@@ -43,6 +43,13 @@ clr.ImportExtensions(System.Linq)
 from Autodesk.Revit.DB import *
 from System.IO import Path, Directory
 
+#output messages either to batch processor (debug = False) or console (debug = True)
+def Output(message = ''):
+    if not debug:
+        revit_script_util.Output(str(message))
+    else:
+        print (message)
+
 # -------------
 # my code here:
 # -------------

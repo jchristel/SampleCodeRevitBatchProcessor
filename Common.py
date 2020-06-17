@@ -1,14 +1,3 @@
-#module managing output the revit batch processor console
-import revit_script_util
-
-#output messages either to batch processor (debug = False) or console (debug = True)
-#default is console
-def Output(message = '', debug = True):
-    if not debug:
-        revit_script_util.Output(str(message))
-    else:
-        print (message)
-
 #transaction wrapper
 #returns:
 #   - False if something went wrong

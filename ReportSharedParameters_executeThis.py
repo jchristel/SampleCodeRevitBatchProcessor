@@ -25,7 +25,6 @@
 
 import clr
 import System
-import datetime
 
 # flag whether this runs in debug or not
 debug = False

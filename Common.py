@@ -21,6 +21,18 @@
 #
 #
 
+import datetime
+import System
+from System.IO import Path
+
+#returns an time stamped output file name based on the revit file name
+#file extension needs to include '.', default is '.txt'
+def GetOutPutFileName(revitFilePath, fileExtension = '.txt'):
+    #get date prefix for file name
+    d = datetime.datetime.now()
+    filePrefix = d.strftime("%y_%m_%d")
+    name = Path.GetFileNameWithoutExtension(revitFilePath)
+    return filePrefix + '_' + name + fileExtension
 
 #transaction wrapper
 #returns:

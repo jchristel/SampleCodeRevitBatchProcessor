@@ -64,7 +64,6 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
-from System.IO import Path, Directory
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -77,12 +76,8 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#get date prefix for file name
-d = datetime.datetime.now()
-filePrefix = d.strftime("%y_%m_%d")
-
 #build output file name
-fileName = rootPath + '\\'+ filePrefix + '_' + Path.GetFileName(revitFilePath) + '.txt'
+fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
 
 #method writing out shared parameter information
 def writeSharedData(doc, fileName):
@@ -95,18 +90,18 @@ def writeSharedData(doc, fileName):
         f.close()
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName, debug)
-        Output (str(e), debug)
+        Output('Failed to write data file!' + fileName)
+        Output (str(e))
     return status
 
 # -------------
 # main:
 # -------------
 
-Output('Writing Shared Parameter Data.... start', debug)
+Output('Writing Shared Parameter Data.... start')
 
 #write out shared parameter data
 result = writeSharedData(doc, fileName)
 
-Output('Writing Shared Parameter Data.... status: ' + str(result), debug)
-Output('Writing Shared Parameter Data.... finished ' + fileName, debug)
+Output('Writing Shared Parameter Data.... status: ' + str(result))
+Output('Writing Shared Parameter Data.... finished ' + fileName)

@@ -96,7 +96,7 @@ def WriteType (action, description, fileName, doc):
                     f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)), EncodeAscii(paraName), EncodeAscii(pValue), '\n']))
             except Exception as e:
                 Output('Failed to get material data')
-                f.write(f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)),'\n']))
+                f.write(f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)),'\n'])))
     except:
         status = False
         Output('Failed to write data file!' + fileName)

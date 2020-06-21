@@ -30,7 +30,7 @@ from System.IO import Path
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt'):
     #get date prefix for file name
     d = datetime.datetime.now()
-    filePrefix = d.strftime("%y_%m_%d")
+    filePrefix = d.strftime('%y_%m_%d')
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return filePrefix + '_' + name + fileExtension
 
@@ -60,7 +60,7 @@ def SyncFile (doc):
     ro = RelinquishOptions(True)
     transActOptions = TransactWithCentralOptions()
     sync = SynchronizeWithCentralOptions()
-    sync.Comment = "Synchronised by Revit Batch Processor"
+    sync.Comment = 'Synchronised by Revit Batch Processor'
     sync.SetRelinquishOptions(ro)
     #Synch it
     try:
@@ -72,3 +72,7 @@ def SyncFile (doc):
     except Exception as e:
         result = False
     return result
+
+#encode string as ascii and replaces all non ascii characters
+def EncodeAscii (string):
+    return string.encode('ascii','replace')

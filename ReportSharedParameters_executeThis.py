@@ -82,10 +82,10 @@ fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
 def writeSharedData(doc, fileName):
     status = True
     try:
-        f = open(fileName, "w")
-        f.write("\t".join(["GUID", "ID", "NAME", "\n"]))
+        f = open(fileName, 'w')
+        f.write('\t'.join(['GUID', 'ID', 'NAME', '\n']))
         for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
-            f.write("\t".join([p.GuidValue.ToString(), str(p.Id.IntegerValue), Element.Name.GetValue(p), "\n"]))
+            f.write('\t'.join([p.GuidValue.ToString(), str(p.Id.IntegerValue), Element.Name.GetValue(p), '\n']))
         f.close()
     except Exception as e:
         status = False

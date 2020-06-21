@@ -93,11 +93,11 @@ def WriteType (action, description, fileName, doc):
                         wallTypeName = str(Element.Name.GetValue(wt))
                         function = str(csl.Function)
                         width = str(csl.Width*304.8)
-                        f.write(fileName + '\t' + wallTypeName + '\t' + function + '\t' + width + '\t' + materialName + '\n')
+                        f.write('\t'.join([fileName, EncodeAscii(wallTypeName), function, width, EncodeAscii(materialName), '\n']))
                 else:                 
-                    f.write(fileName + '\t' + Element.Name.GetValue(wt) + '\n')
+                    f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)), '\n']))
             except Exception as inst:
-                f.write(fileName + '\t' + Element.Name.GetValue(wt) + '\n')
+                f.write('\t'.join([fileName , Element.Name.GetValue(wt), '\n']))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)

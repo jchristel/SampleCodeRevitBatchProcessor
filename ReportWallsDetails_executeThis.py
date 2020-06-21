@@ -98,7 +98,7 @@ def WriteType (action, description, fileName, doc):
                     f.write(fileName + '\t' + Element.Name.GetValue(wt) + '\n')
             except Exception as inst:
                 f.write(fileName + '\t' + Element.Name.GetValue(wt) + '\n')
-    except Exception as inst:
+    except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)
     f.write('Wall Types...end')

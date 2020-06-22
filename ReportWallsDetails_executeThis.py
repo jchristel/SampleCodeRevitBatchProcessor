@@ -37,7 +37,7 @@ rootPath = r'C:\temp'
 #path to Common.py
 commonlibraryDebugLocation = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test.rvt'
+debugRevitFileName = r'C:\temp\Test_walls.rvt'
 
 # Add batch processor scripting references
 if not debug:
@@ -82,7 +82,7 @@ def WriteType (action, description, fileName, doc):
     print ('Writing ' + description +'....')
     f = open(fileName, 'w')
     try:
-        f.write('Wall Types...start'+ '\n')
+        #f.write('Wall Types...start'+ '\n')
         for wt in collector:
             try:
                 cs = wt.GetCompoundStructure()
@@ -101,7 +101,7 @@ def WriteType (action, description, fileName, doc):
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)
-    f.write('Wall Types...end')
+    #f.write('Wall Types...end')
     f.close()
     return status
 
@@ -140,3 +140,4 @@ Output('Writing Wall Type Data.... start')
 #write out wall type data
 result = WriteType (actionWT, 'wall type', fileName, doc)
 Output('Writing Wall Type Data.... status: ' + str(result))
+Output('Writing Wall Type Data.... finished ' + fileName)

@@ -27,7 +27,7 @@ import clr
 import System
 
 # flag whether this runs in debug or not
-debug = True
+debug = False
 
 # --------------------------
 #default file path locations
@@ -35,7 +35,7 @@ debug = True
 #store output here:
 rootPath = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation = r'C:\Project\Git\RB'
+commonlibraryDebugLocation = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName = r'C:\temp\Test_worksets.rvt'
 

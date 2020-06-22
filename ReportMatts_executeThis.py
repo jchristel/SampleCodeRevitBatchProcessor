@@ -37,7 +37,7 @@ rootPath = r'C:\temp'
 #path to Common.py
 commonlibraryDebugLocation = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test.rvt'
+debugRevitFileName = r'C:\temp\Test_mats.rvt'
 
 # Add batch processor scripting references
 if not debug:
@@ -80,7 +80,7 @@ def WriteType (action, description, fileName, doc):
     print ('Writing ' + description +'....')
     f = open(fileName, 'w')
     try:
-        f.write('Materials...start'+ '\n')
+        #f.write('Materials...start'+ '\n')
         for wt in collector:
             try:
                 paras = wt.GetOrderedParameters()
@@ -100,7 +100,7 @@ def WriteType (action, description, fileName, doc):
     except:
         status = False
         Output('Failed to write data file!' + fileName)
-    f.write('Materials...end')
+    #f.write('Materials...end')
     f.close()
     return status
 
@@ -120,3 +120,4 @@ fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
 Output('Writing Material Data.... start')
 result = WriteType (actionMat, 'Materials', fileName, doc)
 Output('Writing Material Data.... status: ' + str(result))
+Output('Writing Material Data.... finished ' + fileName)

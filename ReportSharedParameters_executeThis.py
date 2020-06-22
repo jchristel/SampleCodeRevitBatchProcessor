@@ -37,7 +37,7 @@ rootPath = r'C:\temp'
 #path to Common.py
 commonlibraryDebugLocation = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test.rvt'
+debugRevitFileName = r'C:\temp\Test_sharedPara.rvt'
 
 # Add batch processor scripting references
 if not debug:

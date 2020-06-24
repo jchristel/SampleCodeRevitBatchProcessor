@@ -78,6 +78,23 @@ def Output(message = ''):
 #build output file name
 fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
 
+#returns all paramterbindings for a given parameter
+def ParamBindingExists(doc, paramName, paramType):
+    categories = []
+    map = doc.ParameterBindings
+    iterator = map.ForwardIterator()
+    iterator.Reset()
+    while iterator.MoveNext():
+        if iterator.Key != None and iterator.Key.Name == paramName and iterator.Key.ParameterType == paramType:
+            elemBind = iterator.Current
+            for cat in elemBind.Categories:
+                categories.append(cat.Name)
+            paramExists = True
+            break
+        else:
+            paramExists = False
+    return ('[' + str(','.join(categories)) + ']')
+
 #method writing out shared parameter information
 def writeSharedData(doc, fileName):
     status = True
@@ -85,7 +102,8 @@ def writeSharedData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['GUID', 'ID', 'NAME', '\n']))
         for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
-            f.write('\t'.join([p.GuidValue.ToString(), str(p.Id.IntegerValue), EncodeAscii(Element.Name.GetValue(p)), '\n']))
+            pdef = p.GetDefinition()
+            f.write('\t'.join([p.GuidValue.ToString(), str(p.Id.IntegerValue), EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
         f.close()
     except Exception as e:
         status = False

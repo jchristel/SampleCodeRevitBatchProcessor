@@ -75,8 +75,9 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#build output file name
-fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
+#build output file names
+fileNameGrid = rootPath + '\\'+ GetOutPutFileName(revitFilePath,'.txt', '_grids')
+fileNameLevel = rootPath + '\\'+ GetOutPutFileName(revitFilePath,'.txt', '_levels')
 
 def GetWorksetName(doc, idInteger):
     name = 'unknown'
@@ -107,14 +108,33 @@ def writeGridData(doc, fileName):
         Output (str(e))
     return status
 
+#method writing out level information
+def writeLevelData(doc, fileName):
+    status = True
+    try:
+        f = open(fileName, 'w')
+        f.write('\t'.join(['ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
+        for p in FilteredElementCollector(doc).OfClass(Level):
+            f.write('\t'.join([str(p.Id.IntegerValue), EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
+        f.close()
+    except Exception as e:
+        status = False
+        Output('Failed to write data file!' + fileName)
+        Output (str(e))
+    return status
+
 # -------------
 # main:
 # -------------
 
+#write out grid data
 Output('Writing Grid Data.... start')
-
-#write out shared parameter data
-result = writeGridData(doc, fileName)
-
+result = writeGridData(doc, fileNameGrid)
 Output('Writing Grid Data.... status: ' + str(result))
-Output('Writing Grid Data.... finished ' + fileName)
+Output('Writing Grid Data.... finished ' + fileNameGrid)
+
+#write out Level data
+Output('Writing Level Data.... start')
+result = writeLevelData(doc, fileNameLevel)
+Output('Writing Level Data.... status: ' + str(result))
+Output('Writing Level Data.... finished ' + fileNameLevel)

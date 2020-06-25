@@ -34,6 +34,11 @@ def GetOutPutFileName(revitFilePath, fileExtension = '.txt'):
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return filePrefix + '_' + name + fileExtension
 
+# returns the revit file name without the file extension
+def GetRevitFileName(revitFilePath):
+    name = Path.GetFileNameWithoutExtension(revitFilePath)
+    return name
+
 #transaction wrapper
 #returns:
 #   - False if something went wrong

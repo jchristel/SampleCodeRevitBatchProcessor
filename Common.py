@@ -24,6 +24,7 @@
 import datetime
 import System
 from System.IO import Path
+from Autodesk.Revit.DB import *
 
 #returns an time stamped output file name based on the revit file name
 #file extension needs to include '.', default is '.txt'

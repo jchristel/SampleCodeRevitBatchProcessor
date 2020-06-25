@@ -28,12 +28,13 @@ from Autodesk.Revit.DB import *
 
 #returns an time stamped output file name based on the revit file name
 #file extension needs to include '.', default is '.txt'
-def GetOutPutFileName(revitFilePath, fileExtension = '.txt'):
+#file suffix will be appended after the name but before the file extension. Default is blank.
+def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     #get date prefix for file name
     d = datetime.datetime.now()
     filePrefix = d.strftime('%y_%m_%d')
     name = Path.GetFileNameWithoutExtension(revitFilePath)
-    return filePrefix + '_' + name + fileExtension
+    return filePrefix + '_' + name + fileSuffix + fileExtension
 
 # returns the revit file name without the file extension
 def GetRevitFileName(revitFilePath):

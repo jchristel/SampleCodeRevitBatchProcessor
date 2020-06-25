@@ -141,14 +141,14 @@ defaultWorksets = [
 ['Test_grids', '99_LEVELS AND GRIDS']
 ]
 
-#write out shared parameter data
+#modify workset of levels, grids ands scope boxes
 result = Modify(doc, revitFilePath, defaultWorksets)
 Output('Checking levels and grids.... status: ' + str(result))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug == False):
     Output('Syncing to Central: start')
-    SyncFile (doc, fileName)
+    SyncFile (doc)
     Output('Syncing to Central: finished')
 
 Output('Checking levels and grids.... finished ')

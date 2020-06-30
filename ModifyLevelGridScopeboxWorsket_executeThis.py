@@ -27,33 +27,34 @@ import clr
 import System
 
 # flag whether this runs in debug or not
-debug = True
+debug_ = True
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath = r'C:\temp'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation = r'C:\Project\Git\RB'
+commonlibraryDebugLocation_ = r'C:\Project\Git\RB'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test_grids.rvt'
+debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
-if not debug:
+if not debug_:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #set path to common library
-    import sys
-    sys.path.append(commonlibraryDebugLocation)
     #get default revit file name
-    revitFilePath = debugRevitFileName
+    revitFilePath_ = debugRevitFileName_
+
+#set path to common library
+import sys
+sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
 import Common
@@ -66,7 +67,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug:
+    if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -137,16 +138,16 @@ def Modify(doc, revitFilePath, gridData):
 
 Output('Checking levels and grids.... start')
 
-defaultWorksets = [
+defaultWorksets_ = [
 ['Test_grids', '99_LEVELS AND GRIDS']
 ]
 
 #modify workset of levels, grids ands scope boxes
-result = Modify(doc, revitFilePath, defaultWorksets)
-Output('Checking levels and grids.... status: ' + str(result))
+result_ = Modify(doc, revitFilePath_, defaultWorksets_)
+Output('Checking levels and grids.... status: ' + str(result_))
 
 #sync changes back to central
-if (doc.IsWorkshared and debug == False):
+if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     SyncFile (doc)
     Output('Syncing to Central: finished')

@@ -27,17 +27,17 @@ import clr
 import System
 
 # flag whether this runs in debug or not
-debug = False
+debug_ = False
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath = r'C:\temp'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation = r'C:\temp'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test_grids.rvt'
+debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
 if not debug:
@@ -47,14 +47,14 @@ if not debug:
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #set path to common library
-    import sys
-    sys.path.append(commonlibraryDebugLocation)
     #get default revit file name
-    revitFilePath = debugRevitFileName
+    revitFilePath_ = debugRevitFileName_
 
+#set path to common library
+import sys
+sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common
 from Common import *
@@ -66,7 +66,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug:
+    if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -76,8 +76,8 @@ def Output(message = ''):
 # -------------
 
 #build output file names
-fileNameGrid = rootPath + '\\'+ GetOutPutFileName(revitFilePath,'.txt', '_grids')
-fileNameLevel = rootPath + '\\'+ GetOutPutFileName(revitFilePath,'.txt', '_levels')
+fileNameGrid_ = rootPath + '\\'+ GetOutPutFileName(revitFilePath_,'.txt', '_grids')
+fileNameLevel_ = rootPath + '\\'+ GetOutPutFileName(revitFilePath_,'.txt', '_levels')
 
 def GetWorksetName(doc, idInteger):
     name = 'unknown'
@@ -129,12 +129,12 @@ def writeLevelData(doc, fileName):
 
 #write out grid data
 Output('Writing Grid Data.... start')
-result = writeGridData(doc, fileNameGrid)
-Output('Writing Grid Data.... status: ' + str(result))
-Output('Writing Grid Data.... finished ' + fileNameGrid)
+result_ = writeGridData(doc, fileNameGrid_)
+Output('Writing Grid Data.... status: ' + str(result_))
+Output('Writing Grid Data.... finished ' + fileNameGrid_)
 
 #write out Level data
 Output('Writing Level Data.... start')
-result = writeLevelData(doc, fileNameLevel)
-Output('Writing Level Data.... status: ' + str(result))
-Output('Writing Level Data.... finished ' + fileNameLevel)
+result_ = writeLevelData(doc, fileNameLevel)
+Output('Writing Level Data.... status: ' + str(result_))
+Output('Writing Level Data.... finished ' + fileNameLevel_)

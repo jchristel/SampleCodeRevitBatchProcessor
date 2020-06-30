@@ -30,20 +30,20 @@ import System
 import os.path as path
 
 # flag whether this runs in debug or not
-debug = False
+debug_ = False
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\ReportLinks\_Output'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Links.rvt'
 
 # Add batch processor scripting references
-if not debug:
+if not debug_:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
@@ -70,7 +70,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug:
+    if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)

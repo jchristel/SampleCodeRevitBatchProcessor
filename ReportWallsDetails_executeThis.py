@@ -27,34 +27,34 @@ import clr
 import System
 
 # flag whether this runs in debug or not
-debug = False
+debug_ = False
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath = r'C:\temp'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation = r'C:\temp'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test_walls.rvt'
+debugRevitFileName_ = r'C:\temp\Test_walls.rvt'
 
 # Add batch processor scripting references
-if not debug:
+if not debug_:
     import revit_script_util
     from revit_script_util import Output
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #set path to common library
-    import sys
-    sys.path.append(commonlibraryDebugLocation)
     #get default revit file name
-    revitFilePath = debugRevitFileName
+    revitFilePath_ = debugRevitFileName_
 
+#set path to common library
+import sys
+sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common
 from Common import *
@@ -66,7 +66,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug:
+    if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -125,8 +125,7 @@ def GetNameAndMark (mat):
 #gets all wall types in a model
 #this includes types of curtain walls as well as any in types of place wall families!
 def actionWT():  
-    collector = FilteredElementCollector(doc)
-    collector.OfCategory(BuiltInCategory.OST_Walls).WhereElementIsElementType()
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsElementType()
     return collector
 
 # -------------
@@ -134,10 +133,10 @@ def actionWT():
 # -------------
 
 #build output file name
-fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
+fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
 
 Output('Writing Wall Type Data.... start')
 #write out wall type data
-result = WriteType (actionWT, 'wall type', fileName, doc)
-Output('Writing Wall Type Data.... status: ' + str(result))
-Output('Writing Wall Type Data.... finished ' + fileName)
+result_ = WriteType (actionWT, 'wall type', fileName_, doc)
+Output('Writing Wall Type Data.... status: ' + str(result_))
+Output('Writing Wall Type Data.... finished ' + fileName_)

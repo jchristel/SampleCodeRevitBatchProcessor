@@ -27,36 +27,37 @@ import clr
 import System
 
 # flag whether this runs in debug or not
-debug = False
+debug_ = False
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath = r'C:\temp'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation = r'C:\temp'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test_mats.rvt'
+debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
 
 # Add batch processor scripting references
-if not debug:
+if not debug_:
     import revit_script_util
     from revit_script_util import Output
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #set path to common library
-    import sys
-    sys.path.append(commonlibraryDebugLocation)
     #get default revit file name
-    revitFilePath = debugRevitFileName
+    revitFilePath_ = debugRevitFileName_
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
+
+#set path to common library
+import sys
+sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
 import Common
@@ -66,7 +67,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug:
+    if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -106,8 +107,7 @@ def WriteType (action, description, fileName, doc):
 
 #gets all materials in a model
 def actionMat():  
-    collector = FilteredElementCollector(doc)
-    collector.OfClass(Material)
+    collector = FilteredElementCollector(doc).OfClass(Material)
     return collector
 
 # -------------
@@ -115,9 +115,9 @@ def actionMat():
 # -------------
 
 #build output file name
-fileName = rootPath + '\\'+ GetOutPutFileName(revitFilePath)
+fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
 
 Output('Writing Material Data.... start')
-result = WriteType (actionMat, 'Materials', fileName, doc)
-Output('Writing Material Data.... status: ' + str(result))
-Output('Writing Material Data.... finished ' + fileName)
+result = WriteType (actionMat, 'Materials', fileName_, doc)
+Output('Writing Material Data.... status: ' + str(result_))
+Output('Writing Material Data.... finished ' + fileName_)

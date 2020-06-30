@@ -23,6 +23,8 @@
 #
 #
 
+# this sample reports on Revit and CAD links
+
 import clr
 import System
 import os.path as path
@@ -81,6 +83,7 @@ def Output(message = ''):
 fileNameLinkRevit_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_,'.txt', '_RVT')
 fileNameLinkCAD_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_,'.txt', '_CAD')
 
+#extract some CAD link type data (path)
 def GetCADLinkTypeDataByName(cadLinkName, doc):
     match = False
     #default values

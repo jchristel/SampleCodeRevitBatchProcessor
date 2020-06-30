@@ -23,6 +23,9 @@
 #
 #
 
+# this sample shows how to merge a number of text report files created on the same day with the same suffix (from the same report)
+#into a single report file for ease of reviewing
+
 import clr
 import System
 

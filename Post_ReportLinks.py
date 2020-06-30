@@ -36,15 +36,15 @@ debug = False
 #default file path locations
 # --------------------------
 #store output here:
-rootPath = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\ReportLinks\_Output'
+rootPath = r'C:\temp
 #path to Common.py
-commonlibraryDebugLocation_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
+commonlibraryDebugLocation_ = r'C:\temp'
 
 # Add batch processor scripting references
 if not debug:
     import script_util
 
-#set path to common library
+#set path to common_Post library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 

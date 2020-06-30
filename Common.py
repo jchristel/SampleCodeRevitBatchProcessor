@@ -25,14 +25,19 @@ import datetime
 import System
 from System.IO import Path
 from Autodesk.Revit.DB import *
+import os.path as path
+
+#get a time stamp in format year_month_day
+def GetFileDateStamp():
+    d = datetime.datetime.now()
+    return d.strftime('%y_%m_%d')
 
 #returns an time stamped output file name based on the revit file name
 #file extension needs to include '.', default is '.txt'
 #file suffix will be appended after the name but before the file extension. Default is blank.
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     #get date prefix for file name
-    d = datetime.datetime.now()
-    filePrefix = d.strftime('%y_%m_%d')
+    filePrefix = GetFileDateStamp()
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return filePrefix + '_' + name + fileSuffix + fileExtension
 
@@ -41,6 +46,17 @@ def GetRevitFileName(revitFilePath):
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return name
 
+#removes '..\..' or '..\' from relative file path supplied by Revit and replaces it with full path derived from Revit document
+def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
+    if( r'..\..' in relativeFilePath):
+        two_up = path.abspath(path.join(fullFilePath ,r'..\..'))
+        return two_up + relativeFilePath[5:]
+    elif('..' in relativeFilePath):
+        one_up = path.abspath(path.join(fullFilePath ,'..'))
+        return one_up + relativeFilePath[2:]
+    else:
+        return relativeFilePath
+    
 #transaction wrapper
 #returns:
 #   - False if something went wrong

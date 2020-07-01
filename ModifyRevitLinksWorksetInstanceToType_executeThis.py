@@ -38,7 +38,7 @@ debug_ = False
 #store output here:
 rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Links.rvt'
 
@@ -169,4 +169,11 @@ def writeRevitLinkData(doc):
 Output('Modifying Revit Link Data.... start')
 result_ = writeRevitLinkData(doc)
 Output('Modifying Revit Link.... status: ' + str(result_))
+
+#sync changes back to central
+if (doc.IsWorkshared and debug_ == False):
+    Output('Syncing to Central: start')
+    SyncFile (doc)
+    Output('Syncing to Central: finished')
+
 Output('Modifying Revit Link.... finished ')

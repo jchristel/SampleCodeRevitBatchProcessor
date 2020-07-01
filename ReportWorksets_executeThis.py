@@ -35,7 +35,7 @@ debug_ = False
 #store output here:
 rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibrarydebugLocation_ = r'C:\temp'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_worksets.rvt'
 

@@ -97,23 +97,25 @@ def InTransaction(tranny, action):
 def Modify(doc, revitFilePath, worksetData):
     revitFileName = GetRevitFileName(revitFilePath)
     flag = False
-    #loop over list provided and try to find a host file name match
+    flagRenamed = False
     for fileName, defaultWorksetName in worksetData:
         if (revitFileName.startswith(fileName)):
             flag = True
-            #loop over workset data and rename worksets as required
             for currentName, newName in defaultWorksetName:
                 for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-                    if(p.Name ==currentName):
+                    if(p.Name == currentName):
                         def action():
                             WorksetTable.RenameWorkset(doc, p.Id, newName)
                         transaction = Transaction(doc, "Changing workset name from: " + str(currentName) + ' to ' + str(newName))
                         result = InTransaction(transaction, action)
                         Output("Changing workset name from: " + str(currentName) + ' to ' + str(newName) + ' ' + str(result))
+                        flagRenamed = True
             break
     if (flag == False):
-        Output('No workset data provided for current Revit file')
-    return flag
+        Output('No workset data provided for current Revit file!')
+    elif(flagRenamed == False):
+        Output('No matching workset names provided for current set of worksets!')
+    return flag & flagRenamed
 
 Output('Modifying Worksets.... start')
 

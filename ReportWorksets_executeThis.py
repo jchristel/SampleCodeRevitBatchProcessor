@@ -83,9 +83,9 @@ def writeWorksetData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['ID', 'NAME', 'ISVISIBLEBYDEFAULT', '\n']))
+        f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'ISVISIBLEBYDEFAULT', '\n']))
         for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-            f.write('\t'.join([str(p.Id.IntegerValue), EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
+            f.write('\t'.join([GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
         f.close()
     except Exception as e:
         status = False

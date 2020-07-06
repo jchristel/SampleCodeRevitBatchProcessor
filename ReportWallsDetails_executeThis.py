@@ -96,9 +96,9 @@ def WriteType (action, description, fileName, doc):
                         width = str(csl.Width*304.8)
                         f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(wallTypeName), function, width, EncodeAscii(materialName), '\n']))
                 else:                 
-                    f.write('\t'.join([GetRevitFileName(revitFilePath_), EncodeAscii(Element.Name.GetValue(wt)), '\n']))
+                    f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(Element.Name.GetValue(wt)), '\n']))
             except Exception as inst:
-                f.write('\t'.join([GetRevitFileName(revitFilePath_) , Element.Name.GetValue(wt), '\n']))
+                f.write('\t'.join([GetRevitFileName(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)

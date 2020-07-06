@@ -81,6 +81,7 @@ def WriteType (action, description, fileName, doc):
     collector = action()
     print ('Writing ' + description +'....')
     f = open(fileName, 'w')
+    f.write('\t'.join(['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', '\n']))
     try:
         #f.write('Wall Types...start'+ '\n')
         for wt in collector:
@@ -93,11 +94,11 @@ def WriteType (action, description, fileName, doc):
                         wallTypeName = str(Element.Name.GetValue(wt))
                         function = str(csl.Function)
                         width = str(csl.Width*304.8)
-                        f.write('\t'.join([fileName, EncodeAscii(wallTypeName), function, width, EncodeAscii(materialName), '\n']))
+                        f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(wallTypeName), function, width, EncodeAscii(materialName), '\n']))
                 else:                 
-                    f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)), '\n']))
+                    f.write('\t'.join([GetRevitFileName(revitFilePath_), EncodeAscii(Element.Name.GetValue(wt)), '\n']))
             except Exception as inst:
-                f.write('\t'.join([fileName , Element.Name.GetValue(wt), '\n']))
+                f.write('\t'.join([GetRevitFileName(revitFilePath_) , Element.Name.GetValue(wt), '\n']))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)

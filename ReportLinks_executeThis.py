@@ -119,7 +119,7 @@ def extractCADLinkInstanceData(cadLink, doc):
     isViewSpecific= cadLink.ViewSpecific
     ownerViewId = cadLink.OwnerViewId
     linkTypeData = GetCADLinkTypeDataByName(lNameParam.AsString(), doc)
-    return '\t'.join([GetOutPutFileName(revitFilePath_), str(cadLink.Id), str(lNameParam.AsString()), str(isViewSpecific), str(ownerViewId), str(wsParam.AsValueString()), str(doParam.AsString()),str(cadLink.Pinned), str(lDrawLayerParam.AsValueString()),linkTypeData, '\n'])
+    return '\t'.join([GetRevitFileName(revitFilePath_), str(cadLink.Id), str(lNameParam.AsString()), str(isViewSpecific), str(ownerViewId), str(wsParam.AsValueString()), str(doParam.AsString()),str(cadLink.Pinned), str(lDrawLayerParam.AsValueString()),linkTypeData, '\n'])
 
 #returns Revit Link Type data
 def GetRevitLinkTypeDataByName(revitLinkName, doc):
@@ -169,7 +169,7 @@ def extractRevitLinkInstanceData(revitLink, doc):
         lS = False if '<not shared>' in linkTypeName.lower() else True
     else:
         Output('Failed to split link name into 3 parts')
-    return '\t'.join([GetOutPutFileName(revitFilePath_), str(revitLink.Id), lN, str(lS), linkTypeName, str(wsparam.AsValueString()), str(doparam.AsString()), linkTypeData, '\n'])
+    return '\t'.join([GetRevitFileName(revitFilePath_), str(revitLink.Id), lN, str(lS), linkTypeName, str(wsparam.AsValueString()), str(doparam.AsString()), linkTypeData, '\n'])
 
 #method writing out Revit link information
 def writeRevitLinkData(doc, fileName):

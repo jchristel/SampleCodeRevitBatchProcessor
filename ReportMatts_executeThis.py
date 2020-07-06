@@ -80,6 +80,7 @@ def WriteType (action, description, fileName, doc):
     collector = action()
     print ('Writing ' + description +'....')
     f = open(fileName, 'w')
+    f.write('\t'.join(['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE', '\n']))
     try:
         #f.write('Materials...start'+ '\n')
         for wt in collector:
@@ -94,10 +95,10 @@ def WriteType (action, description, fileName, doc):
                     elif(p.StorageType == StorageType.String):
                         if(p.AsString() != None and p.AsString() != ''):
                             pValue = p.AsString()                    
-                    f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)), EncodeAscii(paraName), EncodeAscii(pValue), '\n']))
+                    f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(Element.Name.GetValue(wt)), EncodeAscii(paraName), EncodeAscii(pValue), '\n']))
             except Exception as e:
                 Output('Failed to get material data')
-                f.write('\t'.join([fileName, EncodeAscii(Element.Name.GetValue(wt)),'\n']))
+                f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id),EncodeAscii(Element.Name.GetValue(wt)),'\n']))
     except:
         status = False
         Output('Failed to write data file!' + fileName)

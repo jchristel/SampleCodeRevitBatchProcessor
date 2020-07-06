@@ -100,10 +100,10 @@ def writeSharedData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['GUID', 'ID', 'NAME', '\n']))
+        f.write('\t'.join(['HOSTFILE', 'GUID', 'ID', 'NAME', '\n']))
         for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
             pdef = p.GetDefinition()
-            f.write('\t'.join([p.GuidValue.ToString(), str(p.Id.IntegerValue), EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
+            f.write('\t'.join([GetRevitFileName(revitFilePath_), p.GuidValue.ToString(), str(p.Id.IntegerValue), EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
         f.close()
     except Exception as e:
         status = False

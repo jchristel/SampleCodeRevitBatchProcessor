@@ -98,9 +98,9 @@ def writeGridData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
+        f.write('\t'.join(['HOSTFILE', added host file column to report'ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Grid):
-            f.write('\t'.join([str(p.Id.IntegerValue), EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
+            f.write('\t'.join([GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
         f.close()
     except Exception as e:
         status = False
@@ -113,9 +113,9 @@ def writeLevelData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
+        f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Level):
-            f.write('\t'.join([str(p.Id.IntegerValue), EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
+            f.write('\t'.join([GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
         f.close()
     except Exception as e:
         status = False

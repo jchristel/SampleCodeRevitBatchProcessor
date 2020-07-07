@@ -46,3 +46,8 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
                     result.write( line )
                 lineCounter += 1
             fileCounter += 1
+
+#returns a list of files from a given folder with a given file extension
+def GetFiles(folderPath, fileExtension='.rvt'):
+    file_list = glob.glob(folderPath + '\\*' + fileExtension)
+    return file_list

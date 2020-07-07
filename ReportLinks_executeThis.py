@@ -85,14 +85,10 @@ fileNameLinkCAD_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_,'.txt', '_
 
 #extract some CAD link type data (path)
 def GetCADLinkTypeDataByName(cadLinkName, doc):
-    match = False
     #default values
     modelPath = 'unknown'
-    isViewSpecific = False
-    ownerViewId = ElementId.InvalidElementId
     for p in FilteredElementCollector(doc).OfClass(CADLinkType):
         if (Element.Name.GetValue(p) == cadLinkName):
-            match = True
             try:
                 exFileRef = p.GetExternalFileReference()
                 if(exFileRef.IsValidExternalFileReference(exFileRef)):

@@ -112,7 +112,16 @@ def SaveAsWorksharedFile(doc, fullFileName):
     except Exception:
         result = False
     return result
-    
+
+#enables work sharing
+def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', worksetName = 'Workset1'):
+    result = True
+    try:
+        doc.EnableWorksharing('Shared Levels and Grids','Workset1')
+    except Exception:
+        result = False
+    return result
+
 #encode string as ascii and replaces all non ascii characters
 def EncodeAscii (string):
     return string.encode('ascii','replace')

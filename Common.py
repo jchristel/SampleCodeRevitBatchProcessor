@@ -96,6 +96,23 @@ def SyncFile (doc):
         result = False
     return result
 
+#saves a new central file to given location
+def SaveAsWorksharedFile(doc, fullFileName):
+    result = True
+    try:
+        workSharingSaveAsOption = WorksharingSaveAsOptions()
+        workSharingSaveAsOption.OpenWorksetsDefault = SimpleWorksetConfiguration.AskUserToSpecify
+        workSharingSaveAsOption.SaveAsCentral = True
+        saveOption = SaveAsOptions()
+        saveOption.OverwriteExistingFile = True
+        saveOption.SetWorksharingOptions(workSharingSaveAsOption)
+        saveOption.MaximumBackups = 5
+        saveOption.Compact = True
+        doc.SaveAs(fullFileName, saveOption)
+    except Exception:
+        result = False
+    return result
+    
 #encode string as ascii and replaces all non ascii characters
 def EncodeAscii (string):
     return string.encode('ascii','replace')

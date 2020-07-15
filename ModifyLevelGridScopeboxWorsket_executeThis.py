@@ -20,7 +20,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
+
+# sample description
 # This modifies the worksets of levels, grids and scope boxes
 # A list provides per file the default workset these elements should be on
 

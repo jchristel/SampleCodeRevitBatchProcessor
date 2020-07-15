@@ -89,7 +89,7 @@ def GetWorksetNamebyId(doc, Id):
     return name
     
     
-#returns Revit Link Type data
+#returns Revit Link Instance data
 def GetRevitInstanceDataByName(revitLinkName, doc):
     match = False
     #default values
@@ -128,8 +128,8 @@ def ModifyRevitLinkTypeData(revitLink, doc):
     else:
         Output(str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName))
 
-#method writing out Revit link information
-def writeRevitLinkData(doc):
+#method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
+def modifyRevitLinkTypes(doc):
     status = True
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
@@ -146,7 +146,7 @@ def writeRevitLinkData(doc):
 
 #write out revit link data
 Output('Modifying Revit Link Data.... start')
-result_ = writeRevitLinkData(doc)
+result_ = modifyRevitLinkTypes(doc)
 Output('Modifying Revit Link.... status: ' + str(result_))
 
 #sync changes back to central

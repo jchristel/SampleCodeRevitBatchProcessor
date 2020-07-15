@@ -23,6 +23,10 @@
 #
 #
 
+# sample description
+# how to report on shared parameters
+# note: shared parameters introduced to a project through a family do not report their category bindings through the below...
+
 import clr
 import System
 

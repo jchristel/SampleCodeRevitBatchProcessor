@@ -228,7 +228,7 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
         newFileName = targetFolderPath + '\\'+ revitFileName +'.rvt'
         returnvalue.message = 'Found no file name match for: ' + currentFullFileName
     try:
-        returnvalue.status = SaveAsWorksharedFile(doc, newFileName)
+        returnvalue.status = SaveAsWorksharedFile(doc, newFileName).status
         returnvalue.message = returnvalue.message + '\n' + 'Saved file: ' + newFileName
     except Exception as e:
         returnvalue.status = False

@@ -23,7 +23,9 @@
 #
 #
 
-# this sample moves revit link instances onto a workset specified in list
+# sample description
+# this sample shows how to detach and save a file somwhere else and or under a different name
+# list of end this file provides a mapping from the old file name to the new file name
 
 import clr
 import System

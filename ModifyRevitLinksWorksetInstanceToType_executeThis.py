@@ -23,6 +23,7 @@
 #
 #
 
+# sample description
 # this sample moves revit link types onto the same workset than the corresponding link instance
 
 import clr

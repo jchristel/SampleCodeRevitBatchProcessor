@@ -23,6 +23,7 @@
 #
 #
 
+# sample description
 # this sample moves revit link instances and types onto the a workset provided in list below
 
 import clr

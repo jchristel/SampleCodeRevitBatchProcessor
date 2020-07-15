@@ -42,7 +42,6 @@ debugRevitFileName_ = r'C:\temp\Test_walls.rvt'
 # Add batch processor scripting references
 if not debug_:
     import revit_script_util
-    from revit_script_util import Output
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
@@ -56,7 +55,7 @@ else:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -83,7 +82,6 @@ def WriteType (action, description, fileName, doc):
     f = open(fileName, 'w')
     f.write('\t'.join(['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', '\n']))
     try:
-        #f.write('Wall Types...start'+ '\n')
         for wt in collector:
             try:
                 cs = wt.GetCompoundStructure()
@@ -94,15 +92,14 @@ def WriteType (action, description, fileName, doc):
                         wallTypeName = str(Element.Name.GetValue(wt))
                         function = str(csl.Function)
                         width = str(csl.Width*304.8)
-                        f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(wallTypeName), function, width, EncodeAscii(materialName), '\n']))
+                        f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(wallTypeName), function, width, com.EncodeAscii(materialName), '\n']))
                 else:                 
-                    f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(Element.Name.GetValue(wt)), '\n']))
-            except Exception as inst:
-                f.write('\t'.join([GetRevitFileName(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
+                    f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(Element.Name.GetValue(wt)), '\n']))
+            except Exception:
+                f.write('\t'.join([com.GetRevitFileName(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-    #f.write('Wall Types...end')
+        Output('Failed to write data file! ' + fileName +' with exception '+str(e))
     f.close()
     return status
 
@@ -134,7 +131,7 @@ def actionWT():
 # -------------
 
 #build output file name
-fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Wall Type Data.... start')
 #write out wall type data

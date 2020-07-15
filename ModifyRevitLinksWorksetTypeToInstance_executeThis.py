@@ -60,7 +60,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -79,25 +79,6 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-def InTransaction(tranny, action):
-    result = None
-    tranny.Start()
-    try:
-        result = action()
-        tranny.Commit()
-    except Exception as e:
-        Output ("exception: " + str(e))
-        tranny.RollBack()
-    return result
-
-def GetWorksetIdbyName(doc, name):
-    id = ElementId.InvalidElementId
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Name == name):
-            id = p.Id
-            break
-    return id
-
 def GetWorksetNamebyId(doc, Id):
     name = 'unknown'
     for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
@@ -109,17 +90,15 @@ def GetWorksetNamebyId(doc, Id):
     
 #returns Revit Link Type data
 def GetRevitLinkTypeDataByName(revitLinkName, doc):
-    match = False
     #default values
     typeWorksetName = 'unknown'
     for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
         #Output('['+str(revitLinkName)+'][' + str(Element.Name.GetValue(p))+']')
         if (Element.Name.GetValue(p) == revitLinkName):
-            match = True
             wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             typeWorksetName = wsparam.AsValueString()
             break
-    return GetWorksetIdbyName(doc, typeWorksetName)
+    return com.GetWorksetIdbyName(doc, typeWorksetName)
 
 #get the revit link instance data
 #this also calls GetRevitLinkTypeDataByName() 
@@ -127,7 +106,7 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
-    instanceWorksetId = GetWorksetIdbyName(doc, instanceWorksetName)
+    instanceWorksetId = com.GetWorksetIdbyName(doc, instanceWorksetName)
     lN = "unknown"
     #split revit link name at colon
     linkTypeNameParts = revitLink.Name.split(':')
@@ -139,19 +118,16 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
         typeWorksetName = GetWorksetNamebyId(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != ElementId.InvalidElementId):
-            linkInstanceNameEncoded = EncodeAscii(lN[0:-1])
+            linkInstanceNameEncoded = com.EncodeAscii(lN[0:-1])
             if(instanceWorksetId != typeWorksetId):
                 Output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
-                def action():
-                    wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-                    wsparam.Set(typeWorksetId.IntegerValue)
                 transaction = Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                result = InTransaction(transaction, action)
-                Output(linkInstanceNameEncoded + ' ' + str(result))
+                result = com.InTransaction(transaction,  com.GetActionChangeElementWorkset(revitLink, typeWorksetId))
+                Output(linkInstanceNameEncoded + ' ' + str(result.status))
             else:
                 Output(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
         else:
-          Output('Link is not loaded' + str(EncodeAscii(lN[0:-1])))
+          Output('Link is not loaded' + str(com.EncodeAscii(lN[0:-1])))
     else:
         Output('Failed to split link name into 3 parts')
 
@@ -179,7 +155,8 @@ Output('Modifying Revit Link.... status: ' + str(result_))
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    SyncFile (doc)
-    Output('Syncing to Central: finished')
+    syncing_ = com.SyncFile (doc)
+    Output('Syncing to Central: finished ' + str(syncing_.result))
+
 
 Output('Modifying Revit Link.... finished ')

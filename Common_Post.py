@@ -31,6 +31,12 @@ def GetFileDateStamp():
     d = datetime.datetime.now()
     return d.strftime('%y_%m_%d')
 
+
+#get the date stamp prefix of report files
+def GetFolderDateStamp():
+    d = datetime.datetime.now()
+    return d.strftime('%Y%m%d')
+
 #used to combine report files into one
 #files are combined pased on thsi search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 #prefix is usually the time stamp in format  '%y_%m_%d'
@@ -48,6 +54,14 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
             fileCounter += 1
 
 #returns a list of files from a given folder with a given file extension
+#file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
+    return file_list
+
+#returns a list of files from a given folder with a given file extension and a file name filter
+#file extension in format '.txt'
+#file filter is in 'something*'
+def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
+    file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list

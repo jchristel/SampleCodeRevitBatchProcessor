@@ -59,7 +59,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -78,30 +78,6 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#save file under new name in given location
-def SaveAs(doc, currentFullFileName, nameData):
-    status = True
-    revitFileName = GetRevitFileName(currentFullFileName)
-    newFileName= ''
-    match = False
-    for oldName, newName in nameData:
-        if (revitFileName.startswith(oldName)):
-            match = True
-            # save file under new name
-            newFileName = rootPath_ + '\\'+ newName +'.rvt'
-            break
-    if(match == False):
-        # save under same file name
-        newFileName = rootPath_ + '\\'+ revitFileName +'.rvt'
-    try:
-        SaveAsWorksharedFile(doc, newFileName)
-    except Exception as e:
-        status = False
-        Output('Failed to save revit file to new location!')
-        Output (str(e))
-    return status
-
-# -------------
 # main:
 # -------------
 
@@ -113,17 +89,17 @@ defaultFileNames_ = [
 
 #save revit file to new location
 Output('Modifying Revit File.... start')
-result_ = SaveAs(doc, revitFilePath_, defaultFileNames_)
+result_ = com.SaveAs(doc, revitFilePath_, defaultFileNames_)
 
 #make further changes as required....
 
 
-Output('Modifying Revit File.... status: ' + str(result_))
+Output('Modifying Revit File.... status: ' + str(result_.status))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    SyncFile (doc)
-    Output('Syncing to Central: finished')
+    syncing_ = com.SyncFile (doc)
+    Output('Syncing to Central: finished ' + str(syncing_.result))
 
 Output('Modifying Revit File.... finished ')

@@ -60,7 +60,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common
+import Common as com
 from Common import *
 
 from Autodesk.Revit.DB import *
@@ -95,10 +95,10 @@ def WriteType (action, description, fileName, doc):
                     elif(p.StorageType == StorageType.String):
                         if(p.AsString() != None and p.AsString() != ''):
                             pValue = p.AsString()                    
-                    f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id), EncodeAscii(Element.Name.GetValue(wt)), EncodeAscii(paraName), EncodeAscii(pValue), '\n']))
+                    f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(Element.Name.GetValue(wt)), com.EncodeAscii(paraName), com.EncodeAscii(pValue), '\n']))
             except Exception as e:
                 Output('Failed to get material data')
-                f.write('\t'.join([GetRevitFileName(revitFilePath_), str(wt.Id),EncodeAscii(Element.Name.GetValue(wt)),'\n']))
+                f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id),com.EncodeAscii(Element.Name.GetValue(wt)),'\n']))
     except:
         status = False
         Output('Failed to write data file!' + fileName)
@@ -116,9 +116,9 @@ def actionMat():
 # -------------
 
 #build output file name
-fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Material Data.... start')
-result = WriteType (actionMat, 'Materials', fileName_, doc)
+result_ = WriteType (actionMat, 'Materials', fileName_, doc)
 Output('Writing Material Data.... status: ' + str(result_))
 Output('Writing Material Data.... finished ' + fileName_)

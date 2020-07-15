@@ -56,7 +56,7 @@ else:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -76,7 +76,7 @@ def Output(message = ''):
 # -------------
 
 #build output file name
-fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 #returns all paramterbindings for a given parameter
 def ParamBindingExists(doc, paramName, paramType):
@@ -89,10 +89,7 @@ def ParamBindingExists(doc, paramName, paramType):
             elemBind = iterator.Current
             for cat in elemBind.Categories:
                 categories.append(cat.Name)
-            paramExists = True
             break
-        else:
-            paramExists = False
     return ('[' + str(','.join(categories)) + ']')
 
 #method writing out shared parameter information
@@ -103,7 +100,7 @@ def writeSharedData(doc, fileName):
         f.write('\t'.join(['HOSTFILE', 'GUID', 'ID', 'NAME', '\n']))
         for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
             pdef = p.GetDefinition()
-            f.write('\t'.join([GetRevitFileName(revitFilePath_), p.GuidValue.ToString(), str(p.Id.IntegerValue), EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
+            f.write('\t'.join([com.GetRevitFileName(revitFilePath_), p.GuidValue.ToString(), str(p.Id.IntegerValue), com.EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
         f.close()
     except Exception as e:
         status = False

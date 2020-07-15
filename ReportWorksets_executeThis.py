@@ -56,7 +56,7 @@ else:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -76,7 +76,7 @@ def Output(message = ''):
 # -------------
 
 #build output file name
-fileName_ = rootPath_ + '\\'+ GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 #method writing out shared parameter information
 def writeWorksetData(doc, fileName):
@@ -85,11 +85,11 @@ def writeWorksetData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'ISVISIBLEBYDEFAULT', '\n']))
         for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-            f.write('\t'.join([GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
+            f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), com.EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
         f.close()
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
+        Output('Failed to write data file! ' + fileName + ' with exception: ' + str(e))
         Output (str(e))
     return status
 

@@ -23,7 +23,7 @@
 #
 #
 
-# this sample moves revit link types onto the same workset than the corresponding link instances
+# this sample moves revit link types onto the same workset than the corresponding link instance
 
 import clr
 import System
@@ -60,7 +60,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -78,25 +78,6 @@ def Output(message = ''):
 # -------------
 # my code here:
 # -------------
-
-def InTransaction(tranny, action):
-    result = None
-    tranny.Start()
-    try:
-        result = action()
-        tranny.Commit()
-    except Exception as e:
-        Output ("exception: " + str(e))
-        tranny.RollBack()
-    return result
-
-def GetWorksetIdbyName(doc, name):
-    id = ElementId.InvalidElementId
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Name == name):
-            id = p.Id
-            break
-    return id
 
 def GetWorksetNamebyId(doc, Id):
     name = 'unknown'
@@ -124,28 +105,25 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
                 break
     if(match == True):
         #Output(instanceWorksetName)
-        return GetWorksetIdbyName(doc, instanceWorksetName)
+        return com.GetWorksetIdbyName(doc, instanceWorksetName)
     else:
         #Output('no match')
         return ElementId.InvalidElementId
 
 #get the revit link instance data
-#this also calls GetRevitLinkTypeDataByName() 
+#this also calls GetRevitLinkInstanceDataByName() 
 def ModifyRevitLinkTypeData(revitLink, doc):
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
-    typeWorksetId = GetWorksetIdbyName(doc, typeWorksetName)
+    typeWorksetId = com.GetWorksetIdbyName(doc, typeWorksetName)
     instanceWorksetId = GetRevitInstanceDataByName(revitLink, doc)
     instanceWorksetName = GetWorksetNamebyId(doc, instanceWorksetId)
     if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
-        def action():
-            wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-            wsparam.Set(instanceWorksetId.IntegerValue)
         transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
-        result = InTransaction(transaction, action)
-        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(result))
+        result = com.InTransaction(transaction, com.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(result.status))
     else:
         Output(str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName))
 
@@ -173,7 +151,7 @@ Output('Modifying Revit Link.... status: ' + str(result_))
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    SyncFile (doc)
-    Output('Syncing to Central: finished')
+    syncing_ = com.SyncFile (doc)
+    Output('Syncing to Central: finished ' + str(syncing_.result))
 
 Output('Modifying Revit Link.... finished ')

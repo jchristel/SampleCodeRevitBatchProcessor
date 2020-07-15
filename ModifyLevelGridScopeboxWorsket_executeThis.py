@@ -21,43 +21,42 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#
+# This modifies the worksets of levels, grids and scope boxes
+# A list provides per file the default workset these elements should be on
 
 import clr
 import System
 
 # flag whether this runs in debug or not
-debug_ = True
+debug = False
 
 # --------------------------
 #default file path locations
 # --------------------------
 #store output here:
-rootPath_ = r'C:\temp'
+rootPath = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation_ = r'C:\Project\Git\RB'
+commonlibraryDebugLocation = r'C:\temp'
 #debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
+debugRevitFileName = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
-if not debug_:
+if not debug:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    revitFilePath = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
-
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
+    revitFilePath = debugRevitFileName
 
 #import common library
-import Common
+import sys
+sys.path.append(commonlibraryDebugLocation)
+import Common as com
 from Common import *
 
 clr.AddReference('System.Core')
@@ -67,7 +66,7 @@ from Autodesk.Revit.DB import *
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
-    if not debug_:
+    if not debug:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -76,80 +75,57 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-def InTransaction(tranny, action):
-    result = None
-    tranny.Start()
-    try:
-        result = action()
-        tranny.Commit()
-    except Exception as e:
-        Output ("exception: " + str(e))
-        tranny.RollBack()
-    return result
-
-def GetWorksetIdByName(doc, worksetName):
-    id = ElementId.InvalidElementId
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Name == worksetName):
-            id = p.Id
-            break
-    return id
-
-def ModifyWorkset(doc, defaultWorksetName, collector):
-    #get the ID of the default grids workset
-    defaultId = GetWorksetIdByName(doc, defaultWorksetName)
-    #check if invalid id came back..workset no longer exists..
-    if(defaultId != ElementId.InvalidElementId):
-        #get all grids in model and check their workset
-        for p in collector:
-            if (p.WorksetId != defaultId):
-                #move grid to new workset
-                def action():
-                    wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-                    wsparam.Set(defaultId.IntegerValue )
-                transaction = Transaction(doc, "Changing workset " + p.Name)
-                result = InTransaction(transaction, action)
-                Output(p.Name + ' ' + str(result))
-            else:
-                Output(p.Name + ' is already on default workset ' + defaultWorksetName) 
-    else:
-        Output('Default workset '+ defaultWorksetName + ' does no longer exists in file!')
-
 # -------------
 # main:
 # -------------
 
 def Modify(doc, revitFilePath, gridData):
-    revitFileName = GetRevitFileName(revitFilePath)
+    returnvalue = com.Result()
+    revitFileName = com.GetRevitFileName(revitFilePath)
     flag = False
     for fileName, defaultWorksetName in gridData:
         if (revitFileName.startswith(fileName)):
             flag = True
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            ModifyWorkset(doc, defaultWorksetName, collectorGrids)
+            grids = com.ModifyWorkset(doc, defaultWorksetName, collectorGrids)
+            returnvalue.status = returnvalue.status & grids.status
+            returnvalue.message = returnvalue.message + '\n' + grids.message
+
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            ModifyWorkset(doc, defaultWorksetName, collectorLevels)
+            levels = com.ModifyWorkset(doc, defaultWorksetName, collectorLevels)
+            returnvalue.status = returnvalue.status & levels.status
+            returnvalue.message = returnvalue.message + '\n' + levels.message
+
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            ModifyWorkset(doc, defaultWorksetName, collectorScopeBoxes)
+            sboxes = com.ModifyWorkset(doc, defaultWorksetName, collectorScopeBoxes)
+            returnvalue.status = returnvalue.status & sboxes.status
+            returnvalue.message = returnvalue.message + '\n' + sboxes.message
             break
     if (flag == False):
-        Output('No grid data provided for current Revit file')
-    return flag
+        returnvalue.status = False
+        returnvalue.message = 'No grid data provided for current Revit file '+ revitFileName
+    return returnvalue
 
 Output('Checking levels and grids.... start')
 
+#a list in format
+#[
+#['Revit file name','workset levels, grids, scope boxes should be on'],
+#['Revit file name','workset levels, grids, scope boxes should be on']
+#]
+
 defaultWorksets_ = [
-['Test_grids', '99_LEVELS AND GRIDS']
+['Test_grids', 'Shared Levels & Grids']
 ]
 
 #modify workset of levels, grids ands scope boxes
-result_ = Modify(doc, revitFilePath_, defaultWorksets_)
-Output('Checking levels and grids.... status: ' + str(result_))
+flagModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
+Output(flagModifyWorkSets_.message + ' :: ' + str(flagModifyWorkSets_.status))
 
 #sync changes back to central
-if (doc.IsWorkshared and debug_ == False):
+if (doc.IsWorkshared and debug == False):
     Output('Syncing to Central: start')
-    SyncFile (doc)
-    Output('Syncing to Central: finished')
+    syncing_ = com.SyncFile (doc)
+    Output('Syncing to Central: finished ' + str(syncing_.result))
 
 Output('Checking levels and grids.... finished ')

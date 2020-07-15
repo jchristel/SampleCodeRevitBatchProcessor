@@ -23,6 +23,10 @@
 #
 #
 
+# sample description
+# how to report on wall types
+# note: in place families of category wall and curtain wall do not have a valid Compound structure
+
 import clr
 import System
 

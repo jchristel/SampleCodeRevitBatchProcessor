@@ -23,8 +23,8 @@
 #
 #
 
-# this sample shows how to merge a number of text report files created on the same day with the same suffix (from the same report)
-#into a single report file for ease of reviewing
+# sample description
+# this sample shows how to build a task list file (used as a pre-process)
 
 import clr
 import System
@@ -40,7 +40,7 @@ rootPath_ = r'C:\temp'
 #path to Common.py
 commonlibraryDebugLocation_ = r'C:\Project\Git\SampleCodeRevitBatchProcessor'
 #directory containing files
-sourcePath_ = r'P:\18\1803009.000\Design\BIM\_Revit\1.0 Project Files'
+sourcePath_ = r'C:\temp'
 
 # Add batch processor scripting references
 if not debug_:

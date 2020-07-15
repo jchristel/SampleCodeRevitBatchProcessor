@@ -23,6 +23,7 @@
 #
 #
 
+# sample description
 # this sample moves revit link instances onto the same workset than the corresponding link type
 
 import clr
@@ -132,7 +133,7 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
         Output('Failed to split link name into 3 parts')
 
 #method moving revit link instances to the same workset as their types
-def writeRevitLinkData(doc):
+def modifyRevitLinkInstance(doc):
     status = True
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
@@ -149,7 +150,7 @@ def writeRevitLinkData(doc):
 
 #write out revit link data
 Output('Modifying Revit Link Data.... start')
-result_ = writeRevitLinkData(doc)
+result_ = modifyRevitLinkInstance(doc)
 Output('Modifying Revit Link.... status: ' + str(result_))
 
 #sync changes back to central

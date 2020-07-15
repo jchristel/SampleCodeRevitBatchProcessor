@@ -23,7 +23,8 @@
 #
 #
 
-# this sample reports on Revit and CAD links
+# sample description
+# how to report on CAD and Revit links (note: for true Revit link location (shared or project internal) the link need to be loaded -> open all worksets is required)
 
 import clr
 import System

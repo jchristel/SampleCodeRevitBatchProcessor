@@ -23,9 +23,9 @@
 #
 #
 
-# this sample re-creates a central file by detaching the original file and then creating a new central file with the same name
-# in the same location
-# batch processor settings should be
+# this sample creates a dated back-up folder in a given location and than re-creates a central file with the same name in the new location
+# batch processor settings should be:
+# - detach model
 # - all worksets closed
 # - audit on opening
 # - preserve worskets
@@ -45,11 +45,10 @@ debug_ = False
 # --------------------------
 #default file path locations
 # --------------------------
-#store output here:
-#rootPath_ = r'C:\temp'
-rootPath_ = r'P:\18\1803009.000\Design\BIM\_Revit\3.0 Milestones'
+#store output (models) here:
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
@@ -121,16 +120,19 @@ def CreateTargetFolder(targetLocation, folderName):
 # -------------
 
 
-#list containing the default file names:
+# list containing the default file name:
+# which in case of this back up is the same as the current file name
 # [[revit host file name before save, revit host file name after save]]
 defaultFileNames_ = [[com.GetRevitFileName(revitFilePath_), com.GetRevitFileName(revitFilePath_)]]
 
 #save revit file to new location
 Output('Modifying Revit File.... start')
 
-#get mile stone folder
+# get mile stone folder
 flagGotFolder_, milestonePath_ = CreateTargetFolder(rootPath_, cp.GetFolderDateStamp() + str('_Milestone'))
+# do we have a valid folder?
 if (flagGotFolder_):
+    #save new central file to back up folder
     result_ = com.SaveAs(doc, rootPath_ + '\\' + milestonePath_, revitFilePath_ , defaultFileNames_)
     Output(result_.message + ' :: ' + str(result_.status))
     #sync changes back to central

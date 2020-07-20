@@ -24,6 +24,7 @@
 import datetime
 import System
 import clr
+import glob
 from System.IO import Path
 from Autodesk.Revit.DB import *
 import os.path as path
@@ -129,7 +130,74 @@ def DeleteCADLinks(doc):
     returnvalue = DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
     return returnvalue
 
+# reloads revit links from a given location based on the original link type name (starts with)
+# link locations: a list of directories where the revit files can be located
+# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
+# worksetconfig: None: to use the previously apllied workset config
+def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+    returnvalue = Result()
+    try:
+        # get all revit link types in model
+        for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
+            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+            newLinkPath = 'unknown'
+            try:
+                newLinkPath = GetLinkPath(linkTypeName, linkLocations)
+                if(newLinkPath != None):
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                    #attempt to reload with worksets set to last viewed
+                    # worksetConfig = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
+                    # however that can be achieved also ... According to Autodesk:
+                    # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
+                    result = p.LoadFrom(mp,  worksetConfig)
+                    #store result in message 
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + str(result.value)
+                else:
+                    returnvalue.status = False
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + 'No link path or multiple path found in provided locations' 
+            except Exception as e:
+                returnvalue.status = False
+                returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + 'Failed with exception: ' + str(e)    
+    except Exception as e:
+        returnvalue.status = False
+        returnvalue.message = 'Failed with exception: ' + str(e)
+    return returnvalue    
 
+# returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations
+# returns None if multiple or no matches where found
+def GetLinkPath(fileName, possibleLinkLocations):
+    linkPath = None
+    counter = 0
+    try:
+        foundMatch = False
+        #attempt to find filename match in given locations
+        for linkLocation in possibleLinkLocations:
+            fileList = glob.glob(linkLocation + '\\*' + '.rvt')
+            if (fileList != None):
+                for file in fileList:
+                    fileNameInFolder = path.basename(file)
+                    if (fileNameInFolder.startswith(fileName)):
+                        linkPath = file
+                        counter =+1
+                        foundMatch = True
+                        break
+        #return none if multiple matches where found            
+        if(foundMatch == True and counter > 1):
+            linkPath = None
+    except Exception:
+        linkPath = None
+    return linkPath
+
+# default 'do something with link name' method
+# which returns the name unchanged
+# could be replaced with something which i.e. truncates the revision...
+def DefaultLinkName(name):
+    return name
+
+# default method for returning a workset configuration
+# None in this case reloads a link with the last used workset settings
+def DefaultWorksetConfigForReload():
+    return None
 #-------------------------------------------------------file IO --------------------------------------
 
 #get a time stamp in format year_month_day

@@ -146,18 +146,19 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
                 if(newLinkPath != None):
                     mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     #attempt to reload with worksets set to last viewed
-                    # worksetConfig = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
+                    # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
                     # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
-                    result = p.LoadFrom(mp,  worksetConfig)
+                    wc = worksetConfig()
+                    result = p.LoadFrom(mp,  wc)
                     #store result in message 
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + str(result.value)
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + str(result.LoadResult)
                 else:
                     returnvalue.status = False
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + 'No link path or multiple path found in provided locations' 
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations' 
             except Exception as e:
                 returnvalue.status = False
-                returnvalue.message = returnvalue.message + '\n' + linkTypeName + '\t' + 'Failed with exception: ' + str(e)    
+                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)    
     except Exception as e:
         returnvalue.status = False
         returnvalue.message = 'Failed with exception: ' + str(e)

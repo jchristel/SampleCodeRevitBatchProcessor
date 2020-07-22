@@ -23,13 +23,10 @@
 #
 #
 
-# this sample re-creates a central file by detaching the original file and then creating a new central file with the same name
-# in the same location
+# this sample reloads Revit and CAD links from a number of given locations
 # batch processor settings should be
-# - all worksets closed
-# - audit on opening
-# - preserve worskets
-# the SaveAs() method will compress the newly created central file by default
+# - all worksets open
+# - create new Local file
 
 import clr
 import System
@@ -41,10 +38,9 @@ debug_ = True
 #default file path locations
 # --------------------------
 #store output here:
-#rootPath_ = r'C:\temp'
-rootPath_ = r'P:\18\1803009.000\Design\BIM\_Revit\1.0 Project Files'
+rootPath_ = r'C:\temp'
 #path to Common.py
-commonlibraryDebugLocation_ = r'P:\18\1803009.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
+commonlibraryDebugLocation_ = r'C:\temp'
 #debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
@@ -87,6 +83,7 @@ def Output(message = ''):
 
 #special treatment to link names...
 #ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
+#this is a sample only since the code below uses the default method com.DefaultLinkName
 def LinkName(name):
     return name[0:-8]
 

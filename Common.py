@@ -142,7 +142,7 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
             linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
-                newLinkPath = GetLinkPath(linkTypeName, linkLocations)
+                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
                     mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     #attempt to reload with worksets set to last viewed
@@ -162,18 +162,56 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
     except Exception as e:
         returnvalue.status = False
         returnvalue.message = 'Failed with exception: ' + str(e)
-    return returnvalue    
+    return returnvalue
+
+# reloads CAD links from a given location based on the original link type name (starts with)
+# link locations: a list of directories where the revit files can be located
+# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
+def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
+    returnvalue = Result()
+    try:
+        # get all CAD link types in model
+        for p in FilteredElementCollector(doc).OfClass(CADLinkType):
+            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+            newLinkPath = 'unknown'
+            try:
+                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.dwg')
+                if(newLinkPath != None):
+                    #reloading CAD links requires a transaction
+                    def action():
+                        actionReturnValue = Result()
+                        try:
+                            result = p.LoadFrom(newLinkPath)
+                            actionReturnValue.message = linkTypeName + ' :: ' + str(result.LoadResult)
+                        except Exception as e:
+                            actionReturnValue.status = False
+                            actionReturnValue.message = linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)
+                        return actionReturnValue
+                    transaction = Transaction(doc, 'Reloading: ' + linkTypeName)
+                    reloadResult = InTransaction(transaction, action)
+                    returnvalue.status = returnvalue.status & reloadResult.status
+                    returnvalue.message =  returnvalue.message + '\n' + reloadResult.message
+                else:
+                    returnvalue.status = False
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations'
+            except Exception as e:
+                returnvalue.status = False
+                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e) 
+    except Exception as e:
+        returnvalue.status = False
+        returnvalue.message = 'Failed with exception: ' + str(e)
+    return returnvalue
 
 # returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations
 # returns None if multiple or no matches where found
-def GetLinkPath(fileName, possibleLinkLocations):
+def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
     linkPath = None
     counter = 0
     try:
         foundMatch = False
         #attempt to find filename match in given locations
         for linkLocation in possibleLinkLocations:
-            fileList = glob.glob(linkLocation + '\\*' + '.rvt')
+            fileList = glob.glob(linkLocation + '\\*' + fileExtension)
             if (fileList != None):
                 for file in fileList:
                     fileNameInFolder = path.basename(file)

@@ -88,17 +88,17 @@ def Modify(doc, revitFilePath, gridData):
         if (revitFileName.startswith(fileName)):
             flag = True
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            grids = com.ModifyWorkset(doc, defaultWorksetName, collectorGrids)
+            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids)
             returnvalue.status = returnvalue.status & grids.status
             returnvalue.message = returnvalue.message + '\n' + grids.message
 
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            levels = com.ModifyWorkset(doc, defaultWorksetName, collectorLevels)
+            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels)
             returnvalue.status = returnvalue.status & levels.status
             returnvalue.message = returnvalue.message + '\n' + levels.message
 
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = com.ModifyWorkset(doc, defaultWorksetName, collectorScopeBoxes)
+            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes)
             returnvalue.status = returnvalue.status & sboxes.status
             returnvalue.message = returnvalue.message + '\n' + sboxes.message
             break

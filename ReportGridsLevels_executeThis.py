@@ -57,6 +57,7 @@ else:
 #set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
+
 #import common library
 import Common as com
 from Common import *
@@ -100,7 +101,7 @@ def writeGridData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE', added host file column to report'ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
+        f.write('\t'.join(['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Grid):
             f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), com.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
         f.close()

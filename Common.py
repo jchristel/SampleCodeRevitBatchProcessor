@@ -38,6 +38,100 @@ class Result:
         self.status = True
         self.result = None
 
+#----------------------------------------views-----------------------------------------------
+
+#returns view ids of all schedules on a sheet
+def GetScheduleIdsOnSheets(doc):
+    ids=[]
+    col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
+    for s in col:
+        if s.ScheduleId not in ids:
+            ids.append(s.ScheduleId)
+    return ids
+
+# returns all views in a model of a given type 
+# excludes templates!
+def GetViewsofType(doc, viewtype):
+    views=[]
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        if(v.ViewType == viewtype and v.IsTemplate == False):
+            views.append(v)
+    return views
+# returns all sheets in a model
+def GetSheetsInModel(doc):
+    return GetViewsofType(doc, ViewType.DrawingSheet)
+
+def GetViewportOnSheets(doc, sheets):
+    viewports = []
+    for sheet in sheets:
+        try:
+            viewportIds = sheet.GetAllViewports()
+            if(viewportIds != None):
+                for viewportId in viewportIds:
+                    viewport = doc.GetElement(viewportId)
+                    viewports.append(viewport)
+        except Exception as e:
+            print(str(e))
+    return viewports
+
+# returns true if the view name starts with '<', otherwise false
+def FilterRevisionSchedules(view):
+    if(view.Name.startswith('<')):
+        return False
+    else:
+        return True
+
+# returns all views in a model which are
+# not template views
+# not system browser
+# not project broser
+# not undefined
+# not Internal
+# not sheets
+# match a filter
+def GetViewsInModel(doc, filter):
+    views = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        #filer out browser organisation and other views which cant be deleted
+        if(v.IsTemplate == False and filter(v) == True and v.ViewType != ViewType.SystemBrowser and v.ViewType != ViewType.ProjectBrowser and v.ViewType != ViewType.Undefined and v.ViewType != ViewType.Internal and v.ViewType != ViewType.DrawingSheet):
+            views.append(v)
+    return views
+
+#returns all schedules not on a sheet
+def GetScheduleIdsNotOnSheets(doc):
+    schedulesNotOnSheets = []
+    #get schedules on sheets
+    idsOnSheets = GetScheduleIdsOnSheets(doc)
+    #get all schedules in model
+    schedulesInModel = GetViewsofType(doc, ViewType.Schedule)
+    #loop and filter out schedules not on sheets
+    for schedule in schedulesInModel:
+        if(schedule.Id not in idsOnSheets):
+            schedulesNotOnSheets.append(schedule)
+    return schedulesNotOnSheets
+
+# returns all views not on a sheet
+# excludes schedules
+def GetViewsNotOnSheet(doc):
+    viewsNotOnSheet = []
+    #get all sheets
+    sheetsInModel = GetSheetsInModel(doc)
+    #get all viewports on sheets
+    viewportsOnSheets = GetViewportOnSheets(doc, sheetsInModel)
+    #get all views in model
+    viewsInModel = GetViewsInModel(doc, FilterRevisionSchedules)
+    #check whether view has a viewport if not ... its not placed on a sheet
+    for viewInModel in viewsInModel:
+        match = False
+        for viewportsOnSheet in viewportsOnSheets:
+            if(viewportsOnSheet.ViewId == viewInModel.Id):
+                match = True
+                break
+        if(match == False):
+            viewsNotOnSheet.append(viewInModel)
+    return viewsNotOnSheet
 
 #----------------------------------------elements-----------------------------------------------
 

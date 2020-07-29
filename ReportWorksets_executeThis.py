@@ -93,7 +93,6 @@ def writeWorksetData(doc, fileName):
     except Exception as e:
         status = False
         Output('Failed to write data file! ' + fileName + ' with exception: ' + str(e))
-        Output (str(e))
     return status
 
 # -------------

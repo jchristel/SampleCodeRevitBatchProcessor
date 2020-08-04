@@ -133,6 +133,86 @@ def GetViewsNotOnSheet(doc):
             viewsNotOnSheet.append(viewInModel)
     return viewsNotOnSheet
 
+#----------------------------------------modify views-----------------------------------------------
+# currently known filter conditions
+# returns True if valueOne does not match valueTwo
+def ConDoesNotEqual (valueOne, valueTwo):
+    if (valueOne != valueTwo):
+        return True
+    else:
+        return False
+
+# checks a paramter value based on passed in condition  
+def CheckParameterValue(para, paraCondition, conditionValue):
+    isMatch = False
+    pValue = 'no Value'
+    if(para.StorageType == StorageType.ElementId or para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+        if(para.AsValueString()!= None and para.AsValueString() != ''):
+            pValue = para.AsValueString()
+    elif(para.StorageType == StorageType.String):
+        if(para.AsString() != None and para.AsString() != ''):
+            pValue = para.AsString()
+    isMatch = paraCondition(EncodeAscii(conditionValue), EncodeAscii(pValue))
+    return isMatch
+
+# deletes views based on
+# view rules: array in format [parameter name, condition test method, value to test against]
+def DeleteViews(doc, viewRules, collectorViews):
+    ids = []
+    for v in collectorViews:
+        #filter out revision schedules '<', sheets and other view types which can not be deleted
+        if(EncodeAscii(v.Name)[0] != '<' and v.ViewType != ViewType.Internal and v.ViewType != ViewType.Undefined and v.ViewType != ViewType.ProjectBrowser and v.ViewType != ViewType.DrawingSheet and v.ViewType != ViewType.SystemBrowser):
+            paras = v.GetOrderedParameters()
+            ruleMatch = True
+            for paraName, paraCondition, conditionValue in viewRules:
+                for p in paras:
+                    if(p.Definition.Name == paraName):
+                        ruleMatch = ruleMatch and CheckParameterValue(p, paraCondition, conditionValue)
+            if (ruleMatch == True):
+                #delete view
+                ids.append(v.Id)
+    #delete all views at once
+    result = DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
+    return result
+
+# deletes all views not placed on sheets
+# includes schedules and legends
+def DeleteViewsNotOnSheets(doc, filter):
+    ids = []
+    returnvalue = Result()
+    viewsNotOnSheets = GetViewsNotOnSheet(doc)
+    for viewNotOnSheet in viewsNotOnSheets:
+        if(filter(viewNotOnSheet)):
+            ids.append(viewNotOnSheet.Id)
+    #check we are not trying to delete all views
+    if(len(viewsNotOnSheets) == len(ids) and len(viewsNotOnSheets) > 0):
+        #remove a random view from this list
+        ids.pop(0)
+    if(len(ids) > 0):
+        returnvalue = DeleteByElementIds(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
+    else:
+        returnvalue.status = True
+        returnvalue.message = 'No views not placed on sheets found.'
+    return returnvalue
+
+# deletes sheets based on
+# view rules: array in format [parameter name, condition test method, value to test against]
+def DeleteSheets(doc, viewRules, collectorViews):
+    ids = []
+    for v in collectorViews:
+        if(v.ViewType == ViewType.DrawingSheet):
+            paras = v.GetOrderedParameters()
+            ruleMatch = True
+            for paraName, paraCondition, conditionValue in viewRules:
+                for p in paras:
+                    if(p.Definition.Name == paraName):
+                        ruleMatch = ruleMatch and CheckParameterValue(p, paraCondition, conditionValue)
+            if (ruleMatch == True):
+                #delete view
+                ids.append(v.Id)
+    result = DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
+    return result
+
 #----------------------------------------elements-----------------------------------------------
 
 #method deleting elements by list of element id's

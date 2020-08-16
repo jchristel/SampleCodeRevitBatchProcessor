@@ -63,6 +63,7 @@ sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common as com
 from Common import *
+import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -88,35 +89,35 @@ def ChangeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetId
     return result
 
 def ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
+    returnvalue = res.Result()
     #get the target workset id
     targetWorksetId = com.GetWorksetIdByName(doc, workSetName)
-    match = False
     #check if workset still exists
     if(targetWorksetId != ElementId.InvalidElementId):
         #loop over link types and try to find a match
         for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
             linkTypeName = Element.Name.GetValue(p)
             if (linkTypeName.startswith(linkName)):
-                match = True
                 wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
                 typeWorksetName = wsparam.AsValueString()
                 if(typeWorksetName != workSetName):
                     #change the workset of the link type
-                    ChangeWorkset(doc, p, linkTypeName, typeWorksetName, workSetName, targetWorksetId,'Type')
+                    returnvalue = ChangeWorkset(doc, p, linkTypeName, typeWorksetName, workSetName, targetWorksetId,'Type')
                 else:
                     #no need to do anything
-                    Output('Type ' + str(com.EncodeAscii(linkTypeName)) + ' is already on default workset ' + str(workSetName))
+                    returnvalue.message = 'Type ' + str(com.EncodeAscii(linkTypeName)) + ' is already on default workset ' + str(workSetName)
                 break
     else:
-        Output('Workset '+ workSetName + ' does no longer exist in file!')
-    return match
+        returnvalue.message = 'Workset '+ workSetName + ' does no longer exist in file!')
+        returnvalue.status = False
+    return returnvalue
 
 
 #get the revit link instance data
 def  ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
+    returnvalue = res.Result()
     #get the target workset id
     targetWorksetId = com.GetWorksetIdbyName(doc, workSetName)
-    match = False
     #check if workset still exists
     if(targetWorksetId != ElementId.InvalidElementId):
         #loop over instances and find match
@@ -131,22 +132,23 @@ def  ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
                 lN = linkTypeNameParts[0][0:-1]
                 linkInstanceNameEncoded = com.EncodeAscii(lN[0:-1])
                 if (lN.startswith(linkName)):
-                    match = True
                     if (instanceWorksetName != workSetName):
                         #change the workset of the link instance
-                        ChangeWorkset(doc, p, linkInstanceNameEncoded, instanceWorksetName, workSetName, targetWorksetId, 'Instance')
+                        returnvalue = ChangeWorkset(doc, p, linkInstanceNameEncoded, instanceWorksetName, workSetName, targetWorksetId, 'Instance')
                     else:
                         #no need to do anything
-                        Output('Instance ' + linkInstanceNameEncoded + ' is already on default workset ' + str(workSetName))
+                        returnvalue.message = 'Instance ' + linkInstanceNameEncoded + ' is already on default workset ' + str(workSetName)
             else:
-                Output('Failed to split link name into 3 parts')
+                returnvalue.status = False
+                returnvalue.message = 'Failed to split link name into 3 parts'
     else:
-        Output('Workset '+ workSetName + ' does no longer exist in file!')
-    return match
+        returnvalue.status = False
+        returnvalue.message = 'Workset '+ workSetName + ' does no longer exist in file!'
+    return returnvalue
 
 #method moving revit link instances and types to the same workset as defined in list
 def ModifyRevitLinkData(doc, revitFilePath, linkData):
-    status = True
+    returnvalue = res.Result()
     match = False
     try:
         revitFileName = com.GetRevitFileName(revitFilePath)
@@ -155,16 +157,20 @@ def ModifyRevitLinkData(doc, revitFilePath, linkData):
                 match = True   
                 #loop over link data and change link worksets as required
                 for linkName, newWorksetName in worksetData:
-                    status = status & ModifyRevitLinkInstanceWorkset(doc, linkName, newWorksetName)
-                    status = status & ModifyRevitLinkTypeWorksetName(doc, linkName, newWorksetName)
+                    changeLinkInstance = ModifyRevitLinkInstanceWorkset(doc, linkName, newWorksetName)
+                    returnvalue.staus = returnvalue.status & changeLinkInstance.status
+                    returnvalue.message = returnvalue.message + '\n' + changeLinkInstance.message
+                    
+                    changeLinkType = ModifyRevitLinkTypeWorksetName(doc, linkName, newWorksetName)
+                    returnvalue.status = returnvalue.status & changeLinkType.status
+                    returnvalue.message = returnvalue.message + '\n' + changeLinkType.message
                 break
         if (match == False):
             Output('Failed to find current Revit file link workset data!')
     except Exception as e:
-        status = False
-        Output('Failed to modify revit link instances!')
-        Output (str(e))
-    return status
+        returnvalue.status = False
+        returnvalue.message = 'Failed to modify revit link instances with exception: ' + str(e)
+    return returnvalue
 
 # -------------
 # main:
@@ -180,7 +186,7 @@ defaultWorksets_ = [
 #write out revit link data
 Output('Modifying Revit Link Data.... start')
 result_ = ModifyRevitLinkData(doc, revitFilePath_, defaultWorksets_)
-Output('Modifying Revit Link.... status: ' + str(result_))
+Output(str(result_.message) + str(result_.status))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):

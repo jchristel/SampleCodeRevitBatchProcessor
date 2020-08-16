@@ -63,6 +63,7 @@ sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common as com
 from Common import *
+#import Result as res #not required in this module
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -102,6 +103,6 @@ Output('Modifying Revit File.... status: ' + str(result_.status))
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.result))
+    Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

@@ -62,9 +62,10 @@ else:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+#import common libraries
 import Common as com
 from Common import *
+import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -95,7 +96,7 @@ def CheckName(view):
 def ModifyViews(doc, revitFilePath, viewData):
     
     #set default values
-    returnvalue = com.Result()
+    returnvalue = res.Result()
     returnvalue.status = False
     returnvalue.message = 'No view data provided for current Revit file'
 
@@ -111,7 +112,7 @@ def ModifyViews(doc, revitFilePath, viewData):
 def ModifySheets(doc, sheets):
     
     #set default values
-    returnvalue = com.Result()
+    returnvalue = res.Result()
     returnvalue.status = False
     returnvalue.message = 'No sheet data provided for current Revit file'
 
@@ -132,7 +133,7 @@ def ModifySheets(doc, sheets):
 def Modify(doc, revitFilePath, gridData):
     revitFileName = com.GetRevitFileName(revitFilePath)
     foundMatch = False
-    returnvalue = com.Result()
+    returnvalue = res.Result()
     for fileName, defaultWorksetName in gridData:
         if (revitFileName.startswith(fileName)):
             foundMatch = True
@@ -235,6 +236,6 @@ Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultD
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.result))
+    Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

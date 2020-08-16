@@ -54,11 +54,14 @@ else:
     #get default revit file name
     revitFilePath = debugRevitFileName
 
-#import common library
+#set path to common library
 import sys
-sys.path.append(commonlibraryDebugLocation)
+sys.path.append(commonlibraryDebugLocation_)
+
+#import common libraries
 import Common as com
 from Common import *
+import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -81,7 +84,7 @@ def Output(message = ''):
 # -------------
 
 def Modify(doc, revitFilePath, gridData):
-    returnvalue = com.Result()
+    returnvalue = res.Result()
     revitFileName = com.GetRevitFileName(revitFilePath)
     flag = False
     for fileName, defaultWorksetName in gridData:
@@ -127,6 +130,6 @@ Output(flagModifyWorkSets_.message + ' :: ' + str(flagModifyWorkSets_.status))
 if (doc.IsWorkshared and debug == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.result))
+    Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Checking levels and grids.... finished ')

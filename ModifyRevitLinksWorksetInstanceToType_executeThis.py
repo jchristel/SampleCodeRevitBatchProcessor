@@ -63,6 +63,7 @@ sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common as com
 from Common import *
+import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -114,6 +115,7 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
 #get the revit link instance data
 #this also calls GetRevitLinkInstanceDataByName() 
 def ModifyRevitLinkTypeData(revitLink, doc):
+    returnvalue = res.Result()
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
@@ -123,21 +125,23 @@ def ModifyRevitLinkTypeData(revitLink, doc):
     if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
         transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
-        result = com.InTransaction(transaction, com.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        returnvalue = com.InTransaction(transaction, com.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
         Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(result.status))
     else:
-        Output(str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName))
+        returnvalue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
+    return returnvalue
 
 #method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
 def modifyRevitLinkTypes(doc):
-    status = True
+    returnvalue = res.Result()
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
-            ModifyRevitLinkTypeData(p, doc)
+            changeLink = ModifyRevitLinkTypeData(p, doc)
+            returnvalue.status = returnvalue.status + changeLink.status
+            returnvalue.message = returnvalue.message + '\n' + changeLink.message
     except Exception as e:
-        status = False
-        Output('Failed to modify revit link instances!')
-        Output (str(e))
+        returnvalue.status = False
+        returnvalue.message = returnvalue.message + '\n' + 'Failed to modify revit link instances with exception: ' + str(e)
     return status
 
 # -------------
@@ -147,12 +151,12 @@ def modifyRevitLinkTypes(doc):
 #write out revit link data
 Output('Modifying Revit Link Data.... start')
 result_ = modifyRevitLinkTypes(doc)
-Output('Modifying Revit Link.... status: ' + str(result_))
+Output(str(result_.message) + ' ' + str(result_.status))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.result))
+    Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Modifying Revit Link.... finished ')

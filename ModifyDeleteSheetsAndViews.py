@@ -139,22 +139,24 @@ def Modify(doc, revitFilePath, gridData):
             foundMatch = True
             #fix uyp grids
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids)
-            returnvalue.status = returnvalue.status & grids.status
-            returnvalue.message = returnvalue.message + '\n' + grids.message
+            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+            returnvalue.Update(grids)
             
             #fix up levels
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels)
-            returnvalue.status = returnvalue.status & levels.status
-            returnvalue.message = returnvalue.message + '\n' + levels.message
+            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
+            returnvalue.Update(levels)
 
             #fix up scope boxes
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes)
-            returnvalue.status = returnvalue.status & sboxes.status
-            returnvalue.message = returnvalue.message + '\n' + sboxes.message
-
+            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
+            returnvalue.Update(sboxes)
+            
+            #fix up ref planes
+            collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
+            refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
+            returnvalue.Update(refPlanes)
+            
             break
     if (foundMatch == False):
         returnvalue.status = False

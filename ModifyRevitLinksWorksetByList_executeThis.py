@@ -158,12 +158,9 @@ def ModifyRevitLinkData(doc, revitFilePath, linkData):
                 #loop over link data and change link worksets as required
                 for linkName, newWorksetName in worksetData:
                     changeLinkInstance = ModifyRevitLinkInstanceWorkset(doc, linkName, newWorksetName)
-                    returnvalue.staus = returnvalue.status & changeLinkInstance.status
-                    returnvalue.message = returnvalue.message + '\n' + changeLinkInstance.message
-                    
+                    returnvalue.Update(changeLinkInstance)
                     changeLinkType = ModifyRevitLinkTypeWorksetName(doc, linkName, newWorksetName)
-                    returnvalue.status = returnvalue.status & changeLinkType.status
-                    returnvalue.message = returnvalue.message + '\n' + changeLinkType.message
+                    returnvalue.Update(changeLinkType)
                 break
         if (match == False):
             Output('Failed to find current Revit file link workset data!')

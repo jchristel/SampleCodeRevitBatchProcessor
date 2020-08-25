@@ -30,3 +30,13 @@ class Result:
         self.message = '-'
         self.status = True
         self.result = None
+    
+    #update this result object with another result object
+    #excludes the result field
+    def Update(self, otherResult):
+        try:
+            self.message = self.message + '\n' + otherResult.message
+            self.status = self.status & otherResult.status
+        except Exception as e:
+            print (str(e))
+            pass

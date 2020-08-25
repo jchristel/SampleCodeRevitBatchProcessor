@@ -25,18 +25,13 @@ import datetime
 import System
 import clr
 import glob
+import Result as res
+
 from System.IO import Path
 from Autodesk.Revit.DB import *
 import os.path as path
 
 clr.ImportExtensions(System.Linq)
-
-#a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
-class Result: 
-    def __init__(self): 
-        self.message = '-'
-        self.status = True
-        self.result = None
 
 #----------------------------------------views-----------------------------------------------
 
@@ -179,7 +174,7 @@ def DeleteViews(doc, viewRules, collectorViews):
 # includes schedules and legends
 def DeleteViewsNotOnSheets(doc, filter):
     ids = []
-    returnvalue = Result()
+    returnvalue = res.Result()
     viewsNotOnSheets = GetViewsNotOnSheet(doc)
     for viewNotOnSheet in viewsNotOnSheets:
         if(filter(viewNotOnSheet)):
@@ -219,9 +214,9 @@ def DeleteSheets(doc, viewRules, collectorViews):
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
 def DeleteByElementIds(doc, ids, transactionName, elementName):
-    returnvalue = Result()
+    returnvalue = res.Result()
     def action():
-        actionReturnValue = Result()
+        actionReturnValue = res.Result()
         try:
             doc.Delete(ids.ToList[ElementId]())
             actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
@@ -234,32 +229,39 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     return returnvalue
 
 #attemps to change the worksets of elements provided through an element collector
-def ModifyElementWorkset(doc, defaultWorksetName, collector):
-    returnvalue = Result()
-    returnvalue.message = 'Changing elements workset to '+ defaultWorksetName
+def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
+    returnvalue = res.Result()
+    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName + '\n'
     #get the ID of the default grids workset
     defaultId = GetWorksetIdByName(doc, defaultWorksetName)
+    counterSuccess = 0
+    counterFailure = 0
     #check if invalid id came back..workset no longer exists..
     if(defaultId != ElementId.InvalidElementId):
-        #get all grids in model and check their workset
+        #get all elements in collector and check their workset
         for p in collector:
             if (p.WorksetId != defaultId):
-                #move grid to new workset
-                transaction = Transaction(doc, "Changing workset " + p.Name) 
-                returnvalue.status = returnvalue.status & InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId)).status
-                returnvalue.message = returnvalue.message +'\n' + p.Name 
+                #move element to new workset
+                transaction = Transaction(doc, "Changing workset " + p.Name)
+                trannyStatus = InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
+                if (trannyStatus.status == True):
+                    counterSuccess = counterSuccess + 1
+                else:
+                    counterFailure = counterFailure + 1
+                returnvalue.status = returnvalue.status & trannyStatus.status
             else:
-                returnvalue.message = returnvalue.message = returnvalue.message + '\n' + p.Name + ' is already on default workset ' + defaultWorksetName
+                counterSuccess = counterSuccess + 1
                 returnvalue.status = returnvalue.status & True 
     else:
         returnvalue.message = 'Default workset '+ defaultWorksetName + ' does no longer exists in file!'
         returnvalue.status = False
+    returnvalue.message = returnvalue.message + 'Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']'
     return returnvalue
 
 # returns the required action to change a single elements workset
 def GetActionChangeElementWorkset(el, defaultId):
     def action():
-        actionReturnValue = Result()
+        actionReturnValue = res.Result()
         try:
             wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             wsparam.Set(defaultId.IntegerValue)
@@ -287,7 +289,7 @@ def GetWorksetIdByName(doc, worksetName):
 #deletes all revit links in a file
 def DeleteRevitLinks(doc):
     ids = []
-    returnvalue = Result()
+    returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     #delete all links at once
@@ -297,7 +299,7 @@ def DeleteRevitLinks(doc):
 #deletes all CAD links in a file
 def DeleteCADLinks(doc):
     ids = []
-    returnvalue = Result()
+    returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfClass(ImportInstance):
         ids.append(p.Id)
     #delete all links at once
@@ -309,7 +311,7 @@ def DeleteCADLinks(doc):
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 # worksetconfig: None: to use the previously apllied workset config
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
-    returnvalue = Result()
+    returnvalue = res.Result()
     try:
         # get all revit link types in model
         for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
@@ -342,7 +344,7 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
 # link locations: a list of directories where the revit files can be located
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
-    returnvalue = Result()
+    returnvalue = res.Result()
     try:
         # get all CAD link types in model
         for p in FilteredElementCollector(doc).OfClass(CADLinkType):
@@ -353,7 +355,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
                 if(newLinkPath != None):
                     #reloading CAD links requires a transaction
                     def action():
-                        actionReturnValue = Result()
+                        actionReturnValue = res.Result()
                         try:
                             result = p.LoadFrom(newLinkPath)
                             actionReturnValue.message = linkTypeName + ' :: ' + str(result.LoadResult)
@@ -449,7 +451,7 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
 #   - true if sync without exception been thrown
 #   - false if an exception occured
 def SyncFile (doc):
-    returnvalue = Result()
+    returnvalue = res.Result()
     # set up sync settings
     ro = RelinquishOptions(True)
     transActOptions = TransactWithCentralOptions()
@@ -471,7 +473,7 @@ def SyncFile (doc):
 
 #saves a new central file to given location
 def SaveAsWorksharedFile(doc, fullFileName):
-    returnvalue = Result()
+    returnvalue = res.Result()
     try:
         workSharingSaveAsOption = WorksharingSaveAsOptions()
         workSharingSaveAsOption.OpenWorksetsDefault = SimpleWorksetConfiguration.AskUserToSpecify
@@ -493,7 +495,7 @@ def SaveAsWorksharedFile(doc, fullFileName):
 # currentFullFileName: fully qualified file name of the current Revit file
 # name data: list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
 def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
-    returnvalue = Result()
+    returnvalue = res.Result()
     revitFileName = GetRevitFileName(currentFullFileName)
     newFileName= ''
     match = False
@@ -518,7 +520,7 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
 
 #enables work sharing
 def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', worksetName = 'Workset1'):
-    returnvalue = Result()
+    returnvalue = res.Result()
     try:
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
         returnvalue.message = 'Succesfully enabled worksharing.'
@@ -535,7 +537,7 @@ def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', wor
 #   - True if the action has no return value specified and no exception occured
 # expects the actiooon to return a class object of type Result!!!
 def InTransaction(tranny, action):
-    returnvalue = Result()
+    returnvalue = res.Result()
     try:
         tranny.Start()
         try:

@@ -63,6 +63,7 @@ sys.path.append(commonlibraryDebugLocation_)
 #import common library
 import Common as com
 from Common import *
+import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -104,6 +105,7 @@ def GetRevitLinkTypeDataByName(revitLinkName, doc):
 #get the revit link instance data
 #this also calls GetRevitLinkTypeDataByName() 
 def ModifyRevitLinkInstanceData(revitLink, doc):
+    returnvalue = res.Result()
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
@@ -123,25 +125,27 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
             if(instanceWorksetId != typeWorksetId):
                 Output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
                 transaction = Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                result = com.InTransaction(transaction,  com.GetActionChangeElementWorkset(revitLink, typeWorksetId))
+                returnvalue = com.InTransaction(transaction,  com.GetActionChangeElementWorkset(revitLink, typeWorksetId))
                 Output(linkInstanceNameEncoded + ' ' + str(result.status))
             else:
-                Output(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
+               returnvalue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
         else:
-          Output('Link is not loaded' + str(com.EncodeAscii(lN[0:-1])))
+          returnvalue.message = str('Link is not loaded' + str(com.EncodeAscii(lN[0:-1])))
     else:
-        Output('Failed to split link name into 3 parts')
+        returnvalue.status = False
+        returnvalue.message = str('Failed to split link name into 3 parts')
 
 #method moving revit link instances to the same workset as their types
 def modifyRevitLinkInstance(doc):
+    returnvalue = res.Result()
     status = True
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
-            ModifyRevitLinkInstanceData(p, doc)
+            changeLink = ModifyRevitLinkInstanceData(p, doc)
+            returnvalue.Update(changeLink)
     except Exception as e:
-        status = False
-        Output('Failed to modify revit link instances!')
-        Output (str(e))
+        returnvalue.status = False
+        returnvalue.message = returnvalue.message + '\n' + 'Failed to modify revit link instances with exception: ' + str(e)
     return status
 
 # -------------
@@ -151,13 +155,13 @@ def modifyRevitLinkInstance(doc):
 #write out revit link data
 Output('Modifying Revit Link Data.... start')
 result_ = modifyRevitLinkInstance(doc)
-Output('Modifying Revit Link.... status: ' + str(result_))
+Output(str(result_.message) + ' ' + str(result_.status))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.result))
+    Output('Syncing to Central: finished ' + str(syncing_.status))
 
 
 Output('Modifying Revit Link.... finished ')

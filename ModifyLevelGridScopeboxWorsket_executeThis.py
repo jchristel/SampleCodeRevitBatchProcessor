@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # sample description
-# This modifies the worksets of levels, grids and scope boxes
+# This modifies the worksets of levels, grids, scope boxes and reference planes
 # A list provides per file the default workset these elements should be on
 
 import clr
@@ -91,19 +91,22 @@ def Modify(doc, revitFilePath, gridData):
         if (revitFileName.startswith(fileName)):
             flag = True
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids)
-            returnvalue.status = returnvalue.status & grids.status
-            returnvalue.message = returnvalue.message + '\n' + grids.message
+            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+            returnvalue.Update(grids)
 
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels)
-            returnvalue.status = returnvalue.status & levels.status
-            returnvalue.message = returnvalue.message + '\n' + levels.message
+            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
+            returnvalue.Update(levels)
 
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes)
-            returnvalue.status = returnvalue.status & sboxes.status
-            returnvalue.message = returnvalue.message + '\n' + sboxes.message
+            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
+            returnvalue.Update(sboxes)
+            
+            #fix up ref planes
+            collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
+            refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
+            returnvalue.Update(refPlanes)
+            
             break
     if (flag == False):
         returnvalue.status = False

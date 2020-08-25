@@ -1,4 +1,4 @@
-﻿#
+#
 #License:
 #
 #
@@ -23,9 +23,238 @@
 
 import clr
 import System
+import sys
+
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+# path to 3rd party IFC exporter for Revit 2019
+ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2019.bundle\Contents\2019\IFCExportUIOverride.dll'
+clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
 
 # custom result class
 import Result as res
 
 from System.IO import Path
 from Autodesk.Revit.DB import *
+
+# import the BIM namespace which includes 
+# IFCExportConfiguration and IFCExportConfigurationMaps classes
+from BIM.IFC.Export.UI import IFCExportConfiguration
+
+#import common library
+import Common as com
+#from Common import *
+
+#-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
+
+# Using enum class for IFC coordinates options
+class IFCCoords:
+    SharedCoordinates = '0'
+    SiteSurveyPoint = '1'
+    ProjectBasePoint = '2'
+    InternalCoordinates = '3'
+
+class IFCSpaceBoundaries:
+    noBoundaries = 0
+    firstLevel = 1
+    secondLevel = 2
+
+# method exporting either entire model or view to IFC
+def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
+    # ifc export needs to run in a transaction
+    returnvalue = res.Result()
+    def action():
+        actionReturnValue = res.Result()
+        try:
+            #export to IFC
+            doc.Export(directoryPath, fileName, ifcExportOption)
+            actionReturnValue.status = True
+            actionReturnValue.message = 'Exported: ' + str(directoryPath) + str(fileName)
+        except Exception as e:
+            actionReturnValue.status = False
+            actionReturnValue.message = 'Failed to export to IFC with exception: ' + str(e)
+        return actionReturnValue
+    transaction = Transaction(doc,'Export to IFC')
+    returnvalue = com.InTransaction(transaction, action)
+    return returnvalue
+
+
+# method returning an IFC export configuration using the open source third party IFC exporter plug in supported bu AutoDesk
+# this configuration allows export by view
+def IFCGetThirdPartyExportConfifgByView(ifcVersion):
+    
+    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
+    ifcExportConfig.Name = 'DefaultIFCByViewSetup'
+    #set up IFC version
+    if(ifcVersion is None or ifcVersion == ''):
+        ifcExportConfig.IFCVersion = IFCVersion.Default
+    else:  
+        ifcExportConfig.IFCVersion = ifcVersion
+
+    ifcExportConfig.SpaceBoundaries = 1
+    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ExportBaseQuantities = True
+    ifcExportConfig.SplitWallsAndColumns = True
+    ifcExportConfig.VisibleElementsOfCurrentView = True #by view
+    ifcExportConfig.Use2DRoomBoundaryForVolume = False
+    ifcExportConfig.UseFamilyAndTypeNameForReference = True
+    ifcExportConfig.ExportInternalRevitPropertySets = True
+    ifcExportConfig.ExportIFCCommonPropertySets = True
+    ifcExportConfig.Export2DElements = False
+    ifcExportConfig.ExportPartsAsBuildingElements = True
+    ifcExportConfig.ExportBoundingBox = False
+    ifcExportConfig.ExportSolidModelRep = False
+    ifcExportConfig.ExportSchedulesAsPsets = False
+    ifcExportConfig.ExportUserDefinedPsets = False
+    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
+    ifcExportConfig.ExportLinkedFiles = False
+    ifcExportConfig.IncludeSiteElevation = True
+    ifcExportConfig.UseActiveViewGeometry = True #by view
+    ifcExportConfig.ExportSpecificSchedules = False
+    ifcExportConfig.TessellationLevelOfDetail = 0
+    ifcExportConfig.StoreIFCGUID = True
+    ifcExportConfig.ExportRoomsInView = False #might not work in 3D views if volumnes are not computated???
+    #revit 2019.1
+    ifcExportConfig.UseOnlyTriangulation = False
+    ifcExportConfig.IncludeSteelElements = True
+    ifcExportConfig.COBieCompanyInfo = 'Company Name'
+    ifcExportConfig.COBieProjectInfo = 'Project Info'
+    
+    return ifcExportConfig
+
+# method returning an IFC export configuration using the open source third party IFC exporter plug in supported bu AutoDesk
+# this configuration exports the entire model
+def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
+
+    ifcExportConfig = IFC.Export.UI.IFCExportConfiguration.CreateDefaultConfiguration()
+
+    ifcExportConfig.Name = 'DefaultIFCByModelSetup'
+    
+    #set up IFC version
+    if(ifcVersion is None or ifcVersion == ''):
+        ifcExportConfig.IFCVersion = IFCVersion.Default
+    else:  
+        ifcExportConfig.IFCVersion = ifcVersion
+
+    ifcExportConfig.SpaceBoundaries = 1
+    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ExportBaseQuantities = True
+    ifcExportConfig.SplitWallsAndColumns = True
+    ifcExportConfig.VisibleElementsOfCurrentView = False #by model
+    ifcExportConfig.Use2DRoomBoundaryForVolume = False
+    ifcExportConfig.UseFamilyAndTypeNameForReference = True
+    ifcExportConfig.ExportInternalRevitPropertySets = True
+    ifcExportConfig.ExportIFCCommonPropertySets = True
+    ifcExportConfig.Export2DElements = False
+    ifcExportConfig.ExportPartsAsBuildingElements = True
+    ifcExportConfig.ExportBoundingBox = False
+    ifcExportConfig.ExportSolidModelRep = False
+    ifcExportConfig.ExportSchedulesAsPsets = False
+    ifcExportConfig.ExportUserDefinedPsets = False
+    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
+    ifcExportConfig.ExportLinkedFiles = False
+    ifcExportConfig.IncludeSiteElevation = True
+    ifcExportConfig.UseActiveViewGeometry = False #by model
+    ifcExportConfig.ExportSpecificSchedules = False
+    ifcExportConfig.TessellationLevelOfDetail = 0
+    ifcExportConfig.StoreIFCGUID = True
+    ifcExportConfig.ExportRoomsInView = False #might not work in 3D views if volumnes are not computated???
+    #revit 2019.1
+    ifcExportConfig.UseOnlyTriangulation = False
+    ifcExportConfig.IncludeSteelElements = True
+    ifcExportConfig.COBieCompanyInfo = 'Company Name'
+    ifcExportConfig.COBieProjectInfo = 'Project Info'
+    
+    return ifcExportConfig
+
+# method assigning view Id to active export config if it is exporting by view
+# and returning an IFCExportOptions object
+def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coordOption = IFCCoords.SharedCoordinates):
+    if(exportConfig.UseActiveViewGeometry == True):
+        exportConfig.ActiveViewId = viewId.IntegerValue
+    else:
+        exportConfig.ActiveViewId = -1
+    #set up the ifc export options object
+    exIFC = IFCExportOptions()
+    exportConfig.UpdateOptions(exIFC, viewId)
+
+    # set the coordinate system to use
+    exIFC.AddOption('SitePlacement', coordOption)
+
+    return exIFC
+
+# method exporting the entire model to IFC
+def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName):
+    returnvalue = res.Result()
+    returnvalue = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
+    return returnvalue
+
+# method exporting 3D views matching a filter (view starts with) to IFC
+def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates):
+    returnvalue = res.Result()
+    viewsToExport = []
+    #get all 3D views in model and filter out views to be exported
+    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    for v in views:
+        if(v.Name.lower().startswith(viewFilter.lower())):
+            viewsToExport.append(v)
+    # export those views one by one
+    if(len(viewsToExport) > 0):
+        for exportView in viewsToExport:
+            returnvalueByView = res.Result()
+            updatedExportOption = SetUpIFCExportOption(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
+            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc')
+            returnvalueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
+            returnvalue.Update(returnvalueByView)
+    else:
+        returnvalue.status = True
+        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+    return returnvalue
+
+def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
+    #check if file extension is not none
+    if (fileExtension is None):
+        fileExtension = '.tbc'
+    #check the filter rule
+    if (viewFilterRule is None):
+        newFileName = viewName + fileExtension
+    else:
+        newFileName = viewName[len(viewFilterRule):] + fileExtension
+        newFileName = newFileName.strip()
+    return newFileName
+
+#-------------------------------------------- IFC default -------------------------------------
+
+# Revit build in IFC export options
+def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noBoundaries):
+    exIFC = IFCExportOptions()
+    exIFC.ExportBaseQuantities = True
+    exIFC.FileVersion = ifcVersion
+    exIFC.SpaceBoundaryLevel = ifcSpaceBounds
+    exIFC.WallAndColumnSplitting = True
+    return exIFC
+
+# method exporting 3D views matching a filter (view starts with) to IFC using the default built in exporter
+def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
+    returnvalue = res.Result()
+    viewsToExport = []
+    #get all 3D views in model and filter out views to be exported
+    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    for v in views:
+        if(v.Name.lower().startswith(viewFilter.lower())):
+            viewsToExport.append(v)
+    # export those views one by one
+    if(len(viewsToExport) > 0):
+        for exportView in viewsToExport:
+            returnvalueByView = res.Result()
+            ifcExportOption.FilterViewId = exportView.Id
+            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc')
+            returnvalueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
+            returnvalue.Update(returnvalueByView)
+    else:
+        returnvalue.status = True
+        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+    return returnvalue
+
+#-------------------------------------------- NWC EXPORT -------------------------------------

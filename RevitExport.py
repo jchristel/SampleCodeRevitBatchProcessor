@@ -191,7 +191,8 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName):
     return returnvalue
 
 # method exporting 3D views matching a filter (view starts with) to IFC
-def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates):
+# doSomethingWithViewName method will accept view name as arg only
+def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates, doSomethingWithViewName = None):
     returnvalue = res.Result()
     viewsToExport = []
     #get all 3D views in model and filter out views to be exported
@@ -204,7 +205,7 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
         for exportView in viewsToExport:
             returnvalueByView = res.Result()
             updatedExportOption = SetUpIFCExportOption(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
-            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc')
+            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
             returnvalueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
@@ -258,3 +259,65 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     return returnvalue
 
 #-------------------------------------------- NWC EXPORT -------------------------------------
+
+# Return an NWC Export Options object with shared coordinates, export by View
+def SetUpNWCDefaultExportOptionSharedByView():
+    return SetUpNWCCustomExportOption(True, False, False, True, True, False, False, False)
+
+# Return an NWC Export Options object 
+def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
+    exNWC = NavisworksExportOptions()
+    exNWC.Coordinates = NavisworksCoordinates.Shared if usingSharedCoordinates == True else NavisworksCoordinates.Internal
+    exNWC.ExportScope = NavisworksExportScope.Model if exportEntireModel == True else NavisworksExportScope.View
+    exNWC.ExportLinks = exportLinks
+    exNWC.DivideFileIntoLevels = splitModelByLevel
+    exNWC.ExportParts =  exportParts
+    exNWC.ExportRoomAsAttribute = exportRoomAsAttributes
+    exNWC.ExportRoomGeometry = exportRoomGeometry
+    exNWC.FindMissingMaterials = findMissingMaterials
+    exNWC.ConvertElementProperties = False
+    
+    return exNWC
+
+# method exporting either entire model or view to NWC
+def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
+    # nwc export does not need to run in a transaction
+    returnvalue = res.Result()
+    try:
+        #export to NWC
+        doc.Export(directoryPath, fileName, nwcExportOption)
+        returnvalue.status = True
+        returnvalue.message = 'Exported: ' + str(directoryPath) + str(fileName)
+    except Exception as e:
+        returnvalue.status = False
+        returnvalue.message = 'Failed to export to NWC with exception: ' + str(e)
+    return returnvalue
+
+# method exporting the entire model to NWC
+def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
+    returnvalue = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+    return returnvalue
+
+# method exporting 3D views matching a filter (view starts with) to NWC
+# doSomethingWithViewName method will accept view name as arg only
+def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
+    returnvalue = res.Result()
+    viewsToExport = []
+    #get all 3D views in model and filter out views to be exported
+    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    for v in views:
+        if(v.Name.lower().startswith(viewFilter.lower())):
+            viewsToExport.append(v)
+    # export those views one by one
+    if(len(viewsToExport) > 0):
+        for exportView in viewsToExport:
+            returnvalueByView = res.Result()
+            #store view ID in export option
+            nwcExportOption.ViewId = exportView.Id
+            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
+            returnvalueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+            returnvalue.Update(returnvalueByView)
+    else:
+        returnvalue.status = True
+        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+    return returnvalue

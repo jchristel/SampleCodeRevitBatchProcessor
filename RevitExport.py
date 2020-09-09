@@ -185,9 +185,17 @@ def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coor
     return exIFC
 
 # method exporting the entire model to IFC
-def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName):
+def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption = IFCCoords.SharedCoordinates):
     returnvalue = res.Result()
-    returnvalue = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
+    # need to create an export option from the export config
+    exIFC = IFCExportOptions()
+    # pass in invalid element ID to export entire model
+    ifcExportOption.UpdateOptions(exIFC, ElementId.InvalidElementId)
+
+    # set the coordinate system to use
+    exIFC.AddOption('SitePlacement', coordOption)
+    
+    returnvalue = ExportToIFC(doc, exIFC, directoryPath, fileName)
     return returnvalue
 
 # method exporting 3D views matching a filter (view starts with) to IFC

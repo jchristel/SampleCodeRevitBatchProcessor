@@ -1,4 +1,4 @@
-﻿#
+#
 #License:
 #
 #
@@ -25,6 +25,7 @@ import clr
 import System
 import glob
 import datetime
+import os
 
 #get the date stamp prefix of report files
 def GetFileDateStamp():
@@ -65,3 +66,37 @@ def GetFiles(folderPath, fileExtension='.rvt'):
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
+
+# checks whether a file exists
+def FileExist(fullFilePath):
+    try:
+        value = os.path.exists(fullFilePath)
+    except Exception:
+        value = False
+    return value
+
+# deletes file
+def FileDelete(fullFilePath):
+    try:
+        os.remove(fullFilePath)
+        value = True
+    except Exception:
+        value = False
+    return value
+
+# get directory from file
+def GetFolderPathFromFile(filePath):
+    try:
+        value = os.path.dirname(filePath)
+    except Exception:
+        value = ''
+    return value
+
+# rename a file
+def RenameFile(oldName, newName):
+    try:
+        os.rename(oldName, newName)
+        value = True
+    except Exception:
+        value = False
+    return value

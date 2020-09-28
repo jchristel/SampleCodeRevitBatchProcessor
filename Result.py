@@ -31,12 +31,32 @@ class Result:
         self.status = True
         self.result = None
     
-    #update this result object with another result object
-    #excludes the result field
     def Update(self, otherResult):
         try:
             self.message = self.message + '\n' + otherResult.message
             self.status = self.status & otherResult.status
+        except Exception as e:
+            print (str(e))
+            pass
+    
+    def UpdateSep (self, status, message):
+        try:
+            self.message = self.message + '\n' + message
+            self.status = self.status & status
+        except Exception as e:
+            print (str(e))
+            pass
+
+    def AppendMessage(self, message):
+        try:
+            self.message = self.message + '\n' + message
+        except Exception as e:
+            print (str(e))
+            pass
+
+    def UpdateStatus(self, status):
+        try:
+            self.status = self.status & status
         except Exception as e:
             print (str(e))
             pass

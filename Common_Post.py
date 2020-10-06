@@ -26,6 +26,7 @@ import System
 import glob
 import datetime
 import os
+import Result as res
 
 #get the date stamp prefix of report files
 def GetFileDateStamp():
@@ -42,17 +43,25 @@ def GetFolderDateStamp():
 #files are combined pased on thsi search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 #prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
+    resultFileAppend = res.Result()
     file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
-    with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
-        fileCounter = 0
-        for file_ in file_list:
-            lineCounter = 0
-            for line in open( file_, 'r' ):
-                #ensure header from firs file is copied over
-                if(fileCounter == 0 and lineCounter == 0 or lineCounter != 0):
-                    result.write( line )
-                lineCounter += 1
-            fileCounter += 1
+    resultFileAppend.AppendMessage('Found files: ' + str(len(file_list)))
+    f = open(folderPath + '\\' + outPutFileName, 'w' )
+    fileCounter = 0
+    for file_ in file_list:
+        resultFileAppend.AppendMessage('...Adding lines from file: ' + file_)
+        lineCounter = 0
+        lineCounterAdded = 0
+        for line in open( file_, 'r' ):
+            #ensure header from first file is copied over
+            if(fileCounter == 0 and lineCounter == 0 or lineCounter != 0):
+                f.write( line + '\n')
+                lineCounterAdded += 1
+            lineCounter += 1
+        resultFileAppend.AppendMessage('......Added lines: ' + str(lineCounterAdded))
+        fileCounter += 1
+    f.close()
+    return resultFileAppend
 
 #returns a list of files from a given folder with a given file extension
 #file extension in format '.txt'

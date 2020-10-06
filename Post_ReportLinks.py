@@ -37,7 +37,7 @@ debug_ = False
 #default file path locations
 # --------------------------
 #store output here:
-rootPath_ = r'C:\temp
+rootPath_ = r'C:\temp'
 #path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
 

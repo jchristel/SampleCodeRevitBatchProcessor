@@ -340,6 +340,41 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
         returnvalue.message = 'Failed with exception: ' + str(e)
     return returnvalue
 
+# reloads revit links from a given location based on the original link type name (starts with)
+# link locations: a list of directories where the revit files can be located
+# linkTypesTobReloaded is a list of elements of class RevitLinkType
+# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
+# worksetconfig: None: to use the previously apllied workset config
+def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+    returnvalue = res.Result()
+    try:
+        # loop over links supplied
+        for p in linkTypesTobReloaded:
+            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+            newLinkPath = 'unknown'
+            try:
+                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
+                if(newLinkPath != None):
+                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                    #attempt to reload with worksets set to last viewed
+                    # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
+                    # however that can be achieved also ... According to Autodesk:
+                    # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
+                    wc = worksetConfig()
+                    result = p.LoadFrom(mp,  wc)
+                    #store result in message 
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + str(result.LoadResult)
+                else:
+                    returnvalue.status = False
+                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations' 
+            except Exception as e:
+                returnvalue.status = False
+                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)    
+    except Exception as e:
+        returnvalue.status = False
+        returnvalue.message = 'Failed with exception: ' + str(e)
+    return returnvalue
+
 # reloads CAD links from a given location based on the original link type name (starts with)
 # link locations: a list of directories where the revit files can be located
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link

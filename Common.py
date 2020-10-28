@@ -154,9 +154,11 @@ def CheckParameterValue(para, paraCondition, conditionValue):
 # view rules: array in format [parameter name, condition test method, value to test against]
 def DeleteViews(doc, viewRules, collectorViews):
     ids = []
+    viewCounter = 0
     for v in collectorViews:
         #filter out revision schedules '<', sheets and other view types which can not be deleted
         if(EncodeAscii(v.Name)[0] != '<' and v.ViewType != ViewType.Internal and v.ViewType != ViewType.Undefined and v.ViewType != ViewType.ProjectBrowser and v.ViewType != ViewType.DrawingSheet and v.ViewType != ViewType.SystemBrowser):
+            viewCounter =+ 1
             paras = v.GetOrderedParameters()
             ruleMatch = True
             for paraName, paraCondition, conditionValue in viewRules:
@@ -166,6 +168,9 @@ def DeleteViews(doc, viewRules, collectorViews):
             if (ruleMatch == True):
                 #delete view
                 ids.append(v.Id)
+    # make sure we are not trying to delete all views (this allowed when a model is opened into memory only, but that model will crash when trying to open into UI)
+    if(len(ids) == viewCounter and len(ids) > 0):
+        ids.pop()
     #delete all views at once
     result = DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
     return result

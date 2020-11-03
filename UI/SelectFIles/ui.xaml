@@ -11,7 +11,7 @@
             <DataGrid x:Name="files" Margin="10" Grid.Row="0" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" 
                       AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="File" Binding="{Binding name}" ></DataGridTextColumn>
+                    <DataGridTextColumn Header="File" Width="*" Binding="{Binding name}" ></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Button Grid.Row="1" Margin="0 0 10 10"

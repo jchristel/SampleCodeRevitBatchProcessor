@@ -26,17 +26,19 @@ import sys, getopt, os
 import FileItem as fi
 # import UI class
 import UIFileSelect as UIFs
+# import settings class
+import FileSelectSettings as set
 
 # main method
 def main(argv):
     # get arguments
-    gotArgs, inputDirectory, outputDirectory, outputfileNumber, revitFileExtension = processArgs(argv)
+    gotArgs, settings = processArgs(argv)
     if(gotArgs):
         # get revit files in input dir
-        revitfiles = getRevitFiles(inputDirectory, revitFileExtension)
+        revitfiles = getRevitFiles(settings.inputDir, settings.revitFileExtension)
         if(len(revitfiles) > 0):
             # lets show the window
-            UIFs.MyWindow(xamlFullFileName_, revitfiles).ShowDialog()
+            UIFs.MyWindow(xamlFullFileName_, revitfiles, settings).ShowDialog()
         else:
             # show messagew box
             print ('No Revit project files found!')
@@ -107,7 +109,7 @@ def processArgs(argv):
         gotArgs = False
         print ('Invalid file extension: [' + str(revitFileExtension) + '] expecting: .rvt or .rfa')
 
-    return gotArgs, inputDirectory, outputDirectory, outputfileNumber, revitFileExtension
+    return gotArgs, set.FileSelectionSettings(inputDirectory, outputDirectory, outputfileNumber, revitFileExtension)
 
 # method used to determine directory this script is run from
 # this is used to load xaml file

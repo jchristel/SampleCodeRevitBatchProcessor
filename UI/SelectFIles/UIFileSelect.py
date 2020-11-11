@@ -29,13 +29,21 @@ clr.AddReference('IronPython.Wpf')
 import wpf
 from System import Windows
 
+# import settings class
+import FileSelectSettings as set
+
 # UI class
 class MyWindow (Windows.Window):
-    def __init__(self, xamlFullFileName, revitFiles):
+    def __init__(self, xamlFullFileName, revitFiles, settings):
         wpf.LoadComponent(self,xamlFullFileName)
+        # populate fields
         self.revitfiles = revitFiles
         self.files.ItemsSource = revitFiles
-
+        self.tbSourceFolder.Text = settings.inputDir
+        self.tbDestinationFolder.Text = settings.outputDir
+        self.tbFileType.Text = settings.revitFileExtension
+        self.tbNoOfFiles.Text = str(settings.outputFileNum)
+        #disable editing of text boxes
     def BtnOK(self, sender, EventArgs):
         print('ok')
     

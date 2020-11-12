@@ -72,7 +72,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -111,13 +111,12 @@ def ModifyViews(doc, revitFilePath, viewData):
 # deletes sheets based on rules
 def ModifySheets(doc, sheets):
     
-    #set default values
+    # set default values
     returnvalue = res.Result()
-    returnvalue.status = False
-    returnvalue.message = 'No sheet data provided for current Revit file'
-
+    returnvalue.UpdateSep(False,'No sheet data provided for current Revit file')
+    
     revitFileName = com.GetRevitFileName(revitFilePath_)
-    #Output(sheets)
+    # Output(sheets)
     for fileName, sheetRules in sheets:
         if (revitFileName.startswith(fileName)):
             collectorSheets = FilteredElementCollector(doc).OfClass(View)
@@ -137,30 +136,29 @@ def Modify(doc, revitFilePath, gridData):
     for fileName, defaultWorksetName in gridData:
         if (revitFileName.startswith(fileName)):
             foundMatch = True
-            #fix uyp grids
+            # fix uyp grids
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
             grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
             returnvalue.Update(grids)
             
-            #fix up levels
+            # fix up levels
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
             levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
             returnvalue.Update(levels)
 
-            #fix up scope boxes
+            # fix up scope boxes
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
             sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
             returnvalue.Update(sboxes)
             
-            #fix up ref planes
+            # fix up ref planes
             collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
             refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
             returnvalue.Update(refPlanes)
             
             break
     if (foundMatch == False):
-        returnvalue.status = False
-        returnvalue.message = 'No workset data provided for current Revit file '+ revitFileName
+        returnvalue.UpdateSep(False, 'No workset data provided for current Revit file ' + revitFileName)
     return returnvalue
 #------------------ workset related end-----------------------
 
@@ -192,7 +190,7 @@ sheetRules_ = [
     ]]# applies to file FileTwoBeforeName
 ]
 
-#views to delete rules
+# views to delete rules
 viewRules_ = [
     ['File',[
         ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value'],
@@ -201,18 +199,18 @@ viewRules_ = [
     ]]
 ]
 
-#save revit file to new location
+#s ave revit file to new location
 Output('Modifying Revit File.... start')
 
 # flag indicating whether the file can be saved
-saveFile = True
+saveFile_ = True
 
 # check if worksharing needs to be enabled
 if (doc.IsWorkshared == False):
-    saveFile = com.EnableWorksharing(doc)
-    Output('Enabled worksharing.... status: ' + str(saveFile.status))
+    saveFile_ = com.EnableWorksharing(doc)
+    Output('Enabled worksharing.... status: ' + str(saveFile_.status))
 
-if (saveFile):
+if (saveFile_):
     result_ = com.SaveAs(doc, rootPath_ , revitFilePath_, defaultFileNames_)
     Output(result_.message + ' :: ' + str(result_.status))
 else:

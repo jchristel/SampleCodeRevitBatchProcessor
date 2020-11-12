@@ -35,13 +35,13 @@ import System
 debug_ = True
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
@@ -50,28 +50,28 @@ if not debug_:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
-#import Result as res not required in this module
+# import Result as res not required in this module
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -82,9 +82,9 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#special treatment to link names...
-#ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
-#this is a sample only since the code below uses the default method com.DefaultLinkName
+# special treatment to link names...
+# ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
+# this is a sample only since the code below uses the default method com.DefaultLinkName
 def LinkName(name):
     return name[0:-8]
 
@@ -93,27 +93,27 @@ def LinkName(name):
 # -------------
 hostName_ = com.GetOutPutFileName(revitFilePath_)
 
-#list containing directories where Revit links are located:
+# list containing directories where Revit links are located:
 # ['Directory path 1', 'Directory path 2']
 linkRevitLocations_ = [r'C:\temp']
 
-#list containing directories where CAD links are located:
+# list containing directories where CAD links are located:
 # ['Directory path 1', 'Directory path 2']
 linkCADLocations_ = [r'C:\temp']
 
 
-#save revit file to new location
+# save revit file to new location
 Output('Modifying Revit File.... start')
 
-#reload Revit links
+# reload Revit links
 resultRevitLinksReload_ = com.ReloadRevitLinks(doc, linkRevitLocations_, hostName_, com.DefaultLinkName, com.DefaultWorksetConfigForReload)
 Output(resultRevitLinksReload_.message + ' :: ' + str(resultRevitLinksReload_.status))
 
-#reload CAD links
+# reload CAD links
 resultCADLinksReload_ = com.ReloadCADLinks(doc, linkCADLocations_, hostName_, com.DefaultLinkName)
 Output(resultCADLinksReload_.message + ' :: ' + str(resultCADLinksReload_.status))
 
-#sync changes back to central
+# sync changes back to central
 if (debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)

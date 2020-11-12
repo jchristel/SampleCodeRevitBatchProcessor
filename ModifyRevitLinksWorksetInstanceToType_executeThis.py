@@ -34,13 +34,13 @@ import os.path as path
 debug_ = False
 
 # --------------------------
-#default file path locations
+#d efault file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Links.rvt'
 
 # Add batch processor scripting references
@@ -49,18 +49,18 @@ if not debug_:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 import Result as res
@@ -70,7 +70,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -90,13 +90,13 @@ def GetWorksetNamebyId(doc, Id):
     return name
     
     
-#returns Revit Link Instance data
+# returns Revit Link Instance data
 def GetRevitInstanceDataByName(revitLinkName, doc):
     match = False
-    #default values
+    # default values
     instanceWorksetName = 'unknown'
     for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
-        #Output('['+str(Element.Name.GetValue(revitLinkName))+'][' + str(Element.Name.GetValue(p))+']')
+        # Output('['+str(Element.Name.GetValue(revitLinkName))+'][' + str(Element.Name.GetValue(p))+']')
         linkTypeNameParts = Element.Name.GetValue(p).split(':')
         if(len(linkTypeNameParts) == 3):
             lN = linkTypeNameParts[0]
@@ -106,17 +106,17 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
                 instanceWorksetName = wsparam.AsValueString()
                 break
     if(match == True):
-        #Output(instanceWorksetName)
+        # Output(instanceWorksetName)
         return com.GetWorksetIdbyName(doc, instanceWorksetName)
     else:
-        #Output('no match')
+        # Output('no match')
         return ElementId.InvalidElementId
 
-#get the revit link instance data
-#this also calls GetRevitLinkInstanceDataByName() 
+# get the revit link instance data
+# this also calls GetRevitLinkInstanceDataByName() 
 def ModifyRevitLinkTypeData(revitLink, doc):
     returnvalue = res.Result()
-    #get the workset
+    # get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
     typeWorksetId = com.GetWorksetIdbyName(doc, typeWorksetName)
@@ -131,7 +131,7 @@ def ModifyRevitLinkTypeData(revitLink, doc):
         returnvalue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
     return returnvalue
 
-#method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
+# method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
 def modifyRevitLinkTypes(doc):
     returnvalue = res.Result()
     try:
@@ -139,23 +139,21 @@ def modifyRevitLinkTypes(doc):
             changeLink = ModifyRevitLinkTypeData(p, doc)
             returnvalue.Update(changeLink)
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = returnvalue.message + '\n' + 'Failed to modify revit link instances with exception: ' + str(e)
-    return status
+        returnvalue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+    return returnvalue
 
 # -------------
 # main:
 # -------------
 
-#write out revit link data
-Output('Modifying Revit Link Data.... start')
+# modify revit links
+Output('Modifying Revit Link(s).... start')
 result_ = modifyRevitLinkTypes(doc)
 Output(str(result_.message) + ' ' + str(result_.status))
 
-#sync changes back to central
+# sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
     Output('Syncing to Central: finished ' + str(syncing_.status))
-
-Output('Modifying Revit Link.... finished ')
+Output('Modifying Revit Link(s).... finished ')

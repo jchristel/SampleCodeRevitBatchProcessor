@@ -25,7 +25,7 @@
 # https://stackoverflow.com/questions/54981866/script-for-controlling-exe-without-using-its-gui-unknown-api
 
 commonlibraryDebugLocation_ = r'C:\temp'
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
@@ -70,7 +70,7 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
                         rename.append(ifcFile)
                         filesToRename.append(rename)
                 else:
-                    #something went wrong
+                    # something went wrong
                     returnvalue.UpdateSep(False, 'Failed to optimize file: '+ str(ifcFile))
             # clean up
             for fileToDelete in filesToDelete:

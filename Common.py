@@ -35,7 +35,7 @@ clr.ImportExtensions(System.Linq)
 
 #----------------------------------------views-----------------------------------------------
 
-#returns view ids of all schedules on a sheet
+# returns view ids of all schedules on a sheet
 def GetScheduleIdsOnSheets(doc):
     ids=[]
     col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
@@ -89,19 +89,19 @@ def GetViewsInModel(doc, filter):
     views = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        #filer out browser organisation and other views which cant be deleted
+        #f iler out browser organisation and other views which cant be deleted
         if(v.IsTemplate == False and filter(v) == True and v.ViewType != ViewType.SystemBrowser and v.ViewType != ViewType.ProjectBrowser and v.ViewType != ViewType.Undefined and v.ViewType != ViewType.Internal and v.ViewType != ViewType.DrawingSheet):
             views.append(v)
     return views
 
-#returns all schedules not on a sheet
+# returns all schedules not on a sheet
 def GetScheduleIdsNotOnSheets(doc):
     schedulesNotOnSheets = []
-    #get schedules on sheets
+    # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
-    #get all schedules in model
+    # get all schedules in model
     schedulesInModel = GetViewsofType(doc, ViewType.Schedule)
-    #loop and filter out schedules not on sheets
+    # loop and filter out schedules not on sheets
     for schedule in schedulesInModel:
         if(schedule.Id not in idsOnSheets):
             schedulesNotOnSheets.append(schedule)
@@ -111,13 +111,13 @@ def GetScheduleIdsNotOnSheets(doc):
 # excludes schedules
 def GetViewsNotOnSheet(doc):
     viewsNotOnSheet = []
-    #get all sheets
+    # get all sheets
     sheetsInModel = GetSheetsInModel(doc)
-    #get all viewports on sheets
+    # get all viewports on sheets
     viewportsOnSheets = GetViewportOnSheets(doc, sheetsInModel)
-    #get all views in model
+    # get all views in model
     viewsInModel = GetViewsInModel(doc, FilterRevisionSchedules)
-    #check whether view has a viewport if not ... its not placed on a sheet
+    # check whether view has a viewport if not ... its not placed on a sheet
     for viewInModel in viewsInModel:
         match = False
         for viewportsOnSheet in viewportsOnSheets:
@@ -156,7 +156,7 @@ def DeleteViews(doc, viewRules, collectorViews):
     ids = []
     viewCounter = 0
     for v in collectorViews:
-        #filter out revision schedules '<', sheets and other view types which can not be deleted
+        # filter out revision schedules '<', sheets and other view types which can not be deleted
         if(EncodeAscii(v.Name)[0] != '<' and v.ViewType != ViewType.Internal and v.ViewType != ViewType.Undefined and v.ViewType != ViewType.ProjectBrowser and v.ViewType != ViewType.DrawingSheet and v.ViewType != ViewType.SystemBrowser):
             viewCounter =+ 1
             paras = v.GetOrderedParameters()
@@ -166,12 +166,12 @@ def DeleteViews(doc, viewRules, collectorViews):
                     if(p.Definition.Name == paraName):
                         ruleMatch = ruleMatch and CheckParameterValue(p, paraCondition, conditionValue)
             if (ruleMatch == True):
-                #delete view
+                # delete view
                 ids.append(v.Id)
     # make sure we are not trying to delete all views (this allowed when a model is opened into memory only, but that model will crash when trying to open into UI)
     if(len(ids) == viewCounter and len(ids) > 0):
         ids.pop()
-    #delete all views at once
+    # delete all views at once
     result = DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
     return result
 
@@ -184,15 +184,14 @@ def DeleteViewsNotOnSheets(doc, filter):
     for viewNotOnSheet in viewsNotOnSheets:
         if(filter(viewNotOnSheet)):
             ids.append(viewNotOnSheet.Id)
-    #check we are not trying to delete all views
+    # check we are not trying to delete all views
     if(len(viewsNotOnSheets) == len(ids) and len(viewsNotOnSheets) > 0):
-        #remove a random view from this list
+        # remove a random view from this list
         ids.pop(0)
     if(len(ids) > 0):
         returnvalue = DeleteByElementIds(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
     else:
-        returnvalue.status = True
-        returnvalue.message = 'No views not placed on sheets found.'
+        returnvalue.UpdateSep(True, 'No views not placed on sheets found.')
     return returnvalue
 
 # deletes sheets based on
@@ -208,14 +207,14 @@ def DeleteSheets(doc, viewRules, collectorViews):
                     if(p.Definition.Name == paraName):
                         ruleMatch = ruleMatch and CheckParameterValue(p, paraCondition, conditionValue)
             if (ruleMatch == True):
-                #delete view
+                # delete view
                 ids.append(v.Id)
     result = DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
     return result
 
 #----------------------------------------elements-----------------------------------------------
 
-#method deleting elements by list of element id's
+# method deleting elements by list of element id's
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
 def DeleteByElementIds(doc, ids, transactionName, elementName):
@@ -226,41 +225,39 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
             doc.Delete(ids.ToList[ElementId]())
             actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
         except Exception as e:
-            actionReturnValue.status = False
-            actionReturnValue.message = 'Failed to delete ' + elementName + ' with exception: ' + str(e)
+            actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
         return actionReturnValue
     transaction = Transaction(doc,transactionName)
     returnvalue = InTransaction(transaction, action)
     return returnvalue
 
-#attemps to change the worksets of elements provided through an element collector
+# attemps to change the worksets of elements provided through an element collector
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     returnvalue = res.Result()
     returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName + '\n'
-    #get the ID of the default grids workset
+    # get the ID of the default grids workset
     defaultId = GetWorksetIdByName(doc, defaultWorksetName)
     counterSuccess = 0
     counterFailure = 0
-    #check if invalid id came back..workset no longer exists..
+    # check if invalid id came back..workset no longer exists..
     if(defaultId != ElementId.InvalidElementId):
-        #get all elements in collector and check their workset
+        # get all elements in collector and check their workset
         for p in collector:
             if (p.WorksetId != defaultId):
-                #move element to new workset
+                # move element to new workset
                 transaction = Transaction(doc, "Changing workset " + p.Name)
                 trannyStatus = InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
                 if (trannyStatus.status == True):
-                    counterSuccess = counterSuccess + 1
+                    counterSuccess += 1
                 else:
-                    counterFailure = counterFailure + 1
+                    counterFailure += 1
                 returnvalue.status = returnvalue.status & trannyStatus.status
             else:
-                counterSuccess = counterSuccess + 1
+                counterSuccess += 1
                 returnvalue.status = returnvalue.status & True 
     else:
-        returnvalue.message = 'Default workset '+ defaultWorksetName + ' does no longer exists in file!'
-        returnvalue.status = False
-    returnvalue.message = returnvalue.message + 'Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']'
+        returnvalue.UpdateSep(False, 'Default workset '+ defaultWorksetName + ' does no longer exists in file!')
+    returnvalue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
     return returnvalue
 
 # returns the required action to change a single elements workset
@@ -272,15 +269,14 @@ def GetActionChangeElementWorkset(el, defaultId):
             wsparam.Set(defaultId.IntegerValue)
             actionReturnValue.message = 'Changed element workset.'
         except Exception as e:
-            actionReturnValue.status = False
-            actionReturnValue.message = 'Failed with exception: ' + str(e)
+            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
         return actionReturnValue
     return action
 
 #----------------------------------------worksets-----------------------------------------------
 
-#returns the element id of a workset identified by its name
-#returns invalid Id (-1) if no such workset exists
+# returns the element id of a workset identified by its name
+# returns invalid Id (-1) if no such workset exists
 def GetWorksetIdByName(doc, worksetName):
     id = ElementId.InvalidElementId
     for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
@@ -291,23 +287,23 @@ def GetWorksetIdByName(doc, worksetName):
 
 #-------------------------------------------LINKS------------------------------------------------
 
-#deletes all revit links in a file
+# deletes all revit links in a file
 def DeleteRevitLinks(doc):
     ids = []
     returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
-    #delete all links at once
+    # delete all links at once
     returnvalue = DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
     return returnvalue
 
-#deletes all CAD links in a file
+# deletes all CAD links in a file
 def DeleteCADLinks(doc):
     ids = []
     returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfClass(ImportInstance):
         ids.append(p.Id)
-    #delete all links at once
+    # delete all links at once
     returnvalue = DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
     return returnvalue
 
@@ -326,23 +322,20 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
                     mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
-                    #attempt to reload with worksets set to last viewed
+                    # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
                     # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
-                    #store result in message 
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + str(result.LoadResult)
+                    # store result in message 
+                    returnvalue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnvalue.status = False
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations' 
+                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.status = False
-                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)    
+                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 # reloads revit links from a given location based on the original link type name (starts with)
@@ -361,23 +354,20 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
                     mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
-                    #attempt to reload with worksets set to last viewed
+                    # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
                     # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
-                    #store result in message 
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + str(result.LoadResult)
+                    # store result in message 
+                    returnvalue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnvalue.status = False
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations' 
+                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.status = False
-                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)    
+                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 # reloads CAD links from a given location based on the original link type name (starts with)
@@ -393,29 +383,24 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
             try:
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.dwg')
                 if(newLinkPath != None):
-                    #reloading CAD links requires a transaction
+                    # reloading CAD links requires a transaction
                     def action():
                         actionReturnValue = res.Result()
                         try:
                             result = p.LoadFrom(newLinkPath)
                             actionReturnValue.message = linkTypeName + ' :: ' + str(result.LoadResult)
                         except Exception as e:
-                            actionReturnValue.status = False
-                            actionReturnValue.message = linkTypeName + ' :: ' + 'Failed with exception: ' + str(e)
+                            actionReturnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     transaction = Transaction(doc, 'Reloading: ' + linkTypeName)
                     reloadResult = InTransaction(transaction, action)
-                    returnvalue.status = returnvalue.status & reloadResult.status
-                    returnvalue.message =  returnvalue.message + '\n' + reloadResult.message
+                    returnvalue.Update(reloadResult)
                 else:
-                    returnvalue.status = False
-                    returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations'
+                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.status = False
-                returnvalue.message = returnvalue.message + '\n' + linkTypeName + ' :: ' + 'Failed with exception: ' + str(e) 
+                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 # returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations
@@ -425,7 +410,7 @@ def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
     counter = 0
     try:
         foundMatch = False
-        #attempt to find filename match in given locations
+        # attempt to find filename match in given locations
         for linkLocation in possibleLinkLocations:
             fileList = glob.glob(linkLocation + '\\*' + fileExtension)
             if (fileList != None):
@@ -433,10 +418,10 @@ def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
                     fileNameInFolder = path.basename(file)
                     if (fileNameInFolder.startswith(fileName)):
                         linkPath = file
-                        counter =+1
+                        counter =+ 1
                         foundMatch = True
                         break
-        #return none if multiple matches where found            
+        # return none if multiple matches where found            
         if(foundMatch == True and counter > 1):
             linkPath = None
     except Exception:
@@ -455,16 +440,16 @@ def DefaultWorksetConfigForReload():
     return None
 #-------------------------------------------------------file IO --------------------------------------
 
-#get a time stamp in format year_month_day
+# get a time stamp in format year_month_day
 def GetFileDateStamp():
     d = datetime.datetime.now()
     return d.strftime('%y_%m_%d')
 
-#returns an time stamped output file name based on the revit file name
-#file extension needs to include '.', default is '.txt'
-#file suffix will be appended after the name but before the file extension. Default is blank.
+# returns an time stamped output file name based on the revit file name
+# file extension needs to include '.', default is '.txt'
+# file suffix will be appended after the name but before the file extension. Default is blank.
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
-    #get date prefix for file name
+    # get date prefix for file name
     filePrefix = GetFileDateStamp()
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return filePrefix + '_' + name + fileSuffix + fileExtension
@@ -474,7 +459,7 @@ def GetRevitFileName(revitFilePath):
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return name
 
-#removes '..\..' or '..\' from relative file path supplied by Revit and replaces it with full path derived from Revit document
+# removes '..\..' or '..\' from relative file path supplied by Revit and replaces it with full path derived from Revit document
 def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     if( r'..\..' in relativeFilePath):
         two_up = path.abspath(path.join(fullFilePath ,r'..\..'))
@@ -486,8 +471,8 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
         return relativeFilePath
 
 
-#synchronises a Revit central file
-#returns:
+# synchronises a Revit central file
+# returns:
 #   - true if sync without exception been thrown
 #   - false if an exception occured
 def SyncFile (doc):
@@ -498,20 +483,19 @@ def SyncFile (doc):
     sync = SynchronizeWithCentralOptions()
     sync.Comment = 'Synchronised by Revit Batch Processor'
     sync.SetRelinquishOptions(ro)
-    #Synch it
+    # Synch it
     try:
-        #save local first ( this seems to prevent intermittend crash on sync(?))
+        # save local first ( this seems to prevent intermittend crash on sync(?))
         doc.Save()
         doc.SynchronizeWithCentral(transActOptions, sync)
-        #relinquish all
+        # relinquish all
         WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
         returnvalue.message = 'Succesfully synched file.'
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-#saves a new central file to given location
+# saves a new central file to given location
 def SaveAsWorksharedFile(doc, fullFileName):
     returnvalue = res.Result()
     try:
@@ -524,10 +508,9 @@ def SaveAsWorksharedFile(doc, fullFileName):
         saveOption.MaximumBackups = 5
         saveOption.Compact = True
         doc.SaveAs(fullFileName, saveOption)
-        returnvalue.message = 'Succesfully saved file: '+str(fullFileName)
+        returnvalue.message = 'Succesfully saved file: ' + str(fullFileName)
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 #save file under new name in given location
@@ -552,27 +535,25 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
         returnvalue.message = 'Found no file name match for: ' + currentFullFileName
     try:
         returnvalue.status = SaveAsWorksharedFile(doc, newFileName).status
-        returnvalue.message = returnvalue.message + '\n' + 'Saved file: ' + newFileName
+        returnvalue.AppendMessage('Saved file: ' + newFileName)
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = returnvalue.message + '\n' + 'Failed to save revit file to new location!' + ' exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnvalue
 
-#enables work sharing
+# enables work sharing
 def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', worksetName = 'Workset1'):
     returnvalue = res.Result()
     try:
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
         returnvalue.message = 'Succesfully enabled worksharing.'
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 #--------------------------------------------Transactions-----------------------------------------
 
-#transaction wrapper
-#returns:
+# transaction wrapper
+# returns:
 #   - False if something went wrong
 #   - True if the action has no return value specified and no exception occured
 # expects the actiooon to return a class object of type Result!!!
@@ -583,17 +564,15 @@ def InTransaction(tranny, action):
         try:
             trannyResult = action()
             tranny.Commit()
-            #check what came back
-            if (trannyResult!= None):
-                #store false value 
+            # check what came back
+            if (trannyResult != None):
+                # store false value 
                 returnvalue = trannyResult
         except Exception as e:
             tranny.RollBack()
-            returnvalue.status = False
-            returnvalue.message = 'Failed with exception: ' + str(e)
+            returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
 #--------------------------------------------string-----------------------------------------

@@ -33,13 +33,13 @@ import System
 debug_ = True
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Export.rvt'
 
 # Add batch processor scripting references
@@ -52,10 +52,10 @@ if not debug_:
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#import common library
+# import common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
@@ -67,7 +67,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -87,7 +87,7 @@ def Output(message = ''):
 def IFCExportView(doc):
     returnvalue = res.Result()
     ifcExportOption = rex.IFCGetThirdPartyExportConfifgByView(IFCVersion.IFC2x3)
-    #exports 3D view where name starts with 'NWCP', Origin is project base point
+    # exports 3D view where name starts with 'NWCP', Origin is project base point
     returnvalue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
     return returnvalue
 

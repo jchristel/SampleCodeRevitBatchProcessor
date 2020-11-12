@@ -33,31 +33,31 @@ import System
 debug_ = True
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\Project\Git\SampleCodeRevitBatchProcessor'
-#directory containing files
+# directory containing files
 sourcePath_ = r'C:\temp'
 
 # Add batch processor scripting references
 if not debug_:
     import script_util
 
-#set path to common_Post library
+# set path to common_Post library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library (in this case the post lib since it got the methods we are after)
+# import common library (in this case the post lib since it got the methods we are after)
 import Common_Post as cp
 from Common_Post import *
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         script_util.Output(str(message))
@@ -87,7 +87,7 @@ def WriteFileList():
 # main:
 # -------------
 
-#get file data
+# get file data
 Output('Writing file Data.... start')
 result_ = WriteFileList()
 Output('Writing file Data.... status: ' + str(result_))

@@ -40,13 +40,13 @@ from System.IO import Path
 debug_ = True
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#directory containing incoming files
+# directory containing incoming files
 sourcePath_ = r'C:\temp'
 
 # Add batch processor scripting references
@@ -57,14 +57,14 @@ if not debug_:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library (in this case the post lib since it got the methods we are after)
+# import common library (in this case the post lib since it got the methods we are after)
 import Common_Post as cp
 from Common_Post import *
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         script_util.Output(str(message))
@@ -78,7 +78,7 @@ def Output(message = ''):
 #to read csv files
 import csv
 
-#drop revision and other things of current NWC file name
+# drop revision and other things of current NWC file name
 def GetNWCFileName(currentFileName):
     returnValue = currentFileName
     foundMatch = False
@@ -97,18 +97,18 @@ def GetNWCFileName(currentFileName):
         Output('Found no match for:  ' + currentFileName )
     return returnValue
 
-#copy nwc files to Navisworks location
+# copy nwc files to Navisworks location
 def CopyNWCFiles():
     status = True
     fileFilter = '*.nwc'
-    #check whether any files match the filter
+    # check whether any files match the filter
     for nwcFileNameStart, nwcTargetFolder in defaultNWCLocations_:
         files = cp.GetFilesWithFilter(sourcePath_, fileFilter, nwcFileNameStart + '*')
         if(files != None and len(files) > 0):
             Output('Copying nwc Files...' + str(len(files)))
             for file in files:
                 try:
-                    #extract file name only
+                    # extract file name only
                     fileName = Path.GetFileName(file)
                     src = sourcePath_ + '\\' + fileName
                     destinationFileName = GetNWCFileName(fileName)
@@ -138,12 +138,12 @@ def CreateFolder(root, folderName):
 # set up dated model incoming folder
 def CreateTargetFolder(targetLocation, folderName):
     returnFolderName = folderName
-    #check if folder exists
+    # check if folder exists
     flag = False
     if(path.exists(targetLocation + '\\' + folderName) == True):
         gotFolder = False
         n = 1
-        #create new folder (stop at 10 attemps)
+        # create new folder (stop at 10 attemps)
         while (gotFolder == False and n < 10):
             if (path.exists(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
                 flag = CreateFolder(targetLocation, folderName + '(' + str(n) + ')')
@@ -152,31 +152,31 @@ def CreateTargetFolder(targetLocation, folderName):
                 gotFolder = True
             n += 1
     else:
-        #create new folder
+        # create new folder
         flag = CreateFolder(targetLocation, folderName)
     return flag, returnFolderName
 
 # move files into incoming folder(s)
 def MoveFiles(fileData):
     status = True
-    #get the date stamp
+    # get the date stamp
     folderName = cp.GetFolderDateStamp() + str('_Models')
     for fileFilter, targetLocation in fileData:
-        #check if target root path still exists
+        # check if target root path still exists
         if(path.exists(targetLocation)):
-            #check whether any files match the filter
+            # check whether any files match the filter
             files = cp.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
-            #copy any *.nwc files into the right folders first
+            # copy any *.nwc files into the right folders first
             CopyNWCFiles()
-            #move files into file in location
+            # move files into file in location
             if(files != None and len(files) > 0):
                 flagGotFolder, folderName = CreateTargetFolder(targetLocation, folderName)
                 if (flagGotFolder):
                     Output('Moving Files...' + str(len(files)))
-                    #move files
+                    # move files
                     for file in files:
                         try:
-                            #extract file name only
+                            # extract file name only
                             fileName = Path.GetFileName(file)
                             src = sourcePath_ + '\\' + fileName
                             dst = targetLocation + '\\' + folderName + '\\' + fileName
@@ -213,28 +213,28 @@ def SaveFilesReceivedList():
                 # get files and check for match
                 dateValue, revision = GetMatch(fileExtension, nameFilter)
                 if (dateValue == '-'):
-                    #use the value from currentIssueList (if there is one...)
+                    # use the value from currentIssueList (if there is one...)
                     if(currentIssueList is not None and len(currentIssueList)>0):
                         try:
                             newIssueRow.append(currentIssueList[rowCounter + outPutRowHeadersCount_][columnCounter + outPutColumnHeadersCount_])
-                            columnCounter = columnCounter + 1
+                            columnCounter += 1
                             newIssueRow.append(currentIssueList[rowCounter + outPutRowHeadersCount_][columnCounter + outPutColumnHeadersCount_])
                         except Exception:
                             # current file issue list has less columns the new one...add default
                             newIssueRow.append('-')# date
-                            columnCounter = columnCounter + 1
+                            columnCounter += 1
                             newIssueRow.append('-')# revision
                     else:
-                        #no file issue list was found...add default value
+                        # no file issue list was found...add default value
                         newIssueRow.append('-')# date
-                        columnCounter = columnCounter + 1
+                        columnCounter += 1
                         newIssueRow.append('-')# revision
                 else:
                     newIssueRow.append(dateValue)
-                    columnCounter = columnCounter + 1
+                    columnCounter += 1
                     newIssueRow.append(revision)
-                #increase column counter
-                columnCounter = columnCounter + 1
+                # increase column counter
+                columnCounter += 1
         newIssueList.append(newIssueRow)
     # write array back to file
     paddedData = AddHeadersToData(newIssueList)
@@ -246,15 +246,15 @@ def AddHeadersToData(newIssueList):
     updatedData = []
     # check if row headers are required
     if (outPutRowHeadersCount_ > 0):
-        #row counter
+        # row counter
         rowIndex = 0
         for dataRow in newIssueList:
             columnIndex = 0
             for rowHeader in outPutRowHeaders_:
                 dataRow.insert(columnIndex, rowHeader[rowIndex])
-                columnIndex = columnIndex + 1
+                columnIndex  += 1
             updatedData.append(dataRow)
-            rowIndex = rowIndex + 1
+            rowIndex += 1
     else:
         for dataRow in newIssueList:
             updatedData.append(dataRow)
@@ -262,13 +262,13 @@ def AddHeadersToData(newIssueList):
     if (outPutColumnHeadersCount_ > 0):
         rowIndex = 0
         for columnHeader in outPutColumnHeaders_:
-            #Insert blank columns for row headers
+            # Insert blank columns for row headers
             if (outPutRowHeadersCount_ > 0):
                 for x in range(0,outPutRowHeadersCount_):
                     columnHeader.insert(0,'-')
-            #need to allow for row headers!!
+            # need to allow for row headers!!
             updatedData.insert(rowIndex, columnHeader)
-            rowIndex = rowIndex + 1
+            rowIndex += 1
     return updatedData
 
 # find file match with filters provided
@@ -276,26 +276,26 @@ def AddHeadersToData(newIssueList):
 def GetMatch(fileExtension, nameFilter):
     returnValue = '-'
     revision = '-'
-    #check whether valid name filter otherwise return '-'
+    # check whether valid name filter otherwise return '-'
     if(nameFilter is not ''):
         files = cp.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
         if (files is not None and len(files) > 0):
-            #got a match
+            # got a match
             returnValue = cp.GetFolderDateStamp()
-            #get the revision
+            # get the revision
             revision = GetRevision(files[0])
     return returnValue, revision
 
-#get the revision of the file name
+# get the revision of the file name
 def GetRevision(filename):
-    #default value in case no revision information is included in file name
+    # default value in case no revision information is included in file name
     returnvalue = '-'
     for revStart in revisionSeparatorsStart_:
         # check if file contains any of these
         startIndex = filename.find(revStart)
         if ( startIndex > 0):
             endIndex = startIndex + 1
-            #look for end of revision
+            # look for end of revision
             for revEnd in revisionSeparatorsEnd_:
                 endIndex = filename.find(revEnd)
                 if (endIndex > 0):
@@ -312,12 +312,12 @@ def BuildMappingTable():
     # loop over lists and build mapping table as required
     rvtList = RebuildList(allFilesReceivedRVT_)
     nwcList = RebuildList(allFilesReceivedNWC_)
-    #loop over array and build mapping 2d array:
-    #row discipline, column building in format ([filter (rvt), filename], [filter(nwc), filename])
+    # loop over array and build mapping 2d array:
+    # row discipline, column building in format ([filter (rvt), filename], [filter(nwc), filename])
     for x in range(0, len(nwcList)):
         mappingRow = []
         for y in range(0,len(nwcList[x])):
-            mappingRow.append([nwcList[x][y],rvtList[x][y]])
+            mappingRow.append([nwcList[x][y], rvtList[x][y]])
         mappingArray.append(mappingRow)
     return mappingArray
 

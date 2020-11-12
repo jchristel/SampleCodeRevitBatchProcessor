@@ -32,13 +32,13 @@ import System
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
@@ -47,18 +47,18 @@ if not debug:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 
@@ -67,7 +67,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -78,9 +78,9 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#build output file names
-fileNameGrid_ = rootPath + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
-fileNameLevel_ = rootPath + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
+# build output file names
+fileNameGrid_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
+fileNameLevel_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
 
 def GetWorksetName(doc, idInteger):
     name = 'unknown'
@@ -96,7 +96,7 @@ def GetMaxExtentAsString(grid):
     min = '['+ ','.join([str(ex.MinimumPoint.X), str(ex.MinimumPoint.Y), str(ex.MinimumPoint.Z)]) + ']'    
     return '\t'.join([min, max])
 
-#method writing out grid information
+# method writing out grid information
 def writeGridData(doc, fileName):
     status = True
     try:
@@ -111,7 +111,7 @@ def writeGridData(doc, fileName):
         Output (str(e))
     return status
 
-#method writing out level information
+# method writing out level information
 def writeLevelData(doc, fileName):
     status = True
     try:
@@ -138,6 +138,6 @@ Output('Writing Grid Data.... finished ' + fileNameGrid_)
 
 #write out Level data
 Output('Writing Level Data.... start')
-result_ = writeLevelData(doc, fileNameLevel)
+result_ = writeLevelData(doc, fileNameLevel_)
 Output('Writing Level Data.... status: ' + str(result_))
 Output('Writing Level Data.... finished ' + fileNameLevel_)

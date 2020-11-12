@@ -42,9 +42,9 @@ from Autodesk.Revit.DB import *
 # IFCExportConfiguration and IFCExportConfigurationMaps classes
 from BIM.IFC.Export.UI import IFCExportConfiguration
 
-#import common library
+# import common library
 import Common as com
-#from Common import *
+# from Common import *
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
@@ -67,13 +67,11 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     def action():
         actionReturnValue = res.Result()
         try:
-            #export to IFC
+            # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
-            actionReturnValue.status = True
-            actionReturnValue.message = 'Exported: ' + str(directoryPath) + str(fileName)
+            actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
         except Exception as e:
-            actionReturnValue.status = False
-            actionReturnValue.message = 'Failed to export to IFC with exception: ' + str(e)
+            actionReturnValue.UpdateSep(False, 'Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
     transaction = Transaction(doc,'Export to IFC')
     returnvalue = com.InTransaction(transaction, action)
@@ -86,7 +84,7 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     
     ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
     ifcExportConfig.Name = 'DefaultIFCByViewSetup'
-    #set up IFC version
+    # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
         ifcExportConfig.IFCVersion = IFCVersion.Default
     else:  
@@ -96,7 +94,7 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
-    ifcExportConfig.VisibleElementsOfCurrentView = True #by view
+    ifcExportConfig.VisibleElementsOfCurrentView = True # by view
     ifcExportConfig.Use2DRoomBoundaryForVolume = False
     ifcExportConfig.UseFamilyAndTypeNameForReference = True
     ifcExportConfig.ExportInternalRevitPropertySets = True
@@ -110,12 +108,12 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = True #by view
+    ifcExportConfig.UseActiveViewGeometry = True # by view
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False #might not work in 3D views if volumnes are not computated???
-    #revit 2019.1
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
     ifcExportConfig.COBieCompanyInfo = 'Company Name'
@@ -131,7 +129,7 @@ def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
 
     ifcExportConfig.Name = 'DefaultIFCByModelSetup'
     
-    #set up IFC version
+    # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
         ifcExportConfig.IFCVersion = IFCVersion.Default
     else:  
@@ -141,7 +139,7 @@ def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
     ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
-    ifcExportConfig.VisibleElementsOfCurrentView = False #by model
+    ifcExportConfig.VisibleElementsOfCurrentView = False # by model
     ifcExportConfig.Use2DRoomBoundaryForVolume = False
     ifcExportConfig.UseFamilyAndTypeNameForReference = True
     ifcExportConfig.ExportInternalRevitPropertySets = True
@@ -155,12 +153,12 @@ def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False #by model
+    ifcExportConfig.UseActiveViewGeometry = False # by model
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False #might not work in 3D views if volumnes are not computated???
-    #revit 2019.1
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
     ifcExportConfig.COBieCompanyInfo = 'Company Name'
@@ -175,7 +173,7 @@ def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coor
         exportConfig.ActiveViewId = viewId.IntegerValue
     else:
         exportConfig.ActiveViewId = -1
-    #set up the ifc export options object
+    # set up the ifc export options object
     exIFC = IFCExportOptions()
     exportConfig.UpdateOptions(exIFC, viewId)
 
@@ -203,7 +201,7 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
 def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates, doSomethingWithViewName = None):
     returnvalue = res.Result()
     viewsToExport = []
-    #get all 3D views in model and filter out views to be exported
+    # get all 3D views in model and filter out views to be exported
     views = com.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
@@ -217,15 +215,14 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
             returnvalueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.status = True
-        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
     return returnvalue
 
 def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
-    #check if file extension is not none
+    # check if file extension is not none
     if (fileExtension is None):
         fileExtension = '.tbc'
-    #check the filter rule
+    # check the filter rule
     if (viewFilterRule is None):
         newFileName = viewName + fileExtension
     else:
@@ -248,7 +245,7 @@ def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.no
 def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     returnvalue = res.Result()
     viewsToExport = []
-    #get all 3D views in model and filter out views to be exported
+    # get all 3D views in model and filter out views to be exported
     views = com.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
@@ -262,8 +259,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
             returnvalueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.status = True
-        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
     return returnvalue
 
 #-------------------------------------------- NWC EXPORT -------------------------------------
@@ -294,11 +290,9 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     try:
         #export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
-        returnvalue.status = True
-        returnvalue.message = 'Exported: ' + str(directoryPath) + str(fileName)
+        returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = 'Failed to export to NWC with exception: ' + str(e)
+        returnvalue.UpdateSep(False, 'Failed to export to NWC with exception: ' + str(e))
     return returnvalue
 
 # method exporting the entire model to NWC
@@ -311,7 +305,7 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
 def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
     returnvalue = res.Result()
     viewsToExport = []
-    #get all 3D views in model and filter out views to be exported
+    # get all 3D views in model and filter out views to be exported
     views = com.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
@@ -320,12 +314,11 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     if(len(viewsToExport) > 0):
         for exportView in viewsToExport:
             returnvalueByView = res.Result()
-            #store view ID in export option
+            # store view ID in export option
             nwcExportOption.ViewId = exportView.Id
             fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
             returnvalueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.status = True
-        returnvalue.message = 'No 3D views found matching filter...nothing was exported'
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
     return returnvalue

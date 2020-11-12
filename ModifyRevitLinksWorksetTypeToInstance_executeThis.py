@@ -34,13 +34,13 @@ import os.path as path
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Links.rvt'
 
 # Add batch processor scripting references
@@ -56,11 +56,11 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 import Result as res
@@ -70,7 +70,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -90,20 +90,20 @@ def GetWorksetNamebyId(doc, Id):
     return name
     
     
-#returns Revit Link Type data
+# returns Revit Link Type data
 def GetRevitLinkTypeDataByName(revitLinkName, doc):
-    #default values
+    # default values
     typeWorksetName = 'unknown'
     for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
-        #Output('['+str(revitLinkName)+'][' + str(Element.Name.GetValue(p))+']')
+        # Output('['+str(revitLinkName)+'][' + str(Element.Name.GetValue(p))+']')
         if (Element.Name.GetValue(p) == revitLinkName):
             wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             typeWorksetName = wsparam.AsValueString()
             break
     return com.GetWorksetIdbyName(doc, typeWorksetName)
 
-#get the revit link instance data
-#this also calls GetRevitLinkTypeDataByName() 
+# get the revit link instance data
+# this also calls GetRevitLinkTypeDataByName() 
 def ModifyRevitLinkInstanceData(revitLink, doc):
     returnvalue = res.Result()
     #get the workset
@@ -132,28 +132,25 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
         else:
           returnvalue.message = str('Link is not loaded' + str(com.EncodeAscii(lN[0:-1])))
     else:
-        returnvalue.status = False
-        returnvalue.message = str('Failed to split link name into 3 parts')
+        returnvalue.UpdateSep(False, 'Failed to split link name into 3 parts')
 
 #method moving revit link instances to the same workset as their types
 def modifyRevitLinkInstance(doc):
     returnvalue = res.Result()
-    status = True
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
             changeLink = ModifyRevitLinkInstanceData(p, doc)
             returnvalue.Update(changeLink)
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = returnvalue.message + '\n' + 'Failed to modify revit link instances with exception: ' + str(e)
-    return status
+        returnvalue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+    return returnvalue
 
 # -------------
 # main:
 # -------------
 
-#write out revit link data
-Output('Modifying Revit Link Data.... start')
+# modify revit links
+Output('Modifying Revit Link(s).... start')
 result_ = modifyRevitLinkInstance(doc)
 Output(str(result_.message) + ' ' + str(result_.status))
 
@@ -163,5 +160,4 @@ if (doc.IsWorkshared and debug_ == False):
     syncing_ = com.SyncFile (doc)
     Output('Syncing to Central: finished ' + str(syncing_.status))
 
-
-Output('Modifying Revit Link.... finished ')
+Output('Modifying Revit Link(s).... finished ')

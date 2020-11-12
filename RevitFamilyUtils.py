@@ -30,7 +30,7 @@ clr.AddReference('System')
 from System.Collections.Generic import List
 
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 import Result as res

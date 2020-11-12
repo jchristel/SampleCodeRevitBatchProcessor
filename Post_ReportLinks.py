@@ -34,29 +34,29 @@ import System
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
 
 # Add batch processor scripting references
 if not debug_:
     import script_util
 
-#set path to common_Post library
+# set path to common_Post library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common_Post as cp
 from Common_Post import *
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         script_util.Output(str(message))
@@ -71,10 +71,10 @@ def Output(message = ''):
 # main:
 # -------------
 
-#combine data
+# combine data
 Output('Writing summary Data.... start')
 dateStamp_ = cp.GetFileDateStamp()
 cp.CombineFiles(rootPath_, dateStamp_, '_CAD','.txt', dateStamp_ + '_CAD_Links_summary.txt')
-Output('Writing summary Data.... finished: ' + dateStamp + '_CAD_Links_summary.txt')
+Output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
 cp.CombineFiles(rootPath_, dateStamp_, '_RVT','.txt', dateStamp_ + '_RVT_Links_summary.txt')
-Output('Writing summary Data.... finished: ' + dateStamp + '_RVT_Links_summary.txt')
+Output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')

@@ -33,13 +33,13 @@ import System
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_worksets.rvt'
 
 # Add batch processor scripting references
@@ -48,17 +48,17 @@ if not debug_:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
 #set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
-#import common library
+# import common library
 import Common as com
 from Common import *
 
@@ -67,7 +67,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -78,10 +78,10 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-#build output file name
+# build output file name
 fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
-#method writing out shared parameter information
+# method writing out shared parameter information
 def writeWorksetData(doc, fileName):
     status = True
     try:
@@ -101,7 +101,7 @@ def writeWorksetData(doc, fileName):
 
 Output('Writing Workset Data.... start')
 
-#write out shared parameter data
+# write out workset data
 result_ = writeWorksetData(doc, fileName_)
 
 Output('Writing Workset Data.... status: ' + str(result_))

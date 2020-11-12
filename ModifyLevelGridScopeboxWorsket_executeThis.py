@@ -32,13 +32,13 @@ import System
 debug = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
@@ -51,14 +51,14 @@ if not debug:
     doc = revit_script_util.GetScriptDocument()
     revitFilePath = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath = debugRevitFileName
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common libraries
+# import common libraries
 import Common as com
 from Common import *
 import Result as res
@@ -68,7 +68,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug:
         revit_script_util.Output(str(message))
@@ -102,20 +102,19 @@ def Modify(doc, revitFilePath, gridData):
             sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
             returnvalue.Update(sboxes)
             
-            #fix up ref planes
+            # fix up ref planes
             collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
             refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
             returnvalue.Update(refPlanes)
             
             break
     if (flag == False):
-        returnvalue.status = False
-        returnvalue.message = 'No grid data provided for current Revit file '+ revitFileName
+        returnvalue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
     return returnvalue
 
 Output('Checking levels and grids.... start')
 
-#a list in format
+# a list in format
 #[
 #['Revit file name','workset levels, grids, scope boxes should be on'],
 #['Revit file name','workset levels, grids, scope boxes should be on']
@@ -125,11 +124,11 @@ defaultWorksets_ = [
 ['Test_grids', 'Shared Levels & Grids']
 ]
 
-#modify workset of levels, grids ands scope boxes
+# modify workset of levels, grids ands scope boxes
 flagModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
 Output(flagModifyWorkSets_.message + ' :: ' + str(flagModifyWorkSets_.status))
 
-#sync changes back to central
+# sync changes back to central
 if (doc.IsWorkshared and debug == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)

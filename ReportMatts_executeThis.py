@@ -32,13 +32,13 @@ import System
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
 
 # Add batch processor scripting references
@@ -51,23 +51,23 @@ if not debug_:
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -84,7 +84,7 @@ def WriteType (action, description, fileName, doc):
     f = open(fileName, 'w')
     f.write('\t'.join(['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE', '\n']))
     try:
-        #f.write('Materials...start'+ '\n')
+        # f.write('Materials...start'+ '\n')
         for wt in collector:
             try:
                 paras = wt.GetOrderedParameters()
@@ -104,11 +104,11 @@ def WriteType (action, description, fileName, doc):
     except:
         status = False
         Output('Failed to write data file!' + fileName)
-    #f.write('Materials...end')
+    # f.write('Materials...end')
     f.close()
     return status
 
-#gets all materials in a model
+# gets all materials in a model
 def actionMat():  
     collector = FilteredElementCollector(doc).OfClass(Material)
     return collector
@@ -117,7 +117,7 @@ def actionMat():
 # main:
 # -------------
 
-#build output file name
+# build output file name
 fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Material Data.... start')

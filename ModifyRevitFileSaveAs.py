@@ -36,11 +36,11 @@ debug_ = False
 # --------------------------
 #default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
@@ -53,24 +53,24 @@ if not debug_:
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
 import Common as com
 from Common import *
-#import Result as res #not required in this module
+# import Result as res #not required in this module
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -84,22 +84,22 @@ def Output(message = ''):
 # main:
 # -------------
 
-#list containing the default file names:
+# list containing the default file names:
 # [[revit host file name before save, revit host file name after save]]
 defaultFileNames_ = [
 ['Test_Files', 'Test_Files_new']
 ]
 
-#save revit file to new location
+# save revit file to new location
 Output('Modifying Revit File.... start')
 result_ = com.SaveAs(doc, revitFilePath_, defaultFileNames_)
 
-#make further changes as required....
+# make further changes as required....
 
 
 Output('Modifying Revit File.... status: ' + str(result_.status))
 
-#sync changes back to central
+# sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)

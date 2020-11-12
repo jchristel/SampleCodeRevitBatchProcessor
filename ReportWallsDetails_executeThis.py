@@ -34,13 +34,13 @@ import System
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output here:
+# store output here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_walls.rvt'
 
 # Add batch processor scripting references
@@ -52,13 +52,13 @@ if not debug_:
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
-#import common library
+# import common library
 import Common as com
 from Common import *
 
@@ -107,7 +107,7 @@ def WriteType (action, description, fileName, doc):
     f.close()
     return status
 
-#returns a materials mark and name based on a material id
+# returns a materials mark and name based on a material id
 def GetMaterialbyId (id, doc):
     collector = FilteredElementCollector(doc)
     collector.OfClass(Material)
@@ -115,8 +115,8 @@ def GetMaterialbyId (id, doc):
         if m.Id.IntegerValue == id.IntegerValue:
             return GetNameAndMark(m)
 
-#returns the material mark and defintion name in format:
-#{mark}{name}
+# returns the material mark and defintion name in format:
+# {mark}{name}
 def GetNameAndMark (mat):
     paraName = Element.Name.GetValue(mat)
     name= '{}' if paraName == None else '{' + paraName + '}'
@@ -124,8 +124,8 @@ def GetNameAndMark (mat):
     mark= '{}' if paraMark == None else '{' + paraMark.AsString() + '}'
     return name + mark
 
-#gets all wall types in a model
-#this includes types of curtain walls as well as any in types of place wall families!
+# gets all wall types in a model
+# this includes types of curtain walls as well as any in types of place wall families!
 def actionWT():  
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsElementType()
     return collector
@@ -134,7 +134,7 @@ def actionWT():
 # main:
 # -------------
 
-#build output file name
+# build output file name
 fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Wall Type Data.... start')

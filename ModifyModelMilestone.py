@@ -43,13 +43,13 @@ from os import path
 debug_ = False
 
 # --------------------------
-#default file path locations
+# default file path locations
 # --------------------------
-#store output (models) here:
+# store output (models) here:
 rootPath_ = r'C:\temp'
-#path to Common.py
+# path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
+# debug mode revit project file name
 debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
@@ -58,23 +58,23 @@ if not debug_:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-#import common library
+# import common library
 import Common as com
 from Common import *
 # import Result as res #not required in this module
 
-#folder methods are in here:
+# folder methods are in here:
 import Common_Post as cp
 from Common_Post import *
 
@@ -83,7 +83,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
@@ -133,14 +133,14 @@ Output('Modifying Revit File.... start')
 flagGotFolder_, milestonePath_ = CreateTargetFolder(rootPath_, cp.GetFolderDateStamp() + str('_Milestone'))
 # do we have a valid folder?
 if (flagGotFolder_):
-    #save new central file to back up folder
+    # save new central file to back up folder
     result_ = com.SaveAs(doc, rootPath_ + '\\' + milestonePath_, revitFilePath_ , defaultFileNames_)
     Output(result_.message + ' :: ' + str(result_.status))
-    #sync changes back to central
+    # sync changes back to central
     if (debug_ == False):
         Output('Syncing to Central: start')
         syncing_ = com.SyncFile (doc)
-        Output('Syncing to Central: finished ' + str(syncing_.result))
+        Output('Syncing to Central: finished ' + str(syncing_.status))
 else:
     Output('failed to create target folder ' + rootPath_ + '\\' + cp.GetFolderDateStamp() + str('_Milestone'))
 

@@ -56,8 +56,9 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
-            <DataGrid x:Name="files" Margin="10" Grid.Row="0" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" 
-                      AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False">
+                <DataGrid x:Name="files" Margin="10" Grid.Row="0" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Extended" 
+                      AlternatingRowBackground="BlanchedAlmond" AutoGenerateColumns="False"
+                      >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="File" Width="*" Binding="{Binding name}" ></DataGridTextColumn>
                 </DataGrid.Columns>

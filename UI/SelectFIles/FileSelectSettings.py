@@ -24,8 +24,9 @@
 # An item to represent a file name in a row in a grid.
 class FileSelectionSettings:
     
-    def __init__(self, inputDirectory, outputDirectory, outputfileNumber, revitFileExtension):
+    def __init__(self, inputDirectory, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension):
         self.inputDir = inputDirectory
+        self.inclSubDirs = includeSubDirsInSearch
         self.outputDir = outputDirectory
         self.outputFileNum = outputfileNumber
         self.revitFileExtension = revitFileExtension

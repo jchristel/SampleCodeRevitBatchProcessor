@@ -28,14 +28,21 @@ clr.AddReference('IronPython.Wpf')
 # import WPF creator and base window
 import wpf
 from System import Windows
+import ctypes
 
 # import settings class
 import FileSelectSettings as set
 
+# simple message box
+def Mbox(title, text, style):
+        return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+
 # UI class
 class MyWindow (Windows.Window):
     def __init__(self, xamlFullFileName, revitFiles, settings):
+        
         wpf.LoadComponent(self,xamlFullFileName)
+
         # populate fields
         self.revitfiles = revitFiles
         self.files.ItemsSource = revitFiles
@@ -43,9 +50,18 @@ class MyWindow (Windows.Window):
         self.tbDestinationFolder.Text = settings.outputDir
         self.tbFileType.Text = settings.revitFileExtension
         self.tbNoOfFiles.Text = str(settings.outputFileNum)
-        #disable editing of text boxes
+        self.selectedFiles = []
+
+
     def BtnOK(self, sender, EventArgs):
-        print('ok')
+        rows = self.files.SelectedItems
+        if(rows != None and len(rows) > 0):
+            selectedFiles.clear()
+            for row in rows:
+                selectedFiles.append(row.name)
+            Mbox('ok',str(len(selectedFiles)), 1)
+        else:
+            Mbox('Attention','No files selected', 1)
     
     def BtnCancel(self, sender, EventArgs):
         print('cancel')

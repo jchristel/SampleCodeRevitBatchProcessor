@@ -34,8 +34,14 @@ def main(argv):
     # get arguments
     gotArgs, settings = processArgs(argv)
     if(gotArgs):
-        # get revit files in input dir
-        revitfiles = getRevitFiles(settings.inputDir, settings.revitFileExtension)
+        revitfiles = []
+        # check a to serch for files is to include sub dirs
+        if(settings.inclSubDirs):
+            # get revit files in input dir and subdirs
+            revitfiles = getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+        else:
+            # get revit files in input dir
+            revitfiles = getRevitFiles(settings.inputDir, settings.revitFileExtension)
         if(len(revitfiles) > 0):
             # lets show the window
             UIFs.MyWindow(xamlFullFileName_, revitfiles, settings).ShowDialog()
@@ -50,17 +56,33 @@ def main(argv):
 # helper method retrieving revit files in a given directory and of a given file extension
 def getRevitFiles(directory, fileExtension):
     files = []
-    file_list = os.listdir(directory)
-    for f in file_list:
+    listOfFiles = os.listdir(directory)
+    for f in listOfFiles:
         # check for file extension match
         if(f.lower().endswith(fileExtension.lower())):
             # Use join to get full file path.
             location = os.path.join(directory, f)
 
-            # Get size and add to list of tuples.
+            # Get size and add to list of files.
             size = os.path.getsize(location)
         
             files.append(fi.MyFileItem(location,size))
+    return files
+
+# helper method retrieving revit files in a given directory and its subdirectories 
+# and of a given file extension
+def getRevitFilesInclSubDirs(directory, fileExtension):
+    files = []
+    # Get the list of all files in directory tree at given path
+    listOfFiles = list()
+    for (dirpath, dirnames, filenames) in os.walk(directory):
+        listOfFiles += [os.path.join(dirpath, file) for file in filenames]
+    for f in listOfFiles:
+        # check for file extension match
+        if(f.lower().endswith(fileExtension.lower())):
+            # Get size and add to list of files.
+            size = os.path.getsize(f)
+            files.append(fi.MyFileItem(f,size))
     return files
 
 # argument processor
@@ -69,14 +91,17 @@ def processArgs(argv):
     outputDirectory = ''
     outputfileNumber = 1
     revitFileExtension = '.rvt'
+    includeSubDirsInSearch = False
     gotArgs = False
     try:
-        opts, args = getopt.getopt(argv,"hi:o:n:e:",["inputDir=","outputDir=",'numberFiles=','filextension='])
+        opts, args = getopt.getopt(argv,"hsi:o:n:e:",["subDir","inputDir=","outputDir=",'numberFiles=','filextension='])
     except getopt.GetoptError:
-        print 'test.py -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>'
+        print ('test.py -s -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
     for opt, arg in opts:
         if opt == '-h':
             print 'test.py -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>'
+        elif opt in ("-s", "--subDir"):
+            includeSubDirsInSearch = True
         elif opt in ("-i", "--inputDir"):
             inputDirectory = arg
             gotArgs = True
@@ -109,7 +134,7 @@ def processArgs(argv):
         gotArgs = False
         print ('Invalid file extension: [' + str(revitFileExtension) + '] expecting: .rvt or .rfa')
 
-    return gotArgs, set.FileSelectionSettings(inputDirectory, outputDirectory, outputfileNumber, revitFileExtension)
+    return gotArgs, set.FileSelectionSettings(inputDirectory, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension)
 
 # method used to determine directory this script is run from
 # this is used to load xaml file

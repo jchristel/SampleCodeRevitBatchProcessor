@@ -35,7 +35,7 @@
                 <Label Name="lnoOfOutputFiles" Grid.Row="3" Content="Number of Files" 
                        Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <Grid Grid.Row="3" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>        
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>

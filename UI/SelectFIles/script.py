@@ -44,10 +44,19 @@ def main(argv):
             revitfiles = getRevitFiles(settings.inputDir, settings.revitFileExtension)
         if(len(revitfiles) > 0):
             # lets show the window
-            UIFs.MyWindow(xamlFullFileName_, revitfiles, settings).ShowDialog()
+            ui = UIFs.MyWindow(xamlFullFileName_, revitfiles, settings)
+            uiResult = ui.ShowDialog()
+            if(uiResult):
+                # write out file lists
+                print('todo write out file lists')
+                sys.exit(0)
+            else:
+                # do nothing...
+                print ('No files selected!')
+                sys.exit(2)
         else:
             # show messagew box
-            print ('No Revit project files found!')
+            print ('No files found!')
             sys.exit(2)
     else:
         # invalid or no args provided... get out

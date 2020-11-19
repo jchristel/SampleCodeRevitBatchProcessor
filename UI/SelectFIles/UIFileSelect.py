@@ -44,24 +44,33 @@ class MyWindow (Windows.Window):
         wpf.LoadComponent(self,xamlFullFileName)
 
         # populate fields
+        self.selectedFiles = []
         self.revitfiles = revitFiles
         self.files.ItemsSource = revitFiles
         self.tbSourceFolder.Text = settings.inputDir
         self.tbDestinationFolder.Text = settings.outputDir
         self.tbFileType.Text = settings.revitFileExtension
         self.tbNoOfFiles.Text = str(settings.outputFileNum)
-        self.selectedFiles = []
-
-
+        self.cbInclSubDirs.IsChecked = settings.inclSubDirs
+        
     def BtnOK(self, sender, EventArgs):
+        # get selected items
         rows = self.files.SelectedItems
         if(rows != None and len(rows) > 0):
-            selectedFiles.clear()
+            self.selectedFiles = []
             for row in rows:
-                selectedFiles.append(row.name)
-            Mbox('ok',str(len(selectedFiles)), 1)
+                # get the original file element
+                for oRev in self.revitfiles:
+                    if(oRev.name == row.name):
+                        self.selectedFiles.append(oRev)
+                        break
+            # Mbox('ok',str(len(self.selectedFiles)), 1)
+            self.DialogResult = True
+            self.Close()
         else:
             Mbox('Attention','No files selected', 1)
     
     def BtnCancel(self, sender, EventArgs):
-        print('cancel')
+        #print('cancel')
+        self.DialogResult = False
+        self.Close()

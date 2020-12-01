@@ -22,12 +22,19 @@
 #
 
 import sys, getopt, os
+# to get to the root folder of this repo
+# sys.path.insert(0,'../..')
+
 #import file item class
 import FileItem as fi
 # import UI class
 import UIFileSelect as UIFs
 # import settings class
 import FileSelectSettings as set
+# import workloader utils
+import Workloader as wl
+import WorkloadBucket as wlb
+
 
 # main method
 def main(argv):
@@ -47,8 +54,16 @@ def main(argv):
             ui = UIFs.MyWindow(xamlFullFileName_, revitfiles, settings)
             uiResult = ui.ShowDialog()
             if(uiResult):
+                # build bucket list
+                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, getFileSize)
                 # write out file lists
-                print('todo write out file lists')
+                counter = 0
+                for bucket in buckets:
+                    fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
+                    statusWrite = writeRevitTaskFile(fileName, bucket)
+                    print ('Wrote file ' + fileName + ' [' + str(statusWrite) + ']')
+                    counter += 1
+                print('Finished writing out task files')
                 sys.exit(0)
             else:
                 # do nothing...
@@ -61,6 +76,22 @@ def main(argv):
     else:
         # invalid or no args provided... get out
         sys.exit(1)
+
+# helper used to define workload size (same as file size)
+def getFileSize(item):
+    return item.size
+
+# method writing out task files
+def writeRevitTaskFile(fileName, bucket):
+    status = True
+    try:
+        f = open(fileName, 'w')
+        for p in bucket.items:
+            f.write('\n' + p.name)
+        f.close()
+    except Exception as e:
+        status = False
+    return status
 
 # helper method retrieving revit files in a given directory and of a given file extension
 def getRevitFiles(directory, fileExtension):
@@ -164,6 +195,7 @@ def FileExist(path):
 
 # the directory this script lives in
 currentScriptDir_ = GetFolderPathFromFile(sys.path[0])
+
 # xaml file name
 xamlfile_ = 'ui.xaml'
 # xaml full path

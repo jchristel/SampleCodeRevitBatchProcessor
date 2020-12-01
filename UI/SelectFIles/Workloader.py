@@ -23,7 +23,7 @@
 
 import System
 import clr
-import SampleCodeRevitBatchProcessor.WorkloadBucket as wb
+import WorkloadBucket as wb
 
 
 # distributes a given number evenly to workload buckets

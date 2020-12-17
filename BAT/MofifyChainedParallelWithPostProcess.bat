@@ -28,6 +28,10 @@ echo   [batch processor folder path: %targetPath%]
 :: this can be the same script but each settings file points to a different file task list
 
 start "TaskAlphaOne" 9>"%lock%1" %targetPath% --settings_file "C:\temp\SettingsAlpha1.json"
+
+:: wait a few seconds in between revit start ups
+timeout /t 15 /nobreak
+
 start "TaskAlphaTwo" 9>"%lock%2" %targetPath% --settings_file "C:\temp\SettingsAlpha2.json"
 
 :WaitOne for both processes to finish (wait until lock files are no longer locked)
@@ -51,6 +55,10 @@ echo starting Revit Batch Processor...Second Script Name here
 :: Launch processes asynchronously, with stream 9 redirected to a lock file.
 :: The lock file will remain locked until the script ends.
 start "TaskBetaOne" 9>"%lock%1" %targetPath% --settings_file "C:\temp\SettingsBeta1.json"
+
+:: wait a few seconds in between revit start ups
+timeout /t 15 /nobreak
+
 start "TaskBetaTwo" 9>"%lock%2" %targetPath% --settings_file "C:\temp\SettingsBeta2.json"
 
 :WaitTwo for both processes to finish (wait until lock files are no longer locked)

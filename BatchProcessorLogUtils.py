@@ -31,14 +31,14 @@
 #   - find files processed:
 #            11/12/2020 18:01:40 : Processing Revit file (1 of 1) in Revit 2020 session.
 #            11/12/2020 18:01:40 : 
-#            11/12/2020 18:01:40 : 	P:\filepath\fileName.rvt
+#            11/12/2020 18:01:40 : 	P:\something\FileName.rvt
 #            ....
 #            25/11/2020 09:37:34 : 	- Operation completed.
 #   - check whether an exception occured when processing any of the above files:
 #       - file(s) not found 
 #           "WARNING: The following Revit Files do not exist"
 #       - .net exception 
-#           "Exception: [Exception]"
+#           "ERROR: An error occurred while executing the task script!"
 #       - timed out occured and revit process got killed
 #           "WARNING: Timed-out"
 #   - delete process id pointer file
@@ -131,7 +131,7 @@ def GetLogFiles(listOfSessionIds):
                 print('File is to old')
     return logfiles
 
-# method readinmg the first two rows of a log file to get the session Id used
+# method reading the first two rows of a log file to get the session Id used
 #
 # filePath: fully qualified file path to log file
 def GetSessionIdFromLogFile(filePath):
@@ -169,6 +169,7 @@ def GetTextBetween(text, first, last):
     return text[start:end]
 
 # returns the message string from json formatted message field in log file
+# thins includes leading tab characters
 #
 # data: json formatted row of logfile
 def GetMessageFromJson(data):
@@ -199,7 +200,7 @@ def ProcessLogFile(filePath):
         filesProcessStatus.append(dummy)
     # add files not found
     for f in filesNotFound:
-        dummy = [f, False, 'File not found']
+        dummy = [f[0], False, ['File not found']]
         filesProcessStatus.append(dummy)
     return filesProcessStatus
 
@@ -213,7 +214,7 @@ def filterFilesNotyFound(filesProcessed, filesNotFound):
     filteredList = []
     for fileName,status in filesProcessed:
         flag = False
-        for fn in filesNotFound:
+        for fn, fnStatus in filesNotFound:
             if(fn == fileName):
                 flag = True
                 break
@@ -229,7 +230,7 @@ def GetProcessStatus(fileToCheck, logFilePath):
     message = ['Ok']
     jsonData = ReadLogFile(logFilePath)
     # get data block showing how each file was processed
-    unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, 'Processing file (', 'Operation completed.', True)
+    unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, 'Processing Revit file (', '\t- Operation completed.', True)
     processStatus = True
     # loop over messages in this block and check for time out, and exception messages
     for mblock in  unformattedRevitFileProcessMessages:
@@ -239,9 +240,9 @@ def GetProcessStatus(fileToCheck, logFilePath):
         if(fileName == fileToCheck):
             for m in mblock:
                 # check for exceptions
-                if('Exception: [Exception]' in m or 'WARNING: Timed-out' in m):
+                if('ERROR: An error occurred while executing the task script! Operation' in m or 'WARNING: Timed-out' in m):
                     processStatus = False
-                    message = m
+                    message = [m.strip()]
                     break
     return processStatus, message
         
@@ -250,10 +251,9 @@ def GetProcessStatus(fileToCheck, logFilePath):
 # mblock: list of json formatted rows representing all messages received during file process
 # returns the fully qualified file path of the file processed
 def GetFileNameFromDataBlock(mblock):
-    # file name is in first row
-    # "\t- Processing file (1 of 2): P:\\18\\1803009.000\\Design\\BIM\\_Revit\\1.0 Project Files\\1803009.000_AR_LEVELS & GRIDS_RVT19.rvt"
-    start = mblock[0].index('): ') + len('): ')
-    fileName = mblock[0][start:]
+    # file name is in third row
+    # "message":{"msgId":"","message":"\tP:something\\AR_1904021_CTC_RHINO MAPPER FILE_2020.rvt"
+    fileName = mblock[2].Trim()
     return fileName
 
 # method reading a logfile and extracting all files processed
@@ -297,11 +297,10 @@ def GetFilesProcessed(filePath):
 def GetFileData(data):
     # trim white spaces from file name
     fileName = data[0].Trim()
+    filestatus = False
     # check whether file status contains a YES
     if ('YES' in data[1]):
         filestatus = True
-    else:
-        filestatus - False
     return [fileName,filestatus]  
 
 # filters list of all files meant to be processed and returns the one flagged as file not found
@@ -379,7 +378,7 @@ def ProcessLogFiles(folderPath):
                         logfileResults.append(d)
                 # store results in return object
                 for lfResults in logfileResults:
-                    listToStr = ' '.join(map(str, lfResults)) 
+                    listToStr = '\t'.join(map(str, lfResults)) 
                     returnvalue.AppendMessage(listToStr)
                 returnvalue.status = True
             else:

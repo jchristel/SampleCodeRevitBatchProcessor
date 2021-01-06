@@ -212,6 +212,23 @@ def DeleteSheets(doc, viewRules, collectorViews):
     result = DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
     return result
 
+# returns sheets matching filters provided
+# view rules: array in format [parameter name, condition test method, value to test against]
+def GetSheetsByFilters(doc, viewRules):
+    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    views = []
+    for v in collectorViews:
+        paras = v.GetOrderedParameters()
+        ruleMatch = True
+        for paraName, paraCondition, conditionValue in viewRules:
+            for p in paras:
+                if(p.Definition.Name == paraName):
+                    ruleMatch = ruleMatch and CheckParameterValue(p, paraCondition, conditionValue)
+        if (ruleMatch == True):
+            # delete view
+            views.append(v)
+    return views
+
 #----------------------------------------elements-----------------------------------------------
 
 # method deleting elements by list of element id's

@@ -181,3 +181,4 @@ Office Temp Files
 x64/
 .metadata
 *.pyc
+/.vs/slnx.sqlite

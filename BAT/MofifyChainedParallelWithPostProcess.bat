@@ -2,7 +2,7 @@
 :: - run 2 different task (Alpha and Beta) where each task itself is executed in 2 parallel running sessions (session 1 and 2) of batchprocessor
 ::    - session 1 and 2 use two different settings files where the only difference between them is the task file list. All other settings are identical.
 :: - task Beta is dependent on task Alpha to finish first before it can start
-:: - run a post process script outside of the revit environment whcih will only start off after all task Beta sessions have finished processing  
+:: - run a post process script outside of the revit environment which will only start off after all task Beta sessions have finished processing  
 
 :: based on stack overflow scripts:
 :: https://stackoverflow.com/questions/18758502/wait-for-multiple-applications-run-asynchronously-from-batch-file-to-finish
@@ -81,7 +81,7 @@ echo [python folder path: %pythonPath%]
 
 call %pythonPath% "C:\temp\PostProcessingScript.py"
 
-echo Cleaning up : Done
+echo Post Processing : Done
 echo.
 echo ********************************************************************************
 

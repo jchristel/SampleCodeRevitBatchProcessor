@@ -24,6 +24,7 @@
 import clr
 import System
 import sys
+import time
 
 
 clr.AddReference('System.Core')
@@ -34,7 +35,7 @@ clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
 
 # custom result class
 import Result as res
-
+import revit_script_util
 from System.IO import Path
 from Autodesk.Revit.DB import *
 
@@ -215,8 +216,13 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
             returnvalueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported,Export3DViewsToIFC')
     return returnvalue
+
+def Output(message = ''):
+        revit_script_util.Output(str(message))
+ 
+
 
 def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
     # check if file extension is not none
@@ -259,7 +265,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
             returnvalueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported,Export3DViewsToIFCDefault')
     return returnvalue
 
 #-------------------------------------------- NWC EXPORT -------------------------------------
@@ -289,10 +295,13 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     returnvalue = res.Result()
     try:
         #export to NWC
-        doc.Export(directoryPath, fileName, nwcExportOption)
+        v = doc.Export(directoryPath, fileName, nwcExportOption)
+        Output('sucessfully exported!')
+        Output(v)
         returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed to export to NWC with exception: ' + str(e))
+        Output(str(e))
     return returnvalue
 
 # method exporting the entire model to NWC
@@ -305,20 +314,30 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
 def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
     returnvalue = res.Result()
     viewsToExport = []
+   
     # get all 3D views in model and filter out views to be exported
     views = com.GetViewsofType(doc, ViewType.ThreeD)
+   
     for v in views:
+        
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
     # export those views one by one
     if(len(viewsToExport) > 0):
+        
         for exportView in viewsToExport:
+            Output(exportView.Name)
             returnvalueByView = res.Result()
             # store view ID in export option
             nwcExportOption.ViewId = exportView.Id
+            
             fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
+
             returnvalueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+            Output(directoryPath)
+            
+            Output(returnvalueByView)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported, Export3DViewsToNWC')
     return returnvalue

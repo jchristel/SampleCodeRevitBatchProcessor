@@ -28,19 +28,30 @@
 
 import clr
 import System
+import os
+
 
 # flag whether this runs in debug or not
-debug_ = True
+debug_ = False
 
 # --------------------------
 # default file path locations
 # --------------------------
 # store output here:
-rootPath_ = r'C:\temp'
+rootPath_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor\Exported Files'
 # path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
+commonlibraryDebugLocation_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Export.rvt'
+debugRevitFileName_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor\TBS-PH1_3DREF_R06_2021-01-29_GPLA_ARC_TMP.rvt'
+
+# output messages either to batch processor (debug = False) or console (debug = True)
+def Output(message = ''):
+    if not debug_:
+        revit_script_util.Output(str(message))
+    else:
+        print (message)
+
+
 
 # Add batch processor scripting references
 if not debug_:
@@ -49,8 +60,13 @@ if not debug_:
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
+    
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
+    Output('*************Path is:*************')
+    Output(revitFilePath_)
+    
+    
 else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
@@ -67,12 +83,7 @@ clr.ImportExtensions(System.Linq)
 
 from Autodesk.Revit.DB import *
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        revit_script_util.Output(str(message))
-    else:
-        print (message)
+
 
 # -------------
 # my code here:
@@ -100,31 +111,39 @@ def IFCExportViewDefault(doc):
 def ModifyNWCExportByView(doc):
     returnvalue = res.Result()
     nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
-    returnvalue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+    Output('calling Export3DViewsToNWC')
+    returnvalue = rex.Export3DViewsToNWC(doc, None, nwcExportOption,  rootPath_)
     return returnvalue
 
 def ModifyNWCExportModel(doc):
     returnvalue = res.Result()
     nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
-    returnvalue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+    Output('calling ExportModelToNWC')
+    #get Revit File Name
+    fileName = os.path.basename(revitFilePath_)
+    #remove .rvt extension
+    fileName = fileName[:-4]
+    Output(fileName)
+    
+    returnvalue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, fileName + '.nwc')
     return returnvalue
 
 Output('Exporting.... start')
 
 # export to IFC file format - view
-flagExportIFC_ = IFCExportView(doc)
+#flagExportIFC_ = IFCExportView(doc)
 # export to IFC file format - view but use default ootb ifc exporter
-flagExportIFCDefault_ = IFCExportViewDefault(doc)
-flagExportIFC_.Update(flagExportIFCDefault_)
+#flagExportIFCDefault_ = IFCExportViewDefault(doc)
+#flagExportIFC_.Update(flagExportIFCDefault_)
 
 # nwc by model
 flagExportNWCModel_ = ModifyNWCExportModel(doc)
-flagExportIFC_.Update(flagExportNWCModel_)
+#flagExportIFC_.Update(flagExportNWCModel_)
 
 # nwc by view
-flagExportNWCThreeDViews_= ModifyNWCExportByView(doc)
-flagExportIFC_.Update(flagExportNWCThreeDViews_)
+#flagExportNWCThreeDViews_= ModifyNWCExportByView(doc)
+#flagExportIFC_.Update(flagExportNWCThreeDViews_)
 
-Output(flagExportIFC_.message + ' :: ' + str(flagExportIFC_.status))
+#Output(flagExportIFC_.message + ' :: ' + str(flagExportIFC_.status))
 
 Output('Exporting.... finished ')

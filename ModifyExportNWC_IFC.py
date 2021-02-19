@@ -38,11 +38,11 @@ debug_ = False
 # default file path locations
 # --------------------------
 # store output here:
-rootPath_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor\Exported Files'
+rootPath_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\04.REVIT\01. SCRIPTS\OUTPUT'
 # path to Common.py
-commonlibraryDebugLocation_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor'
+commonlibraryDebugLocation_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\04.REVIT\01. SCRIPTS\SampleCodeRevitBatchProcessor'
 # debug mode revit project file name
-debugRevitFileName_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor\TBS-PH1_3DREF_R06_2021-01-29_GPLA_ARC_TMP.rvt'
+debugRevitFileName_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\04.REVIT\01. SCRIPTS\INPUT\Revit Files\TBS-PH1_3DREF_R06_2021-01-29_GPLA_ARC_TMP.rvt'
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):

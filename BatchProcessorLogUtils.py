@@ -54,7 +54,7 @@ import json
 
 from System.IO import Path
 
-commonlibraryDebugLocation_ = r'C:\temp'
+commonlibraryDebugLocation_ = r'D:\TBS.GT.INTERNAL\01.PROJECT_INFO\06.AUTOMATION\01.NAVIS\05.SCRIPTS\Revit Batch Processor'
 #set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)

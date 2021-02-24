@@ -25,8 +25,10 @@ import sys, getopt, os
 # to get to the root folder of this repo
 # sys.path.insert(0,'../..')
 
-#import file item class
+# import file item class
 import FileItem as fi
+# import file list methods
+import FileList as fl
 # import UI class
 import UIFileSelect as UIFs
 # import settings class
@@ -45,23 +47,23 @@ def main(argv):
         # check a to serch for files is to include sub dirs
         if(settings.inclSubDirs):
             # get revit files in input dir and subdirs
-            revitfiles = getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+            revitfiles = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
         else:
             # get revit files in input dir
-            revitfiles = getRevitFiles(settings.inputDir, settings.revitFileExtension)
+            revitfiles = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
         if(len(revitfiles) > 0):
             # lets show the window
             ui = UIFs.MyWindow(xamlFullFileName_, revitfiles, settings)
             uiResult = ui.ShowDialog()
             if(uiResult):
                 # build bucket list
-                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, getFileSize)
+                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, fl.getFileSize)
                 # write out file lists
                 counter = 0
                 for bucket in buckets:
                     fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
-                    statusWrite = writeRevitTaskFile(fileName, bucket)
-                    print ('Wrote file ' + fileName + ' [' + str(statusWrite) + ']')
+                    statusWrite = fl.writeRevitTaskFile(fileName, bucket)
+                    print (statusWrite.message)
                     counter += 1
                 print('Finished writing out task files')
                 sys.exit(0)
@@ -76,54 +78,6 @@ def main(argv):
     else:
         # invalid or no args provided... get out
         sys.exit(1)
-
-# helper used to define workload size (same as file size)
-def getFileSize(item):
-    return item.size
-
-# method writing out task files
-def writeRevitTaskFile(fileName, bucket):
-    status = True
-    try:
-        f = open(fileName, 'w')
-        for p in bucket.items:
-            f.write('\n' + p.name)
-        f.close()
-    except Exception as e:
-        status = False
-    return status
-
-# helper method retrieving revit files in a given directory and of a given file extension
-def getRevitFiles(directory, fileExtension):
-    files = []
-    listOfFiles = os.listdir(directory)
-    for f in listOfFiles:
-        # check for file extension match
-        if(f.lower().endswith(fileExtension.lower())):
-            # Use join to get full file path.
-            location = os.path.join(directory, f)
-
-            # Get size and add to list of files.
-            size = os.path.getsize(location)
-        
-            files.append(fi.MyFileItem(location,size))
-    return files
-
-# helper method retrieving revit files in a given directory and its subdirectories 
-# and of a given file extension
-def getRevitFilesInclSubDirs(directory, fileExtension):
-    files = []
-    # Get the list of all files in directory tree at given path
-    listOfFiles = list()
-    for (dirpath, dirnames, filenames) in os.walk(directory):
-        listOfFiles += [os.path.join(dirpath, file) for file in filenames]
-    for f in listOfFiles:
-        # check for file extension match
-        if(f.lower().endswith(fileExtension.lower())):
-            # Get size and add to list of files.
-            size = os.path.getsize(f)
-            files.append(fi.MyFileItem(f,size))
-    return files
 
 # argument processor
 def processArgs(argv):

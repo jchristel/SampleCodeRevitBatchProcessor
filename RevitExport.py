@@ -108,7 +108,7 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = True # by view
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True

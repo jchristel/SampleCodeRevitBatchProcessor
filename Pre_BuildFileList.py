@@ -24,7 +24,7 @@
 #
 
 # sample description
-# this sample shows how to build a task list file (used as a pre-process)
+# this sample shows how to build a task list file (used as a pre-process) using FileList module
 
 import clr
 import System
@@ -35,12 +35,14 @@ debug_ = True
 # --------------------------
 # default file path locations
 # --------------------------
-# store output here:
+# directory containing files
 rootPath_ = r'C:\temp'
+# store task files lists here
+rootPathExport_ = r'C:\temp'
 # path to Common.py
 commonlibraryDebugLocation_ = r'C:\Project\Git\SampleCodeRevitBatchProcessor'
-# directory containing files
-sourcePath_ = r'C:\temp'
+# number of task list files to be written out
+taskFilesNumber_ = 1
 
 # Add batch processor scripting references
 if not debug_:
@@ -50,12 +52,8 @@ if not debug_:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 
-# import common library (in this case the post lib since it got the methods we are after)
-import Common_Post as cp
-from Common_Post import *
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
+# import file list module
+import FileList as fl
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -68,27 +66,12 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-def WriteFileList():
-    status = True
-    try:
-        f = open(rootPath_ + '\\ProcessThis.txt', 'w')
-        files = cp.GetFiles(sourcePath_)
-        if(files != None and len(files) > 0):
-            for file in files:
-                f.write(file + '\n')
-        f.close()
-    except Exception as e:
-        status = False
-        Output('Failed to save file list!')
-        Output (str(e))
-    return status
-
 # -------------
 # main:
 # -------------
 
 # get file data
 Output('Writing file Data.... start')
-result_ = WriteFileList()
-Output('Writing file Data.... status: ' + str(result_))
-Output('Writing file Data.... finished: ' + rootPath_  + '\\ProcessThis.txt')
+result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
+Output (result_.message)
+Output('Writing file Data.... status: ' + str(result_.status))

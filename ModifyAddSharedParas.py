@@ -59,12 +59,10 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
 import Result as res
-from Result import *
 import RevitSharedParameterAdd as paraAdd
-from RevitSharedParameterAdd import *
+
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

@@ -30,6 +30,7 @@
 
 import clr
 import System
+import datetime
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -62,10 +63,9 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
+import Utility as util
 import Result as res
-from Result import *
 
 
 clr.AddReference('System.Core')
@@ -87,10 +87,10 @@ def Output(message = ''):
 def GetSheets(doc, sheetFilterRules):
     results = []
     # get sheets where revisions need to be applied to:
-    revitFileName = com.GetRevitFileName(revitFilePath_)
+    revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
     for fileName, sheetRules in sheetFilterRules:
         if (revitFileName.startswith(fileName)):
-            results = GetSheetsByFilters(doc, sheetRules)
+            results = com.GetSheetsByFilters(doc, sheetRules)
             break
     return results
 
@@ -138,7 +138,7 @@ def AddRevToDocument(doc):
             ids.Add(newRev.Id)
         result.result = ids
     except Exception as e:
-        result.UpdateSep(False, 'Failed to create revisions')
+        result.UpdateSep(False, 'Failed to create revisions: ' + str(e))
     return result
 
 # adds revisions to single sheet
@@ -157,8 +157,8 @@ def AddRevsToSheet(doc, sheet, revIds):
 
 def AddRevsToSheetsRequired(doc, sheetFilterRules):
     result = res.Result()
-    # get sheet to which revisions are to be applied
-    sheetsInModelFiltered = GetSheets(doc)
+    # get sheet to which revisions are to be appliedß
+    sheetsInModelFiltered = GetSheets(doc, sheetFilterRules)
     if(len(sheetsInModelFiltered) > 0 ):
         # set up revision
         revIdResult = AddRevToDocument(doc)
@@ -166,7 +166,7 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
         if(revIdResult.status):
             revIds = revIdResult.result
             # get sheets where revisions need to be applied to:
-            revitFileName = com.GetRevitFileName(revitFilePath_)
+            revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
             for fileName, sheetRules in sheetFilterRules:
                 if (revitFileName.startswith(fileName)):
                     # add revisions to sheets:
@@ -196,10 +196,10 @@ revisionsToAdd_ = [
 
 # sheets to add revisions to rules 
 sheetRules_ = [
-    ['FileOne',[['Parameter Name', com.ConDoesNotEqual, 'Parameter Value']]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
+    ['FileOne',[['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
     ['FileTwo', [
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value']
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
     ]]# applies to file FileTwoBeforeName
 ]
 

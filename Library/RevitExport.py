@@ -43,8 +43,7 @@ from Autodesk.Revit.DB import *
 from BIM.IFC.Export.UI import IFCExportConfiguration
 
 # import common library
-import Common as com
-# from Common import *
+import CommonRevitAPI as com
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
@@ -70,6 +69,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
             # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
             actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
+            actionReturnValue.result = [directoryPath, fileName]
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
@@ -192,8 +192,8 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
 
     # set the coordinate system to use
     exIFC.AddOption('SitePlacement', coordOption)
-    
-    returnvalue = ExportToIFC(doc, exIFC, directoryPath, fileName)
+    returnvalueByModel = ExportToIFC(doc, exIFC, directoryPath, fileName)
+    returnvalue.Update(returnvalueByModel)
     return returnvalue
 
 # method exporting 3D views matching a filter (view starts with) to IFC
@@ -291,13 +291,16 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
         #export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
         returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
+        returnvalue.result = [directoryPath, fileName]
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed to export to NWC with exception: ' + str(e))
     return returnvalue
 
 # method exporting the entire model to NWC
 def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
-    returnvalue = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+    returnvalue = res.Result()
+    returnvalueByModel = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+    returnvalue.Update(returnvalueByModel)
     return returnvalue
 
 # method exporting 3D views matching a filter (view starts with) to NWC

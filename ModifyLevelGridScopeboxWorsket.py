@@ -59,8 +59,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common libraries
-import Common as com
-from Common import *
+import CommonRevitAPI as com
 import Result as res
 
 clr.AddReference('System.Core')
@@ -125,8 +124,8 @@ defaultWorksets_ = [
 ]
 
 # modify workset of levels, grids ands scope boxes
-flagModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
-Output(flagModifyWorkSets_.message + ' :: ' + str(flagModifyWorkSets_.status))
+statusModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
+Output(statusModifyWorkSets_.message + ' :: ' + str(statusModifyWorkSets_.status))
 
 # sync changes back to central
 if (doc.IsWorkshared and debug == False):

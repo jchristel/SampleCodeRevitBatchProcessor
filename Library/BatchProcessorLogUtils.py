@@ -61,6 +61,8 @@ sys.path.append(commonlibraryDebugLocation_)
 
 # custom result class
 import Result as res
+# library from commonlibraryDebugLocation_
+import Utility as util
 
 
 # method removing chevrons and replace colons with underscores in session id supplied by revit batch processor
@@ -104,6 +106,12 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
 def GetCurrentSessionIds(folderPath):
     ids = []
     file_list = glob.glob(folderPath + '\\*' + '.txt')
+    # delete marker files
+    resultDelete = True
+    for fd in file_list:
+        resultDelete = resultDelete & util.FileDelete(fd)
+    if(not resultDelete):
+        print ('Failed to delete a marker file!')
     for f in file_list:
         ids.append(AdjustSessionIdFileNameBack(Path.GetFileNameWithoutExtension(f)))
     return ids

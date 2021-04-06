@@ -21,8 +21,6 @@
 #
 #
 
-import System
-import clr
 
 # a class used to store work load items
 class WorkloadBucket: 

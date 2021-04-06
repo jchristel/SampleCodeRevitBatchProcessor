@@ -42,7 +42,7 @@ def DistributeWorkload (numerOfBuckets, items, getWorkloadSize):
         for item in items:
             itemToWorkLoadValues.append([item, getWorkloadSize(item)])
         
-        # sort list by workload size in descending order
+        # sort list by workload size in descending order (biggest item first)
         itemToWorkLoadValues = Sort(itemToWorkLoadValues)
         
         # load up with buckets
@@ -67,5 +67,5 @@ def Sort(sub_li):
     # reverse = None (Sorts in Ascending order) 
     # key is set to sort using second element of  
     # sublist lambda has been used 
-    sub_li.sort(key = lambda x: x[1]) 
+    sub_li.sort(key = lambda x: x[1], reverse = True) 
     return sub_li 

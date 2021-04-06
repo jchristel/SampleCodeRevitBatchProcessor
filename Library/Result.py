@@ -29,12 +29,17 @@ class Result:
     def __init__(self): 
         self.message = '-'
         self.status = True
-        self.result = None
+        self.result = []
     
     def Update(self, otherResult):
         try:
-            self.message = self.message + '\n' + otherResult.message
+            # check if default message string, if so do not update
+            if(otherResult.message is not '-'):
+                self.message = self.message + '\n' + otherResult.message
             self.status = self.status & otherResult.status
+            # check if result property that was passed in has values
+            if(otherResult.result is not None and len(otherResult.result)>0):
+                self.result.append(otherResult.result)
         except Exception as e:
             print (str(e))
             pass

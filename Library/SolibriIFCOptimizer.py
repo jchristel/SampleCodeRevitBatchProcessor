@@ -34,8 +34,8 @@ from System.IO import Path
 
 # custom result class
 import Result as res
-import Common_Post as cp
-from Common_Post import GetFiles
+import Utility as util
+
 
 # default install path for solibri ifc optimizer
 solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe'
@@ -46,9 +46,9 @@ solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimi
 def OptimizeAllIFCFilesinFolder(directoryPath):
     returnvalue = res.Result()
     # check if ifc optimizer is installed:
-    if(cp.FileExist(solibriInstallPath_)):
+    if(util.FileExist(solibriInstallPath_)):
         returnvalue.message = 'Solibri IFC optimizer is installed.'
-        ifcFiles = cp.GetFiles(directoryPath, '.ifc')
+        ifcFiles = util.GetFiles(directoryPath, '.ifc')
         filesToDelete = []
         filesToRename = []
         if(len(ifcFiles) > 0):
@@ -63,7 +63,7 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
                     # get the rename information
                     # contains old and new file name
                     rename = []
-                    p = cp.GetFolderPathFromFile(ifcFile)
+                    p = util.GetFolderPathFromFile(ifcFile)
                     if(p != ''):
                         newFilePath = str(p)+'\\'+ str(Path.GetFileNameWithoutExtension(ifcFile))+'_optimized.ifc'
                         rename.append(newFilePath)
@@ -74,13 +74,13 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
                     returnvalue.UpdateSep(False, 'Failed to optimize file: '+ str(ifcFile))
             # clean up
             for fileToDelete in filesToDelete:
-                statusDelete = cp.FileDelete(fileToDelete)
+                statusDelete = util.FileDelete(fileToDelete)
                 if(statusDelete):
                     returnvalue.AppendMessage('Deleted original file: ' + str(fileToDelete))
                 else:
                     returnvalue.UpdateSep(False,'Failed to delete original file: '+ str(fileToDelete))
             for fileToRename in filesToRename:
-                statusRename = cp.RenameFile(fileToRename[0], fileToRename[1])
+                statusRename = util.RenameFile(fileToRename[0], fileToRename[1])
                 if(statusRename):
                     returnvalue.AppendMessage('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
                 else:

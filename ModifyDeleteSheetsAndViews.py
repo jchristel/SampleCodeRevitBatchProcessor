@@ -63,8 +63,8 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common libraries
-import Common as com
-from Common import *
+import CommonRevitAPI as com
+import Utility as util
 import Result as res
 
 clr.AddReference('System.Core')
@@ -100,7 +100,7 @@ def ModifyViews(doc, revitFilePath, viewData):
     returnvalue.status = False
     returnvalue.message = 'No view data provided for current Revit file'
 
-    revitFileName = com.GetRevitFileName(revitFilePath)
+    revitFileName =  util.GetFileNameWithoutExt(revitFilePath)
     for fileName, viewRules in viewData:
         if (revitFileName.startswith(fileName)):
             collectorViews = FilteredElementCollector(doc).OfClass(View)
@@ -115,7 +115,7 @@ def ModifySheets(doc, sheets):
     returnvalue = res.Result()
     returnvalue.UpdateSep(False,'No sheet data provided for current Revit file')
     
-    revitFileName = com.GetRevitFileName(revitFilePath_)
+    revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
     # Output(sheets)
     for fileName, sheetRules in sheets:
         if (revitFileName.startswith(fileName)):
@@ -126,99 +126,33 @@ def ModifySheets(doc, sheets):
 
 #------------------view related end-----------------------
 
-#------------------ workset related
-
-# modifies worksets of levels, grids, scope boxes
-def Modify(doc, revitFilePath, gridData):
-    revitFileName = com.GetRevitFileName(revitFilePath)
-    foundMatch = False
-    returnvalue = res.Result()
-    for fileName, defaultWorksetName in gridData:
-        if (revitFileName.startswith(fileName)):
-            foundMatch = True
-            # fix uyp grids
-            collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
-            returnvalue.Update(grids)
-            
-            # fix up levels
-            collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
-            returnvalue.Update(levels)
-
-            # fix up scope boxes
-            collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
-            returnvalue.Update(sboxes)
-            
-            # fix up ref planes
-            collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
-            refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
-            returnvalue.Update(refPlanes)
-            
-            break
-    if (foundMatch == False):
-        returnvalue.UpdateSep(False, 'No workset data provided for current Revit file ' + revitFileName)
-    return returnvalue
-#------------------ workset related end-----------------------
-
 # -------------
 # main:
 # -------------
 
 
-# list containing the default file names:
-# [[revit host file name before save, revit host file name after save]]
-defaultFileNames_ = [
-    ['FileOneOneBeforeName', 'FileOneOneAfterName'],
-    ['FileOneTwoBeforeName', 'FileOneTwoAfterName'],
-    ['FileTwoBeforeName', 'FileTwoAfterName']
-]
-
-# list containing default worksets for levels grids, scope boxes
-defaultWorksets_ = [
-    ['FileOne', 'LEVELS AND GRIDS'],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
-    ['FileTwo', 'SHARED LEVELS AND GRIDS']# applies to file FileTwoBeforeName
-]
-
 # sheets to delete rules 
 sheetRules_ = [
-    ['FileOne',[['Parameter Name', com.ConDoesNotEqual, 'Parameter Value']]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
+    ['FileOne',[
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
+        ]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
     ['FileTwo', [
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value']
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
     ]]# applies to file FileTwoBeforeName
 ]
 
 # views to delete rules
 viewRules_ = [
     ['File',[
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', com.ConDoesNotEqual, 'Parameter Value']
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
+        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
     ]]
 ]
 
 #s ave revit file to new location
 Output('Modifying Revit File.... start')
-
-# flag indicating whether the file can be saved
-saveFile_ = True
-
-# check if worksharing needs to be enabled
-if (doc.IsWorkshared == False):
-    saveFile_ = com.EnableWorksharing(doc)
-    Output('Enabled worksharing.... status: ' + str(saveFile_.status))
-
-if (saveFile_):
-    result_ = com.SaveAs(doc, rootPath_ , revitFilePath_, defaultFileNames_)
-    Output(result_.message + ' :: ' + str(result_.status))
-else:
-    Output('Not Saving Revit File!!!')
-
-# fix up worksets....
-flagModifyWorkSets_ = Modify(doc, revitFilePath_, defaultWorksets_)
-Output('Changing levels and grids.... status: ' + str(flagModifyWorkSets_.status))
 
 # delete sheets
 resultDeleteSheets_ = ModifySheets(doc, sheetRules_)
@@ -232,7 +166,7 @@ Output(resultDeleteViews_.message + '.... status: ' + str(resultDeleteViews_.sta
 resultDeleteViewsNotOnSheets_ = com.DeleteViewsNotOnSheets(doc, CheckName)
 Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultDeleteViewsNotOnSheets_.status))
  
-# sync changes back to central
+# sync changes back to central, non workshared files will not be saved!
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)

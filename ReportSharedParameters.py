@@ -1,4 +1,4 @@
-﻿#!/usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -24,7 +24,8 @@
 #
 
 # sample description
-# how to report on worksets
+# how to report on shared parameters
+# note: shared parameters introduced to a project through a family do not report their category bindings through the below...
 
 import clr
 import System
@@ -40,7 +41,7 @@ rootPath_ = r'C:\temp'
 # path to Common.py
 commonlibraryDebugLocation_ = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_worksets.rvt'
+debugRevitFileName_ = r'C:\temp\Test_sharedPara.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -55,12 +56,11 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
+# set path to common library
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 # import common library
-import Common as com
-from Common import *
+import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -78,31 +78,47 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-# build output file name
-fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
+# returns all paramterbindings for a given parameter
+def ParamBindingExists(doc, paramName, paramType):
+    categories = []
+    map = doc.ParameterBindings
+    iterator = map.ForwardIterator()
+    iterator.Reset()
+    while iterator.MoveNext():
+        if iterator.Key != None and iterator.Key.Name == paramName and iterator.Key.ParameterType == paramType:
+            elemBind = iterator.Current
+            for cat in elemBind.Categories:
+                categories.append(cat.Name)
+            break
+    return ('[' + str(','.join(categories)) + ']')
 
 # method writing out shared parameter information
-def writeWorksetData(doc, fileName):
+def writeSharedData(doc, fileName):
     status = True
     try:
         f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'ISVISIBLEBYDEFAULT', '\n']))
-        for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-            f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), com.EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
+        f.write('\t'.join(['HOSTFILE', 'GUID', 'ID', 'NAME', '\n']))
+        for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
+            pdef = p.GetDefinition()
+            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), p.GuidValue.ToString(), str(p.Id.IntegerValue), util.EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
         f.close()
     except Exception as e:
         status = False
-        Output('Failed to write data file! ' + fileName + ' with exception: ' + str(e))
+        Output('Failed to write data file!' + fileName)
+        Output (str(e))
     return status
 
 # -------------
 # main:
 # -------------
 
-Output('Writing Workset Data.... start')
+# build output file name
+fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
 
-# write out workset data
-result_ = writeWorksetData(doc, fileName_)
+Output('Writing Shared Parameter Data.... start')
 
-Output('Writing Workset Data.... status: ' + str(result_))
-Output('Writing Workset Data.... finished ' + fileName_)
+#write out shared parameter data
+result_ = writeSharedData(doc, fileName_)
+
+Output('Writing Shared Parameter Data.... status: ' + str(result_))
+Output('Writing Shared Parameter Data.... finished ' + fileName_)

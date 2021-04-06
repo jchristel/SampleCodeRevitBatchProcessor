@@ -1,15 +1,12 @@
 # based on building coder article:
 # https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
 
-import clr
-import System
 from Autodesk.Revit.DB import *
 
 # custom result class
 import Result as res
-# import InTransaction from common module
-import Common as com
-from Common import InTransaction
+# import revit api module
+import CommonRevitAPI as com
 
 # opens a shared parameter file
 def LoadSharedParameterFile(doc, path):

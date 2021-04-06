@@ -59,8 +59,7 @@ else:
 import sys
 sys.path.append(commonlibraryDebugLocation_)
 # import common library
-import Common as com
-from Common import *
+import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -95,12 +94,12 @@ def WriteType (action, description, fileName, doc):
                         materialName = str(GetMaterialbyId (csl.MaterialId, doc))
                         wallTypeName = str(Element.Name.GetValue(wt))
                         function = str(csl.Function)
-                        width = str(csl.Width*304.8)
-                        f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(wallTypeName), function, width, com.EncodeAscii(materialName), '\n']))
+                        width = str(csl.Width * 304.8) #conversion from imperial to metric
+                        f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(wallTypeName), function, width, util.EncodeAscii(materialName), '\n']))
                 else:                 
-                    f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(Element.Name.GetValue(wt)), '\n']))
+                    f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(Element.Name.GetValue(wt)), '\n']))
             except Exception:
-                f.write('\t'.join([com.GetRevitFileName(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
+                f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
     except Exception as e:
         status = False
         Output('Failed to write data file! ' + fileName +' with exception '+str(e))
@@ -135,7 +134,7 @@ def actionWT():
 # -------------
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Wall Type Data.... start')
 #write out wall type data

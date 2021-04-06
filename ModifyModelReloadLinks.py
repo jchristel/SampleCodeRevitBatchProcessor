@@ -62,8 +62,9 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
+import Utility as util
+
 # import Result as res not required in this module
 
 clr.AddReference('System.Core')
@@ -91,7 +92,7 @@ def LinkName(name):
 # -------------
 # main:
 # -------------
-hostName_ = com.GetOutPutFileName(revitFilePath_)
+hostName_ = util.GetOutPutFileName(revitFilePath_)
 
 # list containing directories where Revit links are located:
 # ['Directory path 1', 'Directory path 2']

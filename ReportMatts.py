@@ -44,7 +44,6 @@ debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
 # Add batch processor scripting references
 if not debug_:
     import revit_script_util
-    from revit_script_util import Output
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
@@ -62,8 +61,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import Utility as util
 
 from Autodesk.Revit.DB import *
 
@@ -80,7 +78,7 @@ def Output(message = ''):
 def WriteType (action, description, fileName, doc):
     status = True
     collector = action()
-    print ('Writing ' + description +'....')
+    Output ('Writing ' + description +'....')
     f = open(fileName, 'w')
     f.write('\t'.join(['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE', '\n']))
     try:
@@ -97,10 +95,10 @@ def WriteType (action, description, fileName, doc):
                     elif(p.StorageType == StorageType.String):
                         if(p.AsString() != None and p.AsString() != ''):
                             pValue = p.AsString()                    
-                    f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id), com.EncodeAscii(Element.Name.GetValue(wt)), com.EncodeAscii(paraName), com.EncodeAscii(pValue), '\n']))
+                    f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(Element.Name.GetValue(wt)), util.EncodeAscii(paraName), util.EncodeAscii(pValue), '\n']))
             except Exception as e:
-                Output('Failed to get material data')
-                f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(wt.Id),com.EncodeAscii(Element.Name.GetValue(wt)),'\n']))
+                Output('Failed to get material data: ' + str(e))
+                f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id),util.EncodeAscii(Element.Name.GetValue(wt)),'\n']))
     except:
         status = False
         Output('Failed to write data file!' + fileName)
@@ -118,7 +116,7 @@ def actionMat():
 # -------------
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_)
+fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
 
 Output('Writing Material Data.... start')
 result_ = WriteType (actionMat, 'Materials', fileName_, doc)

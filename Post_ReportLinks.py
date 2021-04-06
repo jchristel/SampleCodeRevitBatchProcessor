@@ -50,8 +50,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common_Post as cp
-from Common_Post import *
+import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -73,8 +72,8 @@ def Output(message = ''):
 
 # combine data
 Output('Writing summary Data.... start')
-dateStamp_ = cp.GetFileDateStamp()
-cp.CombineFiles(rootPath_, dateStamp_, '_CAD','.txt', dateStamp_ + '_CAD_Links_summary.txt')
+dateStamp_ = util.GetFileDateStamp()
+util.CombineFiles(rootPath_, dateStamp_, '_CAD','.txt', dateStamp_ + '_CAD_Links_summary.txt')
 Output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
-cp.CombineFiles(rootPath_, dateStamp_, '_RVT','.txt', dateStamp_ + '_RVT_Links_summary.txt')
+util.CombineFiles(rootPath_, dateStamp_, '_RVT','.txt', dateStamp_ + '_RVT_Links_summary.txt')
 Output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')

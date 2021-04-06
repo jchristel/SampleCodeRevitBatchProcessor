@@ -60,10 +60,9 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
 import Result as res
-from Result import *
+
 
 
 clr.AddReference('System.Core')
@@ -109,7 +108,7 @@ def AddRevToDocument(doc):
             ids.Add(newRev.Id)
         result.result = ids
     except Exception as e:
-        result.UpdateSep(False, 'Failed to create revisions')
+        result.UpdateSep(False, 'Failed to create revisions: ' + str(e))
     return result
 
 # -------------
@@ -139,7 +138,7 @@ if(debug_ == False):
   else:
       #none work shared
       Output('Add revision.... Saving non norkshared file: start')
-      doc.SaveAs(revitFilePath)
+      doc.SaveAs(revitFilePath_)
       Output('Add revision.... Saving non norkshared file: finished')
 
 Output('Add revision.... finished ')

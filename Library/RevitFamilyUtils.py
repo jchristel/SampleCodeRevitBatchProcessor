@@ -31,10 +31,8 @@ from System.Collections.Generic import List
 
 
 # import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
 import Result as res
-from Result import *
 import RevitFamilyLoadOption as famLoadOpt
 from RevitFamilyLoadOption import *
 

@@ -61,8 +61,8 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
+import Utility as util
 import Result as res
 
 clr.AddReference('System.Core')
@@ -113,10 +113,10 @@ def ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
 
 
 # get the revit link instance data
-def  ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
+def ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
     returnvalue = res.Result()
     # get the target workset id
-    targetWorksetId = com.GetWorksetIdbyName(doc, workSetName)
+    targetWorksetId = com.GetWorksetIdByName(doc, workSetName)
     # check if workset still exists
     if(targetWorksetId != ElementId.InvalidElementId):
         # loop over instances and find match
@@ -129,7 +129,7 @@ def  ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
             linkTypeNameParts = p.Name.split(':')
             if(len(linkTypeNameParts) == 3):
                 lN = linkTypeNameParts[0][0:-1]
-                linkInstanceNameEncoded = com.EncodeAscii(lN[0:-1])
+                linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
                 if (lN.startswith(linkName)):
                     if (instanceWorksetName != workSetName):
                         # change the workset of the link instance
@@ -148,7 +148,7 @@ def ModifyRevitLinkData(doc, revitFilePath, linkData):
     returnvalue = res.Result()
     match = False
     try:
-        revitFileName = com.GetRevitFileName(revitFilePath)
+        revitFileName = util.GetFileNameWithoutExt(revitFilePath)
         for fileName, worksetData in linkData:
             if (revitFileName.startswith(fileName)):
                 match = True   

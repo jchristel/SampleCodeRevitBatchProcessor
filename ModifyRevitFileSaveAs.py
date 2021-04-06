@@ -61,8 +61,8 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 #import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
+
 # import Result as res #not required in this module
 
 clr.AddReference('System.Core')
@@ -92,11 +92,9 @@ defaultFileNames_ = [
 
 # save revit file to new location
 Output('Modifying Revit File.... start')
-result_ = com.SaveAs(doc, revitFilePath_, defaultFileNames_)
+result_ = com.SaveAs(doc, rootPath_, revitFilePath_, defaultFileNames_)
 
 # make further changes as required....
-
-
 Output('Modifying Revit File.... status: ' + str(result_.status))
 
 # sync changes back to central

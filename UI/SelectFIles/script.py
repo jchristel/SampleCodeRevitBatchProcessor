@@ -37,7 +37,6 @@ import FileSelectSettings as set
 import Workloader as wl
 import WorkloadBucket as wlb
 
-
 # main method
 def main(argv):
     # get arguments
@@ -93,7 +92,7 @@ def processArgs(argv):
         print ('test.py -s -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
     for opt, arg in opts:
         if opt == '-h':
-            print 'test.py -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>'
+            print ('test.py -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
         elif opt in ("-s", "--subDir"):
             includeSubDirsInSearch = True
         elif opt in ("-i", "--inputDir"):
@@ -148,7 +147,7 @@ def FileExist(path):
     return value
 
 # the directory this script lives in
-currentScriptDir_ = GetFolderPathFromFile(sys.path[0])
+currentScriptDir_ = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])
 
 # xaml file name
 xamlfile_ = 'ui.xaml'

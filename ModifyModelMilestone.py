@@ -70,13 +70,10 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
-# import Result as res #not required in this module
-
+import CommonRevitAPI as com
 # folder methods are in here:
-import Common_Post as cp
-from Common_Post import *
+import Utility as util
+
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -94,43 +91,21 @@ def Output(message = ''):
 # my code here:
 # -------------
 
-def CreateFolder(root, folderName):
-    dirName = path.join(root,folderName)
-    flag = True
-    try:
-        # Create target Directory
-        Output('Creating directory ' + dirName)
-        os.mkdir(dirName)
-    except Exception:
-        flag = False
-    return flag
-    
-def CreateTargetFolder(targetLocation, folderName):
-    returnFolderName = folderName
-    #check if folder exists
-    flag = False
-    if(path.exists(targetLocation + '\\' + folderName) == False):
-        flag = CreateFolder(targetLocation, folderName)
-    else:
-        #create new folder
-        flag = True
-    return flag, returnFolderName
-
 # -------------
 # main:
 # -------------
 
-
 # list containing the default file name:
 # which in case of this back up is the same as the current file name
 # [[revit host file name before save, revit host file name after save]]
-defaultFileNames_ = [[com.GetRevitFileName(revitFilePath_), com.GetRevitFileName(revitFilePath_)]]
+defaultFileNames_ = [[util.GetFileNameWithoutExt(revitFilePath_), util.GetFileNameWithoutExt(revitFilePath_)]]
 
 #save revit file to new location
 Output('Modifying Revit File.... start')
 
 # get mile stone folder
-flagGotFolder_, milestonePath_ = CreateTargetFolder(rootPath_, cp.GetFolderDateStamp() + str('_Milestone'))
+milestonePath_ = rootPath_ + '\\' + util.GetFolderDateStamp() + str('_Milestone')
+flagGotFolder_ = util.CreateTargetFolder(rootPath_, util.GetFolderDateStamp() + str('_Milestone'))
 # do we have a valid folder?
 if (flagGotFolder_):
     # save new central file to back up folder
@@ -142,6 +117,6 @@ if (flagGotFolder_):
         syncing_ = com.SyncFile (doc)
         Output('Syncing to Central: finished ' + str(syncing_.status))
 else:
-    Output('failed to create target folder ' + rootPath_ + '\\' + cp.GetFolderDateStamp() + str('_Milestone'))
+    Output('failed to create target folder ' + rootPath_ + '\\' + util.GetFolderDateStamp() + str('_Milestone'))
 
 ('Modifying Revit File.... finished ')

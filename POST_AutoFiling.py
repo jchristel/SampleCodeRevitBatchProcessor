@@ -58,8 +58,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library (in this case the post lib since it got the methods we are after)
-import Common_Post as cp
-from Common_Post import *
+import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -103,7 +102,7 @@ def CopyNWCFiles():
     fileFilter = '*.nwc'
     # check whether any files match the filter
     for nwcFileNameStart, nwcTargetFolder in defaultNWCLocations_:
-        files = cp.GetFilesWithFilter(sourcePath_, fileFilter, nwcFileNameStart + '*')
+        files = util.GetFilesWithFilter(sourcePath_, fileFilter, nwcFileNameStart + '*')
         if(files != None and len(files) > 0):
             Output('Copying nwc Files...' + str(len(files)))
             for file in files:
@@ -160,12 +159,12 @@ def CreateTargetFolder(targetLocation, folderName):
 def MoveFiles(fileData):
     status = True
     # get the date stamp
-    folderName = cp.GetFolderDateStamp() + str('_Models')
+    folderName = util.GetFolderDateStamp() + str('_Models')
     for fileFilter, targetLocation in fileData:
         # check if target root path still exists
         if(path.exists(targetLocation)):
             # check whether any files match the filter
-            files = cp.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
+            files = util.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
             # copy any *.nwc files into the right folders first
             CopyNWCFiles()
             # move files into file in location
@@ -278,10 +277,10 @@ def GetMatch(fileExtension, nameFilter):
     revision = '-'
     # check whether valid name filter otherwise return '-'
     if(nameFilter is not ''):
-        files = cp.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
+        files = util.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
         if (files is not None and len(files) > 0):
             # got a match
-            returnValue = cp.GetFolderDateStamp()
+            returnValue = util.GetFolderDateStamp()
             # get the revision
             revision = GetRevision(files[0])
     return returnValue, revision

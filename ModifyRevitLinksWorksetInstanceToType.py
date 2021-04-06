@@ -24,7 +24,7 @@
 #
 
 # sample description
-# this sample moves revit link instances onto the same workset than the corresponding link type
+# this sample moves revit link types onto the same workset than the corresponding link instance
 
 import clr
 import System
@@ -34,7 +34,7 @@ import os.path as path
 debug_ = False
 
 # --------------------------
-# default file path locations
+#d efault file path locations
 # --------------------------
 # store output here:
 rootPath_ = r'C:\temp'
@@ -49,11 +49,11 @@ if not debug_:
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
+    # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
-    #get default revit file name
+    # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
 # set path to common library
@@ -61,8 +61,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import CommonRevitAPI as com
 import Result as res
 
 clr.AddReference('System.Core')
@@ -90,56 +89,53 @@ def GetWorksetNamebyId(doc, Id):
     return name
     
     
-# returns Revit Link Type data
-def GetRevitLinkTypeDataByName(revitLinkName, doc):
+# returns Revit Link Instance data
+def GetRevitInstanceDataByName(revitLinkName, doc):
+    match = False
     # default values
-    typeWorksetName = 'unknown'
-    for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
-        # Output('['+str(revitLinkName)+'][' + str(Element.Name.GetValue(p))+']')
-        if (Element.Name.GetValue(p) == revitLinkName):
-            wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-            typeWorksetName = wsparam.AsValueString()
-            break
-    return com.GetWorksetIdbyName(doc, typeWorksetName)
+    instanceWorksetName = 'unknown'
+    for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
+        # Output('['+str(Element.Name.GetValue(revitLinkName))+'][' + str(Element.Name.GetValue(p))+']')
+        linkTypeNameParts = Element.Name.GetValue(p).split(':')
+        if(len(linkTypeNameParts) == 3):
+            lN = linkTypeNameParts[0]
+            if(lN[0:-1] == Element.Name.GetValue(revitLinkName)):
+                match = True
+                wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+                instanceWorksetName = wsparam.AsValueString()
+                break
+    if(match == True):
+        # Output(instanceWorksetName)
+        return com.GetWorksetIdByName(doc, instanceWorksetName)
+    else:
+        # Output('no match')
+        return ElementId.InvalidElementId
 
 # get the revit link instance data
-# this also calls GetRevitLinkTypeDataByName() 
-def ModifyRevitLinkInstanceData(revitLink, doc):
+# this also calls GetRevitLinkInstanceDataByName() 
+def ModifyRevitLinkTypeData(revitLink, doc):
     returnvalue = res.Result()
-    #get the workset
+    # get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
-    instanceWorksetName = wsparam.AsValueString()
-    instanceWorksetId = com.GetWorksetIdbyName(doc, instanceWorksetName)
-    lN = "unknown"
-    #split revit link name at colon
-    linkTypeNameParts = revitLink.Name.split(':')
-    if(len(linkTypeNameParts) == 3):
-        lN = linkTypeNameParts[0]
-        #get the link type data before extension is stripped from the name,
-        #strip space of end of name too
-        typeWorksetId = GetRevitLinkTypeDataByName(lN[0:-1], doc)
-        typeWorksetName = GetWorksetNamebyId(doc, typeWorksetId)
-        #revit will return a -1 if link is not loaded...
-        if(typeWorksetId != ElementId.InvalidElementId):
-            linkInstanceNameEncoded = com.EncodeAscii(lN[0:-1])
-            if(instanceWorksetId != typeWorksetId):
-                Output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
-                transaction = Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                returnvalue = com.InTransaction(transaction,  com.GetActionChangeElementWorkset(revitLink, typeWorksetId))
-                Output(linkInstanceNameEncoded + ' ' + str(result.status))
-            else:
-               returnvalue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
-        else:
-          returnvalue.message = str('Link is not loaded' + str(com.EncodeAscii(lN[0:-1])))
+    typeWorksetName = wsparam.AsValueString()
+    typeWorksetId = com.GetWorksetIdByName(doc, typeWorksetName)
+    instanceWorksetId = GetRevitInstanceDataByName(revitLink, doc)
+    instanceWorksetName = GetWorksetNamebyId(doc, instanceWorksetId)
+    if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
+        Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
+        transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
+        returnvalue = com.InTransaction(transaction, com.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(returnvalue.status))
     else:
-        returnvalue.UpdateSep(False, 'Failed to split link name into 3 parts')
+        returnvalue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
+    return returnvalue
 
-#method moving revit link instances to the same workset as their types
-def modifyRevitLinkInstance(doc):
+# method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
+def modifyRevitLinkTypes(doc):
     returnvalue = res.Result()
     try:
-        for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
-            changeLink = ModifyRevitLinkInstanceData(p, doc)
+        for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
+            changeLink = ModifyRevitLinkTypeData(p, doc)
             returnvalue.Update(changeLink)
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
@@ -151,13 +147,12 @@ def modifyRevitLinkInstance(doc):
 
 # modify revit links
 Output('Modifying Revit Link(s).... start')
-result_ = modifyRevitLinkInstance(doc)
+result_ = modifyRevitLinkTypes(doc)
 Output(str(result_.message) + ' ' + str(result_.status))
 
-#sync changes back to central
+# sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = com.SyncFile (doc)
     Output('Syncing to Central: finished ' + str(syncing_.status))
-
 Output('Modifying Revit Link(s).... finished ')

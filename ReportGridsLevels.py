@@ -59,8 +59,7 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import Common as com
-from Common import *
+import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -79,8 +78,8 @@ def Output(message = ''):
 # -------------
 
 # build output file names
-fileNameGrid_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
-fileNameLevel_ = rootPath_ + '\\'+ com.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
+fileNameGrid_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
+fileNameLevel_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
 
 def GetWorksetName(doc, idInteger):
     name = 'unknown'
@@ -103,7 +102,7 @@ def writeGridData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Grid):
-            f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), com.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
+            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
         f.close()
     except Exception as e:
         status = False
@@ -118,7 +117,7 @@ def writeLevelData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Level):
-            f.write('\t'.join([com.GetRevitFileName(revitFilePath_), str(p.Id.IntegerValue), com.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
+            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
         f.close()
     except Exception as e:
         status = False

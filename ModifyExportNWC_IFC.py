@@ -79,11 +79,6 @@ def Output(message = ''):
 # -------------
 
 
-    
-# -------------
-# main:
-# -------------
-
 def IFCExportView(doc):
     returnvalue = res.Result()
     ifcExportOption = rex.IFCGetThirdPartyExportConfifgByView(IFCVersion.IFC2x3)
@@ -97,34 +92,39 @@ def IFCExportViewDefault(doc):
     returnvalue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
     return returnvalue
 
-def ModifyNWCExportByView(doc):
+def NWCExportByView(doc):
     returnvalue = res.Result()
     nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
     returnvalue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
     return returnvalue
 
-def ModifyNWCExportModel(doc):
+def NWCExportModel(doc):
     returnvalue = res.Result()
     nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
     returnvalue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
     return returnvalue
 
+# -------------
+# main:
+# -------------
+
+
 Output('Exporting.... start')
 
 # export to IFC file format - view
-flagExportIFC_ = IFCExportView(doc)
+statusExport_ = IFCExportView(doc)
 # export to IFC file format - view but use default ootb ifc exporter
-flagExportIFCDefault_ = IFCExportViewDefault(doc)
-flagExportIFC_.Update(flagExportIFCDefault_)
+statusExportIFCDefault_ = IFCExportViewDefault(doc)
+statusExport_.Update(statusExportIFCDefault_)
 
 # nwc by model
-flagExportNWCModel_ = ModifyNWCExportModel(doc)
-flagExportIFC_.Update(flagExportNWCModel_)
+statusExportNWCModel_ = NWCExportModel(doc)
+statusExport_.Update(statusExportNWCModel_)
 
 # nwc by view
-flagExportNWCThreeDViews_= ModifyNWCExportByView(doc)
-flagExportIFC_.Update(flagExportNWCThreeDViews_)
+statusExportNWCThreeDViews_= NWCExportByView(doc)
+statusExport_.Update(statusExportNWCThreeDViews_)
 
-Output(flagExportIFC_.message + ' :: ' + str(flagExportIFC_.status))
+Output(statusExport_.message + ' :: ' + str(statusExport_.status))
 
 Output('Exporting.... finished ')

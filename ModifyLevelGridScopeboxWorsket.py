@@ -21,25 +21,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# sample description
-# This modifies the worksets of levels, grids, scope boxes and reference planes
+# this sample demonstrates how to 
+# modify the worksets of levels, grids, scope boxes and reference planes
 # A list provides per file the default workset these elements should be on
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import common libraries
+import CommonRevitAPI as com
+import Result as res
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
 if not debug:
@@ -52,20 +66,11 @@ if not debug:
     revitFilePath = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath = debugRevitFileName
+    revitFilePath = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common libraries
-import CommonRevitAPI as com
-import Result as res
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -73,14 +78,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
-
-# -------------
-# main:
-# -------------
 
 def Modify(doc, revitFilePath, gridData):
     returnvalue = res.Result()
@@ -110,6 +107,13 @@ def Modify(doc, revitFilePath, gridData):
     if (flag == False):
         returnvalue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
     return returnvalue
+
+# -------------
+# main:
+# -------------
+
+# store output here:
+rootPath = r'C:\temp'
 
 Output('Checking levels and grids.... start')
 

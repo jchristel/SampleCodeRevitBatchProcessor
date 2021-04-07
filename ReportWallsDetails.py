@@ -27,21 +27,34 @@
 # how to report on wall types
 # note: in place families of category wall and curtain wall do not have a valid Compound structure
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_walls.rvt'
+
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import common library
+import Utility as util
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_walls.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -55,16 +68,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-# import common library
-import Utility as util
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -73,11 +79,6 @@ def Output(message = ''):
     else:
         print (message)
 
-# -------------
-# my code here:
-# -------------
-
-#
 def WriteType (action, description, fileName, doc):
     status = True
     collector = action()
@@ -132,6 +133,9 @@ def actionWT():
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
 
 # build output file name
 fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)

@@ -23,25 +23,38 @@
 #
 #
 
-# sample description
-# this sample moves revit link instances onto the same workset than the corresponding link type
+# this sample demonstrates how to move revit link instances onto the same workset than the corresponding link type
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
-import os.path as path
+
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import CommonRevitAPI as com
+import Utility as util
+import Result as res
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Links.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -56,19 +69,9 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import CommonRevitAPI as com
-import Utility as util
-import Result as res
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -77,19 +80,6 @@ def Output(message = ''):
     else:
         print (message)
 
-# -------------
-# my code here:
-# -------------
-
-def GetWorksetNamebyId(doc, Id):
-    name = 'unknown'
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Id == Id):
-            name = p.Name
-            break
-    return name
-    
-    
 # returns Revit Link Type data
 def GetRevitLinkTypeDataByName(revitLinkName, doc):
     # default values
@@ -118,7 +108,7 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
         #get the link type data before extension is stripped from the name,
         #strip space of end of name too
         typeWorksetId = GetRevitLinkTypeDataByName(lN[0:-1], doc)
-        typeWorksetName = GetWorksetNamebyId(doc, typeWorksetId)
+        typeWorksetName = com.GetWorksetNameById(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != ElementId.InvalidElementId):
             linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
@@ -149,6 +139,9 @@ def modifyRevitLinkInstance(doc):
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
 
 # modify revit links
 Output('Modifying Revit Link(s).... start')

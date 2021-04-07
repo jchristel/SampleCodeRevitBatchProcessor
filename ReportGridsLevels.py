@@ -25,21 +25,35 @@
 # sample description
 # how to report on grids and levels properties
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
+
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import common libraries
+import CommonRevitAPI as com
+import Utility as util
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
 
 # Add batch processor scripting references
 if not debug:
@@ -54,17 +68,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import Utility as util
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -72,22 +78,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
-
-# build output file names
-fileNameGrid_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
-fileNameLevel_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
-
-def GetWorksetName(doc, idInteger):
-    name = 'unknown'
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Id.IntegerValue == idInteger):
-            name = p.Name
-            break
-    return name
 
 def GetMaxExtentAsString(grid):
     ex = grid.GetExtents()
@@ -102,7 +92,7 @@ def writeGridData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Grid):
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
+            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), com.GetWorksetNameById(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
         f.close()
     except Exception as e:
         status = False
@@ -117,7 +107,7 @@ def writeLevelData(doc, fileName):
         f = open(fileName, 'w')
         f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
         for p in FilteredElementCollector(doc).OfClass(Level):
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), GetWorksetName(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
+            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), com.GetWorksetNameById(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
         f.close()
     except Exception as e:
         status = False
@@ -128,6 +118,13 @@ def writeLevelData(doc, fileName):
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
+
+# build output file names
+fileNameGrid_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
+fileNameLevel_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
 
 #write out grid data
 Output('Writing Grid Data.... start')

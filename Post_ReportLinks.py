@@ -27,33 +27,37 @@
 # this sample shows how to merge a number of text report files created on the same day with the same suffix (from the same report)
 # into a single report file for ease of reviewing
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+
 import clr
 import System
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-
-# Add batch processor scripting references
-if not debug_:
-    import script_util
-
-# set path to common_Post library
+# set path to library and this script
 import sys
-sys.path.append(commonlibraryDebugLocation_)
+sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
 import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
+
+# flag whether this runs in debug or not
+debug_ = False
+
+# Add batch processor scripting references
+if not debug_:
+    import script_util
+
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -63,12 +67,11 @@ def Output(message = ''):
         print (message)
 
 # -------------
-# my code here:
-# -------------
-
-# -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
 
 # combine data
 Output('Writing summary Data.... start')

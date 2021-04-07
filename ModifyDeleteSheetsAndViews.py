@@ -23,27 +23,41 @@
 #
 #
 
-# this sample creates a detached copy of project files and
-# deletes all views where given parameter(s) fails value tests(s)
-# deletes all sheets where given parameter(s) fails value test(s)
-# any views not on sheets with exception of views starting with a given string
+# this sample:
+# - deletes all views where given parameter(s) fails value tests(s)
+# - deletes all sheets where given parameter(s) fails value test(s)
+# - any views not on sheets with exception of views starting with a given string
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+#import common libraries
+import CommonRevitAPI as com
+import Utility as util
+import Result as res
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-#default file path locations
-# --------------------------
-#store output here:
-rootPath_ = r'C:\temp'
-#path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -58,19 +72,9 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-#import common libraries
-import CommonRevitAPI as com
-import Utility as util
-import Result as res
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -78,12 +82,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
-
-#-------------------view related
 
 # checks whether view names starts with given strings
 def CheckName(view):
@@ -124,12 +122,12 @@ def ModifySheets(doc, sheets):
             break
     return returnvalue
 
-#------------------view related end-----------------------
-
 # -------------
 # main:
 # -------------
 
+# store output here:
+rootPath_ = r'C:\temp'
 
 # sheets to delete rules 
 sheetRules_ = [

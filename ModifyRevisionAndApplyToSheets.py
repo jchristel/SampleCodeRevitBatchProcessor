@@ -28,22 +28,37 @@
 # - apply those revisions to sheets (filtered selection)
 # - mark the revision(s) as issued
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 import clr
 import System
 import datetime
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import CommonRevitAPI as com
+import Utility as util
+import Result as res
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-#default file path locations
-# --------------------------
-#store output here:
-rootPath_ = r'C:\temp'
-#path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -58,32 +73,18 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
+# -------------
+# my code here:
+# -------------
 
-#import common library
-import CommonRevitAPI as com
-import Utility as util
-import Result as res
-
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
-
-#output messages either to batch processor (debug = False) or console (debug = True)
+# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# -------------
-# my code here:
-# -------------
-
+# returns the sheets in this file matching provided filter(s)
 def GetSheets(doc, sheetFilterRules):
     results = []
     # get sheets where revisions need to be applied to:
@@ -94,6 +95,7 @@ def GetSheets(doc, sheetFilterRules):
             break
     return results
 
+# adds a revision to the document
 def AddRevisionToDocument (doc, revData):
     result = res.Result()
     newRevision = None
@@ -109,6 +111,8 @@ def AddRevisionToDocument (doc, revData):
     result = com.InTransaction(transaction, action)
     return result 
 
+# marks a revisions as issued
+# reIds is a list of revision id's to be marked issued
 def MarkRevisonsAsIssued(doc, revIds):
     result = res.Result()
     # get all revisions in file
@@ -126,9 +130,11 @@ def MarkRevisonsAsIssued(doc, revIds):
         result.Update(resultSetToIssued)
     return result
 
+# adds a number of revisions to the document
+# revision information is stored in global list
 def AddRevToDocument(doc):
     result = res.Result()
-    # store rev id's in list
+    # store rev id's in list 
     ids=[]
     try:
         for rev in revisionsToAdd_:
@@ -155,6 +161,7 @@ def AddRevsToSheet(doc, sheet, revIds):
     result = com.InTransaction(transaction, action)
     return result
 
+# main function of this sample
 def AddRevsToSheetsRequired(doc, sheetFilterRules):
     result = res.Result()
     # get sheet to which revisions are to be appliedß
@@ -185,6 +192,9 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
 
 # list of revisions in format:
 # {'Description', 'IssuedBy', RevisionNumberType.Numeric, 'date'}

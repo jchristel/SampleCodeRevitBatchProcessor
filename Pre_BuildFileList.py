@@ -26,34 +26,34 @@
 # sample description
 # this sample shows how to build a task list file (used as a pre-process) using FileList module
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+
 import clr
 import System
 
-# flag whether this runs in debug or not
-debug_ = True
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
 
-# --------------------------
-# default file path locations
-# --------------------------
-# directory containing files
-rootPath_ = r'C:\temp'
-# store task files lists here
-rootPathExport_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\Project\Git\SampleCodeRevitBatchProcessor'
-# number of task list files to be written out
-taskFilesNumber_ = 1
+# import libraries
+import FileList as fl
+
+# flag whether this runs in debug or not 
+debug_ = False
 
 # Add batch processor scripting references
 if not debug_:
     import script_util
 
-# set path to common_Post library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import file list module
-import FileList as fl
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -63,12 +63,15 @@ def Output(message = ''):
         print (message)
 
 # -------------
-# my code here:
-# -------------
-
-# -------------
 # main:
 # -------------
+
+# directory containing files
+rootPath_ = r'C:\temp'
+# store task files lists here
+rootPathExport_ = r'C:\temp'
+# number of task list files to be written out
+taskFilesNumber_ = 1
 
 # get file data
 Output('Writing file Data.... start')

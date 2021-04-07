@@ -23,23 +23,38 @@
 #
 #
 
-# this sample demonstrated how to add shared parameter to project files
+# this sample demonstrates how to add shared parameters to project files
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import CommonRevitAPI as com
+import Result as res
+import RevitSharedParameterAdd as paraAdd
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -54,20 +69,9 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import CommonRevitAPI as com
-import Result as res
-import RevitSharedParameterAdd as paraAdd
-
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -75,10 +79,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
 
 def UpDateParameters (doc, data):
     status = res.Result()
@@ -93,11 +93,15 @@ def UpDateParameters (doc, data):
         status.message = 'Terminated with exception: '+ str(e)
     return status
 
-
 # -------------
 # main:
 # -------------
 
+# store output here:
+rootPath_ = r'C:\temp'
+
+# fully qualified path to shared parameter file
+sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
 
 # list of properties per parameter
 # para name - string
@@ -149,12 +153,9 @@ def UpDateParameters (doc, data):
 
 listOfParameters = [
     ['ParameterOne','Exported Parameters',ParameterType.Length, True, [BuiltInCategory.OST_Ceilings], BuiltInParameterGroup.PG_GEOMETRY, True],
-    ['ParameterTwo','Exported Parameters',ParameterType.YesNo, True, [BuiltInCategory.OST_Windows,BuiltInCategory.OST_CurtainWallPanels,BuiltInCategory.OST_Walls], BuiltInParameterGroup.PG_IDENTITY_DATA, True]
+    ['ParameterTwo','Exported Parameters',ParameterType.YesNo, True, [BuiltInCategory.OST_Windows,BuiltInCategory.OST_CurtainWallPanels,BuiltInCategory.OST_Walls], BuiltInParameterGroup.PG_IDENTITY_DATA, True],
     ['ParameterThree','Exported Parameters',ParameterType.Text, True, [BuiltInCategory.OST_Rooms], BuiltInParameterGroup.PG_IDENTITY_DATA, True]
 ]
-
-# fully qualified path to shared parameter file
-sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
 
 Output('Updating Shared Parameter Data.... start')
 

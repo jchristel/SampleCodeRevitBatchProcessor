@@ -31,26 +31,35 @@
 # - preserve worskets
 # the SaveAs() method will compress the newly created central file by default
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
 
-import os
-from os import path
+# import libraries
+import CommonRevitAPI as com
+import Utility as util
 
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output (models) here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -65,20 +74,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import CommonRevitAPI as com
-# folder methods are in here:
-import Utility as util
-
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -88,12 +86,12 @@ def Output(message = ''):
         print (message)
 
 # -------------
-# my code here:
-# -------------
-
-# -------------
 # main:
 # -------------
+
+# store output (models) here:
+rootPath_ = r'C:\temp'
+modelOutFolderSuffix_ = '_Milestone'
 
 # list containing the default file name:
 # which in case of this back up is the same as the current file name
@@ -104,8 +102,8 @@ defaultFileNames_ = [[util.GetFileNameWithoutExt(revitFilePath_), util.GetFileNa
 Output('Modifying Revit File.... start')
 
 # get mile stone folder
-milestonePath_ = rootPath_ + '\\' + util.GetFolderDateStamp() + str('_Milestone')
-flagGotFolder_ = util.CreateTargetFolder(rootPath_, util.GetFolderDateStamp() + str('_Milestone'))
+milestonePath_ = rootPath_ + '\\' + util.GetFolderDateStamp() + modelOutFolderSuffix_
+flagGotFolder_ = util.CreateTargetFolder(rootPath_, util.GetFolderDateStamp() + modelOutFolderSuffix_)
 # do we have a valid folder?
 if (flagGotFolder_):
     # save new central file to back up folder
@@ -117,6 +115,6 @@ if (flagGotFolder_):
         syncing_ = com.SyncFile (doc)
         Output('Syncing to Central: finished ' + str(syncing_.status))
 else:
-    Output('failed to create target folder ' + rootPath_ + '\\' + util.GetFolderDateStamp() + str('_Milestone'))
+    Output('failed to create target folder ' + milestonePath_)
 
 ('Modifying Revit File.... finished ')

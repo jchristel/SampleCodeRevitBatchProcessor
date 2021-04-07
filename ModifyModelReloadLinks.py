@@ -28,21 +28,35 @@
 # - all worksets open
 # - create new Local file
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 import clr
 import System
 
-# flag whether this runs in debug or not
-debug_ = True
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
 
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+# import libraries
+import CommonRevitAPI as com
+import Utility as util
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
+# flag whether this runs in debug or not
+debug_ = False
 
 # Add batch processor scripting references
 if not debug_:
@@ -57,20 +71,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import CommonRevitAPI as com
-import Utility as util
-
-# import Result as res not required in this module
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -78,10 +81,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
 
 # special treatment to link names...
 # ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
@@ -92,6 +91,10 @@ def LinkName(name):
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
+
 hostName_ = util.GetOutPutFileName(revitFilePath_)
 
 # list containing directories where Revit links are located:
@@ -101,7 +104,6 @@ linkRevitLocations_ = [r'C:\temp']
 # list containing directories where CAD links are located:
 # ['Directory path 1', 'Directory path 2']
 linkCADLocations_ = [r'C:\temp']
-
 
 # save revit file to new location
 Output('Modifying Revit File.... start')

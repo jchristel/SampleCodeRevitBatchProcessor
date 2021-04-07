@@ -23,25 +23,37 @@
 #
 #
 
-# sample description
-# this sample shows how to detach and save a file somwhere else and or under a different name
+# this sample demonstrates how to detach and save a file somwhere else and or under a different name
 # list of end this file provides a mapping from the old file name to the new file name
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import CommonRevitAPI as com
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-#default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -56,19 +68,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-#import common library
-import CommonRevitAPI as com
-
-# import Result as res #not required in this module
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -77,17 +79,16 @@ def Output(message = ''):
     else:
         print (message)
 
-# -------------
-# my code here:
-# -------------
-
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
 
 # list containing the default file names:
 # [[revit host file name before save, revit host file name after save]]
 defaultFileNames_ = [
-['Test_Files', 'Test_Files_new']
+    ['Test_Files', 'Test_Files_new']
 ]
 
 # save revit file to new location

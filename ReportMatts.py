@@ -25,21 +25,34 @@
 # sample description
 # how to report on materials
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
+
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import common libraries
+import Utility as util
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -53,17 +66,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-# set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library
-import Utility as util
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -72,9 +77,6 @@ def Output(message = ''):
     else:
         print (message)
 
-# -------------
-# my code here:
-# -------------
 def WriteType (action, description, fileName, doc):
     status = True
     collector = action()
@@ -114,6 +116,8 @@ def actionMat():
 # -------------
 # main:
 # -------------
+# store output here:
+rootPath_ = r'C:\temp'
 
 # build output file name
 fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)

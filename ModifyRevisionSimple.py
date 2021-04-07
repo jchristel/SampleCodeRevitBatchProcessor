@@ -26,21 +26,35 @@
 # this sample demonstrates how to:
 # - add a revision (or multiple) to a document
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 import clr
 import System
 
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import CommonRevitAPI as com
+import Result as res
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
 # flag whether this runs in debug or not
 debug_ = False
-
-# --------------------------
-#default file path locations
-# --------------------------
-#store output here:
-rootPath_ = r'C:\temp'
-#path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 # Add batch processor scripting references
 if not debug_:
@@ -55,20 +69,9 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-#import common library
-import CommonRevitAPI as com
-import Result as res
-
-
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -76,10 +79,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
 
 def AddRevisionToDocument (doc, revData):
     result = res.Result()
@@ -115,12 +114,15 @@ def AddRevToDocument(doc):
 # main:
 # -------------
 
+# store output here:
+rootPath_ = r'C:\temp'
+
 # list of revisions in format:
 # {'Description', 'IssuedBy', RevisionNumberType.Numeric, 'date'}
 # datetime.datetime.now().strftime("%d/%m/%y")
 
 revisionsToAdd_ = [
-    ['FOR INFORMATION','JC', RevisionNumberType.Numeric, r'22/12/20']
+    ['FOR INFORMATION','your initials', RevisionNumberType.Numeric, r'22/12/20']
 ]
 
 Output('Add revision.... start')

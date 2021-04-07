@@ -29,39 +29,44 @@
 # move Revit, NWC, IFC files into an automatically created dated folder in a given INCOMING location [INCOMING location can be nominated per file to allow for separate locations per consultant for instance]
 # updated an incoming files register with date and revision of files received. (Date is current date, revision will need to be included in the file name). The register is a CSV text file which in turn can be linked into MS Excel
 
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+
 import clr
 import System
+
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
+
+# import libraries
+import Utility as util
+
 import os.path
 from os import path
 import shutil
 from System.IO import Path
 
-# flag whether this runs in debug or not
-debug_ = True
+# to read csv files
+import csv
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
 
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# directory containing incoming files
-sourcePath_ = r'C:\temp'
+# flag whether this runs in debug or not
+debug_ = False
 
 # Add batch processor scripting references
 if not debug_:
     import script_util
 
-#set path to common_Post library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# import common library (in this case the post lib since it got the methods we are after)
-import Utility as util
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -69,13 +74,6 @@ def Output(message = ''):
         script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
-
-#to read csv files
-import csv
 
 # drop revision and other things of current NWC file name
 def GetNWCFileName(currentFileName):
@@ -144,7 +142,7 @@ def CreateTargetFolder(targetLocation, folderName):
         n = 1
         # create new folder (stop at 10 attemps)
         while (gotFolder == False and n < 10):
-            if (path.exists(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
+            if (util.FileExist(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
                 flag = CreateFolder(targetLocation, folderName + '(' + str(n) + ')')
                 returnFolderName = folderName + '(' + str(n) + ')'
                 # ignore the flag coming back in to avoid infinite loops
@@ -169,7 +167,7 @@ def MoveFiles(fileData):
             CopyNWCFiles()
             # move files into file in location
             if(files != None and len(files) > 0):
-                flagGotFolder, folderName = CreateTargetFolder(targetLocation, folderName)
+                flagGotFolder = util.CreateTargetFolder(targetLocation, folderName)
                 if (flagGotFolder):
                     Output('Moving Files...' + str(len(files)))
                     # move files
@@ -362,6 +360,11 @@ def writeNewData(data):
 # -------------
 # main:
 # -------------
+
+# store output here:
+rootPath_ = r'C:\temp'
+# directory containing incoming files
+sourcePath_ = r'C:\temp'
 
 # list of locations where incoming files are to be saved,
 # format is:

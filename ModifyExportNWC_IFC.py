@@ -22,25 +22,39 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# this sample exports a model or 3D view to IFC and NWC files
+# this sample exports an entire model or 3D view to IFC and NWC files
 # batch processor should have enabled:
-#    - open all worksets
+#    - open all worksets to ensure everything required gets exported
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+# path to library modules
+commonLibraryLocation_ = r'C:\temp'
+# path to directory containing this script (in case there are any other modules to be loaded from here)
+scriptLocation_ = r'C:\temp'
+# debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
-# flag whether this runs in debug or not
-debug_ = True
+# set path to library and this script
+import sys
+sys.path += [commonLibraryLocation_, scriptLocation_]
 
-# --------------------------
-# default file path locations
-# --------------------------
-# store output here:
-rootPath_ = r'C:\temp'
-# path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Export.rvt'
+# import libraries
+import Result as res
+import RevitExport as rex
+
+# autodesk API
+from Autodesk.Revit.DB import *
+
+clr.AddReference('System.Core')
+clr.ImportExtensions(System.Linq)
+
+# flag whether this runs in debug or not
+debug_ = False
 
 # Add batch processor scripting references
 if not debug_:
@@ -55,17 +69,9 @@ else:
     # get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-# import common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-import Result as res
-import RevitExport as rex
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-from Autodesk.Revit.DB import *
+# -------------
+# my code here:
+# -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
@@ -73,11 +79,6 @@ def Output(message = ''):
         revit_script_util.Output(str(message))
     else:
         print (message)
-
-# -------------
-# my code here:
-# -------------
-
 
 def IFCExportView(doc):
     returnvalue = res.Result()
@@ -108,6 +109,8 @@ def NWCExportModel(doc):
 # main:
 # -------------
 
+# store output here:
+rootPath_ = r'C:\temp'
 
 Output('Exporting.... start')
 

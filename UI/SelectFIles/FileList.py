@@ -52,7 +52,6 @@ clr.ImportExtensions(System.Linq)
 # taskFilesNumbes       number of task files to be written
 def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter):
     returnvalue = res.Result()
-    status = True
     # get revit files in input dir
     revitfiles = fileGetter(directoryPath,'.rvt')
     # build bucket list
@@ -107,15 +106,32 @@ def getRevitFilesInclSubDirs(directory, fileExtension):
 def getFileSize(item):
     return item.size
 
+# default task list content for files on a file server location
+def BucketToTaskListFileSystem(item):
+    return item.name
+
+# default task list content for files on a BIM 360 cloud drive
+def BucketToTaskListBIM360(item):
+    return ' '.join([item.BIM360RevitVersion, item.BIM360ProjectGUID, item.BIM360FileGUID])
+
 # method writing out task files
 # filename      fully qualified file path of the task file name including extension
 # bucket        workload bucket containing fully qualified file path in .name property
-def writeRevitTaskFile(fileName, bucket):
+# GetData       method writing out file data required ()
+def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
     returnvalue = res.Result()
     try:
         f = open(fileName, 'w')
+        rowCounter = 0
         for p in bucket.items:
-            f.write('\n' + p.name)
+            data = GetData(p)
+            # check whether first row
+            if(rowCounter != 0):
+                # if not first row add line feed character before data written
+                data = '\n' + data
+            else:
+                rowCounter += 1
+            f.write(data)
         f.close()
         returnvalue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
     except Exception as e:

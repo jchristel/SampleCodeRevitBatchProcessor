@@ -21,7 +21,7 @@
 #
 #
 
-import sys, getopt, os
+import sys, getopt, os, csv
 # to get to the root folder of this repo
 # sys.path.insert(0,'../..')
 
@@ -42,14 +42,15 @@ def main(argv):
     # get arguments
     gotArgs, settings = processArgs(argv)
     if(gotArgs):
-        revitfiles = []
-        # check a to serch for files is to include sub dirs
-        if(settings.inclSubDirs):
-            # get revit files in input dir and subdirs
-            revitfiles = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+        # retrieve revit file data
+        revitfiles = GetFileData(settings)
+        # check whether this is a BIM360 project or file system and assign
+        # data retriever method acordingly
+        if(isBIM360File(revitfiles)):
+            getData = fl.BucketToTaskListBIM360
         else:
-            # get revit files in input dir
-            revitfiles = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+            getData = fl.BucketToTaskListFileSystem
+        # check if anything came back
         if(len(revitfiles) > 0):
             # lets show the window
             ui = UIFs.MyWindow(xamlFullFileName_, revitfiles, settings)
@@ -61,7 +62,7 @@ def main(argv):
                 counter = 0
                 for bucket in buckets:
                     fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
-                    statusWrite = fl.writeRevitTaskFile(fileName, bucket)
+                    statusWrite = fl.writeRevitTaskFile(fileName, bucket, getData)
                     print (statusWrite.message)
                     counter += 1
                 print('Finished writing out task files')
@@ -80,23 +81,23 @@ def main(argv):
 
 # argument processor
 def processArgs(argv):
-    inputDirectory = ''
+    inputDirFile = ''
     outputDirectory = ''
     outputfileNumber = 1
     revitFileExtension = '.rvt'
     includeSubDirsInSearch = False
     gotArgs = False
     try:
-        opts, args = getopt.getopt(argv,"hsi:o:n:e:",["subDir","inputDir=","outputDir=",'numberFiles=','filextension='])
+        opts, args = getopt.getopt(argv,"hsi:o:n:e:",["subDir","input=","outputDir=",'numberFiles=','filextension='])
     except getopt.GetoptError:
-        print ('test.py -s -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
+        print ('test.py -s -i <input> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
     for opt, arg in opts:
         if opt == '-h':
-            print ('test.py -i <inputDirectory> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
+            print ('test.py -i <input> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
         elif opt in ("-s", "--subDir"):
             includeSubDirsInSearch = True
-        elif opt in ("-i", "--inputDir"):
-            inputDirectory = arg
+        elif opt in ("-i", "--input"):
+            inputDirFile = arg
             gotArgs = True
         elif opt in ("-o", "--outputDir"):
             outputDirectory = arg
@@ -117,9 +118,9 @@ def processArgs(argv):
     if (outputfileNumber < 0 or outputfileNumber > 100):
         gotArgs = False
         print ('The number of output files must be bigger then 0 and smaller then 100')
-    if(not FileExist(inputDirectory)):
+    if(not FileExist(inputDirFile)):
         gotArgs = False
-        print ('Invalid input directory: ' + str(inputDirectory))
+        print ('Invalid input directory or file path: ' + str(inputDirFile))
     if(not FileExist(outputDirectory)):
         gotArgs = False
         print ('Invalid output directory: ' + str(outputDirectory))
@@ -127,7 +128,7 @@ def processArgs(argv):
         gotArgs = False
         print ('Invalid file extension: [' + str(revitFileExtension) + '] expecting: .rvt or .rfa')
 
-    return gotArgs, set.FileSelectionSettings(inputDirectory, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension)
+    return gotArgs, set.FileSelectionSettings(inputDirFile, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension)
 
 # method used to determine directory this script is run from
 # this is used to load xaml file
@@ -138,13 +139,93 @@ def GetFolderPathFromFile(filePath):
         value = ''
     return value
 
-# used to check whether input and output directory supplied in arguments by user do exist
+# used to check whether input directory or input file path and output directory supplied in arguments by user do exist
 def FileExist(path):
     try:
         value = os.path.exists(path)
     except Exception:
         value = False
     return value
+
+# retrieves revit file data from either:
+#   -  directory on a file server
+#   - a text file containing BIM 360 project data
+#       - text file needs to be a .csv
+#       - format:
+#           0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
+def GetFileData(settings):
+    revitfiles = []
+    # check whether input is a directory path or a text file (csv) containing BIM 360 data
+    # since we tested for a valid path initially it will need to be either one...
+    try:
+        if(os.path.isfile(settings.inputDir)):
+            # got a text file...extract BIM 360 data
+            revitfiles = GetBIM360Data(settings.inputDir)
+        elif(os.path.isdir(settings.inputDir)):
+            # check a to serch for files is to include sub dirs
+            if(settings.inclSubDirs):
+                # get revit files in input dir and subdirs
+                revitfiles = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+            else:
+                # get revit files in input dir
+                revitfiles = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+    except Exception as e:
+        print ('An exception occured during BIM360 file read! ' + str(e))
+        # return an empty list which will cause this script to abort
+        revitfiles = []
+    return revitfiles
+
+# entry point for processing a csb file containing BIM 360 data
+def GetBIM360Data(filepathCSV):
+    revitfiles = []
+    try:
+        # read the CSV into rows
+        rows = ReadCSVfile(filepathCSV)
+        # check whether anything came back
+        if(len(rows)>0):
+            # process rows
+            for row in rows:
+                dummy = ProcessBIM360Row(row)
+                # check whether row got processed ok
+                if (dummy is not None):
+                    revitfiles.append(dummy)
+    except Exception as e:
+        print ('An exception occured during BIM360 row processing! ' + str(e))
+        # return an empty list which will cause this script to abort
+        revitfiles = []
+    return revitfiles
+
+# read a csv files into a list of rows
+def ReadCSVfile(filepathCSV):
+    rowList = []
+    try:
+        with open(filepathCSV) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader: # each row is a list
+                rowList.append(row)
+    except Exception as e:
+        print (str(e))
+        rowList = []
+    return rowList
+
+# reads a row from csv file into file item class object
+# returns None if row is not the right length
+def ProcessBIM360Row (rowData):
+    # check whether we have the right number of columns
+    if(len(rowData) == 5):
+        dummy = fi.MyFileItem(rowData[4], rowData[3], rowData[1], rowData[2], rowData[0])
+        return dummy
+    else:
+        return None
+
+# checks whether the firs item in a file item list belongs to a BIM 360 project
+def isBIM360File(revitFiles):
+    BIM360File = False
+    for r in revitFiles:
+        if(r.BIM360ProjectGUID != None):
+            BIM360File = True
+            break
+    return BIM360File
 
 # the directory this script lives in
 currentScriptDir_ = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])

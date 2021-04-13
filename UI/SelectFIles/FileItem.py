@@ -24,6 +24,9 @@
 # An item to represent a file name in a row in a grid.
 class MyFileItem:
     
-    def __init__(self, name, size):
+    def __init__(self, name, size, BIM360projectguid = None , BIM360fileguid = None, BIM360revitversion = '-'):
         self.name = name
         self.size = size
+        self.BIM360ProjectGUID = BIM360projectguid
+        self.BIM360FileGUID = BIM360fileguid
+        self.BIM360RevitVersion = BIM360revitversion

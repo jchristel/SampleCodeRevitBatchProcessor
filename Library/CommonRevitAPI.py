@@ -599,13 +599,14 @@ def DefaultWorksetConfigForReload():
 # returns:
 #   - true if sync without exception been thrown
 #   - false if an exception occured
-def SyncFile (doc):
+def SyncFile (doc, compactCentralFile = False):
     returnvalue = res.Result()
     # set up sync settings
     ro = RelinquishOptions(True)
     transActOptions = TransactWithCentralOptions()
     sync = SynchronizeWithCentralOptions()
     sync.Comment = 'Synchronised by Revit Batch Processor'
+    sync.Compact = compactCentralFile
     sync.SetRelinquishOptions(ro)
     # Synch it
     try:

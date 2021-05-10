@@ -213,7 +213,7 @@ def ReadCSVfile(filepathCSV):
 def ProcessBIM360Row (rowData):
     # check whether we have the right number of columns
     if(len(rowData) == 5):
-        dummy = fi.MyFileItem(rowData[4], rowData[3], rowData[1], rowData[2], rowData[0])
+        dummy = fi.MyFileItem(rowData[4], int(rowData[3]), rowData[1], rowData[2], rowData[0])
         return dummy
     else:
         return None

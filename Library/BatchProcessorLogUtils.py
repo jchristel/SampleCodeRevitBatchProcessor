@@ -52,14 +52,7 @@ import time
 import os
 import json
 
-from System.IO import Path
-
-commonlibraryDebugLocation_ = r'C:\temp'
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
-
-# custom result class
+# custom result class from commonlibraryDebugLocation_
 import Result as res
 # library from commonlibraryDebugLocation_
 import Utility as util
@@ -99,7 +92,7 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
     return status
 
 # method returning file names of all text files in a given directory representing session Ids
-# files will be deleted imediately after reading
+# files will be deleted immediately after reading
 # 
 # folderPath: directory of where test files are located
 # will return list of session Ids 
@@ -129,7 +122,7 @@ def GetLogFiles(listOfSessionIds):
             # check whether file is older than 24h
             fileTime = os.path.getmtime(l)
             # 24 hr are 86400 seconds
-            if timeNow - fileTime < 86400000:
+            if timeNow - fileTime < 86400:
                 # read the first two rows of the file to get the id
                 idstring = GetSessionIdFromLogFile(l)
                 for idtoMatch in listOfSessionIds:

@@ -5,7 +5,7 @@ from Autodesk.Revit.DB import *
 
 # custom result class
 import Result as res
-# import revit api module
+# import InTransaction from common module
 import CommonRevitAPI as com
 
 # opens a shared parameter file
@@ -50,16 +50,19 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                         if(elemBind.Categories.Contains(cat)):
                             # check parameter type
                             if(definition.ParameterType != parameterType):
-                                returnvalue.UpdateSep(False, parameterName + ': wrong paramter type: '+ str(definition.ParameterType))
+                                returnvalue.status = False
+                                returnvalue.message = parameterName + ': wrong paramter type: '+ str(definition.ParameterType)
                                 return returnvalue
                             #check binding type
                             if(isInstance):
                                 if(elemBind.GetType() != InstanceBinding):
-                                    returnvalue.UpdateSep(False, parameterName + ': wrong binding type (looking for instance but got type)')
+                                    returnvalue.status = False
+                                    returnvalue.message = parameterName + ': wrong binding type (looking for instance but got type)'
                                     return returnvalue
                             else:
                                 if(elemBind.GetType() != TypeBinding):
-                                    returnvalue.UpdateSep(False, parameterName + ': wrong binding type (looking for type but got instance)')
+                                    returnvalue.status = False
+                                    returnvalue.message = parameterName + ': wrong binding type (looking for type but got instance)'
                                     return returnvalue
                     
                             # Check Visibility - cannot (not exposed)
@@ -88,7 +91,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
             opt.Visible = isVisible
             definition = defGroup.Definitions.Create(opt)
 
-        # get category from builtin category
+        #get category from builtin category
         catSet.Insert(doc.Settings.Categories.get_Item(category))
 
         bind = None
@@ -117,14 +120,17 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                         actionReturnValue.message = parameterName + ' : parameter succesfully bound'
                         return actionReturnValue
                     else:
-                        actionReturnValue.UpdateSep(False, parameterName + ' : failed to bind parameter!')
+                        actionReturnValue.status = False
+                        actionReturnValue.message = parameterName + ' : failed to bind parameter!'
             except Exception as e:
-                actionReturnValue.UpdateSep(False, parameterName + ' : Failed to bind parameter with exception: ' + str(e))
+                actionReturnValue.status = False
+                actionReturnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
             return actionReturnValue
         transaction = Transaction(doc,'Binding parameter')
         returnvalue = com.InTransaction(transaction, action)    
         return returnvalue
 
     except Exception as e:
-        returnvalue.UpdateSep(False, parameterName + ' : Failed to bind parameter with exception: ' + str(e))
+        returnvalue.status = False
+        returnvalue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
     return returnvalue

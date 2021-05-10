@@ -255,6 +255,27 @@ def DeleteViewsNotOnSheets(doc, filter):
         returnvalue.UpdateSep(True, 'No views not placed on sheets found.')
     return returnvalue
 
+# deletes unused elevation markers
+def DeleteUnusedElevationViewMarkers(doc):
+    returnvalue = res.Result()
+    ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
+    # items to be deleted
+    ids = []
+    # set up view counter (how many views will be deleted)
+    counter = 0
+    # loop over markers
+    for e in ele:
+        # check if view count is 0 (unused marker)
+        if(e.CurrentViewCount == 0):
+            # add to list of views to be deleted
+            ids.append(e.Id)
+            counter += 1
+    if(len(ids) > 0):
+        returnvalue = DeleteByElementIds(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
+    else:
+        returnvalue.UpdateSep(True, 'No unused elevation markers in model')
+    return returnvalue
+
 # deletes sheets based on
 # view rules: array in format [parameter name, condition test method, value to test against]
 def DeleteSheets(doc, viewRules, collectorViews):
@@ -596,16 +617,19 @@ def DefaultWorksetConfigForReload():
     return None
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file
+# doc: the document to be synced
+# compactCentralFile: option to compact the central file ... default is False (no compacting)
 # returns:
 #   - true if sync without exception been thrown
 #   - false if an exception occured
-def SyncFile (doc):
+def SyncFile (doc, compactCentralFile = False):
     returnvalue = res.Result()
     # set up sync settings
     ro = RelinquishOptions(True)
     transActOptions = TransactWithCentralOptions()
     sync = SynchronizeWithCentralOptions()
     sync.Comment = 'Synchronised by Revit Batch Processor'
+    sync.Compact = compactCentralFile
     sync.SetRelinquishOptions(ro)
     # Synch it
     try:

@@ -1,4 +1,4 @@
-#
+﻿#
 #License:
 #
 #
@@ -68,7 +68,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
         try:
             # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
-            actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
+            actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
             actionReturnValue.result = [directoryPath, fileName]
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Failed to export to IFC with exception: ' + str(e))
@@ -116,8 +116,8 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
-    ifcExportConfig.COBieCompanyInfo = 'Company Name'
-    ifcExportConfig.COBieProjectInfo = 'Project Info'
+    ifcExportConfig.COBieCompanyInfo = 'BVN'
+    ifcExportConfig.COBieProjectInfo = 'SIRIUS'
     
     return ifcExportConfig
 
@@ -290,7 +290,7 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     try:
         #export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
-        returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + str(fileName))
+        returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
         returnvalue.result = [directoryPath, fileName]
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed to export to NWC with exception: ' + str(e))

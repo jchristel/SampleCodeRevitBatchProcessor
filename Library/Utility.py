@@ -297,6 +297,20 @@ def ConDoesEqual (valueOne, valueTwo):
     else:
         return False
 
+# returns True if valueOne starts with valueTwo
+def ConOneStartWithTwo (valueOne, valueTwo):
+    if (valueOne.startswith(valueTwo)):
+        return True
+    else:
+        return False
+
+# returns True if valueTwo starts with valueTwo
+def ConTwoStartWithOne (valueOne, valueTwo):
+    if (valueTwo.startswith(valueOne)):
+        return True
+    else:
+        return False
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 # default 2 digit padding

@@ -46,6 +46,7 @@
 
 import clr
 import System
+from System.IO import Path
 import glob
 import datetime
 import time
@@ -57,7 +58,14 @@ import Result as res
 # library from commonlibraryDebugLocation_
 import Utility as util
 
+# global variable controlling debug output
+debugMode_ = False
 
+# output...
+def Output(message = ''):
+    if debugMode_:
+        print (message)
+        
 # method removing chevrons and replace colons with underscores in session id supplied by revit batch processor
 def AdjustSessionIdForFileName(id):
     # remove colons
@@ -102,9 +110,10 @@ def GetCurrentSessionIds(folderPath):
     # delete marker files
     resultDelete = True
     for fd in file_list:
-        resultDelete = resultDelete & util.FileDelete(fd)
+        #resultDelete = resultDelete & util.FileDelete(fd)
+        resultDelete = True
     if(not resultDelete):
-        print ('Failed to delete a marker file!')
+        Output ('Failed to delete a marker file!')
     for f in file_list:
         ids.append(AdjustSessionIdFileNameBack(Path.GetFileNameWithoutExtension(f)))
     return ids
@@ -129,7 +138,7 @@ def GetLogFiles(listOfSessionIds):
                     if idtoMatch == idstring:
                         logfiles.append(l)
             else:
-                print('File is to old')
+                Output('File is to old: ' + str(l))
     return logfiles
 
 # method reading the first two rows of a log file to get the session Id used
@@ -189,20 +198,32 @@ def GetMessageFromJson(data):
 def ProcessLogFile(filePath):
     filesProcessStatus = []
     # get all files processed
-    filesProcessed = GetFilesProcessed(filePath)
-    # check whether any file not founds came back
-    filesNotFound = GetFilesNotFound(filesProcessed)
-    # filter filesProcessed by files not found
-    filesToCheck = filterFilesNotyFound(filesProcessed, filesNotFound)
-    # check for exceptions during file processing
-    for fileToCheck in filesToCheck:
-        status, message = GetProcessStatus(fileToCheck, filePath)
-        dummy = [fileToCheck, status, message]
-        filesProcessStatus.append(dummy)
-    # add files not found
-    for f in filesNotFound:
-        dummy = [f[0], False, ['File not found']]
-        filesProcessStatus.append(dummy)
+    try:
+        filesProcessed = GetFilesProcessed(filePath)
+        # check whether any file not founds came back
+        try:
+            filesNotFound = GetFilesNotFound(filesProcessed)
+            try:
+                # filter filesProcessed by files not found
+                filesToCheck = filterFilesNotyFound(filesProcessed, filesNotFound)
+                # check for exceptions during file processing
+                for fileToCheck in filesToCheck:
+                    try:
+                        status, message = GetProcessStatus(fileToCheck, filePath)
+                    except Exception as e:
+                        Output ('GetProcessStatus: ' + str(e))
+                    dummy = [fileToCheck, status, message]
+                    filesProcessStatus.append(dummy)
+                # add files not found
+                for f in filesNotFound:
+                    dummy = [f[0], False, ['File not found']]
+                    filesProcessStatus.append(dummy)
+            except Exception as e:
+                Output ('FileToCheck: ' + str(e))
+        except Exception as e:
+            Output ('GetFilesNotFound: ' + str(e))
+    except Exception as e:
+        Output ('GetFilesProcessed: ' + str(e))
     return filesProcessStatus
 
 
@@ -278,16 +299,19 @@ def GetFilesProcessed(filePath):
     jsonData = ReadLogFile(filePath)
     # get data block showing which files are to be processed
     # there should just be one ...
-    unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, 'Revit Files for processing', 'Starting batch operation...', False)[0]
-    # parse data block and get list of files and file exists status
-    # each file block is proceeded by an empty message row
-    # last entry is also an empty message block!
-    for x in range(len(unformattedRevitFileProcessMessages)):
-        # check for start of data block 
-        if(unformattedRevitFileProcessMessages[x] == '' and x + 2 <= len(unformattedRevitFileProcessMessages)):
-            # get file data from next two rows
-            dummy = [unformattedRevitFileProcessMessages[x + 1],unformattedRevitFileProcessMessages[x + 2]]
-            listOfFiles.append(GetFileData(dummy))
+    logBlocks = GetLogBlocks(jsonData, 'Revit Files for processing', 'Starting batch operation...', False)
+    if(len(logBlocks) > 0):
+        Output ('Found processed files')
+        unformattedRevitFileProcessMessages = logBlocks[0]
+        # parse data block and get list of files and file exists status
+        # each file block is proceeded by an empty message row
+        # last entry is also an empty message block!
+        for x in range(len(unformattedRevitFileProcessMessages)):
+            # check for start of data block 
+            if(unformattedRevitFileProcessMessages[x] == '' and x + 2 <= len(unformattedRevitFileProcessMessages)):
+                # get file data from next two rows
+                dummy = [unformattedRevitFileProcessMessages[x + 1],unformattedRevitFileProcessMessages[x + 2]]
+                listOfFiles.append(GetFileData(dummy))
     return listOfFiles
 
 # method parsing two rows of json formatted data
@@ -358,25 +382,41 @@ def ReadLogFile(filePath):
 # [logId, 
 #   [ processed Revit file name, status of processing (true or false), message]
 # ]
-def ProcessLogFiles(folderPath):
+def ProcessLogFiles(folderPath, debug = False):
     returnvalue = res.Result()
+    debugMode_ = debug
     logfileResults = []
     try:
         # get all marker files
         markerfileIds = GetCurrentSessionIds(folderPath)
-        #returnvalue.AppendMessage('Found marker files: ' + str(len(markerfileIds)))
+        if(debugMode_):
+            returnvalue.AppendMessage('Found marker file(s): ' + str(len(markerfileIds)))
         if(len(markerfileIds) > 0):
             # find log files matching markers
             logfiles = GetLogFiles(markerfileIds)
-            # returnvalue.AppendMessage('Found log files: ' + str(len(logfiles)))
+            if(debugMode_):
+                returnvalue.AppendMessage('Found log file(s): ' + str(len(logfiles)))
             if(len(logfiles) == len(markerfileIds)):
                 data = []
                 for lf in logfiles:
-                    # returnvalue.AppendMessage('Processing log files: ' + lf)
-                    data = ProcessLogFile(lf)
-                    # returnvalue.AppendMessage('Got data: ' + str(len(data)))
+                    # debug output
+                    message = 'Processing log file(s): ' + lf
+                    #returnvalue.AppendMessage('Processing log files: ' + lf)
+                    try:
+                        data = ProcessLogFile(lf)
+                        if (len(data) > 0):
+                            message = message + ' [Got processed Revit file(s) data: ' + str(len(data)) +']'
+                        else:
+                            # dummy run no files processed!
+                            message = message + ' [No Revit file(s) processed!]'
+                    except Exception as e:
+                        message = message + ' [An exception occured: ' + str(e) + ']'
+                    if(debugMode_):
+                        returnvalue.AppendMessage(message)
                     for d in data:
                         logfileResults.append(d)
+                returnvalue.AppendMessage('\n')
+                returnvalue.AppendMessage('Processed file(s) results:')
                 # store results in return object
                 for lfResults in logfileResults:
                     listToStr = '\t'.join(map(str, lfResults)) 

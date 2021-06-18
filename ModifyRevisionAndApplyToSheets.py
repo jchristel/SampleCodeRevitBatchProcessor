@@ -47,7 +47,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitViews as rView
 import Utility as util
 import Result as res
 
@@ -91,7 +92,7 @@ def GetSheets(doc, sheetFilterRules):
     revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
     for fileName, sheetRules in sheetFilterRules:
         if (revitFileName.startswith(fileName)):
-            results = com.GetSheetsByFilters(doc, sheetRules)
+            results = rView.GetSheetsByFilters(doc, sheetRules)
             break
     return results
 

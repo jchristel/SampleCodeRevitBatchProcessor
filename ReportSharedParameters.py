@@ -46,6 +46,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
 import Utility as util
+import RevitSharedParameters as rSp
 
 # autodesk API
 from Autodesk.Revit.DB import *
@@ -80,36 +81,21 @@ def Output(message = ''):
     else:
         print (message)
 
-# returns all paramterbindings for a given parameter
-def ParamBindingExists(doc, paramName, paramType):
-    categories = []
-    map = doc.ParameterBindings
-    iterator = map.ForwardIterator()
-    iterator.Reset()
-    while iterator.MoveNext():
-        if iterator.Key != None and iterator.Key.Name == paramName and iterator.Key.ParameterType == paramType:
-            elemBind = iterator.Current
-            for cat in elemBind.Categories:
-                categories.append(cat.Name)
-            break
-    return ('[' + str(','.join(categories)) + ']')
-
-# method writing out shared parameter information
-def writeSharedData(doc, fileName):
+# method writing out material information
+# doc:          current model document
+# fileName:     fully qualified file path
+def writeSharedParaData(doc, fileName):
     status = True
     try:
-        f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE', 'GUID', 'ID', 'NAME', '\n']))
-        for p in FilteredElementCollector(doc).OfClass(SharedParameterElement):
-            pdef = p.GetDefinition()
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), p.GuidValue.ToString(), str(p.Id.IntegerValue), util.EncodeAscii(Element.Name.GetValue(p)), ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType), '\n']))
-        f.close()
+        status = util.writeReportData(
+            fileName, 
+            rSp.REPORT_SHAREDPARAMETERS_HEADER, 
+            rSp.GetSharedParameterReportData(doc, revitFilePath_))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)
         Output (str(e))
     return status
-
 # -------------
 # main:
 # -------------
@@ -118,12 +104,12 @@ def writeSharedData(doc, fileName):
 rootPath_ = r'C:\temp'
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
+fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_SharedParas')
 
 Output('Writing Shared Parameter Data.... start')
 
 #write out shared parameter data
-result_ = writeSharedData(doc, fileName_)
+result_ = writeSharedParaData(doc, fileName_)
 
 Output('Writing Shared Parameter Data.... status: ' + str(result_))
 Output('Writing Shared Parameter Data.... finished ' + fileName_)

@@ -36,6 +36,8 @@ import FileSelectSettings as set
 # import workloader utils
 import Workloader as wl
 import WorkloadBucket as wlb
+# BIM360 utilities
+import UtilBIM360 as ub360
 
 # main method
 def main(argv):
@@ -160,7 +162,7 @@ def GetFileData(settings):
     try:
         if(os.path.isfile(settings.inputDir)):
             # got a text file...extract BIM 360 data
-            revitfiles = GetBIM360Data(settings.inputDir)
+            revitfiles = ub360.GetBIM360Data(settings.inputDir)
         elif(os.path.isdir(settings.inputDir)):
             # check a to serch for files is to include sub dirs
             if(settings.inclSubDirs):
@@ -174,49 +176,6 @@ def GetFileData(settings):
         # return an empty list which will cause this script to abort
         revitfiles = []
     return revitfiles
-
-# entry point for processing a csb file containing BIM 360 data
-def GetBIM360Data(filepathCSV):
-    revitfiles = []
-    try:
-        # read the CSV into rows
-        rows = ReadCSVfile(filepathCSV)
-        # check whether anything came back
-        if(len(rows)>0):
-            # process rows
-            for row in rows:
-                dummy = ProcessBIM360Row(row)
-                # check whether row got processed ok
-                if (dummy is not None):
-                    revitfiles.append(dummy)
-    except Exception as e:
-        print ('An exception occured during BIM360 row processing! ' + str(e))
-        # return an empty list which will cause this script to abort
-        revitfiles = []
-    return revitfiles
-
-# read a csv files into a list of rows
-def ReadCSVfile(filepathCSV):
-    rowList = []
-    try:
-        with open(filepathCSV) as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader: # each row is a list
-                rowList.append(row)
-    except Exception as e:
-        print (str(e))
-        rowList = []
-    return rowList
-
-# reads a row from csv file into file item class object
-# returns None if row is not the right length
-def ProcessBIM360Row (rowData):
-    # check whether we have the right number of columns
-    if(len(rowData) == 5):
-        dummy = fi.MyFileItem(rowData[4], int(rowData[3]), rowData[1], rowData[2], rowData[0])
-        return dummy
-    else:
-        return None
 
 # checks whether the firs item in a file item list belongs to a BIM 360 project
 def isBIM360File(revitFiles):

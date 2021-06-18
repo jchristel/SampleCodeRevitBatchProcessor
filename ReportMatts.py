@@ -44,6 +44,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
 import Utility as util
+import RevitMaterials as rMat
 
 # autodesk API
 from Autodesk.Revit.DB import *
@@ -77,41 +78,21 @@ def Output(message = ''):
     else:
         print (message)
 
-def WriteType (action, description, fileName, doc):
+# method writing out material information
+# doc:          current model document
+# fileName:     fully qualified file path
+def writeMaterialData(doc, fileName):
     status = True
-    collector = action()
-    Output ('Writing ' + description +'....')
-    f = open(fileName, 'w')
-    f.write('\t'.join(['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE', '\n']))
     try:
-        # f.write('Materials...start'+ '\n')
-        for wt in collector:
-            try:
-                paras = wt.GetOrderedParameters()
-                for p in paras:
-                    paraName = p.Definition.Name
-                    pValue = 'no Value'
-                    if(p.StorageType == StorageType.ElementId or p.StorageType == StorageType.Double or p.StorageType == StorageType.Integer):
-                        if(p.AsValueString()!= None and p.AsValueString() != ''):
-                            pValue = p.AsValueString()
-                    elif(p.StorageType == StorageType.String):
-                        if(p.AsString() != None and p.AsString() != ''):
-                            pValue = p.AsString()                    
-                    f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(Element.Name.GetValue(wt)), util.EncodeAscii(paraName), util.EncodeAscii(pValue), '\n']))
-            except Exception as e:
-                Output('Failed to get material data: ' + str(e))
-                f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id),util.EncodeAscii(Element.Name.GetValue(wt)),'\n']))
-    except:
+        status = util.writeReportData(
+            fileName, 
+            rMat.REPORT_MATERIALS_HEADER, 
+            rMat.GetMaterialReportData(doc, revitFilePath_))
+    except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)
-    # f.write('Materials...end')
-    f.close()
+        Output (str(e))
     return status
-
-# gets all materials in a model
-def actionMat():  
-    collector = FilteredElementCollector(doc).OfClass(Material)
-    return collector
 
 # -------------
 # main:
@@ -120,9 +101,9 @@ def actionMat():
 rootPath_ = r'C:\temp'
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
+fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_Materials')
 
 Output('Writing Material Data.... start')
-result_ = WriteType (actionMat, 'Materials', fileName_, doc)
+result_ = writeMaterialData(doc, fileName_)
 Output('Writing Material Data.... status: ' + str(result_))
 Output('Writing Material Data.... finished ' + fileName_)

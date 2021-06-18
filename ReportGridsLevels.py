@@ -43,7 +43,9 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitGrids as rGrid
+import RevitLevels as rLevel
 import Utility as util
 
 # autodesk API
@@ -79,21 +81,14 @@ def Output(message = ''):
     else:
         print (message)
 
-def GetMaxExtentAsString(grid):
-    ex = grid.GetExtents()
-    max = '['+ ','.join([str(ex.MaximumPoint.X), str(ex.MaximumPoint.Y), str(ex.MaximumPoint.Z)]) + ']'
-    min = '['+ ','.join([str(ex.MinimumPoint.X), str(ex.MinimumPoint.Y), str(ex.MinimumPoint.Z)]) + ']'    
-    return '\t'.join([min, max])
-
 # method writing out grid information
 def writeGridData(doc, fileName):
     status = True
     try:
-        f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN', '\n']))
-        for p in FilteredElementCollector(doc).OfClass(Grid):
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), com.GetWorksetNameById(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p), '\n']))
-        f.close()
+        status = util.writeReportData(
+            fileName, 
+            rGrid.REPORT_GRIDS_HEADER, 
+            rGrid.GetGridReportData(doc, revitFilePath_))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)
@@ -104,11 +99,10 @@ def writeGridData(doc, fileName):
 def writeLevelData(doc, fileName):
     status = True
     try:
-        f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION', '\n']))
-        for p in FilteredElementCollector(doc).OfClass(Level):
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), com.GetWorksetNameById(doc, p.WorksetId.IntegerValue), str(p.Elevation), '\n']))
-        f.close()
+        status = util.writeReportData(
+            fileName, 
+            rLevel.REPORT_LEVELS_HEADER, 
+            rLevel.GetLevelReportData(doc, revitFilePath_))
     except Exception as e:
         status = False
         Output('Failed to write data file!' + fileName)

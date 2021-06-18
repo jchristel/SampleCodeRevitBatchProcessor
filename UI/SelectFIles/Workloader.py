@@ -21,10 +21,7 @@
 #
 #
 
-import System
-import clr
 import WorkloadBucket as wb
-
 
 # distributes a given number evenly to workload buckets
 # number of buckets : the nubmer of buckets items are to be distributed to

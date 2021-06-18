@@ -46,6 +46,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
 import Utility as util
+import RevitWalls as rWall
 
 # autodesk API
 from Autodesk.Revit.DB import *
@@ -79,56 +80,21 @@ def Output(message = ''):
     else:
         print (message)
 
-def WriteType (action, description, fileName, doc):
+# method writing out material information
+# doc:          current model document
+# fileName:     fully qualified file path
+def WriteWallTypeData(doc, fileName):
     status = True
-    collector = action()
-    print ('Writing ' + description +'....')
-    f = open(fileName, 'w')
-    f.write('\t'.join(['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', '\n']))
     try:
-        for wt in collector:
-            try:
-                cs = wt.GetCompoundStructure()
-                if cs != None:
-                    csls = cs.GetLayers()
-                    for csl in csls:
-                        materialName = str(GetMaterialbyId (csl.MaterialId, doc))
-                        wallTypeName = str(Element.Name.GetValue(wt))
-                        function = str(csl.Function)
-                        width = str(csl.Width * 304.8) #conversion from imperial to metric
-                        f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(wallTypeName), function, width, util.EncodeAscii(materialName), '\n']))
-                else:                 
-                    f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(wt.Id), util.EncodeAscii(Element.Name.GetValue(wt)), '\n']))
-            except Exception:
-                f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_) , str(wt.Id), Element.Name.GetValue(wt), '\n']))
+        status = util.writeReportData(
+            fileName, 
+            rWall.REPORT_WALLS_HEADER, 
+            rWall.GetWallReportData(doc, revitFilePath_))
     except Exception as e:
         status = False
-        Output('Failed to write data file! ' + fileName +' with exception '+str(e))
-    f.close()
+        Output('Failed to write data file!' + fileName)
+        Output (str(e))
     return status
-
-# returns a materials mark and name based on a material id
-def GetMaterialbyId (id, doc):
-    collector = FilteredElementCollector(doc)
-    collector.OfClass(Material)
-    for m in collector:
-        if m.Id.IntegerValue == id.IntegerValue:
-            return GetNameAndMark(m)
-
-# returns the material mark and defintion name in format:
-# {mark}{name}
-def GetNameAndMark (mat):
-    paraName = Element.Name.GetValue(mat)
-    name= '{}' if paraName == None else '{' + paraName + '}'
-    paraMark = mat.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
-    mark= '{}' if paraMark == None else '{' + paraMark.AsString() + '}'
-    return name + mark
-
-# gets all wall types in a model
-# this includes types of curtain walls as well as any in types of place wall families!
-def actionWT():  
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsElementType()
-    return collector
 
 # -------------
 # main:
@@ -138,10 +104,10 @@ def actionWT():
 rootPath_ = r'C:\temp'
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
+fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_WallTypes')
 
 Output('Writing Wall Type Data.... start')
 #write out wall type data
-result_ = WriteType (actionWT, 'wall type', fileName_, doc)
+result_ = WriteWallTypeData (doc, fileName_)
 Output('Writing Wall Type Data.... status: ' + str(result_))
 Output('Writing Wall Type Data.... finished ' + fileName_)

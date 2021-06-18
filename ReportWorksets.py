@@ -45,6 +45,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
 import Utility as util
+import RevitWorksets as rWks
 
 # autodesk API
 from Autodesk.Revit.DB import *
@@ -78,18 +79,20 @@ def Output(message = ''):
     else:
         print (message)
 
-# method writing out shared parameter information
-def writeWorksetData(doc, fileName):
+# method writing out material information
+# doc:          current model document
+# fileName:     fully qualified file path
+def WriteWorksetData(doc, fileName):
     status = True
     try:
-        f = open(fileName, 'w')
-        f.write('\t'.join(['HOSTFILE', 'ID', 'NAME', 'ISVISIBLEBYDEFAULT', '\n']))
-        for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-            f.write('\t'.join([util.GetFileNameWithoutExt(revitFilePath_), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), str(p.IsVisibleByDefault), '\n']))
-        f.close()
+        status = util.writeReportData(
+            fileName, 
+            rWks.REPORT_WORKSETS_HEADER, 
+            rWks.GetWorksetReportData(doc, revitFilePath_))
     except Exception as e:
         status = False
-        Output('Failed to write data file! ' + fileName + ' with exception: ' + str(e))
+        Output('Failed to write data file!' + fileName)
+        Output (str(e))
     return status
 
 # -------------
@@ -100,12 +103,12 @@ def writeWorksetData(doc, fileName):
 rootPath_ = r'C:\temp'
 
 # build output file name
-fileName_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_)
+fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_Worksets')
 
 Output('Writing Workset Data.... start')
 
 # write out workset data
-result_ = writeWorksetData(doc, fileName_)
+result_ = WriteWorksetData(doc, fileName_)
 
 Output('Writing Workset Data.... status: ' + str(result_))
 Output('Writing Workset Data.... finished ' + fileName_)

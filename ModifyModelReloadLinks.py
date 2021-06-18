@@ -46,7 +46,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitLinks as rLink
 import Utility as util
 
 # autodesk API
@@ -109,11 +110,22 @@ linkCADLocations_ = [r'C:\temp']
 Output('Modifying Revit File.... start')
 
 # reload Revit links
-resultRevitLinksReload_ = com.ReloadRevitLinks(doc, linkRevitLocations_, hostName_, com.DefaultLinkName, com.DefaultWorksetConfigForReload)
+resultRevitLinksReload_ = rLink.ReloadRevitLinks(
+    doc, 
+    linkRevitLocations_, 
+    hostName_, 
+    rLink.DefaultLinkName, 
+    rLink.DefaultWorksetConfigForReload)
+
 Output(resultRevitLinksReload_.message + ' :: ' + str(resultRevitLinksReload_.status))
 
 # reload CAD links
-resultCADLinksReload_ = com.ReloadCADLinks(doc, linkCADLocations_, hostName_, com.DefaultLinkName)
+resultCADLinksReload_ = rLink.ReloadCADLinks(
+    doc, 
+    linkCADLocations_, 
+    hostName_, 
+    rLink.DefaultLinkName)
+
 Output(resultCADLinksReload_.message + ' :: ' + str(resultCADLinksReload_.status))
 
 # sync changes back to central

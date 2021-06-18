@@ -43,7 +43,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitWorksets as rWork
 import Result as res
 
 # autodesk API
@@ -105,7 +106,7 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
                 break
     if(match == True):
         # Output(instanceWorksetName)
-        return com.GetWorksetIdByName(doc, instanceWorksetName)
+        return rWork.GetWorksetIdByName(doc, instanceWorksetName)
     else:
         # Output('no match')
         return ElementId.InvalidElementId
@@ -117,7 +118,7 @@ def ModifyRevitLinkTypeData(revitLink, doc):
     # get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
-    typeWorksetId = com.GetWorksetIdByName(doc, typeWorksetName)
+    typeWorksetId = rWork.GetWorksetIdByName(doc, typeWorksetName)
     instanceWorksetId = GetRevitInstanceDataByName(revitLink, doc)
     instanceWorksetName = GetWorksetNamebyId(doc, instanceWorksetId)
     if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):

@@ -4,7 +4,7 @@
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# Copyright (c) 2021  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,30 +21,27 @@
 #
 #
 
-import System
 import clr
-import glob
+import System
+
+# import common library modules
+import RevitCommonAPI as com
 import Result as res
-import csv
-import FileItem as fi
+import Utility as util
 
-#from System.IO import Path
+# import Autodesk
 from Autodesk.Revit.DB import *
-import os.path as path
 
-# return human readable BIM 360 path
-def GetBim360Path(doc):
-    # get bim 360 path
-    revitFilePath = ''
-    try:
-        path = doc.GetCloudModelPath()
-        revitFilePath = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
-    except Exception as e:
-        revitFilePath = ''
-    return revitFilePath
+clr.ImportExtensions(System.Linq)
 
-# pretend this is a file server path rather than cloud model path
-def ConvertBIM360FilePath(path):
-    # hack.. pretend path points to C:\\ rather than BIM 360://
-    path = path.replace(r'BIM 360://', r'C:/')
-    return path
+# -------------------------------------------- common variables --------------------
+# header used in reports
+REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'ITEM TYPE']
+
+# --------------------------------------------- utility functions ------------------
+
+# returns a list of filled region elements from the model
+# doc   current document
+def GetFilledRegionsInModel(doc):
+    return FilteredElementCollector(doc).OfClass(FilledRegion).ToList()
+

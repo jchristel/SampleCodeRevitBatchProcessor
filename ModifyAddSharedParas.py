@@ -43,7 +43,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 import Result as res
 import RevitSharedParameterAdd as paraAdd
 
@@ -80,6 +80,9 @@ def Output(message = ''):
     else:
         print (message)
 
+# bind parameters to category
+# doc:  current model document
+# data:     list describing shared parameter to be added. Refer to listOfParameters_ below
 def UpDateParameters (doc, data):
     status = res.Result()
     try:
@@ -151,7 +154,8 @@ sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
             #{"Visibility",BuiltInParameterGroup.PG_VISIBILITY}
 # iS Instance - boolean
 
-listOfParameters = [
+# parameters to be added list
+listOfParameters_ = [
     ['ParameterOne','Exported Parameters',ParameterType.Length, True, [BuiltInCategory.OST_Ceilings], BuiltInParameterGroup.PG_GEOMETRY, True],
     ['ParameterTwo','Exported Parameters',ParameterType.YesNo, True, [BuiltInCategory.OST_Windows,BuiltInCategory.OST_CurtainWallPanels,BuiltInCategory.OST_Walls], BuiltInParameterGroup.PG_IDENTITY_DATA, True],
     ['ParameterThree','Exported Parameters',ParameterType.Text, True, [BuiltInCategory.OST_Rooms], BuiltInParameterGroup.PG_IDENTITY_DATA, True]
@@ -159,7 +163,7 @@ listOfParameters = [
 
 Output('Updating Shared Parameter Data.... start')
 
-result = UpDateParameters (doc, listOfParameters)
+result = UpDateParameters (doc, listOfParameters_)
 Output(str(result.message) + '....' + str(result.status))
 
 # sync changes back to central

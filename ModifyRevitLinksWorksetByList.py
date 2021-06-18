@@ -43,7 +43,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitWorksets as rWork
 import Utility as util
 import Result as res
 
@@ -90,7 +91,7 @@ def ChangeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetId
 def ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
     returnvalue = res.Result()
     # get the target workset id
-    targetWorksetId = com.GetWorksetIdByName(doc, workSetName)
+    targetWorksetId = rWork.GetWorksetIdByName(doc, workSetName)
     # check if workset still exists
     if(targetWorksetId != ElementId.InvalidElementId):
         # loop over link types and try to find a match
@@ -104,7 +105,7 @@ def ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
                     returnvalue = ChangeWorkset(doc, p, linkTypeName, typeWorksetName, workSetName, targetWorksetId,'Type')
                 else:
                     # no need to do anything
-                    returnvalue.message = 'Type ' + str(com.EncodeAscii(linkTypeName)) + ' is already on default workset ' + str(workSetName)
+                    returnvalue.message = 'Type ' + str(util.EncodeAscii(linkTypeName)) + ' is already on default workset ' + str(workSetName)
                 break
     else:
         returnvalue.UpdateSep(False, 'Workset ' + workSetName + ' does no longer exist in file!')
@@ -115,7 +116,7 @@ def ModifyRevitLinkTypeWorksetName(doc, linkName, workSetName):
 def ModifyRevitLinkInstanceWorkset(doc, linkName, workSetName):
     returnvalue = res.Result()
     # get the target workset id
-    targetWorksetId = com.GetWorksetIdByName(doc, workSetName)
+    targetWorksetId = rWork.GetWorksetIdByName(doc, workSetName)
     # check if workset still exists
     if(targetWorksetId != ElementId.InvalidElementId):
         # loop over instances and find match

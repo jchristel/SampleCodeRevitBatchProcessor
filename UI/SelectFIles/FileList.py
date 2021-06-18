@@ -45,30 +45,6 @@ clr.ImportExtensions(System.Linq)
 # my code here:
 # -------------
 
-# method creating a number of task list files
-# directoryPath         directory containing files to be added to task lists
-# fileExtension         file extenision in format .rvt
-# tasklistDirectory     the directory path where the task files will be written to
-# taskFilesNumbes       number of task files to be written
-def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter):
-    returnvalue = res.Result()
-    # get revit files in input dir
-    revitfiles = fileGetter(directoryPath,'.rvt')
-    # build bucket list
-    buckets = wl.DistributeWorkload(taskFilesNumber, revitfiles, getFileSize)
-    try:
-        # write out file lists
-        counter = 0
-        for bucket in buckets:
-            fileName =  os.path.join(taskListDirectory, 'Tasklist_' + str(counter)+ '.txt')
-            statusWrite = writeRevitTaskFile(fileName, bucket)
-            returnvalue.Update(statusWrite)
-            counter += 1
-        returnvalue.AppendMessage('Finished writing out task files')
-    except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to save file list! '  + str(e))
-    return returnvalue
-
 # helper method retrieving files in a given directory and of a given file extension
 # directory              directory containing files to be retrived
 # fileExtension         file extenision in format .rvt
@@ -136,4 +112,29 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
         returnvalue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
+    return returnvalue
+
+
+# method creating a number of task list files
+# directoryPath         directory containing files to be added to task lists
+# fileExtension         file extenision in format .rvt
+# tasklistDirectory     the directory path where the task files will be written to
+# taskFilesNumbes       number of task files to be written
+def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
+    returnvalue = res.Result()
+    # get revit files in input dir
+    revitfiles = fileGetter(directoryPath,'.rvt')
+    # build bucket list
+    buckets = wl.DistributeWorkload(taskFilesNumber, revitfiles, getFileSize)
+    try:
+        # write out file lists
+        counter = 0
+        for bucket in buckets:
+            fileName =  os.path.join(taskListDirectory, 'Tasklist_' + str(counter)+ '.txt')
+            statusWrite = writeRevitTaskFile(fileName, bucket, fileDataProcessor)
+            returnvalue.Update(statusWrite)
+            counter += 1
+        returnvalue.AppendMessage('Finished writing out task files')
+    except Exception as e:
+        returnvalue.UpdateSep(False, 'Failed to save file list! '  + str(e))
     return returnvalue

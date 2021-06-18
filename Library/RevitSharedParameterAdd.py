@@ -6,7 +6,7 @@ from Autodesk.Revit.DB import *
 # custom result class
 import Result as res
 # import InTransaction from common module
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 
 # opens a shared parameter file
 def LoadSharedParameterFile(doc, path):
@@ -43,7 +43,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
             if(iter.Key != None):
                 definition = iter.Key
                 elemBind = iter.Current
-                #check parameter name match
+                # check parameter name match
                 if(parameterName == definition.Name):
                     try: 
                         cat = doc.Settings.Categories.get_Item(category)

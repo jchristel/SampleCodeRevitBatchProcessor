@@ -61,6 +61,15 @@ import Utility as util
 # global variable controlling debug output
 debugMode_ = False
 
+# message snippets which indicate processing a file went bad
+EXCEPTION_MESSAGES = [
+    'ERROR: An error occurred while executing the task script! Operation', # revit batch p message when script is buggy
+    'WARNING: Timed-out', # revit batch p message when revit times out
+    'Exception: [Exception]', # Revit Batch P message when an exception occurs
+    '\t- \tMessage: An unrecoverable error has occurred.  The program will now be terminated.', # Revit message when it crashes out
+    'Script Exception:' # custom script message...something the script was meant to do failed
+]
+
 # output...
 def Output(message = ''):
     if debugMode_:
@@ -85,8 +94,8 @@ def AdjustSessionIdFileNameBack(fileNameId):
 
 # method writing out an empty marker file in given directory
 # file is empty and of type .txt
+#
 # file name is the batchprocessor sessionId used to identify log file belonging to this process
-
 # folderpath : directory of where the file will be written to
 # sesionId: the actual file name
 def WriteSessionIdMarkerFile(folderPath, sessionId):
@@ -110,8 +119,8 @@ def GetCurrentSessionIds(folderPath):
     # delete marker files
     resultDelete = True
     for fd in file_list:
-        #resultDelete = resultDelete & util.FileDelete(fd)
-        resultDelete = True
+        if(debugMode_ == False):
+            resultDelete = resultDelete & util.FileDelete(fd)
     if(not resultDelete):
         Output ('Failed to delete a marker file!')
     for f in file_list:
@@ -131,7 +140,10 @@ def GetLogFiles(listOfSessionIds):
             # check whether file is older than 24h
             fileTime = os.path.getmtime(l)
             # 24 hr are 86400 seconds
-            if timeNow - fileTime < 86400:
+            timeOut = 86400
+            if debugMode_ == True:
+                timeOut = 8640000
+            if timeNow - fileTime < timeOut:
                 # read the first two rows of the file to get the id
                 idstring = GetSessionIdFromLogFile(l)
                 for idtoMatch in listOfSessionIds:
@@ -226,7 +238,6 @@ def ProcessLogFile(filePath):
         Output ('GetFilesProcessed: ' + str(e))
     return filesProcessStatus
 
-
 # filtering files not found from overall file list
 #
 # filesProcessed: list of arrays, first entry in array is fully qualified file path
@@ -249,10 +260,12 @@ def filterFilesNotyFound(filesProcessed, filesNotFound):
 # fileToCheck: fully qualified file path of Revit file which was processed
 # logfilePath: path to log file to be processed
 def GetProcessStatus(fileToCheck, logFilePath):
-    message = ['Ok']
+    message = ['Found no match in log file']
+    # flag indicating whether we managed to retrieve processing data for a file
+    foundMatch = False
     jsonData = ReadLogFile(logFilePath)
     # get data block showing how each file was processed
-    unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, 'Processing Revit file (', '\t- Operation completed.', True)
+    unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, '\t- Processing file (', ['\t- Task script operation completed.','\t- Operation aborted.'], True)
     processStatus = True
     # loop over messages in this block and check for time out, and exception messages
     for mblock in  unformattedRevitFileProcessMessages:
@@ -260,12 +273,26 @@ def GetProcessStatus(fileToCheck, logFilePath):
         # todo
         fileName = GetFileNameFromDataBlock(mblock)
         if(fileName == fileToCheck):
+            Output('file to check: ' +str(fileToCheck + '     file found: '+fileName) +'    is match '  +str(fileName == fileToCheck))
+            foundMatch = True
+            # flag to show whether logs show any issues
+            foundProblem = False
             for m in mblock:
+                Output(m)
                 # check for exceptions
-                if('ERROR: An error occurred while executing the task script! Operation' in m or 'WARNING: Timed-out' in m):
-                    processStatus = False
-                    message = [m.strip()]
-                    break
+                for exceptionMessage in EXCEPTION_MESSAGES:
+                    if(exceptionMessage in m):
+                        processStatus = False
+                        foundProblem = True
+                        message = [m.strip()]
+                        break
+            if (foundProblem == False):
+                message = '[ok]'
+                processStatus = True
+    # check if a match for given file was found in log data
+    if(foundMatch == False):
+        processStatus = False
+        message = '[Failed to retrieve processing data for file.]'
     return processStatus, message
         
 # method extracting the file name from a process message block
@@ -273,9 +300,15 @@ def GetProcessStatus(fileToCheck, logFilePath):
 # mblock: list of json formatted rows representing all messages received during file process
 # returns the fully qualified file path of the file processed
 def GetFileNameFromDataBlock(mblock):
-    # file name is in third row
-    # "message":{"msgId":"","message":"\tP:something\\AR_1904021_CTC_RHINO MAPPER FILE_2020.rvt"
-    fileName = mblock[2].Trim()
+    # check if this is a cloud model
+    if('CLOUD MODEL' in mblock[0]):
+        #['\t- Processing file (1 of 1): CLOUD MODEL', '\t- ', '\t- \tProject ID: GUID', '\t- \tModel ID: GUID',...]
+        messageStarter = '\t- \t'
+        fileName = mblock[3].Trim()[len(messageStarter)-1:]
+    else:
+        # ["\t- Processing file (x of y): file path"}},...]
+        messageStarter = '\t- Processing file (x of y): '
+        fileName = mblock[0].Trim()[len(messageStarter)-1:]
     return fileName
 
 # method reading a logfile and extracting all files processed
@@ -285,7 +318,7 @@ def GetFileNameFromDataBlock(mblock):
 # [[filepath, status]]
 def GetFilesProcessed(filePath):
     # log file structure:
-    # start of file list:
+    # start of file list (file server):
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Revit Files for processing (1):"}}
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":""}}
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"\tP:\\something\\FileName.rvt"}}
@@ -295,36 +328,59 @@ def GetFilesProcessed(filePath):
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":""}}
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Starting batch operation..."}}
     # end of file list
+    # start of file list (cloud model):
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":"Revit Files for processing (1):"}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":""}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":"\tCLOUD MODEL"}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":"\tProject ID: ee514b99-fac1-441a-ba98-6912c4aa4fdb"}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":"\tModel ID: c15a664d-fab8-4153-8532-b8fa04402528"}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":"\tRevit version: 2020"}}
+    #   {"date":{"local":"18/05/2021","utc":"18/05/2021"},"time":{"local":"19:20:00","utc":"09:20:00"},"sessionId":"e8a39f45-ca88-464f-a32f-278f0414280f","message":{"msgId":"","message":""}}
+    # end of file list
     listOfFiles = []
     jsonData = ReadLogFile(filePath)
     # get data block showing which files are to be processed
     # there should just be one ...
-    logBlocks = GetLogBlocks(jsonData, 'Revit Files for processing', 'Starting batch operation...', False)
+    logBlocks = GetLogBlocks(jsonData, 'Revit Files for processing', ['Starting batch operation...'], False)
     if(len(logBlocks) > 0):
-        Output ('Found processed files')
         unformattedRevitFileProcessMessages = logBlocks[0]
         # parse data block and get list of files and file exists status
         # each file block is proceeded by an empty message row
         # last entry is also an empty message block!
         for x in range(len(unformattedRevitFileProcessMessages)):
             # check for start of data block 
-            if(unformattedRevitFileProcessMessages[x] == '' and x + 2 <= len(unformattedRevitFileProcessMessages)):
-                # get file data from next two rows
-                dummy = [unformattedRevitFileProcessMessages[x + 1],unformattedRevitFileProcessMessages[x + 2]]
+            # Output('unformatted messages '+str(unformattedRevitFileProcessMessages))
+            if(unformattedRevitFileProcessMessages[x] == '' and x + 3 <= len(unformattedRevitFileProcessMessages)):
+                # check whether cloud model or file server model
+                if('CLOUD MODEL' in unformattedRevitFileProcessMessages[x + 1]):
+                    # get file data from next two rows
+                    # substitute file name with file GUID, fake the status always exists
+                    dummy = [unformattedRevitFileProcessMessages[x + 3],'File exists: YES']
+                else:
+                    # get file data from next two rows
+                    dummy = [unformattedRevitFileProcessMessages[x + 1],unformattedRevitFileProcessMessages[x + 2]]
                 listOfFiles.append(GetFileData(dummy))
     return listOfFiles
 
 # method parsing two rows of json formatted data
 #
 # data list of 2 rows of Json formatted data
+# sample of file system:
+#18/05/2021 15:57:53 : 	File exists: YES
+#18/05/2021 15:57:53 : 	File size: 199.38MB
+# sample of BIM360:
+#18/05/2021 15:37:23 : 	Project ID: a valid guid
+#18/05/2021 15:37:23 : 	Model ID: a valid guid
+# note: when processing BIM360 files Batchprocessor is not checking whether the file exists upfront!
 # returns list in format
 # [filename, file exists status as bool]
 def GetFileData(data):
     # trim white spaces from file name
     fileName = data[0].Trim()
     filestatus = False
-    # check whether file status contains a YES
-    if ('YES' in data[1]):
+    # check whether file status contains a YES or whether this is a cloud model 
+    # (RBP does not check upfront whether a cloud model exists!)
+    if ('YES' in data[1] or 'Project ID' in data[1]):
         filestatus = True
     return [fileName,filestatus]  
 
@@ -344,23 +400,39 @@ def GetFilesNotFound(filesProcessed):
 # startMarker: string in messages indicating start of block
 # endMarker: string in messages indicating end of block
 # multipleBlocks: bool indicating whether there are multiple data block in log file to be returned
-def GetLogBlocks(jsonData, startMarker, endMarker, multipleBlocks):
+def GetLogBlocks(jsonData, startMarker, endMarkers, multipleBlocks):
     unformattedBlockData = []
     datablock = []
+    messageString = ''
     # extract rows belonging to blocks
     fileBlock = False
+    #Output('json data: ' + str(jsonData))
     for data in jsonData:
         messageString = GetMessageFromJson(data)
         if messageString.startswith(startMarker) and fileBlock == False:
             fileBlock = True
-        if messageString.startswith(endMarker) and fileBlock == True:
-            unformattedBlockData.append(datablock)
-            datablock = []
-            fileBlock = False
-            if(not multipleBlocks):
+        # flag to indicate we found a match for end of block
+        matchEndBlock = False
+        for endMarker in endMarkers:
+            match = False
+            if messageString.startswith(endMarker) and fileBlock == True:
+                matchEndBlock = True
+                unformattedBlockData.append(datablock)
+                datablock = []
+                fileBlock = False
+                match = True
                 break
-        if fileBlock:
+        if(not multipleBlocks and match):
+            break
+        if (fileBlock):
             datablock.append(messageString)
+    # check for open block
+    if (fileBlock == True and matchEndBlock == False):
+        # append this data...hopefully there is an exception message in there!!
+        unformattedBlockData.append(datablock)
+        Output('Added open data block')
+        Output(datablock)
+        Output('')
     return unformattedBlockData
 
 # method reading log file into lists of json object

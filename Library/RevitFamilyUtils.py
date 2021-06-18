@@ -31,7 +31,7 @@ from System.Collections.Generic import List
 
 
 # import common library
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 import Result as res
 import RevitFamilyLoadOption as famLoadOpt
 from RevitFamilyLoadOption import *
@@ -196,3 +196,17 @@ def GetFamilySymbols(doc, cats):
         return elements
     except Exception:
         return elements
+
+# returns a list of in editable and not in place families
+# doc   current model document
+def GetAllLoadableFamilies(doc):
+    collector = FilteredElementCollector(doc)
+    families = collector.OfClass(Family).Where(lambda e: (e.IsEditable == True and e.IsInPlace == False)).ToList()
+    return families
+
+# returns a list of in place families
+# doc   current model document
+def GetAllInPlaceFamilies(doc):
+    collector = FilteredElementCollector(doc)
+    families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == True)).ToList()
+    return families

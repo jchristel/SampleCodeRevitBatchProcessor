@@ -25,7 +25,8 @@ import clr
 import System
 
 # import common library modules
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitWorksets as rWork
 import Result as res
 import Utility as util
 
@@ -224,11 +225,16 @@ def ModifyGridsWorksets(doc, revitFileName, worksetRules):
 
 # ------------------------------------------------------- Grid reporting --------------------------------------------------------------------
 
-# gets grid data ready for being prited to file
+# gets grid data ready for being printed to file
 # doc: the current revit document
 # revitFilePath: fully qualified file path of Revit file
 def GetGridReportData(doc, revitFilePath):
     data = []
     for p in FilteredElementCollector(doc).OfClass(Grid):
-        data.append('\t'.join([util.GetFileNameWithoutExt(revitFilePath), str(p.Id.IntegerValue), util.EncodeAscii(p.Name), com.GetWorksetNameById(doc, p.WorksetId.IntegerValue), GetMaxExtentAsString(p)]))
+        data.append('\t'.join([
+            util.GetFileNameWithoutExt(revitFilePath), 
+            str(p.Id.IntegerValue), 
+            util.EncodeAscii(p.Name), 
+            rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue), 
+            GetMaxExtentAsString(p)]))
     return data

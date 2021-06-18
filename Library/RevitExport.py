@@ -43,7 +43,7 @@ from Autodesk.Revit.DB import *
 from BIM.IFC.Export.UI import IFCExportConfiguration
 
 # import common library
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
@@ -71,7 +71,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
             actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
             actionReturnValue.result = [directoryPath, fileName]
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to export to IFC with exception: ' + str(e))
+            actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
     transaction = Transaction(doc,'Export to IFC')
     returnvalue = com.InTransaction(transaction, action)
@@ -288,12 +288,12 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     # nwc export does not need to run in a transaction
     returnvalue = res.Result()
     try:
-        #export to NWC
+        # export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
         returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
         returnvalue.result = [directoryPath, fileName]
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to export to NWC with exception: ' + str(e))
+        returnvalue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
     return returnvalue
 
 # method exporting the entire model to NWC
@@ -323,5 +323,5 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
             returnvalueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
             returnvalue.Update(returnvalueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnvalue.UpdateSep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
     return returnvalue

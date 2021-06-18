@@ -25,7 +25,7 @@ import clr
 import System
 
 # import common library modules
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 import Result as res
 
 # import Autodesk
@@ -58,6 +58,11 @@ def DeleteLinePatternsWithout(doc, contains):
     result = com.DeleteByElementIds(doc,deleteids, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
+# return all line patterns in the model
+# doc:      curren document
+def GetAllLinePatterns(doc):
+    return FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
+
 # ------------------------------------------------ DELETE LINE STYLES ----------------------------------------------
 
 # deletes all line styles where the name starts with provided string
@@ -66,3 +71,17 @@ def DeleteLineStylesStartsWith(doc, startsWith):
     ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[ElementId]()
     result = com.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
     return result
+
+# return all line styles ids in the model
+# doc:      curren document
+def GetAllLineStyleIds(doc):
+    lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
+    ids = list(c.Id for c in lc.SubCategories).ToList[ElementId]()
+    return ids
+
+# ------------------------------------------------ Fill Patterns ----------------------------------------------
+
+# return all fill pattern ids in the model
+# doc:      curren document
+def GetAllFillPattern(doc):
+    return FilteredElementCollector(doc).OfClass(FillPatternElement).ToList()

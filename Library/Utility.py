@@ -30,10 +30,12 @@ import os
 import shutil
 import os.path
 from os import path
+import csv
 
 # default file stamp date format
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
+FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 
 # get the date stamp prefix of report files
 def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
@@ -149,20 +151,50 @@ def GetFirstRowInFile(filePath):
         row = None
     return row
 
+# method writing out report information
+# fileName:         fully qualified file path
+# header:           list of column headers
+# data:             list of lists representing row data
+def writeReportData(fileName, header, data):
+    f = open(fileName, 'w')
+    f.write('\t'.join(header + ['\n']))
+    for d in data:
+        f.write('\t'.join(d + ['\n']))
+    f.close()
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-#returns a list of files from a given folder with a given file extension
-#file extension in format '.txt'
+# returns a list of files from a given folder with a given file extension
+# file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
     return file_list
 
-#returns a list of files from a given folder with a given file extension and a file name filter
-#file extension in format '.txt'
-#file filter is in 'something*'
+# returns a list of files from a given folder with a given file extension and a file name filter
+# file extension in format '.txt'
+# file filter is in 'something*'
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
+
+# number of file size options
+FILE_SIZE_IN_KB = 1024
+FILE_SIZE_IN_MB = 1024*1024
+FILE_SIZE_IN_GB = 1024*1024*1024
+
+# get the file size in given units (default is MB)
+# filePath  fully qualified file path
+# unit      unit of file size to be returned, default is MB
+def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
+    # default value if anything goes wrong
+    size = -1
+    try:
+        size = os.path.getsize(filePath)
+        # convert units
+        size = size / unit
+    except:
+        pass
+    return size
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -280,6 +312,19 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     else:
         return relativeFilePath
 
+# read a csv files into a list of rows
+def ReadCSVfile(filepathCSV):
+    rowList = []
+    try:
+        with open(filepathCSV) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader: # each row is a list
+                rowList.append(row)
+    except Exception as e:
+        print (str(e))
+        rowList = []
+    return rowList
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 # currently known comparisons
@@ -337,3 +382,7 @@ def EncodeAscii (string):
 # if no value found returns the specificed default value
 def GetFirst(iterable, default, condition = lambda x: True):
     return next((x for x in iterable if condition(x)),default)
+
+# converts feet and inches to mm
+def ConvertImperialToMetricMM(value):
+    return value * 304.8

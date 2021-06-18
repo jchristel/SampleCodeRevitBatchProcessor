@@ -46,7 +46,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 #import common libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitViews as rView
 import Utility as util
 import Result as res
 
@@ -102,7 +103,7 @@ def ModifyViews(doc, revitFilePath, viewData):
     for fileName, viewRules in viewData:
         if (revitFileName.startswith(fileName)):
             collectorViews = FilteredElementCollector(doc).OfClass(View)
-            returnvalue = com.DeleteViews(doc, viewRules, collectorViews)
+            returnvalue = rView.DeleteViews(doc, viewRules, collectorViews)
             break
     return returnvalue
 
@@ -118,7 +119,7 @@ def ModifySheets(doc, sheets):
     for fileName, sheetRules in sheets:
         if (revitFileName.startswith(fileName)):
             collectorSheets = FilteredElementCollector(doc).OfClass(View)
-            returnvalue = com.DeleteSheets(doc, sheetRules, collectorSheets)
+            returnvalue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
             break
     return returnvalue
 
@@ -161,7 +162,7 @@ resultDeleteViews_ = ModifyViews(doc, revitFilePath_, viewRules_)
 Output(resultDeleteViews_.message + '.... status: ' + str(resultDeleteViews_.status))
 
 # delete views not on sheets
-resultDeleteViewsNotOnSheets_ = com.DeleteViewsNotOnSheets(doc, CheckName)
+resultDeleteViewsNotOnSheets_ = rView.DeleteViewsNotOnSheets(doc, CheckName)
 Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultDeleteViewsNotOnSheets_.status))
  
 # sync changes back to central, non workshared files will not be saved!

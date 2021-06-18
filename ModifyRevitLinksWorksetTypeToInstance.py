@@ -43,7 +43,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
+import RevitWorksets as rWork
 import Utility as util
 import Result as res
 
@@ -90,7 +91,7 @@ def GetRevitLinkTypeDataByName(revitLinkName, doc):
             wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
             typeWorksetName = wsparam.AsValueString()
             break
-    return com.GetWorksetIdByName(doc, typeWorksetName)
+    return rWork.GetWorksetIdByName(doc, typeWorksetName)
 
 # get the revit link instance data
 # this also calls GetRevitLinkTypeDataByName() 
@@ -99,7 +100,7 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
-    instanceWorksetId = com.GetWorksetIdByName(doc, instanceWorksetName)
+    instanceWorksetId = rWork.GetWorksetIdByName(doc, instanceWorksetName)
     lN = "unknown"
     #split revit link name at colon
     linkTypeNameParts = revitLink.Name.split(':')
@@ -108,7 +109,7 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
         #get the link type data before extension is stripped from the name,
         #strip space of end of name too
         typeWorksetId = GetRevitLinkTypeDataByName(lN[0:-1], doc)
-        typeWorksetName = com.GetWorksetNameById(doc, typeWorksetId)
+        typeWorksetName = rWork.GetWorksetNameById(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != ElementId.InvalidElementId):
             linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])

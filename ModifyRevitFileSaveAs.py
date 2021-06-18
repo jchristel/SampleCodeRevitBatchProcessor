@@ -44,7 +44,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import CommonRevitAPI as com
+import RevitCommonAPI as com
 
 # autodesk API
 from Autodesk.Revit.DB import *

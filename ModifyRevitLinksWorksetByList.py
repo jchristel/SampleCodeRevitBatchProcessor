@@ -84,7 +84,7 @@ def Output(message = ''):
 def ChangeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetId, descriptor):
     Output(str(descriptor) + ':: Moving '+ str(linkName) + ' from ' + str(fromWorksetName) + ' to ' + str(toWorksetName))
     transaction = Transaction(doc, "Changing workset of " + linkName)
-    result = com.InTransaction(transaction,  com.GetActionChangeElementWorkset(el,toWorksetId))
+    result = com.InTransaction(transaction,  rWork.GetActionChangeElementWorkset(el,toWorksetId))
     Output(linkName + ' ' + str(result.status))
     return result
 

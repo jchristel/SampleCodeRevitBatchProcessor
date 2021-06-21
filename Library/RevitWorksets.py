@@ -97,6 +97,48 @@ def OpenWorksetsWithElementsHack(doc):
             # this will force Revit to open the workset containing this element
             uidoc.ShowElements(elemIds.First())
 
+# attemps to change the worksets of elements provided through an element collector
+def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
+    returnvalue = res.Result()
+    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName + '\n'
+    # get the ID of the default grids workset
+    defaultId = GetWorksetIdByName(doc, defaultWorksetName)
+    counterSuccess = 0
+    counterFailure = 0
+    # check if invalid id came back..workset no longer exists..
+    if(defaultId != ElementId.InvalidElementId):
+        # get all elements in collector and check their workset
+        for p in collector:
+            if (p.WorksetId != defaultId):
+                # move element to new workset
+                transaction = Transaction(doc, "Changing workset " + p.Name)
+                trannyStatus = com.InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
+                if (trannyStatus.status == True):
+                    counterSuccess += 1
+                else:
+                    counterFailure += 1
+                returnvalue.status = returnvalue.status & trannyStatus.status
+            else:
+                counterSuccess += 1
+                returnvalue.status = returnvalue.status & True 
+    else:
+        returnvalue.UpdateSep(False, 'Default workset '+ defaultWorksetName + ' does no longer exists in file!')
+    returnvalue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
+    return returnvalue
+
+# returns the required action to change a single elements workset
+def GetActionChangeElementWorkset(el, defaultId):
+    def action():
+        actionReturnValue = res.Result()
+        try:
+            wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+            wsparam.Set(defaultId.IntegerValue)
+            actionReturnValue.message = 'Changed element workset.'
+        except Exception as e:
+            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        return actionReturnValue
+    return action
+
 # ------------------------------------------------------- workset reporting --------------------------------------------------------------------
 
 # gets workset data ready for being printed to file

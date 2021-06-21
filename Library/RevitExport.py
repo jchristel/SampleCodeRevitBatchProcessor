@@ -44,6 +44,7 @@ from BIM.IFC.Export.UI import IFCExportConfiguration
 
 # import common library
 import RevitCommonAPI as com
+import RevitViews as rView
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
@@ -202,7 +203,7 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
@@ -246,7 +247,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
@@ -309,7 +310,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = com.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)

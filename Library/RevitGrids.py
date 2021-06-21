@@ -145,7 +145,7 @@ def ModifyGridWorkSetsDefault (doc, worksetRules):
     collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
     for rule in worksetRules:
         for defaultWorksetName in rule:
-            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+            grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
             gridsResults.Update(grids)
     return gridsResults
 
@@ -170,7 +170,7 @@ def ModifyGridWorkSetsByTypeName(doc, worksetRules):
         # get the grid type id from the type name
         typeId = GetGridTypeIdByName(doc, typeName)
         collectorGrids = FilteredElementCollector(doc).OfClass(Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
-        grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+        grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 
@@ -192,7 +192,7 @@ def ModifyGridWorkSetsByParameterValue(doc, worksetRules):
     # get all grids matching filter
     for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
         collectorGrids = FilteredElementCollector(doc).OfClass(Grid).Where(lambda e: GridCheckParameterValue(e, paraName, paraCondition, conditionValue))
-        grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+        grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 

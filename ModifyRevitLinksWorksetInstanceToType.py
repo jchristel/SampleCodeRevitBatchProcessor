@@ -124,7 +124,7 @@ def ModifyRevitLinkTypeData(revitLink, doc):
     if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
         transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
-        returnvalue = com.InTransaction(transaction, com.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        returnvalue = com.InTransaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
         Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(returnvalue.status))
     else:
         returnvalue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)

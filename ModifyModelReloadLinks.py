@@ -85,7 +85,7 @@ def Output(message = ''):
 
 # special treatment to link names...
 # ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
-# this is a sample only since the code below uses the default method com.DefaultLinkName
+# this is a sample only since the code below uses the default method RevitWorksets.DefaultLinkName
 def LinkName(name):
     return name[0:-8]
 

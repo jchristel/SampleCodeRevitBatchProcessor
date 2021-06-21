@@ -33,6 +33,7 @@ import RevitCommonAPI as com
 import Result as res
 import RevitDesignSetOptions as rDoS
 import RevitWarnings as rWarn
+import RevitWorksets as rWork
 import RevitViews as rViews
 import RevitLineStylesPatterns as rLsp
 import RevitLinks as rLinks
@@ -98,7 +99,7 @@ def GetParametersOfInstance(famInstance, doc):
 # number of worksets in model
 # doc   current document
 def GetWorksetNumber(doc):
-    return len(com.GetWorksets(doc))
+    return len(rWork.GetWorksets(doc))
 
 # get the file size in MB
 # doc   current document

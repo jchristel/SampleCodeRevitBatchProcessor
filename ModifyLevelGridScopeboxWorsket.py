@@ -44,6 +44,8 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
 import RevitCommonAPI as com
+import RevitWorksets as rWork
+import Utility as util
 import Result as res
 
 # autodesk API
@@ -81,26 +83,26 @@ def Output(message = ''):
 
 def Modify(doc, revitFilePath, gridData):
     returnvalue = res.Result()
-    revitFileName = com.GetRevitFileName(revitFilePath)
+    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     flag = False
     for fileName, defaultWorksetName in gridData:
         if (revitFileName.startswith(fileName)):
             flag = True
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
-            grids = com.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+            grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
             returnvalue.Update(grids)
 
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
-            levels = com.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
+            levels = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
             returnvalue.Update(levels)
 
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
+            sboxes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
             returnvalue.Update(sboxes)
             
             # fix up ref planes
             collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
-            refPlanes = com.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
+            refPlanes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
             returnvalue.Update(refPlanes)
             
             break

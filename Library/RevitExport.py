@@ -117,8 +117,8 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
-    ifcExportConfig.COBieCompanyInfo = 'BVN'
-    ifcExportConfig.COBieProjectInfo = 'SIRIUS'
+    ifcExportConfig.COBieCompanyInfo = 'Company Name'
+    ifcExportConfig.COBieProjectInfo = 'Project Info'
     
     return ifcExportConfig
 
@@ -126,8 +126,7 @@ def IFCGetThirdPartyExportConfifgByView(ifcVersion):
 # this configuration exports the entire model
 def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
 
-    ifcExportConfig = IFC.Export.UI.IFCExportConfiguration.CreateDefaultConfiguration()
-
+    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
     ifcExportConfig.Name = 'DefaultIFCByModelSetup'
     
     # set up IFC version

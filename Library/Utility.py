@@ -274,8 +274,10 @@ def CreateFolder(root, folderName):
     flag = True
     try:
         os.mkdir(dirName)
-    except Exception:
-        flag = False
+    except Exception as e:
+        # just in case the folder does exist (created by another instance at almost the same time)
+        if('[Errno 17]' not in str(e)):
+            flag = False
     return flag
 
 # checks whether folder exists and if not attempts to create it

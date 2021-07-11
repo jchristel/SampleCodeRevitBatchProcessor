@@ -50,8 +50,9 @@ def GetModelGroups(doc):
 def GetDetailGroups(doc):
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType().ToList()
 
-# returns a list of detail groups from the model
+# returns a list of unplaced groups from the model
 # doc   current document
+# groupCategory     either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
 def GetNotPlacedGroups(doc, groupCategory):
     groupTypes = FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType().ToList()
     groupInstances = FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsNotElementType().ToList()
@@ -63,8 +64,10 @@ def GetNotPlacedGroups(doc, groupCategory):
         for gi in groupInstances:
             # check if we had this group type checked allready, if so ignore and move to next
             if(gi.GetTypeId() not in allreadyChecked):
-                allreadyChecked.append(gi.GetTypeId())
+                #  check for type id match
                 if(gi.GetTypeId() == gt.Id):
+                    # add to allready checked and verified as match list
+                    allreadyChecked.append(gi.GetTypeId())
                     match = True
                     break
         if(match == False):
@@ -72,11 +75,16 @@ def GetNotPlacedGroups(doc, groupCategory):
     return notPlaced
 
 # returns a list of unplaced detail groups from the model
+# this will not list any attached detail groups!!
+# attached detail groups can be switched off by view...in order to find them would require to iterate over every view (not schedules etc)
+# and check whether that detail group is visible in that view via:
+# method: GetShownAttachedDetailGroupTypeIds(viewId)
+# to get any attached detail groups in general use: GetAvailableAttachedDetailGroupTypeIds()
 # doc   current document
 def GetUnplacedDetailGroups(doc):
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
 
-# returns a list of unplaced detail groups from the model
+# returns a list of unplaced model groups from the model
 # doc   current document
 def GetUnplacedModelGroups(doc):
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSModelGroups)

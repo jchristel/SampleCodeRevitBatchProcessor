@@ -48,10 +48,12 @@ def PurgeUnplacedModelGroupsInModel(doc, transactionName):
     try:
         unused = rGrp.GetUnplacedModelGroups(doc)
         ids = []
+        groupNames = ['Model Groups:']
         for unusedGroup in unused:
             ids.append(unusedGroup.Id)
-            purgeResult = com.DeleteByElementIds(doc, ids, transactionName, unusedGroup.Name)
-            resultValue.update(purgeResult)
+            groupNames.append(Element.Name.GetValue(unusedGroup))
+        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
+        resultValue.Update(purgeResult)
     except Exception as e:
         resultValue.UpdateSep(False,'Terminated purge unused model groups with exception: '+ str(e))
     return resultValue
@@ -63,10 +65,12 @@ def PurgeUnplacedDetailGroupsInModel(doc, transactionName):
     try:
         unused = rGrp.GetUnplacedDetailGroups(doc)
         ids = []
+        groupNames = ['Detail Groups:']
         for unusedGroup in unused:
             ids.append(unusedGroup.Id)
-            purgeResult = com.DeleteByElementIds(doc, ids, transactionName, unusedGroup.Name)
-            resultValue.update(purgeResult)
+            groupNames.append(Element.Name.GetValue(unusedGroup))
+        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
+        resultValue.Update(purgeResult)
     except Exception as e:
         resultValue.UpdateSep(False,'Terminated purge unused detail groups with exception: '+ str(e))
     return resultValue

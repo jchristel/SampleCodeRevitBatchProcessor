@@ -31,11 +31,21 @@ class Result:
         self.status = True
         self.result = []
     
+    def AppendMessage(self, message):
+        try:
+            if(self.message == '-'):
+                self.message = message
+            else:
+                self.message = self.message + '\n' + message
+        except Exception as e:
+            print (str(e))
+            pass
+
     def Update(self, otherResult):
         try:
             # check if default message string, if so do not update
             if(otherResult.message is not '-'):
-                self.message = self.message + '\n' + otherResult.message
+                self.AppendMessage(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
             if(otherResult.result is not None and len(otherResult.result)>0):
@@ -46,18 +56,13 @@ class Result:
     
     def UpdateSep (self, status, message):
         try:
-            self.message = self.message + '\n' + message
+            self.AppendMessage(message)
+            # self.message = self.message + '\n' + message
             self.status = self.status & status
         except Exception as e:
             print (str(e))
             pass
 
-    def AppendMessage(self, message):
-        try:
-            self.message = self.message + '\n' + message
-        except Exception as e:
-            print (str(e))
-            pass
 
     def UpdateStatus(self, status):
         try:

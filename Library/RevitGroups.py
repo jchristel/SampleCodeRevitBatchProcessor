@@ -50,6 +50,11 @@ def GetModelGroups(doc):
 def GetDetailGroups(doc):
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType().ToList()
 
+# returns a list of nested detail groups from the model
+# doc   current document
+def GetNestedDetailGroups(doc):
+    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType().ToList()
+
 # returns a list of unplaced groups from the model
 # doc   current document
 # groupCategory     either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
@@ -75,14 +80,16 @@ def GetNotPlacedGroups(doc, groupCategory):
     return notPlaced
 
 # returns a list of unplaced detail groups from the model
-# this will not list any attached detail groups!!
-# attached detail groups can be switched off by view...in order to find them would require to iterate over every view (not schedules etc)
-# and check whether that detail group is visible in that view via:
-# method: GetShownAttachedDetailGroupTypeIds(viewId)
-# to get any attached detail groups in general use: GetAvailableAttachedDetailGroupTypeIds()
+# this will not include any attached detail groups!!
 # doc   current document
 def GetUnplacedDetailGroups(doc):
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
+
+# returns a list of unplaced nested detail groups from the model
+# this will not list any none nested detail groups!!
+# doc   current document
+def GetUnplacedNestedDetailGroups(doc):
+    return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
 
 # returns a list of unplaced model groups from the model
 # doc   current document

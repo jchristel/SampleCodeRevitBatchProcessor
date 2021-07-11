@@ -41,50 +41,70 @@ from System.Collections.Generic import List
 
 # --------------------------------------------- Groups ---------------------------------------------
 
-# purges unplaced model groups from a model
+# purges all unplaced groups provided through a passed in getter method from a model
 # doc   current document
-def PurgeUnplacedModelGroupsInModel(doc, transactionName):
+# getGroups     expects a method which has to
+#   - return a list of either: model groups, detail groups or nested detail groups. 
+#   - excepts as a single argument the current document
+# transactionName   the transaction name to be used when deleting elements by Id
+# groupNameHeader   the text to be displayed at the start of the list containing the deleted group names
+def PurgeUnplacedGroups (doc, getGroups, transactionName, groupNameHeader):
     resultValue = res.Result()
     try:
-        unused = rGrp.GetUnplacedModelGroups(doc)
+        unused = getGroups(doc)
         ids = []
-        groupNames = ['Model Groups:']
+        groupNames = [groupNameHeader]
         for unusedGroup in unused:
             ids.append(unusedGroup.Id)
             groupNames.append(Element.Name.GetValue(unusedGroup))
         purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
         resultValue.Update(purgeResult)
     except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused model groups with exception: '+ str(e))
+        resultValue.UpdateSep(False,'Terminated purge unused ' + groupNameHeader + ' with exception: '+ str(e))
     return resultValue
+
+# purges unplaced model groups from a model
+# doc   current document
+# transactionName   the transaction name to be used when deleting elements by Id
+def PurgeUnplacedModelGroupsInModel(doc, transactionName):
+    return PurgeUnplacedGroups(
+        doc, 
+        rGrp.GetUnplacedModelGroups, 
+        transactionName, 
+        'Model Group(s)')
 
 # purges unplaced detail groups from a model
 # doc   current document
+# transactionName   the transaction name to be used when deleting elements by Id
 def PurgeUnplacedDetailGroupsInModel(doc, transactionName):
-    resultValue = res.Result()
-    try:
-        unused = rGrp.GetUnplacedDetailGroups(doc)
-        ids = []
-        groupNames = ['Detail Groups:']
-        for unusedGroup in unused:
-            ids.append(unusedGroup.Id)
-            groupNames.append(Element.Name.GetValue(unusedGroup))
-        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
-        resultValue.Update(purgeResult)
-    except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused detail groups with exception: '+ str(e))
-    return resultValue
+    return PurgeUnplacedGroups(
+        doc, 
+        rGrp.GetUnplacedDetailGroups, 
+        transactionName, 
+        'Detail Group(s)')
+
+# purges unplaced nested detail groups from a model
+# doc   current document
+# transactionName   the transaction name to be used when deleting elements by Id
+def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName):
+    return PurgeUnplacedGroups(
+        doc, 
+        rGrp.GetUnplacedNestedDetailGroups, 
+        transactionName, 
+        'Nested Detail Group(s)')
 
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
 PURGE_ACTIONS = [
-    ['Purge Unused Model Groups', PurgeUnplacedModelGroupsInModel],
-    ['Purge Unused Detail Groups', PurgeUnplacedDetailGroupsInModel]
+    ['Purge Unused Model Group(s)', PurgeUnplacedModelGroupsInModel],
+    ['Purge Unused Detail Group(s)', PurgeUnplacedDetailGroupsInModel],
+    ['Purge Unused Nested Detail Group(s)', PurgeUnplacedNestedDetailGroupsInModel]
 ]
 
-# updates any instances of model health tracking family in a project
+# calls all available purge actions defined in global list 
 # doc   current document
+# returns a Result object
 def PurgeUnused(doc, revitFilePath):
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)

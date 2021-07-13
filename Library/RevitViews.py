@@ -40,15 +40,105 @@ REPORT_SHEETS_HEADER = ['HOSTFILE','ID', 'NAME']
 
 # --------------------------------------------- utility functions ------------------
 
-# returns view types in a model
+# --------------------------------------------- View Types  ------------------
+
+# returns all view family types in a model
 # doc: current model
 def GetViewTypes(doc):
-    data = []
-    vts = FilteredElementCollector(doc).OfClass(ViewFamilyType).ToList()
+    return FilteredElementCollector(doc).OfClass(ViewFamilyType)
+
+# returns all view family types in the model
+# doc   current model document
+def GetUsedViewTypeIdsInTheModel(doc):
+    viewTypeIdsUsed = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out browser organisation and other views which cant be deleted
+        if(v.IsTemplate == False and 
+        v.ViewType != ViewType.SystemBrowser and 
+        v.ViewType != ViewType.ProjectBrowser and 
+        v.ViewType != ViewType.Undefined and 
+        v.ViewType != ViewType.Internal and 
+        v.ViewType != ViewType.DrawingSheet):
+            if(v.GetTypeId() not in viewTypeIdsUsed):
+                viewTypeIdsUsed.append(v.GetTypeId())
+    return viewTypeIdsUsed
+
+
+# returns a list of uniqe viewtypes and similar view family types in format:
+# [[view type, similar view type id, similar view type id]]
+# doc   current model document
+def GetSimilarViewTypeFamiliesByViewType(doc):
+    simTypes=[]
+    vts = GetViewTypes(doc)
     for vt in vts:
-        row =[Element.Name.GetValue(vt), vt.FamilyName]
-        data.append(row)
-    return data
+        vtData = [vt]
+        sims = vt.GetSimilarTypes()
+        simData = []
+        for sim in sims:
+            simData.append(sim)
+        vtData.append(simData)
+        if(CheckUniqueViewTypeData(simTypes, vtData)):
+            simTypes.append(vtData)
+    return simTypes
+
+# checking whether we have view type and asociated viewfamily types already
+# returns true 
+# -if view type is not in list source passed in or
+# -if ids of similar view family types do not match any similar view types already in list
+def CheckUniqueViewTypeData(source, newData):
+    result = True
+    for s in source:
+        # check for matching view family name
+        if (s[0].FamilyName == newData[0].FamilyName):
+            # check if match has the same amount of similar view family types
+            # if not it is unique
+            if (len(s[1]) == len(newData[1])):
+                # assume IDs do match
+                matchIDs = True
+                for i in range(len(s[1])):
+                    if(s[1][i] != newData[1][i]):
+                          # id's dont match, this is unique
+                          matchIDs = False
+                          break
+                if(matchIDs):
+                    # data is not unique
+                    result = False
+                    break
+    return result
+
+# returns ID of unused view family types in the model
+# doc   current model document
+def GetUnusedViewTypeIdsInModel(doc):
+    # get all view types available and associated view family types
+    viewFamilTypesAvailable = GetSimilarViewTypeFamiliesByViewType(doc)
+    # get used view type ids
+    usedViewFamilyTypeIds = GetUsedViewTypeIdsInTheModel(doc)
+    # loop over avaiable types and check which one is used
+    for vt in viewFamilTypesAvailable:
+        # remove all used view family type Id's from the available list...
+        # whatever is left can be deleted if not last available item in list for view type
+        # there should always be just one match
+        for usedfamilyViewTypeId in usedViewFamilyTypeIds:
+                # get the index of match
+                index = util.IndexOf(vt[1],usedfamilyViewTypeId)
+                # remove used item from list
+                if (index > -1):
+                   vt[1].pop(index) 
+    # filter these by view family types where is only one left
+    # make sure to leave at least one family type behind, since the last type cannot be deleted
+    filteredUnusedViewTypeIds = []
+    for vt in viewFamilTypesAvailable:
+        if(len(vt[1]) > 1):
+            # check whether this can be deleted...
+            for id in vt[1]:
+                # get the element
+                vtFam = doc.GetElement(id)
+                if (vtFam.CanBeDeleted):
+                    filteredUnusedViewTypeIds.append(id)
+    return filteredUnusedViewTypeIds     
+ 
+# -------------------------------------------------------------------------------------------------------
 
 # returns view ids of all schedules on a sheet
 def GetScheduleIdsOnSheets(doc):

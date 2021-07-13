@@ -31,6 +31,7 @@ import RevitCommonAPI as com
 import Utility as util
 import Result as res
 import RevitGroups as rGrp
+import RevitViews as rView
 
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import List
@@ -56,7 +57,7 @@ def PurgeUnplacedGroups (doc, getGroups, transactionName, groupNameHeader):
         groupNames = [groupNameHeader]
         for unusedGroup in unused:
             ids.append(unusedGroup.Id)
-            groupNames.append(Element.Name.GetValue(unusedGroup))
+            groupNames.append(SPACER + Element.Name.GetValue(unusedGroup))
         purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
         resultValue.Update(purgeResult)
     except Exception as e:
@@ -93,14 +94,37 @@ def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName):
         transactionName, 
         'Nested Detail Group(s)')
 
+# --------------------------------------------- Views ---------------------------------------------
+
+# purges unused view family types from the model
+# doc   current document
+def PurgeUnusedViewFamilyTypes(doc, transactionName):
+    resultValue = res.Result()
+    try:
+        unused = rView.GetUnusedViewTypeIdsInModel(doc)
+        ids = []
+        viewTypeNames = ['View Family Types']
+        for unusedvft in unused:
+            ids.append(unusedvft)
+            vft = doc.GetElement(unusedvft)
+            viewTypeNames.append(SPACER + Element.Name.GetValue(vft))
+        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( viewTypeNames ))
+        resultValue.Update(purgeResult)
+    except Exception as e:
+        resultValue.UpdateSep(False,'Terminated purge unused view family types with exception: '+ str(e))
+    return resultValue
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
 PURGE_ACTIONS = [
     ['Purge Unused Model Group(s)', PurgeUnplacedModelGroupsInModel],
     ['Purge Unused Detail Group(s)', PurgeUnplacedDetailGroupsInModel],
-    ['Purge Unused Nested Detail Group(s)', PurgeUnplacedNestedDetailGroupsInModel]
+    ['Purge Unused Nested Detail Group(s)', PurgeUnplacedNestedDetailGroupsInModel],
+    ['Purge Unused View Family Types', PurgeUnusedViewFamilyTypes]
 ]
+
+# indentation for names of items purged
+SPACER = '...'
 
 # calls all available purge actions defined in global list 
 # doc   current document

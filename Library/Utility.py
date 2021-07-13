@@ -388,3 +388,10 @@ def GetFirst(iterable, default, condition = lambda x: True):
 # converts feet and inches to mm
 def ConvertImperialToMetricMM(value):
     return value * 304.8
+
+# helper method for index of item in list
+def IndexOf(list, item):
+    try:
+        return list.index(item)
+    except:
+        return -1

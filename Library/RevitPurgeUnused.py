@@ -41,7 +41,6 @@ from System.Collections.Generic import List
 # model properties 
 # ----------------------------------------------
 
-# --------------------------------------------- Groups ---------------------------------------------
 
 # doc   current document
 # getGroups     expects a method which has to
@@ -49,27 +48,38 @@ from System.Collections.Generic import List
 #   - excepts as a single argument the current document
 # transactionName   the transaction name to be used when deleting elements by Id
 # groupNameHeader   the text to be displayed at the start of the list containing the deleted group names
-def PurgeUnplacedGroups (doc, getGroups, transactionName, groupNameHeader):
-    """purges all unplaced groups provided through a passed in getter method from a model"""
+def PurgeUnplacedElements (doc:'Autodesk.Revit.DB.Document', 
+    getUnusedElementIds, 
+    transactionName:str, 
+    unUsedElementNameHeader:str,
+    isDebug = False) -> 'res.Result':
+    """purges all unplaced elements provided through a passed in element id getter method from a model"""
     resultValue = res.Result()
     try:
-        unused = getGroups(doc)
-        ids = []
-        groupNames = [groupNameHeader]
-        for unusedGroup in unused:
-            ids.append(unusedGroup.Id)
-            groupNames.append(SPACER + Element.Name.GetValue(unusedGroup))
-        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( groupNames ))
+        unusedElementIds = getUnusedElementIds(doc)
+        unusedElementNames = []
+        if(isDebug):
+            unusedElementNames.append(unUsedElementNameHeader)
+            for unusedId in unusedElementIds:
+                unusedElementNames.append(SPACER + Element.Name.GetValue(doc.GetElement(unusedId)))
+        else:
+            unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
+        purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+        # check if an exception occured and in debug mode, purge elements one by one
+        if(isDebug & purgeResult.status == False):
+            purgeResult = com.DeleteByElementIdsOneByOne(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         resultValue.Update(purgeResult)
     except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused ' + groupNameHeader + ' with exception: '+ str(e))
+        resultValue.UpdateSep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
     return resultValue
+
+# --------------------------------------------- Groups ---------------------------------------------
 
 # doc   current document
 # transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedModelGroupsInModel(doc, transactionName):
+def PurgeUnplacedModelGroupsInModel(doc, transactionName:str) -> res.Result:
     """purges unplaced model groups from a model"""
-    return PurgeUnplacedGroups(
+    return PurgeUnplacedElements(
         doc, 
         rGrp.GetUnplacedModelGroups, 
         transactionName, 
@@ -78,19 +88,19 @@ def PurgeUnplacedModelGroupsInModel(doc, transactionName):
 
 # doc   current document
 # transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedDetailGroupsInModel(doc, transactionName):
+def PurgeUnplacedDetailGroupsInModel(doc, transactionName:str) -> res.Result:
     """purges unplaced detail groups from a model"""
-    return PurgeUnplacedGroups(
+    return PurgeUnplacedElements(
         doc, 
         rGrp.GetUnplacedDetailGroups, 
         transactionName, 
         'Detail Group(s)')
 
-# purges unplaced nested detail groups from a model
 # doc   current document
 # transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName):
-    return PurgeUnplacedGroups(
+def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName:str) -> res.Result:
+    """purges unplaced nested detail groups from a model"""
+    return PurgeUnplacedElements(
         doc, 
         rGrp.GetUnplacedNestedDetailGroups, 
         transactionName, 
@@ -99,58 +109,31 @@ def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName):
 # --------------------------------------------- Views ---------------------------------------------
 
 # doc   current document
-def PurgeUnusedViewFamilyTypes(doc, transactionName):
+def PurgeUnusedViewFamilyTypes(doc, transactionName:str) -> res.Result:
     """purges unused view family types from the model"""
-    resultValue = res.Result()
-    try:
-        unused = rView.GetUnusedViewTypeIdsInModel(doc)
-        ids = []
-        viewTypeNames = ['View Family Types']
-        for unusedvft in unused:
-            ids.append(unusedvft)
-            vft = doc.GetElement(unusedvft)
-            viewTypeNames.append(SPACER + Element.Name.GetValue(vft))
-        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( viewTypeNames ))
-        resultValue.Update(purgeResult)
-    except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused view family types with exception: '+ str(e))
-    return resultValue
+    return PurgeUnplacedElements(
+        doc, 
+        rView.GetUnusedViewTypeIdsInModel(doc), 
+        transactionName, 
+        'View Family Type(s)')
 
 # doc   current document
-def PurgeUnusedViewTemplates(doc, transactionName):
-    """purges unused view family types from the model"""
-    resultValue = res.Result()
-    try:
-        unused = rView.GetAllUnusedViewTemplateIdsInModel(doc)
-        ids = []
-        viewTemplateNames = ['View Templates']
-        for unusedvt in unused:
-            ids.append(unusedvt)
-            vt = doc.GetElement(unusedvt)
-            viewTemplateNames.append(SPACER + Element.Name.GetValue(vt))
-        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( viewTemplateNames ))
-        resultValue.Update(purgeResult)
-    except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused view templates with exception: '+ str(e))
-    return resultValue
+def PurgeUnusedViewTemplates(doc, transactionName:str) -> res.Result:
+    """purges unused view templates from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rView.GetAllUnusedViewTemplateIdsInModel(doc), 
+        transactionName, 
+        'View Family Templates(s)')
 
 # doc   current document
-def PurgeUnusedViewFilters(doc, transactionName):
+def PurgeUnusedViewFilters(doc, transactionName) -> res.Result:
     """purges unused view filters from the model"""
-    resultValue = res.Result()
-    try:
-        unused = rView.GetAllUnUsedViewFilters(doc)
-        ids = []
-        viewTemplateNames = ['View Filters']
-        for unusedvt in unused:
-            ids.append(unusedvt)
-            vt = doc.GetElement(unusedvt)
-            viewTemplateNames.append(SPACER + Element.Name.GetValue(vt))
-        purgeResult = com.DeleteByElementIds(doc, ids, transactionName, '\n'.join( viewTemplateNames ))
-        resultValue.Update(purgeResult)
-    except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused view filters with exception: '+ str(e))
-    return resultValue
+    return PurgeUnplacedElements(
+        doc, 
+        rView.GetAllUnUsedViewFilters(doc), 
+        transactionName, 
+        'View Filter(s)')
 
 # --------------------------------------------- Main ---------------------------------------------
 
@@ -172,7 +155,7 @@ t = Timer()
 
 # doc   current document
 # returns a Result object
-def PurgeUnused(doc, revitFilePath):
+def PurgeUnused(doc, revitFilePath: str) -> res.Result:
     """calls all available purge actions defined in global list """
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)

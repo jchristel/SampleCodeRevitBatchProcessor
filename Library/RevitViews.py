@@ -138,7 +138,151 @@ def GetUnusedViewTypeIdsInModel(doc):
                     filteredUnusedViewTypeIds.append(id)
     return filteredUnusedViewTypeIds     
  
-# -------------------------------------------------------------------------------------------------------
+# -------------------------------------------View Templates --------------------------------------------
+
+# doc   current model document
+def GetViewsTemplatesInInModel(doc):
+    """get all templates in a model"""
+    viewTemplates = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out templates
+        if(v.IsTemplate):
+            viewTemplates.append(v)
+    return viewTemplates
+
+# doc   current model document
+def GetUsedViewTemplateIdsInTheModel(doc):
+    """returns view templates used in views in the model only"""
+    viewTemplateIdsUsed = []
+    # get all view templates assigned to views
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out browser organisation and other views which cant be deleted
+        if(v.IsTemplate == False and 
+        v.ViewType != ViewType.SystemBrowser and 
+        v.ViewType != ViewType.ProjectBrowser and 
+        v.ViewType != ViewType.Undefined and 
+        v.ViewType != ViewType.Internal and 
+        v.ViewType != ViewType.DrawingSheet):
+            if(v.ViewTemplateId not in viewTemplateIdsUsed and v.ViewTemplateId != ElementId.InvalidElementId):
+                viewTemplateIdsUsed.append(v.ViewTemplateId)
+    return viewTemplateIdsUsed
+
+# doc   current model document
+def GetDefaultViewTypeTemplateIds(doc):
+    """returns view template Id's used as default by view types"""
+    viewTemplateIdsUsed = []
+    # get all templates assigned to view family types:
+    vfts = GetSimilarViewTypeFamiliesByViewType(doc)
+    for vt in vfts:
+        for id in vt[1]:
+            # get the element
+            vtFam = doc.GetElement(id)
+            if(vtFam.DefaultTemplateId not in viewTemplateIdsUsed and 
+            vtFam.DefaultTemplateId != ElementId.InvalidElementId):
+                viewTemplateIdsUsed.append(vtFam.DefaultTemplateId)
+    return viewTemplateIdsUsed
+
+# doc   current model document
+def GetAllViewTemplateIdsUsedInModel(doc):
+    """returns view template Id's used as default by view types and by views"""
+    vtv = GetUsedViewTemplateIdsInTheModel(doc)
+    vfts = GetDefaultViewTypeTemplateIds(doc)
+    for id in vfts:
+        if(id not in vtv):
+            vtv.append(id)
+    return vtv
+
+# doc   current model document
+# filterByType:   list of view types of which to return view templates from
+def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
+    """get all templates in a model of given type"""
+    viewTemplates = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out templates
+        if(v.IsTemplate):
+            for filter in filterByType:
+                if (v.ViewType == filter):
+                    viewTemplates.append(v)
+                    break
+    return viewTemplates
+
+# doc   current model document
+def GetAllUnusedViewTemplateIdsInModel(doc):
+    """returns all view template Id's not used by view types and by views"""
+    usedVts = GetAllViewTemplateIdsUsedInModel(doc)
+    vtInModel = GetViewsTemplatesInInModel(doc)
+    unusedVts = []
+    for vt in vtInModel:
+        if(vt.Id not in usedVts):
+            unusedVts.append(vt.Id)
+    return unusedVts
+
+# -------------------------------------------View Filters --------------------------------------------
+
+# all view types which can have filters applied
+VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.Elevation, ViewType.ThreeD, ViewType.EngineeringPlan, ViewType.AreaPlan, ViewType.Section, ViewType.Detail, ViewType.Walkthrough, ViewType.DraftingView, ViewType.Legend]
+
+# doc   current model document
+def GetAllAvailableFiltersInModel(doc):
+    """returns all filters in document as a collector"""
+    collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
+    return collector
+
+# view   view from which to get the filters from
+# uniqueList    list of filters of which to add new filters to (not already in list)
+def GetFilterIdsFromViewByFilter(view, uniqueList):
+    """returns passed in list of filter id's plus new filter id's from view (not already in list passt in)"""
+    filters = view.GetFilters()
+    if len(filters) != 0:
+        for j in filters:
+            if (j not in uniqueList): 
+                uniqueList.append(j)
+    return uniqueList
+
+# doc   current model document
+def GetFiltersFromTemplates(doc):
+    """returns all filters used in templates only"""
+    filtersInUse = []
+    # get view filters used in templates only
+    templateWithFilters = GetTemplateIdsWhichCanHaveFilters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    for temp in templateWithFilters:
+        # get filters and check whether already in list
+        filtersInUse = GetFilterIdsFromViewByFilter(temp, filtersInUse)
+    return filtersInUse
+
+# doc   current model document
+# filterByType:   list of view types of which to return view templates from
+def GetFilterIdsFromViewswithoutTemplate(doc, filterByType):
+    """get all filters from views which dont have a template applied"""
+    filtersInUse = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out templates
+        if(v.IsTemplate == False and v.ViewTemplateId == ElementId.InvalidElementId):
+            for filter in filterByType:
+                if (v.ViewType == filter):
+                    GetFilterIdsFromViewByFilter(v, filtersInUse)
+                    break
+    return filtersInUse
+
+# doc   current model document
+def GetAllUnUsedViewFilters(doc):
+    """gets id's of all unused view filters in a model"""
+    unUsedViewFilterIds = []
+    allAvailableFilters = GetAllAvailableFiltersInModel(doc)
+    allFilterIdsByTemplate = GetFiltersFromTemplates(doc)
+    allFilterIdsByView = GetFilterIdsFromViewswithoutTemplate(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    # combine list of used filters into one
+    allUsedViewFilters = allFilterIdsByTemplate + allFilterIdsByView
+    # loop over all available filters and check for match in used filters
+    for availableF in allAvailableFilters:
+        if(availableF.Id not in allUsedViewFilters):
+            unUsedViewFilterIds.append(availableF.Id)
+    return unUsedViewFilterIds
+# ----------------------------------------------------------------------------------------
 
 # returns view ids of all schedules on a sheet
 def GetScheduleIdsOnSheets(doc):

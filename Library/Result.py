@@ -31,7 +31,7 @@ class Result:
         self.status = True
         self.result = []
     
-    def AppendMessage(self, message):
+    def AppendMessage(self, message:str):
         try:
             if(self.message == '-'):
                 self.message = message
@@ -41,7 +41,7 @@ class Result:
             print (str(e))
             pass
 
-    def Update(self, otherResult):
+    def Update(self, otherResult:'Result'):
         try:
             # check if default message string, if so do not update
             if(otherResult.message is not '-'):
@@ -54,7 +54,7 @@ class Result:
             print (str(e))
             pass
     
-    def UpdateSep (self, status, message):
+    def UpdateSep (self, status:bool, message:str):
         try:
             self.AppendMessage(message)
             # self.message = self.message + '\n' + message
@@ -64,7 +64,7 @@ class Result:
             pass
 
 
-    def UpdateStatus(self, status):
+    def UpdateStatus(self, status:bool):
         try:
             self.status = self.status & status
         except Exception as e:

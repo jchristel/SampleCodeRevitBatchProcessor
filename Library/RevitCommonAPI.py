@@ -157,10 +157,10 @@ def GetSheetRevByNumber(doc, sheetNumber):
 
 #----------------------------------------elements-----------------------------------------------
 
-# method deleting elements by list of element id's
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
 def DeleteByElementIds(doc, ids, transactionName, elementName):
+    """method deleting elements by list of element id's"""
     returnvalue = res.Result()
     def action():
         actionReturnValue = res.Result()
@@ -172,6 +172,24 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
         return actionReturnValue
     transaction = Transaction(doc,transactionName)
     returnvalue = InTransaction(transaction, action)
+    return returnvalue
+
+# transactionName : name the transaction will be given
+# elementName: will appear in description of what got deleted
+def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
+    """method deleting elements by list of element id's one at the time"""
+    returnvalue = res.Result()
+    for id in ids:
+        def action():
+            actionReturnValue = res.Result()
+            try:
+                doc.Delete(id)
+                actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
+            return actionReturnValue
+        transaction = Transaction(doc,transactionName)
+        returnvalue.Update( InTransaction(transaction, action))
     return returnvalue
 
 #-------------------------------------------------------file IO --------------------------------------

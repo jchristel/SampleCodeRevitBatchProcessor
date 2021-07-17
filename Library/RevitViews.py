@@ -42,14 +42,14 @@ REPORT_SHEETS_HEADER = ['HOSTFILE','ID', 'NAME']
 
 # --------------------------------------------- View Types  ------------------
 
-# returns all view family types in a model
 # doc: current model
-def GetViewTypes(doc):
+def GetViewTypes(doc) -> 'FilteredElementCollector':
+    """returns all view family types in a model"""
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
 
-# returns all view family types in the model
 # doc   current model document
 def GetUsedViewTypeIdsInTheModel(doc):
+    """returns all view family types in the model"""
     viewTypeIdsUsed = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -65,10 +65,10 @@ def GetUsedViewTypeIdsInTheModel(doc):
     return viewTypeIdsUsed
 
 
-# returns a list of uniqe viewtypes and similar view family types in format:
 # [[view type, similar view type id, similar view type id]]
 # doc   current model document
 def GetSimilarViewTypeFamiliesByViewType(doc):
+    """returns a list of uniqe viewtype and similar view family type Id's in """
     simTypes=[]
     vts = GetViewTypes(doc)
     for vt in vts:
@@ -107,9 +107,9 @@ def CheckUniqueViewTypeData(source, newData):
                     break
     return result
 
-# returns ID of unused view family types in the model
 # doc   current model document
 def GetUnusedViewTypeIdsInModel(doc):
+    """returns ID of unused view family types in the model"""
     # get all view types available and associated view family types
     viewFamilTypesAvailable = GetSimilarViewTypeFamiliesByViewType(doc)
     # get used view type ids
@@ -284,18 +284,18 @@ def GetAllUnUsedViewFilters(doc):
     return unUsedViewFilterIds
 # ----------------------------------------------------------------------------------------
 
-# returns view ids of all schedules on a sheet
 def GetScheduleIdsOnSheets(doc):
+    """returns view ids of all schedules on a sheet"""
     ids=[]
     col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
     for s in col:
         if s.ScheduleId not in ids:
             ids.append(s.ScheduleId)
     return ids
-
-# returns all views in a model of a given type 
+ 
 # excludes templates!
 def GetViewsofType(doc, viewtype):
+    """returns all views in a model of a given type"""
     views=[]
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -303,14 +303,14 @@ def GetViewsofType(doc, viewtype):
             views.append(v)
     return views
 
-# returns all sheets in a model
 def GetSheetsInModel(doc):
+    """ returns all sheets in a model"""
     return GetViewsofType(doc, ViewType.DrawingSheet)
 
-# returns all view ports
 # doc:      current document
 # sheets:   all sheets to retrieve view ports from
 def GetViewportOnSheets(doc, sheets):
+    """returns all view ports in the model"""
     viewports = []
     for sheet in sheets:
         try:
@@ -323,22 +323,22 @@ def GetViewportOnSheets(doc, sheets):
             print(str(e))
     return viewports
 
-# returns true if the view name starts with '<', otherwise false
 def FilterRevisionSchedules(view):
+    """returns true if the view name starts with '<', otherwise false"""
     if(view.Name.startswith('<')):
         return False
     else:
         return True
 
-# returns all views in a model which are
-# not template views
-# not system browser
-# not project broser
-# not undefined
-# not Internal
-# not sheets
-# match a filter
 def GetViewsInModel(doc, filter):
+    """eturns all views in a model which are
+    not template views
+    not system browser
+    not project broser
+    not undefined
+    not Internal
+    not sheets
+    match a filter"""
     views = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -352,8 +352,8 @@ def GetViewsInModel(doc, filter):
             views.append(v)
     return views
 
-# returns all schedules not on a sheet
 def GetScheduleIdsNotOnSheets(doc):
+    """returns all schedules not on a sheet"""
     schedulesNotOnSheets = []
     # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
@@ -365,9 +365,9 @@ def GetScheduleIdsNotOnSheets(doc):
             schedulesNotOnSheets.append(schedule)
     return schedulesNotOnSheets
 
-# returns all views not on a sheet
 # excludes schedules
 def GetViewsNotOnSheet(doc):
+    """returns all views not on a sheet"""
     viewsNotOnSheet = []
     # get all sheets
     sheetsInModel = GetSheetsInModel(doc)
@@ -388,7 +388,7 @@ def GetViewsNotOnSheet(doc):
 
 # deletes views based on
 # view rules: array in format [parameter name, condition test method, value to test against]
-def DeleteViews(doc, viewRules, collectorViews):
+def DeleteViews(doc, viewRules, collectorViews) -> 'res.Result':
     ids = []
     viewCounter = 0
     for v in collectorViews:
@@ -416,9 +416,8 @@ def DeleteViews(doc, viewRules, collectorViews):
     result = com.DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
     return result
 
-# deletes all views not placed on sheets
-# includes schedules and legends
-def DeleteViewsNotOnSheets(doc, filter):
+def DeleteViewsNotOnSheets(doc, filter) -> 'res.Result':
+    """deletes all views not placed on sheets includes schedules and legends"""
     ids = []
     returnvalue = res.Result()
     viewsNotOnSheets = GetViewsNotOnSheet(doc)
@@ -435,8 +434,8 @@ def DeleteViewsNotOnSheets(doc, filter):
         returnvalue.UpdateSep(True, 'No views not placed on sheets found.')
     return returnvalue
 
-# deletes unused elevation markers
-def DeleteUnusedElevationViewMarkers(doc):
+def DeleteUnusedElevationViewMarkers(doc) -> 'res.Result':
+    """deletes unused elevation markers"""
     returnvalue = res.Result()
     ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
     # items to be deleted
@@ -456,9 +455,8 @@ def DeleteUnusedElevationViewMarkers(doc):
         returnvalue.UpdateSep(True, 'No unused elevation markers in model')
     return returnvalue
 
-# deletes sheets based on
-# view rules: array in format [parameter name, condition test method, value to test against]
-def DeleteSheets(doc, viewRules, collectorViews):
+def DeleteSheets(doc, viewRules, collectorViews) -> 'res.Result':
+    """deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]"""
     ids = []
     for v in collectorViews:
         if(v.ViewType == ViewType.DrawingSheet):
@@ -474,8 +472,8 @@ def DeleteSheets(doc, viewRules, collectorViews):
     result = com.DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
     return result
 
-# deletes all sheets in a model
-def DeleteAllSheetsInModel(doc):
+def DeleteAllSheetsInModel(doc) -> 'res.Result':
+    """deletes all sheets in a model"""
     returnvalue = res.Result()
     ids = []
     collectorSheets = FilteredElementCollector(doc).OfClass(View)
@@ -488,9 +486,9 @@ def DeleteAllSheetsInModel(doc):
         returnvalue.UpdateSep(True, 'No sheets in the model')
     return returnvalue
 
-# returns sheets matching filters provided
 # view rules: array in format [parameter name, condition test method, value to test against]
 def GetSheetsByFilters(doc, viewRules = None):
+    """returns sheets matching filters provided"""
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collectorViews:

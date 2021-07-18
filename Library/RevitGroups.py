@@ -79,19 +79,48 @@ def GetNotPlacedGroups(doc, groupCategory):
             notPlaced.append(gt)
     return notPlaced
 
-# returns a list of unplaced detail groups from the model
+
 # this will not include any attached detail groups!!
 # doc   current document
 def GetUnplacedDetailGroups(doc):
+    """returns a list of unplaced detail groups from the model"""
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
 
-# returns a list of unplaced nested detail groups from the model
+# this will not include any attached detail groups!!
+# doc   current document
+def GetUnplacedDetailGroupIds(doc):
+    """returns a list of unplaced detail groups Ids from the model"""
+    unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
+    ids = []
+    for unplaced in unplacedGroups:
+        ids.append(unplaced.Id)
+    return ids
+
 # this will not list any none nested detail groups!!
 # doc   current document
 def GetUnplacedNestedDetailGroups(doc):
+    """returns a list of unplaced nested detail groups from the model"""
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
 
-# returns a list of unplaced model groups from the model
+# doc   current document
+def GetUnplacedNestedDetailGroupIds(doc):
+    """returns a list of unplaced nested detail group Ids from the model. This will not list any none nested detail groups!!"""
+    unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
+    ids = []
+    for unplaced in unplacedGroups:
+        ids.append(unplaced.Id)
+    return ids
+
 # doc   current document
 def GetUnplacedModelGroups(doc):
+    """returns a list of unplaced model groups from the model"""
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSModelGroups)
+
+# doc   current document
+def GetUnplacedModelGroupIds(doc):
+    """returns a list of unplaced model group Ids from the model"""
+    unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSModelGroups)
+    ids = []
+    for unplaced in unplacedGroups:
+        ids.append(unplaced.Id)
+    return ids

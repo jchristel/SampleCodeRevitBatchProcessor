@@ -43,7 +43,7 @@ REPORT_SHEETS_HEADER = ['HOSTFILE','ID', 'NAME']
 # --------------------------------------------- View Types  ------------------
 
 # doc: current model
-def GetViewTypes(doc) -> 'FilteredElementCollector':
+def GetViewTypes(doc):
     """returns all view family types in a model"""
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
 
@@ -130,8 +130,11 @@ def GetUnusedViewTypeIdsInModel(doc):
     filteredUnusedViewTypeIds = []
     for vt in viewFamilTypesAvailable:
         if(len(vt[1]) > 1):
+            # make sure to leave one behind
+            maxLength = len(vt[1]) - 1
             # check whether this can be deleted...
-            for id in vt[1]:
+            for x in range(maxLength):
+                id = vt[1][x]
                 # get the element
                 vtFam = doc.GetElement(id)
                 if (vtFam.CanBeDeleted):
@@ -388,7 +391,7 @@ def GetViewsNotOnSheet(doc):
 
 # deletes views based on
 # view rules: array in format [parameter name, condition test method, value to test against]
-def DeleteViews(doc, viewRules, collectorViews) -> 'res.Result':
+def DeleteViews(doc, viewRules, collectorViews):
     ids = []
     viewCounter = 0
     for v in collectorViews:
@@ -416,7 +419,7 @@ def DeleteViews(doc, viewRules, collectorViews) -> 'res.Result':
     result = com.DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
     return result
 
-def DeleteViewsNotOnSheets(doc, filter) -> 'res.Result':
+def DeleteViewsNotOnSheets(doc, filter):
     """deletes all views not placed on sheets includes schedules and legends"""
     ids = []
     returnvalue = res.Result()
@@ -434,7 +437,7 @@ def DeleteViewsNotOnSheets(doc, filter) -> 'res.Result':
         returnvalue.UpdateSep(True, 'No views not placed on sheets found.')
     return returnvalue
 
-def DeleteUnusedElevationViewMarkers(doc) -> 'res.Result':
+def DeleteUnusedElevationViewMarkers(doc):
     """deletes unused elevation markers"""
     returnvalue = res.Result()
     ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
@@ -455,7 +458,7 @@ def DeleteUnusedElevationViewMarkers(doc) -> 'res.Result':
         returnvalue.UpdateSep(True, 'No unused elevation markers in model')
     return returnvalue
 
-def DeleteSheets(doc, viewRules, collectorViews) -> 'res.Result':
+def DeleteSheets(doc, viewRules, collectorViews):
     """deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]"""
     ids = []
     for v in collectorViews:
@@ -472,7 +475,7 @@ def DeleteSheets(doc, viewRules, collectorViews) -> 'res.Result':
     result = com.DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
     return result
 
-def DeleteAllSheetsInModel(doc) -> 'res.Result':
+def DeleteAllSheetsInModel(doc):
     """deletes all sheets in a model"""
     returnvalue = res.Result()
     ids = []

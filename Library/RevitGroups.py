@@ -40,63 +40,51 @@ REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTAN
 
 # --------------------------------------------- utility functions ------------------
 
-# returns a list of model groups from the model
 # doc   current document
 def GetModelGroups(doc):
+    """returns a list of model groups from the model"""
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType().ToList()
 
-# returns a list of detail groups from the model
 # doc   current document
 def GetDetailGroups(doc):
+    """returns a list of detail groups from the model"""
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType().ToList()
 
-# returns a list of nested detail groups from the model
 # doc   current document
 def GetNestedDetailGroups(doc):
+    """returns a list of nested detail groups from the model"""
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType().ToList()
 
-# returns a list of unplaced groups from the model
 # doc   current document
 # groupCategory     either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
 def GetNotPlacedGroups(doc, groupCategory):
-    groupTypes = FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType().ToList()
-    groupInstances = FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsNotElementType().ToList()
-    notPlaced = []
-    allreadyChecked = []
-    # loop over all types and check for matching instances
-    for gt in groupTypes:
-        match = False
-        for gi in groupInstances:
-            # check if we had this group type checked allready, if so ignore and move to next
-            if(gi.GetTypeId() not in allreadyChecked):
-                #  check for type id match
-                if(gi.GetTypeId() == gt.Id):
-                    # add to allready checked and verified as match list
-                    allreadyChecked.append(gi.GetTypeId())
-                    match = True
-                    break
-        if(match == False):
-            notPlaced.append(gt)
-    return notPlaced
+    """returns a list of unplaced groups from the model"""
+    def getterTypes(doc):
+        return FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType()
+    def getterInstances(doc):
+        return FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsNotElementType()
+    # get unplaced groups
+    return com.GetNotPlacedTypes(
+        doc, 
+        getterTypes, 
+        getterInstances)
 
-
-# this will not include any attached detail groups!!
 # doc   current document
 def GetUnplacedDetailGroups(doc):
-    """returns a list of unplaced detail groups from the model"""
+    """returns a list of unplaced detail groups from the model
+    this will not include any attached detail groups!!"""
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
 
-# this will not include any attached detail groups!!
 # doc   current document
 def GetUnplacedDetailGroupIds(doc):
-    """returns a list of unplaced detail groups Ids from the model"""
+    """returns a list of unplaced detail groups Ids from the model
+    this will not include any attached detail groups!!"""
     unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
     ids = []
     for unplaced in unplacedGroups:
         ids.append(unplaced.Id)
     return ids
 
-# this will not list any none nested detail groups!!
 # doc   current document
 def GetUnplacedNestedDetailGroups(doc):
     """returns a list of unplaced nested detail groups from the model"""

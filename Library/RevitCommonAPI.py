@@ -32,6 +32,7 @@ from Autodesk.Revit.DB import *
 import os.path as path
 
 import Utility as util
+import RevitGroups as rGroup
 
 clr.ImportExtensions(System.Linq)
 
@@ -155,6 +156,34 @@ def GetSheetRevByNumber(doc, sheetNumber):
         revValue = revP.AsString()
     return revValue
 
+#----------------------------------------instances of types-----------------------------------------------
+
+# doc   current document
+# getTypes:         available types getter. Needs to accept doc as argument and return a collector of type foo
+# getInstances:     placed instances getter. Needs to accept doc as argument and return a collector of instances foo
+def GetNotPlacedTypes(doc, getTypes, getInstances):
+    """returns a list of unused Types foo by compring type Ids of placed instances with all avialable types"""
+    availTypes = getTypes(doc)
+    placedInstances = getInstances(doc)
+    notPlaced = []
+    allreadyChecked = []
+    # loop over all types and check for matching instances
+    for at in availTypes:
+        match = False
+        for pi in placedInstances:
+            # check if we had this type checked allready, if so ignore and move to next
+            if(pi.GetTypeId() not in allreadyChecked):
+                #  check for type id match
+                if(pi.GetTypeId() == at.Id):
+                    # add to allready checked and verified as match list
+                    allreadyChecked.append(pi.GetTypeId())
+                    match = True
+                    break
+        if(match == False):
+            notPlaced.append(at)
+    return notPlaced
+
+
 #----------------------------------------elements-----------------------------------------------
 
 # transactionName : name the transaction will be given
@@ -193,6 +222,53 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
         transaction = Transaction(doc,transactionName)
         returnvalue.Update( InTransaction(transaction, action))
     return returnvalue
+
+# --------------------------------------------- check whether groups contain certain element types ------------------
+# doc       current document
+# typeIds   types ids to check for matches in group
+# group     to check for matching type id
+def CheckGroupForTypeIds(doc, groupType, typeIds):
+    """Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
+    This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!"""
+    unusedTypeIds = []
+    usedTypeIds = []
+    # get the first group from the group type and get its members
+    for g in groupType.Groups:
+        # get ids of group elements:
+        memberIds = g.GetMemberIds()
+        # built list of used type ids
+        for memberId in memberIds:
+            member = doc.GetElement(memberId)
+            usedTypeId = member.GetTypeId()
+            if (usedTypeId not in usedTypeIds):
+                usedTypeIds.append(usedTypeId)
+    for checkId in typeIds:
+        if(checkId not in usedTypeIds):
+            unusedTypeIds.append(checkId)
+    return unusedTypeIds
+
+def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
+    """checks all elements in groups passt in whether type Id is matching any type ids passt in
+    returns all type ids not matched"""
+    for groupType in groupTypes:
+        typeIds = CheckGroupForTypeIds(doc, groupType, typeIds)
+        # check if all type ids where matched up
+        if (len(typeIds) == 0):
+            break
+    return typeIds
+
+# doc   current document
+# typeIds   types ids to check for matches in groups
+def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
+    """checks elements in nested detail groups and detail groupd whether their type ID is in the list passt in.
+    Returns all type Ids from list passt in not found in group definitions
+    This only returns valid data if at least one instance of the group is placed in the model!!"""
+    unusedTypeIds = []
+    nestedDetailGroups = rGroup.GetNestedDetailGroups(doc)
+    detailGroups = rGroup.GetDetailGroups(doc)
+    unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, nestedDetailGroups, typeIds)
+    unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, detailGroups, typeIds)
+    return unusedTypeIds
 
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file

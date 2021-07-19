@@ -31,6 +31,7 @@ import RevitCommonAPI as com
 import Utility as util
 import Result as res
 import RevitGroups as rGrp
+import RevitLinks as rLink
 import RevitViews as rView
 from timer import Timer
 
@@ -141,6 +142,18 @@ def PurgeUnusedViewFilters(doc, transactionName, isDebug):
         'View Filter(s)',
         isDebug)
 
+# --------------------------------------------- Images ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedImages(doc, transactionName, isDebug):
+    """purges unused images from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rLink.GetAllUnusedImagetypeIdsInModel, 
+        transactionName,
+        'Images(s)',
+        isDebug)
+
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
@@ -150,7 +163,8 @@ PURGE_ACTIONS = [
     ['Purge Unused Nested Detail Group(s)', PurgeUnplacedNestedDetailGroupsInModel],
     ['Purge Unused View Family Types', PurgeUnusedViewFamilyTypes],
     ['Purge Unused View Templates', PurgeUnusedViewTemplates],
-    ['Purge Unused View Filters', PurgeUnusedViewFilters]
+    ['Purge Unused View Filters', PurgeUnusedViewFilters],
+    ['Purge Unused Image Links', PurgeUnusedImages]
 ]
 
 # indentation for names of items purged

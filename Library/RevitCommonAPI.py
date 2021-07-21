@@ -155,8 +155,90 @@ def GetSheetRevByNumber(doc, sheetNumber):
         revP = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
         revValue = revP.AsString()
     return revValue
+#----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-#----------------------------------------instances of types-----------------------------------------------
+# doc   current model document
+# typeGetter    method needs to accept the current document as argument and need to return a collector of Autodesk.Revit.DB ElementType
+def GetSimilarTypeFamiliesByType(doc, typeGetter):
+    """returns a list of uniqe types and similar family types in format:
+    [[type, similar type id, similar type id,...]]"""
+    simTypes=[]
+    types = typeGetter(doc)
+    for t in types:
+        tData = [t]
+        sims = t.GetSimilarTypes()
+        simData = []
+        for sim in sims:
+            simData.append(sim)
+        tData.append(simData)
+        if(CheckUniqueTypeData(simTypes, tData)):
+            simTypes.append(tData)
+    return simTypes
+
+# existingTypes     list in format [[type, similar type id, similar type id,...]]
+# newTypeData       list in format [type, similar type id, similar type id,...] 
+def CheckUniqueTypeData(existingTypes, newTypeData):
+    """checking whether we have type and associated similar types already
+    returns true:
+    -if type is not in list existing Types passed in or
+    -if ids of similar family types do not match any similar types already in list"""
+    result = True
+    for s in existingTypes:
+        # check for matching family name
+        if (s[0].FamilyName == newTypeData[0].FamilyName):
+            # check if match has the same amount of similar family types
+            # if not it is unique
+            if (len(s[1]) == len(newTypeData[1])):
+                # assume IDs do match
+                matchIDs = True
+                for i in range(len(s[1])):
+                    if(s[1][i] != newTypeData[1][i]):
+                          # id's dont match, this is unique
+                          matchIDs = False
+                          break
+                if(matchIDs):
+                    # data is not unique
+                    result = False
+                    break
+    return result
+
+# doc   current model document
+# typeGetter: method asccepting current document as argument and returning a collector of types in model
+# instanceGetter: method asccepting current document as argument and returning a list of instances in model
+def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
+    """returns ID of unused family types in the model"""
+    # get all  types available and associated family types
+    familTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
+    # get used type ids
+    usedFamilyTypeIds = instanceGetter(doc)
+    # loop over avaiable types and check which one is used
+    for vt in familTypesAvailable:
+        # remove all used family type Id's from the available list...
+        # whatever is left can be deleted if not last available item in list for type
+        # there should always be just one match
+        for usedfamilyTypeId in usedFamilyTypeIds:
+                # get the index of match
+                index = util.IndexOf(vt[1],usedfamilyTypeId)
+                # remove used item from list
+                if (index > -1):
+                   vt[1].pop(index) 
+    # filter these by family types where is only one left
+    # make sure to leave at least one family type behind, since the last type cannot be deleted
+    filteredUnusedTypeIds = []
+    for vt in familTypesAvailable:
+        if(len(vt[1]) > 1):
+            # make sure to leave one behind
+            maxLength = len(vt[1]) - 1
+            # check whether this can be deleted...
+            for x in range(maxLength):
+                id = vt[1][x]
+                # get the element
+                vtFam = doc.GetElement(id)
+                if (vtFam.CanBeDeleted):
+                    filteredUnusedTypeIds.append(id)
+    return filteredUnusedTypeIds
+
+#----------------------------------------instances of types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
 # doc   current document
 # getTypes:         available types getter. Needs to accept doc as argument and return a collector of type foo
@@ -184,46 +266,7 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
     return notPlaced
 
 
-#----------------------------------------elements-----------------------------------------------
-
-# transactionName : name the transaction will be given
-# elementName: will appear in description of what got deleted
-def DeleteByElementIds(doc, ids, transactionName, elementName):
-    """method deleting elements by list of element id's"""
-    returnvalue = res.Result()
-    def action():
-        actionReturnValue = res.Result()
-        try:
-            doc.Delete(ids.ToList[ElementId]())
-            actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
-        except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
-        return actionReturnValue
-    transaction = Transaction(doc,transactionName)
-    returnvalue = InTransaction(transaction, action)
-    return returnvalue
-
-# transactionName : name the transaction will be given
-# elementName: will appear in description of what got deleted
-def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
-    """method deleting elements by list of element id's one at the time"""
-    returnvalue = res.Result()
-    for id in ids:
-        def action():
-            actionReturnValue = res.Result()
-            element = doc.GetElement(id)
-            n = Element.Name.GetValue(element)
-            try:
-                doc.Delete(id)
-                actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + n
-            except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
-            return actionReturnValue
-        transaction = Transaction(doc,transactionName)
-        returnvalue.Update( InTransaction(transaction, action))
-    return returnvalue
-
-# --------------------------------------------- check whether groups contain certain element types ------------------
+# --------------------------------------------- check whether groups contain certain element types - Autodesk.Revit.DB ElementType  ------------------
 # doc       current document
 # typeIds   types ids to check for matches in group
 # group     to check for matching type id
@@ -269,6 +312,45 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
     unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, nestedDetailGroups, typeIds)
     unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, detailGroups, typeIds)
     return unusedTypeIds
+
+#----------------------------------------elements-----------------------------------------------
+
+# transactionName : name the transaction will be given
+# elementName: will appear in description of what got deleted
+def DeleteByElementIds(doc, ids, transactionName, elementName):
+    """method deleting elements by list of element id's"""
+    returnvalue = res.Result()
+    def action():
+        actionReturnValue = res.Result()
+        try:
+            doc.Delete(ids.ToList[ElementId]())
+            actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
+        except Exception as e:
+            actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
+        return actionReturnValue
+    transaction = Transaction(doc,transactionName)
+    returnvalue = InTransaction(transaction, action)
+    return returnvalue
+
+# transactionName : name the transaction will be given
+# elementName: will appear in description of what got deleted
+def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
+    """method deleting elements by list of element id's one at the time"""
+    returnvalue = res.Result()
+    for id in ids:
+        def action():
+            actionReturnValue = res.Result()
+            element = doc.GetElement(id)
+            n = Element.Name.GetValue(element)
+            try:
+                doc.Delete(id)
+                actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + n
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
+            return actionReturnValue
+        transaction = Transaction(doc,transactionName)
+        returnvalue.Update( InTransaction(transaction, action))
+    return returnvalue
 
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file

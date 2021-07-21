@@ -64,82 +64,11 @@ def GetUsedViewTypeIdsInTheModel(doc):
                 viewTypeIdsUsed.append(v.GetTypeId())
     return viewTypeIdsUsed
 
-
-# [[view type, similar view type id, similar view type id]]
-# doc   current model document
-def GetSimilarViewTypeFamiliesByViewType(doc):
-    """returns a list of uniqe viewtype and similar view family type Id's in """
-    simTypes=[]
-    vts = GetViewTypes(doc)
-    for vt in vts:
-        vtData = [vt]
-        sims = vt.GetSimilarTypes()
-        simData = []
-        for sim in sims:
-            simData.append(sim)
-        vtData.append(simData)
-        if(CheckUniqueViewTypeData(simTypes, vtData)):
-            simTypes.append(vtData)
-    return simTypes
-
-# checking whether we have view type and asociated viewfamily types already
-# returns true 
-# -if view type is not in list source passed in or
-# -if ids of similar view family types do not match any similar view types already in list
-def CheckUniqueViewTypeData(source, newData):
-    result = True
-    for s in source:
-        # check for matching view family name
-        if (s[0].FamilyName == newData[0].FamilyName):
-            # check if match has the same amount of similar view family types
-            # if not it is unique
-            if (len(s[1]) == len(newData[1])):
-                # assume IDs do match
-                matchIDs = True
-                for i in range(len(s[1])):
-                    if(s[1][i] != newData[1][i]):
-                          # id's dont match, this is unique
-                          matchIDs = False
-                          break
-                if(matchIDs):
-                    # data is not unique
-                    result = False
-                    break
-    return result
-
 # doc   current model document
 def GetUnusedViewTypeIdsInModel(doc):
     """returns ID of unused view family types in the model"""
-    # get all view types available and associated view family types
-    viewFamilTypesAvailable = GetSimilarViewTypeFamiliesByViewType(doc)
-    # get used view type ids
-    usedViewFamilyTypeIds = GetUsedViewTypeIdsInTheModel(doc)
-    # loop over avaiable types and check which one is used
-    for vt in viewFamilTypesAvailable:
-        # remove all used view family type Id's from the available list...
-        # whatever is left can be deleted if not last available item in list for view type
-        # there should always be just one match
-        for usedfamilyViewTypeId in usedViewFamilyTypeIds:
-                # get the index of match
-                index = util.IndexOf(vt[1],usedfamilyViewTypeId)
-                # remove used item from list
-                if (index > -1):
-                   vt[1].pop(index) 
-    # filter these by view family types where is only one left
-    # make sure to leave at least one family type behind, since the last type cannot be deleted
-    filteredUnusedViewTypeIds = []
-    for vt in viewFamilTypesAvailable:
-        if(len(vt[1]) > 1):
-            # make sure to leave one behind
-            maxLength = len(vt[1]) - 1
-            # check whether this can be deleted...
-            for x in range(maxLength):
-                id = vt[1][x]
-                # get the element
-                vtFam = doc.GetElement(id)
-                if (vtFam.CanBeDeleted):
-                    filteredUnusedViewTypeIds.append(id)
-    return filteredUnusedViewTypeIds     
+    filteredUnusedViewTypeIds = com.GetUnusedTypeIdsInModel(doc, GetViewTypes, GetUsedViewTypeIdsInTheModel)
+    return filteredUnusedViewTypeIds
  
 # -------------------------------------------View Templates --------------------------------------------
 
@@ -177,7 +106,7 @@ def GetDefaultViewTypeTemplateIds(doc):
     """returns view template Id's used as default by view types"""
     viewTemplateIdsUsed = []
     # get all templates assigned to view family types:
-    vfts = GetSimilarViewTypeFamiliesByViewType(doc)
+    vfts = com.GetSimilarTypeFamiliesByType(doc, GetViewTypes)
     for vt in vfts:
         for id in vt[1]:
             # get the element

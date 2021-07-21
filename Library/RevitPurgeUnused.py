@@ -33,6 +33,7 @@ import Result as res
 import RevitGroups as rGrp
 import RevitLinks as rLink
 import RevitViews as rView
+import RevitAnnotation as rAnn
 from timer import Timer
 
 from Autodesk.Revit.DB import *
@@ -154,6 +155,18 @@ def PurgeUnusedImages(doc, transactionName, isDebug):
         'Images(s)',
         isDebug)
 
+# --------------------------------------------- Dimensions ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedDimTypes(doc, transactionName, isDebug):
+    """purges unused Dimension Types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rAnn.GetAllUnusedViewTypeIdsInModel, 
+        transactionName,
+        'Dimension Type(s)',
+        isDebug)
+
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
@@ -164,7 +177,8 @@ PURGE_ACTIONS = [
     ['Purge Unused View Family Types', PurgeUnusedViewFamilyTypes],
     ['Purge Unused View Templates', PurgeUnusedViewTemplates],
     ['Purge Unused View Filters', PurgeUnusedViewFilters],
-    ['Purge Unused Image Links', PurgeUnusedImages]
+    ['Purge Unused Image Links', PurgeUnusedImages],
+    ['Purge Unused Dimension Types', PurgeUnusedDimTypes]
 ]
 
 # indentation for names of items purged

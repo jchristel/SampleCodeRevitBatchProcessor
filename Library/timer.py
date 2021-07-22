@@ -23,6 +23,11 @@
 
 from System.Diagnostics import Stopwatch
 
+# default 2 digit padding
+PAD_SINGLE_DIGIT_TO_TWO = '%02d'
+# default 3 digit padding
+PAD_SINGLE_DIGIT_TO_THREE = '%03d'
+
 class TimerError(Exception):
     """A custom exception used to report errors in use of Timer class"""
 
@@ -45,4 +50,4 @@ class Timer:
         self._stopWatch.Stop()
         timespan = self._stopWatch.Elapsed
         self._stopWatch = None
-        return ('Elapsed time: ' + str(timespan.Seconds) + '.' + str(timespan.Milliseconds) + ' seconds')
+        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%timespan.Milliseconds) + 'ms')

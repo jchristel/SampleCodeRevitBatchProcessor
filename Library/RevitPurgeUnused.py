@@ -158,11 +158,21 @@ def PurgeUnusedImages(doc, transactionName, isDebug):
 # --------------------------------------------- Dimensions ---------------------------------------------
 
 # doc   current document
+def PurgeUnusedMultiRefDimTypes(doc, transactionName, isDebug):
+    """purges unused MultiRef Dimension Types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rAnn.GetAllUnusedMultiRefDimTypeIdsInModel, 
+        transactionName,
+        'MultiRef Dimension Type(s)',
+        isDebug)
+
+# doc   current document
 def PurgeUnusedDimTypes(doc, transactionName, isDebug):
     """purges unused Dimension Types from the model"""
     return PurgeUnplacedElements(
         doc, 
-        rAnn.GetAllUnusedViewTypeIdsInModel, 
+        rAnn.GetAllUnusedDimTypeIdsInModel, 
         transactionName,
         'Dimension Type(s)',
         isDebug)
@@ -178,6 +188,7 @@ PURGE_ACTIONS = [
     ['Purge Unused View Templates', PurgeUnusedViewTemplates],
     ['Purge Unused View Filters', PurgeUnusedViewFilters],
     ['Purge Unused Image Links', PurgeUnusedImages],
+    ['Purge Unused MultiRef Dimension Types', PurgeUnusedMultiRefDimTypes],
     ['Purge Unused Dimension Types', PurgeUnusedDimTypes]
 ]
 

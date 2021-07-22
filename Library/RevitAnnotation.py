@@ -71,6 +71,16 @@ def GetAllMultiRefAnnotationElements(doc):
     return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotation)
 
 # doc   current model document
+def GetUsedMultiRefDimTypeIdsInTheModel(doc):
+    """returns all ids of multireference types used by elements in the model"""
+    dimTypeIdsUsed = []
+    col = GetAllMultiRefAnnotationElements(doc)
+    for v in col:
+        if(v.GetTypeId() not in dimTypeIdsUsed):
+            dimTypeIdsUsed.append(v.GetTypeId())
+    return dimTypeIdsUsed
+
+# doc   current model document
 def GetAllSimilarMultiReferenceAnnoTypes(doc):
     """returns all multireference annotation types from similar types in the model"""
     multiReferenceAnnoTypes = com.GetSimilarTypeFamiliesByType(doc, GetAllMultiRefAnnotationTypes)
@@ -89,7 +99,12 @@ def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
     return dimTypeIdsUsed
 
 # doc   current model document
-def GetAllUnusedViewTypeIdsInModel(doc):
+def GetAllUnusedMultiRefDimTypeIdsInModel(doc):
+    """returns IDs of unused multiref dimension types in the model"""
+    return com.GetUnusedTypeIdsInModel(doc, GetAllMultiRefAnnotationTypes, GetUsedMultiRefDimTypeIdsInTheModel)
+
+# doc   current model document
+def GetAllUnusedDimTypeIdsInModel(doc):
     """returns ID of unused dim types in the model"""
     # get unused dimension type ids
     filteredUnusedDimTypeIds = com.GetUnusedTypeIdsInModel(doc, GetDimTypes, GetUsedDimTypeIdsInTheModel)

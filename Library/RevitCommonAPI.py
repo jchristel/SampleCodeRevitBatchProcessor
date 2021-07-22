@@ -211,31 +211,52 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
     familTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
     # get used type ids
     usedFamilyTypeIds = instanceGetter(doc)
+    # flag indicating that at leat one type was removed from list because it is in use
+    # this flag used when checking how many items are left...
+    removedAtLeastOne = []
+    # set index to 0, type names might not be unique!!
+    counter = 0
     # loop over avaiable types and check which one is used
-    for vt in familTypesAvailable:
+    for t in familTypesAvailable:
         # remove all used family type Id's from the available list...
         # whatever is left can be deleted if not last available item in list for type
         # there should always be just one match
         for usedfamilyTypeId in usedFamilyTypeIds:
-                # get the index of match
-                index = util.IndexOf(vt[1],usedfamilyTypeId)
-                # remove used item from list
-                if (index > -1):
-                   vt[1].pop(index) 
+            print(usedfamilyTypeId)
+            # get the index of match
+            index = util.IndexOf(t[1],usedfamilyTypeId)
+            # remove used item from list
+            if (index > -1):
+                t[1].pop(index)
+                if(t not in removedAtLeastOne):
+                    removedAtLeastOne.append(counter)
+        counter = counter + 1
     # filter these by family types where is only one left
     # make sure to leave at least one family type behind, since the last type cannot be deleted
     filteredUnusedTypeIds = []
-    for vt in familTypesAvailable:
-        if(len(vt[1]) > 1):
-            # make sure to leave one behind
-            maxLength = len(vt[1]) - 1
-            # check whether this can be deleted...
-            for x in range(maxLength):
-                id = vt[1][x]
+    # reset index
+    counter = 0
+    for t in familTypesAvailable:
+        if (counter in removedAtLeastOne):
+            # at least one item was already removed from list...so all left over ones can be purged
+            for id in t[1]:
                 # get the element
-                vtFam = doc.GetElement(id)
-                if (vtFam.CanBeDeleted):
+                tFam = doc.GetElement(id)
+                if (tFam.CanBeDeleted):
                     filteredUnusedTypeIds.append(id)
+        else:
+            #need to keep at least one item
+            if(len(t[1]) > 1):
+                # make sure to leave one behind
+                maxLength = len(t[1]) - 1
+                # check whether this can be deleted...
+                for x in range(maxLength):
+                    id = t[1][x]
+                    # get the element
+                    tFam = doc.GetElement(id)
+                    if (tFam.CanBeDeleted):
+                        filteredUnusedTypeIds.append(id)
+        counter = counter + 1 
     return filteredUnusedTypeIds
 
 #----------------------------------------instances of types - Autodesk.Revit.DB ElementType -----------------------------------------------

@@ -179,6 +179,7 @@ def GetFiltersFromTemplates(doc):
     """returns all filters used in templates only"""
     filtersInUse = []
     # get view filters used in templates only
+    # include templates which do not enforce filters but still may have some set
     templateWithFilters = GetTemplateIdsWhichCanHaveFilters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
     for temp in templateWithFilters:
         # get filters and check whether already in list
@@ -187,13 +188,16 @@ def GetFiltersFromTemplates(doc):
 
 # doc   current model document
 # filterByType:   list of view types of which to return view templates from
-def GetFilterIdsFromViewswithoutTemplate(doc, filterByType):
+def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
     """get all filters from views which dont have a template applied"""
     filtersInUse = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        # filter out templates
-        if(v.IsTemplate == False and v.ViewTemplateId == ElementId.InvalidElementId):
+        # cant filter out templates or templates which do not control filters to be more precise
+        # views The parameter:
+        # BuiltInParameter.VIS_GRAPHICS_FILTERS
+        # which is attached to views is of strorage type None...not much use...
+        if(v.IsTemplate == False):
             for filter in filterByType:
                 if (v.ViewType == filter):
                     GetFilterIdsFromViewByFilter(v, filtersInUse)
@@ -206,7 +210,7 @@ def GetAllUnUsedViewFilters(doc):
     unUsedViewFilterIds = []
     allAvailableFilters = GetAllAvailableFiltersInModel(doc)
     allFilterIdsByTemplate = GetFiltersFromTemplates(doc)
-    allFilterIdsByView = GetFilterIdsFromViewswithoutTemplate(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    allFilterIdsByView = GetFilterIdsFromViewsWithoutTemplate(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
     # combine list of used filters into one
     allUsedViewFilters = allFilterIdsByTemplate + allFilterIdsByView
     # loop over all available filters and check for match in used filters

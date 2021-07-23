@@ -177,6 +177,30 @@ def PurgeUnusedDimTypes(doc, transactionName, isDebug):
         'Dimension Type(s)',
         isDebug)
 
+# --------------------------------------------- text ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedTextTypes(doc, transactionName, isDebug):
+    """purges unused Text Types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rAnn.GetAllUnusedTextTypeIdsInModel, 
+        transactionName,
+        'Text Type(s)',
+        isDebug)
+
+# --------------------------------------------- Arrow Heads ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedArrowHeadTypes(doc, transactionName, isDebug):
+    """purges unused arrow head types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rAnn.GetAllUnusedArrowTypeIdsInModel, 
+        transactionName,
+        'Arrow Head Type(s)',
+        isDebug)
+
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
@@ -189,14 +213,17 @@ PURGE_ACTIONS = [
     ['Purge Unused View Filters', PurgeUnusedViewFilters],
     ['Purge Unused Image Links', PurgeUnusedImages],
     ['Purge Unused MultiRef Dimension Types', PurgeUnusedMultiRefDimTypes],
-    ['Purge Unused Dimension Types', PurgeUnusedDimTypes]
+    ['Purge Unused Dimension Types', PurgeUnusedDimTypes],
+    ['Purge Unused Text Types', PurgeUnusedTextTypes],
+    ['Purge Unused Arrow Heads', PurgeUnusedArrowHeadTypes]
 ]
 
 # indentation for names of items purged
 SPACER = '...'
 
-# set up a timer object
+# set up a timer objects
 t = Timer()
+tOverall = Timer()
 
 # doc   current document
 # returns a Result object
@@ -205,6 +232,7 @@ def PurgeUnused(doc, revitFilePath, isDebug):
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
+    tOverall.start()
     for purgeAction in PURGE_ACTIONS:
         try:
             t.start()
@@ -216,4 +244,5 @@ def PurgeUnused(doc, revitFilePath, isDebug):
             resultValue.Update(purgeFlag)
         except Exception as e:
             resultValue.UpdateSep(False,'Terminated purge unused actions with exception: '+ str(e))
+    resultValue.AppendMessage('purge duration: '+ str(tOverall.stop()))
     return resultValue

@@ -49,12 +49,15 @@ def CheckParameterValue(para, paraCondition, conditionValue):
 # returns a parameter value as string
 def getParameterValue(para):
     pValue = 'no Value'
-    if(para.StorageType == StorageType.ElementId or para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+    if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
         if(para.AsValueString()!= None and para.AsValueString() != ''):
             pValue = para.AsValueString()
     elif(para.StorageType == StorageType.String):
         if(para.AsString() != None and para.AsString() != ''):
             pValue = para.AsString()
+    elif(para.StorageType == StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = para.AsElementId()
     return pValue
 
 # sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:
@@ -222,7 +225,6 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
         # whatever is left can be deleted if not last available item in list for type
         # there should always be just one match
         for usedfamilyTypeId in usedFamilyTypeIds:
-            print(usedfamilyTypeId)
             # get the index of match
             index = util.IndexOf(t[1],usedfamilyTypeId)
             # remove used item from list

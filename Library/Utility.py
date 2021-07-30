@@ -351,12 +351,19 @@ def ConOneStartWithTwo (valueOne, valueTwo):
     else:
         return False
 
-# returns True if valueTwo starts with valueTwo
+# returns True if valueTwo starts with valueOne
 def ConTwoStartWithOne (valueOne, valueTwo):
     if (valueTwo.startswith(valueOne)):
         return True
     else:
         return False
+
+# returns True if valueTwo does not starts with valueOne
+def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
+    if (valueTwo.startswith(valueOne)):
+        return False
+    else:
+        return True
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 

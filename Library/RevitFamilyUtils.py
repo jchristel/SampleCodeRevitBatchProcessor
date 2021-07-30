@@ -201,7 +201,7 @@ def GetFamilySymbols(doc, cats):
 # doc   current model document
 def GetAllLoadableFamilies(doc):
     collector = FilteredElementCollector(doc)
-    families = collector.OfClass(Family).Where(lambda e: (e.IsEditable == True and e.IsInPlace == False)).ToList()
+    families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     return families
 
 # returns a list of in place families

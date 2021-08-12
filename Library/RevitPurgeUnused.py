@@ -30,10 +30,13 @@ clr.AddReference('System')
 import RevitCommonAPI as com
 import Utility as util
 import Result as res
+import RevitAnnotation as rAnn
+import RevitCeilings as rCeil
+import RevitFloors as rFlo
 import RevitGroups as rGrp
 import RevitLinks as rLink
 import RevitViews as rView
-import RevitAnnotation as rAnn
+import RevitWalls as rWall
 from timer import Timer
 
 from Autodesk.Revit.DB import *
@@ -201,6 +204,96 @@ def PurgeUnusedArrowHeadTypes(doc, transactionName, isDebug):
         'Arrow Head Type(s)',
         isDebug)
 
+# ---------------------------------------------wall types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedStackedWallTypes(doc, transactionName, isDebug):
+    """purges unused stacked wall types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rWall.GetUnusedStackedWallTypeIdsToPurge, 
+        transactionName,
+        'Stacked Wall Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedInPlaceWallTypes(doc, transactionName, isDebug):
+    """purges unused inPlace wall types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rWall.GetUnusedInPlaceWallIdsForPurge, 
+        transactionName,
+        'InPlace Wall Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedCurtainWallTypes(doc, transactionName, isDebug):
+    """purges unused curtain wall types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rWall.GetUnUsedCurtainWallTypeIdsToPurge, 
+        transactionName,
+        'Curtain Wall Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedBasicTypes(doc, transactionName, isDebug):
+    """purges unused basic wall types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rWall.GetUnUsedBasicWallTypeIdsToPurge, 
+        transactionName,
+        'Basic Wall Type(s)',
+        isDebug)
+
+# ---------------------------------------------ceiling types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedCeilingTypes(doc, transactionName, isDebug):
+    """purges unused ceiling types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 
+        transactionName,
+        'Ceiling Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedInPlaceCeilingTypes(doc, transactionName, isDebug):
+    """purges unused inPlace ceiling types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rCeil.GetUnusedInPlaceCeilingIdsForPurge, 
+        transactionName,
+        'InPlace Ceiling Type(s)',
+        isDebug)
+
+# ---------------------------------------------floor types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedFloorTypes(doc, transactionName, isDebug):
+    """purges unused floor types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 
+        transactionName,
+        'Floor Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedInPlaceFloorTypes(doc, transactionName, isDebug):
+    """purges unused inPlace floor types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rFlo.GetUnusedInPlaceFloorIdsForPurge, 
+        transactionName,
+        'InPlace Floor Type(s)',
+        isDebug)
+
+
+
+
+
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
@@ -215,7 +308,15 @@ PURGE_ACTIONS = [
     ['Purge Unused MultiRef Dimension Types', PurgeUnusedMultiRefDimTypes],
     ['Purge Unused Dimension Types', PurgeUnusedDimTypes],
     ['Purge Unused Text Types', PurgeUnusedTextTypes],
-    ['Purge Unused Arrow Heads', PurgeUnusedArrowHeadTypes]
+    ['Purge Unused Arrow Heads', PurgeUnusedArrowHeadTypes],
+    ['Purge Unused Stacked Wall Types', PurgeUnusedStackedWallTypes],
+    ['Purge Unused InPlace Wall Types', PurgeUnusedInPlaceWallTypes],
+    ['Purge Unused Curtain Wall Types', PurgeUnusedCurtainWallTypes],
+    ['Purge Unused Basic Types', PurgeUnusedBasicTypes],
+    ['Purge Unused Ceiling Types', PurgeUnusedCeilingTypes],
+    ['Purge Unused InPlace Ceiling Types', PurgeUnusedInPlaceCeilingTypes],
+    ['Purge Unused Floor Types', PurgeUnusedFloorTypes],
+    ['Purge Unused InPlace Floor Types', PurgeUnusedInPlaceFloorTypes]
 ]
 
 # indentation for names of items purged

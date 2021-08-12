@@ -32,6 +32,7 @@ from System.Collections.Generic import List
 
 # import common library
 import RevitCommonAPI as com
+import Utility as util
 import Result as res
 import RevitFamilyLoadOption as famLoadOpt
 from RevitFamilyLoadOption import *
@@ -210,3 +211,63 @@ def GetAllInPlaceFamilies(doc):
     collector = FilteredElementCollector(doc)
     families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
+
+# --------------------------family data ----------------
+
+# doc   current document
+# typeIds   in place family type ids available in model
+def GetSymbolsFromType(doc, typeIds):
+    """returns dictionary where key is the family and value are symbol(family type) ids"""
+    fams = {}
+    for tId in typeIds:
+        # get family element
+        typeEl = doc.GetElement(tId)
+        famEl = typeEl.Family
+        # get all available family types
+        sIds = famEl.GetFamilySymbolIds().ToList()
+        if(famEl.Id not in fams):
+            fams[famEl.Id] = sIds
+    return fams
+
+# famTypeIds        symbol(type) ids of a family
+# usedTypeIds       symbol(type) ids in use in a project
+def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
+    """ returns true if all symbols (types) of a family are in use in a model"""
+    match = True
+    for famTypeId in famTypeIds:
+        if (famTypeId not in usedTypeIds):
+            match = False
+            break
+    return match
+
+# doc   current document
+def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
+    """ returns type ids off all available in place families of category wall """
+    filter = ElementCategoryFilter(famBuiltInCategory)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    ids = []
+    for c in col:
+            ids.append(c.Id)
+    return ids
+
+# doc   current document
+def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
+    """returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged"""
+    unusedIds = []
+    unusedFamilyIds = []
+    # get all unused type Ids
+    unusedTypeIds = unusedTypeGetter(doc)
+    # get family Elements belonging to those type ids
+    fams = GetSymbolsFromType(doc, unusedTypeIds)
+    # check whether an entire family can be purged and if so remove their symbol(type) ids from 
+    # from unusedType ids list since we will be purging the family instead
+    for key, value in fams.items():
+        if(FamilyAllTypesInUse(value, unusedTypeIds)):
+            unusedFamilyIds.append(key)
+            unusedTypeIds = util.RemoveItemsFromList(unusedTypeIds, value)
+    # check whether entire families can be purged and if so add their ids to list to be returned
+    if(len(unusedFamilyIds)>0):
+        unusedIds = unusedFamilyIds + unusedTypeIds
+    else:
+        unusedIds = unusedTypeIds
+    return unusedIds

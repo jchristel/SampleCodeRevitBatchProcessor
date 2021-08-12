@@ -158,6 +158,25 @@ def GetSheetRevByNumber(doc, sheetNumber):
         revP = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
         revValue = revP.AsString()
     return revValue
+
+#----------------------------------------Legend Components -----------------------------------------------
+
+# typeIds       types to check whether they have been placed as legend components
+# doc           current model document
+def GetLegendComponentsInModel(doc, typeIds):
+    """ returns all type ids which have been placed as legend components"""
+    ids = []
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
+    for c in col:
+        paras = c.GetOrderedParameters()
+        for p in paras:
+            if (p.Definition.BuiltInParameter == BuiltInParameter.LEGEND_COMPONENT):
+                id = com.getParameterValue(p)
+                if (id in typeIds and id not in ids):
+                    ids.append(id)
+                break
+    return ids
+
 #----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
 # doc   current model document
@@ -288,8 +307,8 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
             notPlaced.append(at)
     return notPlaced
 
-
 # --------------------------------------------- check whether groups contain certain element types - Autodesk.Revit.DB ElementType  ------------------
+
 # doc       current document
 # typeIds   types ids to check for matches in group
 # group     to check for matching type id
@@ -313,6 +332,9 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
             unusedTypeIds.append(checkId)
     return unusedTypeIds
 
+# doc           current document
+# groupType     group to be checked whether it contains elements of types passt in
+# typeIds       list of type ids to confirm whether they are in use a group
 def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
     """checks all elements in groups passt in whether type Id is matching any type ids passt in
     returns all type ids not matched"""
@@ -337,6 +359,23 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
     return unusedTypeIds
 
 #----------------------------------------elements-----------------------------------------------
+
+# doc   current model document
+# el    the element of which to check for dependent elements
+# filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
+# threshold   once there are more elements depending on element passed in then specified in threshold value it is deemed that other elements 
+#             are dependent on this element (stacked walls for instance return as a minimum 2 elements: the stacked wall type and the legend component
+#             available for this type
+def HasDependentElements(doc, el, filter = None, threshold = 2):
+    """ returns 0 for no dependent elements, 1, for other elements depned on it, -1 if an exception occured"""
+    value = 0 # 0, no dependent Elements, 1, has dependent elements, -1 an exception occured
+    try:
+        dependentElements = el.GetDependentElements(filter)
+        if(len(dependentElements)) > threshold :
+            value = 1
+    except Exception as e:
+        value = -1
+    return value
 
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted

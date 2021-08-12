@@ -402,3 +402,14 @@ def IndexOf(list, item):
         return list.index(item)
     except:
         return -1
+
+# sourcelist    list to remove items from
+# removeList    list containing items to be removed from source
+def RemoveItemsFromList(sourceList, removeIdsList):
+    """helper removes ids from a source list"""
+    try:
+        for item in removeIdsList:
+            sourceList.remove(item)
+    except:
+        pass
+    return sourceList

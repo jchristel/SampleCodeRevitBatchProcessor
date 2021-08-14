@@ -35,6 +35,8 @@ import RevitCeilings as rCeil
 import RevitFloors as rFlo
 import RevitGroups as rGrp
 import RevitLinks as rLink
+import RevitRoofs as rRoof
+import RevitStairs as rStair
 import RevitViews as rView
 import RevitWalls as rWall
 from timer import Timer
@@ -290,8 +292,49 @@ def PurgeUnusedInPlaceFloorTypes(doc, transactionName, isDebug):
         'InPlace Floor Type(s)',
         isDebug)
 
+# ---------------------------------------------roof types ---------------------------------------------
 
+# doc   current document
+def PurgeUnusedRoofTypes(doc, transactionName, isDebug):
+    """purges unused roof types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rRoof.GetUnusedNonInPlaceRoofTypeIdsToPurge, 
+        transactionName,
+        'Roof Type(s)',
+        isDebug)
 
+# doc   current document
+def PurgeUnusedInPlaceRoofTypes(doc, transactionName, isDebug):
+    """purges unused inPlace roof types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rRoof.GetUnusedInPlaceRoofIdsForPurge, 
+        transactionName,
+        'InPlace Roof Type(s)',
+        isDebug)
+
+# ---------------------------------------------stair types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedStairTypes(doc, transactionName, isDebug):
+    """purges unused stair types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedNonInPlaceStairTypeIdsToPurge, 
+        transactionName,
+        'Stair Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedInPlaceStairTypes(doc, transactionName, isDebug):
+    """purges unused inPlace stair types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedInPlaceStairIdsForPurge, 
+        transactionName,
+        'InPlace Stair Type(s)',
+        isDebug)
 
 
 # --------------------------------------------- Main ---------------------------------------------
@@ -316,7 +359,12 @@ PURGE_ACTIONS = [
     ['Purge Unused Ceiling Types', PurgeUnusedCeilingTypes],
     ['Purge Unused InPlace Ceiling Types', PurgeUnusedInPlaceCeilingTypes],
     ['Purge Unused Floor Types', PurgeUnusedFloorTypes],
-    ['Purge Unused InPlace Floor Types', PurgeUnusedInPlaceFloorTypes]
+    ['Purge Unused InPlace Floor Types', PurgeUnusedInPlaceFloorTypes],
+    ['Purge Unused Roof Types', PurgeUnusedRoofTypes],
+    ['Purge Unused InPlace Roof Types', PurgeUnusedInPlaceRoofTypes],
+    ['Purge Unused Stair Types', PurgeUnusedStairTypes],
+    ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes]
+
 ]
 
 # indentation for names of items purged

@@ -74,6 +74,33 @@ def GetStairTypesByClass(doc):
     it will therefore not return any in place family types or Stair types..."""
     return  FilteredElementCollector(doc).OfClass(StairsType)
 
+# doc   current model document
+def GetStairPathTypesByClass(doc):
+    """ this will return a filtered element collector of all Stair path types in the model """
+    return  FilteredElementCollector(doc).OfClass(StairsPathType)
+
+# doc   current model document
+def GetStairLandingTypesByClass(doc):
+    """ this will return a filtered element collector of all Stair landing types in the model """
+    return  FilteredElementCollector(doc).OfClass(StairsLandingType)
+
+# doc   current model document
+def GetStairRunTypesByClass(doc):
+    """ this will return a filtered element collector of all Stair run types in the model """
+    return  FilteredElementCollector(doc).OfClass(StairsRunType)
+
+# doc   current model document
+def GetStairCutMarkTypesByClass(doc):
+    """ this will return a filtered element collector of all cut mark types in the model """
+    return  FilteredElementCollector(doc).OfClass(CutMarkType)
+
+# returns all stringers and carriage types in a model
+# doc:   current model document
+def GetAllStairStringersCarriageByCategory(doc):
+    """ this will return a filtered element collector of all Stair stringers and cariage types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
+    return collector
+
 # collector   fltered element collector containing Stair type elments of family symbols representing in place families
 # dic         dictionary containing key: wall type family name, value: list of ids
 def BuildStairTypeDictionary(collector, dic):
@@ -143,11 +170,10 @@ def GetAllStairInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByCategory(doc):
-    """ returns all Stair element types available placed in model """
+    """ returns all Stair element types available in model """
     ids = []
     colCat = GetAllStairTypesByCategory(doc)
-    for cCat in colCat:
-        ids.append(cCat.Id)
+    ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
 # doc   current model document
@@ -155,8 +181,47 @@ def GetAllStairTypeIdsInModelByClass(doc):
     """ returns all Stair element types available placed in model """
     ids = []
     colClass = GetStairTypesByClass(doc)
-    for cClass in colClass:
-        ids.append(cClass.Id)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllStairPathTypeIdsInModelByClass(doc):
+    """ returns all Stair path element type ids available in model """
+    ids = []
+    colClass = GetStairPathTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllStairLandingTypeIdsInModelByClass(doc):
+    """ returns all Stair landing element type ids available in model """
+    ids = []
+    colClass = GetStairLandingTypesByClass (doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllStairRunTypeIdsInModelByClass(doc):
+    """ returns all Stair run element type ids available in model """
+    ids = []
+    colClass = GetStairRunTypesByClass (doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllStairCutMarkTypeIdsInModelByClass(doc):
+    """ returns all Stair cut mark element type ids available in model """
+    ids = []
+    colClass = GetStairCutMarkTypesByClass (doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
+    """ returns all Stair stringers and carriage element type ids available in model """
+    ids = []
+    colCat = GetAllStairStringersCarriageByCategory (doc)
+    ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
 # doc   current document
@@ -193,7 +258,57 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
- 
+
+# doc   current document
+def GetUnusedStairPathTypeIdsToPurge(doc):
+    """ returns all unused Stair path ids"""
+    # get unused type ids
+    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairPathTypeIdsInModelByClass, 0)
+    availableTypes = GetStairPathTypesByClass(doc)
+    if(len(availableTypes.ToList()) == len(idsUnused)):
+        idsUnused.pop(0)
+    return idsUnused
+
+# doc   current document
+def GetUnusedStairLandingTypeIdsToPurge(doc):
+    """ returns all unused Stair landing ids"""
+    # get unused type ids
+    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairLandingTypeIdsInModelByClass, 0)
+    availableTypes = GetStairLandingTypesByClass(doc)
+    if(len(availableTypes.ToList()) == len(idsUnused)):
+        idsUnused.pop(0)
+    return idsUnused
+
+# doc   current document
+def GetUnusedStairRunTypeIdsToPurge(doc):
+    """ returns all unused Stair landing ids"""
+    # get unused type ids
+    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairRunTypeIdsInModelByClass, 0)
+    availableTypes = GetStairRunTypesByClass(doc)
+    if(len(availableTypes.ToList()) == len(idsUnused)):
+        idsUnused.pop(0)
+    return idsUnused
+
+# doc   current document
+def GetUnusedStairCutMarkTypeIdsToPurge(doc):
+    """ returns all unused Stair cut mark type ids"""
+    # get unused type ids
+    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairCutMarkTypeIdsInModelByClass, 0)
+    availableTypes = GetStairCutMarkTypesByClass(doc)
+    if(len(availableTypes.ToList()) == len(idsUnused)):
+        idsUnused.pop(0)
+    return idsUnused
+
+# doc   current document
+def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
+    """ returns all unused Stair stringer / carriage type ids"""
+    # get unused type ids
+    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, 0)
+    availableTypes = GetAllStairStringersCarriageByCategory(doc)
+    if(len(availableTypes.ToList()) == len(idsUnused)):
+        idsUnused.pop(0)
+    return idsUnused
+
 # -------------------------------- In place Stair types -------------------------------------------------------
 
 # doc   current document

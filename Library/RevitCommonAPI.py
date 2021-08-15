@@ -414,6 +414,14 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
         returnvalue.Update( InTransaction(transaction, action))
     return returnvalue
 
+# col    element collector
+def GetIdsFromElementCollector(col):
+    """ this will return a list of all element ids in collector """
+    ids = []
+    for c in col:
+        ids.append(c.Id)
+    return ids
+
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file
 # doc: the document to be synced

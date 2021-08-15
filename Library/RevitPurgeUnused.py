@@ -327,6 +327,56 @@ def PurgeUnusedStairTypes(doc, transactionName, isDebug):
         isDebug)
 
 # doc   current document
+def PurgeUnusedPathTypes(doc, transactionName, isDebug):
+    """purges unused stair path types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedStairPathTypeIdsToPurge, 
+        transactionName,
+        'Stair Path Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedLandingTypes(doc, transactionName, isDebug):
+    """purges unused stair landing types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedStairLandingTypeIdsToPurge, 
+        transactionName,
+        'Stair Landing Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedRunTypes(doc, transactionName, isDebug):
+    """purges unused stair run types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedStairRunTypeIdsToPurge, 
+        transactionName,
+        'Stair Run Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedStringerCarriageTypes(doc, transactionName, isDebug):
+    """purges unused stair stringer and carriage types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedStairStringersCarriageTypeIdsToPurge, 
+        transactionName,
+        'Stair Stringers and Carriage Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedStairCutMarkTypes(doc, transactionName, isDebug):
+    """purges unused stair cut mark types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rStair.GetUnusedStairCutMarkTypeIdsToPurge, 
+        transactionName,
+        'Stair Cut Mark Type(s)',
+        isDebug)
+
+# doc   current document
 def PurgeUnusedInPlaceStairTypes(doc, transactionName, isDebug):
     """purges unused inPlace stair types from the model"""
     return PurgeUnplacedElements(
@@ -335,6 +385,7 @@ def PurgeUnusedInPlaceStairTypes(doc, transactionName, isDebug):
         transactionName,
         'InPlace Stair Type(s)',
         isDebug)
+
 
 
 # --------------------------------------------- Main ---------------------------------------------
@@ -363,8 +414,12 @@ PURGE_ACTIONS = [
     ['Purge Unused Roof Types', PurgeUnusedRoofTypes],
     ['Purge Unused InPlace Roof Types', PurgeUnusedInPlaceRoofTypes],
     ['Purge Unused Stair Types', PurgeUnusedStairTypes],
-    ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes]
-
+    ['Purge Unused Path Types', PurgeUnusedPathTypes],
+    ['Purge Unused Landing Types', PurgeUnusedLandingTypes],
+    ['Purge Unused Run Types', PurgeUnusedRunTypes],
+    ['Purge Unused Stringers and Carriage Types', PurgeUnusedStringerCarriageTypes],
+    ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
+    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes] #might need to be moved after ramp type purge
 ]
 
 # indentation for names of items purged

@@ -35,6 +35,7 @@ import RevitCeilings as rCeil
 import RevitFloors as rFlo
 import RevitGroups as rGrp
 import RevitLinks as rLink
+import RevitRamps as rRam
 import RevitRoofs as rRoof
 import RevitStairs as rStair
 import RevitViews as rView
@@ -386,6 +387,17 @@ def PurgeUnusedInPlaceStairTypes(doc, transactionName, isDebug):
         'InPlace Stair Type(s)',
         isDebug)
 
+# ---------------------------------------------ramp types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedRampTypes(doc, transactionName, isDebug):
+    """purges unused ramp types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 
+        transactionName,
+        'Ramp Type(s)',
+        isDebug)
 
 
 # --------------------------------------------- Main ---------------------------------------------
@@ -419,6 +431,7 @@ PURGE_ACTIONS = [
     ['Purge Unused Run Types', PurgeUnusedRunTypes],
     ['Purge Unused Stringers and Carriage Types', PurgeUnusedStringerCarriageTypes],
     ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
+    ['Purge Unused Ramp Types', PurgeUnusedRampTypes],
     ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes] #might need to be moved after ramp type purge
 ]
 

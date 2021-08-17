@@ -122,8 +122,7 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
     """ returns all Roof element types available placed in model """
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
-    for cCat in colCat:
-        ids.append(cCat.Id)
+    ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
 # doc   current model document
@@ -131,8 +130,7 @@ def GetAllRoofTypeIdsInModelByClass(doc):
     """ returns all Roof element types available placed in model """
     ids = []
     colClass = GetRoofTypesByClass(doc)
-    for cClass in colClass:
-        ids.append(cClass.Id)
+    ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
 # doc   current document

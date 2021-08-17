@@ -120,8 +120,7 @@ def GetAllFloorTypeIdsInModelByCategory(doc):
     """ returns all Floor element types available placed in model """
     ids = []
     colCat = GetAllFloorTypesByCategory(doc)
-    for cCat in colCat:
-        ids.append(cCat.Id)
+    ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
 # doc   current model document
@@ -129,8 +128,7 @@ def GetAllFloorTypeIdsInModelByClass(doc):
     """ returns all Floor element types available placed in model """
     ids = []
     colClass = GetFloorTypesByClass(doc)
-    for cClass in colClass:
-        ids.append(cClass.Id)
+    ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
 # doc   current document

@@ -271,3 +271,48 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     else:
         unusedIds = unusedTypeIds
     return unusedIds
+
+# --------------------------family purge  ----------------
+
+# doc             current document
+# cats          list of builtin categories to filter by
+def GetFamilySymbolsIds(doc, cats):
+    """"returns a list of family symbols belonging to categories passt in"""
+    ids = []
+    try:
+        multiCatFilter = ElementMulticategoryFilter(cats)
+        elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
+        for cCat in elements:
+            ids.append(cCat.Id)
+        return ids
+    except Exception:
+        return ids
+
+# doc             current document
+# useTyep         0, no dependent elements; 1: has dependent elements
+# typeIdGetter    list of type ids to be checked for dependent elements
+def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
+    """returns either used or unused type ids"""
+    # get all types elements available
+    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD)
+    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags)
+    allTypeIds = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
+    ids = []
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = com.HasDependentElements(doc, type)
+        if(hasDependents == useType):
+            ids.append(typeId)
+    return ids
+
+# doc             current document
+def GetUnusedFamilyTypes(doc):
+    """returns all unused family type ids in model"""
+    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0)
+    return ids
+
+# doc             current document
+def GetUnusedFamilySymbolsAndTypeIdsToPurge(doc):
+    """returns all unused family types and symbol ids in model"""
+    idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
+    return idsUnused 

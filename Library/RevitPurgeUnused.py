@@ -33,6 +33,7 @@ import Result as res
 import RevitAnnotation as rAnn
 import RevitBuildingPads as rBuildP
 import RevitCeilings as rCeil
+import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
 import RevitGroups as rGrp
 import RevitLinks as rLink
@@ -412,6 +413,18 @@ def PurgeUnusedBuildingPadTypes(doc, transactionName, isDebug):
         'Building Pad Type(s)',
         isDebug)
 
+# ---------------------------------------------loadable families ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedLoadableFamilyTypes(doc, transactionName, isDebug):
+    """purges unused loadable family types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rFamU.GetUnusedFamilySymbolsAndTypeIdsToPurge, 
+        transactionName,
+        'Loadable Family Type(s)',
+        isDebug)
+
 # --------------------------------------------- Main ---------------------------------------------
 
 # list containing purge action names and the purge action method
@@ -445,7 +458,8 @@ PURGE_ACTIONS = [
     ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
     ['Purge Unused Ramp Types', PurgeUnusedRampTypes],
     ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes], # might need to be moved after ramp type purge
-    ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes]
+    ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes]#,
+    #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 
 # indentation for names of items purged

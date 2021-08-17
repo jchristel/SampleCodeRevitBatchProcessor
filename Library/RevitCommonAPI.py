@@ -367,7 +367,7 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 #             are dependent on this element (stacked walls for instance return as a minimum 2 elements: the stacked wall type and the legend component
 #             available for this type
 def HasDependentElements(doc, el, filter = None, threshold = 2):
-    """ returns 0 for no dependent elements, 1, for other elements depned on it, -1 if an exception occured"""
+    """ returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured"""
     value = 0 # 0, no dependent Elements, 1, has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)

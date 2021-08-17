@@ -31,6 +31,7 @@ import RevitCommonAPI as com
 import Utility as util
 import Result as res
 import RevitAnnotation as rAnn
+import RevitBuildingPads as rBuildP
 import RevitCeilings as rCeil
 import RevitFloors as rFlo
 import RevitGroups as rGrp
@@ -399,6 +400,17 @@ def PurgeUnusedRampTypes(doc, transactionName, isDebug):
         'Ramp Type(s)',
         isDebug)
 
+# ---------------------------------------------building pad types ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedBuildingPadTypes(doc, transactionName, isDebug):
+    """purges unused building pad types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rBuildP.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 
+        transactionName,
+        'Building Pad Type(s)',
+        isDebug)
 
 # --------------------------------------------- Main ---------------------------------------------
 
@@ -432,7 +444,8 @@ PURGE_ACTIONS = [
     ['Purge Unused Stringers and Carriage Types', PurgeUnusedStringerCarriageTypes],
     ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
     ['Purge Unused Ramp Types', PurgeUnusedRampTypes],
-    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes] #might need to be moved after ramp type purge
+    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes], # might need to be moved after ramp type purge
+    ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes]
 ]
 
 # indentation for names of items purged

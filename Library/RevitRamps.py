@@ -79,23 +79,6 @@ def SortRampTypesByFamilyName(doc):
     usedWts = BuildRampTypeDictionary(wts_two, usedWts)
     return usedWts
 
-# doc   current model document
-# el    the element of which to check for dependent elements
-# filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
-# threshold   once there are more elements depending on element passed in then specified in threshold value it is deemed that other elements 
-#             are dependent on this element (stacked walls for instance return as a minimum 2 elements: the stacked wall type and the legend component
-#             available for this type
-def HasDependentElements(doc, el, filter = None, threshold = 2):
-    """ returns 0 for no dependent elements, 1, for other elements depned on it, -1 if an exception occured"""
-    value = 0 # 0, no dependent Elements, 1, has dependent elements, -1 an exception occured
-    try:
-        dependentElements = el.GetDependentElements(filter)
-        if(len(dependentElements)) > threshold :
-            value = 1
-    except Exception as e:
-        value = -1
-    return value
-
 # doc             current document
 # useTyep         0, no dependent elements; 1: has dependent elements
 # typeIdGetter    list of type ids to be checked for dependent elements
@@ -110,7 +93,7 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
         # element type
         # ramp type itself
         # ???
-        hasDependents = HasDependentElements(doc, wallType, None, 4)
+        hasDependents = com.HasDependentElements(doc, wallType, None, 4)
         if(hasDependents == useType):
             ids.append(wallTypeId)
     return ids

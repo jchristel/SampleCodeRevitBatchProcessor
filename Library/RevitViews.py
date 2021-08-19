@@ -442,3 +442,72 @@ def GetSheetsByFilters(doc, viewRules = None):
         else:
             views.append(v)
     return views
+
+# ------------------------------------------------------- sheet reporting --------------------------------------------------------------------
+
+# method writing out sheet data
+# doc:          current model document
+# fileName:     fully qualified file path
+def WriteSheetData(doc, fileName, currentFileName):
+    """writes out sheet data to file"""
+    returnvalue = res.Result()
+    try:
+        parameterHeaders, data = GetSheetReportData(doc)
+        convertedData = ConvertData(data, currentFileName)
+        util.writeReportData(
+            fileName, 
+            REPORT_SHEETS_HEADER + parameterHeaders, 
+            convertedData)
+        returnvalue.UpdateSep(True, 'Succesfully wrote data file')
+    except Exception as e:
+        returnvalue.UpdateSep(False, str(e))
+    return returnvalue
+
+
+def ConvertData(data, currentFileName):
+    rowData = []
+    for s in data:
+            # get second element in tuple
+            n = 1
+            data = [str(x[n]) for x in s]
+            data.insert(0, currentFileName)
+            rowData.append(data)
+    return rowData
+
+# doc: the current revit document
+def GetSheetReportData(doc):
+    """method retrieving all sheets and associated parameter names and values"""
+    headers = []
+    sheetData = []
+    # get sheets in model
+    sheets = GetSheetsByFilters(doc)
+    if (len(sheets) > 0):
+        # get headers:
+        headers = GetHeaders(sheets[0])
+        for sheet in sheets:
+            sheeparameters = GetSheetParameters(sheet)
+            sheetData.append(sheeparameters)
+    return headers, sheetData
+
+# samplesheet         Sheet view
+def GetHeaders (sampleSheet):
+    """method retrieving column headers for report file"""
+    headers = []
+    paras = sampleSheet.GetOrderedParameters()
+    for p in paras:
+        headers.append(p.Definition.Name)
+    # sort alphabeticaly
+    return sorted(headers)
+
+# sheet         Sheet view
+def GetSheetParameters(sheet):
+    """method retrieving parameters and their values per sheet"""
+    sheetParameters = []
+    paras = sheet.GetOrderedParameters()
+    for p in paras:
+        v = com.getParameterValue(p)
+        tupe_d = (p.Definition.Name, v)
+        sheetParameters.append(tupe_d)
+    # sort by definition name
+    sheetParameters.sort(key=lambda t: t[0])
+    return sheetParameters

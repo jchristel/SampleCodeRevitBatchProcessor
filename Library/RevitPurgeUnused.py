@@ -33,6 +33,7 @@ import Result as res
 import RevitAnnotation as rAnn
 import RevitBuildingPads as rBuildP
 import RevitCeilings as rCeil
+import RevitCurtainWallElements as rCWE
 import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
 import RevitGroups as rGrp
@@ -252,6 +253,16 @@ def PurgeUnusedBasicTypes(doc, transactionName, isDebug):
         'Basic Wall Type(s)',
         isDebug)
 
+# doc   current document
+def PurgeUnusedCurtainWallElementTypes(doc, transactionName, isDebug):
+    """purges unused curtain wall element types from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge, 
+        transactionName,
+        'Curtain Wall Element Type(s)',
+        isDebug)
+
 # ---------------------------------------------ceiling types ---------------------------------------------
 
 # doc   current document
@@ -467,6 +478,7 @@ PURGE_ACTIONS = [
     ['Purge Unused InPlace Wall Types', PurgeUnusedInPlaceWallTypes],
     ['Purge Unused Curtain Wall Types', PurgeUnusedCurtainWallTypes],
     ['Purge Unused Basic Types', PurgeUnusedBasicTypes],
+    ['Purge Unused Curtain Wall Element Types', PurgeUnusedCurtainWallElementTypes],
     ['Purge Unused Ceiling Types', PurgeUnusedCeilingTypes],
     ['Purge Unused InPlace Ceiling Types', PurgeUnusedInPlaceCeilingTypes],
     ['Purge Unused Floor Types', PurgeUnusedFloorTypes],
@@ -483,7 +495,7 @@ PURGE_ACTIONS = [
     ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes], # might need to be moved after ramp type purge
     ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes],
     ['Purge Unused Railing Types', PurgeUnusedRailingTypes],
-    ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes]
+    ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes]#,
     #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 

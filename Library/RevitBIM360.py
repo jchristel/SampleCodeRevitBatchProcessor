@@ -48,3 +48,15 @@ def ConvertBIM360FilePath(path):
     # hack.. pretend path points to C:\\ rather than BIM 360://
     path = path.replace(r'BIM 360://', r'C:/')
     return path
+
+# doc       current model document
+def GetModelBIM360Ids(doc):
+    """returns project id, model id, human readable path"""
+    path = doc.GetCloudModelPath()
+    modelGuid = path.GetModelGUID()
+    projectGuid = path.GetProjectGUID()
+    # check whether this is a cloud model
+    isCloudModel = path.CloudPath
+    # get human reeadable path
+    human = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+    return projectGuid,modelGuid,str(human)

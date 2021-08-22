@@ -52,7 +52,7 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
-# returns all wall types in a model
+# returns all stair types in a model
 # doc:   current model document
 def GetAllStairTypesByCategory(doc):
     """ this will return a filtered element collector of all Stair types in the model:
@@ -102,7 +102,7 @@ def GetAllStairStringersCarriageByCategory(doc):
     return collector
 
 # collector   fltered element collector containing Stair type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: stair type family name, value: list of ids
 def BuildStairTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
@@ -130,13 +130,13 @@ def SortStairTypesByFamilyName(doc):
 # typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
     # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
+    allTypeIds = typeIdGetter(doc)
     ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = com.HasDependentElements(doc, type)
         if(hasDependents == useType):
-            ids.append(wallTypeId)
+            ids.append(typeId)
     return ids
 
 # -------------------------------- none in place Stair types -------------------------------------------------------
@@ -161,7 +161,7 @@ def GetAllStairTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByClass(doc):
-    """ returns all Stair element types available placed in model """
+    """ returns all Stair element types available in model """
     ids = []
     colClass = GetStairTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -306,7 +306,7 @@ def GetInPlaceStairFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceStairTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category wall """
+    """ returns type ids off all available in place families of category stair """
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Stairs)
     return ids
 

@@ -35,8 +35,8 @@ clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 # header used in reports
-REPORT_VIEWS_HEADER = ['HOSTFILE','ID', 'NAME']
-REPORT_SHEETS_HEADER = ['HOSTFILE','ID', 'NAME']
+REPORT_VIEWS_HEADER = ['HOSTFILE']
+REPORT_SHEETS_HEADER = ['HOSTFILE']
 
 # --------------------------------------------- utility functions ------------------
 
@@ -492,7 +492,7 @@ def GetSheetReportData(doc):
 # samplesheet         Sheet view
 def GetHeaders (sampleSheet):
     """method retrieving column headers for report file"""
-    headers = []
+    headers = ['SheetId']
     paras = sampleSheet.GetOrderedParameters()
     for p in paras:
         headers.append(p.Definition.Name)
@@ -504,9 +504,11 @@ def GetSheetParameters(sheet):
     """method retrieving parameters and their values per sheet"""
     sheetParameters = []
     paras = sheet.GetOrderedParameters()
+    tupe_d = ('Sheet Id', sheet.Id)
+    sheetParameters.append(tupe_d)
     for p in paras:
         v = com.getParameterValue(p)
-        tupe_d = (p.Definition.Name, v)
+        tupe_d = (p.Definition.Name, util.EncodeAscii(str(v)))
         sheetParameters.append(tupe_d)
     # sort by definition name
     sheetParameters.sort(key=lambda t: t[0])

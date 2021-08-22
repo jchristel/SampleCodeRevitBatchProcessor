@@ -48,7 +48,7 @@ BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
+# returns all roof types in a model
 # doc:   current model document
 def GetAllRoofTypesByCategory(doc):
     """ this will return a filtered element collector of all Roof types in the model:
@@ -96,13 +96,13 @@ def SortRoofTypesByFamilyName(doc):
 # typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
     # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
+    allTypeIds = typeIdGetter(doc)
     ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = com.HasDependentElements(doc, type)
         if(hasDependents == useType):
-            ids.append(wallTypeId)
+            ids.append(typeId)
     return ids
 
 # -------------------------------- none in place Roof types -------------------------------------------------------
@@ -119,7 +119,7 @@ def GetAllRoofInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByCategory(doc):
-    """ returns all Roof element types available placed in model """
+    """ returns all Roof element types available in model """
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -127,7 +127,7 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByClass(doc):
-    """ returns all Roof element types available placed in model """
+    """ returns all Roof element types available in model """
     ids = []
     colClass = GetRoofTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
@@ -172,7 +172,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceRoofFamilyInstances(doc):
-    """ returns all instances in place families of category wall """
+    """ returns all instances of in place families of category roof """
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -182,7 +182,7 @@ def GetInPlaceRoofFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceRoofTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category wall """
+    """ returns type ids off all available in place families of category roof"""
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Roofs)
     return ids
 

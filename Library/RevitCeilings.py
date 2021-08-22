@@ -51,7 +51,7 @@ BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
+# returns all ceiling types in a model
 # doc:   current model document
 def GetAllCeilingTypesByCategory(doc):
     """ this will return a filtered element collector of all ceiling types in the model:
@@ -72,13 +72,12 @@ def GetCeilingTypesByClass(doc):
     it will therefore not return any in place family types ..."""
     return  FilteredElementCollector(doc).OfClass(CeilingType)
 
-# collector   fltered element collector containing ceiling type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# collector   filtered element collector containing ceiling type elments of family symbols representing in place families
+# dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -101,13 +100,13 @@ def SortCeilingTypesByFamilyName(doc):
 # typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
     # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
+    allTypeIds = typeIdGetter(doc)
     ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = com.HasDependentElements(doc, type)
         if(hasDependents == useType):
-            ids.append(wallTypeId)
+            ids.append(typeId)
     return ids
 
 # -------------------------------- none in place ceiling types -------------------------------------------------------
@@ -124,20 +123,18 @@ def GetAllCeilingInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByCategory(doc):
-    """ returns all ceiling element types available placed in model """
+    """ returns all ceiling element types available in model """
     ids = []
     colCat = GetAllCeilingTypesByCategory(doc)
-    for cCat in colCat:
-        ids.append(cCat.Id)
+    ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByClass(doc):
-    """ returns all ceiling element types available placed in model """
+    """ returns all ceiling element type ids available in model """
     ids = []
     colClass = GetCeilingTypesByClass(doc)
-    for cClass in colClass:
-        ids.append(cClass.Id)
+    ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
 # doc   current document

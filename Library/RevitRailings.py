@@ -150,7 +150,7 @@ def GetAllRailingInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByCategory(doc):
-    """ returns all Railing element types available placed in model """
+    """ returns all Railing element types available in model """
     ids = []
     colCat = GetAllRailingTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -158,7 +158,7 @@ def GetAllRailingTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByClass(doc):
-    """ returns all Railing element types available placed in model """
+    """ returns all Railing element types available in model """
     ids = []
     colClass = GetRailingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)

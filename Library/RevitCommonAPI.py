@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 #
 #License:
 #
@@ -49,15 +51,18 @@ def CheckParameterValue(para, paraCondition, conditionValue):
 # returns a parameter value as string
 def getParameterValue(para):
     pValue = 'no Value'
-    if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
-        if(para.AsValueString()!= None and para.AsValueString() != ''):
-            pValue = para.AsValueString()
-    elif(para.StorageType == StorageType.String):
-        if(para.AsString() != None and para.AsString() != ''):
-            pValue = para.AsString()
-    elif(para.StorageType == StorageType.ElementId):
-        if(para.AsElementId() != None):
-            pValue = para.AsElementId()
+    try:
+        if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+            if(para.AsValueString()!= None and para.AsValueString() != ''):
+                pValue = para.AsValueString()
+        elif(para.StorageType == StorageType.String):
+            if(para.AsString() != None and para.AsString() != ''):
+                pValue = para.AsString()
+        elif(para.StorageType == StorageType.ElementId):
+            if(para.AsElementId() != None):
+                pValue = para.AsElementId()
+    except  Exception as e:
+        pValue = 'Exception: '+str(e)
     return pValue
 
 # sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:

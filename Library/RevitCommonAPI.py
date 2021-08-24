@@ -365,6 +365,41 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 
 #----------------------------------------elements-----------------------------------------------
 
+# doc           current model document
+# elementIds    elements of which to build a dictionary by category
+def BuildCategoryDictionary(doc, elementIds):
+    dic = {}
+    for elId in elementIds:
+        el = doc.GetElement(elId)
+        if(dic.has_key(el.Category.Name)):
+            dic[el.Category.Name].append(el)
+        else:
+            dic[el.Category.Name] = [el]
+    return dic
+
+# doc           current model document
+# elementIds    dependent elements of which to  check whether orphaned legend components
+def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, elementIds):
+    """ returns True if all but one dependent element are orphaned legend components"""
+    flag = True
+    categoryName = 'Legend Components'
+    # build dependent type dictionary
+    # check whether dictionary is made of
+    #   1 entry for type
+    #   multiple entries for legend components
+    #   no other entry
+    # if so: check whether any of the legend component entry has a valid view id
+    #   if none has return true, otherwise return false
+    dic = BuildCategoryDictionary(doc,  elementIds)
+    if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
+        for value in dic[categoryName]:
+            if value.OwnerViewId != ElementId.InvalidElementId:
+                flag = False
+                break
+    else:
+        flag = False
+    return flag
+
 # doc   current model document
 # el    the element of which to check for dependent elements
 # filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
@@ -377,7 +412,10 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
     try:
         dependentElements = el.GetDependentElements(filter)
         if(len(dependentElements)) > threshold :
-            value = 1
+            # there appear to be situations where dependent elements are multiple (orphaned?) legend components only
+            # these are legend components with an invalid OwnerViewId, check whether this is the case...
+            if (CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents(doc, dependentElements) == False):
+                value = 1
     except Exception as e:
         value = -1
     return value

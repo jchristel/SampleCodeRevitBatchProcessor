@@ -56,6 +56,10 @@ def GetDateStamp(format):
     d = datetime.datetime.now()
     return d.strftime(format)
 
+def GetLocalAppDataPath():
+    """return directory path to local app data folder"""
+    return os.environ['LOCALAPPDATA']
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 # used to combine report files into one file (assumes all files have the same number of columns)
@@ -176,6 +180,17 @@ def GetFiles(folderPath, fileExtension='.rvt'):
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
+
+# path      root directory to start fiel search in
+# filter    file name must contain filter value
+def GetFilesFromDirectoryWalker(path, filter):
+    """returns all files in directory and nested subdirectories where file name contains filter value"""
+    filesFound = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if (name.Contains(filter)) :
+                filesFound.append(root + '\\' + name)
+    return filesFound
 
 # number of file size options
 FILE_SIZE_IN_KB = 1024

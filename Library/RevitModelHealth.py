@@ -29,6 +29,7 @@ clr.ImportExtensions(System.Linq)
 clr.AddReference('System')
 
 import Utility as util
+import RevitBIM360 as b360
 import RevitCommonAPI as com
 import Result as res
 import RevitDesignSetOptions as rDoS
@@ -109,9 +110,13 @@ def GetFileSize(doc):
         # get the path from the document
         # this will fail if not a file based doc or the document is detached
         revitFilePath = doc.PathName
-        if(util.FileExist(revitFilePath)):
-            # get file size in MB
-            size = util.GetFileSize(revitFilePath)
+        # check if bim 360 file
+        if (revitFilePath.StartsWith('BIM 360')):
+            size = b360.GetModelFileSize(doc)
+        else:
+            if(util.FileExist(revitFilePath)):
+                # get file size in MB
+                size = util.GetFileSize(revitFilePath)
     except:
         pass
     return size

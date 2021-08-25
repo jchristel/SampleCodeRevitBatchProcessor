@@ -27,6 +27,8 @@ import glob
 import Result as res
 import csv
 import FileItem as fi
+import os
+import Utility as util
 
 #from System.IO import Path
 from Autodesk.Revit.DB import *
@@ -60,3 +62,26 @@ def GetModelBIM360Ids(doc):
     # get human reeadable path
     human = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     return projectGuid,modelGuid,str(human)
+
+# doc       current model document
+def GetModelFileSize(doc):
+    """returns BIM360 file size, if file not exists on local cache it will return -1"""
+    fileSize = -1
+    path = doc.GetCloudModelPath()
+    fullPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+    if (fullPath.StartsWith("BIM 360")):
+        # get user envirnoment
+        hostName = util.GetLocalAppDataPath()
+        # build path to local cache files
+        folder = hostName + '\\Autodesk\\Revit\\Autodesk Revit ' + str(doc.Application.VersionNumber) + '\\CollaborationCache'
+        # local cache file name is same as file GUID on BIM360
+        revitFile = doc.WorksharingCentralGUID.ToString()
+        # get all files in cache folder matching GUID
+        file_list = util.GetFilesFromDirectoryWalker(folder, revitFile)
+        if (len(file_list) > 0):
+            for file in file_list:
+                # just select one of the file instance..not to sure why this one?
+                if (file.Contains('CentralCache') == False):
+                    fileSize = util.GetFileSize(file)
+                    break
+    return fileSize

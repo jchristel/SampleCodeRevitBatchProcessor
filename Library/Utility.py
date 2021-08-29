@@ -30,6 +30,7 @@ import os
 import shutil
 import os.path
 from os import path
+import codecs
 import csv
 
 # default file stamp date format
@@ -157,14 +158,16 @@ def GetFirstRowInFile(filePath):
 
 # method writing out report information
 # fileName:         fully qualified file path
-# header:           list of column headers
+# header:           list of column headers, provide empty list if not required!
 # data:             list of lists representing row data
 def writeReportData(fileName, header, data):
-    f = open(fileName, 'w')
-    f.write('\t'.join(header + ['\n']))
-    for d in data:
-        f.write('\t'.join(d + ['\n']))
-    f.close()
+    with codecs.open(fileName, 'w', encoding='utf-8') as f:
+        # check if header is required
+        if(len(header)>0): 
+            f.write('\t'.join(header + ['\n']))
+        for d in data:
+            f.write('\t'.join(d + ['\n']))
+        f.close()
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 

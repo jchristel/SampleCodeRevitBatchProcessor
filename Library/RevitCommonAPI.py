@@ -65,6 +65,21 @@ def getParameterValue(para):
         pValue = 'Exception: '+str(e)
     return pValue
 
+# para      revit parameter to get value of
+def GetParameterValueUTF8String(para):
+    """ returns parameter values as utf-8 encoded strings"""
+    pValue = 'no Value'
+    if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+        if(para.AsValueString()!= None and para.AsValueString() != ''):
+            pValue = para.AsValueString().encode('utf-8')
+    elif(para.StorageType == StorageType.String):
+        if(para.AsString() != None and para.AsString() != ''):
+            pValue = para.AsString().encode('utf-8')
+    elif(para.StorageType == StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = str(para.AsElementId()).encode('utf-8')
+    return pValue
+
 # sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:
 def setParameterValue(para, valueAsString, doc):
     returnvalue = res.Result()

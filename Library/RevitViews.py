@@ -36,7 +36,7 @@ clr.ImportExtensions(System.Linq)
 # -------------------------------------------- common variables --------------------
 # header used in reports
 REPORT_VIEWS_HEADER = ['HOSTFILE']
-REPORT_SHEETS_HEADER = ['HOSTFILE']
+REPORT_SHEETS_HEADER = ['HOSTFILE','Id']
 
 # --------------------------------------------- utility functions ------------------
 
@@ -452,64 +452,50 @@ def WriteSheetData(doc, fileName, currentFileName):
     """writes out sheet data to file"""
     returnvalue = res.Result()
     try:
-        parameterHeaders, data = GetSheetReportData(doc)
-        convertedData = ConvertData(data, currentFileName)
+        data = GetSheetReportData(doc, currentFileName)
+        headers = GetReportHeaders(doc)
         util.writeReportData(
             fileName, 
-            REPORT_SHEETS_HEADER + parameterHeaders, 
-            convertedData)
+            headers, 
+            data)
         returnvalue.UpdateSep(True, 'Succesfully wrote data file')
     except Exception as e:
         returnvalue.UpdateSep(False, str(e))
     return returnvalue
 
 
-def ConvertData(data, currentFileName):
-    rowData = []
-    for s in data:
-            # get second element in tuple
-            n = 1
-            data = [str(x[n]) for x in s]
-            data.insert(0, currentFileName)
-            rowData.append(data)
-    return rowData
+# doc       the current revit document
+# hostanme  the file hostname, which is added to data returned
+def GetSheetReportData(doc, hostName):
+    """returns sheet data including file name and sheet id"""
+    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    views = []
+    for v in collectorViews:
+        # get all parameters attached to sheet
+        paras = v.GetOrderedParameters()
+        data = [hostName, str(v.Id)]
+        for para in paras:
+            # get values as utf-8 encoded strings
+            value = com.GetParameterValueUTF8String(para)
+            try:
+                # replace non utf-8 sqm symbol
+                # 
+                data.append (value)
+            except:
+                data.append('Failed to retrieve value')
+        views.append(data)
+    return views
 
-# doc: the current revit document
-def GetSheetReportData(doc):
-    """method retrieving all sheets and associated parameter names and values"""
-    headers = []
-    sheetData = []
-    # get sheets in model
-    sheets = GetSheetsByFilters(doc)
-    if (len(sheets) > 0):
-        # get headers:
-        headers = GetHeaders(sheets[0])
-        for sheet in sheets:
-            sheeparameters = GetSheetParameters(sheet)
-            sheetData.append(sheeparameters)
-    return headers, sheetData
-
-# samplesheet         Sheet view
-def GetHeaders (sampleSheet):
-    """method retrieving column headers for report file"""
-    headers = ['SheetId']
-    paras = sampleSheet.GetOrderedParameters()
-    for p in paras:
-        headers.append(p.Definition.Name)
-    # sort alphabeticaly
-    return sorted(headers)
-
-# sheet         Sheet view
-def GetSheetParameters(sheet):
-    """method retrieving parameters and their values per sheet"""
-    sheetParameters = []
-    paras = sheet.GetOrderedParameters()
-    tupe_d = ('Sheet Id', sheet.Id)
-    sheetParameters.append(tupe_d)
-    for p in paras:
-        v = com.getParameterValue(p)
-        tupe_d = (p.Definition.Name, util.EncodeAscii(str(v)))
-        sheetParameters.append(tupe_d)
-    # sort by definition name
-    sheetParameters.sort(key=lambda t: t[0])
-    return sheetParameters
+# doc       the current revit document
+def GetReportHeaders(doc):
+    """returns sheet data including file name and sheet id"""
+    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    # copy headers list
+    headers = REPORT_SHEETS_HEADER[:]
+    for v in collectorViews:
+        # get all parameters attached to sheet
+        paras = v.GetOrderedParameters()
+        for para in paras:
+            headers.append (para.Definition.Name)
+        break
+    return headers

@@ -38,6 +38,7 @@ import RevitWorksets as rWork
 import RevitViews as rViews
 import RevitLineStylesPatterns as rLsp
 import RevitLinks as rLinks
+import RevitModelHealthReportFileNames as rFns
 import RevitFamilyUtils as rFams
 import RevitGroups as rGrp
 import RevitRooms as rRooms
@@ -76,8 +77,8 @@ def GetParametersOfInstance(famInstance, doc):
         # check if parameter is read only
         if(p.IsReadOnly == False):
             # check an action to update this parameter value exists
-            if(PARAM_ACTIONS_.ContainsKey(p.Definition.Name)):
-                pvalue = PARAM_ACTIONS_[p.Definition.Name].getData(doc)
+            if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
+                pvalue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
                 if(pvalue != FAILED_TO_RETRIEVE_VALUE):
                     flag = com.setParameterValue(p, str(pvalue), doc)
                     resultValue.Update(flag)
@@ -397,34 +398,34 @@ def GetNumberOfFilledRegionInModel(doc):
 #set up a named tuple to store data in it
 healthDataAction = namedtuple('healthDataAction', 'getData reportFileName')
 
-PARAM_ACTIONS_ = {
-    'ValueWorksets': healthDataAction(GetWorksetNumber,'_NumberOfWorksets'),
-    'ValueFileSize': healthDataAction(GetFileSize,'_FileSize'),
-    'ValueWarnings': healthDataAction(GetNumberOfWarnings,'_NumberOfWarnings'),
-    'ValueDesignSets': healthDataAction(GetNumberOfDesignSets,'_NumberOfDesingSets'),
-    'ValueDesignOptions': healthDataAction(GetNumberOfDesignOptions,'_NumberOfDesignOptions'),
-    'ValueSheets': healthDataAction(GetNumberOfSheets,'_NumberOfSheets'),
-    'ValueViews': healthDataAction(GetViewsInTheModel,'_NumberOfViews'),
-    'ValueViewsNotPlaced': healthDataAction(GetUnplacedViews,'_NumberOfViewsNotPlaced'),
-    'ValueLineStyles': healthDataAction(GetNumberOfLineStyles,'_NumberOfLineStyles'),
-    'ValueLinePatterns': healthDataAction(GetNumberOfLinePatterns,'_NumberOfLinePatterns'),
-    'ValueFillPatterns': healthDataAction(GetNumberOfFillPatterns,'_NumberOfFillPatterns'),
-    'ValueCADImports': healthDataAction(GetNumberOfCADImports,'_NumberOfCadImports'),
-    'ValueCADLinksToModel': healthDataAction(GetNumberOfCADLinksToModel,'_NumberOfCadLinksModel'),
-    'ValueCADLinksToView': healthDataAction(GetNumberOfCADLinksToView,'_NumberOfCadLinksView'),
-    'ValueImageImports': healthDataAction(GetNumberOfImageImports,'_NumberOfImageImports'),
-    'ValueImageLinks': healthDataAction(GetNumberOfImageLinks,'_NumberOfImageLinks'),
-    'ValueFamilies': healthDataAction(GetNumberOfFamiliesInModel,'_NumberOfFamilies'),
-    'ValueFamiliesInPlace': healthDataAction(GetNumberOfInPlaceFamiliesInModel,'_NumberOfInPlaceFamilies'),
-    'ValueModelGroups': healthDataAction(GetNumberOfModelGroupsInModel,'_NumberOfModelGroups'),
-    'ValueModelGroupsUnplaced': healthDataAction(GetNumberOfUnplacedModelGroupsInModel,'_NumberOfUnplacedModelGroups'),
-    'ValueDetailGroups': healthDataAction(GetNumberOfDetailGroupsInModel,'_NumberOfDetailGroups'),
-    'ValueDetailGroupsUnplaced': healthDataAction(GetNumberOfUnplacedDetailGroupsInModel,'_NumberOfUnplacedDetailGroups'),
-    'ValueRooms': healthDataAction(GetNumberOfRoomsInModel,'_NumberOfRooms'),
-    'ValueRoomsUnplaced': healthDataAction(GetNumberOfUnplacedRoomsInModel,'_NumberOfUnplacedRooms'),
-    'ValueRoomsNotEnclosed': healthDataAction(GetNumberOfNotEnclosedRoomsInModel,'_NumberOfNotEnclosedRooms'),
-    'ValueRoomsRedundant': healthDataAction(GetNumberOfRedundantRoomsInModel,'_NumberOfRedundantRooms'),
-    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel,'_NumberOfRegions')
+PARAM_ACTIONS = {
+    'ValueWorksets': healthDataAction(GetWorksetNumber, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS),
+    'ValueFileSize': healthDataAction(GetFileSize, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE),
+    'ValueWarnings': healthDataAction(GetNumberOfWarnings, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS),
+    'ValueDesignSets': healthDataAction(GetNumberOfDesignSets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS),
+    'ValueDesignOptions': healthDataAction(GetNumberOfDesignOptions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS),
+    'ValueSheets': healthDataAction(GetNumberOfSheets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS),
+    'ValueViews': healthDataAction(GetViewsInTheModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS),
+    'ValueViewsNotPlaced': healthDataAction(GetUnplacedViews, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED),
+    'ValueLineStyles': healthDataAction(GetNumberOfLineStyles, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES),
+    'ValueLinePatterns': healthDataAction(GetNumberOfLinePatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS),
+    'ValueFillPatterns': healthDataAction(GetNumberOfFillPatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS),
+    'ValueCADImports': healthDataAction(GetNumberOfCADImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS),
+    'ValueCADLinksToModel': healthDataAction(GetNumberOfCADLinksToModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL),
+    'ValueCADLinksToView': healthDataAction(GetNumberOfCADLinksToView, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW),
+    'ValueImageImports': healthDataAction(GetNumberOfImageImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS),
+    'ValueImageLinks': healthDataAction(GetNumberOfImageLinks, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS),
+    'ValueFamilies': healthDataAction(GetNumberOfFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES),
+    'ValueFamiliesInPlace': healthDataAction(GetNumberOfInPlaceFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE),
+    'ValueModelGroups': healthDataAction(GetNumberOfModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS),
+    'ValueModelGroupsUnplaced': healthDataAction(GetNumberOfUnplacedModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED),
+    'ValueDetailGroups': healthDataAction(GetNumberOfDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS),
+    'ValueDetailGroupsUnplaced': healthDataAction(GetNumberOfUnplacedDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED),
+    'ValueRooms': healthDataAction(GetNumberOfRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS),
+    'ValueRoomsUnplaced': healthDataAction(GetNumberOfUnplacedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED),
+    'ValueRoomsNotEnclosed': healthDataAction(GetNumberOfNotEnclosedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED),
+    'ValueRoomsRedundant': healthDataAction(GetNumberOfRedundantRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT),
+    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS)
 }
 
 # updates any instances of model health tracking family in a project
@@ -449,9 +450,9 @@ def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     # get values and write them out
-    for key, value in PARAM_ACTIONS_.items():
-        pvalue = PARAM_ACTIONS_[key].getData(doc)
-        fileName = util.GetFileDateStamp() + revitFileName + PARAM_ACTIONS_[key].reportFileName + '.temp'
+    for key, value in PARAM_ACTIONS.items():
+        pvalue = PARAM_ACTIONS[key].getData(doc)
+        fileName = util.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
         resExport = res.Result()
         try:
             util.writeReportData(

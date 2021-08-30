@@ -63,12 +63,11 @@ def GetLocalAppDataPath():
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# used to combine report files into one file (assumes all files have the same number of columns)
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
+    """used to combine report files into one file (assumes all files have the same number of columns)"""
     file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
-    print(str(len(file_list)))
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
         for file_ in file_list:
@@ -79,6 +78,23 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
                     result.write( line )
                 lineCounter += 1
             fileCounter += 1
+    
+# files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
+# prefix is usually the time stamp in format  '%y_%m_%d'
+def AppendToSingleFiles(sourceFile, appendFile):
+    """used to append one file to another, assumes same number of headers)"""
+    flag = True
+    try:
+        # read file to append into memory...hopefully will never get in GB range in terms of file size
+        fp = codecs.open(appendFile,'r',encoding='utf-8')
+        lines=fp.readlines()
+        fp.close()
+        with codecs.open(sourceFile, 'a', encoding='utf-8') as f:
+            for line in lines:
+                f.write( line )
+    except Exception:
+        flag = False
+    return flag
 
 # used to combine report files into one file, files may have different number / named columns
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
@@ -163,24 +179,27 @@ def GetFirstRowInFile(filePath):
 def writeReportData(fileName, header, data):
     with codecs.open(fileName, 'w', encoding='utf-8') as f:
         # check if header is required
-        if(len(header)>0): 
+        if(len(header) > 0):
+            print('\t'.join(header + ['\n']))
             f.write('\t'.join(header + ['\n']))
-        for d in data:
-            f.write('\t'.join(d + ['\n']))
+        # check if data is required
+        if(len(data) > 0):
+            for d in data:
+                f.write('\t'.join(d + ['\n']))
         f.close()
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# returns a list of files from a given folder with a given file extension
 # file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
+    """returns a list of files from a given folder with a given file extension"""
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
     return file_list
 
-# returns a list of files from a given folder with a given file extension and a file name filter
 # file extension in format '.txt'
 # file filter is in 'something*'
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
+    """returns a list of files from a given folder with a given file extension and a file name filter"""
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
 

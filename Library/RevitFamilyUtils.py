@@ -148,7 +148,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_InternalPointLoadTags,
     BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
     BuiltInCategory.OST_KeynoteTags,
-    BuiltInCategory.OST_LevelHeads,
+    #uiltInCategory.OST_LevelHeads, purged separately
     BuiltInCategory.OST_LightingDeviceTags,
     BuiltInCategory.OST_LightingFixtureTags,
     BuiltInCategory.OST_LineLoadTags,
@@ -267,7 +267,8 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
             ids.append(c.Id)
     return ids
 
-# doc   current document
+# doc                   current document
+# unusedTypeGetter      returns ids of unused symbols (family types)
 def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     """returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged"""
     unusedIds = []

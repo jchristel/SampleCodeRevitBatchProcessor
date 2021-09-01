@@ -385,11 +385,23 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 def BuildCategoryDictionary(doc, elementIds):
     dic = {}
     for elId in elementIds:
-        el = doc.GetElement(elId)
-        if(dic.has_key(el.Category.Name)):
-            dic[el.Category.Name].append(el)
-        else:
-            dic[el.Category.Name] = [el]
+        try:
+            el = doc.GetElement(elId)
+            try:
+                if(dic.has_key(el.Category.Name)):
+                    dic[el.Category.Name].append(el)
+                else:
+                    dic[el.Category.Name] = [el]
+            except:
+                if(dic.has_key('invalid category')):
+                    dic['invalid category'].append(el)
+                else:
+                    dic['invalid category'] = [el]
+        except:
+            if(dic.has_key('invalid element')):
+                dic['invalid element'].append(el)
+            else:
+                dic['invalid element'] = [el]
     return dic
 
 # doc           current model document
@@ -411,7 +423,8 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
             if value.OwnerViewId != ElementId.InvalidElementId:
                 flag = False
                 break
-    else:
+    # check if keys in dictioanry does not equal 2
+    elif(len(dic.keys()) != 2):
         flag = False
     return flag
 

@@ -37,6 +37,7 @@ import RevitCurtainWallElements as rCWE
 import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
 import RevitGroups as rGrp
+import RevitLevels as rLev
 import RevitLinks as rLink
 import RevitRailings as rRail
 import RevitRamps as rRam
@@ -447,6 +448,29 @@ def PurgeUnusedInPlaceRailingTypes(doc, transactionName, isDebug):
         'InPlace Railing Type(s)',
         isDebug)
 
+# ---------------------------------------------levels ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedLevelypes(doc, transactionName, isDebug):
+    """purges unused revit level types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rLev.GetUnusedLevelTypesForPurge, 
+        transactionName,
+        'Level Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedLevelHeadFamilyTypes(doc, transactionName, isDebug):
+    """purges unused level head families from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rLev.GetUnusedLevelHeadFamiliesForPurge, 
+        transactionName,
+        'Level Head family Type(s)',
+        isDebug)
+
+
 # ---------------------------------------------loadable families ---------------------------------------------
 
 # doc   current document
@@ -495,7 +519,9 @@ PURGE_ACTIONS = [
     ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes], # might need to be moved after ramp type purge
     ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes],
     ['Purge Unused Railing Types', PurgeUnusedRailingTypes],
-    ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes]#,
+    ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes],
+    ['Purge Unused Level Types', PurgeUnusedLevelypes],
+    ['Purge Unused Level Head Types', PurgeUnusedLevelHeadFamilyTypes]#,
     #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 

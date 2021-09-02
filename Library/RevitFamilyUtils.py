@@ -142,7 +142,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_FurnitureSystemTags,
     BuiltInCategory.OST_GenericModelTags,
     BuiltInCategory.OST_GenericAnnotation,
-    BuiltInCategory.OST_GridHeads,
+    #BuiltInCategory.OST_GridHeads, purged separately
     BuiltInCategory.OST_InternalAreaLoadTags,
     BuiltInCategory.OST_InternalLineLoadTags,
     BuiltInCategory.OST_InternalPointLoadTags,

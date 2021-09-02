@@ -418,13 +418,18 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     # if so: check whether any of the legend component entry has a valid view id
     #   if none has return true, otherwise return false
     dic = BuildCategoryDictionary(doc,  elementIds)
-    if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
-        for value in dic[categoryName]:
-            if value.OwnerViewId != ElementId.InvalidElementId:
-                flag = False
-                break
-    # check if keys in dictioanry does not equal 2
-    elif(len(dic.keys()) != 2):
+    # check if dictioanry has legend component key first up
+    if(dic.has_key(categoryName) == True):
+        # if so check number of keys and length of elements per key
+        if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
+            for value in dic[categoryName]:
+                if value.OwnerViewId != ElementId.InvalidElementId:
+                    flag = False
+                    break
+        # check if keys in dictioanry does not equal 2
+        elif(len(dic.keys()) != 2):
+            flag = False
+    else:
         flag = False
     return flag
 
@@ -447,6 +452,22 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
     except Exception as e:
         value = -1
     return value
+
+
+# doc             current document
+# useTyep         0, no dependent elements; 1: has dependent elements
+# typeIdGetter    list of type ids to be checked for dependent elements
+def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
+    # get all types elements available
+    allTypeIds = typeIdGetter(doc)
+    ids = []
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = HasDependentElements(doc, type, None, threshold)
+        if(hasDependents == useType):
+            ids.append(typeId)
+    return ids
+
 
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted

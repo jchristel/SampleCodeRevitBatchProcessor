@@ -37,6 +37,7 @@ import RevitCurtainWallElements as rCWE
 import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
 import RevitGroups as rGrp
+import RevitGrids as rGrid
 import RevitLevels as rLev
 import RevitLinks as rLink
 import RevitRailings as rRail
@@ -470,6 +471,27 @@ def PurgeUnusedLevelHeadFamilyTypes(doc, transactionName, isDebug):
         'Level Head family Type(s)',
         isDebug)
 
+# ---------------------------------------------grids ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedGridTypes(doc, transactionName, isDebug):
+    """purges unused revit grid types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rGrid.GetUnusedGridTypesForPurge, 
+        transactionName,
+        'Grid Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedGridHeadFamilyTypes(doc, transactionName, isDebug):
+    """purges unused grid head families from the model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rGrid.GetUnusedLevelHeadFamiliesForPurge, 
+        transactionName,
+        'Grid Head family Type(s)',
+        isDebug)
 
 # ---------------------------------------------loadable families ---------------------------------------------
 
@@ -521,7 +543,9 @@ PURGE_ACTIONS = [
     ['Purge Unused Railing Types', PurgeUnusedRailingTypes],
     ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes],
     ['Purge Unused Level Types', PurgeUnusedLevelypes],
-    ['Purge Unused Level Head Types', PurgeUnusedLevelHeadFamilyTypes]#,
+    ['Purge Unused Level Head Types', PurgeUnusedLevelHeadFamilyTypes],
+    ['Purge Unused Grid Types', PurgeUnusedGridTypes],
+    ['Purge Unused Grid Head Types', PurgeUnusedGridHeadFamilyTypes]#,
     #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 

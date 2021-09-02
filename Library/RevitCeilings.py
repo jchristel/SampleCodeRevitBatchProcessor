@@ -51,7 +51,6 @@ BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
 # doc:   current model document
 def GetAllCeilingTypesByCategory(doc):
     """ this will return a filtered element collector of all ceiling types in the model:
@@ -73,12 +72,11 @@ def GetCeilingTypesByClass(doc):
     return  FilteredElementCollector(doc).OfClass(CeilingType)
 
 # collector   fltered element collector containing ceiling type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -89,26 +87,12 @@ def BuildCeilingTypeDictionary(collector, dic):
 def SortCeilingTypesByFamilyName(doc):
     # get all ceiling Type Elements
     wts = GetCeilingTypesByClass(doc)
-    # get all ceiling types including in place wall families
+    # get all ceiling types including in place ceiling families
     wts_two = GetAllCeilingTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildCeilingTypeDictionary(wts, usedWts)
     usedWts = BuildCeilingTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
 
 # -------------------------------- none in place ceiling types -------------------------------------------------------
 
@@ -143,7 +127,7 @@ def GetAllCeilingTypeIdsInModelByClass(doc):
 # doc   current document
 def GetUsedCeilingTypeIds(doc):
     """ returns all used in ceiling type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -165,7 +149,7 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
     - Basic Ceiling
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByClass, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByClass, 0)
     # make sure there is at least on ceiling type per system family left in model
     ceilingTypes = SortCeilingTypesByFamilyName(doc)
     for key, value in ceilingTypes.items():
@@ -196,13 +180,13 @@ def GetAllInPlaceCeilingTypeIdsInModel(doc):
 # doc   current document
 def GetUsedInPlaceCeilingTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceCeilingTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 0)
     return ids
 
 # doc   current document

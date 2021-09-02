@@ -46,7 +46,6 @@ BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
 # doc:   current model document
 def GetAllBuildingPadTypesByCategory(doc):
     """ this will return a filtered element collector of all BuildingPad types in the model:
@@ -61,12 +60,11 @@ def GetBuildingPadTypesByClass(doc):
     return  FilteredElementCollector(doc).OfClass(BuildingPadType)
 
 # collector   fltered element collector containing BuildingPad type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: pad type family name, value: list of ids
 def BuildBuildingPadTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -75,28 +73,14 @@ def BuildBuildingPadTypeDictionary(collector, dic):
 
 # doc   current model document
 def SortBuildingPadTypesByFamilyName(doc):
-    # get all Wall Type Elements
+    # get all building pad Type Elements
     wts = GetBuildingPadTypesByClass(doc)
-    # get all wall types including in place wall families
+    # get all pad types including in place pad families
     wts_two = GetAllBuildingPadTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildBuildingPadTypeDictionary(wts, usedWts)
     usedWts = BuildBuildingPadTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
 
 # -------------------------------- none in place BuildingPad types -------------------------------------------------------
 
@@ -131,7 +115,7 @@ def GetAllBuildingPadTypeIdsInModelByClass(doc):
 # doc   current document
 def GetUsedBuildingPadTypeIds(doc):
     """ returns all used in BuildingPad type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -150,7 +134,7 @@ def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
     """ returns all unused BuildingPad type ids for:
     - Basic BuildingPad"""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByClass, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByClass, 0)
     # make sure there is at least on BuildingPad type per system family left in model
     BuildingPadTypes = SortBuildingPadTypesByFamilyName(doc)
     for key, value in BuildingPadTypes.items():

@@ -48,7 +48,6 @@ BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
 # doc:   current model document
 def GetAllRoofTypesByCategory(doc):
     """ this will return a filtered element collector of all Roof types in the model:
@@ -68,12 +67,11 @@ def GetRoofTypesByClass(doc):
     return  FilteredElementCollector(doc).OfClass(RoofType)
 
 # collector   fltered element collector containing Roof type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: roof type family name, value: list of ids
 def BuildRoofTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -82,28 +80,14 @@ def BuildRoofTypeDictionary(collector, dic):
 
 # doc   current model document
 def SortRoofTypesByFamilyName(doc):
-    # get all Wall Type Elements
+    # get all Roof Type Elements
     wts = GetRoofTypesByClass(doc)
-    # get all wall types including in place wall families
+    # get all roof types including in place roof families
     wts_two = GetAllRoofTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildRoofTypeDictionary(wts, usedWts)
     usedWts = BuildRoofTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
 
 # -------------------------------- none in place Roof types -------------------------------------------------------
 
@@ -136,7 +120,7 @@ def GetAllRoofTypeIdsInModelByClass(doc):
 # doc   current document
 def GetUsedRoofTypeIds(doc):
     """ returns all used in Roof type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -158,7 +142,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
     - Basic Roof
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
     # make sure there is at least on Roof type per system family left in model
     RoofTypes = SortRoofTypesByFamilyName(doc)
     for key, value in RoofTypes.items():
@@ -172,7 +156,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceRoofFamilyInstances(doc):
-    """ returns all instances in place families of category wall """
+    """ returns all instances in place families of category roof """
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -182,20 +166,20 @@ def GetInPlaceRoofFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceRoofTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category wall """
+    """ returns type ids off all available in place families of category roof """
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Roofs)
     return ids
 
 # doc   current document
 def GetUsedInPlaceRoofTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRoofTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
     return ids
 
 # doc   current document

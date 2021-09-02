@@ -46,7 +46,6 @@ BUILTIN_FLOOR_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
 # doc:   current model document
 def GetAllFloorTypesByCategory(doc):
     """ this will return a filtered element collector of all floor types in the model:
@@ -66,12 +65,11 @@ def GetFloorTypesByClass(doc):
     return  FilteredElementCollector(doc).OfClass(FloorType)
 
 # collector   fltered element collector containing Floor type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: floor type family name, value: list of ids
 def BuildFloorTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -82,26 +80,12 @@ def BuildFloorTypeDictionary(collector, dic):
 def SortFloorTypesByFamilyName(doc):
     # get all floor Type Elements
     wts = GetFloorTypesByClass(doc)
-    # get all floor types including in place wall families
+    # get all floor types including in place floor families
     wts_two = GetAllFloorTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildFloorTypeDictionary(wts, usedWts)
     usedWts = BuildFloorTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
 
 # -------------------------------- none in place Floor types -------------------------------------------------------
 
@@ -134,7 +118,7 @@ def GetAllFloorTypeIdsInModelByClass(doc):
 # doc   current document
 def GetUsedFloorTypeIds(doc):
     """ returns all used in Floor type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -155,7 +139,7 @@ def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
     - foundation slab
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByClass, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByClass, 0)
     # make sure there is at least on Floor type per system family left in model
     floorTypes = SortFloorTypesByFamilyName(doc)
     for key, value in floorTypes.items():
@@ -186,13 +170,13 @@ def GetAllInPlaceFloorTypeIdsInModel(doc):
 # doc   current document
 def GetUsedInPlaceFloorTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceFloorTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 0)
     return ids
 
 # doc   current document

@@ -98,20 +98,6 @@ def SortCurtainWallElementTypesByFamilyName(doc):
     usedWts = BuildCurtainWallElementTypeDictionary(wts_two, usedWts)
     return usedWts
 
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
-
 # -------------------------------- none in place Curtain Wall Element types -------------------------------------------------------
 
 # doc   current model document
@@ -159,7 +145,7 @@ def GetAllCurtainWallElementTypeIdssByCategoryExclInPlace(doc):
 # doc   current document
 def GetUsedCurtainWallElementTypeIds(doc):
     """ returns all used in CurtainWallElement type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -180,6 +166,6 @@ def GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge(doc):
     - curtain wall mullions
     it will therefore not return any family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdssByCategoryExclInPlace, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdssByCategoryExclInPlace, 0)
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
     return ids

@@ -103,7 +103,6 @@ def BuildRailingTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -114,26 +113,12 @@ def BuildRailingTypeDictionary(collector, dic):
 def SortRailingTypesByFamilyName(doc):
     # get all Railing Type Elements
     wts = GetRailingTypesByClass(doc)
-    # get all Railing types including in place wall families
+    # get all Railing types including in place railing families
     wts_two = GetAllRailingTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildRailingTypeDictionary(wts, usedWts)
     usedWts = BuildRailingTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
 
 # -------------------------------- none in place Railing types -------------------------------------------------------
 
@@ -183,7 +168,7 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
 # doc   current document
 def GetUsedRailingTypeIds(doc):
     """ returns all used in Railing type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -205,7 +190,7 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
     - Top Rail
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
     RailingTypes = SortRailingTypesByFamilyName(doc)
     for key, value in RailingTypes.items():
@@ -240,13 +225,13 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
 # doc   current document
 def GetUsedInPlaceRailingTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRailingTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
 # doc   current document

@@ -60,21 +60,18 @@ def GetLevelReportData(doc, revitFilePath):
 
 # ------------------------------------------------- filters --------------------------------------------------------------------
 
-# returns all wall level head family symbols in a model
 # doc:   current model document
 def GetAllLevelHeadsByCategory(doc):
     """ this will return a filtered element collector of all level head types in the model"""
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
     return collector
 
-# returns all level types in a model
 # doc:   current model document
 def GetAllLevelTypesByCategory(doc):
     """ this will return a filtered element collector of all level types in the model"""
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsElementType()
     return collector
 
-# returns all level types in a model
 # doc:   current model document
 def GetAllLevelTypeIdsByCategory(doc):
     """ this will return a filtered element collector of all level type ids in the model"""
@@ -82,50 +79,35 @@ def GetAllLevelTypeIdsByCategory(doc):
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
-
 # -------------------------------------------------  purge --------------------------------------------------------------------
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type, None, 6)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
 
 # doc             current document
 def GetUnusedLevelTypesForPurge(doc):
     """ this will return all ids of unused level types in the model to be purged"""
-    return GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 0)
+    return com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 0, 6)
 
 # doc             current document
 def GetUnusedLevelHeadFamilies(doc):
     """ this will return all ids of unused family symbols (types) of level head families"""
-    usedLevelTypes = GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 1)
+    usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
-    for lId in usedLevelTypes:
-        levelType = doc.GetElement(lId)
-        paras = levelType.GetOrderedParameters()
+    for lId in usedTypes:
+        type = doc.GetElement(lId)
+        paras = type.GetOrderedParameters()
         for p in paras:
             if(p.Definition.BuiltInParameter == BuiltInParameter.LEVEL_HEAD_TAG):
                 if (com.getParameterValue(p) not in headsInUseIds):
                     headsInUseIds.append(com.getParameterValue(p))
                 break
     # get all level head symbols available
-    allLevelSymbolsInModel = GetAllLevelHeadsByCategory(doc)
-    unusedLevelSymbolIds = []
+    allSymbolsInModel = GetAllLevelHeadsByCategory(doc)
+    unusedSymbolIds = []
     # filter out unused level head symbols and add to list to be returned
-    for  levelSymbolInModel in  allLevelSymbolsInModel:
+    for  levelSymbolInModel in  allSymbolsInModel:
         if(levelSymbolInModel.Id not in headsInUseIds ):
-            unusedLevelSymbolIds.append(levelSymbolInModel.Id)
-    return unusedLevelSymbolIds
+            unusedSymbolIds.append(levelSymbolInModel.Id)
+    return unusedSymbolIds
 
 # doc             current document
 def GetUnusedLevelHeadFamiliesForPurge(doc):

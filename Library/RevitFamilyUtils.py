@@ -246,6 +246,17 @@ def GetSymbolsFromType(doc, typeIds):
             fams[famEl.Id] = sIds
     return fams
 
+# doc:      current model document
+# typeId:   symbol type id
+def GetFamilyInstancesBySymbolTypeId(doc, typeId):
+    """returns all instances of a given family symbol"""
+    pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
+    equals = FilterNumericEquals()
+    idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
+    efilter =  ElementParameterFilter( idFilter )
+    collector = FilteredElementCollector(doc).WherePasses( efilter )
+    return collector
+
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyAllTypesInUse(famTypeIds,usedTypeIds):

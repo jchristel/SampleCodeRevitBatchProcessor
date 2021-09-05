@@ -117,7 +117,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_CurtainWallPanelTags,
     BuiltInCategory.OST_AreaTags,
     BuiltInCategory.OST_CaseworkTags,
-    BuiltInCategory.OST_CalloutHeads,
+    #BuiltInCategory.OST_CalloutHeads, purged separately
     BuiltInCategory.OST_CeilingTags,
     BuiltInCategory.OST_DataDeviceTags,
     BuiltInCategory.OST_DetailComponentTags,
@@ -131,7 +131,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_ElectricalCircuitTags,
     BuiltInCategory.OST_ElectricalEquipmentTags,
     BuiltInCategory.OST_ElectricalFixtureTags,
-    BuiltInCategory.OST_ElevationMarks,
+    #BuiltInCategory.OST_ElevationMarks, purged separately
     BuiltInCategory.OST_FabricAreaTags,
     BuiltInCategory.OST_FabricReinforcementTags,
     BuiltInCategory.OST_FireAlarmDeviceTags,
@@ -171,11 +171,11 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_PlumbingFixtureTags,
     BuiltInCategory.OST_RailingSystemTags,
     BuiltInCategory.OST_RebarTags,
-    BuiltInCategory.OST_ReferenceViewerSymbol,
+    #BuiltInCategory.OST_ReferenceViewerSymbol, purged separately
     BuiltInCategory.OST_RevisionCloudTags,
     BuiltInCategory.OST_RoofTags,
     BuiltInCategory.OST_RoomTags,
-    BuiltInCategory.OST_SectionHeads,
+    #BuiltInCategory.OST_SectionHeads, purged separately
     BuiltInCategory.OST_SecurityDeviceTags,
     BuiltInCategory.OST_SitePropertyLineSegmentTags,
     BuiltInCategory.OST_SitePropertyTags,

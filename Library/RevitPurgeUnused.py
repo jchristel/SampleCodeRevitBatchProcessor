@@ -45,6 +45,7 @@ import RevitRamps as rRam
 import RevitRoofs as rRoof
 import RevitStairs as rStair
 import RevitViews as rView
+import RevitViewReferencing as rViewRef
 import RevitWalls as rWall
 from timer import Timer
 
@@ -493,6 +494,38 @@ def PurgeUnusedGridHeadFamilyTypes(doc, transactionName, isDebug):
         'Grid Head family Type(s)',
         isDebug)
 
+# --------------------------------------------- view refs ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedViewRefTypes(doc, transactionName, isDebug):
+    """purges unused view ref types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 
+        transactionName,
+        'View Ref Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedViewContTypes(doc, transactionName, isDebug):
+    """purges unused view cont types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 
+        transactionName,
+        'View Continuation Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedViewRefFamilies(doc, transactionName, isDebug):
+    """purges unused view ref families and continuation markers from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 
+        transactionName,
+        'View Ref and Continuation Marker families(s)',
+        isDebug)
+
 # ---------------------------------------------loadable families ---------------------------------------------
 
 # doc   current document
@@ -538,14 +571,17 @@ PURGE_ACTIONS = [
     ['Purge Unused Stringers and Carriage Types', PurgeUnusedStringerCarriageTypes],
     ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
     ['Purge Unused Ramp Types', PurgeUnusedRampTypes],
-    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes], # might need to be moved after ramp type purge
+    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes],
     ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes],
     ['Purge Unused Railing Types', PurgeUnusedRailingTypes],
     ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes],
     ['Purge Unused Level Types', PurgeUnusedLevelypes],
     ['Purge Unused Level Head Types', PurgeUnusedLevelHeadFamilyTypes],
     ['Purge Unused Grid Types', PurgeUnusedGridTypes],
-    ['Purge Unused Grid Head Types', PurgeUnusedGridHeadFamilyTypes]#,
+    ['Purge Unused Grid Head Types', PurgeUnusedGridHeadFamilyTypes],
+    ['Purge Unused View Reference Types', PurgeUnusedViewRefTypes],
+    ['Purge Unused View Continuation Types', PurgeUnusedViewContTypes],
+    ['Purge Unused View Reference Families', PurgeUnusedViewRefFamilies]#,
     #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 

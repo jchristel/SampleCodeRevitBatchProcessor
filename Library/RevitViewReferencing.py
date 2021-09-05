@@ -24,7 +24,7 @@
 import clr
 import System
 from System.Collections.Generic import List
-
+clr.ImportExtensions(System.Linq)
 
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFamU
@@ -93,6 +93,8 @@ def GetAllReferenceViewElementsByCategory(doc):
     """this will return an filtered element collector of all reference elements in the model"""
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewer)
     return collector
+
+# ---------------------- view ref types  -----------------------
 
 # contains the builtin parameter definitions for Call out type ids, section type ids, elevation type ids
 VIEW_REFERENCE_PARAMETER_DEF_NAMES = [
@@ -199,15 +201,104 @@ def GetUsedViewContinuationTypeIds(doc):
     return ids
 
 # doc:   current model document
-def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
-    """returns all unused view continuation type ids in model for purge"""
+def GetAllViewReferenceSymbolIds(doc):
+    """returns the ids of all view reference symbols(types) in the model"""
     ids = []
-    allAvailableTypeIds = GetAllViewContinuationTypeIds(doc)
-    allUsedTypeIds = GetUsedViewContinuationTypeIds(doc)
-    for aId in allAvailableTypeIds:
-        if( aId not in allUsedTypeIds):
-            ids.append(aId)
+    multiCatFilter = ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
+    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    ids = com.GetIdsFromElementCollector(collector)
     return ids
+
+# ---------------------- view refs and continuation symbols -----------------------
+
+# doc:   current model document
+# viewRefTypesIds   list of view reference type ids
+def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
+    """returns the ids of all view symbols(types) from given view ref types or continuation types the model"""
+    ids = []
+    for vrtId in viewRefTypesIds:
+        el = doc.GetElement(vrtId)
+        paras = el.GetOrderedParameters()
+        for p in paras:
+            if (p.Definition.BuiltInParameter in VIEW_TAG_SYMBOL_PARAMETER_DEF):
+                pvalue = com.getParameterValue(p)
+                if(pvalue not in ids):
+                    ids.append(pvalue)
+    return ids
+
+# doc:   current model document
+def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
+    """returns the ids of all view reference symbols(types) and view continuations symbols (types) used by 
+    view reference types and view continuation types in the model"""
+    ids = []
+    viewContTypes = GetAllViewContinuationTypeIds(doc)
+    viewReftypes = GetAllViewReferenceTypeIdData(doc)
+    # get ids of symbols used in view ref types
+    idsCont = GetSymbolIdsFromTypeIds(doc, viewContTypes)
+    idsViewRefs = []
+    for key,value in viewReftypes.items():
+        idsViewRefs = idsViewRefs + GetSymbolIdsFromTypeIds(doc, viewReftypes[key])
+    # build unique dictionary
+    for idC in idsCont:
+        ids.append(idC)
+    for idV in idsViewRefs:
+        if(idV not in ids):
+            ids.append(idV)
+    return ids
+
+def GetNestedFamilyMarkerNames(doc, usedIds):
+    """returns nested family names"""
+    names = []
+    for usedSymbolId in usedIds:
+        if(usedSymbolId != ElementId.InvalidElementId):
+            # get the family
+            elSymbol = doc.GetElement(usedSymbolId)
+            fam = elSymbol.Family
+            # open family
+            try:
+                famDoc = doc.EditFamily(fam)
+                nestedFamCol = rFamU.GetAllLoadableFamilies(famDoc)
+                for nFam in nestedFamCol:
+                    if(nFam.Name not in names and nFam.Name != ''):
+                        names.append(nFam.Name)        
+                famDoc.Close(False)
+            except Exception as e:
+                print (e)
+    #print (names)
+    return names
+
+def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
+    """returns true if symbol belongs to family in list passt in"""
+    flag = False
+    famSymb = doc.GetElement(id)
+    fam = famSymb.Family
+    if(fam.Name in nestedFamilyNames):
+        flag = True
+    return flag
+
+# doc:   current model document
+def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
+    """returns the ids of all view reference symbols(types) and view continuation types not used in the model"""
+    ids = []
+    # compare used vs available in view ref types
+    # whatever is marked as unused: check for any instances in the model...placed on legends!
+    availableIds = GetAllViewReferenceSymbolIds(doc) # check: does this really return all continuation marker types??
+    usedIds = GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc)
+    # elevation marker families might use nested families...check!
+    nestedFamilyNames = GetNestedFamilyMarkerNames(doc, usedIds)
+    checkIds = []
+    for aId in availableIds:
+        if (aId not in usedIds):
+            checkIds.append(aId)
+    # check for any instances
+    for id in checkIds:
+        instances = rFamU.GetFamilyInstancesBySymbolTypeId(doc, id).ToList()
+        if(len(instances) == 0):
+            if(IsNestedFamilySymbol(doc, id, nestedFamilyNames) == False):
+                ids.append(id)
+    return ids
+
+# ---------------------- purge unused view ref types and symbols -----------------------
 
 # doc:   current model document
 def GetUnusedViewReferenceTypeIdsForPurge(doc):
@@ -226,81 +317,22 @@ def GetUnusedViewReferenceTypeIdsForPurge(doc):
                 ids = ids + allAvailableTypeIds[key]
     return ids
 
+# ---------------------- purge unused view continuation types-----------------------
+
 # doc:   current model document
-def GetAllViewReferenceSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) in the model"""
+def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
+    """returns all unused view continuation type ids in model for purge"""
     ids = []
-    multiCatFilter = ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
-    ids = com.GetIdsFromElementCollector(collector)
+    allAvailableTypeIds = GetAllViewContinuationTypeIds(doc)
+    allUsedTypeIds = GetUsedViewContinuationTypeIds(doc)
+    for aId in allAvailableTypeIds:
+        if( aId not in allUsedTypeIds):
+            ids.append(aId)
     return ids
 
-# doc:   current model document
-# viewRefTypesIds   list of view reference types
-def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
-    """returns the ids of all view symbols(types) from given view ref types the model"""
-    ids = []
-    for vrtId in viewRefTypesIds:
-        el = doc.GetElement(vrtId)
-        paras = el.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter in VIEW_TAG_SYMBOL_PARAMETER_DEF):
-                pvalue = com.getParameterValue(p)
-                if(pvalue not in ids):
-                    ids.append(pvalue)
-    return ids
+# ---------------------- purge unused view ref symbol and continuation symbols -----------------------
 
 # doc:   current model document
-def GetUsedViewReferenceSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) used by view reference types in the model"""
-    ids = []
-    viewContTypes = GetAllViewContinuationTypeIds(doc)
-    viewReftypes = GetAllViewReferenceTypeIdData(doc)
-    # get ids of symbols used in view ref types
-    idsCont = GetSymbolIdsFromTypeIds(doc, viewContTypes)
-    idsViewRefs = []
-    for key,value in viewReftypes.items():
-        idsViewRefs = idsViewRefs + GetSymbolIdsFromTypeIds(doc, viewReftypes[key])
-    # build unique dictionary
-    for idC in idsCont:
-        ids.append(idC)
-    for idV in idsViewRefs:
-        if(idV not in ids):
-            ids.append(idV)
-    return ids
-
-# doc:      current model document
-# typeId:   symbol type id
-def GetFamilyInstancesBySymbolTypeId(doc, typeId):
-    """returns all instances of a given family symbol"""
-    pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
-    equals = FilterNumericEquals()
-    idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
-    efilter =  ElementParameterFilter( idFilter )
-    collector = FilteredElementCollector(doc).WherePasses( efilter )
-    return collector
-
-
-# doc:   current model document
-def GetUnusedViewRefSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) not used in the model"""
-    ids = []
-    # compare used vs available in view ref types
-    # whatever is marked as unused: check for any instances in the model...placed on legends!
-    availableIds = GetAllViewReferenceSymbolIds(doc)
-    usedIds = GetUsedViewReferenceSymbolIds(doc)
-    checkIds = []
-    for aId in availableIds:
-        if (aId not in usedIds):
-            checkIds.append(aId)
-    # check for any instances
-    for id in checkIds:
-        instances = rFamU.GetFamilyInstancesBySymbolTypeId(doc, id).ToList()
-        if(len(instances) == 0):
-            ids.append(id)
-    return ids
-
-# doc:   current model document
-def GetUnusedViewRefFamiliesForPurge(doc):
+def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
     """returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging"""
-    return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefSymbolIds)
+    return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)

@@ -45,3 +45,98 @@ REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'ITEM TYPE']
 def GetFilledRegionsInModel(doc):
     return FilteredElementCollector(doc).OfClass(FilledRegion).ToList()
 
+
+ELEMENT_TYPE = 'Autodesk.Revit.DB.ElementType'
+FILLED_REGION_TYPE = 'Autodesk.Revit.DB.FilledRegionType'
+FAMILY_SYMBOL = 'Autodesk.Revit.DB.FamilySymbol'
+
+DETAIL_COMPONENT_TYPES = [
+    ELEMENT_TYPE,
+    FILLED_REGION_TYPE,
+    FAMILY_SYMBOL
+]
+
+
+# doc:   current model document
+def GetAllDetailTypesByCategory(doc):
+    """ this will return a filtered element collector of all detail component types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DetailComponents).WhereElementIsElementType()
+    return collector
+
+# collector   filtered element collector detail component types
+def BuildDetailTypesDictionary(collector):
+    """returns the dictionary keys is autodesk.revit.db element type as string and values are available types"""
+    dic = {}
+    for c in collector:
+        if(dic.has_key(str(c.GetType()))):
+            if(c.Id not in dic[str(c.GetType())]):
+                dic[str(c.GetType())].append(c.Id)
+        else:
+            dic[str(c.GetType())] = [c.Id]
+    return dic
+
+# doc:   current model document
+# collector   filtered element collector detail component types
+def BuildDependentElementsDictionary(doc, collector):
+    """returns the dictionary keys is autodesk.revit.db element type as string and values are elements"""
+    dic = {}
+    for c in collector:
+        el = doc.GetElement(c)
+        if(dic.has_key(str(el.GetType()))):
+            if(c not in dic[str(el.GetType())]):
+                dic[str(el.GetType())].append(c)
+        else:
+            dic[str(el.GetType())] = [c]
+    return dic
+    
+# -------------------------------- repeating detail types -------------------------------------------------------
+
+# doc:   current model document
+def GetAllRepeatingDetailTypesAvailable(doc):
+    """get all repeating detail type ids in model"""
+    dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
+    return dic[ELEMENT_TYPE]
+
+# doc   current document
+def GetUsedRepeatingDetailTypeIds(doc):
+    """get all used repeating detail type ids"""
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 1, 1)
+    return ids
+
+# doc   current document
+def GetUnUsedRepeatingDetailTypeIds(doc):
+    """get all unused repeating detail type ids"""
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 0, 1)
+    return ids
+
+# -------------------------------- filled region types -------------------------------------------------------
+
+# doc   current document
+def GetAllFilledDetailTypesAvailable(doc):
+    """get all filled regions types in model"""
+    dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
+    return dic[FILLED_REGION_TYPE]
+
+# doc   current document
+def GetUsedFilledRegionTypeIds(doc):
+    """get all used filled regions types in model"""
+    ids = []
+    idsAll = GetAllFilledDetailTypesAvailable(doc)
+    for id in idsAll:
+        el = doc.GetElement(id)
+        dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
+        if(dic.has_key('Autodesk.Revit.DB.FilledRegion')):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedFilledRegionTypeIds(doc):
+    """get all un used filled regions types in model"""
+    ids = []
+    idsAll = GetAllFilledDetailTypesAvailable(doc)
+    for id in idsAll:
+        el = doc.GetElement(id)
+        dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
+        if(dic.has_key('Autodesk.Revit.DB.FilledRegion') == False):
+            ids.append(id)
+    return ids

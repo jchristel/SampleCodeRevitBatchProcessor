@@ -34,6 +34,7 @@ import RevitAnnotation as rAnn
 import RevitBuildingPads as rBuildP
 import RevitCeilings as rCeil
 import RevitCurtainWallElements as rCWE
+import RevitDetailItems as rDet
 import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
 import RevitGroups as rGrp
@@ -526,6 +527,29 @@ def PurgeUnusedViewRefFamilies(doc, transactionName, isDebug):
         'View Ref and Continuation Marker families(s)',
         isDebug)
 
+# --------------------------------------------- detail components ---------------------------------------------
+
+# doc   current document
+def PurgeUnusedRepeatingDetailTypes(doc, transactionName, isDebug):
+    """purges unused repeating detail types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rDet.GetUnUsedRepeatingDetailTypeIds, 
+        transactionName,
+        'Repeating Detail Type(s)',
+        isDebug)
+
+# doc   current document
+def PurgeUnusedFilledRegionTypes(doc, transactionName, isDebug):
+    """purges unused filled region types from model"""
+    return PurgeUnplacedElements(
+        doc, 
+        rDet.GetUnUsedFilledRegionTypeIds, 
+        transactionName,
+        'Filled Region Type(s)',
+        isDebug)
+
+
 # ---------------------------------------------loadable families ---------------------------------------------
 
 # doc   current document
@@ -581,7 +605,9 @@ PURGE_ACTIONS = [
     ['Purge Unused Grid Head Types', PurgeUnusedGridHeadFamilyTypes],
     ['Purge Unused View Reference Types', PurgeUnusedViewRefTypes],
     ['Purge Unused View Continuation Types', PurgeUnusedViewContTypes],
-    ['Purge Unused View Reference Families', PurgeUnusedViewRefFamilies]#,
+    ['Purge Unused View Reference Families', PurgeUnusedViewRefFamilies],
+    ['Purge Unused Repeating Details', PurgeUnusedRepeatingDetailTypes],
+    ['Purge Unused Filled Regions', PurgeUnusedFilledRegionTypes]#,
     #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
 ]
 

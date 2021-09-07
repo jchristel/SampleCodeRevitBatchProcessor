@@ -93,9 +93,12 @@ def BuildDependentElementsDictionary(doc, collector):
 
 # doc:   current model document
 def GetAllRepeatingDetailTypesAvailable(doc):
-    """get all repeating detail type ids in model"""
+    """get all repeating detail types in model"""
     dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
-    return dic[ELEMENT_TYPE]
+    if (dic.has_key(ELEMENT_TYPE)):
+        return dic[ELEMENT_TYPE]
+    else:
+        return []
 
 # doc   current document
 def GetUsedRepeatingDetailTypeIds(doc):
@@ -109,23 +112,35 @@ def GetUnUsedRepeatingDetailTypeIds(doc):
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 0, 1)
     return ids
 
+# doc   current document
+def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
+    """get all unused repeating detail type ids"""
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 0, 1)
+    allIds = GetAllRepeatingDetailTypesAvailable(doc)
+    # need to keep at least one
+    if(len(allIds) == len(ids)):
+        ids.pop(0)
+    return ids
 # -------------------------------- filled region types -------------------------------------------------------
 
 # doc   current document
-def GetAllFilledDetailTypesAvailable(doc):
+def GetAllFilledRegionTypesAvailable(doc):
     """get all filled regions types in model"""
     dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
-    return dic[FILLED_REGION_TYPE]
+    if (dic.has_key(FILLED_REGION_TYPE)):
+        return dic[FILLED_REGION_TYPE]
+    else:
+        return []
 
 # doc   current document
 def GetUsedFilledRegionTypeIds(doc):
     """get all used filled regions types in model"""
     ids = []
-    idsAll = GetAllFilledDetailTypesAvailable(doc)
+    idsAll = GetAllFilledRegionTypesAvailable(doc)
     for id in idsAll:
         el = doc.GetElement(id)
         dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
-        if(dic.has_key('Autodesk.Revit.DB.FilledRegion')):
+        if(dic.has_key(FILLED_REGION_TYPE)):
             ids.append(id)
     return ids
 
@@ -133,10 +148,25 @@ def GetUsedFilledRegionTypeIds(doc):
 def GetUnUsedFilledRegionTypeIds(doc):
     """get all un used filled regions types in model"""
     ids = []
-    idsAll = GetAllFilledDetailTypesAvailable(doc)
+    idsAll = GetAllFilledRegionTypesAvailable(doc)
+    for id in idsAll:
+        el = doc.GetElement(id)
+        dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
+        if(dic.has_key(FILLED_REGION_TYPE) == False):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedFilledRegionTypeIdsForPurge(doc):
+    """get all un used filled regions types in model"""
+    ids = []
+    idsAll = GetAllFilledRegionTypesAvailable(doc)
     for id in idsAll:
         el = doc.GetElement(id)
         dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
         if(dic.has_key('Autodesk.Revit.DB.FilledRegion') == False):
             ids.append(id)
+    # need to keep at least one
+    if(len(idsAll) == len(ids)):
+        ids.pop(0)
     return ids

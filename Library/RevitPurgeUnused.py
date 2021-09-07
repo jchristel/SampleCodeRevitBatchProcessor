@@ -534,7 +534,7 @@ def PurgeUnusedRepeatingDetailTypes(doc, transactionName, isDebug):
     """purges unused repeating detail types from model"""
     return PurgeUnplacedElements(
         doc, 
-        rDet.GetUnUsedRepeatingDetailTypeIds, 
+        rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 
         transactionName,
         'Repeating Detail Type(s)',
         isDebug)
@@ -544,7 +544,7 @@ def PurgeUnusedFilledRegionTypes(doc, transactionName, isDebug):
     """purges unused filled region types from model"""
     return PurgeUnplacedElements(
         doc, 
-        rDet.GetUnUsedFilledRegionTypeIds, 
+        rDet.GetUnUsedFilledRegionTypeIdsForPurge, 
         transactionName,
         'Filled Region Type(s)',
         isDebug)

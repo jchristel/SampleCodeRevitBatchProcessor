@@ -236,14 +236,14 @@ def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
     return ids
 
 # doc   current document
-def GetUsedBasicWallTypeIds_OLD(doc):
+def GetUsedBasicWallTypeIds(doc):
     """ returns type ids off all used basic wall types """
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
-    """ returns type ids off all unused curtain wall types, will leave one behind if none is used"""
+    """ returns type ids off all unused basic wall types, will leave one behind if none is used"""
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllBasicWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:

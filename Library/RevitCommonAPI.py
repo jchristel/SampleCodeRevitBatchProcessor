@@ -422,12 +422,12 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     if(dic.has_key(categoryName) == True):
         # if so check number of keys and length of elements per key
         if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
+            # this should be the only code path returning true...
             for value in dic[categoryName]:
                 if value.OwnerViewId != ElementId.InvalidElementId:
                     flag = False
                     break
-        # check if keys in dictioanry does not equal 2
-        elif(len(dic.keys()) != 2):
+        else:
             flag = False
     else:
         flag = False
@@ -441,7 +441,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
 #             available for this type
 def HasDependentElements(doc, el, filter = None, threshold = 2):
     """ returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured"""
-    value = 0 # 0, no dependent Elements, 1, has dependent elements, -1 an exception occured
+    value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)
         if(len(dependentElements)) > threshold :

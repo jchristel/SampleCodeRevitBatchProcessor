@@ -52,6 +52,26 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
+
+# list of built in parameters attached to stair sub types
+STAIR_LANDING_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_LANDING_TYPE
+]
+
+STAIR_CUTMARK_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
+]
+
+STAIR_SUPPORT_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
+    BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
+    BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
+]
+
+STAIR_RUN_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_RUN_TYPE
+]
+
 # doc:   current model document
 def GetAllStairTypesByCategory(doc):
     """ this will return a filtered element collector of all Stair types in the model:
@@ -77,6 +97,10 @@ def GetStairTypesByClass(doc):
 def GetStairPathTypesByClass(doc):
     """ this will return a filtered element collector of all Stair path types in the model """
     return  FilteredElementCollector(doc).OfClass(StairsPathType)
+
+def GetAllStairPathElementsInModel(doc):
+    """ this will return a filtered element collector of all Stair path elements in the model """
+    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetStairLandingTypesByClass(doc):
@@ -226,55 +250,113 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
                 ids.remove(value[0])
     return ids
 
+#--------------------------------utlity functions to ge unused sub types ----------------------
+
+# doc   current document
+def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
+    """ gets the ids returned from stair type belonging to parameter list passt in"""
+    ids = []
+    stairType = doc.GetElement(stairTypeId)
+    typeParas = stairType.GetOrderedParameters()
+    for tp in typeParas:
+        if(tp.Definition.BuiltInParameter in paras):
+            pvalue = com.getParameterValue(tp)
+            if(pvalue not in ids):
+                ids.append(pvalue)
+    return ids
+
+def BuildSystemFamilyDictioanry(doc, ids):
+    dic = {}
+    for id in ids:
+        el = doc.GetElement(id)
+        if(dic.has_key(el.FamilyName)):
+            dic[el.FamilyName].append(id)
+        else:
+            dic[el.FamilyName] = [id]
+    return dic
+
+def CheckSystemFamilies(doc, ids):
+    dicToCheck = BuildSystemFamilyDictioanry(doc, ids)
+    el  = doc.GetElement(ids[0])
+    similarIds = el.GetSimilarTypes()
+    dicReference = BuildSystemFamilyDictioanry(doc, similarIds)
+    ids = []
+    for key,value in dicToCheck.items():
+        if (dicReference.has_key(key)):
+            if(len(dicReference[key]) == len(dicToCheck[key])):
+                # need to leave one behind...
+                if(len(dicToCheck[key])>0):
+                    dicToCheck[key].pop(0)
+                    ids = ids + dicToCheck[key]
+            else:
+                 ids = ids + dicToCheck[key]
+        else:
+            ids = ids + dicToCheck[key]
+    return ids
+
+# doc   current document
+def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
+    """ returns a list of type ids whcih are not used in any stair types. Type ids are furnished via an id getter function """
+    ids = []
+    # get all available type ids and then check against used Stair type ids
+    idsAvailable = availavbleIdsGetter(doc)
+    allUsedStairTypeIds = GetUsedStairTypeIds(doc)
+    idsUsedTypes = []
+    for used in allUsedStairTypeIds:
+        idsUsed = GetUsedSubTypeIdsFromStairType(doc, used, paras)
+        for id in idsUsed:
+            if(id not in idsUsedTypes):
+                idsUsedTypes.append(id)
+    for idAvailable in idsAvailable:
+        if(idAvailable not in idsUsedTypes):
+            ids.append(idAvailable)
+    # need to check that we are not trying to delete last type of a system family....
+    ids = CheckSystemFamilies(doc, ids)
+    return ids
+
+# --------------------------------- purging subtypes ------------------------------------------------
+
 # doc   current document
 def GetUnusedStairPathTypeIdsToPurge(doc):
-    """ returns all unused Stair path ids"""
-    # get unused type ids
-    idsUnused = com.GetUsedUnusedTypeIds(doc, GetAllStairPathTypeIdsInModelByClass, 0)
-    availableTypes = GetStairPathTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    """ returns all unused Stair path type ids to purge (leaves one behind since last one cant be purged)"""
+    idsUsed = []
+    availableTypes = GetAllStairPathTypeIdsInModelByClass(doc)
+    col = GetAllStairPathElementsInModel(doc)
+    for c in col:
+        if (c.GetTypeId() not in idsUsed):
+            idsUsed.append(c.GetTypeId())
+    ids = []
+    for at in availableTypes:
+        if(at not in idsUsed):
+            ids.append(at)
+    
+    if(len(ids) == len(availableTypes) and len(ids) > 0):
+        ids.pop(0)
+    return ids
 
 # doc   current document
 def GetUnusedStairLandingTypeIdsToPurge(doc):
     """ returns all unused Stair landing ids"""
-    # get unused type ids
-    idsUnused = com.GetUsedUnusedTypeIds(doc, GetAllStairLandingTypeIdsInModelByClass, 0)
-    availableTypes = GetStairLandingTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairLandingTypeIdsInModelByClass, STAIR_LANDING_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairRunTypeIdsToPurge(doc):
     """ returns all unused Stair landing ids"""
-    # get unused type ids
-    idsUnused = com.GetUsedUnusedTypeIds(doc, GetAllStairRunTypeIdsInModelByClass, 0)
-    availableTypes = GetStairRunTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairRunTypeIdsInModelByClass, STAIR_RUN_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairCutMarkTypeIdsToPurge(doc):
     """ returns all unused Stair cut mark type ids"""
-    # get unused type ids
-    idsUnused = com.GetUsedUnusedTypeIds(doc, GetAllStairCutMarkTypeIdsInModelByClass, 0)
-    availableTypes = GetStairCutMarkTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUTMARK_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
     """ returns all unused Stair stringer / carriage type ids"""
-    # get unused type ids
-    idsUnused = com.GetUsedUnusedTypeIds(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, 0)
-    availableTypes = GetAllStairStringersCarriageByCategory(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
+    return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------
 

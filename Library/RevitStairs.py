@@ -231,7 +231,9 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             match = False
             break
     return match
- 
+
+# -------------------------------- none in place Stair types purge -------------------------------------------------------
+
 # doc   current document
 def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     """ returns all unused Stair type ids for:
@@ -244,7 +246,7 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     # make sure there is at least on Stair type per system family left in model
     StairTypes = SortStairTypesByFamilyName(doc)
     for key, value in StairTypes.items():
-        if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
+       if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
             if(FamilyNoTypesInUse(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
@@ -265,7 +267,23 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
                 ids.append(pvalue)
     return ids
 
-def BuildSystemFamilyDictioanry(doc, ids):
+# doc   current document
+# ids   list of system type ids
+def GetAllSimilarTypeIds(doc, ids):
+    """returns all ids of similar types of elemet ids passed in"""
+    simIds = []
+    for id in ids:
+         el = doc.GetElement(id)
+         simTypes = el.GetSimilarTypes()
+         for st in simTypes:
+            if (st not in simIds):
+                simIds.append(st)
+    return simIds
+
+# doc   current document
+# ids   list of system type ids
+def BuildSystemFamilyDictionary(doc, ids):
+    """returns dictionary where key is the system family name and values available types of that system family"""
     dic = {}
     for id in ids:
         el = doc.GetElement(id)
@@ -275,15 +293,19 @@ def BuildSystemFamilyDictioanry(doc, ids):
             dic[el.FamilyName] = [id]
     return dic
 
-def CheckSystemFamilies(doc, ids):
-    dicToCheck = BuildSystemFamilyDictioanry(doc, ids)
-    el  = doc.GetElement(ids[0])
-    similarIds = el.GetSimilarTypes()
-    dicReference = BuildSystemFamilyDictioanry(doc, similarIds)
+# doc   current document
+# ids   list of ids to check
+# leaveOneBehind        flag default is true: leave at least one type of a system family behind
+def CheckSystemFamilies(doc, ids, leaveOneBehind):
+    """check whether a list of ids of system family is the entire list of types avaialble
+    if so it will remove one type id per system family to allow purging"""
+    dicToCheck = BuildSystemFamilyDictionary(doc, ids)
+    similarIds = GetAllSimilarTypeIds(doc, ids)
+    dicReference = BuildSystemFamilyDictionary(doc, similarIds)
     ids = []
     for key,value in dicToCheck.items():
         if (dicReference.has_key(key)):
-            if(len(dicReference[key]) == len(dicToCheck[key])):
+            if(len(dicReference[key]) == len(dicToCheck[key]) and leaveOneBehind):
                 # need to leave one behind...
                 if(len(dicToCheck[key])>0):
                     dicToCheck[key].pop(0)
@@ -295,8 +317,11 @@ def CheckSystemFamilies(doc, ids):
     return ids
 
 # doc   current document
+# availavbleIdsGetter   function returning available type ids
+# paras                 list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
+# leaveOneBehind        flag default is true: leave at least one type of a system family behind
 def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
-    """ returns a list of type ids whcih are not used in any stair types. Type ids are furnished via an id getter function """
+    """ returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function """
     ids = []
     # get all available type ids and then check against used Stair type ids
     idsAvailable = availavbleIdsGetter(doc)
@@ -311,14 +336,14 @@ def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
         if(idAvailable not in idsUsedTypes):
             ids.append(idAvailable)
     # need to check that we are not trying to delete last type of a system family....
-    ids = CheckSystemFamilies(doc, ids)
+    ids = CheckSystemFamilies(doc, ids, leaveOneBehind)
     return ids
 
 # --------------------------------- purging subtypes ------------------------------------------------
 
 # doc   current document
 def GetUnusedStairPathTypeIdsToPurge(doc):
-    """ returns all unused Stair path type ids to purge (leaves one behind since last one cant be purged)"""
+    """ returns all unused Stair path ids to purge, will elave on path type id behinf ber system family"""
     idsUsed = []
     availableTypes = GetAllStairPathTypeIdsInModelByClass(doc)
     col = GetAllStairPathElementsInModel(doc)
@@ -329,9 +354,7 @@ def GetUnusedStairPathTypeIdsToPurge(doc):
     for at in availableTypes:
         if(at not in idsUsed):
             ids.append(at)
-    
-    if(len(ids) == len(availableTypes) and len(ids) > 0):
-        ids.pop(0)
+    ids = CheckSystemFamilies(doc, ids, True)
     return ids
 
 # doc   current document

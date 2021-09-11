@@ -47,6 +47,13 @@ def GetViewTypes(doc):
     """returns all view family types in a model"""
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
 
+def GetViewTypeIds(doc):
+    """returns all view family type ids in a model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(ViewFamilyType)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
 # doc   current model document
 def GetUsedViewTypeIdsInTheModel(doc):
     """returns all view family types in the model"""
@@ -82,6 +89,17 @@ def GetViewsTemplatesInInModel(doc):
         if(v.IsTemplate):
             viewTemplates.append(v)
     return viewTemplates
+
+# doc   current model document
+def GetViewsTemplateIdsInInModel(doc):
+    """get all template ids in a model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out templates
+        if(v.IsTemplate):
+            ids.append(v.Id)
+    return ids
 
 # doc   current model document
 def GetUsedViewTemplateIdsInTheModel(doc):
@@ -162,6 +180,14 @@ def GetAllAvailableFiltersInModel(doc):
     """returns all filters in document as a collector"""
     collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
     return collector
+
+# doc   current model document
+def GetAllAvailableFilterIdsInModel(doc):
+    """returns all view filter ids in document"""
+    ids = []
+    col = GetAllAvailableFiltersInModel(doc)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
 
 # view   view from which to get the filters from
 # uniqueList    list of filters of which to add new filters to (not already in list)

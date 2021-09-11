@@ -108,11 +108,10 @@ def GetAllCeilingInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByCategory(doc):
-    """ returns all ceiling element types available placed in model """
+    """ returns all ceiling element type ids available placed in model """
     ids = []
     colCat = GetAllCeilingTypesByCategory(doc)
-    for cCat in colCat:
-        ids.append(cCat.Id)
+    ids = com.GetIdsFromElementCollector(colCat)
     return ids
 
 # doc   current model document
@@ -120,8 +119,7 @@ def GetAllCeilingTypeIdsInModelByClass(doc):
     """ returns all ceiling element types available placed in model """
     ids = []
     colClass = GetCeilingTypesByClass(doc)
-    for cClass in colClass:
-        ids.append(cClass.Id)
+    ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
 # doc   current document

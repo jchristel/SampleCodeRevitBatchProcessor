@@ -175,9 +175,10 @@ def GetFirstRowInFile(filePath):
 # method writing out report information
 # fileName:         fully qualified file path
 # header:           list of column headers, provide empty list if not required!
-# data:             list of lists representing row data
-def writeReportData(fileName, header, data):
-    with codecs.open(fileName, 'w', encoding='utf-8') as f:
+# data:             list of list of strings representing row data
+# writeType         w: new file, a: append to existing file...
+def writeReportData(fileName, header, data, writeType = 'w'):
+    with codecs.open(fileName, writeType, encoding='utf-8') as f:
         # check if header is required
         if(len(header) > 0):
             print('\t'.join(header + ['\n']))

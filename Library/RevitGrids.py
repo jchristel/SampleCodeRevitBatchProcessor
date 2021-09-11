@@ -267,6 +267,15 @@ def GetUnusedGridTypesForPurge(doc):
     return com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 0, 8)
 
 # doc             current document
+def GetAllGridHeadFamilyTypeIds(doc):
+    """ this will return all ids grid head family types in the model"""
+    ids = []
+    filter = ElementCategoryFilter(BuiltInCategory.OST_GridHeads)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
+# doc             current document
 def GetUnusedGridHeadFamilies(doc):
     """ this will return all ids of unused family symbols (types) of grid head families"""
     usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 1, 8)
@@ -287,6 +296,6 @@ def GetUnusedGridHeadFamilies(doc):
     return unusedSymbolIds 
 
 # doc             current document
-def GetUnusedLevelHeadFamiliesForPurge(doc):
+def GetUnusedGridHeadFamiliesForPurge(doc):
     """ this will return all ids of unused grid head symbols and families to be purged"""
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGridHeadFamilies)

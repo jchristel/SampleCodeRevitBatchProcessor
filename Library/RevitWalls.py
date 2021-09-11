@@ -101,10 +101,9 @@ def GetAllStackedWallTypesInModel(doc):
 
 def GetAllStackedWallTypeIdsInModel(doc):
     """ returns all stacked wall element types available in model """
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
     ids = []
-    for c in col:
-        ids.append(c.Id)
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
+    ids = com.GetIdsFromElementCollector(col)
     return ids
 
 # doc   current document
@@ -137,11 +136,10 @@ def GetInPlaceWallFamilyInstances(doc):
 # doc   current document
 def GetAllInPlaceWallTypeIdsInModel(doc):
     """ returns type ids off all available in place families of category wall """
+    ids = []
     filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
-    ids = []
-    for c in col:
-            ids.append(c.Id)
+    ids = com.GetIdsFromElementCollector(col)
     return ids
 
 # doc   current document
@@ -167,7 +165,11 @@ def GetUnusedInPlaceWallIdsForPurge(doc):
 # doc   current document
 def GetAllCurtainWallTypeIdsInModel(doc):
     """ returns type ids off all available curtain wall types"""
-    return SortWallTypesByFamilyName(doc)[CURTAIN_WALL_FAMILY_NAME]
+    ids = []
+    dic = SortWallTypesByFamilyName(doc)
+    if(dic.has_key(CURTAIN_WALL_FAMILY_NAME)):
+        ids = dic[CURTAIN_WALL_FAMILY_NAME]
+    return ids
 
 # doc           current model document
 # availableIds  type ids to check for use a curtain panel
@@ -211,7 +213,11 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
 # doc   current document
 def GetAllBasicWallTypeIdsInModel(doc):
     """ returns type ids off all available basic wall types"""
-    return SortWallTypesByFamilyName(doc)[BASIC_WALL_FAMILY_NAME]
+    ids = []
+    dic = SortWallTypesByFamilyName(doc)
+    if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
+        ids = dic[BASIC_WALL_FAMILY_NAME]
+    return ids
     
 # doc           current model document
 # availableIds  type ids to check for use as basic wall type

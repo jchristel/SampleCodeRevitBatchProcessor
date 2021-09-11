@@ -64,8 +64,8 @@ def GetAllDetailTypesByCategory(doc):
     return collector
 
 # collector   filtered element collector detail component types
-def BuildDetailTypesDictionary(collector):
-    """returns the dictionary keys is autodesk.revit.db element type as string and values are available types"""
+def BuildDetailTypeIdsDictionary(collector):
+    """returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids"""
     dic = {}
     for c in collector:
         if(dic.has_key(str(c.GetType()))):
@@ -92,9 +92,9 @@ def BuildDependentElementsDictionary(doc, collector):
 # -------------------------------- repeating detail types -------------------------------------------------------
 
 # doc:   current model document
-def GetAllRepeatingDetailTypesAvailable(doc):
+def GetAllRepeatingDetailTypeIdsAvailable(doc):
     """get all repeating detail types in model"""
-    dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
+    dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
         return dic[ELEMENT_TYPE]
     else:
@@ -103,20 +103,20 @@ def GetAllRepeatingDetailTypesAvailable(doc):
 # doc   current document
 def GetUsedRepeatingDetailTypeIds(doc):
     """get all used repeating detail type ids"""
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 1, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
     return ids
 
 # doc   current document
 def GetUnUsedRepeatingDetailTypeIds(doc):
     """get all unused repeating detail type ids"""
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 0, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     return ids
 
 # doc   current document
 def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
     """get all unused repeating detail type ids"""
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypesAvailable, 0, 1)
-    allIds = GetAllRepeatingDetailTypesAvailable(doc)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
+    allIds = GetAllRepeatingDetailTypeIdsAvailable(doc)
     # need to keep at least one
     if(len(allIds) == len(ids)):
         ids.pop(0)
@@ -124,9 +124,9 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
 # -------------------------------- filled region types -------------------------------------------------------
 
 # doc   current document
-def GetAllFilledRegionTypesAvailable(doc):
+def GetAllFilledRegionTypeIdsAvailable(doc):
     """get all filled regions types in model"""
-    dic = BuildDetailTypesDictionary(GetAllDetailTypesByCategory(doc))
+    dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(FILLED_REGION_TYPE)):
         return dic[FILLED_REGION_TYPE]
     else:
@@ -136,7 +136,7 @@ def GetAllFilledRegionTypesAvailable(doc):
 def GetUsedFilledRegionTypeIds(doc):
     """get all used filled regions types in model"""
     ids = []
-    idsAll = GetAllFilledRegionTypesAvailable(doc)
+    idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
         el = doc.GetElement(id)
         dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
@@ -148,7 +148,7 @@ def GetUsedFilledRegionTypeIds(doc):
 def GetUnUsedFilledRegionTypeIds(doc):
     """get all un used filled regions types in model"""
     ids = []
-    idsAll = GetAllFilledRegionTypesAvailable(doc)
+    idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
         el = doc.GetElement(id)
         dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
@@ -160,7 +160,7 @@ def GetUnUsedFilledRegionTypeIds(doc):
 def GetUnUsedFilledRegionTypeIdsForPurge(doc):
     """get all un used filled regions types in model"""
     ids = []
-    idsAll = GetAllFilledRegionTypesAvailable(doc)
+    idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
         el = doc.GetElement(id)
         dic = BuildDependentElementsDictionary(doc, el.GetDependentElements(None))

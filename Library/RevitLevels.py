@@ -110,6 +110,15 @@ def GetUnusedLevelHeadFamilies(doc):
     return unusedSymbolIds
 
 # doc             current document
+def GetAllLevelHeadfamilyTypeIds(doc):
+    """ this will return all ids level head family types in the model"""
+    ids = []
+    filter = ElementCategoryFilter(BuiltInCategory.OST_LevelHeads)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
+# doc             current document
 def GetUnusedLevelHeadFamiliesForPurge(doc):
     """ this will return all ids of unused level head symbols and families to be purged"""
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedLevelHeadFamilies)

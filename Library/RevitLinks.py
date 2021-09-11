@@ -421,6 +421,13 @@ def GetImagesTypesInModel(doc):
     collector = FilteredElementCollector(doc).OfClass(ImageType)
     return collector
 
+def GetImagesTypeIdsInModel(doc):
+    """returns all image link type Ids and image link instance ids in a model"""
+    ids = []
+    col = GetImagesTypesInModel(doc)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
 # doc   current model document
 def SortImageLinkTypesByImportOrLinked(doc):
     """returns two lists: First one: images linked into model, secon one images saved into model from model itself (no external file reference)"""

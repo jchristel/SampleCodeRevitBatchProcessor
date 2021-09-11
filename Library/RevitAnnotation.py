@@ -46,6 +46,14 @@ def GetDimTypes(doc):
     """returns all dimension types in a model"""
     return FilteredElementCollector(doc).OfClass(DimensionType)
 
+# doc: current model document
+def GetDimTypeIds(doc):
+    """returns all dimension type ids in a model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(DimensionType)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
 # doc   current model document
 def GetUsedDimTypeIdsInTheModel(doc):
     """returns all dimension type Ids in the model"""
@@ -65,6 +73,14 @@ def GetAllDimensionElements(doc):
 def GetAllMultiRefAnnotationTypes(doc):
     """returns all multireference annotation types in the model"""
     return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
+
+# doc   current model document
+def GetAllMultiRefAnnotationTypeIds(doc):
+    """returns all multireference annotation type ids in the model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
 
 # doc   current model document
 def GetAllMultiRefAnnotationElements(doc):
@@ -126,6 +142,14 @@ def GetAllUnusedDimTypeIdsInModel(doc):
 def GetAllTextTypes(doc):
     """returns all text types in the model"""
     return FilteredElementCollector(doc).OfClass(TextElementType)
+
+# doc   current model document
+def GetAllTextTypeIds(doc):
+    """returns all text type ids in the model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(TextElementType)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
 
 # doc   current model document
 def GetAllTextAnnotationElements(doc):
@@ -320,16 +344,12 @@ def GetArrowTypesInModel(doc):
 # doc   current model document
 def GetArrowTypesIdsInModel(doc):
     """returns all arrow type ids in the model"""
-    types = []
-    similarTypes = []
-    col = FilteredElementCollector(doc).OfClass(ElementType)
-    for c in col:
-        if (c.FamilyName == 'Arrowhead'):
-            similarTypes = c.GetSimilarTypes()
-            # filter out any types not in similar list...not sure what these are...
-            if(c.Id in similarTypes):
-                types.append(c.Id)
-    return types
+    arrowTypes = GetArrowTypesInModel(doc)
+    ids = []
+    for at in arrowTypes:
+            if(at.Id not in ids):
+                ids.append(at.Id)
+    return ids
 
 # doc   current model document
 def GetAllUnusedArrowTypeIdsInModel(doc):

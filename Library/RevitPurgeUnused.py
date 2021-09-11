@@ -52,18 +52,16 @@ from timer import Timer
 
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import List
+from collections import namedtuple
 
-# ----------------------------------------------
-# model properties 
-# ----------------------------------------------
+# --------------------------------------------- Purge - utility ---------------------------------------------
 
-
-# doc   current document
-# getGroups     expects a method which has to
-#   - return a list of either: model groups, detail groups or nested detail groups. 
-#   - excepts as a single argument the current document
-# transactionName   the transaction name to be used when deleting elements by Id
-# groupNameHeader   the text to be displayed at the start of the list containing the deleted group names
+# doc                       current document
+# getUnusedElementIds       function which returns all ids of elements to be purged
+# transactionName           the transaction name to be used when deleting elements by Id
+# unUsedElementNameHeader   the text to be displayed at the start of the list containing the deleted element names
+# isDebug                   flag: true: will return detailed report and attempt to try to delete elements one by one if an exception occurs
+#                           false:  short report and no attempt to delete elements one by one if an exception is thrown during element list delete
 def PurgeUnplacedElements (doc, 
     getUnusedElementIds, 
     transactionName, 
@@ -90,525 +88,61 @@ def PurgeUnplacedElements (doc,
         resultValue.UpdateSep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
     return resultValue
 
-# --------------------------------------------- Groups ---------------------------------------------
-
-# doc   current document
-# transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedModelGroupsInModel(doc, transactionName, isDebug):
-    """purges unplaced model groups from a model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rGrp.GetUnplacedModelGroupIds, 
-        transactionName,
-        'Model Group(s)',
-        isDebug)
-
-# doc   current document
-# transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedDetailGroupsInModel(doc, transactionName, isDebug):
-    """purges unplaced detail groups from a model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rGrp.GetUnplacedDetailGroupIds, 
-        transactionName,
-        'Detail Group(s)',
-        isDebug)
-
-# doc   current document
-# transactionName   the transaction name to be used when deleting elements by Id
-def PurgeUnplacedNestedDetailGroupsInModel(doc, transactionName, isDebug):
-    """purges unplaced nested detail groups from a model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rGrp.GetUnplacedNestedDetailGroupIds, 
-        transactionName,
-        'Nested Detail Group(s)',
-        isDebug)
-
-# --------------------------------------------- Views ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedViewFamilyTypes(doc, transactionName, isDebug):
-    """purges unused view family types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rView.GetUnusedViewTypeIdsInModel, 
-        transactionName,
-        'View Family Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedViewTemplates(doc, transactionName, isDebug):
-    """purges unused view templates from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rView.GetAllUnusedViewTemplateIdsInModel, 
-        transactionName,
-        'View Family Templates(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedViewFilters(doc, transactionName, isDebug):
-    """purges unused view filters from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rView.GetAllUnUsedViewFilters, 
-        transactionName,
-        'View Filter(s)',
-        isDebug)
-
-# --------------------------------------------- Images ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedImages(doc, transactionName, isDebug):
-    """purges unused images from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rLink.GetAllUnusedImagetypeIdsInModel, 
-        transactionName,
-        'Images(s)',
-        isDebug)
-
-# --------------------------------------------- Dimensions ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedMultiRefDimTypes(doc, transactionName, isDebug):
-    """purges unused MultiRef Dimension Types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rAnn.GetAllUnusedMultiRefDimTypeIdsInModel, 
-        transactionName,
-        'MultiRef Dimension Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedDimTypes(doc, transactionName, isDebug):
-    """purges unused Dimension Types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rAnn.GetAllUnusedDimTypeIdsInModel, 
-        transactionName,
-        'Dimension Type(s)',
-        isDebug)
-
-# --------------------------------------------- text ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedTextTypes(doc, transactionName, isDebug):
-    """purges unused Text Types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rAnn.GetAllUnusedTextTypeIdsInModel, 
-        transactionName,
-        'Text Type(s)',
-        isDebug)
-
-# --------------------------------------------- Arrow Heads ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedArrowHeadTypes(doc, transactionName, isDebug):
-    """purges unused arrow head types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rAnn.GetAllUnusedArrowTypeIdsInModel, 
-        transactionName,
-        'Arrow Head Type(s)',
-        isDebug)
-
-# ---------------------------------------------wall types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedStackedWallTypes(doc, transactionName, isDebug):
-    """purges unused stacked wall types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rWall.GetUnusedStackedWallTypeIdsToPurge, 
-        transactionName,
-        'Stacked Wall Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceWallTypes(doc, transactionName, isDebug):
-    """purges unused inPlace wall types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rWall.GetUnusedInPlaceWallIdsForPurge, 
-        transactionName,
-        'InPlace Wall Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedCurtainWallTypes(doc, transactionName, isDebug):
-    """purges unused curtain wall types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rWall.GetUnUsedCurtainWallTypeIdsToPurge, 
-        transactionName,
-        'Curtain Wall Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedBasicTypes(doc, transactionName, isDebug):
-    """purges unused basic wall types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rWall.GetUnUsedBasicWallTypeIdsToPurge, 
-        transactionName,
-        'Basic Wall Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedCurtainWallElementTypes(doc, transactionName, isDebug):
-    """purges unused curtain wall element types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge, 
-        transactionName,
-        'Curtain Wall Element Type(s)',
-        isDebug)
-
-# ---------------------------------------------ceiling types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedCeilingTypes(doc, transactionName, isDebug):
-    """purges unused ceiling types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 
-        transactionName,
-        'Ceiling Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceCeilingTypes(doc, transactionName, isDebug):
-    """purges unused inPlace ceiling types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rCeil.GetUnusedInPlaceCeilingIdsForPurge, 
-        transactionName,
-        'InPlace Ceiling Type(s)',
-        isDebug)
-
-# ---------------------------------------------floor types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedFloorTypes(doc, transactionName, isDebug):
-    """purges unused floor types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 
-        transactionName,
-        'Floor Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceFloorTypes(doc, transactionName, isDebug):
-    """purges unused inPlace floor types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rFlo.GetUnusedInPlaceFloorIdsForPurge, 
-        transactionName,
-        'InPlace Floor Type(s)',
-        isDebug)
-
-# ---------------------------------------------roof types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedRoofTypes(doc, transactionName, isDebug):
-    """purges unused roof types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rRoof.GetUnusedNonInPlaceRoofTypeIdsToPurge, 
-        transactionName,
-        'Roof Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceRoofTypes(doc, transactionName, isDebug):
-    """purges unused inPlace roof types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rRoof.GetUnusedInPlaceRoofIdsForPurge, 
-        transactionName,
-        'InPlace Roof Type(s)',
-        isDebug)
-
-# ---------------------------------------------stair types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedStairTypes(doc, transactionName, isDebug):
-    """purges unused stair types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedNonInPlaceStairTypeIdsToPurge, 
-        transactionName,
-        'Stair Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedPathTypes(doc, transactionName, isDebug):
-    """purges unused stair path types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedStairPathTypeIdsToPurge, 
-        transactionName,
-        'Stair Path Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedLandingTypes(doc, transactionName, isDebug):
-    """purges unused stair landing types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedStairLandingTypeIdsToPurge, 
-        transactionName,
-        'Stair Landing Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedRunTypes(doc, transactionName, isDebug):
-    """purges unused stair run types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedStairRunTypeIdsToPurge, 
-        transactionName,
-        'Stair Run Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedStringerCarriageTypes(doc, transactionName, isDebug):
-    """purges unused stair stringer and carriage types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedStairStringersCarriageTypeIdsToPurge, 
-        transactionName,
-        'Stair Stringers and Carriage Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedStairCutMarkTypes(doc, transactionName, isDebug):
-    """purges unused stair cut mark types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedStairCutMarkTypeIdsToPurge, 
-        transactionName,
-        'Stair Cut Mark Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceStairTypes(doc, transactionName, isDebug):
-    """purges unused inPlace stair types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rStair.GetUnusedInPlaceStairIdsForPurge, 
-        transactionName,
-        'InPlace Stair Type(s)',
-        isDebug)
-
-# ---------------------------------------------ramp types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedRampTypes(doc, transactionName, isDebug):
-    """purges unused ramp types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 
-        transactionName,
-        'Ramp Type(s)',
-        isDebug)
-
-# ---------------------------------------------building pad types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedBuildingPadTypes(doc, transactionName, isDebug):
-    """purges unused building pad types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rBuildP.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 
-        transactionName,
-        'Building Pad Type(s)',
-        isDebug)
-
-# ---------------------------------------------railing types ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedRailingTypes(doc, transactionName, isDebug):
-    """purges unused railing types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 
-        transactionName,
-        'Railing Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedInPlaceRailingTypes(doc, transactionName, isDebug):
-    """purges unused inPlace railing types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rRail.GetUnusedInPlaceRailingIdsForPurge, 
-        transactionName,
-        'InPlace Railing Type(s)',
-        isDebug)
-
-# ---------------------------------------------levels ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedLevelypes(doc, transactionName, isDebug):
-    """purges unused revit level types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rLev.GetUnusedLevelTypesForPurge, 
-        transactionName,
-        'Level Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedLevelHeadFamilyTypes(doc, transactionName, isDebug):
-    """purges unused level head families from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rLev.GetUnusedLevelHeadFamiliesForPurge, 
-        transactionName,
-        'Level Head family Type(s)',
-        isDebug)
-
-# ---------------------------------------------grids ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedGridTypes(doc, transactionName, isDebug):
-    """purges unused revit grid types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rGrid.GetUnusedGridTypesForPurge, 
-        transactionName,
-        'Grid Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedGridHeadFamilyTypes(doc, transactionName, isDebug):
-    """purges unused grid head families from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rGrid.GetUnusedLevelHeadFamiliesForPurge, 
-        transactionName,
-        'Grid Head family Type(s)',
-        isDebug)
-
-# --------------------------------------------- view refs ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedViewRefTypes(doc, transactionName, isDebug):
-    """purges unused view ref types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 
-        transactionName,
-        'View Ref Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedViewContTypes(doc, transactionName, isDebug):
-    """purges unused view cont types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 
-        transactionName,
-        'View Continuation Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedViewRefFamilies(doc, transactionName, isDebug):
-    """purges unused view ref families and continuation markers from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 
-        transactionName,
-        'View Ref and Continuation Marker families(s)',
-        isDebug)
-
-# --------------------------------------------- detail components ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedRepeatingDetailTypes(doc, transactionName, isDebug):
-    """purges unused repeating detail types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 
-        transactionName,
-        'Repeating Detail Type(s)',
-        isDebug)
-
-# doc   current document
-def PurgeUnusedFilledRegionTypes(doc, transactionName, isDebug):
-    """purges unused filled region types from model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rDet.GetUnUsedFilledRegionTypeIdsForPurge, 
-        transactionName,
-        'Filled Region Type(s)',
-        isDebug)
-
-
-# ---------------------------------------------loadable families ---------------------------------------------
-
-# doc   current document
-def PurgeUnusedLoadableFamilyTypes(doc, transactionName, isDebug):
-    """purges unused loadable family types from the model"""
-    return PurgeUnplacedElements(
-        doc, 
-        rFamU.GetUnusedFamilySymbolsAndTypeIdsToPurge, 
-        transactionName,
-        'Loadable Family Type(s)',
-        isDebug)
-
 # --------------------------------------------- Main ---------------------------------------------
+
+#set up a named tuple to store purge actions     
+purgeAction = namedtuple(
+    'purgeTransactionName', # the revit transaction name for the purge action
+    'purgeIdsGetter', # the function which returns all element ids to be purged
+    'purgeReportHeader', # human readable repport header for each purge action
+    'testReportHeader',  # human readable repport header for each test action
+    'testIdsGetter') # functions which returns all availble type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
 
 # list containing purge action names and the purge action method
 PURGE_ACTIONS = [
-    ['Purge Unused Model Group(s)', PurgeUnplacedModelGroupsInModel],
-    ['Purge Unused Detail Group(s)', PurgeUnplacedDetailGroupsInModel],
-    ['Purge Unused Nested Detail Group(s)', PurgeUnplacedNestedDetailGroupsInModel],
-    ['Purge Unused View Family Types', PurgeUnusedViewFamilyTypes],
-    ['Purge Unused View Templates', PurgeUnusedViewTemplates],
-    ['Purge Unused View Filters', PurgeUnusedViewFilters],
-    ['Purge Unused Image Links', PurgeUnusedImages],
-    ['Purge Unused MultiRef Dimension Types', PurgeUnusedMultiRefDimTypes],
-    ['Purge Unused Dimension Types', PurgeUnusedDimTypes],
-    ['Purge Unused Text Types', PurgeUnusedTextTypes],
-    ['Purge Unused Arrow Heads', PurgeUnusedArrowHeadTypes],
-    ['Purge Unused Stacked Wall Types', PurgeUnusedStackedWallTypes],
-    ['Purge Unused InPlace Wall Types', PurgeUnusedInPlaceWallTypes],
-    ['Purge Unused Curtain Wall Types', PurgeUnusedCurtainWallTypes],
-    ['Purge Unused Basic Types', PurgeUnusedBasicTypes],
-    ['Purge Unused Curtain Wall Element Types', PurgeUnusedCurtainWallElementTypes],
-    ['Purge Unused Ceiling Types', PurgeUnusedCeilingTypes],
-    ['Purge Unused InPlace Ceiling Types', PurgeUnusedInPlaceCeilingTypes],
-    ['Purge Unused Floor Types', PurgeUnusedFloorTypes],
-    ['Purge Unused InPlace Floor Types', PurgeUnusedInPlaceFloorTypes],
-    ['Purge Unused Roof Types', PurgeUnusedRoofTypes],
-    ['Purge Unused InPlace Roof Types', PurgeUnusedInPlaceRoofTypes],
-    ['Purge Unused Stair Types', PurgeUnusedStairTypes],
-    ['Purge Unused Path Types', PurgeUnusedPathTypes],
-    ['Purge Unused Landing Types', PurgeUnusedLandingTypes],
-    ['Purge Unused Run Types', PurgeUnusedRunTypes],
-    ['Purge Unused Stringers and Carriage Types', PurgeUnusedStringerCarriageTypes],
-    ['Purge Unused InPlace Stair Types', PurgeUnusedInPlaceStairTypes],
-    ['Purge Unused Ramp Types', PurgeUnusedRampTypes],
-    ['Purge Unused Stair Cut Mark Types', PurgeUnusedStairCutMarkTypes],
-    ['Purge Unused Building Pad Types', PurgeUnusedBuildingPadTypes],
-    ['Purge Unused Railing Types', PurgeUnusedRailingTypes],
-    ['Purge Unused InPlace Railing Types', PurgeUnusedInPlaceRailingTypes],
-    ['Purge Unused Level Types', PurgeUnusedLevelypes],
-    ['Purge Unused Level Head Types', PurgeUnusedLevelHeadFamilyTypes],
-    ['Purge Unused Grid Types', PurgeUnusedGridTypes],
-    ['Purge Unused Grid Head Types', PurgeUnusedGridHeadFamilyTypes],
-    ['Purge Unused View Reference Types', PurgeUnusedViewRefTypes],
-    ['Purge Unused View Continuation Types', PurgeUnusedViewContTypes],
-    ['Purge Unused View Reference Families', PurgeUnusedViewRefFamilies],
-    ['Purge Unused Repeating Details', PurgeUnusedRepeatingDetailTypes],
-    ['Purge Unused Filled Regions', PurgeUnusedFilledRegionTypes]#,
-    #['Purge Unused Loadable Family Types', PurgeUnusedLoadableFamilyTypes]
+    purgeAction('Purge Unused Model Group(s)', rGrp.GetUnplacedModelGroupIds, 'Model Group(s)', 'Model Group(s)', rGrp.GetModelGroupIds),
+    purgeAction('Purge Unused Detail Group(s)', rGrp.GetUnplacedDetailGroupIds, 'Detail Group(s)', 'Detail Group(s)', rGrp.GetDetailGroupIds),
+    purgeAction('Purge Unused Nested Detail Group(s)', rGrp.GetUnplacedNestedDetailGroupIds, 'Nested Detail Group(s)', 'Nested Detail Group(s)', rGrp.GetNestedDetailGroupIds),
+    purgeAction('Purge Unused View Family Types', rView.GetUnusedViewTypeIdsInModel, 'View Family Type(s)', 'View Family Type(s)', rView.GetViewTypeIds),
+    purgeAction('Purge Unused View Templates', rView.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rView.GetViewsTemplateIdsInInModel),
+    purgeAction('Purge Unused View Filters', rView.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rView.GetAllAvailableFilterIdsInModel),
+    purgeAction('Purge Unused Image Links', rLink.GetAllUnusedImagetypeIdsInModel, 'Images(s)', 'Images(s)', rLink.GetImagesTypeIdsInModel),
+    purgeAction('Purge Unused MultiRef Dimension Types', rAnn.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rAnn.GetAllMultiRefAnnotationTypeIds),
+    purgeAction('Purge Unused Dimension Types', rAnn.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rAnn.GetDimTypeIds),
+    purgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds),
+    purgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel),
+    purgeAction('Purge Unused Stacked Wall Types', rWall.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rWall.GetAllStackedWallTypeIdsInModel),
+    purgeAction('Purge Unused InPlace Wall Types', rWall.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel),
+    purgeAction('Purge Unused Curtain Wall Types', rWall.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel),
+    purgeAction('Purge Unused Basic Types', rWall.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel),
+    purgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsInModelByCategory),
+    purgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByCategory),
+    purgeAction('Purge Unused InPlace Ceiling Types', rCeil.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel),
+    purgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass), #TODO check why this is using by class...
+    purgeAction('Purge Unused InPlace Floor Types', rFlo.GetUnusedInPlaceFloorIdsForPurge, 'InPlace Floor Type(s)', 'InPlace Floor Type(s)', rFlo.GetAllInPlaceFloorTypeIdsInModel),
+    purgeAction('Purge Unused Roof Types', rRoof.GetUnusedNonInPlaceRoofTypeIdsToPurge, 'Roof Type(s)', 'Roof Type(s)', rRoof.GetAllRoofTypeIdsInModelByClass), #TODO check why by class
+    purgeAction('Purge Unused InPlace Roof Types', rRoof.GetUnusedInPlaceRoofIdsForPurge, 'InPlace Roof Type(s)', 'InPlace Roof Type(s)', rRoof.GetAllInPlaceRoofTypeIdsInModel),
+    purgeAction('Purge Unused Stair Types', rStair.GetUnusedNonInPlaceStairTypeIdsToPurge, 'Stair Type(s)', 'Stair Type(s)', rStair.GetAllStairTypeIdsInModelByClass), #TODO check why by class
+    purgeAction('Purge Unused Path Types', rStair.GetUnusedStairPathTypeIdsToPurge, 'Stair Path Type(s)', 'Stair Path Type(s)', rStair.GetAllStairPathTypeIdsInModelByClass),
+    purgeAction('Purge Unused Landing Types', rStair.GetUnusedStairLandingTypeIdsToPurge, 'Stair Landing Type(s)', 'Stair Landing Type(s)',rStair.GetAllStairLandingTypeIdsInModelByClass),
+    purgeAction('Purge Unused Run Types', rStair.GetUnusedStairRunTypeIdsToPurge, 'Stair Run Type(s)', 'Stair Run Type(s)', rStair.GetAllStairRunTypeIdsInModelByClass),
+    purgeAction('Purge Unused Stringers and Carriage Types', rStair.GetUnusedStairStringersCarriageTypeIdsToPurge, 'Stair Stringers and Carriage Type(s)', 'Stair Stringers and Carriage Type(s)', rStair.GetAllStairstringCarriageTypeIdsInModelByCategory),
+    purgeAction('Purge Unused InPlace Stair Types', rStair.GetUnusedInPlaceStairIdsForPurge,'InPlace Stair Type(s)', 'InPlace Stair Type(s)', rStair.GetAllInPlaceStairTypeIdsInModel),
+    purgeAction('Purge Unused Ramp Types', rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory),
+    purgeAction('Purge Unused Stair Cut Mark Types', rStair.GetUnusedStairCutMarkTypeIdsToPurge, 'Stair Cut Mark Type(s)', 'Stair Cut Mark Type(s)', rStair.GetAllStairCutMarkTypeIdsInModelByClass),
+    purgeAction('Purge Unused Building Pad Types', rBuildP.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 'Building Pad Type(s)', 'Building Pad Type(s)', rBuildP.GetAllBuildingPadTypeIdsInModelByClass),
+    purgeAction('Purge Unused Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory),
+    purgeAction('Purge Unused InPlace Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge,'Railing Type(s)','Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel),
+    purgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory),
+    purgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadfamilyTypeIds),
+    purgeAction('Purge Unused Grid Types', rGrid.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory),
+    purgeAction('Purge Unused Grid Head Types', rGrid.GetUnusedGridHeadFamiliesForPurge, 'Grid Head family Type(s)', rGrid.GetAllGridHeadFamilyTypeIds),
+    purgeAction('Purge Unused View Reference Types', rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList),
+    purgeAction('Purge Unused View Continuation Types', rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds),
+    purgeAction('Purge Unused View Reference Families', rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds),
+    purgeAction('Purge Unused Repeating Details', rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable),
+    purgeAction('Purge Unused Filled Regions', rDet.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable),
+    purgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedFamilySymbolsAndTypeIdsToPurge, 'Loadable Family Type(s)', 'Loadable Family Type(s)', rFamU.GetAllFamilySymbolIds)
 ]
 
 # indentation for names of items purged
@@ -626,16 +160,83 @@ def PurgeUnused(doc, revitFilePath, isDebug):
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     tOverall.start()
-    for purgeAction in PURGE_ACTIONS:
+    for pA in PURGE_ACTIONS:
         try:
             t.start()
-            purgeFlag = purgeAction[1](
-                doc, 
-                purgeAction[0], 
-                isDebug)
+            purgeFlag = PurgeUnplacedElements(
+                doc,
+                pA.purgeIdsGetter,
+                pA.purgeTransactionName,
+                pA.purgeReportHeader,
+                isDebug
+            )
             purgeFlag.AppendMessage(SPACER + str(t.stop()))
             resultValue.Update(purgeFlag)
         except Exception as e:
             resultValue.UpdateSep(False,'Terminated purge unused actions with exception: '+ str(e))
     resultValue.AppendMessage('purge duration: '+ str(tOverall.stop()))
+    return resultValue
+
+# --------------------------------------------- Testing ---------------------------------------------
+
+# doc                       current document
+# typeIdGetter              function which returns all available type ids
+# reportHeader              the first entry per row written to file
+# outputFilePath            location of file
+# counter                   action counter, if 0 the report file will be created from scratch, any othe value means append to existing report file
+def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, counter):
+    """gets all available type ids from passed in type id getter and writes result to file"""
+    resultValue = res.Result()
+    writeType = 'a'
+    if(counter == 0):
+        writeType = 'w'
+    try:
+        typeIds = typeIdGetter(doc)
+        # convert data to list of lists of strings for report writer
+        data = []
+        typeIdsAsString = [reportHeader]
+        for tId in typeIds:
+            typeIdsAsString.append(str(tId))
+        data.append(typeIdsAsString)
+        # writer data to file
+        util.writeReportData(
+            outputFilePath,
+            '',
+            data,
+            writeType)
+        resultValue.UpdateSep(True,'Added type group ' + reportHeader + ' with ' + str(len(typeIds) + ' entries'))
+    except Exception as e:
+        resultValue.UpdateSep(False,'Terminated purge unused ' + reportHeader + ' with exception: '+ str(e))
+    return resultValue
+
+# fileSource            bench mark type ids file
+# fileTest              file to check against the benchmark
+def CompareReportData(fileSource, fileTest):
+    """used to compare a bench mark results file containing type ids against a new results file
+    will report missing or additional ids in results file"""
+    pass
+
+# doc           current document
+# filePath      fully qualified report file path
+def ReportAvailableTypeIds(doc, filePath):
+    """calls all available type id getter functions and writes results to file"""
+    resultValue = res.Result()
+    tOverall.start()
+    for pA in PURGE_ACTIONS:
+        counter = 0 #any counter value greater then 0 means append to report file rather then creating a new file
+        try:
+            t.start()
+            reportFlag = WriteAvailableTypeIds(
+                doc,
+                pA.testIdsGetter,
+                pA.testReportHeader,
+                filePath,
+                counter
+            )
+            reportFlag.AppendMessage(SPACER + str(t.stop()))
+            resultValue.Update(reportFlag)
+        except Exception as e:
+            resultValue.UpdateSep(False,'Terminated get available type id actions with exception: '+ str(e))
+        counter = counter + 1
+    resultValue.AppendMessage('Report available types duration: '+ str(tOverall.stop()))
     return resultValue

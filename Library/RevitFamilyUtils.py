@@ -318,6 +318,15 @@ def GetFamilySymbolsIds(doc, cats):
         return ids
 
 # doc             current document
+def GetAllFamilySymbolIds(doc):
+    """"returns a list of all family symbol ids in the model based on hard coded family category lists!"""
+    ids = []
+    allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
+    allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
+    ids = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
+    return ids
+
+# doc             current document
 # useTyep         0, no dependent elements; 1: has dependent elements
 # typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):

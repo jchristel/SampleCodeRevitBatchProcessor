@@ -179,6 +179,16 @@ def GetAllViewReferenceTypeIdData(doc):
     return dic
 
 # doc:   current model document
+def GetAllViewReferenceTypeIdDataAsList(doc):
+    """returns all view references type id s available in the model in a list"""
+    dic = GetAllViewReferenceTypeIdData(doc)
+    ids = []
+    for key, value in dic.items():
+        if(len(dic[key]) > 0):
+            ids = ids + dic[key]
+    return ids
+
+# doc:   current model document
 def GetAllViewContinuationTypeIds(doc):
     """returns all view continuation types available in the model"""
     ids = []
@@ -202,7 +212,7 @@ def GetUsedViewContinuationTypeIds(doc):
 
 # doc:   current model document
 def GetAllViewReferenceSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) in the model"""
+    """returns the ids of all view reference family symbols(types) in the model"""
     ids = []
     multiCatFilter = ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
@@ -214,7 +224,7 @@ def GetAllViewReferenceSymbolIds(doc):
 # doc:   current model document
 # viewRefTypesIds   list of view reference type ids
 def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
-    """returns the ids of all view symbols(types) from given view ref types or continuation types the model"""
+    """returns the ids of all view family symbols(types) from given view ref types or continuation types the model"""
     ids = []
     for vrtId in viewRefTypesIds:
         el = doc.GetElement(vrtId)

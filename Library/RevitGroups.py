@@ -67,7 +67,7 @@ def GetModelGroupIds(doc):
 def GetDetailGroupIds(doc):
     """returns a list of detail groups from the model"""
     ids = []
-    rcol = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType()
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
 

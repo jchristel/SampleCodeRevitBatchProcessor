@@ -275,6 +275,9 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     ids = []
     for c in col:
+        fam = c.Family
+        # check if this an in place or loaded family!
+        if (fam.IsInPlace == True):
             ids.append(c.Id)
     return ids
 

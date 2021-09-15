@@ -323,9 +323,9 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
 def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
     """ returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function """
     ids = []
-    # get all available type ids and then check against used Stair type ids
+    # get all available type ids and then check against all Stair type ids
     idsAvailable = availavbleIdsGetter(doc)
-    allUsedStairTypeIds = GetUsedStairTypeIds(doc)
+    allUsedStairTypeIds = GetAllStairTypeIdsInModelByCategory(doc)
     idsUsedTypes = []
     for used in allUsedStairTypeIds:
         idsUsed = GetUsedSubTypeIdsFromStairType(doc, used, paras)

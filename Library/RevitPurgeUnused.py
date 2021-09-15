@@ -109,7 +109,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWall.Ge
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWall.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWall.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeil.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Floor Types', rFlo.GetUnusedInPlaceFloorIdsForPurge, 'InPlace Floor Type(s)', 'InPlace Floor Type(s)', rFlo.GetAllInPlaceFloorTypeIdsInModel))
@@ -202,12 +202,78 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
         resultValue.UpdateSep(False,'Terminated purge unused ' + reportHeader + ' with exception: '+ str(e))
     return resultValue
 
+
+# first     base line dictionary
+# second    dictionary to be checked against base line
+def CompareReportDictioanries(first,second):
+    """comparison will return all elements which are in first dictionary only, True if none are missing"""
+    resultValue = res.Result()
+    for key,value in first.items():
+        if(second.has_key(key)):
+            # check whether all values in base line key are in matching comparison key
+            notInList = []
+            for d in first[key]:
+                if d not in second[key]:
+                    notInList.append(d)
+            if(len(notInList) > 0):
+                resultValue.status = False
+                resultValue.AppendMessage(key + ' has different ids!')
+                data = [key] + notInList
+                resultValue.result.append(data)
+        else:
+            # entire key is missing!
+            resultValue.AppendMessage(key + ' is missing!')
+            resultValue.status = False
+            data = [key] + first[key]
+            resultValue.result.append(data)
+    # check whether any dif was found
+    if(len(resultValue.result) == 0):
+        resultValue.UpdateSep(True, "All elements from first dictionary are in second dictionary")
+    return resultValue
+
+# data      list of list of strings
+def ConvertReportDataIntoDictionary(data):
+    """build a dictionary where key is the first entry in each list, values are all subsequent entries in the same list"""
+    dic = {}
+    for d in data:
+        dic[d[0]] = []
+        for i in range(0,len(d)-1):
+            if(i>0):
+                dic[d[0]].append(d[i])
+    return dic
+
 # fileSource            bench mark type ids file
 # fileTest              file to check against the benchmark
 def CompareReportData(fileSource, fileTest):
+    resultValue = res.Result()
     """used to compare a bench mark results file containing type ids against a new results file
     will report missing or additional ids in results file"""
-    return True
+    sourceRows = util.ReadTabSeparatedFile(fileSource)
+    testRows = util.ReadTabSeparatedFile(fileTest)
+    sourceDic = ConvertReportDataIntoDictionary(sourceRows)
+    testDic = ConvertReportDataIntoDictionary(testRows)
+    # check benchmark against test
+    statusSource = CompareReportDictioanries(sourceDic, testDic)
+    # update overall status
+    resultValue.UpdateStatus(statusSource.status)
+    if(statusSource.status == True):
+        resultValue.message ='Benchmark contains no additional ids'
+    else:
+        resultValue.message ='Benchmark contains no additional ids'
+        resultValue.result.append(statusSource.result)
+    
+    # check test against benchmark
+    statusTest = CompareReportDictioanries(testDic, sourceDic)
+
+    resultValue.UpdateStatus(statusTest.status)
+    # update overall message with data from test benchmark comparison
+    if(statusTest.status == True):
+        resultValue.AppendMessage('\n' + 'Test contains no additional ids')
+    else:
+        resultValue.AppendMessage('\n' + 'Test contains additional ids')
+        resultValue.result.append(statusTest.result)
+
+    return resultValue
 
 # doc           current document
 # filePath      fully qualified report file path

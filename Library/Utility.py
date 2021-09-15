@@ -352,12 +352,27 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     else:
         return relativeFilePath
 
-# read a csv files into a list of rows
+# filePathCSV      fully qualified file path to tab separated file
 def ReadCSVfile(filepathCSV):
+    """read a csv files into a list of rows"""
     rowList = []
     try:
         with open(filepathCSV) as csvfile:
             reader = csv.reader(csvfile)
+            for row in reader: # each row is a list
+                rowList.append(row)
+    except Exception as e:
+        print (str(e))
+        rowList = []
+    return rowList
+
+# filePath      fully qualified file path to tab separated file
+def ReadTabSeparatedFile(filePath):
+    """read a tab delimited files into a list of rows"""
+    rowList = []
+    try:
+        with codecs.open (filePath,'r',encoding='utf-8') as f:
+            reader = csv.reader(f, dialect='excel-tab')
             for row in reader: # each row is a list
                 rowList.append(row)
     except Exception as e:

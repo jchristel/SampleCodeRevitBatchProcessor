@@ -108,7 +108,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWall.Ge
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWall.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWall.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWall.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdssByCategoryExclInPlace))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeil.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
@@ -138,6 +138,13 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDet.GetUnUs
 # PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedFamilySymbolsAndTypeIdsToPurge, 'Loadable Family Type(s)', 'Loadable Family Type(s)', rFamU.GetAllFamilySymbolIds)) #TODO check its not deleting to much
 
 
+# list containing keys to be ignored in comparison code
+# these keys do not get purged by revits native purge unused and would therefore show up as false positives
+COMPARISON_IGNORE= [
+    'View Family Type(s)',
+    'View Family Templates(s)',
+    'View Filter(s)'
+]
 # indentation for names of items purged
 SPACER = '...'
 
@@ -209,23 +216,24 @@ def CompareReportDictioanries(first,second):
     """comparison will return all elements which are in first dictionary only, True if none are missing"""
     resultValue = res.Result()
     for key,value in first.items():
-        if(second.has_key(key)):
-            # check whether all values in base line key are in matching comparison key
-            notInList = []
-            for d in first[key]:
-                if d not in second[key]:
-                    notInList.append(d)
-            if(len(notInList) > 0):
+        if(key not in COMPARISON_IGNORE):
+            if(second.has_key(key)):
+                # check whether all values in base line key are in matching comparison key
+                notInList = []
+                for d in first[key]:
+                    if d not in second[key]:
+                        notInList.append(d)
+                if(len(notInList) > 0):
+                    resultValue.status = False
+                    resultValue.AppendMessage(key + ' has different ids!')
+                    data = [key] + notInList
+                    resultValue.result.append(data)
+            else:
+                # entire key is missing!
+                resultValue.AppendMessage(key + ' is missing!')
                 resultValue.status = False
-                resultValue.AppendMessage(key + ' has different ids!')
-                data = [key] + notInList
+                data = [key] + first[key]
                 resultValue.result.append(data)
-        else:
-            # entire key is missing!
-            resultValue.AppendMessage(key + ' is missing!')
-            resultValue.status = False
-            data = [key] + first[key]
-            resultValue.result.append(data)
     # check whether any dif was found
     if(len(resultValue.result) == 0):
         resultValue.UpdateSep(True, "All elements from first dictionary are in second dictionary")

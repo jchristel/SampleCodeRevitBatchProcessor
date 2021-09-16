@@ -286,7 +286,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
                 if (tFam.CanBeDeleted):
                     filteredUnusedTypeIds.append(id)
         else:
-            #need to keep at least one item
+            # need to keep at least one item
             if(len(t[1]) > 1):
                 # make sure to leave one behind
                 maxLength = len(t[1]) - 1

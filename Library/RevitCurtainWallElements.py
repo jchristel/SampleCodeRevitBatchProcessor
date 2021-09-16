@@ -36,7 +36,7 @@ clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 # header used in reports
-REPORT_CURTAINWALL_ELEMENTS_HEADER = ['HOSTFILE', 'ReplaceMeTYPEID', 'ReplaceMeTYPENAME']
+REPORT_CURTAINWALL_ELEMENTS_HEADER = ['HOSTFILE', 'CURTAINWALL_ELEMENT_TYPEID', 'ReplaceMeTYPENAME']
 
 CURTAINWALL_PANEL_EMPTY_FAMILY_NAME = 'Empty System Panel'
 CURTAINWALL_PANEL_SYSTEM_FAMILY_NAME = 'Empty System Panel'
@@ -70,9 +70,10 @@ CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[BuiltInCategory] ([
 # returns all curtain panel element types in a model
 # doc:   current model document
 def GetAllCurtainWallElementTypesByCategory(doc):
-    """ this will return a filtered element collector of all Railing types in the model:
+    """ this will return a filtered element collector of all curtain wall element types in the model:
     - curtain wall panels
     - curtain wall mullions
+    - family symbols!
     """
     multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
@@ -108,7 +109,7 @@ def GetCurtainWallElementInstancesInModelByCategory(doc):
 
 # doc   current model document
 def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
-    """ returns all CurtainWallElement element types available placed in model """
+    """ returns all CurtainWallElement element type ids available in model """
     ids = []
     colCat = GetAllCurtainWallElementTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)

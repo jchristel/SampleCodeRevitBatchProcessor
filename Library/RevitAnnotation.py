@@ -224,7 +224,7 @@ def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
             for pInt in parameterList:
                 if (p.Definition.BuiltInParameter == pInt):
                     id = com.getParameterValue(p)
-                    if(id not in usedIds and id != ElementId.	InvalidElementId):
+                    if(id not in usedIds and id != ElementId.InvalidElementId):
                         usedIds.append(id)
                     break
     return usedIds

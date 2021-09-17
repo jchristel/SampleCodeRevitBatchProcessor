@@ -267,7 +267,8 @@ def CompareReportData(fileSource, fileTest):
     if(statusSource.status == True):
         resultValue.message ='Benchmark contains no additional ids'
     else:
-        resultValue.message ='Benchmark contains no additional ids'
+        resultValue.message ='Benchmark contains additional ids'
+        resultValue.AppendMessage(statusSource.message)
         resultValue.result.append(statusSource.result)
     
     # check test against benchmark
@@ -279,6 +280,7 @@ def CompareReportData(fileSource, fileTest):
         resultValue.AppendMessage('\n' + 'Test contains no additional ids')
     else:
         resultValue.AppendMessage('\n' + 'Test contains additional ids')
+        resultValue.AppendMessage(statusTest.message)
         resultValue.result.append(statusTest.result)
 
     return resultValue

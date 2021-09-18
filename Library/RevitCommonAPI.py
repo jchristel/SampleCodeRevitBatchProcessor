@@ -212,6 +212,7 @@ def GetSimilarTypeFamiliesByType(doc, typeGetter):
         simData = []
         for sim in sims:
             simData.append(sim)
+        # simData.sort() # not sure a sort is actually doing anything
         tData.append(simData)
         if(CheckUniqueTypeData(simTypes, tData)):
             simTypes.append(tData)
@@ -288,13 +289,13 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
         else:
             # need to keep at least one item
             if(len(t[1]) > 1):
-                # make sure to leave one behind
-                maxLength = len(t[1]) - 1
-                # check whether this can be deleted...
-                for x in range(maxLength):
+                #maxLength = len(t[1])
+                # make sure to leave the first one behind to match Revit purge behaviour
+                for x in range(1, len(t[1])):
                     id = t[1][x]
                     # get the element
                     tFam = doc.GetElement(id)
+                    # check whether this can be deleted...
                     if (tFam.CanBeDeleted):
                         filteredUnusedTypeIds.append(id)
         counter = counter + 1 

@@ -434,6 +434,25 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
         flag = False
     return flag
 
+# doc                 current model document
+# dependentElements   list of elements ids               
+def FilterOutWarnings(doc, dependentElements):
+    """attempts to filter out any warnings from ids supplied by checking the workset name
+    of each element for 'Reviewable Warnings'"""
+    ids = []
+    for id in dependentElements:
+        el = doc.GetElement(id)
+        paras = el.GetOrderedParameters()
+        isWarning = False
+        for p in paras:
+            if(p.Definition.BuiltInParameter == BuiltInParameter.ELEM_PARTITION_PARAM):
+                if (getParameterValue(p) == 'Reviewable Warnings'):
+                    isWarning = True
+                break
+        if(isWarning == False):
+            ids.append(id)
+    return ids
+
 # doc   current model document
 # el    the element of which to check for dependent elements
 # filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
@@ -445,15 +464,18 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
     value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)
+        # remove any warnings from dependent elements
+        dependentElements = FilterOutWarnings(doc, dependentElements)
+        # check if dependent elements pass threshold value
         if(len(dependentElements)) > threshold :
             # there appear to be situations where dependent elements are multiple (orphaned?) legend components only
+            # or warnings belonging to a type (same type mark ...)
             # these are legend components with an invalid OwnerViewId, check whether this is the case...
             if (CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents(doc, dependentElements) == False):
                 value = 1
     except Exception as e:
         value = -1
     return value
-
 
 # doc             current document
 # useTyep         0, no dependent elements; 1: has dependent elements
@@ -468,7 +490,6 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
         if(hasDependents == useType):
             ids.append(typeId)
     return ids
-
 
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted

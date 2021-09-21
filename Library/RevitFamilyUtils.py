@@ -76,7 +76,7 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_Columns,
     BuiltInCategory.OST_CommunicationDevices,
     BuiltInCategory.OST_ConduitFitting,
-    BuiltInCategory.OST_CurtainWallPanels,
+    # BuiltInCategory.OST_CurtainWallPanels, purged elsewhere
     BuiltInCategory.OST_DataDevices,
     BuiltInCategory.OST_DetailComponents,
     BuiltInCategory.OST_Doors,
@@ -117,7 +117,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_CurtainWallPanelTags,
     BuiltInCategory.OST_AreaTags,
     BuiltInCategory.OST_CaseworkTags,
-    #BuiltInCategory.OST_CalloutHeads, purged separately
+    #BuiltInCategory.OST_CalloutHeads, #purged separately
     BuiltInCategory.OST_CeilingTags,
     BuiltInCategory.OST_DataDeviceTags,
     BuiltInCategory.OST_DetailComponentTags,
@@ -131,7 +131,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_ElectricalCircuitTags,
     BuiltInCategory.OST_ElectricalEquipmentTags,
     BuiltInCategory.OST_ElectricalFixtureTags,
-    #BuiltInCategory.OST_ElevationMarks, purged separately
+    #BuiltInCategory.OST_ElevationMarks, #purged separately
     BuiltInCategory.OST_FabricAreaTags,
     BuiltInCategory.OST_FabricReinforcementTags,
     BuiltInCategory.OST_FireAlarmDeviceTags,
@@ -141,14 +141,14 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_FoundationSlabAnalyticalTags,
     BuiltInCategory.OST_FurnitureSystemTags,
     BuiltInCategory.OST_GenericModelTags,
-    BuiltInCategory.OST_GenericAnnotation,
-    #BuiltInCategory.OST_GridHeads, purged separately
+    #BuiltInCategory.OST_GenericAnnotation, # purged separately tricky one...some of these might be used in dimensions for instance...
+    #BuiltInCategory.OST_GridHeads, # purged separately
     BuiltInCategory.OST_InternalAreaLoadTags,
     BuiltInCategory.OST_InternalLineLoadTags,
     BuiltInCategory.OST_InternalPointLoadTags,
     BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
     BuiltInCategory.OST_KeynoteTags,
-    #uiltInCategory.OST_LevelHeads, purged separately
+    #uiltInCategory.OST_LevelHeads, #purged separately
     BuiltInCategory.OST_LightingDeviceTags,
     BuiltInCategory.OST_LightingFixtureTags,
     BuiltInCategory.OST_LineLoadTags,
@@ -171,11 +171,11 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_PlumbingFixtureTags,
     BuiltInCategory.OST_RailingSystemTags,
     BuiltInCategory.OST_RebarTags,
-    #BuiltInCategory.OST_ReferenceViewerSymbol, purged separately
+    #BuiltInCategory.OST_ReferenceViewerSymbol, #purged separately
     BuiltInCategory.OST_RevisionCloudTags,
     BuiltInCategory.OST_RoofTags,
     BuiltInCategory.OST_RoomTags,
-    #BuiltInCategory.OST_SectionHeads, purged separately
+    #BuiltInCategory.OST_SectionHeads, #purged separately
     BuiltInCategory.OST_SecurityDeviceTags,
     BuiltInCategory.OST_SitePropertyLineSegmentTags,
     BuiltInCategory.OST_SitePropertyTags,
@@ -308,21 +308,30 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 
 # doc             current document
 # cats          list of builtin categories to filter by
-def GetFamilySymbolsIds(doc, cats):
+def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     """"returns a list of family symbols belonging to categories passt in"""
     ids = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
         elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
-        for cCat in elements:
-            ids.append(cCat.Id)
+        for el in elements:
+            if(excludeSharedFam):
+                fam = el.Family
+                paras = fam.GetOrderedParameters()
+                for p in paras:
+                    if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
+                        if(com.getParameterValue(p) == 'No' and el.Id not in ids):
+                            ids.append(el.Id)
+                        break
+            else:
+                ids.append(el.Id)
         return ids
     except Exception:
         return ids
 
 # doc             current document
-def GetAllFamilySymbolIds(doc):
-    """"returns a list of all family symbol ids in the model based on hard coded family category lists!"""
+def GetAllNonSharedFamilySymbolIds(doc):
+    """"returns a list of all non shared family symbol ids in the model based on hard coded family category lists!"""
     ids = []
     allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
     allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
@@ -332,11 +341,11 @@ def GetAllFamilySymbolIds(doc):
 # doc             current document
 # useTyep         0, no dependent elements; 1: has dependent elements
 # typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
+def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     """returns either used or unused type ids"""
     # get all types elements available
-    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD)
-    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags)
+    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD, excludeSharedFam)
+    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags, excludeSharedFam)
     allTypeIds = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
     ids = []
     for typeId in allTypeIds:
@@ -347,13 +356,13 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
     return ids
 
 # doc             current document
-def GetUnusedFamilyTypes(doc):
+def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
     """returns all unused family type ids in model"""
-    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0)
+    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
     return ids
 
 # doc             current document
-def GetUnusedFamilySymbolsAndTypeIdsToPurge(doc):
-    """returns all unused family types and symbol ids in model"""
+def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
+    """returns all unused non shared family types and symbol ids in model"""
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
     return idsUnused 

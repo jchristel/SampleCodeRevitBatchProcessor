@@ -82,6 +82,7 @@ def PurgeUnplacedElements (doc,
         purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         # check if an exception occured and in debug mode, purge elements one by one
         if(isDebug and purgeResult.status == False):
+            #pass
             print('second debug run')
             purgeResult = com.DeleteByElementIdsOneByOne(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         resultValue.Update(purgeResult)
@@ -104,7 +105,8 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWall.Ge
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWall.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWall.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWall.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdssByCategoryExclInPlace))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCWE.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCWE.GetAllCurtainWallNonSharedSymbolIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeil.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
@@ -135,7 +137,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rA
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnn.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rAnn.GetDimTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel))
-# PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedFamilySymbolsAndTypeIdsToPurge, 'Loadable Family Type(s)', 'Loadable Family Type(s)', rFamU.GetAllFamilySymbolIds)) #TODO check its not deleting to much
+#PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 
 # list containing keys to be ignored in comparison code

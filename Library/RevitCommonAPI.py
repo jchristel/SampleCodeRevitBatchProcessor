@@ -520,7 +520,7 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
             n = Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + n
+                actionReturnValue.message = 'Deleted [' + str(id) + '] ' + n
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return actionReturnValue

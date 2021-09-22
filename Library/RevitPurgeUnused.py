@@ -133,11 +133,12 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rVi
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDet.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDet.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnn.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rAnn.GetAllMultiRefAnnotationTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnn.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rAnn.GetDimTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel))
-#PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 
 # list containing keys to be ignored in comparison code

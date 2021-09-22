@@ -76,9 +76,9 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_Columns,
     BuiltInCategory.OST_CommunicationDevices,
     BuiltInCategory.OST_ConduitFitting,
-    # BuiltInCategory.OST_CurtainWallPanels, purged elsewhere
+    # BuiltInCategory.OST_CurtainWallPanels, purged else where
     BuiltInCategory.OST_DataDevices,
-    BuiltInCategory.OST_DetailComponents,
+    # BuiltInCategory.OST_DetailComponents, purged else where
     BuiltInCategory.OST_Doors,
     BuiltInCategory.OST_DuctAccessory,
     BuiltInCategory.OST_DuctTerminal,

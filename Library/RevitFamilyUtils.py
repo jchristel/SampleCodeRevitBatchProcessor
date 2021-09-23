@@ -104,7 +104,7 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_Site,
     BuiltInCategory.OST_SpecialityEquipment,
     BuiltInCategory.OST_Sprinklers,
-    BuiltInCategory.OST_StairsRailingBaluster,
+    #BuiltInCategory.OST_StairsRailingBaluster, #purged else where
     BuiltInCategory.OST_StructuralColumns,
     BuiltInCategory.OST_StructuralFoundation,
     BuiltInCategory.OST_StructuralFraming,

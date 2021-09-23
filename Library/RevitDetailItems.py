@@ -28,6 +28,7 @@ import System
 import RevitCommonAPI as com
 import Result as res
 import Utility as util
+import RevitFamilyUtils as rFam
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -55,7 +56,6 @@ DETAIL_COMPONENT_TYPES = [
     FILLED_REGION_TYPE,
     FAMILY_SYMBOL
 ]
-
 
 # doc:   current model document
 def GetAllDetailTypesByCategory(doc):
@@ -189,12 +189,14 @@ def GetAllUnUsedDetailSymbolIds(doc):
 # doc:   current model document
 def GetAllUnUsedDetailSymbolIdsForPurge(doc):
     """get all unused detail symbol type ids in model to be purged (leaves one behind)"""
-    ids = GetAllUnUsedDetailSymbolIds(doc)
-    allAvailableIds = GetAllDetailSymbolIdsAvailable(doc)
-    # need to keep at least one
-    if(len(allAvailableIds) == len(ids)):
-        ids.pop(0)
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
     return ids
+    #ids = GetAllUnUsedDetailSymbolIds(doc)
+    #allAvailableIds = GetAllDetailSymbolIdsAvailable(doc)
+    # need to keep at least one
+    #if(len(allAvailableIds) == len(ids)):
+    #    ids.pop(0)
+    #return ids
 
 # -------------------------------- filled region types -------------------------------------------------------
 

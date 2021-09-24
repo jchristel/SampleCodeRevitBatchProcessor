@@ -489,6 +489,47 @@ def WriteSheetData(doc, fileName, currentFileName):
         returnvalue.UpdateSep(False, str(e))
     return returnvalue
 
+# doc:          current model document
+# fileName:     fully qualified file path
+def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
+    """writes to file sheet properties as nominated in passt in list """
+    returnvalue = res.Result()
+    try:
+        data = GetSheetReportData(doc, currentFileName)
+        headers = GetReportHeaders(doc)
+        data = FilterDataByProperties(data, headers, sheetProperties)
+        # change headers to filtered + default
+        headers = REPORT_SHEETS_HEADER[:]
+        headers = headers + sheetProperties
+        # write data out to file
+        util.writeReportData(
+            fileName, 
+            headers, 
+            data)
+        returnvalue.UpdateSep(True, 'Succesfully wrote data file')
+    except Exception as e:
+        returnvalue.UpdateSep(False, str(e))
+    return returnvalue
+
+# data                  sheet data as a list of lists
+# headers               list of property names
+# sheetProperties       list of sheet properties to be extracted from data
+def FilterDataByProperties(data, headers, sheetProperties):
+    """filters sheet data by supplied property names"""
+    # add default headers to propertie to be filtered first
+    dataIndexList= [iter for iter in range(len(REPORT_SHEETS_HEADER))]
+    # build index pointer list of data to be kept
+    for f in sheetProperties:
+        if (f in headers):
+            dataIndexList.append(headers.index(f))
+    # filter data out
+    newData = []
+    for d in data:
+        dataRow = []
+        for i in dataIndexList:
+            dataRow.append(d[i])
+        newData.append(dataRow)
+    return newData
 
 # doc       the current revit document
 # hostanme  the file hostname, which is added to data returned
@@ -504,8 +545,6 @@ def GetSheetReportData(doc, hostName):
             # get values as utf-8 encoded strings
             value = com.GetParameterValueUTF8String(para)
             try:
-                # replace non utf-8 sqm symbol
-                # 
                 data.append (value)
             except:
                 data.append('Failed to retrieve value')

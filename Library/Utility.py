@@ -38,6 +38,9 @@ FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
 FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 
+# time stamp using colons
+TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
+
 # get the date stamp prefix of report files
 def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
     d = datetime.datetime.now()

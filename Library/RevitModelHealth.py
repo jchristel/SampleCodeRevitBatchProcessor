@@ -458,7 +458,7 @@ def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
             util.writeReportData(
                 ouputDirectory + '\\' + fileName,
                 '',
-                [[revitFileName, util.GetDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC), str(pvalue)]])
+                [[revitFileName, util.GetDateStamp(util.FILE_DATE_STAMP_YY_MM_DD), util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), str(pvalue)]])
             resExport.UpdateSep(True, 'Exported: ' + str(key))
         except Exception as e:
                 resExport.UpdateSep(True, 'Export failed: ' + str(key)+ ' ' + str(e))

@@ -316,7 +316,7 @@ def GetAllUsedArrowHeadTypeIdsInModel(doc):
     independent tags, spot dims, annotation symbols (incl room and area tags), stairs path"""
     usedIds = []
     usedIds = usedIds + GetDimTypeArrowHeadIds(doc)
-    usedIds = usedIds +  GetTextTypeArrowHeadIds(doc)
+    usedIds = usedIds + GetTextTypeArrowHeadIds(doc)
     usedIds = usedIds + GetIndependentTagTypeArrowHeadIds(doc)
     usedIds = usedIds + GetSpotTypeArrowHeadIds(doc)
     usedIds = usedIds + GetAnnoSymbolArrowHeadIds(doc)
@@ -360,4 +360,38 @@ def GetAllUnusedArrowTypeIdsInModel(doc):
     for aId in availableIds:
         if(aId not in usedIds):
             unusedIds.append(aId)
-    return unusedIds 
+    return unusedIds
+
+
+# --------------------------------------------- symbols used in dims and spots  ------------------
+'''centre line symbols and spot symbols'''
+
+# doc   current model document
+def GetSymbolIdsFromDimTypes(doc):
+    '''returns all symbol ids used as centre line symbol from all dim styles in the model'''
+    ids = []
+    dimTs = GetDimTypes(doc)
+    for t in dimTs:
+        paras = t.GetOrderedParamaters()
+        for p in paras:
+            if (p.Definition.BuiltInParameter == BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL):
+                id = com.getParameterValue(p)
+                if(id not in ids and id != ElementId.InvalidElementId):
+                    ids.append(id)
+                break
+    return ids
+
+# doc   current model document
+def GetSymbolIdsFromSpotTypes(doc):
+    '''returns all symbol ids used as symbol from all spot elevation and coordinate'''
+    ids = []
+    dimTs = GetAllSpotDimTypes(doc)
+    for t in dimTs:
+        paras = t.GetOrderedParamaters()
+        for p in paras:
+            if (p.Definition.BuiltInParameter == BuiltInParameter.SPOT_ELEV_SYMBOL):
+                id = com.getParameterValue(p)
+                if(id not in ids and id != ElementId.InvalidElementId):
+                    ids.append(id)
+                break
+    return ids

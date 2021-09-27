@@ -158,7 +158,7 @@ def GetAllUsedDetailSymbolIds(doc):
         idsUnfiltered = dic[FAMILY_SYMBOL]
         # check if used in repeating details
         idsRepeatDet = GetAllRepeatingDetailTypeIdsAvailable(doc)
-        print('ids used in repeating details ' + str(len(idsRepeatDet)))
+        #print('ids used in repeating details ' + str(len(idsRepeatDet)))
         # get detail types used in repeating details only
         idsOfDetailsUsedRepeatDetails = GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet)
         # get detail types used in model

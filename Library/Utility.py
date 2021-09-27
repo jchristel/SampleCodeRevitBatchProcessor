@@ -35,6 +35,8 @@ import csv
 
 # default file stamp date format
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
+FILE_DATE_STAMP_YYMMDD_SPACE = '%y %m %d'
+FILE_DATE_STAMP_YYYYMMDD_SPACE = '%Y %m %d'
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
 FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 

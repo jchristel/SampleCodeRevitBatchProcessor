@@ -50,6 +50,10 @@ PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED = '_NumberOfNotEnclosedRooms'
 PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT = '_NumberOfRedundantRooms'
 PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS = '_NumberOfRegions'
 
+# combined log file for all reports
+PARAM_ACTIONS_FILENAME_MOTHER = '_AllLogs'
+
+
 # list of report file name extensions
 PARAM_ACTIONS_FILENAMES = {
     PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS,

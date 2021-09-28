@@ -372,7 +372,7 @@ def GetSymbolIdsFromDimTypes(doc):
     ids = []
     dimTs = GetDimTypes(doc)
     for t in dimTs:
-        paras = t.GetOrderedParamaters()
+        paras = t.GetOrderedParameters()
         for p in paras:
             if (p.Definition.BuiltInParameter == BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL):
                 id = com.getParameterValue(p)
@@ -387,7 +387,7 @@ def GetSymbolIdsFromSpotTypes(doc):
     ids = []
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        paras = t.GetOrderedParamaters()
+        paras = t.GetOrderedParameters()
         for p in paras:
             if (p.Definition.BuiltInParameter == BuiltInParameter.SPOT_ELEV_SYMBOL):
                 id = com.getParameterValue(p)

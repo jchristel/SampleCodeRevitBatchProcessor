@@ -99,7 +99,7 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_PipeFitting,
     BuiltInCategory.OST_Planting,
     BuiltInCategory.OST_PlumbingFixtures,
-    BuiltInCategory.OST_ProfileFamilies,
+    #BuiltInCategory.OST_ProfileFamilies, #purged elsewhere
     BuiltInCategory.OST_SecurityDevices,
     BuiltInCategory.OST_Site,
     BuiltInCategory.OST_SpecialityEquipment,
@@ -195,7 +195,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_StructuralStiffenerTags,
     BuiltInCategory.OST_TelephoneDeviceTags,
     BuiltInCategory.OST_TrussTags,
-    BuiltInCategory.OST_ViewportLabel,
+    #BuiltInCategory.OST_ViewportLabel, #purged elsewhere
     BuiltInCategory.OST_WallTags,
     BuiltInCategory.OST_WindowTags
 ])
@@ -318,11 +318,16 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
             if(excludeSharedFam):
                 fam = el.Family
                 paras = fam.GetOrderedParameters()
+                parameterMatch = False
                 for p in paras:
                     if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
+                        parameterMatch = True
                         if(com.getParameterValue(p) == 'No' and el.Id not in ids):
                             ids.append(el.Id)
                         break
+                if(parameterMatch == False):
+                    # family cant be of type shared...
+                    ids.append(el.Id)
             else:
                 ids.append(el.Id)
         return ids

@@ -37,6 +37,7 @@ import RevitCurtainWallElements as rCWE
 import RevitDetailItems as rDet
 import RevitFamilyUtils as rFamU
 import RevitFloors as rFlo
+import RevitGenericAnnotation as rGAnno
 import RevitGroups as rGrp
 import RevitGrids as rGrid
 import RevitLevels as rLev
@@ -139,6 +140,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rA
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnn.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rAnn.GetDimTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rGAnno.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 

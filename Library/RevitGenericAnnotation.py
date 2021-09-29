@@ -60,7 +60,9 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
     col = GetAllGenericAnnotationTypesByCategory(doc)
     for c in col:
         parameterMatch = False
-        paras = c.GetOrderedParameters()
+        # get the family object to checkwhether it is a shared family
+        fam = c.Family
+        paras = fam.GetOrderedParameters()
         for p in paras:
             if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
                 parameterMatch = True

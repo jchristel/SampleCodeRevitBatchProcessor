@@ -42,6 +42,7 @@ import RevitGroups as rGrp
 import RevitGrids as rGrid
 import RevitLevels as rLev
 import RevitLinks as rLink
+import RevitMEPSystems as rMEP
 import RevitRailings as rRail
 import RevitRamps as rRam
 import RevitRoofs as rRoof
@@ -126,6 +127,10 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildP.
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', rRail.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', rRail.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',rRail.GetAllBalusterSymbolIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', rMEP.GetAllCableTrayTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', rMEP.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', rMEP.GetAllConduitTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', rMEP.GetAllDuctTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Types', rMEP.GetUnUsedPipeTypeIdsToPurge,'Pipe Type(s)','Pipe Type(s)', rMEP.GetAllPipeTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadfamilyTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGrid.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))

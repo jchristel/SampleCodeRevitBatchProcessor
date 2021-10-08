@@ -1,0 +1,379 @@
+#
+#License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# Copyright (c) 2021  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+import clr
+import System
+
+import sys
+sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
+
+import RevitCommonAPI as com
+import RevitFamilyUtils as rFam
+from timer import Timer
+
+# import Autodesk
+from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB.Mechanical import *
+from Autodesk.Revit.DB.Electrical import *
+from Autodesk.Revit.DB.Plumbing import *
+
+
+clr.ImportExtensions(System.Linq)
+
+# -------------------------------------------- common variables --------------------
+# header used in reports
+REPORT_REVITMEPSYSTEMS_HEADER = ['HOSTFILE', 'RevitMEPSystemsTYPEID', 'RevitMEPSystemsTYPENAME']
+
+# duct types are split into three major families
+DUCT_OVAL_FAMILY_NAME = 'Oval Duct'
+DUCT_ROUND_FAMILY_NAME = 'Round Duct'
+DUCT_RECTANGULAR_FAMILY_NAME = 'Rectangular Duct'
+
+# duct major types collection
+BUILTIN_DUCT_TYPE_FAMILY_NAMES = [
+    DUCT_OVAL_FAMILY_NAME,
+    DUCT_ROUND_FAMILY_NAME,
+    DUCT_RECTANGULAR_FAMILY_NAME
+]
+
+# conduits types are split into two major families
+CONDUIT_WITHFITTING_FAMILY_NAME = 'Conduit with Fittings'
+CONDUIT_WITHOUTFITTING_FAMILY_NAME = 'Conduit without Fittings'
+
+# conduit major types collection
+BUILTIN_CONDUIT_TYPE_FAMILY_NAMES = [
+    CONDUIT_WITHFITTING_FAMILY_NAME,
+    CONDUIT_WITHOUTFITTING_FAMILY_NAME
+]
+
+# cable tray types are split into two major families
+CABLETRAY_WITHFITTING_FAMILY_NAME = 'Cable Tray with Fittings'
+CABLETRAY_WITHOUTFITTING_FAMILY_NAME = 'Cable Tray without Fittings'
+
+# cable tray major types collection
+BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES = [
+    CABLETRAY_WITHFITTING_FAMILY_NAME,
+    CABLETRAY_WITHOUTFITTING_FAMILY_NAME
+]
+
+# pipe types exist in one major families
+PIPE_FAMILY_NAME = 'Pipe Types'
+
+# pipes major types collection
+BUILTIN_PIPE_TYPE_FAMILY_NAMES = [
+    PIPE_FAMILY_NAME
+]
+
+# --------------------------------------------- utility functions ------------------
+
+# doc:   current model document
+def GetAllDuctTypesByCategory(doc):
+    """ this will return a filtered element collector of all duct types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DuctCurves).WhereElementIsElementType()
+    return collector
+
+# doc   current model document
+def GetDuctTypesByClass(doc):
+    """ this will return a filtered element collector of all duct types in the model"""
+    return  FilteredElementCollector(doc).OfClass(DuctType)
+
+# doc:   current model document
+def GetAllConduitTypesByCategory(doc):
+    """ this will return a filtered element collector of all conduit types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Conduit).WhereElementIsElementType()
+    return collector
+
+# doc   current model document
+def GetConduitTypesByClass(doc):
+    """ this will return a filtered element collector of all conduit types in the model"""
+    return  FilteredElementCollector(doc).OfClass(ConduitType)
+
+# doc:   current model document
+def GetAllCableTrayTypesByCategory(doc):
+    """ this will return a filtered element collector of all cable tray types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CableTray).WhereElementIsElementType()
+    return collector
+
+# doc   current model document
+def GetCableTrayTypesByClass(doc):
+    """ this will return a filtered element collector of all cable tray types in the model"""
+    return  FilteredElementCollector(doc).OfClass(CableTrayType)
+
+# doc:   current model document
+def GetAllPipeTypesByCategory(doc):
+    """ this will return a filtered element collector of all pipe types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_PipeCurves).WhereElementIsElementType()
+    return collector
+
+# doc   current model document
+def GetPipeTypesByClass(doc):
+    """ this will return a filtered element collector of all pipe types in the model"""
+    return  FilteredElementCollector(doc).OfClass(PipeType)
+
+# -------------------------------- family instances -------------------------------------------------------
+
+# TODO check these actually work...
+
+# doc   current model document
+def GetAllDuctInstancesInModelByCategory(doc):
+    """ returns all Duct elements placed in model by category..."""
+    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DuctCurves).WhereElementIsNotElementType()
+    
+# doc   current model document
+def GetAllDuctInstancesInModelByClass(doc):
+    """ returns all duct elements placed in model by class...ignores in place"""
+    return FilteredElementCollector(doc).OfClass(DuctType).WhereElementIsNotElementType()
+
+# doc:   current model document
+def GetAllConduitInstancesByCategory(doc):
+    """ this will return a filtered element collector of all conduit instances in the model by category"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Conduit).WhereElementIsNotElementType()
+    return collector
+
+# doc   current model document
+def GetConduitInstancesByClass(doc):
+    """ this will return a filtered element collector of all conduit instances in the model by class"""
+    return  FilteredElementCollector(doc).OfClass(ConduitType).WhereElementIsNotElementType()
+
+# doc:   current model document
+def GetAllCableTrayInstancesByCategory(doc):
+    """ this will return a filtered element collector of all cable tray instances in the model by category"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CableTray).WhereElementIsNotElementType()
+    return collector
+
+# doc   current model document
+def GetCableTrayInstancesByClass(doc):
+    """ this will return a filtered element collector of all cable tray instances in the model by class"""
+    return  FilteredElementCollector(doc).OfClass(CableTrayType).WhereElementIsNotElementType()
+
+# doc:   current model document
+def GetAllPipeInstancesByCategory(doc):
+    """ this will return a filtered element collector of all pipe instances in the model by category"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_PipeCurves).WhereElementIsNotElementType()
+    return collector
+
+# doc   current model document
+def GetPipeInstancesByClass(doc):
+    """ this will return a filtered element collector of all pipe instances in the model by class"""
+    return  FilteredElementCollector(doc).OfClass(PipeType).WhereElementIsNotElementType()
+
+# -------------------------------- MEP system types -------------------------------------------------------
+
+# doc   current model document
+def GetAllDuctTypeIdsInModelByCategory(doc):
+    """ returns all Duct element types available placed in model """
+    ids = []
+    colCat = GetAllDuctTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector (colCat)
+    return ids
+
+# doc   current model document
+def GetAllDuctTypeIdsInModelByClass(doc):
+    """ returns all Duct element types available placed in model """
+    ids = []
+    colClass = GetDuctTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector(colClass)
+    return ids
+
+# doc   current model document
+def GetAllConduitTypeIdsInModelByCategory(doc):
+    """ returns all conduit element types available placed in model """
+    ids = []
+    colCat = GetAllConduitTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector (colCat)
+    return ids
+
+# doc   current model document
+def GetAllConduitTypeIdsInModelByClass(doc):
+    """ returns all conduit element types available placed in model """
+    ids = []
+    colClass = GetConduitTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllCableTrayTypeIdsInModelByCategory(doc):
+    """ returns all cable tray element types available placed in model """
+    ids = []
+    colCat = GetAllCableTrayTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector (colCat)
+    return ids
+
+# doc   current model document
+def GetAllCableTrayTypeIdsInModelByClass(doc):
+    """ returns all cable tray element types available placed in model """
+    ids = []
+    colClass = GetCableTrayTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current model document
+def GetAllPipeTypeIdsInModelByCategory(doc):
+    """ returns all pipe element types available placed in model """
+    ids = []
+    colCat = GetAllPipeTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector (colCat)
+    return ids
+
+# doc   current model document
+def GetAllPipeTypeIdsInModelByClass(doc):
+    """ returns all pipe element types available placed in model """
+    ids = []
+    colClass = GetPipeTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector (colClass)
+    return ids
+
+# doc   current document
+def GetUsedDuctTypeIds(doc):
+    """ returns all used in duct type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllDuctTypeIdsInModelByCategory, 1)
+    return ids
+
+# doc   current document
+def GetUsedConduitTypeIds(doc):
+    """ returns all used in conduit type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllConduitTypeIdsInModelByCategory, 1)
+    return ids
+
+# doc   current document
+def GetUsedCableTrayTypeIds(doc):
+    """ returns all used in cable tray type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCableTrayTypeIdsInModelByCategory, 1)
+    return ids
+
+# doc   current document
+def GetUsedPipeTypeIds(doc):
+    """ returns all used in pipe type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllPipeTypeIdsInModelByCategory, 1)
+    return ids
+
+# doc   current document
+def GetUnUsedDuctTypeIds(doc):
+    """ returns all unused in duct type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllDuctTypeIdsInModelByCategory, 0)
+    return ids
+
+# doc   current document
+def GetUnUsedConduitTypeIds(doc):
+    """ returns all unused in conduit type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllConduitTypeIdsInModelByCategory, 0)
+    return ids
+
+# doc   current document
+def GetUnUsedCableTrayTypeIds(doc):
+    """ returns all unused in cable tray type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCableTrayTypeIdsInModelByCategory, 0)
+    return ids
+
+# doc   current document
+def GetUnUsedPipeTypeIds(doc):
+    """ returns all unused in pipe type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllPipeTypeIdsInModelByCategory, 0)
+    return ids
+
+
+# -------------------------------- purge MEP system types -------------------------------------------------------
+
+# famTypeIds        symbol(type) ids of a family
+# usedTypeIds       symbol(type) ids in use in a project
+def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+    """ returns false if any symbols (types) of a family are in use in a model"""
+    match = True
+    for famTypeId in famTypeIds:
+        if (famTypeId not in unUsedTypeIds):
+            match = False
+            break
+    return match
+
+# collector   fltered element collector containing system type elments 
+# dic         dictionary containing key: system type family name, value: list of ids
+def BuildTypeDictionary(collector, dic):
+    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    for c in collector:
+        if(dic.has_key(c.FamilyName)):
+            # todo : check WallKind Enum???
+            if(c.Id not in dic[c.FamilyName]):
+                dic[c.FamilyName].append(c.Id)
+        else:
+            dic[c.FamilyName] = [c.Id]
+    return dic
+
+# doc   current model document
+def SortTypesByFamilyName(doc, typeGetter):
+    # get all Wall Type Elements
+    wts = typeGetter(doc)
+    usedWts = {}
+    usedWts = BuildTypeDictionary(wts, usedWts)
+    return usedWts
+
+# doc                   current model document
+# allTypeIDGetter       gets all available system type ids as a collector
+# allTypesGetter        gets all available system types as a collector
+# builtInFamilyTypeNames    list containing alll available major type(families?) names
+def GetUnUsedMEPSystemTypeIdsToPurge(doc, allTypeIDGetter, allTypesGetter, builtInFamilyTypeNames):
+    """returns ids of unsued system types. Takes into accounts whether they belong to a major category and how many are left
+    (leaves on behind) since the last one cannot be purged"""
+    ids = com.GetUsedUnusedTypeIds(doc, allTypeIDGetter, 0)
+    # make sure there is at least on Stair type per system family left in model
+    types = SortTypesByFamilyName(doc, allTypesGetter)
+    for key, value in types.items():
+        if(key in builtInFamilyTypeNames ):
+            if(FamilyNoTypesInUse(value,ids) == True):
+                # remove one type of this system family from unused list
+                ids.remove(value[0])
+    return ids
+
+
+# doc   current document
+def GetUnUsedDuctTypeIdsToPurge(doc):
+    """ returns all unused in duct type ids. Note there are three major types:
+    - Rectangular Duct
+    - Round Duct
+    - Oval Duct"""
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc,GetAllDuctTypeIdsInModelByCategory, GetAllDuctTypesByCategory, BUILTIN_DUCT_TYPE_FAMILY_NAMES)
+    return ids
+
+# doc   current document
+def GetUnUsedConduitTypeIdsToPurge(doc):
+    """ returns all unused in conduit type ids. Note there are two major types:
+    - Conduit with Fittings
+    - Conduit without Fittings"""
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllConduitTypeIdsInModelByCategory, GetAllConduitTypesByCategory, BUILTIN_CONDUIT_TYPE_FAMILY_NAMES)
+    return ids
+
+# doc   current document
+def GetUnUsedCableTrayTypeIdsToPurge(doc):
+    """ returns all unused in cable tray type ids. Note there are two major types:
+    - Cable Tray with Fittings
+    - Cable Tray without Fittings"""
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllCableTrayTypeIdsInModelByCategory, GetAllCableTrayTypesByCategory, BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES)
+    return ids
+
+# doc   current document
+def GetUnUsedPipeTypeIdsToPurge(doc):
+    """ returns all unused in pipe type ids."""
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllPipeTypeIdsInModelByCategory, GetAllPipeTypesByCategory, BUILTIN_PIPE_TYPE_FAMILY_NAMES)
+    return ids
+
+
+# --------------------------------

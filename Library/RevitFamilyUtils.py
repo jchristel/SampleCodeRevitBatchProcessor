@@ -71,18 +71,18 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
 # ---------------- preset builtin category lists of categories which represent loadable families used in filtering
 
 catsLoadableThreeD = List[BuiltInCategory] ([
-    BuiltInCategory.OST_CableTrayFitting,
+    #BuiltInCategory.OST_CableTrayFitting,  purged else where
     BuiltInCategory.OST_Casework,
     BuiltInCategory.OST_Columns,
     BuiltInCategory.OST_CommunicationDevices,
-    BuiltInCategory.OST_ConduitFitting,
+    # BuiltInCategory.OST_ConduitFitting,  purged else where
     # BuiltInCategory.OST_CurtainWallPanels, purged else where
     BuiltInCategory.OST_DataDevices,
     # BuiltInCategory.OST_DetailComponents, purged else where
     BuiltInCategory.OST_Doors,
-    BuiltInCategory.OST_DuctAccessory,
-    BuiltInCategory.OST_DuctTerminal,
-    BuiltInCategory.OST_DuctFitting,
+    #BuiltInCategory.OST_DuctAccessory,  purged else where
+    #BuiltInCategory.OST_DuctTerminal, purged else where
+    #BuiltInCategory.OST_DuctFitting,  purged else where
     BuiltInCategory.OST_ElectricalEquipment,
     BuiltInCategory.OST_ElectricalFixtures,
     BuiltInCategory.OST_Entourage,
@@ -95,8 +95,8 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_MechanicalEquipment,
     BuiltInCategory.OST_NurseCallDevices,
     BuiltInCategory.OST_Parking,
-    BuiltInCategory.OST_PipeAccessory,
-    BuiltInCategory.OST_PipeFitting,
+    #BuiltInCategory.OST_PipeAccessory,  purged else where
+    #BuiltInCategory.OST_PipeFitting,  purged else where
     BuiltInCategory.OST_Planting,
     BuiltInCategory.OST_PlumbingFixtures,
     #BuiltInCategory.OST_ProfileFamilies, #purged elsewhere

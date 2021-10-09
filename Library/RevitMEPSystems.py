@@ -23,6 +23,7 @@
 
 import clr
 import System
+from System.Collections.Generic import List
 
 import sys
 sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
@@ -85,6 +86,17 @@ BUILTIN_PIPE_TYPE_FAMILY_NAMES = [
 ]
 
 # --------------------------------------------- utility functions ------------------
+
+# listSource    list to be added to
+# listMerge     list containing new values to be added to listSource
+def MergeIntoUniquList(listSource, listMerge):
+    '''merges the second list into the first by adding elements from second list which are not already in first list'''
+    for i in listMerge:
+        if (i not in listSource):
+            listSource.append(i)
+    return listSource
+
+# --------------------------------------------- system utility functions ------------------
 
 # doc:   current model document
 def GetAllDuctTypesByCategory(doc):
@@ -375,5 +387,302 @@ def GetUnUsedPipeTypeIdsToPurge(doc):
     ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllPipeTypeIdsInModelByCategory, GetAllPipeTypesByCategory, BUILTIN_PIPE_TYPE_FAMILY_NAMES)
     return ids
 
+# -------------------------------- loaded families which can be used in system types --------------------------------
 
-# --------------------------------
+"""properties of system types which can use symbols:
+Cross
+Elbow
+MultiShapeTransition
+Tap
+Tee
+Transition
+Union
+"""
+# loadable family categories for duct related elements
+CATS_LOADABLE_DUCSTS = List[BuiltInCategory] ([
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+])
+
+# loadable family categories for cable tray related elements
+CATS_LOADABLE_CABLETRAYS = List[BuiltInCategory] ([
+    BuiltInCategory.OST_CableTrayFitting
+])
+
+# loadable family categories for conduit related elements
+CATS_LOADABLE_CONDUITS = List[BuiltInCategory] ([
+    BuiltInCategory.OST_ConduitFitting
+])
+
+# loadable family categories for pipe related elements
+CATS_LOADABLE_PIPES = List[BuiltInCategory] ([
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting
+])
+
+# doc   current document
+# systemTypeId      MEP systemt type id (pipe, conduit, duct, cable tray)
+def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
+    """returns list of unique symobol ids used in system type properties:
+    - Cross
+    - Elbow
+    - MultiShapeTransition
+    - Tap
+    - Tee
+    - Transition
+    - Union
+    """
+    ids = []
+    el = doc.GetElement(systemTypeId)
+    try:
+        unfilteredElements = [el.Cross, el.Elbow, el.MultiShapeTransition, el.Tap, el.Tee, el.Transition, el.Union]
+        for unfilteredel in unfilteredElements:
+            if (unfilteredel != None):
+                if (unfilteredel.Id != ElementId.InvalidElementId and unfilteredel.Id not in ids):
+                    ids.append(unfilteredel.Id)
+    except Exception as ex:
+        print('System type get used symbol ids threw exception: '+ str(ex))
+    return ids
+
+# doc   current document
+# systemTypeId      list of MEP systemt type id (pipe, conduit, duct, cable tray)
+def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
+    """returns list of unique symobol ids used in system type properties:
+    - Cross
+    - Elbow
+    - MultiShapeTransition
+    - Tap
+    - Tee
+    - Transition
+    - Union
+    """
+    ids = []
+    for systemTypeId in systemTypeIds:
+        idsUnfiltered = GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId)
+        ids = MergeIntoUniquList(ids, idsUnfiltered)
+    return ids
+
+# doc   current document
+def GetSymbolIdsUsedInDuctTypes(doc):
+    """returns list of unique symobol ids used in system type properties of duct types"""
+    ids = []
+    tyeIds = GetAllDuctTypeIdsInModelByCategory(doc)
+    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    return ids
+
+# doc   current document
+def GetSymbolIdsUsedInConduitTypes(doc):
+    """returns list of unique symobol ids used in system type properties of conduit types"""
+    ids = []
+    tyeIds = GetAllConduitTypeIdsInModelByCategory(doc)
+    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    return ids
+
+# doc   current document
+def GetSymbolIdsUsedInCableTrayTypes(doc):
+    """returns list of unique symobol ids used in system type properties of cable tray types"""
+    ids = []
+    tyeIds = GetAllCableTrayTypeIdsInModelByCategory(doc)
+    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    return ids
+
+# doc   current document
+def GetSymbolIdsUsedInPipeTypes(doc):
+    """returns list of unique symobol ids used in system type properties of pipe types"""
+    ids = []
+    tyeIds = GetAllPipeTypeIdsInModelByCategory(doc)
+    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    return ids
+
+# doc   current document
+# catgeoryList      built incategories belonging to an MEP system type
+# systemTypeName       used in exception message to identify the mep system
+def GetSymbolIdsForMEPSystemTypes(doc, catgeoryList, systemTypeName):
+    """returns list of symbol ids used in system types"""
+    ids = []
+    try:
+        multiCatFilter = ElementMulticategoryFilter(catgeoryList)
+        col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
+        ids = com.GetIdsFromElementCollector (col)
+    except Exception as ex:
+        print (systemTypeName+ ' threw exception: ' + str(ex))
+    return ids
+
+# doc   current document
+def GetSymbolIdsForDuctTypesInModel(doc):
+    """returns list of symobol ids of the following categories:
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+    """
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCSTS, 'GetSymbolIdsForDuctTypes')
+    return ids
+
+# doc   current document
+def GetSymbolIdsForCableTrayTypesInModel(doc):
+    """returns list of symobol ids of the following categories:
+    BuiltInCategory.OST_CableTrayFitting
+    """
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CABLETRAYS, 'GetSymbolIdsForCableTrayTypes')
+    return ids
+
+# doc   current document
+def GetSymbolIdsForConduitTypesInModel(doc):
+    """returns list of symobol ids of the following categories:
+    BuiltInCategory.OST_ConduitFitting
+    """
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CONDUITS, 'GetSymbolIdsForConduitTypes')
+    return ids
+
+# doc   current document
+def GetSymbolIdsForPipeTypesInModel(doc):
+    """returns list of symobol ids of the following categories:
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting
+    """
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_PIPES, 'GetSymbolIdsForPipeTypes')
+    return ids
+
+# -------------------------------- purge loaded families which can be used in system types --------------------------------
+
+# doc   current document
+def GetUsedDuctSymbolIds(doc):
+    """ returns all used duct symbol ids of categories
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+    """
+    ids = []
+    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
+    idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
+    ids = MergeIntoUniquList(ids, idsInModel)
+    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    return ids
+
+# doc   current document
+def GetUnUsedDuctSymbolIds(doc):
+    """ returns all unused duct symbol ids of categories
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+    """
+    ids = []
+    idsUsed = GetUsedDuctSymbolIds(doc)
+    idsAvailable = GetSymbolIdsForDuctTypesInModel(doc)
+    for id in idsAvailable:
+        if (id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedDuctSymbolIdsForPurge(doc):
+    """get all un used duct symbol ids of categories
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+    """
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctSymbolIds)
+    return ids
+
+# doc   current document
+def GetUsedCableTraySymbolIds(doc):
+    """ returns all used duct symbol ids of categories
+    BuiltInCategory.OST_CableTrayFitting
+    """
+    ids = []
+    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
+    idsUsedInTypes = GetSymbolIdsUsedInCableTrayTypes(doc)
+    ids = MergeIntoUniquList(ids, idsInModel)
+    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    return ids
+
+# doc   current document
+def GetUnUsedCableTraySymbolIds(doc):
+    """ returns all unused duct symbol ids of categories
+    BuiltInCategory.OST_CableTrayFitting
+    """
+    ids = []
+    idsUsed = GetUsedCableTraySymbolIds(doc)
+    idsAvailable = GetSymbolIdsForCableTrayTypesInModel(doc)
+    for id in idsAvailable:
+        if (id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedCableTraySymbolIdsForPurge(doc):
+    """get all un used duct symbol ids of categories
+    BuiltInCategory.OST_CableTrayFitting
+    """
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedCableTraySymbolIds)
+    return ids
+
+# doc   current document
+def GetUsedConduitSymbolIds(doc):
+    """ returns all used conduit symbol ids of categories
+    BuiltInCategory.OST_ConduitFitting
+    """
+    ids = []
+    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForConduitTypesInModel, 1)
+    idsUsedInTypes = GetSymbolIdsUsedInConduitTypes(doc)
+    ids = MergeIntoUniquList(ids, idsInModel)
+    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    return ids
+
+# doc   current document
+def GetUnUsedConduitSymbolIds(doc):
+    """ returns all unused conduit symbol ids of categories
+    BuiltInCategory.OST_ConduitFitting
+    """
+    ids = []
+    idsUsed = GetUsedConduitSymbolIds(doc)
+    idsAvailable = GetSymbolIdsForConduitTypesInModel(doc)
+    for id in idsAvailable:
+        if (id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedConduitSymbolIdsForPurge(doc):
+    """get all un used conduit symbol ids of categories
+    BuiltInCategory.OST_ConduitFitting
+    """
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedConduitSymbolIds)
+    return ids
+
+# doc   current document
+def GetUsedPipeSymbolIds(doc):
+    """ returns all used pipe symbol ids of categories
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting
+    """
+    ids = []
+    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForPipeTypesInModel, 1)
+    idsUsedInTypes = GetSymbolIdsUsedInPipeTypes(doc)
+    ids = MergeIntoUniquList(ids, idsInModel)
+    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    return ids
+
+# doc   current document
+def GetUnUsedPipeSymbolIds(doc):
+    """ returns all unused pipe symbol ids of categories
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting
+    """
+    ids = []
+    idsUsed = GetUsedPipeSymbolIds(doc)
+    idsAvailable = GetSymbolIdsForPipeTypesInModel(doc)
+    for id in idsAvailable:
+        if (id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedPipeSymbolIdsForPurge(doc):
+    """get all un used pipe symbol ids of categories
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting
+    """
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedPipeSymbolIds)
+    return ids

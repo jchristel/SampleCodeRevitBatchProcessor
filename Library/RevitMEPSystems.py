@@ -57,6 +57,16 @@ BUILTIN_DUCT_TYPE_FAMILY_NAMES = [
     DUCT_RECTANGULAR_FAMILY_NAME
 ]
 
+# flex duct types are split into three major families
+FLEX_DUCT_REC_FAMILY_NAME = 'Flex Duct Rectangular'
+FLEX_DUCT_ROUND_FAMILY_NAME = 'Flex Duct Round'
+
+# flex duct major types collection
+BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES = [
+    FLEX_DUCT_REC_FAMILY_NAME,
+    FLEX_DUCT_ROUND_FAMILY_NAME
+]
+
 # conduits types are split into two major families
 CONDUIT_WITHFITTING_FAMILY_NAME = 'Conduit with Fittings'
 CONDUIT_WITHOUTFITTING_FAMILY_NAME = 'Conduit without Fittings'
@@ -110,6 +120,17 @@ def GetDuctTypesByClass(doc):
     return  FilteredElementCollector(doc).OfClass(DuctType)
 
 # doc:   current model document
+def GetAllFlexDuctTypesByCategory(doc):
+    """ this will return a filtered element collector of all flex duct types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_FlexDuctCurves).WhereElementIsElementType()
+    return collector
+
+# doc   current model document
+def GetFlexDuctTypesByClass(doc):
+    """ this will return a filtered element collector of all flex duct types in the model"""
+    return  FilteredElementCollector(doc).OfClass(FlexDuctType)
+
+# doc:   current model document
 def GetAllConduitTypesByCategory(doc):
     """ this will return a filtered element collector of all conduit types in the model"""
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Conduit).WhereElementIsElementType()
@@ -142,7 +163,7 @@ def GetPipeTypesByClass(doc):
     """ this will return a filtered element collector of all pipe types in the model"""
     return  FilteredElementCollector(doc).OfClass(PipeType)
 
-# -------------------------------- family instances -------------------------------------------------------
+# -------------------------------- none in place instances -------------------------------------------------------
 
 # TODO check these actually work...
 
@@ -155,6 +176,16 @@ def GetAllDuctInstancesInModelByCategory(doc):
 def GetAllDuctInstancesInModelByClass(doc):
     """ returns all duct elements placed in model by class...ignores in place"""
     return FilteredElementCollector(doc).OfClass(DuctType).WhereElementIsNotElementType()
+
+# doc   current model document
+def GetAllFlexDuctInstancesInModelByCategory(doc):
+    """ returns all flex flex Duct elements placed in model by category..."""
+    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_FlexDuctCurves).WhereElementIsNotElementType()
+    
+# doc   current model document
+def GetAllFlexDuctInstancesInModelByClass(doc):
+    """ returns all flex duct elements placed in model by class...ignores in place"""
+    return FilteredElementCollector(doc).OfClass(FlexDuctType).WhereElementIsNotElementType()
 
 # doc:   current model document
 def GetAllConduitInstancesByCategory(doc):
@@ -204,6 +235,22 @@ def GetAllDuctTypeIdsInModelByClass(doc):
     """ returns all Duct element types available placed in model """
     ids = []
     colClass = GetDuctTypesByClass(doc)
+    ids = com.GetIdsFromElementCollector(colClass)
+    return ids
+
+# doc   current model document
+def GetAllFlexDuctTypeIdsInModelByCategory(doc):
+    """ returns all flex Duct element types available placed in model """
+    ids = []
+    colCat = GetAllFlexDuctTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector (colCat)
+    return ids
+
+# doc   current model document
+def GetAllFlexDuctTypeIdsInModelByClass(doc):
+    """ returns all flex Duct element types available placed in model """
+    ids = []
+    colClass = GetFlexDuctTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
@@ -262,6 +309,12 @@ def GetUsedDuctTypeIds(doc):
     return ids
 
 # doc   current document
+def GetUsedFlexDuctTypeIds(doc):
+    """ returns all used in flex duct type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllFlexDuctTypeIdsInModelByCategory, 1)
+    return ids
+
+# doc   current document
 def GetUsedConduitTypeIds(doc):
     """ returns all used in conduit type ids """
     ids = com.GetUsedUnusedTypeIds(doc, GetAllConduitTypeIdsInModelByCategory, 1)
@@ -283,6 +336,12 @@ def GetUsedPipeTypeIds(doc):
 def GetUnUsedDuctTypeIds(doc):
     """ returns all unused in duct type ids """
     ids = com.GetUsedUnusedTypeIds(doc, GetAllDuctTypeIdsInModelByCategory, 0)
+    return ids
+
+# doc   current document
+def GetUnUsedFlexDuctTypeIds(doc):
+    """ returns all unused in flex duct type ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllFlexDuctTypeIdsInModelByCategory, 0)
     return ids
 
 # doc   current document
@@ -366,6 +425,14 @@ def GetUnUsedDuctTypeIdsToPurge(doc):
     return ids
 
 # doc   current document
+def GetUnUsedFlexDuctTypeIdsToPurge(doc):
+    """ returns all unused in flex duct type ids. Note there are two major types:
+    - Rectangular flex Duct
+    - Round flex Duct"""
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc,GetAllFlexDuctTypeIdsInModelByCategory, GetAllFlexDuctTypesByCategory, BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES)
+    return ids
+
+# doc   current document
 def GetUnUsedConduitTypeIdsToPurge(doc):
     """ returns all unused in conduit type ids. Note there are two major types:
     - Conduit with Fittings
@@ -387,9 +454,10 @@ def GetUnUsedPipeTypeIdsToPurge(doc):
     ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllPipeTypeIdsInModelByCategory, GetAllPipeTypesByCategory, BUILTIN_PIPE_TYPE_FAMILY_NAMES)
     return ids
 
+
 # -------------------------------- loaded families which can be used in system types --------------------------------
 
-"""properties of system types which can use symbols:
+"""properties of system types which can use symbols: (note: RoutingPreferenceManager may contain multiple rules per connection type!)
 Cross
 Elbow
 MultiShapeTransition
@@ -421,6 +489,20 @@ CATS_LOADABLE_PIPES = List[BuiltInCategory] ([
     BuiltInCategory.OST_PipeFitting
 ])
 
+ROUTING_PREF_RULE_GROUP_TYPES = [
+  RoutingPreferenceRuleGroupType.Segments,
+  RoutingPreferenceRuleGroupType.Elbows,
+  RoutingPreferenceRuleGroupType.Junctions,
+  RoutingPreferenceRuleGroupType.Crosses,
+  RoutingPreferenceRuleGroupType.Transitions,
+  RoutingPreferenceRuleGroupType.Unions,
+  RoutingPreferenceRuleGroupType.MechanicalJoints,
+  RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,
+  RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,
+  RoutingPreferenceRuleGroupType.TransitionsOvalToRound,
+  RoutingPreferenceRuleGroupType.Caps
+]
+
 # doc   current document
 # systemTypeId      MEP systemt type id (pipe, conduit, duct, cable tray)
 def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
@@ -441,6 +523,20 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
             if (unfilteredel != None):
                 if (unfilteredel.Id != ElementId.InvalidElementId and unfilteredel.Id not in ids):
                     ids.append(unfilteredel.Id)
+        #check if there is a RoutingPreferenceManager object...it may have some more symbols in its rules
+        if(el.RoutingPreferenceManager != None):
+            # routing manager got a list RoutingReferencerule objects
+            # each of those got a 	MEPPartId property which is what we are after
+            rpm = el.RoutingPreferenceManager
+            for group in ROUTING_PREF_RULE_GROUP_TYPES:
+                # loop over RoutingPreferenceRuleGroupTypes!
+                numberOfRules = rpm.GetNumberOfRules(group)
+                for i in range(numberOfRules):
+                    rule = rpm.GetRule(group, i)
+                    if rule.MEPPartId not in ids:
+                        ids.append(rule.MEPPartId)
+            
+            
     except Exception as ex:
         print('System type get used symbol ids threw exception: '+ str(ex))
     return ids
@@ -463,11 +559,21 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
         ids = MergeIntoUniquList(ids, idsUnfiltered)
     return ids
 
+# --------------------------------------- symbols used in MEP system types -------------------------------
+
 # doc   current document
 def GetSymbolIdsUsedInDuctTypes(doc):
     """returns list of unique symobol ids used in system type properties of duct types"""
     ids = []
     tyeIds = GetAllDuctTypeIdsInModelByCategory(doc)
+    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    return ids
+
+# doc   current document
+def GetSymbolIdsUsedInFlexDuctTypes(doc):
+    """returns list of unique symobol ids used in system type properties of flex duct types"""
+    ids = []
+    tyeIds = GetAllFlexDuctTypeIdsInModelByCategory(doc)
     ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
     return ids
 
@@ -495,6 +601,8 @@ def GetSymbolIdsUsedInPipeTypes(doc):
     ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
     return ids
 
+# --------------------------------------- symbols available in model -------------------------------
+
 # doc   current document
 # catgeoryList      built incategories belonging to an MEP system type
 # systemTypeName       used in exception message to identify the mep system
@@ -516,6 +624,16 @@ def GetSymbolIdsForDuctTypesInModel(doc):
     BuiltInCategory.OST_DuctTerminal,
     BuiltInCategory.OST_DuctFitting
     """
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCSTS, 'GetSymbolIdsForDuctTypes')
+    return ids
+
+# doc   current document
+def GetSymbolIdsForFlexDuctTypesInModel(doc):
+    """returns list of symobol ids of the following categories:
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting
+    (same as duct)"""
     ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCSTS, 'GetSymbolIdsForDuctTypes')
     return ids
 
@@ -547,7 +665,7 @@ def GetSymbolIdsForPipeTypesInModel(doc):
 # -------------------------------- purge loaded families which can be used in system types --------------------------------
 
 # doc   current document
-def GetUsedDuctSymbolIds(doc):
+def GetUsedDuctAndFlexDuctSymbolIds(doc):
     """ returns all used duct symbol ids of categories
     BuiltInCategory.OST_DuctAccessory,
     BuiltInCategory.OST_DuctTerminal,
@@ -556,19 +674,21 @@ def GetUsedDuctSymbolIds(doc):
     ids = []
     idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
+    idsUsedInFlexTypes = GetSymbolIdsUsedInFlexDuctTypes(doc)
     ids = MergeIntoUniquList(ids, idsInModel)
     ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    ids = MergeIntoUniquList(ids, idsUsedInFlexTypes)
     return ids
 
 # doc   current document
-def GetUnUsedDuctSymbolIds(doc):
+def GetUnUsedDuctAndFlexDuctSymbolIds(doc):
     """ returns all unused duct symbol ids of categories
     BuiltInCategory.OST_DuctAccessory,
     BuiltInCategory.OST_DuctTerminal,
     BuiltInCategory.OST_DuctFitting
     """
     ids = []
-    idsUsed = GetUsedDuctSymbolIds(doc)
+    idsUsed = GetUsedDuctAndFlexDuctSymbolIds(doc)
     idsAvailable = GetSymbolIdsForDuctTypesInModel(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
@@ -576,13 +696,13 @@ def GetUnUsedDuctSymbolIds(doc):
     return ids
 
 # doc   current document
-def GetUnUsedDuctSymbolIdsForPurge(doc):
+def GetUnUsedDuctAndFlexDuctSymbolIdsForPurge(doc):
     """get all un used duct symbol ids of categories
     BuiltInCategory.OST_DuctAccessory,
     BuiltInCategory.OST_DuctTerminal,
     BuiltInCategory.OST_DuctFitting
     """
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctSymbolIds)
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
     return ids
 
 # doc   current document

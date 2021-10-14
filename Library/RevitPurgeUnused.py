@@ -78,7 +78,7 @@ def PurgeUnplacedElements (doc,
         if(isDebug):
             unusedElementNames.append(unUsedElementNameHeader)
             for unusedId in unusedElementIds:
-                unusedElementNames.append(SPACER + Element.Name.GetValue(doc.GetElement(unusedId)))
+                unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ Element.Name.GetValue(doc.GetElement(unusedId)))
         else:
             unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
         purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
@@ -127,13 +127,13 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildP.
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', rRail.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', rRail.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',rRail.GetAllBalusterSymbolIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', rMEP.GetAllCableTrayTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', rMEP.GetUnUsedCableTrayTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', rMEP.GetAllCableTrayTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', rMEP.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', rMEP.GetAllConduitTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', rMEP.GetAllDuctTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Types', rMEP.GetUnUsedPipeTypeIdsToPurge,'Pipe Type(s)','Pipe Type(s)', rMEP.GetAllPipeTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Symbols and Families', rMEP.GetUnUsedCableTraySymbolIdsForPurge,'Cable Tray Symbols and Familie(s)','Cable Tray Symbols and Familie(s)', rMEP.GetSymbolIdsForCableTrayTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Symbols and Families', rMEP.GetUnUsedConduitSymbolIdsForPurge,'Conduit Symbols and Familie(s)','Conduit Symbols and Familie(s)', rMEP.GetSymbolIdsForConduitTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', rMEP.GetUnUsedDuctSymbolIdsForPurge,'Duct Symbols and Familie(s)','Duct Symbols and Familie(s)', rMEP.GetSymbolIdsForDuctTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', rMEP.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge,'Duct Symbols and Familie(s)','Duct Symbols and Familie(s)', rMEP.GetSymbolIdsForDuctTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', rMEP.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Familie(s)','Pipe Symbols and Familie(s)', rMEP.GetSymbolIdsForPipeTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadfamilyTypeIds))

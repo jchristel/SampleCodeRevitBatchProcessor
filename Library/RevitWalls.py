@@ -251,6 +251,8 @@ def GetUsedBasicWallTypeIds(doc):
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
     """ returns type ids off all unused basic wall types, will leave one behind if none is used"""
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
+    # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
+    # argh GetStackedWallMemberIds() is only available on wall element but not walltype. Why?
     availableTypeCount = len(GetAllBasicWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)

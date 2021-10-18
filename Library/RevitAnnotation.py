@@ -27,6 +27,7 @@ import System
 import RevitCommonAPI as com
 import Result as res
 import Utility as util
+import RevitFamilyUtils as rFam
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -203,8 +204,10 @@ ARROWHEAD_PARAS_TEXT = [
 ]
 
 # list of built in parameters attached to spot dims containing arrow head ids
+# and symbols used
 ARROWHEAD_PARAS_SPOT_DIMS = [
-    BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD
+    BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
+    BuiltInParameter.SPOT_ELEV_SYMBOL
 ]
 
 # list of built in parameters attached to stair path types containing arrow head ids
@@ -394,4 +397,46 @@ def GetSymbolIdsFromSpotTypes(doc):
                 if(id not in ids and id != ElementId.InvalidElementId):
                     ids.append(id)
                 break
+    return ids
+
+# doc   current model document
+def GetAllSpotElevationSymbolsInModel(doc):
+    '''returns all symbol of category Spot Elevation Symbol in model'''
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_SpotElevSymbols)
+    return col
+
+# doc   current model document
+def GetAllSpotElevationSymbolIdsInModel(doc):
+    '''returns all symbol of category Spot Elevation Symbol in model'''
+    col = GetAllSpotElevationSymbolsInModel(doc)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
+# doc   current model document
+def GetUnusedSymbolIdsFromSpotTypes(doc):
+    '''returns all symbol ids not used as symbol from all spot elevation and coordinate'''
+    ids = []
+    idsUsed = []
+    idsAvailable = GetAllSpotElevationSymbolIdsInModel(doc)
+    dimTs = GetAllSpotDimTypes(doc)
+    for t in dimTs:
+        paras = t.GetOrderedParameters()
+        for p in paras:
+            if (p.Definition.BuiltInParameter == BuiltInParameter.SPOT_ELEV_SYMBOL):
+                id = com.getParameterValue(p)
+                if(id not in idsUsed and id != ElementId.InvalidElementId):
+                    idsUsed.append(id)
+                break
+    # get unused ids
+    for id in idsAvailable:
+        if(id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current model document
+def GetUnusedSymbolIdsFromSpotTypesToPurge(doc):
+    """get all un used symbol ids of category
+    BuiltInCategory.OST_SpotElevSymbols
+    """
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedSymbolIdsFromSpotTypes)
     return ids

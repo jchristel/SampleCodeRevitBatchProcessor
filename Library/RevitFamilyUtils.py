@@ -180,7 +180,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_SitePropertyLineSegmentTags,
     BuiltInCategory.OST_SitePropertyTags,
     BuiltInCategory.OST_SpecialityEquipmentTags,
-    BuiltInCategory.OST_SpotElevSymbols,
+    #BuiltInCategory.OST_SpotElevSymbols, #purged elsewhere
     BuiltInCategory.OST_SprinklerTags,
     BuiltInCategory.OST_StairsLandingTags,
     BuiltInCategory.OST_StairsRailingTags,

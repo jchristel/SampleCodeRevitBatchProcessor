@@ -91,7 +91,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.Set(newId)
-                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -108,7 +108,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.SetValueString(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -119,7 +119,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.Set(int(valueAsString))
-                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue

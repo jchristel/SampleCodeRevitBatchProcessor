@@ -68,11 +68,32 @@ def GetLocalAppDataPath():
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
+# folderPath        folder path from which to get files
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
+def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
+    '''Get files from a folder filtered by file prefix, file suffix, file extension '''
+    fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
+    return fileList
+
+# path      root directory to start fiel search in
+# filter    file name must contain filter value
+def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
+    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    filesFound = []
+    for root, dirs, files in os.walk(folderPath):
+        for name in files:
+            fileName = GetFileNameWithoutExt(name)
+            if (name.endswith(fileExtension) and fileName.startswith(filePrefix) and fileName.endswith(fileSuffix)):
+                filesFound.append(root + '\\' + name)
+    return filesFound
+
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
-def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
+def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
     """used to combine report files into one file (assumes all files have the same number of columns)"""
-    file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
+    file_list = fileGetter (folderPath, filePrefix, fileSuffix, fileExtension)
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
         for file_ in file_list:
@@ -83,7 +104,7 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
                     result.write( line )
                 lineCounter += 1
             fileCounter += 1
-    
+
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def AppendToSingleFiles(sourceFile, appendFile):

@@ -65,20 +65,32 @@ def ParamBindingExists(doc, paramName, paramType):
             break
     return categories
 
-# gets shared parameter data ready for being printed to file
+
 # doc:              the current revit document
 # revitFilePath:    fully qualified file path of Revit file
 def GetSharedParameterReportData(doc, revitFilePath):
+    '''gets shared parameter data ready for being printed to file'''
     data = []
     paras = GetAllSharedParameters(doc)
     for p in paras:
         pdef = p.GetDefinition()
-        pbindings = ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType)
+        pbindings = []
+        # parameter bindings do not exist in a family document
+        if(doc.IsFamilyDocument == False):
+            pbindings = ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType)
+        
+        # just in case parameter name is not unicode
+        parameterName = 'unknonw'
+        try:   
+            parameterName = util.EncodeAscii(Element.Name.GetValue(p))
+        except Exception as ex:
+            parameterName = 'Exception: ' + str(ex)
+        # build data
         data.append([
             revitFilePath, 
             p.GuidValue.ToString(), 
             str(p.Id.IntegerValue), 
-            util.EncodeAscii(Element.Name.GetValue(p)),
+            parameterName,
             str(pbindings)
             ])
     return data

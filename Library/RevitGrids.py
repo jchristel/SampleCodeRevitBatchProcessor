@@ -251,12 +251,12 @@ def ModifyGridsWorksets(doc, revitFileName, worksetRules):
 def GetGridReportData(doc, revitFilePath):
     data = []
     for p in FilteredElementCollector(doc).OfClass(Grid):
-        data.append('\t'.join([
+        data.append([
             util.GetFileNameWithoutExt(revitFilePath), 
             str(p.Id.IntegerValue), 
             util.EncodeAscii(p.Name), 
             rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue), 
-            GetMaxExtentAsString(p)]))
+            GetMaxExtentAsString(p)])
     return data
 
 # -------------------------------------------------  purge --------------------------------------------------------------------

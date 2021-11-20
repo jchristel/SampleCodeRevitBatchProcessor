@@ -46,6 +46,55 @@ def GetAllSharedParameters(doc):
     collector = FilteredElementCollector(doc).OfClass(SharedParameterElement)
     return collector
 
+# ------------------------------------------------------- parameter utilitis --------------------------------------------------------------------
+
+# doc               current model document
+# parameterGuids    list of guids to check the document for
+def CheckWhetherSharedParametersAreInFile(doc, parameterGuids):
+    '''returns the passt in list filtered by whether the shared parameter are in the file'''
+    filteredGUIDs = []
+    paras = GetAllSharedParameters(doc)
+    for p in paras:
+        if(p.GuidValue.ToString() in parameterGuids):
+            filteredGUIDs.append(p.GuidValue.ToString())
+    return filteredGUIDs
+
+# ------------------------------------------------------- parameter utilitis - delete --------------------------------------------------------------------
+
+# doc   current model document
+# guid  the guid of the shared parameter as string
+def DeleteSharedParameterByGUID(doc, guid):
+    '''deletes a single shared parameter based on a guid provided'''
+    returnvalue = res.Result()
+    paras = GetAllSharedParameters(doc)
+    deleteIds = []
+    parameterName = 'Unknown'
+    for p in paras:
+        if(p.GuidValue.ToString() == guid):
+            deleteIds.append(p.Id)
+            # there should just be one match
+            parameterName = util.EncodeAscii(Element.Name.GetValue(p))
+            break
+    if(len(deleteIds) > 0):
+        returnvalue = com.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+    else:
+        returnvalue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
+    return returnvalue
+
+# doc               current model document
+# parameterGuids    list of guids of shared parameters to be deleted
+def DeleteSharedParameters(doc, parameterGuids):
+    '''deletes shared parameters by GUID from document'''
+    returnvalue = res.Result()
+    deleteGuids = CheckWhetherSharedParametersAreInFile(doc, parameterGuids)
+    if(len(deleteGuids) > 0):
+        for deleteGuid in  deleteGuids:
+            deleteStatus = DeleteSharedParameterByGUID(doc, deleteGuid)
+            returnvalue.Update(deleteStatus)
+    else:
+        returnvalue.UpdateSep(True, 'No matching shard parameters in file!')
+    return returnvalue
+
 # ------------------------------------------------------- parameter reporting --------------------------------------------------------------------
 
 # returns all paramterbindings for a given parameter
@@ -64,7 +113,6 @@ def ParamBindingExists(doc, paramName, paramType):
                 categories.append(cat.Name)
             break
     return categories
-
 
 # doc:              the current revit document
 # revitFilePath:    fully qualified file path of Revit file

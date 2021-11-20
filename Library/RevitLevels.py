@@ -50,12 +50,12 @@ REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 def GetLevelReportData(doc, revitFilePath):
     data = []
     for p in FilteredElementCollector(doc).OfClass(Level):
-        data.append('\t'.join([
+        data.append([
             util.GetFileNameWithoutExt(revitFilePath), 
             str(p.Id.IntegerValue), 
             util.EncodeAscii(p.Name), 
-            rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue), 
-            str(p.Elevation)]))
+            util.EncodeAscii(rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue)), 
+            str(p.Elevation)])
     return data
 
 # ------------------------------------------------- filters --------------------------------------------------------------------

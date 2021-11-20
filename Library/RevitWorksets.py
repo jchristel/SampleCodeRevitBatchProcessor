@@ -110,8 +110,14 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
         # get all elements in collector and check their workset
         for p in collector:
             if (p.WorksetId != defaultId):
+                # get the element name
+                elementName = 'Unknown Element Name'
+                try:
+                    elementName = Element.Name.GetValue(p)
+                except Exception :
+                    pass
                 # move element to new workset
-                transaction = Transaction(doc, "Changing workset " + p.Name)
+                transaction = Transaction(doc, "Changing workset: " + elementName)
                 trannyStatus = com.InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
                 if (trannyStatus.status == True):
                     counterSuccess += 1

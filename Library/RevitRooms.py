@@ -40,14 +40,15 @@ REPORT_ROOMS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTANC
 
 # --------------------------------------------- utility functions ------------------
 
-# returns a list of rooms from the model
 # doc   current document
 def GetAllRooms(doc):
+    '''returns a list of rooms from the model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms).ToList()
 
-# returns a list of unplaced rooms from the model
+
 # doc   current document
 def GetUnplacedRooms(doc):
+    '''returns a list of unplaced rooms from the model'''
     coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
     unplaced = []
     for r in coll:
@@ -55,9 +56,10 @@ def GetUnplacedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-# returns a list of not enclosed rooms from the model
+
 # doc   current document
 def GetNotEnclosedRooms(doc):
+    '''returns a list of not enclosed rooms from the model'''
     coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
     unplaced = []
     boundaryOption = SpatialElementBoundaryOptions()
@@ -67,9 +69,9 @@ def GetNotEnclosedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-# returns a list of redundants rooms from the model
 # doc   current document
 def GetRedundantRooms(doc):
+    '''returns a list of redundants rooms from the model'''
     coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
     unplaced = []
     boundaryOption = SpatialElementBoundaryOptions()
@@ -78,3 +80,25 @@ def GetRedundantRooms(doc):
         if(r.Area == 0.0 and(boundarySegments != None and len(boundarySegments) > 0)):
             unplaced.append(r)
     return unplaced
+
+# doc       current document
+# tagId     the element Id of the tag to be moved
+def MoveTagToRoom(doc, tagId):
+    '''moves a tag to the room location point'''
+    returnvalue = res.Result()
+    rt = doc.GetElement(tagId)
+    roomTagPoint = rt.Location.Point
+    roomLocationPoint = rt.Room.Location.Point
+    roomData = str(rt.Room.Number) + ' ' + str(Element.Name.GetValue(rt.Room))
+    translation =  roomLocationPoint - roomTagPoint
+    def action():
+        actionReturnValue = res.Result()
+        try:
+            rt.Location.Move(translation)
+            actionReturnValue.message = 'Moved tag to room ' + roomData
+        except Exception as e:
+            actionReturnValue.UpdateSep(False, 'Failed to move tag to room ' + roomData + ' with exception: ' + str(e))
+        return actionReturnValue
+    transaction = Transaction(doc, 'Moving room tag to room : ' + roomData)
+    returnvalue.Update(com.InTransaction(transaction, action))
+    return returnvalue

@@ -536,11 +536,12 @@ def GetIdsFromElementCollector(col):
         ids.append(c.Id)
     return ids
 
-# el                    element to be checked
+# elId                  element Id to be checked
 # builtinCategories     list of builtin categories  
-def IsElementOfBuiltInCategory(doc, el, builtinCategories):
+def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
     '''checks whether an element is of one of the built in categories passt in (true) if not returns false'''
     match = False
+    el = doc.GetElement(elId)
     enumCategoryId = el.Category.Id.IntegerValue.ToString()
     for bic in builtinCategories:
         if (enumCategoryId == bic.value__.ToString()):
@@ -548,6 +549,18 @@ def IsElementOfBuiltInCategory(doc, el, builtinCategories):
             break
     return match
         
+# elId                  element Id to be checked
+# builtinCategories     list of builtin categories  
+def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
+    '''checks whether an element is of not one of the built in categories passt in (true) if not returns false'''
+    match = True
+    el = doc.GetElement(elId)
+    enumCategoryId = el.Category.Id.IntegerValue.ToString()
+    for bic in builtinCategories:
+        if (enumCategoryId == bic.value__.ToString()):
+            match = False
+            break
+    return match
 
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file

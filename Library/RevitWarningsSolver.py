@@ -23,12 +23,13 @@
 
 import System
 import clr
-from collections import namedtuple
+#from collections import namedtuple
 
 import Result as res
-import RevitRooms as rRoom
 import RevitWarnings as rWar
-import RevitCommonAPI as com
+
+import RevitWarningsSolverRoomTagToRoom as rwsRoomTagToRoom
+import RevitWarningsSolverDuplicateMark as rwsDuplicateMark
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -38,76 +39,53 @@ class RevitWarningsSolver:
 
     # --------------------------- available solvers ---------------------------
 
-    # --------------------------- elements have duplicate mark values ---------------------------
-
-    SOLVER_ELEMENT_DUPLICATE_MARK_GUID = '6e1efefe-c8e0-483d-8482-150b9f1da21a'
-
-    # doc       current drevit document
-    # warnings  list of warnings
-    def SolverElementDuplicateMark(self, doc, warnings):
-        '''solver setting element mark to nothing'''
-        returnvalue = res.Result()
-        for warning in warnings:
-            elementIds = warning.GetFailingElements()
-            for elid in elementIds:
-                # check whether element passes filter
-                if(self.filterFuncSameMark(doc, elid, self.filterValuesSameMark)):
-                    element = doc.GetElement(elid)
-                    p = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
-                    #paras = element.GetOrderedParameters()
-                    #for p in paras:
-                        #if(p.Definition.BuiltInParameter == BuiltInParameter.ALL_MODEL_MARK):
-                    result = com.setParameterValue(p,'',doc)
-                    returnvalue.Update(result)
-        return returnvalue
-
-    # --------------------------- room tag not in room ---------------------------
-    SOLVER_TAG_OUTSIDE_ROOM_GUID = '4f0bba25-e17f-480a-a763-d97d184be18a'
-    
-    # doc       current drevit document
-    # warnings  list of warnings
-    def SolverTagOutSideRoom(self, doc, warnings):
-        '''solver moving room tags to room location point'''
-        returnvalue = res.Result()
-        for warning in warnings:
-            elementIds = warning.GetFailingElements()
-            for elid in elementIds:
-                result = rRoom.MoveTagToRoom(doc, elid)
-                returnvalue.Update(result)
-        return  returnvalue 
+    # doc           current model object
+    # element       the elemet to be checked
+    def DefaultFilterReturnAll(self, doc, elementId):
+        '''default filter for elements...returns True for any element passt in '''
+        return True
     
     # --------------------------- solvers initialise code ---------------------------
-    Solver = namedtuple("Solver", "guid function")
+    # named tuple format used in list
+    #Solver = namedtuple("Solver", "guid function")
 
-    solverRoomTag = Solver(SOLVER_TAG_OUTSIDE_ROOM_GUID, SolverTagOutSideRoom)
-    solverDuplicateMark = Solver(SOLVER_ELEMENT_DUPLICATE_MARK_GUID, SolverElementDuplicateMark)
+    # default solver classes
+    solveRoomTagToRoom = rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom()
+    solverSameMark = rwsDuplicateMark.RevitWarningsSolverDuplicateMark(DefaultFilterReturnAll)
+    
+    # solver tuple list of available warning solvers
+    #solverRoomTag = Solver(solveRoomTagToRoom.SOLVER_TAG_OUTSIDE_ROOM_GUID, rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom())
+    #solverDuplicateMark = Solver(SOLVER_ELEMENT_DUPLICATE_MARK_GUID, SolverElementDuplicateMark)
 
-    AVAILABLE_SOLVERS = [
-        solverRoomTag,
-        solverDuplicateMark
-    ]
+    AVAILABLE_SOLVERS = {
+        solveRoomTagToRoom.GUID:solveRoomTagToRoom,
+        solverSameMark.GUID:solverSameMark
+    }
 
     # --------------------------- solvers code ---------------------------
 
     def __init__(self): 
         self.filterFuncSameMark = self.DefaultFilterReturnAll
-        self.filterValuesSameMark = []
     
+    # sameMarkFilterFunction        function to be used to filter elements
+    # sameMarkFilterValuee          list of filter values used by filter function
+    def SetSameMarkFilterAndFilterSolver(self, sameMarkFilterSolver):
+        '''over rides default same mark filter class'''
+        # replace the old solver
+        self.AVAILABLE_SOLVERS[sameMarkFilterSolver.GUID] = sameMarkFilterSolver
+        self.solverSameMark = sameMarkFilterSolver
+
     # doc   current model object
     def SolveWarnings(self,doc):
         '''attempts to solve some warning in a revit model'''
         returnvalue = res.Result()
         try:
             for solver in self.AVAILABLE_SOLVERS:
-                warnings =  rWar.GetWarningsByGuid(doc, solver.guid)
-                resultSolver = solver.function(doc, warnings)
+                warnings =  rWar.GetWarningsByGuid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
+                resultSolver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
                 returnvalue.Update(resultSolver)
         except Exception as e:
             print (str(e))
         return returnvalue
 
-    # doc           current model object
-    # element       the elemet to be checked
-    def DefaultFilterReturnAll(self, doc, elementId, **args):
-        '''default filter for elements...returns True for any element passt in '''
-        return True
+    

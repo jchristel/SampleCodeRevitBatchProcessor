@@ -100,7 +100,7 @@ def OpenWorksetsWithElementsHack(doc):
 # attemps to change the worksets of elements provided through an element collector
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     returnvalue = res.Result()
-    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName + '\n'
+    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
     # get the ID of the default grids workset
     defaultId = GetWorksetIdByName(doc, defaultWorksetName)
     counterSuccess = 0
@@ -159,36 +159,36 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
     fileName = util.GetFileNameWithoutExt(revitFilePath)
     worksetDataForFile = {}
     for row in worksetData:
-        if(row[0].startswith(fileName) and len(row) == 4):
-            # todo need to convert this into a bool!!
-            worksetDataForFile[row[1]] = row[3]
+        if(util.GetFileNameWithoutExt(row[0]).startswith(fileName) and len(row) > 3):
+            worksetDataForFile[row[1]] = util.ParsStringToBool(row[3])
     if(len(worksetDataForFile) > 0): 
         # updates worksets
         worksets = GetWorksets(doc)
         for workset in worksets:
-            if(workset.Name in worksetDataForFile):
-                if (workset.IsVisibleByDefault != worksetDataForFile[workset.Name]):
+            if(str(workset.Id) in worksetDataForFile):
+                if (workset.IsVisibleByDefault != worksetDataForFile[str(workset.Id)]):
                     def action():
                         actionReturnValue = res.Result()
+                        defaultVisibility  = WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
                         try:
-                            WorksetDefaultVisibilitySettings.SetWorksetVisibility(workset.Id, worksetDataForFile[workset.Name])
+                            defaultVisibility.SetWorksetVisibility(workset.Id, worksetDataForFile[str(workset.Id)])
+                            actionReturnValue.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(worksetDataForFile[str(workset.Id)]) + ']')
                         except Exception as e:
-                                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+                            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     # move element to new workset
-                    transaction = Transaction(doc, "Changing default workset visibility " + workset.Name)
+                    transaction = Transaction(doc, workset.Name + ": Changing default workset visibility")
                     trannyStatus = com.InTransaction(transaction, action)
                     returnvalue.Update(trannyStatus)
                 else:
-                    returnvalue.UpdateSep(True, util.EncodeAscii(workset.Name) + ' default visibility settings unchanged.')
+                    returnvalue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
             else:
-                returnvalue.UpdateSep(False, util.EncodeAscii(workset.Name) + ' has no corresponding setting in settings file.')
+                returnvalue.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
     else:
         returnvalue.UpdateSep(True, 'No settings found for file: ' + fileName)
     return returnvalue
 
 # ------------------------------------------------------- workset reporting --------------------------------------------------------------------
-
 
 # doc: the current revit document
 # revitFilePath: fully qualified file path of Revit file

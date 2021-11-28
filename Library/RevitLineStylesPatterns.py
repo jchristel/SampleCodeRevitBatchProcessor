@@ -80,6 +80,7 @@ def BuildPatternsDictionaryByName(doc):
 def DeleteDuplicatLinePatterNames(doc):
     """deletes all but the first line pattern by Id with the exact same name"""
     returnvalue = res.Result()
+    returnvalue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name
     # anything where the value list is greate then 1 means duplicates of the same name...
     linePatterns = BuildPatternsDictionaryByName(doc)

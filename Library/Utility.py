@@ -89,6 +89,14 @@ def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, f
                 filesFound.append(root + '\\' + name)
     return filesFound
 
+# path              root directory to start fiel search in
+# fileExtension     file must have this extension
+def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
+    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    filesFound = []
+    filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
+    return filesFound
+
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
@@ -443,6 +451,18 @@ def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
         return False
     else:
         return True
+
+# ---------------------------------------------------------------------------------------------------------------------------------
+
+# text      string to be converted all lower case and then to be converted to a boolean ( 'true' = True, 'false' = False)
+def ParsStringToBool(text):
+    '''converts a string lower case and then to bool. Will throw an exception if it fails to do so'''
+    if(text.lower() == 'true'):
+        return True
+    elif (text.lower() == 'false'):
+        return False
+    else:
+         raise Exception('String cant be converted to bool')
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 

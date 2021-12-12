@@ -147,6 +147,49 @@ def GetActionChangeElementWorkset(el, defaultId):
         return actionReturnValue
     return action
 
+# el            element
+# worksetId     workset id to be checked against 
+def IsElementOnWorksetById(doc, el, worksetId):
+    '''checks whether an element is on a given workset'''
+    flag = True
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsparam)
+        compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
+        if(compareToWorksetName != currentWorksetName):
+            flag = False
+    except Exception as e:
+        print (e)
+        flag = False
+    return flag
+
+# el            element
+# worksetId     workset name to be checked against 
+def IsElementOnWorksetByName(el, worksetName):
+    '''checks whether an element is on a given workset'''
+    flag = True
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsparam)
+        if(worksetName != currentWorksetName):
+            flag = False
+    except Exception as e:
+        print ("IsElementOnWorksetByName: " + str(e))
+        flag = False
+    return flag
+
+# doc:      current model document
+# el            element
+def GetElementWorksetName(el):
+    '''returns the name of the workset an element is on, or invalid workset'''
+    workSetname = 'invalid workset'
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        workSetname = com.getParameterValue(wsparam)
+    except Exception as e:
+        print ("GetElementWorksetName: " + str(e))
+    return workSetname
+
 # doc       current model
 # reportPath        fully qualified path to tab separated report text file same format
 #                   as this module GetWorksetReportData() method

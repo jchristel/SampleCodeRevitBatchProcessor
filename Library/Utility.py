@@ -301,7 +301,8 @@ def DirectoryDelete(fullDirectoryPath):
     try:
         shutil.rmtree(fullDirectoryPath)
         value = True
-    except Exception:
+    except Exception as e:
+        print('An exception occured when attempting to delete a directory: ' + str(e))
         value = False
     return value
 
@@ -409,6 +410,7 @@ def ReadTabSeparatedFile(filePath):
             reader = csv.reader(f, dialect='excel-tab')
             for row in reader: # each row is a list
                 rowList.append(row)
+            f.close()
     except Exception as e:
         print (str(e))
         rowList = []

@@ -37,6 +37,7 @@ class RevitWarningsSolverDuplicateMark:
         '''constructor: this solver takes two arguments: a filter function and a list of values to filter by'''
         self.filter = filterFunc
         self.filterValues = filterValues
+        self.filterName = 'Duplicate mark value.'
 
     # --------------------------- room tag not in room ---------------------------
     GUID = '6e1efefe-c8e0-483d-8482-150b9f1da21a'
@@ -46,17 +47,24 @@ class RevitWarningsSolverDuplicateMark:
     def SolveWarnings(self, doc, warnings):
         '''solver setting element mark to nothing'''
         returnvalue = res.Result()
-        for warning in warnings:
-            elementIds = warning.GetFailingElements()
-            for elid in elementIds:
-                # check whether element passes filter
-                if(self.filter(doc, elid, self.filterValues)):
+        if(len(warnings) > 0):
+            for warning in warnings:
+                elementIds = warning.GetFailingElements()
+                for elid in elementIds:
                     element = doc.GetElement(elid)
-                    #p = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
-                    paras = element.GetOrderedParameters()
-                    for p in paras:
-                        if(p.Definition.BuiltInParameter == BuiltInParameter.ALL_MODEL_MARK):
-                            result = com.setParameterValue(p, '', doc)
-                            returnvalue.Update(result)
+                    # check whether element passes filter
+                    if(self.filter(doc, elid, self.filterValues)):
+                        try:
+                            #p = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
+                            paras = element.GetOrderedParameters()
+                            for p in paras:
+                                if(p.Definition.BuiltInParameter == BuiltInParameter.ALL_MODEL_MARK):
+                                    result = com.setParameterValue(p, '', doc)
+                                    returnvalue.Update(result)
+                        except Exception as e:
+                            returnvalue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
+                    else:
+                        returnvalue.UpdateSep(True,'Element removed by filter:' + self.filterName + ' : ' + Element.Name.GetValue(element))
+        else:
+            returnvalue.UpdateSep(True,'No warnings of type: duplicate mark in model.')
         return returnvalue
-    

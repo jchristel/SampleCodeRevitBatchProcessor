@@ -31,6 +31,7 @@ class RevitWarningsSolverRoomTagToRoom:
 
     def __init__(self):
         '''empty constructor this solver does not take any further arguments'''
+        self.filterName = 'Room tag outside of room.'
         pass
 
     # --------------------------- room tag not in room ---------------------------
@@ -41,10 +42,13 @@ class RevitWarningsSolverRoomTagToRoom:
     def SolveWarnings(self, doc, warnings):
         '''solver moving room tags to room location point'''
         returnvalue = res.Result()
-        for warning in warnings:
-            elementIds = warning.GetFailingElements()
-            for elid in elementIds:
-                result = rRoom.MoveTagToRoom(doc, elid)
-                returnvalue.Update(result)
+        if(len(warnings) > 0 ):
+            for warning in warnings:
+                elementIds = warning.GetFailingElements()
+                for elid in elementIds:
+                    result = rRoom.MoveTagToRoom(doc, elid)
+                    returnvalue.Update(result)
+        else:
+            returnvalue.UpdateSep(True,'No warnings of type: room tag outside of room in model.')
         return  returnvalue 
     

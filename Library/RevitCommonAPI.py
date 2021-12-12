@@ -562,6 +562,76 @@ def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
             break
     return match
 
+# doc           current model
+# familyName    the family name to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstance(doc, familyName, elementId):
+    '''checks whether the family name of a given family instance matches filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(Element.Name.GetValue(el.Symbol.Family) != familyName):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
+    '''checks whether the family name of a given family instance contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue not in Element.Name.GetValue(el.Symbol.Family)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+    '''checks whether the family name of a given family instance does not contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue in Element.Name.GetValue(el.Symbol.Family)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
+    '''checks whether the symbol name of a given family instance contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue not in Element.Name.GetValue(el.Symbol)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+    '''checks whether the symbol name of a given family instance does not contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue in Element.Name.GetValue(el.Symbol)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file
 # doc: the document to be synced

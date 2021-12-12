@@ -202,11 +202,13 @@ catsLoadableTags = List[BuiltInCategory] ([
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------
 
+# doc   current model document
 # returns all family symbols belonging to a list of built in categories
 # cats needs to be an ICollection:
 #       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
 
 def GetFamilySymbols(doc, cats):
+    '''returns all family symbols (types) of given built in categories'''
     elements = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
@@ -214,6 +216,27 @@ def GetFamilySymbols(doc, cats):
         return elements
     except Exception:
         return elements
+
+# doc   current model document
+# cats needs to be an ICollection:
+#       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+def GetFamilyInstancesByBuiltInCategories(doc, cats):
+    '''returns all family instances of given built in categories'''
+    elements = []
+    try:
+        multiCatFilter = ElementMulticategoryFilter(cats)
+        elements = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(multiCatFilter).ToElements()
+        return elements
+    except Exception:
+        return elements
+
+# doc           current model document
+# builtinCat    single revit builInCategory Enum value
+def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
+    '''returns all family instances of a given built in category'''
+    filter = ElementCategoryFilter(builtinCat)
+    col = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    return col
 
 # returns a list of in editable and not in place families
 # doc   current model document

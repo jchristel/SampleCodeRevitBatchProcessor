@@ -42,6 +42,12 @@ REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 
 # --------------------------------------------- utility functions ------------------
 
+# doc:   current model document
+def GetLevelsListAscending(doc):
+    """ this will return a filtered element collector of all levels in the model ascending by project elevation"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToList().OrderBy(lambda l: l.ProjectElevation)
+    return collector
+
 # ------------------------------------------------------- Level reporting --------------------------------------------------------------------
 
 # gets level data ready for being printed to file

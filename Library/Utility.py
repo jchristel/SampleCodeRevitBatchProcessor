@@ -77,8 +77,10 @@ def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
     fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     return fileList
 
-# path      root directory to start fiel search in
-# filter    file name must contain filter value
+# folderPath      root directory to start fiel search in
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
 def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
     """returns all files in directory and nested subdirectories where file name matches filters value"""
     filesFound = []
@@ -89,13 +91,43 @@ def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, f
                 filesFound.append(root + '\\' + name)
     return filesFound
 
-# path              root directory to start fiel search in
+# folderPath              root directory to start fiel search in
 # fileExtension     file must have this extension
 def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
     """returns all files in directory and nested subdirectories where file name matches filters value"""
     filesFound = []
     filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
     return filesFound
+
+# folderPath        root directory to start fiel search in
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
+# includeSubDirs    whether to include subdirectories in search
+def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
+    """returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
+    - key file name without extension
+    - values: list of directories where this file occures (based on file name only!)
+    use case: check for duplicaes by file name only"""
+    filesFound = []
+    # set up a dictionary
+    fileDic = {}
+    try:
+        if(includeSubDirs):
+            filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', '.rfa')
+        else:
+            filesFound = GetFilesSingleFolder(folderPath, '', '', '.rfa')
+    except Exception:
+        return fileDic
+    
+    # populate dictionary
+    for filePath in filesFound:
+        fileName = GetFileNameWithoutExt(filePath)
+        if(fileName in fileDic):
+            fileDic[fileName].append(filePath)
+        else:
+            fileDic[fileName] = [filePath]
+    return fileDic
 
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'

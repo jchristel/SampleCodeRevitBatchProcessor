@@ -30,12 +30,18 @@ import os
 import shutil
 import os.path
 from os import path
+import codecs
 import csv
 
 # default file stamp date format
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
+FILE_DATE_STAMP_YYMMDD_SPACE = '%y %m %d'
+FILE_DATE_STAMP_YYYYMMDD_SPACE = '%Y %m %d'
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
 FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
+
+# time stamp using colons
+TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
 
 # get the date stamp prefix of report files
 def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
@@ -56,14 +62,78 @@ def GetDateStamp(format):
     d = datetime.datetime.now()
     return d.strftime(format)
 
+def GetLocalAppDataPath():
+    """return directory path to local app data folder"""
+    return os.environ['LOCALAPPDATA']
+
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# used to combine report files into one file (assumes all files have the same number of columns)
+# folderPath        folder path from which to get files
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
+def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
+    '''Get files from a folder filtered by file prefix, file suffix, file extension '''
+    fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
+    return fileList
+
+# folderPath      root directory to start fiel search in
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
+def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
+    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    filesFound = []
+    for root, dirs, files in os.walk(folderPath):
+        for name in files:
+            fileName = GetFileNameWithoutExt(name)
+            if (name.endswith(fileExtension) and fileName.startswith(filePrefix) and fileName.endswith(fileSuffix)):
+                filesFound.append(root + '\\' + name)
+    return filesFound
+
+# folderPath              root directory to start fiel search in
+# fileExtension     file must have this extension
+def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
+    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    filesFound = []
+    filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
+    return filesFound
+
+# folderPath        root directory to start fiel search in
+# filePrefix        file starts with this value
+# fileSuffix        file name end on suffix
+# fileExtension     file extension in format '.ext'
+# includeSubDirs    whether to include subdirectories in search
+def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
+    """returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
+    - key file name without extension
+    - values: list of directories where this file occures (based on file name only!)
+    use case: check for duplicaes by file name only"""
+    filesFound = []
+    # set up a dictionary
+    fileDic = {}
+    try:
+        if(includeSubDirs):
+            filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', '.rfa')
+        else:
+            filesFound = GetFilesSingleFolder(folderPath, '', '', '.rfa')
+    except Exception:
+        return fileDic
+    
+    # populate dictionary
+    for filePath in filesFound:
+        fileName = GetFileNameWithoutExt(filePath)
+        if(fileName in fileDic):
+            fileDic[fileName].append(filePath)
+        else:
+            fileDic[fileName] = [filePath]
+    return fileDic
+
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
-def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
-    file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
-    print(str(len(file_list)))
+def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
+    """used to combine report files into one file (assumes all files have the same number of columns)"""
+    file_list = fileGetter (folderPath, filePrefix, fileSuffix, fileExtension)
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
         for file_ in file_list:
@@ -74,6 +144,23 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
                     result.write( line )
                 lineCounter += 1
             fileCounter += 1
+
+# files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
+# prefix is usually the time stamp in format  '%y_%m_%d'
+def AppendToSingleFiles(sourceFile, appendFile):
+    """used to append one file to another, assumes same number of headers)"""
+    flag = True
+    try:
+        # read file to append into memory...hopefully will never get in GB range in terms of file size
+        fp = codecs.open(appendFile,'r',encoding='utf-8')
+        lines=fp.readlines()
+        fp.close()
+        with codecs.open(sourceFile, 'a', encoding='utf-8') as f:
+            for line in lines:
+                f.write( line )
+    except Exception:
+        flag = False
+    return flag
 
 # used to combine report files into one file, files may have different number / named columns
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
@@ -153,29 +240,46 @@ def GetFirstRowInFile(filePath):
 
 # method writing out report information
 # fileName:         fully qualified file path
-# header:           list of column headers
-# data:             list of lists representing row data
-def writeReportData(fileName, header, data):
-    f = open(fileName, 'w')
-    f.write('\t'.join(header + ['\n']))
-    for d in data:
-        f.write('\t'.join(d + ['\n']))
-    f.close()
+# header:           list of column headers, provide empty list if not required!
+# data:             list of list of strings representing row data
+# writeType         w: new file, a: append to existing file...
+def writeReportData(fileName, header, data, writeType = 'w'):
+    with codecs.open(fileName, writeType, encoding='utf-8') as f:
+        # check if header is required
+        if(len(header) > 0):
+            print('\t'.join(header + ['\n']))
+            f.write('\t'.join(header + ['\n']))
+        # check if data is required
+        if(len(data) > 0):
+            for d in data:
+                f.write('\t'.join(d + ['\n']))
+        f.close()
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# returns a list of files from a given folder with a given file extension
 # file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
+    """returns a list of files from a given folder with a given file extension"""
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
     return file_list
 
-# returns a list of files from a given folder with a given file extension and a file name filter
 # file extension in format '.txt'
 # file filter is in 'something*'
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
+    """returns a list of files from a given folder with a given file extension and a file name filter"""
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
+
+# path      root directory to start fiel search in
+# filter    file name must contain filter value
+def GetFilesFromDirectoryWalker(path, filter):
+    """returns all files in directory and nested subdirectories where file name contains filter value"""
+    filesFound = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if (name.Contains(filter)) :
+                filesFound.append(root + '\\' + name)
+    return filesFound
 
 # number of file size options
 FILE_SIZE_IN_KB = 1024
@@ -229,7 +333,8 @@ def DirectoryDelete(fullDirectoryPath):
     try:
         shutil.rmtree(fullDirectoryPath)
         value = True
-    except Exception:
+    except Exception as e:
+        print('An exception occured when attempting to delete a directory: ' + str(e))
         value = False
     return value
 
@@ -314,14 +419,30 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     else:
         return relativeFilePath
 
-# read a csv files into a list of rows
+# filePathCSV      fully qualified file path to tab separated file
 def ReadCSVfile(filepathCSV):
+    """read a csv files into a list of rows"""
     rowList = []
     try:
         with open(filepathCSV) as csvfile:
             reader = csv.reader(csvfile)
             for row in reader: # each row is a list
                 rowList.append(row)
+    except Exception as e:
+        print (str(e))
+        rowList = []
+    return rowList
+
+# filePath      fully qualified file path to tab separated file
+def ReadTabSeparatedFile(filePath):
+    """read a tab delimited files into a list of rows"""
+    rowList = []
+    try:
+        with codecs.open (filePath,'r',encoding='utf-8') as f:
+            reader = csv.reader(f, dialect='excel-tab')
+            for row in reader: # each row is a list
+                rowList.append(row)
+            f.close()
     except Exception as e:
         print (str(e))
         rowList = []
@@ -364,6 +485,18 @@ def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
         return False
     else:
         return True
+
+# ---------------------------------------------------------------------------------------------------------------------------------
+
+# text      string to be converted all lower case and then to be converted to a boolean ( 'true' = True, 'false' = False)
+def ParsStringToBool(text):
+    '''converts a string lower case and then to bool. Will throw an exception if it fails to do so'''
+    if(text.lower() == 'true'):
+        return True
+    elif (text.lower() == 'false'):
+        return False
+    else:
+         raise Exception('String cant be converted to bool')
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 

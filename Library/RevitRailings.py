@@ -56,7 +56,7 @@ RAILING_CATEGORYFILTER = List[BuiltInCategory] ([
         BuiltInCategory.OST_RailingSupport,
         BuiltInCategory.OST_RailingSystem,
         BuiltInCategory.OST_RailingTermination,
-        BuiltInCategory.OST_RailingTopRail
+        BuiltInCategory.OST_RailingTopRail,
     ])
 
 # --------------------------------------------- utility functions ------------------
@@ -103,7 +103,6 @@ def BuildRailingTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -114,26 +113,12 @@ def BuildRailingTypeDictionary(collector, dic):
 def SortRailingTypesByFamilyName(doc):
     # get all Railing Type Elements
     wts = GetRailingTypesByClass(doc)
-    # get all Railing types including in place wall families
+    # get all Railing types including in place railing families
     wts_two = GetAllRailingTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildRailingTypeDictionary(wts, usedWts)
     usedWts = BuildRailingTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
 
 # -------------------------------- none in place Railing types -------------------------------------------------------
 
@@ -183,7 +168,7 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
 # doc   current document
 def GetUsedRailingTypeIds(doc):
     """ returns all used in Railing type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -205,7 +190,7 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
     - Top Rail
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
     RailingTypes = SortRailingTypesByFamilyName(doc)
     for key, value in RailingTypes.items():
@@ -240,17 +225,141 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
 # doc   current document
 def GetUsedInPlaceRailingTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRailingTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRailingIdsForPurge(doc):
     """returns symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged"""
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
+    return ids
+
+
+# -------------------------------- baluster types -------------------------------------------------------
+# -------------baluster utility -------------
+
+# listSource    list to be added to
+# listMerge     list containing new values to be added to listSource
+def MergeIntoUniquList(listSource, listMerge):
+    '''merges the second list into the first by adding elements from second list which are not already in first list'''
+    for i in listMerge:
+        if (i not in listSource):
+            listSource.append(i)
+    return listSource
+
+# bPostPattern    baluster pattern element
+def GetBalustersUsedInPattern(bpattern):
+    '''return list of unique baluster ids used in a pattern only'''
+    ids = []
+    for i in range(0, bpattern.GetBalusterCount()):
+        balInfo = bpattern.GetBaluster(i)
+        if(balInfo.BalusterFamilyId not in ids and balInfo.BalusterFamilyId != ElementId.InvalidElementId ):
+            ids.append(balInfo.BalusterFamilyId)
+    # add excess pattern baluster id
+    if (bpattern.ExcessLengthFillBalusterId not in ids and bpattern.ExcessLengthFillBalusterId != ElementId.InvalidElementId):
+        ids.append(bpattern.ExcessLengthFillBalusterId)
+    return ids
+
+# bPostPattern    Post pattern element
+def GetUsedBalusterPostIds(bPostPattern):
+    '''return list of unique baluster posts ids only:
+    - CornerPost
+    - EndPost
+    - StartPost
+    '''
+    ids = []
+    # get corner post
+    if(bPostPattern.CornerPost.BalusterFamilyId != ElementId.InvalidElementId):
+        ids.append(bPostPattern.CornerPost.BalusterFamilyId)
+    # get end post id
+    if(bPostPattern.EndPost.BalusterFamilyId != ElementId.InvalidElementId and bPostPattern.EndPost.BalusterFamilyId not in ids):
+        ids.append(bPostPattern.EndPost.BalusterFamilyId)
+    # get start post id
+    if(bPostPattern.StartPost.BalusterFamilyId != ElementId.InvalidElementId and bPostPattern.StartPost.BalusterFamilyId not in ids):
+        ids.append(bPostPattern.StartPost.BalusterFamilyId)
+    return ids
+
+# bPlacement    baluster placement element
+def GetUsedBalusterPerTread(bPlacement):
+    ''' gets the id of the baluster per tread'''
+    ids = []
+    # get baluster per tread
+    if(bPlacement.BalusterPerTreadFamilyId != ElementId.InvalidElementId):
+        ids.append(bPlacement.BalusterPerTreadFamilyId)
+    return ids
+
+# -------------baluster utility end-------------
+
+# doc   current document
+def GetAllBalusterSymbols(doc):
+    """ returns all baluster symbols in project"""
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsRailingBaluster).WhereElementIsElementType()
+    return col
+
+ # doc   current document
+def GetAllBalusterSymbolIds(doc):
+    """ returns all baluster symbol ids in project"""
+    ids = []
+    col = GetAllBalusterSymbols(doc)
+    ids = com.GetIdsFromElementCollector (col)
+    return ids
+
+# doc   current document
+def GetBalusterTypesFromRailings(doc):
+    '''returns a unique list of all baluster symbol type ids used in railing types in the model'''
+    ids = []
+    railingTypeIds = GetAllRailingTypeIdsInModelByClassAndCategory(doc)
+    for rtId in railingTypeIds:
+        el = doc.GetElement(rtId)
+        # put into try catch since some rail types have no balusters ...top rail
+        try:
+            btplace = el.BalusterPlacement
+            idsPattern = GetBalustersUsedInPattern(btplace.BalusterPattern)
+            idsPosts = GetUsedBalusterPostIds(btplace.PostPattern)
+            idsPerTread = GetUsedBalusterPerTread(btplace)
+            # build overall ids list
+            ids = MergeIntoUniquList(ids, idsPattern)
+            ids = MergeIntoUniquList(ids, idsPosts)
+            ids = MergeIntoUniquList(ids, idsPerTread)
+        except:
+            pass
+    return ids
+
+# doc   current document
+def GetUsedBalusterTypeIds(doc):
+    """ returns all used baluster type ids """
+    ids = []
+    idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
+    idsUsedInRailings = GetBalusterTypesFromRailings(doc)
+    ids = MergeIntoUniquList(ids, idsUsedInModel)
+    ids = MergeIntoUniquList(ids, idsUsedInRailings)
+    return ids
+
+# doc   current document
+def GetUnUsedBalusterTypeIds(doc):
+    """ returns all unused baluster type ids """
+    ids = []
+    idsUsed = GetUsedBalusterTypeIds(doc)
+    idsAvailable = GetAllBalusterSymbolIds(doc)
+    for id in idsAvailable:
+        if (id not in idsUsed):
+            ids.append(id)
+    return ids
+
+# doc   current document
+def GetUnUsedBalusterTypeIdsForPurge(doc):
+    """get all un used baluster type ids"""
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
+    return ids
+    # no need to keep anything...?
+    #idsAll =  GetAllBalusterSymbolIds(doc)
+    # need to keep at least one ( do I ...?)
+    #if(len(idsAll) == len(ids)):
+    #    ids.pop(0)
     return ids

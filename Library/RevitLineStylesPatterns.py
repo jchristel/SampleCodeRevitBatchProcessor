@@ -63,6 +63,35 @@ def DeleteLinePatternsWithout(doc, contains):
 def GetAllLinePatterns(doc):
     return FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
 
+
+# doc     current model document
+def BuildPatternsDictionaryByName(doc):
+    """builds a dictionary wher line pattern name is key, values are all ids of line patterns with the exact same name"""
+    lpDic = {}
+    lps = FilteredElementCollector(doc).OfClass(LinePatternElement)
+    for lp in lps:
+        if(lpDic.has_key(lp.GetLinePattern().Name)):
+            lpDic[lp.GetLinePattern().Name].append(lp.Id)
+        else:
+            lpDic[lp.GetLinePattern().Name] = [lp.Id]
+    return lpDic
+
+# doc     current model document
+def DeleteDuplicatLinePatterNames(doc):
+    """deletes all but the first line pattern by Id with the exact same name"""
+    returnvalue = res.Result()
+    returnvalue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
+    # get a dictionary: Key pattern name, value all ids of line patterns with the same name
+    # anything where the value list is greate then 1 means duplicates of the same name...
+    linePatterns = BuildPatternsDictionaryByName(doc)
+    for key, value in linePatterns.items():
+        if(len(value) > 1):
+            # keep the first one (original)
+            value.remove(value[0])
+            flagDelete = com.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
+            returnvalue.Update (flagDelete)
+    return returnvalue
+
 # ------------------------------------------------ DELETE LINE STYLES ----------------------------------------------
 
 # deletes all line styles where the name starts with provided string

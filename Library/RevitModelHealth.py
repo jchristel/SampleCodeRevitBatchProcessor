@@ -29,6 +29,7 @@ clr.ImportExtensions(System.Linq)
 clr.AddReference('System')
 
 import Utility as util
+import RevitBIM360 as b360
 import RevitCommonAPI as com
 import Result as res
 import RevitDesignSetOptions as rDoS
@@ -37,6 +38,7 @@ import RevitWorksets as rWork
 import RevitViews as rViews
 import RevitLineStylesPatterns as rLsp
 import RevitLinks as rLinks
+import RevitModelHealthReportFileNames as rFns
 import RevitFamilyUtils as rFams
 import RevitGroups as rGrp
 import RevitRooms as rRooms
@@ -44,6 +46,7 @@ import RevitDetailItems as rDetItems
 
 from Autodesk.Revit.DB import *
 from System.Collections.Generic import List
+from collections import namedtuple
 
 # constants
 # health tracer family name
@@ -51,9 +54,9 @@ MODEL_HEALTH_TRACKER_FAMILY = 'Symbol_GraphicModelHealth_ANN'
 # default value if unable to retrieve value from model
 FAILED_TO_RETRIEVE_VALUE = -1
 
-# gets all instances of the model health tracker family in a model
 # doc   current document
 def GetInstancesOfModelHealth(doc):
+    """gets all instances of the model health tracker family in a model"""
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -64,27 +67,24 @@ def GetInstancesOfModelHealth(doc):
     filter = ElementParameterFilter( rule )
     return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter).ToList()
 
-# update parameter values of model tracker family instance
 # famInstance   an instance of the family model health tracker
 # doc           current document
 def GetParametersOfInstance(famInstance, doc):
+    """update parameter values of model tracker family instance"""
     resultValue = res.Result()
     flagUpdate = False
     for p in famInstance.GetOrderedParameters():
         # check if parameter is read only
         if(p.IsReadOnly == False):
-            for parameterAction in PARAM_ACTIONS:
-                if(p.Definition.Name == parameterAction[0]):
-                    pvalue = parameterAction[1](doc)
-                    if(pvalue != FAILED_TO_RETRIEVE_VALUE):
-                        flag = com.setParameterValue(p, str(pvalue), doc)
-                        resultValue.Update(flag)
-                        # print (str(p.Definition.Name) + ' :: ' +str(flag.message))
-                        flagUpdate = True
-                        break
-                    else:
-                        resultValue.UpdateSep(False, 'Failed to get value for ' + p.Definition.Name)
-                        break
+            # check an action to update this parameter value exists
+            if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
+                pvalue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
+                if(pvalue != FAILED_TO_RETRIEVE_VALUE):
+                    flag = com.setParameterValue(p, str(pvalue), doc)
+                    resultValue.Update(flag)
+                    flagUpdate = True
+                else:
+                    resultValue.UpdateSep(False, 'Failed to get value for ' + p.Definition.Name)
     if(flagUpdate == False):
         resultValue.message = 'No family parameters where updated'
         resultValue.status = True
@@ -109,9 +109,13 @@ def GetFileSize(doc):
         # get the path from the document
         # this will fail if not a file based doc or the document is detached
         revitFilePath = doc.PathName
-        if(util.FileExist(revitFilePath)):
-            # get file size in MB
-            size = util.GetFileSize(revitFilePath)
+        # check if bim 360 file
+        if (revitFilePath.StartsWith('BIM 360')):
+            size = b360.GetModelFileSize(doc)
+        else:
+            if(util.FileExist(revitFilePath)):
+                # get file size in MB
+                size = util.GetFileSize(revitFilePath)
     except:
         pass
     return size
@@ -391,41 +395,43 @@ def GetNumberOfFilledRegionInModel(doc):
 # main 
 # ----------------------------------------------
 
-# list containing parameter names and the action getting the integer value for the parameter
-PARAM_ACTIONS = [
-    ['ValueWorksets', GetWorksetNumber],
-    ['ValueFileSize', GetFileSize],
-    ['ValueWarnings', GetNumberOfWarnings],
-    ['ValueDesignSets', GetNumberOfDesignSets],
-    ['ValueDesignOptions', GetNumberOfDesignOptions],
-    ['ValueSheets', GetNumberOfSheets],
-    ['ValueViews', GetViewsInTheModel],
-    ['ValueViewsNotPlaced', GetUnplacedViews],
-    ['ValueLineStyles', GetNumberOfLineStyles],
-    ['ValueLinePatterns', GetNumberOfLinePatterns],
-    ['ValueFillPatterns', GetNumberOfFillPatterns],
-    ['ValueCADImports', GetNumberOfCADImports],
-    ['ValueCADLinksToModel', GetNumberOfCADLinksToModel],
-    ['ValueCADLinksToView', GetNumberOfCADLinksToView],
-    ['ValueImageImports', GetNumberOfImageImports],
-    ['ValueImageLinks', GetNumberOfImageLinks],
-    ['ValueFamilies', GetNumberOfFamiliesInModel],
-    ['ValueFamiliesInPlace', GetNumberOfInPlaceFamiliesInModel],
-    ['ValueModelGroups', GetNumberOfModelGroupsInModel],
-    ['ValueModelGroupsUnplaced', GetNumberOfUnplacedModelGroupsInModel],
-    ['ValueDetailGroups', GetNumberOfDetailGroupsInModel],
-    ['ValueDetailGroupsUnplaced', GetNumberOfUnplacedDetailGroupsInModel],
-    ['ValueRooms', GetNumberOfRoomsInModel],
-    ['ValueRoomsUnplaced', GetNumberOfUnplacedRoomsInModel],
-    ['ValueRoomsNotEnclosed', GetNumberOfNotEnclosedRoomsInModel],
-    ['ValueRoomsRedundant', GetNumberOfRedundantRoomsInModel],
-    ['ValueFilledRegions', GetNumberOfFilledRegionInModel]
-]
+#set up a named tuple to store data in it
+healthDataAction = namedtuple('healthDataAction', 'getData reportFileName')
+
+PARAM_ACTIONS = {
+    'ValueWorksets': healthDataAction(GetWorksetNumber, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS),
+    'ValueFileSize': healthDataAction(GetFileSize, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE),
+    'ValueWarnings': healthDataAction(GetNumberOfWarnings, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS),
+    'ValueDesignSets': healthDataAction(GetNumberOfDesignSets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS),
+    'ValueDesignOptions': healthDataAction(GetNumberOfDesignOptions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS),
+    'ValueSheets': healthDataAction(GetNumberOfSheets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS),
+    'ValueViews': healthDataAction(GetViewsInTheModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS),
+    'ValueViewsNotPlaced': healthDataAction(GetUnplacedViews, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED),
+    'ValueLineStyles': healthDataAction(GetNumberOfLineStyles, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES),
+    'ValueLinePatterns': healthDataAction(GetNumberOfLinePatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS),
+    'ValueFillPatterns': healthDataAction(GetNumberOfFillPatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS),
+    'ValueCADImports': healthDataAction(GetNumberOfCADImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS),
+    'ValueCADLinksToModel': healthDataAction(GetNumberOfCADLinksToModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL),
+    'ValueCADLinksToView': healthDataAction(GetNumberOfCADLinksToView, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW),
+    'ValueImageImports': healthDataAction(GetNumberOfImageImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS),
+    'ValueImageLinks': healthDataAction(GetNumberOfImageLinks, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS),
+    'ValueFamilies': healthDataAction(GetNumberOfFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES),
+    'ValueFamiliesInPlace': healthDataAction(GetNumberOfInPlaceFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE),
+    'ValueModelGroups': healthDataAction(GetNumberOfModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS),
+    'ValueModelGroupsUnplaced': healthDataAction(GetNumberOfUnplacedModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED),
+    'ValueDetailGroups': healthDataAction(GetNumberOfDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS),
+    'ValueDetailGroupsUnplaced': healthDataAction(GetNumberOfUnplacedDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED),
+    'ValueRooms': healthDataAction(GetNumberOfRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS),
+    'ValueRoomsUnplaced': healthDataAction(GetNumberOfUnplacedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED),
+    'ValueRoomsNotEnclosed': healthDataAction(GetNumberOfNotEnclosedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED),
+    'ValueRoomsRedundant': healthDataAction(GetNumberOfRedundantRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT),
+    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS)
+}
 
 # updates any instances of model health tracking family in a project
 # doc   current document
 def UpdateModelHealthTracerFamily(doc, revitFilePath):
-    # the current file name
+    """updates model health tracker family"""
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     instances = GetInstancesOfModelHealth(doc)
@@ -435,4 +441,26 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
             resultValue.Update(updateFlag)
     else:
         resultValue.UpdateSep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revitFileName)
+    return resultValue
+
+# doc   current document
+# revitFilePath     path of the curren document
+def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
+    """write out health tracker data"""
+    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
+    resultValue = res.Result()
+    # get values and write them out
+    for key, value in PARAM_ACTIONS.items():
+        pvalue = PARAM_ACTIONS[key].getData(doc)
+        fileName = util.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
+        resExport = res.Result()
+        try:
+            util.writeReportData(
+                ouputDirectory + '\\' + fileName,
+                '',
+                [[revitFileName, key, util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), str(pvalue)]])
+            resExport.UpdateSep(True, 'Exported: ' + str(key))
+        except Exception as e:
+                resExport.UpdateSep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
+        resultValue.Update(resExport)
     return resultValue

@@ -107,7 +107,7 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
                 data = '\n' + data
             else:
                 rowCounter += 1
-            f.write(data)
+            f.write(data.encode('utf-8'))
         f.close()
         returnvalue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
     except Exception as e:
@@ -123,7 +123,7 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
 def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
     returnvalue = res.Result()
     # get revit files in input dir
-    revitfiles = fileGetter(directoryPath,'.rvt')
+    revitfiles = fileGetter(directoryPath, fileExtension)
     # build bucket list
     buckets = wl.DistributeWorkload(taskFilesNumber, revitfiles, getFileSize)
     try:

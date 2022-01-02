@@ -45,7 +45,6 @@ REPORT_RAMPS_HEADER = ['HOSTFILE', 'RAMPTYPEID', 'RAMPTYPENAME']
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
 # doc:   current model document
 def GetAllRampTypesByCategory(doc):
     """ this will return a filtered element collector of all Ramp types in the model:
@@ -56,12 +55,11 @@ def GetAllRampTypesByCategory(doc):
 
 
 # collector   fltered element collector containing Ramp type elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
+# dic         dictionary containing key: ramp type family name, value: list of ids
 def BuildRampTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -70,33 +68,11 @@ def BuildRampTypeDictionary(collector, dic):
 
 # doc   current model document
 def SortRampTypesByFamilyName(doc):
-    # get all Wall Type Elements
-    #wts = GetRampTypesByClass(doc)
-    # get all wall types including in place wall families
+    # get all ramp types including in place ramp families
     wts_two = GetAllRampTypesByCategory(doc)
     usedWts = {}
-    #usedWts = BuildRampTypeDictionary(wts, usedWts)
     usedWts = BuildRampTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        # set a threshold value of 4 for ramps
-        # graphic style
-        # element type
-        # ramp type itself
-        # ???
-        hasDependents = com.HasDependentElements(doc, wallType, None, 4)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
 
 # -------------------------------- none in place Ramp types -------------------------------------------------------
 
@@ -116,7 +92,7 @@ def GetAllRampTypeIdsInModelByCategory(doc):
 # doc   current document
 def GetUsedRampTypeIds(doc):
     """ returns all used in Ramp type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -136,7 +112,7 @@ def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
     - Ramp 
     ramps do not have in place families ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
     # make sure there is at least on Ramp type per system family left in model
     RampTypes = SortRampTypesByFamilyName(doc)
     for key, value in RampTypes.items():

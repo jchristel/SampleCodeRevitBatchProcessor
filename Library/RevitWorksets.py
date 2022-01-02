@@ -100,7 +100,7 @@ def OpenWorksetsWithElementsHack(doc):
 # attemps to change the worksets of elements provided through an element collector
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     returnvalue = res.Result()
-    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName + '\n'
+    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
     # get the ID of the default grids workset
     defaultId = GetWorksetIdByName(doc, defaultWorksetName)
     counterSuccess = 0
@@ -110,8 +110,14 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
         # get all elements in collector and check their workset
         for p in collector:
             if (p.WorksetId != defaultId):
+                # get the element name
+                elementName = 'Unknown Element Name'
+                try:
+                    elementName = Element.Name.GetValue(p)
+                except Exception :
+                    pass
                 # move element to new workset
-                transaction = Transaction(doc, "Changing workset " + p.Name)
+                transaction = Transaction(doc, "Changing workset: " + elementName)
                 trannyStatus = com.InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
                 if (trannyStatus.status == True):
                     counterSuccess += 1
@@ -126,8 +132,10 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     returnvalue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
     return returnvalue
 
-# returns the required action to change a single elements workset
+# el            element
+# defaultId     workset id of the workset the element is to be moved to
 def GetActionChangeElementWorkset(el, defaultId):
+    '''returns the required action to change a single elements workset'''
     def action():
         actionReturnValue = res.Result()
         try:
@@ -139,12 +147,96 @@ def GetActionChangeElementWorkset(el, defaultId):
         return actionReturnValue
     return action
 
+# el            element
+# worksetId     workset id to be checked against 
+def IsElementOnWorksetById(doc, el, worksetId):
+    '''checks whether an element is on a given workset'''
+    flag = True
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsparam)
+        compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
+        if(compareToWorksetName != currentWorksetName):
+            flag = False
+    except Exception as e:
+        print (e)
+        flag = False
+    return flag
+
+# el            element
+# worksetId     workset name to be checked against 
+def IsElementOnWorksetByName(el, worksetName):
+    '''checks whether an element is on a given workset'''
+    flag = True
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsparam)
+        if(worksetName != currentWorksetName):
+            flag = False
+    except Exception as e:
+        print ("IsElementOnWorksetByName: " + str(e))
+        flag = False
+    return flag
+
+# doc:      current model document
+# el            element
+def GetElementWorksetName(el):
+    '''returns the name of the workset an element is on, or invalid workset'''
+    workSetname = 'invalid workset'
+    try:
+        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        workSetname = com.getParameterValue(wsparam)
+    except Exception as e:
+        print ("GetElementWorksetName: " + str(e))
+    return workSetname
+
+# doc       current model
+# reportPath        fully qualified path to tab separated report text file same format
+#                   as this module GetWorksetReportData() method
+# revitFilePath     full revit file path
+def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
+    '''updates the default visbility of worksets based on a workset report file'''
+    returnvalue = res.Result()
+    # read report
+    worksetData = util.ReadTabSeparatedFile(reportPath)
+    fileName = util.GetFileNameWithoutExt(revitFilePath)
+    worksetDataForFile = {}
+    for row in worksetData:
+        if(util.GetFileNameWithoutExt(row[0]).startswith(fileName) and len(row) > 3):
+            worksetDataForFile[row[1]] = util.ParsStringToBool(row[3])
+    if(len(worksetDataForFile) > 0): 
+        # updates worksets
+        worksets = GetWorksets(doc)
+        for workset in worksets:
+            if(str(workset.Id) in worksetDataForFile):
+                if (workset.IsVisibleByDefault != worksetDataForFile[str(workset.Id)]):
+                    def action():
+                        actionReturnValue = res.Result()
+                        defaultVisibility  = WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
+                        try:
+                            defaultVisibility.SetWorksetVisibility(workset.Id, worksetDataForFile[str(workset.Id)])
+                            actionReturnValue.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(worksetDataForFile[str(workset.Id)]) + ']')
+                        except Exception as e:
+                            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+                        return actionReturnValue
+                    # move element to new workset
+                    transaction = Transaction(doc, workset.Name + ": Changing default workset visibility")
+                    trannyStatus = com.InTransaction(transaction, action)
+                    returnvalue.Update(trannyStatus)
+                else:
+                    returnvalue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
+            else:
+                returnvalue.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
+    else:
+        returnvalue.UpdateSep(True, 'No settings found for file: ' + fileName)
+    return returnvalue
+
 # ------------------------------------------------------- workset reporting --------------------------------------------------------------------
 
-# gets workset data ready for being printed to file
 # doc: the current revit document
 # revitFilePath: fully qualified file path of Revit file
 def GetWorksetReportData(doc, revitFilePath):
+    '''gets workset data ready for being printed to file'''
     data = []
     worksets = GetWorksetsFromCollector(doc)
     for ws in worksets:

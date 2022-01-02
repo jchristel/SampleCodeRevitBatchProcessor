@@ -36,7 +36,7 @@ clr.ImportExtensions(System.Linq)
 # -------------------------------------------- common variables --------------------
 # header used in reports
 REPORT_VIEWS_HEADER = ['HOSTFILE']
-REPORT_SHEETS_HEADER = ['HOSTFILE']
+REPORT_SHEETS_HEADER = ['HOSTFILE','Id']
 
 # --------------------------------------------- utility functions ------------------
 
@@ -46,6 +46,13 @@ REPORT_SHEETS_HEADER = ['HOSTFILE']
 def GetViewTypes(doc):
     """returns all view family types in a model"""
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
+
+def GetViewTypeIds(doc):
+    """returns all view family type ids in a model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(ViewFamilyType)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
 
 # doc   current model document
 def GetUsedViewTypeIdsInTheModel(doc):
@@ -82,6 +89,17 @@ def GetViewsTemplatesInInModel(doc):
         if(v.IsTemplate):
             viewTemplates.append(v)
     return viewTemplates
+
+# doc   current model document
+def GetViewsTemplateIdsInInModel(doc):
+    """get all template ids in a model"""
+    ids = []
+    col = FilteredElementCollector(doc).OfClass(View)
+    for v in col:
+        # filter out templates
+        if(v.IsTemplate):
+            ids.append(v.Id)
+    return ids
 
 # doc   current model document
 def GetUsedViewTemplateIdsInTheModel(doc):
@@ -162,6 +180,14 @@ def GetAllAvailableFiltersInModel(doc):
     """returns all filters in document as a collector"""
     collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
     return collector
+
+# doc   current model document
+def GetAllAvailableFilterIdsInModel(doc):
+    """returns all view filter ids in document"""
+    ids = []
+    col = GetAllAvailableFiltersInModel(doc)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
 
 # view   view from which to get the filters from
 # uniqueList    list of filters of which to add new filters to (not already in list)
@@ -452,64 +478,89 @@ def WriteSheetData(doc, fileName, currentFileName):
     """writes out sheet data to file"""
     returnvalue = res.Result()
     try:
-        parameterHeaders, data = GetSheetReportData(doc)
-        convertedData = ConvertData(data, currentFileName)
+        data = GetSheetReportData(doc, currentFileName)
+        headers = GetReportHeaders(doc)
         util.writeReportData(
             fileName, 
-            REPORT_SHEETS_HEADER + parameterHeaders, 
-            convertedData)
+            headers, 
+            data)
         returnvalue.UpdateSep(True, 'Succesfully wrote data file')
     except Exception as e:
         returnvalue.UpdateSep(False, str(e))
     return returnvalue
 
+# doc:          current model document
+# fileName:     fully qualified file path
+def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
+    """writes to file sheet properties as nominated in passt in list """
+    returnvalue = res.Result()
+    try:
+        data = GetSheetReportData(doc, currentFileName)
+        headers = GetReportHeaders(doc)
+        data = FilterDataByProperties(data, headers, sheetProperties)
+        # change headers to filtered + default
+        headers = REPORT_SHEETS_HEADER[:]
+        headers = headers + sheetProperties
+        # write data out to file
+        util.writeReportData(
+            fileName, 
+            headers, 
+            data)
+        returnvalue.UpdateSep(True, 'Succesfully wrote data file')
+    except Exception as e:
+        returnvalue.UpdateSep(False, str(e))
+    return returnvalue
 
-def ConvertData(data, currentFileName):
-    rowData = []
-    for s in data:
-            # get second element in tuple
-            n = 1
-            data = [str(x[n]) for x in s]
-            data.insert(0, currentFileName)
-            rowData.append(data)
-    return rowData
+# data                  sheet data as a list of lists
+# headers               list of property names
+# sheetProperties       list of sheet properties to be extracted from data
+def FilterDataByProperties(data, headers, sheetProperties):
+    """filters sheet data by supplied property names"""
+    # add default headers to propertie to be filtered first
+    dataIndexList= [iter for iter in range(len(REPORT_SHEETS_HEADER))]
+    # build index pointer list of data to be kept
+    for f in sheetProperties:
+        if (f in headers):
+            dataIndexList.append(headers.index(f))
+    # filter data out
+    newData = []
+    for d in data:
+        dataRow = []
+        for i in dataIndexList:
+            dataRow.append(d[i])
+        newData.append(dataRow)
+    return newData
 
-# doc: the current revit document
-def GetSheetReportData(doc):
-    """method retrieving all sheets and associated parameter names and values"""
-    headers = []
-    sheetData = []
-    # get sheets in model
-    sheets = GetSheetsByFilters(doc)
-    if (len(sheets) > 0):
-        # get headers:
-        headers = GetHeaders(sheets[0])
-        for sheet in sheets:
-            sheeparameters = GetSheetParameters(sheet)
-            sheetData.append(sheeparameters)
-    return headers, sheetData
+# doc       the current revit document
+# hostanme  the file hostname, which is added to data returned
+def GetSheetReportData(doc, hostName):
+    """returns sheet data including file name and sheet id"""
+    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    views = []
+    for v in collectorViews:
+        # get all parameters attached to sheet
+        paras = v.GetOrderedParameters()
+        data = [hostName, str(v.Id)]
+        for para in paras:
+            # get values as utf-8 encoded strings
+            value = com.GetParameterValueUTF8String(para)
+            try:
+                data.append (value)
+            except:
+                data.append('Failed to retrieve value')
+        views.append(data)
+    return views
 
-# samplesheet         Sheet view
-def GetHeaders (sampleSheet):
-    """method retrieving column headers for report file"""
-    headers = ['SheetId']
-    paras = sampleSheet.GetOrderedParameters()
-    for p in paras:
-        headers.append(p.Definition.Name)
-    # sort alphabeticaly
-    return sorted(headers)
-
-# sheet         Sheet view
-def GetSheetParameters(sheet):
-    """method retrieving parameters and their values per sheet"""
-    sheetParameters = []
-    paras = sheet.GetOrderedParameters()
-    tupe_d = ('Sheet Id', sheet.Id)
-    sheetParameters.append(tupe_d)
-    for p in paras:
-        v = com.getParameterValue(p)
-        tupe_d = (p.Definition.Name, util.EncodeAscii(str(v)))
-        sheetParameters.append(tupe_d)
-    # sort by definition name
-    sheetParameters.sort(key=lambda t: t[0])
-    return sheetParameters
+# doc       the current revit document
+def GetReportHeaders(doc):
+    """returns sheet data including file name and sheet id"""
+    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    # copy headers list
+    headers = REPORT_SHEETS_HEADER[:]
+    for v in collectorViews:
+        # get all parameters attached to sheet
+        paras = v.GetOrderedParameters()
+        for para in paras:
+            headers.append (para.Definition.Name)
+        break
+    return headers

@@ -149,6 +149,26 @@ def FileExist(path):
         value = False
     return value
 
+def IsBackupFile(fileName):
+    '''checks whether a file is a back up file by splitting filname at every full stop
+    check whether I get a list with more more then 2 entries back ?
+    no: not a back up
+    yes: check last list entry whether it is 4 characters in length and can I convert it into an integer?
+    yes: backup file
+    no: normal file
+    returns true if a back up file, false if not
+    '''
+    isBackup = False
+    chunks = fileName.split('.')
+    if(len(chunks)>2):
+        lastChunk = chunks[len(chunks)-2]
+        try:
+            converted_num = int(lastChunk)
+            isBackup = True
+        except Exception:
+            pass
+    return isBackup
+
 # retrieves revit file data from either:
 #   -  directory on a file server
 #   - a text file containing BIM 360 project data
@@ -156,6 +176,13 @@ def FileExist(path):
 #       - format:
 #           0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
 def GetFileData(settings):
+    ''' retrieves revit file data from either:
+        -  directory on a file server
+        - a text file containing BIM 360 project data
+        - text file needs to be a .csv
+        - format:
+            0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
+    '''
     revitfiles = []
     # check whether input is a directory path or a text file (csv) containing BIM 360 data
     # since we tested for a valid path initially it will need to be either one...
@@ -165,12 +192,23 @@ def GetFileData(settings):
             revitfiles = ub360.GetBIM360Data(settings.inputDir)
         elif(os.path.isdir(settings.inputDir)):
             # check a to serch for files is to include sub dirs
+            revitfilesUnfiltered = []
             if(settings.inclSubDirs):
                 # get revit files in input dir and subdirs
-                revitfiles = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+                revitfilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
             else:
                 # get revit files in input dir
-                revitfiles = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+                revitfilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+            # check for max path violations!
+            # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
+            for revitFile in revitfilesUnfiltered:
+                # remove any back up files from selection
+                if(IsBackupFile(os.path.basename(revitFile.name)) == False):
+                    if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
+                        revitfiles.append(revitFile)
+                    else:
+                        print ('Max path lenght violation: ' + revitFile.name)
+                        print ('File has been removed from selection!')
     except Exception as e:
         print ('An exception occured during BIM360 file read! ' + str(e))
         # return an empty list which will cause this script to abort

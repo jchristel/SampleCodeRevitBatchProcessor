@@ -88,20 +88,6 @@ def SortWallTypesByFamilyName(doc):
     usedWts = BuildWallTypeDictionary(wts_two, usedWts)
     return usedWts
 
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allWallTypeIds = typeIdGetter(doc)
-    ids = []
-    for wallTypeId in allWallTypeIds:
-        wallType = doc.GetElement(wallTypeId)
-        hasDependents = com.HasDependentElements(doc, wallType, None, 2)
-        if(hasDependents == useType):
-            ids.append(wallTypeId)
-    return ids
-
 # -------------------------------- stacked wall types -------------------------------------------------------
 
 # doc   current model document
@@ -115,22 +101,21 @@ def GetAllStackedWallTypesInModel(doc):
 
 def GetAllStackedWallTypeIdsInModel(doc):
     """ returns all stacked wall element types available in model """
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
     ids = []
-    for c in col:
-        ids.append(c.Id)
+    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
+    ids = com.GetIdsFromElementCollector(col)
     return ids
 
 # doc   current document
 def GetUsedStackedWallTypeIds(doc):
     """ returns all used stack wall type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedStackedWallTypeIdsToPurge(doc):
     """ returns all unused stack wall type ids, will leave one behind if none is used """
-    ids = GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
@@ -151,23 +136,22 @@ def GetInPlaceWallFamilyInstances(doc):
 # doc   current document
 def GetAllInPlaceWallTypeIdsInModel(doc):
     """ returns type ids off all available in place families of category wall """
+    ids = []
     filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
-    ids = []
-    for c in col:
-            ids.append(c.Id)
+    ids = com.GetIdsFromElementCollector(col)
     return ids
 
 # doc   current document
 def GetUsedInPlaceWallTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceWallTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 0)
     return ids
 
 # doc   current document
@@ -181,7 +165,11 @@ def GetUnusedInPlaceWallIdsForPurge(doc):
 # doc   current document
 def GetAllCurtainWallTypeIdsInModel(doc):
     """ returns type ids off all available curtain wall types"""
-    return SortWallTypesByFamilyName(doc)[CURTAIN_WALL_FAMILY_NAME]
+    ids = []
+    dic = SortWallTypesByFamilyName(doc)
+    if(dic.has_key(CURTAIN_WALL_FAMILY_NAME)):
+        ids = dic[CURTAIN_WALL_FAMILY_NAME]
+    return ids
 
 # doc           current model document
 # availableIds  type ids to check for use a curtain panel
@@ -208,13 +196,13 @@ def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
 # doc   current document
 def GetUsedCurtainWallTypeIds(doc):
     """ returns type ids off all used curtain wall types """
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnUsedCurtainWallTypeIdsToPurge(doc):
     """ returns type ids off all unused curtain wall types, will leave one behind if none is used"""
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllCurtainWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
@@ -225,7 +213,11 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
 # doc   current document
 def GetAllBasicWallTypeIdsInModel(doc):
     """ returns type ids off all available basic wall types"""
-    return SortWallTypesByFamilyName(doc)[BASIC_WALL_FAMILY_NAME]
+    ids = []
+    dic = SortWallTypesByFamilyName(doc)
+    if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
+        ids = dic[BASIC_WALL_FAMILY_NAME]
+    return ids
     
 # doc           current model document
 # availableIds  type ids to check for use as basic wall type
@@ -250,15 +242,17 @@ def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
     return ids
 
 # doc   current document
-def GetUsedBasicWallTypeIds_OLD(doc):
+def GetUsedBasicWallTypeIds(doc):
     """ returns type ids off all used basic wall types """
-    ids = GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
-    """ returns type ids off all unused curtain wall types, will leave one behind if none is used"""
-    ids = GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
+    """ returns type ids off all unused basic wall types, will leave one behind if none is used"""
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
+    # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
+    # argh GetStackedWallMemberIds() is only available on wall element but not walltype. Why?
     availableTypeCount = len(GetAllBasicWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)

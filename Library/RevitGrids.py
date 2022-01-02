@@ -29,6 +29,7 @@ import RevitCommonAPI as com
 import RevitWorksets as rWork
 import Result as res
 import Utility as util
+import RevitFamilyUtils as rFamU
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -40,6 +41,25 @@ clr.ImportExtensions(System.Linq)
 REPORT_GRIDS_HEADER = ['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN']
 
 # --------------------------------------------- utility functions ------------------
+
+# doc:   current model document
+def GetAllGridHeadsByCategory(doc):
+    """ this will return a filtered element collector of all grid head types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
+    return collector
+
+# doc:   current model document
+def GetAllGridTypesByCategory(doc):
+    """ this will return a filtered element collector of all grid types in the model"""
+    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Grids).WhereElementIsElementType()
+    return collector
+
+# doc:   current model document
+def GetAllGridTypeIdsByCategory(doc):
+    """ this will return a filtered element collector of all grid types ids in the model"""
+    collector = GetAllGridTypesByCategory(doc)
+    ids = com.GetIdsFromElementCollector(collector)
+    return ids
 
 # returns a list of list containing a valid grid types available in model
 # format: [[GridTypeId as Revit ElementId, grid type name as string],[...]]
@@ -231,10 +251,51 @@ def ModifyGridsWorksets(doc, revitFileName, worksetRules):
 def GetGridReportData(doc, revitFilePath):
     data = []
     for p in FilteredElementCollector(doc).OfClass(Grid):
-        data.append('\t'.join([
+        data.append([
             util.GetFileNameWithoutExt(revitFilePath), 
             str(p.Id.IntegerValue), 
             util.EncodeAscii(p.Name), 
             rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue), 
-            GetMaxExtentAsString(p)]))
+            GetMaxExtentAsString(p)])
     return data
+
+# -------------------------------------------------  purge --------------------------------------------------------------------
+
+# doc             current document
+def GetUnusedGridTypesForPurge(doc):
+    """ this will return all ids of unused grid types in the model to be purged"""
+    return com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 0, 8)
+
+# doc             current document
+def GetAllGridHeadFamilyTypeIds(doc):
+    """ this will return all ids grid head family types in the model"""
+    ids = []
+    filter = ElementCategoryFilter(BuiltInCategory.OST_GridHeads)
+    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    ids = com.GetIdsFromElementCollector(col)
+    return ids
+
+# doc             current document
+def GetUnusedGridHeadFamilies(doc):
+    """ this will return all ids of unused family symbols (types) of grid head families"""
+    usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 1, 8)
+    headsInUseIds = []
+    for Id in usedTypes:
+        type = doc.GetElement(Id)
+        paras = type.GetOrderedParameters()
+        for p in paras:
+            if(p.Definition.BuiltInParameter == BuiltInParameter.GRID_HEAD_TAG):
+                if (com.getParameterValue(p) not in headsInUseIds):
+                    headsInUseIds.append(com.getParameterValue(p))
+                break
+    allSymbolsInModel = GetAllGridHeadsByCategory(doc)
+    unusedSymbolIds = []
+    for  symbolInModel in  allSymbolsInModel:
+        if(symbolInModel.Id not in headsInUseIds ):
+            unusedSymbolIds.append(symbolInModel.Id)
+    return unusedSymbolIds 
+
+# doc             current document
+def GetUnusedGridHeadFamiliesForPurge(doc):
+    """ this will return all ids of unused grid head symbols and families to be purged"""
+    return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGridHeadFamilies)

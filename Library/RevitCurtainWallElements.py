@@ -36,7 +36,7 @@ clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 # header used in reports
-REPORT_CURTAINWALL_ELEMENTS_HEADER = ['HOSTFILE', 'ReplaceMeTYPEID', 'ReplaceMeTYPENAME']
+REPORT_CURTAINWALL_ELEMENTS_HEADER = ['HOSTFILE', 'CURTAINWALL_ELEMENT_TYPEID', 'ReplaceMeTYPENAME']
 
 CURTAINWALL_PANEL_EMPTY_FAMILY_NAME = 'Empty System Panel'
 CURTAINWALL_PANEL_SYSTEM_FAMILY_NAME = 'Empty System Panel'
@@ -70,9 +70,10 @@ CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[BuiltInCategory] ([
 # returns all curtain panel element types in a model
 # doc:   current model document
 def GetAllCurtainWallElementTypesByCategory(doc):
-    """ this will return a filtered element collector of all Railing types in the model:
+    """ this will return a filtered element collector of all curtain wall element types in the model:
     - curtain wall panels
     - curtain wall mullions
+    - family symbols!
     """
     multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
@@ -98,21 +99,7 @@ def SortCurtainWallElementTypesByFamilyName(doc):
     usedWts = BuildCurtainWallElementTypeDictionary(wts_two, usedWts)
     return usedWts
 
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
-
-# -------------------------------- none in place Curtain Wall Element types -------------------------------------------------------
+# -------------------------------- none in place or loadable Curtain Wall Element types -------------------------------------------------------
 
 # doc   current model document
 def GetCurtainWallElementInstancesInModelByCategory(doc):
@@ -122,7 +109,7 @@ def GetCurtainWallElementInstancesInModelByCategory(doc):
 
 # doc   current model document
 def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
-    """ returns all CurtainWallElement element types available placed in model """
+    """ returns all CurtainWallElement element type ids available in model """
     ids = []
     colCat = GetAllCurtainWallElementTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -144,7 +131,7 @@ def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
 
 # returns all CurtainWallElement types in a model
 # doc:   current model document
-def GetAllCurtainWallElementTypeIdssByCategoryExclInPlace(doc):
+def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
     """ this will return a filtered element collector of all CurtainWallElement type Ids in the model:
     - curtain wall panels
     - curtain wall mullions
@@ -159,7 +146,7 @@ def GetAllCurtainWallElementTypeIdssByCategoryExclInPlace(doc):
 # doc   current document
 def GetUsedCurtainWallElementTypeIds(doc):
     """ returns all used in CurtainWallElement type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -174,12 +161,53 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
  
 # doc   current document
-def GetUnusedNonInPlaceCurtainWallElementTypeIdsToPurge(doc):
+def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
     """ returns all unused CurtainWallElement type ids for:
     - curtain wall panels
     - curtain wall mullions
     it will therefore not return any family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdssByCategoryExclInPlace, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsByCategoryExclSymbols, 0)
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
+    return ids
+
+
+# -------------------------------- loadable Curtain Wall Element types -------------------------------------------------------
+
+# doc   current document
+def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
+    """ this will return a list of all loadable non shared symbols (types) in the model:
+    - curtain wall panels
+    - curtain wall mullions
+    """
+    ids = []
+    multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    for c in collector:
+        if(c.GetType() == FamilySymbol):
+            fam = c.Family
+            paras = fam.GetOrderedParameters()
+            for p in paras:
+                #print(p.Definition.Name)
+                if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
+                    if(com.getParameterValue(p) == 'No' and c.Id not in ids):
+                        ids.append(c.Id)
+    return ids
+
+# doc   current document
+def GetUsedCurtainWallSymbolIds(doc):
+    """ returns all used loadable symbol (type) ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallNonSharedSymbolIdsByCategory, 1)
+    return ids
+
+# doc   current document
+def GetUnusedCurtainWallSymbolIds(doc):
+    """ returns all unused loadable symbol (type) ids """
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallNonSharedSymbolIdsByCategory, 0)
+    return ids
+
+# doc   current document
+def GetUnusedICurtainWallSymbolIdsForPurge(doc):
+    """returns symbol(type) ids and family ids (when no type is in use) of loadable symbols which can be purged"""
+    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedCurtainWallSymbolIds)
     return ids

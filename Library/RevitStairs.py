@@ -52,7 +52,25 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
-# returns all stair types in a model
+# list of built in parameters attached to stair sub types
+STAIR_LANDING_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_LANDING_TYPE
+]
+
+STAIR_CUTMARK_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
+]
+
+STAIR_SUPPORT_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
+    BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
+    BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
+]
+
+STAIR_RUN_TYPE_PARAS = [
+    BuiltInParameter.STAIRSTYPE_RUN_TYPE
+]
+
 # doc:   current model document
 def GetAllStairTypesByCategory(doc):
     """ this will return a filtered element collector of all Stair types in the model:
@@ -78,6 +96,10 @@ def GetStairTypesByClass(doc):
 def GetStairPathTypesByClass(doc):
     """ this will return a filtered element collector of all Stair path types in the model """
     return  FilteredElementCollector(doc).OfClass(StairsPathType)
+
+def GetAllStairPathElementsInModel(doc):
+    """ this will return a filtered element collector of all Stair path elements in the model """
+    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetStairLandingTypesByClass(doc):
@@ -107,7 +129,6 @@ def BuildStairTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
     for c in collector:
         if(dic.has_key(c.FamilyName)):
-            # todo : check WallKind Enum???
             if(c.Id not in dic[c.FamilyName]):
                 dic[c.FamilyName].append(c.Id)
         else:
@@ -116,28 +137,14 @@ def BuildStairTypeDictionary(collector, dic):
 
 # doc   current model document
 def SortStairTypesByFamilyName(doc):
-    # get all Wall Type Elements
+    # get all Stair Type Elements
     wts = GetStairTypesByClass(doc)
-    # get all wall types including in place wall families
+    # get all stair types including in place stair families
     wts_two = GetAllStairTypesByCategory(doc)
     usedWts = {}
     usedWts = BuildStairTypeDictionary(wts, usedWts)
     usedWts = BuildStairTypeDictionary(wts_two, usedWts)
     return usedWts
-
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
-    # get all types elements available
-    allTypeIds = typeIdGetter(doc)
-    ids = []
-    for typeId in allTypeIds:
-        type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
-        if(hasDependents == useType):
-            ids.append(typeId)
-    return ids
 
 # -------------------------------- none in place Stair types -------------------------------------------------------
 
@@ -210,7 +217,7 @@ def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
 # doc   current document
 def GetUsedStairTypeIds(doc):
     """ returns all used in Stair type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByCategory, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
@@ -223,7 +230,9 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             match = False
             break
     return match
- 
+
+# -------------------------------- none in place Stair types purge -------------------------------------------------------
+
 # doc   current document
 def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     """ returns all unused Stair type ids for:
@@ -232,71 +241,150 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     - Basic Stair
     it will therefore not return any in place family types ..."""
     # get unused type ids
-    ids = GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByClass, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByClass, 0)
     # make sure there is at least on Stair type per system family left in model
     StairTypes = SortStairTypesByFamilyName(doc)
     for key, value in StairTypes.items():
-        if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
+       if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
             if(FamilyNoTypesInUse(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
+#--------------------------------utlity functions to ge unused sub types ----------------------
+
+# doc   current document
+def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
+    """ gets the ids returned from stair type belonging to parameter list passt in"""
+    ids = []
+    stairType = doc.GetElement(stairTypeId)
+    typeParas = stairType.GetOrderedParameters()
+    for tp in typeParas:
+        if(tp.Definition.BuiltInParameter in paras):
+            pvalue = com.getParameterValue(tp)
+            if(pvalue not in ids):
+                ids.append(pvalue)
+    return ids
+
+# doc   current document
+# ids   list of system type ids
+def GetAllSimilarTypeIds(doc, ids):
+    """returns all ids of similar types of elemet ids passed in"""
+    simIds = []
+    for id in ids:
+         el = doc.GetElement(id)
+         simTypes = el.GetSimilarTypes()
+         for st in simTypes:
+            if (st not in simIds):
+                simIds.append(st)
+    return simIds
+
+# doc   current document
+# ids   list of system type ids
+def BuildSystemFamilyDictionary(doc, ids):
+    """returns dictionary where key is the system family name and values available types of that system family"""
+    dic = {}
+    for id in ids:
+        el = doc.GetElement(id)
+        if(dic.has_key(el.FamilyName)):
+            dic[el.FamilyName].append(id)
+        else:
+            dic[el.FamilyName] = [id]
+    return dic
+
+# doc   current document
+# ids   list of ids to check
+# leaveOneBehind        flag default is true: leave at least one type of a system family behind
+def CheckSystemFamilies(doc, ids, leaveOneBehind):
+    """check whether a list of ids of system family is the entire list of types avaialble
+    if so it will remove one type id per system family to allow purging"""
+    dicToCheck = BuildSystemFamilyDictionary(doc, ids)
+    similarIds = GetAllSimilarTypeIds(doc, ids)
+    dicReference = BuildSystemFamilyDictionary(doc, similarIds)
+    ids = []
+    for key,value in dicToCheck.items():
+        if (dicReference.has_key(key)):
+            if(len(dicReference[key]) == len(dicToCheck[key]) and leaveOneBehind):
+                # need to leave one behind...
+                if(len(dicToCheck[key])>0):
+                    dicToCheck[key].pop(0)
+                    ids = ids + dicToCheck[key]
+            else:
+                 ids = ids + dicToCheck[key]
+        else:
+            ids = ids + dicToCheck[key]
+    return ids
+
+# doc   current document
+# availavbleIdsGetter   function returning available type ids
+# paras                 list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
+# leaveOneBehind        flag default is true: leave at least one type of a system family behind
+def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
+    """ returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function """
+    ids = []
+    # get all available type ids and then check against all Stair type ids
+    idsAvailable = availavbleIdsGetter(doc)
+    allUsedStairTypeIds = GetAllStairTypeIdsInModelByCategory(doc)
+    idsUsedTypes = []
+    for used in allUsedStairTypeIds:
+        idsUsed = GetUsedSubTypeIdsFromStairType(doc, used, paras)
+        for id in idsUsed:
+            if(id not in idsUsedTypes):
+                idsUsedTypes.append(id)
+    for idAvailable in idsAvailable:
+        if(idAvailable not in idsUsedTypes):
+            ids.append(idAvailable)
+    # need to check that we are not trying to delete last type of a system family....
+    ids = CheckSystemFamilies(doc, ids, leaveOneBehind)
+    return ids
+
+# --------------------------------- purging subtypes ------------------------------------------------
+
 # doc   current document
 def GetUnusedStairPathTypeIdsToPurge(doc):
-    """ returns all unused Stair path ids"""
-    # get unused type ids
-    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairPathTypeIdsInModelByClass, 0)
-    availableTypes = GetStairPathTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    """ returns all unused Stair path ids to purge, will elave on path type id behinf ber system family"""
+    idsUsed = []
+    availableTypes = GetAllStairPathTypeIdsInModelByClass(doc)
+    col = GetAllStairPathElementsInModel(doc)
+    for c in col:
+        if (c.GetTypeId() not in idsUsed):
+            idsUsed.append(c.GetTypeId())
+    ids = []
+    for at in availableTypes:
+        if(at not in idsUsed):
+            ids.append(at)
+    ids = CheckSystemFamilies(doc, ids, True)
+    return ids
 
 # doc   current document
 def GetUnusedStairLandingTypeIdsToPurge(doc):
     """ returns all unused Stair landing ids"""
-    # get unused type ids
-    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairLandingTypeIdsInModelByClass, 0)
-    availableTypes = GetStairLandingTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairLandingTypeIdsInModelByClass, STAIR_LANDING_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairRunTypeIdsToPurge(doc):
     """ returns all unused Stair landing ids"""
-    # get unused type ids
-    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairRunTypeIdsInModelByClass, 0)
-    availableTypes = GetStairRunTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairRunTypeIdsInModelByClass, STAIR_RUN_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairCutMarkTypeIdsToPurge(doc):
     """ returns all unused Stair cut mark type ids"""
-    # get unused type ids
-    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairCutMarkTypeIdsInModelByClass, 0)
-    availableTypes = GetStairCutMarkTypesByClass(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUTMARK_TYPE_PARAS)
+    return ids
 
 # doc   current document
 def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
     """ returns all unused Stair stringer / carriage type ids"""
-    # get unused type ids
-    idsUnused = GetUsedUnusedTypeIds(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, 0)
-    availableTypes = GetAllStairStringersCarriageByCategory(doc)
-    if(len(availableTypes.ToList()) == len(idsUnused)):
-        idsUnused.pop(0)
-    return idsUnused
+    ids = GetUsedSubTypes(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
+    return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------
 
 # doc   current document
 def GetInPlaceStairFamilyInstances(doc):
-    """ returns all instances in place families of category wall """
+    """ returns all instances in place families of category stair """
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -313,13 +401,13 @@ def GetAllInPlaceStairTypeIdsInModel(doc):
 # doc   current document
 def GetUsedInPlaceStairTypeIds(doc):
     """ returns all used in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceStairTypeIds(doc):
     """ returns all unused in place type ids """
-    ids = GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 0)
+    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 0)
     return ids
 
 # doc   current document

@@ -65,6 +65,21 @@ def getParameterValue(para):
         pValue = 'Exception: '+str(e)
     return pValue
 
+# para      revit parameter to get value of
+def GetParameterValueUTF8String(para):
+    """ returns parameter values as utf-8 encoded strings"""
+    pValue = 'no Value'
+    if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+        if(para.AsValueString()!= None and para.AsValueString() != ''):
+            pValue = para.AsValueString().encode('utf-8')
+    elif(para.StorageType == StorageType.String):
+        if(para.AsString() != None and para.AsString() != ''):
+            pValue = para.AsString().encode('utf-8')
+    elif(para.StorageType == StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = str(para.AsElementId()).encode('utf-8')
+    return pValue
+
 # sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:
 def setParameterValue(para, valueAsString, doc):
     returnvalue = res.Result()
@@ -76,7 +91,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.Set(newId)
-                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -93,7 +108,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.SetValueString(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -104,7 +119,7 @@ def setParameterValue(para, valueAsString, doc):
             actionReturnValue = res.Result()
             try:
                 para.Set(int(valueAsString))
-                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -197,6 +212,7 @@ def GetSimilarTypeFamiliesByType(doc, typeGetter):
         simData = []
         for sim in sims:
             simData.append(sim)
+        # simData.sort() # not sure a sort is actually doing anything
         tData.append(simData)
         if(CheckUniqueTypeData(simTypes, tData)):
             simTypes.append(tData)
@@ -271,15 +287,15 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
                 if (tFam.CanBeDeleted):
                     filteredUnusedTypeIds.append(id)
         else:
-            #need to keep at least one item
+            # need to keep at least one item
             if(len(t[1]) > 1):
-                # make sure to leave one behind
-                maxLength = len(t[1]) - 1
-                # check whether this can be deleted...
-                for x in range(maxLength):
+                #maxLength = len(t[1])
+                # make sure to leave the first one behind to match Revit purge behaviour
+                for x in range(1, len(t[1])):
                     id = t[1][x]
                     # get the element
                     tFam = doc.GetElement(id)
+                    # check whether this can be deleted...
                     if (tFam.CanBeDeleted):
                         filteredUnusedTypeIds.append(id)
         counter = counter + 1 
@@ -365,6 +381,78 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 
 #----------------------------------------elements-----------------------------------------------
 
+# doc           current model document
+# elementIds    elements of which to build a dictionary by category
+def BuildCategoryDictionary(doc, elementIds):
+    dic = {}
+    for elId in elementIds:
+        try:
+            el = doc.GetElement(elId)
+            try:
+                if(dic.has_key(el.Category.Name)):
+                    dic[el.Category.Name].append(el)
+                else:
+                    dic[el.Category.Name] = [el]
+            except:
+                if(dic.has_key('invalid category')):
+                    dic['invalid category'].append(el)
+                else:
+                    dic['invalid category'] = [el]
+        except:
+            if(dic.has_key('invalid element')):
+                dic['invalid element'].append(el)
+            else:
+                dic['invalid element'] = [el]
+    return dic
+
+# doc           current model document
+# elementIds    dependent elements of which to  check whether orphaned legend components
+def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, elementIds):
+    """ returns True if all but one dependent element are orphaned legend components"""
+    flag = True
+    categoryName = 'Legend Components'
+    # build dependent type dictionary
+    # check whether dictionary is made of
+    #   1 entry for type
+    #   multiple entries for legend components
+    #   no other entry
+    # if so: check whether any of the legend component entry has a valid view id
+    #   if none has return true, otherwise return false
+    dic = BuildCategoryDictionary(doc,  elementIds)
+    # check if dictioanry has legend component key first up
+    if(dic.has_key(categoryName) == True):
+        # if so check number of keys and length of elements per key
+        if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
+            # this should be the only code path returning true...
+            for value in dic[categoryName]:
+                if value.OwnerViewId != ElementId.InvalidElementId:
+                    flag = False
+                    break
+        else:
+            flag = False
+    else:
+        flag = False
+    return flag
+
+# doc                 current model document
+# dependentElements   list of elements ids               
+def FilterOutWarnings(doc, dependentElements):
+    """attempts to filter out any warnings from ids supplied by checking the workset name
+    of each element for 'Reviewable Warnings'"""
+    ids = []
+    for id in dependentElements:
+        el = doc.GetElement(id)
+        paras = el.GetOrderedParameters()
+        isWarning = False
+        for p in paras:
+            if(p.Definition.BuiltInParameter == BuiltInParameter.ELEM_PARTITION_PARAM):
+                if (getParameterValue(p) == 'Reviewable Warnings'):
+                    isWarning = True
+                break
+        if(isWarning == False):
+            ids.append(id)
+    return ids
+
 # doc   current model document
 # el    the element of which to check for dependent elements
 # filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
@@ -373,14 +461,35 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 #             available for this type
 def HasDependentElements(doc, el, filter = None, threshold = 2):
     """ returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured"""
-    value = 0 # 0, no dependent Elements, 1, has dependent elements, -1 an exception occured
+    value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)
+        # remove any warnings from dependent elements
+        dependentElements = FilterOutWarnings(doc, dependentElements)
+        # check if dependent elements pass threshold value
         if(len(dependentElements)) > threshold :
-            value = 1
+            # there appear to be situations where dependent elements are multiple (orphaned?) legend components only
+            # or warnings belonging to a type (same type mark ...)
+            # these are legend components with an invalid OwnerViewId, check whether this is the case...
+            if (CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents(doc, dependentElements) == False):
+                value = 1
     except Exception as e:
         value = -1
     return value
+
+# doc             current document
+# useTyep         0, no dependent elements; 1: has dependent elements
+# typeIdGetter    list of type ids to be checked for dependent elements
+def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
+    # get all types elements available
+    allTypeIds = typeIdGetter(doc)
+    ids = []
+    for typeId in allTypeIds:
+        type = doc.GetElement(typeId)
+        hasDependents = HasDependentElements(doc, type, None, threshold)
+        if(hasDependents == useType):
+            ids.append(typeId)
+    return ids
 
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
@@ -411,7 +520,7 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
             n = Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + n
+                actionReturnValue.message = 'Deleted [' + str(id) + '] ' + n
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return actionReturnValue
@@ -426,6 +535,102 @@ def GetIdsFromElementCollector(col):
     for c in col:
         ids.append(c.Id)
     return ids
+
+# elId                  element Id to be checked
+# builtinCategories     list of builtin categories  
+def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
+    '''checks whether an element is of one of the built in categories passt in (true) if not returns false'''
+    match = False
+    el = doc.GetElement(elId)
+    enumCategoryId = el.Category.Id.IntegerValue.ToString()
+    for bic in builtinCategories:
+        if (enumCategoryId == bic.value__.ToString()):
+            match = True
+            break
+    return match
+        
+# elId                  element Id to be checked
+# builtinCategories     list of builtin categories  
+def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
+    '''checks whether an element is of not one of the built in categories passt in (true) if not returns false'''
+    match = True
+    el = doc.GetElement(elId)
+    enumCategoryId = el.Category.Id.IntegerValue.ToString()
+    for bic in builtinCategories:
+        if (enumCategoryId == bic.value__.ToString()):
+            match = False
+            break
+    return match
+
+# doc           current model
+# familyName    the family name to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstance(doc, familyName, elementId):
+    '''checks whether the family name of a given family instance matches filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(Element.Name.GetValue(el.Symbol.Family) != familyName):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
+    '''checks whether the family name of a given family instance contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue not in Element.Name.GetValue(el.Symbol.Family)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+    '''checks whether the family name of a given family instance does not contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue in Element.Name.GetValue(el.Symbol.Family)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
+    '''checks whether the symbol name of a given family instance contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue not in Element.Name.GetValue(el.Symbol)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
+
+# doc           current model
+# containsValue    the string the name of the family is to be tested for
+# elementId     the id of the element to be tested
+def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+    '''checks whether the symbol name of a given family instance does not contains filter value: True, otherwise False)'''
+    el = doc.GetElement(elementId)
+    flag = True
+    try:
+        if(containsValue in Element.Name.GetValue(el.Symbol)):
+            flag = False
+    except Exception:
+        flag = False
+    return flag
 
 #-------------------------------------------------------file IO --------------------------------------
 # synchronises a Revit central file

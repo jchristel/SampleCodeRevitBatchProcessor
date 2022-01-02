@@ -71,13 +71,18 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
 # ---------------- preset builtin category lists of categories which represent loadable families used in filtering
 
 catsLoadableThreeD = List[BuiltInCategory] ([
+    #BuiltInCategory.OST_CableTrayFitting,  purged else where
     BuiltInCategory.OST_Casework,
     BuiltInCategory.OST_Columns,
     BuiltInCategory.OST_CommunicationDevices,
+    # BuiltInCategory.OST_ConduitFitting,  purged else where
+    # BuiltInCategory.OST_CurtainWallPanels, purged else where
     BuiltInCategory.OST_DataDevices,
-    BuiltInCategory.OST_DetailComponents,
+    # BuiltInCategory.OST_DetailComponents, purged else where
     BuiltInCategory.OST_Doors,
-    BuiltInCategory.OST_DuctAccessory,
+    #BuiltInCategory.OST_DuctAccessory,  purged else where
+    #BuiltInCategory.OST_DuctTerminal, purged else where
+    #BuiltInCategory.OST_DuctFitting,  purged else where
     BuiltInCategory.OST_ElectricalEquipment,
     BuiltInCategory.OST_ElectricalFixtures,
     BuiltInCategory.OST_Entourage,
@@ -90,24 +95,29 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_MechanicalEquipment,
     BuiltInCategory.OST_NurseCallDevices,
     BuiltInCategory.OST_Parking,
+    #BuiltInCategory.OST_PipeAccessory,  purged else where
+    #BuiltInCategory.OST_PipeFitting,  purged else where
     BuiltInCategory.OST_Planting,
     BuiltInCategory.OST_PlumbingFixtures,
+    #BuiltInCategory.OST_ProfileFamilies, #purged elsewhere
     BuiltInCategory.OST_SecurityDevices,
     BuiltInCategory.OST_Site,
     BuiltInCategory.OST_SpecialityEquipment,
     BuiltInCategory.OST_Sprinklers,
+    #BuiltInCategory.OST_StairsRailingBaluster, #purged else where
     BuiltInCategory.OST_StructuralColumns,
     BuiltInCategory.OST_StructuralFoundation,
     BuiltInCategory.OST_StructuralFraming,
     BuiltInCategory.OST_TitleBlocks,
     BuiltInCategory.OST_TelephoneDevices,
-    BuiltInCategory.OST_Windows,
+    BuiltInCategory.OST_Windows
 ])
 
 catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_CurtainWallPanelTags,
     BuiltInCategory.OST_AreaTags,
     BuiltInCategory.OST_CaseworkTags,
+    #BuiltInCategory.OST_CalloutHeads, #purged separately
     BuiltInCategory.OST_CeilingTags,
     BuiltInCategory.OST_DataDeviceTags,
     BuiltInCategory.OST_DetailComponentTags,
@@ -121,6 +131,7 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_ElectricalCircuitTags,
     BuiltInCategory.OST_ElectricalEquipmentTags,
     BuiltInCategory.OST_ElectricalFixtureTags,
+    #BuiltInCategory.OST_ElevationMarks, #purged separately
     BuiltInCategory.OST_FabricAreaTags,
     BuiltInCategory.OST_FabricReinforcementTags,
     BuiltInCategory.OST_FireAlarmDeviceTags,
@@ -130,12 +141,14 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_FoundationSlabAnalyticalTags,
     BuiltInCategory.OST_FurnitureSystemTags,
     BuiltInCategory.OST_GenericModelTags,
-    BuiltInCategory.OST_GenericAnnotation,
+    #BuiltInCategory.OST_GenericAnnotation, # purged separately tricky one...some of these might be used in dimensions for instance...
+    #BuiltInCategory.OST_GridHeads, # purged separately
     BuiltInCategory.OST_InternalAreaLoadTags,
     BuiltInCategory.OST_InternalLineLoadTags,
     BuiltInCategory.OST_InternalPointLoadTags,
     BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
     BuiltInCategory.OST_KeynoteTags,
+    #uiltInCategory.OST_LevelHeads, #purged separately
     BuiltInCategory.OST_LightingDeviceTags,
     BuiltInCategory.OST_LightingFixtureTags,
     BuiltInCategory.OST_LineLoadTags,
@@ -158,13 +171,16 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_PlumbingFixtureTags,
     BuiltInCategory.OST_RailingSystemTags,
     BuiltInCategory.OST_RebarTags,
+    #BuiltInCategory.OST_ReferenceViewerSymbol, #purged separately
     BuiltInCategory.OST_RevisionCloudTags,
     BuiltInCategory.OST_RoofTags,
     BuiltInCategory.OST_RoomTags,
+    #BuiltInCategory.OST_SectionHeads, #purged separately
     BuiltInCategory.OST_SecurityDeviceTags,
     BuiltInCategory.OST_SitePropertyLineSegmentTags,
     BuiltInCategory.OST_SitePropertyTags,
     BuiltInCategory.OST_SpecialityEquipmentTags,
+    #BuiltInCategory.OST_SpotElevSymbols, #purged elsewhere
     BuiltInCategory.OST_SprinklerTags,
     BuiltInCategory.OST_StairsLandingTags,
     BuiltInCategory.OST_StairsRailingTags,
@@ -179,17 +195,20 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_StructuralStiffenerTags,
     BuiltInCategory.OST_TelephoneDeviceTags,
     BuiltInCategory.OST_TrussTags,
+    #BuiltInCategory.OST_ViewportLabel, #purged elsewhere
     BuiltInCategory.OST_WallTags,
     BuiltInCategory.OST_WindowTags
 ])
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------
 
+# doc   current model document
 # returns all family symbols belonging to a list of built in categories
 # cats needs to be an ICollection:
 #       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
 
 def GetFamilySymbols(doc, cats):
+    '''returns all family symbols (types) of given built in categories'''
     elements = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
@@ -197,6 +216,27 @@ def GetFamilySymbols(doc, cats):
         return elements
     except Exception:
         return elements
+
+# doc   current model document
+# cats needs to be an ICollection:
+#       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+def GetFamilyInstancesByBuiltInCategories(doc, cats):
+    '''returns all family instances of given built in categories'''
+    elements = []
+    try:
+        multiCatFilter = ElementMulticategoryFilter(cats)
+        elements = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(multiCatFilter).ToElements()
+        return elements
+    except Exception:
+        return elements
+
+# doc           current model document
+# builtinCat    single revit builInCategory Enum value
+def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
+    '''returns all family instances of a given built in category'''
+    filter = ElementCategoryFilter(builtinCat)
+    col = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    return col
 
 # returns a list of in editable and not in place families
 # doc   current model document
@@ -229,6 +269,17 @@ def GetSymbolsFromType(doc, typeIds):
             fams[famEl.Id] = sIds
     return fams
 
+# doc:      current model document
+# typeId:   symbol type id
+def GetFamilyInstancesBySymbolTypeId(doc, typeId):
+    """returns all instances of a given family symbol"""
+    pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
+    equals = FilterNumericEquals()
+    idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
+    efilter =  ElementParameterFilter( idFilter )
+    collector = FilteredElementCollector(doc).WherePasses( efilter )
+    return collector
+
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
@@ -247,10 +298,14 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     ids = []
     for c in col:
+        fam = c.Family
+        # check if this an in place or loaded family!
+        if (fam.IsInPlace == True):
             ids.append(c.Id)
     return ids
 
-# doc   current document
+# doc                   current document
+# unusedTypeGetter      returns ids of unused symbols (family types)
 def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     """returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged"""
     unusedIds = []
@@ -276,26 +331,49 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 
 # doc             current document
 # cats          list of builtin categories to filter by
-def GetFamilySymbolsIds(doc, cats):
+def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     """"returns a list of family symbols belonging to categories passt in"""
     ids = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
         elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
-        for cCat in elements:
-            ids.append(cCat.Id)
+        for el in elements:
+            if(excludeSharedFam):
+                fam = el.Family
+                paras = fam.GetOrderedParameters()
+                parameterMatch = False
+                for p in paras:
+                    if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
+                        parameterMatch = True
+                        if(com.getParameterValue(p) == 'No' and el.Id not in ids):
+                            ids.append(el.Id)
+                        break
+                if(parameterMatch == False):
+                    # family cant be of type shared...
+                    ids.append(el.Id)
+            else:
+                ids.append(el.Id)
         return ids
     except Exception:
         return ids
 
 # doc             current document
+def GetAllNonSharedFamilySymbolIds(doc):
+    """"returns a list of all non shared family symbol ids in the model based on hard coded family category lists!"""
+    ids = []
+    allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
+    allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
+    ids = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
+    return ids
+
+# doc             current document
 # useTyep         0, no dependent elements; 1: has dependent elements
 # typeIdGetter    list of type ids to be checked for dependent elements
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
+def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     """returns either used or unused type ids"""
     # get all types elements available
-    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD)
-    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags)
+    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD, excludeSharedFam)
+    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags, excludeSharedFam)
     allTypeIds = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
     ids = []
     for typeId in allTypeIds:
@@ -306,13 +384,13 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0):
     return ids
 
 # doc             current document
-def GetUnusedFamilyTypes(doc):
+def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
     """returns all unused family type ids in model"""
-    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0)
+    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
     return ids
 
 # doc             current document
-def GetUnusedFamilySymbolsAndTypeIdsToPurge(doc):
-    """returns all unused family types and symbol ids in model"""
+def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
+    """returns all unused non shared family types and symbol ids in model"""
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
     return idsUnused 

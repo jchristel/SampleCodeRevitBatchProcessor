@@ -103,7 +103,7 @@ def GetAllRoofInstancesInModelByClass(doc):
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByCategory(doc):
-    """ returns all Roof element types available placed in model """
+    """ returns all Roof element types available in model """
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -111,7 +111,7 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByClass(doc):
-    """ returns all Roof element types available placed in model """
+    """ returns all Roof element types available in model """
     ids = []
     colClass = GetRoofTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)

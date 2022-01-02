@@ -71,7 +71,8 @@ def GetCeilingTypesByClass(doc):
     it will therefore not return any in place family types ..."""
     return  FilteredElementCollector(doc).OfClass(CeilingType)
 
-# collector   fltered element collector containing ceiling type elments of family symbols representing in place families
+
+# collector   filtered element collector containing ceiling type elments of family symbols representing in place families
 # dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):
     """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
@@ -116,7 +117,7 @@ def GetAllCeilingTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByClass(doc):
-    """ returns all ceiling element types available placed in model """
+    """ returns all ceiling element type ids available in model """
     ids = []
     colClass = GetCeilingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)

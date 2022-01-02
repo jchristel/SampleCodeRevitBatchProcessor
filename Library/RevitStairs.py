@@ -52,7 +52,6 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
-
 # list of built in parameters attached to stair sub types
 STAIR_LANDING_TYPE_PARAS = [
     BuiltInParameter.STAIRSTYPE_LANDING_TYPE
@@ -169,7 +168,7 @@ def GetAllStairTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByClass(doc):
-    """ returns all Stair element types available placed in model """
+    """ returns all Stair element types available in model """
     ids = []
     colClass = GetStairTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)

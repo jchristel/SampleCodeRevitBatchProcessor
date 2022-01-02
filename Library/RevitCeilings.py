@@ -71,7 +71,6 @@ def GetCeilingTypesByClass(doc):
     it will therefore not return any in place family types ..."""
     return  FilteredElementCollector(doc).OfClass(CeilingType)
 
-
 # collector   filtered element collector containing ceiling type elments of family symbols representing in place families
 # dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):

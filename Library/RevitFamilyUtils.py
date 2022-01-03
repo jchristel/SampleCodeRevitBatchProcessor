@@ -67,6 +67,33 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
         result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
     return result
 
+# doc               current model document
+# familyFilePath    the fully qualified file path of the family to be loaded
+def LoadFamily(doc, familyFilePath):
+    """loads or reloads a single family with settings:
+    - parameter values overwritten: true"""
+    result = res.Result()
+    try:
+        # set up return value
+        returnFamily = clr.StrongBox[Family]()
+        def action():
+            actionReturnValue = res.Result()
+            try:
+                reloadStatus = doc.LoadFamily(
+                    familyFilePath, 
+                    famLoadOpt.FamilyLoadOption(), # overwrite parameter values etc
+                    returnFamily)
+                actionReturnValue.UpdateSep(reloadStatus,'Loaded family: ' + lfamilyFilePath + ' :: ' + str(reloadStatus))
+            except Exception as e:
+                actionReturnValue.UpdateSep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
+            return actionReturnValue
+        transaction = Transaction(doc,'Loading Family')
+        dummy = com.InTransaction(transaction, action)
+        result.Update(dummy)
+    except Exception as e:
+        result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
+    return result
+
 
 # ----------------------------------------------- filter family symbols -------------------------------------------------------
 

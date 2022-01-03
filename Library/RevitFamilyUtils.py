@@ -42,6 +42,8 @@ from Autodesk.Revit.DB import *
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def ModifyLoadFamilies(doc, revitFilePath, familyData):
+    """reloads a number of families with settings:
+    - parameter values overwritten: true"""
     result = res.Result()
     try:
         for loadFam in familyData:
@@ -112,6 +114,21 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_TelephoneDevices,
     BuiltInCategory.OST_Windows
 ])
+
+catsLoadableThreeDOther = List[BuiltInCategory] ([
+    BuiltInCategory.OST_CableTrayFitting,
+    BuiltInCategory.OST_ConduitFitting,
+    BuiltInCategory.OST_CurtainWallPanels,
+    BuiltInCategory.OST_DetailComponents,
+    BuiltInCategory.OST_DuctAccessory,
+    BuiltInCategory.OST_DuctTerminal,
+    BuiltInCategory.OST_DuctFitting,
+    BuiltInCategory.OST_PipeAccessory,
+    BuiltInCategory.OST_PipeFitting,
+    BuiltInCategory.OST_ProfileFamilies,
+    BuiltInCategory.OST_StairsRailingBaluster
+])
+
 
 catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_CurtainWallPanelTags,
@@ -198,6 +215,18 @@ catsLoadableTags = List[BuiltInCategory] ([
     #BuiltInCategory.OST_ViewportLabel, #purged elsewhere
     BuiltInCategory.OST_WallTags,
     BuiltInCategory.OST_WindowTags
+])
+
+catsLoadableTagsOther = List[BuiltInCategory] ([
+    BuiltInCategory.OST_CalloutHeads,
+    BuiltInCategory.OST_ElevationMarks,
+    BuiltInCategory.OST_GenericAnnotation,
+    BuiltInCategory.OST_GridHeads,
+    BuiltInCategory.OST_LevelHeads,
+    BuiltInCategory.OST_ReferenceViewerSymbol,
+    BuiltInCategory.OST_SectionHeads,
+    BuiltInCategory.OST_SpotElevSymbols,
+    BuiltInCategory.OST_ViewportLabel
 ])
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------

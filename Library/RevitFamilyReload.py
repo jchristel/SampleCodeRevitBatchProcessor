@@ -46,6 +46,10 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
     """reloads a number of families with settings:
     - parameter values overwritten: true"""
     result = res.Result()
+    # if a family is reloaded it may bring in new typs not present in the model at reload
+    # this list contains the ids of those types (symbols)
+    # so they can be deleted if so desired
+    symbolIdsToBeDeleted = []   
     try:
         # build library
         library = util.FilesAsDictionary(libraryLocation,'','','.rfa',includeSubFolders)
@@ -68,8 +72,15 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
                         # found single match for family by name
                         output('Match: ' + library[famName][0])
                         # get all symbols attached to this family by name
+                        priorLoadSymbolIds = fam.GetFamilySymbolIds()
                         # reload family
-                        # remove symbols added through reload process
+                        resultLoad = res.Result()
+                        resultLoad = rFamUtil.LoadFamily(doc, library[famName][0])
+                        # remove symbols (family types) added through reload process
+                        afterLoadSymbolIds = fam.GetFamilySymbolIds()
+                        newSymbolIds = getNewSymboldIds(priorLoadSymbolIds, afterLoadSymbolIds)
+                        if(len(newSymbolIds) > 0):
+                            symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
                     else:
                         matchesMessage = ''
                         for path in library[famName]:
@@ -82,6 +93,14 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
                 else:
                     output('Found no match for: ' + famName)
                     result.UpdateSep(False,'Found no match for ' + famName)
+            # delete any new symbols introduced during the reload
+            if(len(symbolIdsToBeDeleted)>0):
+                resultDelete = com.DeleteByElementIds(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
+                result.Update(resultDelete)
+            else:
+                message = 'No need to delete any new family typese since no new types where created.'
+                output(message)
+                result.UpdateSep(True, message)
         else:
             message = 'Found no loadable families in file!'
             output(message)
@@ -108,3 +127,13 @@ def getFamilyIdsFromSymbols(doc):
         if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
             familyIds.append(famSymbol.Family.Id)
     return familyIds
+
+# preLoadSymbolIdList      list of Ids of symbols prior the reload
+# afterLoadSymbolList       list of ids of symbols after the reload
+def getNewSymboldIds(preLoadSymbolIdList, afterLoadSymbolList):
+    """returns a list of symbol ids not present prior to reload"""
+    ids = []
+    for id in afterLoadSymbolList:
+        if (id not in preLoadSymbolIdList):
+            ids.append(id)
+    return ids

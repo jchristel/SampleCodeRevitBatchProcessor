@@ -47,22 +47,8 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
     result = res.Result()
     try:
         for loadFam in familyData:
-            # set up return value
-            returnFamily = clr.StrongBox[Family]()
-            def action():
-                actionReturnValue = res.Result()
-                try:
-                    reloadStatus = doc.LoadFamily(
-                        loadFam, 
-                        famLoadOpt.FamilyLoadOption(), # overwrite parameter values etc
-                        returnFamily)
-                    actionReturnValue.UpdateSep(reloadStatus,'Loaded family: ' + loadFam + ' :: ' + str(reloadStatus))
-                except Exception as e:
-                    actionReturnValue.UpdateSep(False,'Failed to load family ' + loadFam + ' with exception: '+ str(e))
-                return actionReturnValue
-            transaction = Transaction(doc,'Loading Family')
-            dummy = com.InTransaction(transaction, action)
-            result.Update(dummy)
+            resultLoad = LoadFamily(doc, loadFam)
+            result.Update(resultLoad)
     except Exception as e:
         result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
     return result
@@ -74,20 +60,23 @@ def LoadFamily(doc, familyFilePath):
     - parameter values overwritten: true"""
     result = res.Result()
     try:
-        # set up return value
-        returnFamily = clr.StrongBox[Family]()
+        # set upo reload action
         def action():
+            # set up return value
+            returnFamily = clr.Reference[Autodesk.Revit.DB.Family]()
             actionReturnValue = res.Result()
             try:
                 reloadStatus = doc.LoadFamily(
                     familyFilePath, 
                     famLoadOpt.FamilyLoadOption(), # overwrite parameter values etc
                     returnFamily)
-                actionReturnValue.UpdateSep(reloadStatus,'Loaded family: ' + lfamilyFilePath + ' :: ' + str(reloadStatus))
+                actionReturnValue.UpdateSep(reloadStatus,'Loaded family: ' + familyFilePath + ' :: ' + str(reloadStatus))
+                if(reloadStatus):
+                    actionReturnValue.result.append(returnFamily.Value)
             except Exception as e:
                 actionReturnValue.UpdateSep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
             return actionReturnValue
-        transaction = Transaction(doc,'Loading Family')
+        transaction = Transaction(doc, 'Loading Family: ' + str(util.GetFileNameWithoutExt(familyFilePath)))
         dummy = com.InTransaction(transaction, action)
         result.Update(dummy)
     except Exception as e:

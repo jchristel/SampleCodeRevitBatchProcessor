@@ -42,9 +42,10 @@ from Autodesk.Revit.DB import *
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
+def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
     """reloads a number of families with settings:
-    - parameter values overwritten: true"""
+    - parameter values overwritten: true
+    retuns True if any of the reload actions was succesful"""
     result = res.Result()
     # if a family is reloaded it may bring in new typs not present in the model at reload
     # this list contains the ids of those types (symbols)
@@ -54,33 +55,38 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
         # build library
         library = util.FilesAsDictionary(libraryLocation,'','','.rfa',includeSubFolders)
         if(len(library) == 0):
-            output('Library is empty!')
+            result.UpdateSep(False, 'Library is empty!')
             # get out...
             raise UserWarning('Empty Library')
         else:
-            output('Found ' + str(len(library)) + ' families in Library!')
+            result.UpdateSep(True,'Found ' + str(len(library)) + ' families in Library!')
         # get all families in file:
         familyIds = getFamilyIdsFromSymbols(doc)
         if(len(familyIds) > 0):
-            output('Found ' + str(len(familyIds)) + ' loadable families in file.')
+            result.UpdateSep(True, 'Found ' + str(len(familyIds)) + ' loadable families in file.')
             for famId in familyIds:
                 fam = doc.GetElement(famId)
                 famName = Element.Name.GetValue(fam)
                 if(famName in library):
-                    output('Found match for: ' + famName)
+                    result.UpdateSep(True, 'Found match for: ' + famName)
                     if(len(library[famName]) == 1 ):
                         # found single match for family by name
-                        output('Match: ' + library[famName][0])
+                        result.UpdateSep(True, 'Found single match: ' + library[famName][0])
                         # get all symbols attached to this family by name
                         priorLoadSymbolIds = fam.GetFamilySymbolIds()
                         # reload family
-                        resultLoad = res.Result()
                         resultLoad = rFamUtil.LoadFamily(doc, library[famName][0])
-                        # remove symbols (family types) added through reload process
-                        afterLoadSymbolIds = fam.GetFamilySymbolIds()
-                        newSymbolIds = getNewSymboldIds(priorLoadSymbolIds, afterLoadSymbolIds)
-                        if(len(newSymbolIds) > 0):
-                            symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
+                        result.Update(resultLoad)
+                        if(resultLoad.status == True):
+                            # make sure that if a single reload was succesfull that this method returns true
+                            result.status = True
+                            # remove symbols (family types) added through reload process
+                            if (resultLoad.result != None and len(resultLoad.result) > 0):
+                                famLoaded = resultLoad.result.First()
+                                afterLoadSymbolIds = famLoaded.GetFamilySymbolIds()
+                                newSymbolIds = getNewSymboldIds(priorLoadSymbolIds, afterLoadSymbolIds)
+                                if(len(newSymbolIds) > 0):
+                                    symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
                     else:
                         matchesMessage = ''
                         for path in library[famName]:
@@ -88,10 +94,8 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
                         matchesMessage = 'Found multiple matches for ' + famName + '\n' + matchesMessage
                         matchesMessage = matchesMessage.strip()
                         # found mutliple matches for family by name only...aborting reload
-                        output(matchesMessage)
-                        result.UpdateSep(False,matchesMessage)
+                        result.UpdateSep(False, matchesMessage)
                 else:
-                    output('Found no match for: ' + famName)
                     result.UpdateSep(False,'Found no match for ' + famName)
             # delete any new symbols introduced during the reload
             if(len(symbolIdsToBeDeleted)>0):
@@ -99,15 +103,12 @@ def ReloadAllFamilies(doc, output, libraryLocation, includeSubFolders):
                 result.Update(resultDelete)
             else:
                 message = 'No need to delete any new family typese since no new types where created.'
-                output(message)
                 result.UpdateSep(True, message)
         else:
             message = 'Found no loadable families in file!'
-            output(message)
             result.UpdateSep(True, message)
     except Exception as e:
         message = 'Failed to load families with exception: '+ str(e)
-        output (message)
         result.UpdateSep(False, message)
     return result
 

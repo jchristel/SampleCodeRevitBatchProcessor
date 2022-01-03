@@ -49,7 +49,8 @@ class Result:
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
             if(otherResult.result is not None and len(otherResult.result)>0):
-                self.result.append(otherResult.result)
+                for item in otherResult.result:
+                    self.result.append(item)
         except Exception as e:
             print (str(e))
             pass

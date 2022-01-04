@@ -678,7 +678,7 @@ def SaveAsWorksharedFile(doc, fullFileName):
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-#save file under new name in given location
+# save file under new name in given location
 # targetFolderPath: directory path of where the file is to be saved
 # currentFullFileName: fully qualified file name of the current Revit file
 # name data: list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
@@ -705,6 +705,19 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
         returnvalue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnvalue
 
+# doc: the document to be saved
+def SaveFile(doc, compactFile = False):
+    """to be used for families and non workshared revit files only"""
+    returnvalue = res.Result()
+    try:
+        so = SaveOptions()
+        so.Compact = compactFile
+        doc.Save(so)
+        returnvalue.UpdateSep(True, 'Saved revit file!')
+    except Exception as e:
+        returnvalue.UpdateSep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
+    return returnvalue
+  
 # enables work sharing
 def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', worksetName = 'Workset1'):
     returnvalue = res.Result()

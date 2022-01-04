@@ -59,16 +59,16 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
             # get out...
             raise UserWarning('Empty Library')
         else:
-            result.UpdateSep(True,'Found ' + str(len(library)) + ' families in Library!')
+            result.AppendMessage('Found ' + str(len(library)) + ' families in Library!')
         # get all families in file:
         familyIds = getFamilyIdsFromSymbols(doc)
         if(len(familyIds) > 0):
-            result.UpdateSep(True, 'Found ' + str(len(familyIds)) + ' loadable families in file.')
+            result.AppendMessage('Found ' + str(len(familyIds)) + ' loadable families in file.')
             for famId in familyIds:
                 fam = doc.GetElement(famId)
                 famName = Element.Name.GetValue(fam)
                 if(famName in library):
-                    result.UpdateSep(True, 'Found match for: ' + famName)
+                    result.AppendMessage('Found match for: ' + famName)
                     if(len(library[famName]) == 1 ):
                         # found single match for family by name
                         result.UpdateSep(True, 'Found single match: ' + library[famName][0])
@@ -76,7 +76,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                         priorLoadSymbolIds = fam.GetFamilySymbolIds()
                         # reload family
                         resultLoad = rFamUtil.LoadFamily(doc, library[famName][0])
-                        result.Update(resultLoad)
+                        result.AppendMessage(resultLoad.message)
                         if(resultLoad.status == True):
                             # make sure that if a single reload was succesfull that this method returns true
                             result.status = True
@@ -94,19 +94,19 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                         matchesMessage = 'Found multiple matches for ' + famName + '\n' + matchesMessage
                         matchesMessage = matchesMessage.strip()
                         # found mutliple matches for family by name only...aborting reload
-                        result.UpdateSep(False, matchesMessage)
+                        result.AppendMessage(matchesMessage)
                 else:
-                    result.UpdateSep(False,'Found no match for ' + famName)
+                    result.UpdateSep(result.status,'Found no match for ' + famName)
             # delete any new symbols introduced during the reload
             if(len(symbolIdsToBeDeleted)>0):
                 resultDelete = com.DeleteByElementIds(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
-                result.Update(resultDelete)
+                result.AppendMessage (resultDelete.message)
             else:
                 message = 'No need to delete any new family typese since no new types where created.'
-                result.UpdateSep(True, message)
+                result.AppendMessage(message) # make sure not to change the status
         else:
             message = 'Found no loadable families in file!'
-            result.UpdateSep(True, message)
+            result.UpdateSep(False, message)
     except Exception as e:
         message = 'Failed to load families with exception: '+ str(e)
         result.UpdateSep(False, message)

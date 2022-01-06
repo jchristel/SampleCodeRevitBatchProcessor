@@ -45,26 +45,29 @@ clr.ImportExtensions(System.Linq)
 # my code here:
 # -------------
 
-# helper method retrieving files in a given directory and of a given file extension
 # directory              directory containing files to be retrived
 # fileExtension         file extenision in format .rvt
 def getRevitFiles(directory, fileExtension):
+    """helper method retrieving files in a given directory and of a given file extension"""
     files = []
     listOfFiles = os.listdir(directory)
     for f in listOfFiles:
         # check for file extension match
         if(f.lower().endswith(fileExtension.lower())):
-            # Use join to get full file path.
-            location = os.path.join(directory, f)
-            # Get size and add to list of files.
-            size = os.path.getsize(location)
-            files.append(fi.MyFileItem(location,size))
+            # check if this is a back up file, remove the file extension
+            filePath = f[:-len(fileExtension)]
+            if(isBackUpFile(filePath) == False):
+                # Use join to get full file path.
+                location = os.path.join(directory, f)
+                # Get size and add to list of files.
+                size = os.path.getsize(location)
+                files.append(fi.MyFileItem(location,size))
     return files
 
-# helper method retrieving files in a given directory and its subdirectories with a give extension
 # directory              directory containing files to be retrived
 # fileExtension         file extenision in format .rvt
 def getRevitFilesInclSubDirs(directory, fileExtension):
+    """helper method retrieving files in a given directory and its subdirectories with a give extension"""
     files = []
     # Get the list of all files in directory tree at given path
     listOfFiles = list()
@@ -73,10 +76,34 @@ def getRevitFilesInclSubDirs(directory, fileExtension):
     for f in listOfFiles:
         # check for file extension match
         if(f.lower().endswith(fileExtension.lower())):
-            # Get size and add to list of files.
-            size = os.path.getsize(f)
-            files.append(fi.MyFileItem(f,size))
+            # check if this is a back up file, remove the file extension
+            filePath = f[:-len(fileExtension)]
+            if(isBackUpFile(filePath) == False):
+                # Get size and add to list of files.
+                size = os.path.getsize(f)
+                files.append(fi.MyFileItem(f,size))
     return files
+
+# filePath      file path without the file extension!
+def isBackUpFile(filePath):
+    """checks whether a given file is a backup file"""
+    flag = False
+    try:
+        index = filePath.rindex('.')
+        if(index > 0):
+            # get the string after the last full stop
+            chunk = filePath[index + 1:]
+            # check if correct length
+            if(len(chunk) == 4):
+                # attempt to convert the string into a number
+                try:
+                    converted_num = int(chunk)
+                    flag = True
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    return flag
 
 # helper used to define workload size (same as file size)
 def getFileSize(item):

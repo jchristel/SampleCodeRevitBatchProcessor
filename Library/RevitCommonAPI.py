@@ -678,11 +678,11 @@ def SaveAsWorksharedFile(doc, fullFileName):
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-# save file under new name in given location
-# targetFolderPath: directory path of where the file is to be saved
-# currentFullFileName: fully qualified file name of the current Revit file
-# name data: list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
-def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
+# targetFolderPath:         directory path of where the file is to be saved
+# currentFullFileName:      fully qualified file name of the current Revit file
+# name data:                list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
+def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rfa', compactFile = False):
+    """save a family file under new name in given location"""
     returnvalue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
@@ -692,11 +692,43 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData):
             match = True
             returnvalue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
             # save file under new name
-            newFileName = targetFolderPath + '\\'+ newName +'.rvt'
+            newFileName = targetFolderPath + '\\'+ newName + fileExtension
             break
     if(match == False):
         # save under same file name
-        newFileName = targetFolderPath + '\\'+ revitFileName +'.rvt'
+        newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
+        returnvalue.message = 'Found no file name match for: ' + currentFullFileName
+    try:
+        so = SaveAsOptions()
+        so.OverwriteExistingFile = True
+        so.MaximumBackups = 5
+        so.SetWorksharingOptions(None)
+        so.Compact = compactFile
+        doc.SaveAs(newFileName, so)
+        returnvalue.UpdateSep(True, 'Saved file: ' + newFileName)
+    except Exception as e:
+        returnvalue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+    return returnvalue
+
+# save file under new name in given location
+# targetFolderPath: directory path of where the file is to be saved
+# currentFullFileName: fully qualified file name of the current Revit file
+# name data: list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
+def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rvt'):
+    returnvalue = res.Result()
+    revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
+    newFileName= ''
+    match = False
+    for oldName, newName in nameData:
+        if (revitFileName.startswith(oldName)):
+            match = True
+            returnvalue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
+            # save file under new name
+            newFileName = targetFolderPath + '\\'+ newName + fileExtension
+            break
+    if(match == False):
+        # save under same file name
+        newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
         returnvalue.message = 'Found no file name match for: ' + currentFullFileName
     try:
         returnvalue.status = SaveAsWorksharedFile(doc, newFileName).status

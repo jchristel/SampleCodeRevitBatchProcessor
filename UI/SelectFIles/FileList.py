@@ -149,6 +149,7 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
 # taskFilesNumbes       number of task files to be written
 def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
     returnvalue = res.Result()
+    returnvalue.status = True
     # get revit files in input dir
     revitfiles = fileGetter(directoryPath, fileExtension)
     # build bucket list

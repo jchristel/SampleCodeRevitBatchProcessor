@@ -138,11 +138,15 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
         fileCounter = 0
         for file_ in file_list:
             lineCounter = 0
-            for line in open( file_, 'r' ):
+            fp = open( file_, 'r' )
+            lines = fp.readlines()
+            fp.close()
+            for line in lines:
                 # ensure header from first file is copied over
                 if(fileCounter == 0 and lineCounter == 0 or lineCounter != 0):
                     result.write( line )
                 lineCounter += 1
+            
             fileCounter += 1
 
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension

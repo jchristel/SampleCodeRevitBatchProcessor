@@ -28,6 +28,7 @@ import System
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 import RevitGeometry as rGeo
+import DataCeiling as dCeiling
 import Utility as util
 
 
@@ -233,3 +234,48 @@ def Get2DPointsFromRevitCeilingsInModel(doc):
        if(len(ceilingPoints) > 0 ):
            allCeilingPoints.append (ceilingPoints)
     return allCeilingPoints
+
+# -------------------------------- ceiling data -------------------------------------------------------
+
+# doc       current model document
+def GetAllCeilingData(doc):
+    '''
+    returns a list of ceiling data objects for each ceiling element in the model
+    '''
+    allCeilingData = []
+    ceilings = GetAllCeilingInstancesInModelByCategory(doc)
+    for ceiling in ceilings:
+        cd = PopulateDataCeilingObject(doc, ceiling)
+        allCeilingData.append(cd)
+    return allCeilingData
+
+# revitCeiling        Revit ceiling element
+def PopulateDataCeilingObject(doc, revitCeiling):
+    '''
+    returns a custom ceiling data objects populated with some data from the revit model ceiling passt in
+    '''
+    # set up data class object
+    dataC = dCeiling.DataCeiling()
+    # get room geometry (boundary points)
+    revitGeometryPointGroups = Get2DPointsFromRevitCeiling(revitCeiling)
+    roomPointGroupsAsDoubles = []
+    for ceilingPointGroups in revitGeometryPointGroups:
+        convertedCeilingPointGroups = []
+        for ceilingPointGroup in ceilingPointGroups:
+            convertedCeilingPointGroup = []
+            for point in ceilingPointGroup:
+                convertedCeilingPointGroup.append(rGeo.GetPointAsDoubles(point))
+            convertedCeilingPointGroups.append(convertedCeilingPointGroup)
+        roomPointGroupsAsDoubles.append(convertedCeilingPointGroups)
+    dataC.geometry = roomPointGroupsAsDoubles
+    # get other data
+    dataC.id = revitCeiling.Id.IntegerValue
+    dataC.typeName = Element.Name.GetValue(revitCeiling)
+    # get type data
+    ceilingTypeId = revitCeiling.GetTypeId()
+    ceilingType = doc.GetElement(ceilingTypeId)
+    dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, BuiltInParameter.ALL_MODEL_TYPE_MARK)
+    dataC.mark =  com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)
+    dataC.levelName = Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId))
+    dataC.levelId = revitCeiling.LevelId.IntegerValue
+    return dataC

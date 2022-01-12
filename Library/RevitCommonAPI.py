@@ -41,8 +41,13 @@ clr.ImportExtensions(System.Linq)
 
 #----------------------------------------parameters-----------------------------------------------
 
-# checks a paramter value based on passed in condition  
+# para              the parameter containiung value to be checked
+# paraCondition     the condition to be applied
+# conditionValue    the value to be checked for
 def CheckParameterValue(para, paraCondition, conditionValue):
+    '''
+    checks a paramter value based on passed in condition  
+    '''
     isMatch = False
     pValue = getParameterValue(para)
     isMatch = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(pValue))
@@ -79,6 +84,21 @@ def GetParameterValueUTF8String(para):
         if(para.AsElementId() != None):
             pValue = str(para.AsElementId()).encode('utf-8')
     return pValue
+
+# element                   the revit element containing the built in parameter of which the value is to be returned
+# builtInParameterDef       the built in parameter defintion
+# parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string
+def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
+    '''
+    Returns the built in parameter value specified by the the defintion. If parameter does not exist on element None will be returned!!
+    '''
+    parameterValue = None
+    paras = element.GetOrderedParameters()
+    for para in paras:
+        if(para.Definition.BuiltInParameter == builtInParameterDef):
+            parameterValue = parameterValueGetter(para)
+            break
+    return parameterValue
 
 # sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:
 def setParameterValue(para, valueAsString, doc):
@@ -188,13 +208,10 @@ def GetLegendComponentsInModel(doc, typeIds):
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
     for c in col:
-        paras = c.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter == BuiltInParameter.LEGEND_COMPONENT):
-                id = com.getParameterValue(p)
-                if (id in typeIds and id not in ids):
-                    ids.append(id)
-                break
+        id = GetBuiltInParameterValue(c, BuiltInParameter.LEGEND_COMPONENT, getParameterValue)
+        if (id in typeIds and id not in ids):
+            ids.append(id)
+            break
     return ids
 
 #----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
@@ -307,7 +324,9 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
 # getTypes:         available types getter. Needs to accept doc as argument and return a collector of type foo
 # getInstances:     placed instances getter. Needs to accept doc as argument and return a collector of instances foo
 def GetNotPlacedTypes(doc, getTypes, getInstances):
-    """returns a list of unused Types foo by compring type Ids of placed instances with all avialable types"""
+    """
+    returns a list of unused Types foo by compring type Ids of placed instances with all avialable types
+    """
     availTypes = getTypes(doc)
     placedInstances = getInstances(doc)
     notPlaced = []
@@ -334,8 +353,10 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
 # typeIds   types ids to check for matches in group
 # group     to check for matching type id
 def CheckGroupForTypeIds(doc, groupType, typeIds):
-    """Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
-    This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!"""
+    """
+    Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
+    This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!
+    """
     unusedTypeIds = []
     usedTypeIds = []
     # get the first group from the group type and get its members
@@ -357,8 +378,10 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
 # groupType     group to be checked whether it contains elements of types passt in
 # typeIds       list of type ids to confirm whether they are in use a group
 def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
-    """checks all elements in groups passt in whether type Id is matching any type ids passt in
-    returns all type ids not matched"""
+    """
+    checks all elements in groups passt in whether type Id is matching any type ids passt in
+    returns all type ids not matched
+    """
     for groupType in groupTypes:
         typeIds = CheckGroupForTypeIds(doc, groupType, typeIds)
         # check if all type ids where matched up
@@ -442,14 +465,8 @@ def FilterOutWarnings(doc, dependentElements):
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)
-        paras = el.GetOrderedParameters()
-        isWarning = False
-        for p in paras:
-            if(p.Definition.BuiltInParameter == BuiltInParameter.ELEM_PARTITION_PARAM):
-                if (getParameterValue(p) == 'Reviewable Warnings'):
-                    isWarning = True
-                break
-        if(isWarning == False):
+        pValue = GetBuiltInParameterValue(el, BuiltInParameter.ELEM_PARTITION_PARAM, getParameterValue)
+        if(pValue != 'Reviewable Warnings'):
             ids.append(id)
     return ids
 

@@ -77,6 +77,13 @@ def GetEdgePoints(edge):
         points.append(p)
     return points
 
+# point         Revit XYZ point
+def GetPointAsDoubles(point):
+    '''
+    returns a revit XYZ as a list of doubles in order x,y,z
+    '''
+    return [point.X, point.Y, point.Z]
+
 # edges         list of Revit Edge objects
 # edge          Revit Edge objectS
 def CheckDuplicateEdge(edges, edge):

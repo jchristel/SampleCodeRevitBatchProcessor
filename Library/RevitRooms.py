@@ -102,3 +102,69 @@ def MoveTagToRoom(doc, tagId):
     transaction = Transaction(doc, 'Moving room tag to room : ' + roomData)
     returnvalue.Update(com.InTransaction(transaction, action))
     return returnvalue
+
+# -------------------------------- room geometry -------------------------------------------------------
+
+# revitRoom         Revit Room element
+def GetRoomBoundaryLoops(revitRoom):
+    ''' 
+    Returns all boundary loops for each rooms
+    '''
+    allBoundaryLoops = []
+    # set up spatial boundary option
+    spatialBoundaryOption = SpatialElementBoundaryOptions()
+    spatialBoundaryOption.StoreFreeBoundaryFaces = True
+    spatialBoundaryOption.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center
+    # get loops
+    loops = revitRoom.GetBoundarySegments(spatialBoundaryOption)
+    allBoundaryLoops.append(loops)
+    return allBoundaryLoops
+
+# boundaryLoops     Revit Boundary loops
+def GetPointsFromRoomBoundaries(boundaryLoops):
+    '''
+    Returns a list of lists of points representing the room boundary loops
+    List of Lists because a room can be made up of multiple loops (holes in rooms!)
+    First nested list represents the outer boundary of a room
+    '''
+    allPoints = []
+    for bounadryLoop in boundaryLoops:
+        for roomLoop in bounadryLoop:
+            #p0 = None  # loop start point
+            p = None # segment start point
+            #q = None # segment end point
+            loopPoints = []
+            for segment in roomLoop:
+                p = segment.GetCurve().GetEndPoint(0)
+                loopPoints.append(p)
+                #q = segment.GetCurve().GetEndPoint(1)
+                #if (None == p0):
+                #    p0 = p # save loop start point
+            allPoints.append(loopPoints)
+    return allPoints
+
+# doc       current model document
+def Get2DPointsFromRevitRoom(revitRoom):
+    '''
+    Returns a list of lists of points representing the flattened(2D geometry) of each room in the model
+    List of Lists because a rooms can have holes. First group of points represents external boundary of room. Any further list represents a hole in the room.
+    '''
+    roomPoints = []
+    boundaryLoops = GetRoomBoundaryLoops(revitRoom)
+    if(len(boundaryLoops) > 0):
+        roomPoints = GetPointsFromRoomBoundaries(boundaryLoops)
+    return roomPoints
+
+# doc       current model document
+def Get2DPointsFromAllRevitRoomsInModel(doc):
+    '''
+    Returns a list of lists of points representing the flattened(2D geometry) of each room in the model
+    List of Lists because a rooms can have holes. First group of points represents external boundary of room. Any further list represents a hole in the room.
+    '''
+    allRoomPointGroups = []
+    rooms = GetAllRooms(doc)
+    for room in rooms:
+        roomPoints = Get2DPointsFromRevitRoom(room)
+        if(len(roomPoints) > 0):
+            allRoomPointGroups.append(roomPoints)
+    return allRoomPointGroups

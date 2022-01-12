@@ -27,6 +27,7 @@ import System
 # import common library modules
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
+import RevitGeometry as rGeo
 import Utility as util
 
 
@@ -192,3 +193,43 @@ def GetUnusedInPlaceCeilingIdsForPurge(doc):
     """returns symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be purged"""
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
     return ids
+
+# -------------------------------- ceiling geometry -------------------------------------------------------
+
+# ceiling       Revit Ceiling element
+def Get2DPointsFromRevitCeiling(ceiling):
+    '''
+    Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
+    List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
+    Does not work with in place ceilings
+    '''
+    allCeilingPoints = []
+    # get geometry from ceiling
+    opt = Options()
+    fr1_geom = ceiling.get_Geometry(opt)
+    solids = []
+    # check geometry for Solid elements
+    for item in fr1_geom:
+        if(type(item) is Solid):
+            solids.append(item)
+    # process solids to points (not sure whether there will be ever more then one solid??)
+    for s in solids:
+        pointPerCeilings = rGeo.ConvertSolidToFlattened2DPoints(s)
+        if(len(pointPerCeilings) > 0):
+            allCeilingPoints.append(pointPerCeilings)
+    return allCeilingPoints
+
+# doc       current model document
+def Get2DPointsFromRevitCeilingsInModel(doc):
+    '''
+    Returns a list of lists of points representing the flattened(2D geometry) of each ceiling in the model
+    List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
+    Does not work with in place ceilings
+    '''
+    ceilingInstances =  GetAllCeilingInstancesInModelByCategory(doc)
+    allCeilingPoints = []
+    for cI in ceilingInstances:
+       ceilingPoints = Get2DPointsFromRevitCeiling(cI)
+       if(len(ceilingPoints) > 0 ):
+           allCeilingPoints.append (ceilingPoints)
+    return allCeilingPoints

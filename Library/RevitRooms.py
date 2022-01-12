@@ -28,6 +28,8 @@ import System
 import RevitCommonAPI as com
 import Result as res
 import Utility as util
+import RevitGeometry as rGeo
+import DataRoom as dRoom
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -168,3 +170,41 @@ def Get2DPointsFromAllRevitRoomsInModel(doc):
         if(len(roomPoints) > 0):
             allRoomPointGroups.append(roomPoints)
     return allRoomPointGroups
+
+# -------------------------------- room data -------------------------------------------------------
+
+# doc       current model document
+def GetAllRoomData(doc):
+    '''
+    returns a list of room data objects for each room in the model
+    '''
+    allRoomData = []
+    rooms = GetAllRooms(doc)
+    for room in rooms:
+        rd = PopulateDataRoomObject(room)
+        allRoomData.append(rd)
+    return allRoomData
+
+# revitRoom         Revit Room element
+def PopulateDataRoomObject(revitRoom):
+    '''
+    returns a custom room data objects populated with some data from the revit model room passt in
+    '''
+    # set up data class object
+    dataR = dRoom.DataRoom()
+    # get room geometry (boundary points)
+    revitGeometryPointGroups = Get2DPointsFromRevitRoom(revitRoom)
+    roomPointGroupsAsDoubles = []
+    for roomPointGroup in revitGeometryPointGroups:
+        convertedRoompointGroup = []
+        for point in roomPointGroup:
+            convertedRoompointGroup.append(rGeo.GetPointAsDoubles(point))
+        roomPointGroupsAsDoubles.append(convertedRoompointGroup)
+    dataR.geometry = roomPointGroupsAsDoubles
+    # get other data
+    dataR.id = revitRoom.Id.IntegerValue
+    dataR.name = Element.Name.GetValue(revitRoom)
+    dataR.number = revitRoom.Number
+    dataR.levelName = Element.Name.GetValue(revitRoom.Level)
+    dataR.levelId = revitRoom.Level.Id.IntegerValue
+    return dataR

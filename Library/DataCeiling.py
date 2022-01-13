@@ -24,7 +24,7 @@
 import json
 
 class DataCeiling():
-    def __init__(self):
+    def __init__(self, j = {}):
         self.dataType = 'ceiling'
         self.id = -1
         self.typeName = '-'
@@ -34,9 +34,11 @@ class DataCeiling():
         self.levelId = '-'
         self.geometry = [[]]
         self.associatedElements = []
+        if(len(j) > 0 ):
+            self.__dict__ = json.loads(j)
 
     def to_json(self):
         '''
         convert the instance of this class to json
         '''
-        return json.dumps(self, indent = 4, default=lambda o: o.__dict__)
+        return json.dumps(self, indent = None, default=lambda o: o.__dict__)

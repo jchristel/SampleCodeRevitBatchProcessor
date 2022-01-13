@@ -256,7 +256,10 @@ def writeReportData(fileName, header, data, writeType = 'w'):
         # check if data is required
         if(len(data) > 0):
             for d in data:
-                f.write('\t'.join(d + ['\n']))
+                if (len(d) > 1):
+                    f.write('\t'.join(d + ['\n']))
+                elif(len(d) == 1):
+                    f.write(d[0] + '\n')
         f.close()
 
 # ---------------------------------------------------------------------------------------------------------------------------------

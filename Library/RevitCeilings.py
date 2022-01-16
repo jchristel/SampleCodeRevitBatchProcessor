@@ -210,14 +210,18 @@ def Get2DPointsFromRevitCeiling(ceiling):
     fr1_geom = ceiling.get_Geometry(opt)
     solids = []
     # check geometry for Solid elements
+    # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
         if(type(item) is Solid):
             solids.append(item)
-    # process solids to points (not sure whether there will be ever more then one solid??)
+   
+    # process solids to points 
+    # in place families may have more then one solid
     for s in solids:
         pointPerCeilings = rGeo.ConvertSolidToFlattened2DPoints(s)
         if(len(pointPerCeilings) > 0):
-            allCeilingPoints.append(pointPerCeilings)
+            for pLists in pointPerCeilings:
+                allCeilingPoints.append(pLists)
     return allCeilingPoints
 
 # doc       current model document
@@ -248,7 +252,7 @@ def GetAllCeilingData(doc):
         cd = PopulateDataCeilingObject(doc, ceiling)
         allCeilingData.append(cd)
     return allCeilingData
-
+    
 # revitCeiling        Revit ceiling element
 def PopulateDataCeilingObject(doc, revitCeiling):
     '''
@@ -259,23 +263,26 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     # get room geometry (boundary points)
     revitGeometryPointGroups = Get2DPointsFromRevitCeiling(revitCeiling)
     roomPointGroupsAsDoubles = []
-    for ceilingPointGroups in revitGeometryPointGroups:
-        convertedCeilingPointGroups = []
-        for ceilingPointGroup in ceilingPointGroups:
-            convertedCeilingPointGroup = []
-            for point in ceilingPointGroup:
-                convertedCeilingPointGroup.append(rGeo.GetPointAsDoubles(point))
-            convertedCeilingPointGroups.append(convertedCeilingPointGroup)
-        roomPointGroupsAsDoubles.append(convertedCeilingPointGroups)
+    for allCeilingPointGroups in revitGeometryPointGroups:
+        # loop over lists containing exterior poly lines and associates hole poly lines
+        for ceilingPointGroupByPoly in allCeilingPointGroups:
+            convertedCeilingPointGroupByPoly = []
+            # loop over exterior and their associated hole poly lines
+            for groupByLoop in ceilingPointGroupByPoly:
+                convertedGroupByLoop = []
+                # convert each point per polyline into doubles
+                for point in groupByLoop:
+                    convertedGroupByLoop.append(rGeo.GetPointAsDoubles(point))
+                convertedCeilingPointGroupByPoly.append(convertedGroupByLoop)
+            roomPointGroupsAsDoubles.append(convertedCeilingPointGroupByPoly)
     dataC.geometry = roomPointGroupsAsDoubles
     # get other data
-    dataC.id = revitCeiling.Id.IntegerValue
-    dataC.typeName = Element.Name.GetValue(revitCeiling)
-    # get type data
     ceilingTypeId = revitCeiling.GetTypeId()
     ceilingType = doc.GetElement(ceilingTypeId)
+    dataC.id = revitCeiling.Id.IntegerValue
+    dataC.typeName = Element.Name.GetValue(revitCeiling)
+    dataC.mark = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
     dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, BuiltInParameter.ALL_MODEL_TYPE_MARK)
-    dataC.mark =  com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)
     dataC.levelName = Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId))
     dataC.levelId = revitCeiling.LevelId.IntegerValue
     return dataC

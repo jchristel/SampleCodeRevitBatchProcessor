@@ -30,6 +30,7 @@ import Result as res
 import Utility as util
 import RevitGeometry as rGeo
 import DataRoom as dRoom
+import DataGeometry as dGeometry
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -128,22 +129,27 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
     Returns a list of lists of points representing the room boundary loops
     List of Lists because a room can be made up of multiple loops (holes in rooms!)
     First nested list represents the outer boundary of a room
+    all loops are implicitly closed ( last point is not the first point again!)
     '''
-    allPoints = []
+    loopCounter = 0
+    hasInnerLoops = False
+    dgeo = dGeometry.DataGeometry()
     for bounadryLoop in boundaryLoops:
         for roomLoop in bounadryLoop:
-            #p0 = None  # loop start point
             p = None # segment start point
-            #q = None # segment end point
             loopPoints = []
             for segment in roomLoop:
                 p = segment.GetCurve().GetEndPoint(0)
                 loopPoints.append(p)
-                #q = segment.GetCurve().GetEndPoint(1)
-                #if (None == p0):
-                #    p0 = p # save loop start point
-            allPoints.append(loopPoints)
-    return allPoints
+            if(loopCounter == 0):
+                dgeo.outerLoop = loopPoints
+            else:
+                dgeo.innerLoops.append(loopPoints)
+                hasInnerLoops = True
+            loopCounter += 1
+    if (not hasInnerLoops):
+        dgeo.innerLoops = []
+    return dgeo
 
 # doc       current model document
 def Get2DPointsFromRevitRoom(revitRoom):
@@ -151,11 +157,12 @@ def Get2DPointsFromRevitRoom(revitRoom):
     Returns a list of lists of points representing the flattened(2D geometry) of each room in the model
     List of Lists because a rooms can have holes. First group of points represents external boundary of room. Any further list represents a hole in the room.
     '''
-    roomPoints = []
+    allRoomPoints = []
     boundaryLoops = GetRoomBoundaryLoops(revitRoom)
     if(len(boundaryLoops) > 0):
         roomPoints = GetPointsFromRoomBoundaries(boundaryLoops)
-    return roomPoints
+        allRoomPoints.append(roomPoints)
+    return allRoomPoints
 
 # doc       current model document
 def Get2DPointsFromAllRevitRoomsInModel(doc):
@@ -181,30 +188,35 @@ def GetAllRoomData(doc):
     allRoomData = []
     rooms = GetAllRooms(doc)
     for room in rooms:
-        rd = PopulateDataRoomObject(room)
-        allRoomData.append(rd)
+        rd = PopulateDataRoomObject(doc, room)
+        if(rd is not None):
+            allRoomData.append(rd)
     return allRoomData
 
-# revitRoom         Revit Room element
-def PopulateDataRoomObject(revitRoom):
+# doc                   current revit document
+# revitRoom             Revit Room element
+def PopulateDataRoomObject(doc, revitRoom):
     '''
     returns a custom room data objects populated with some data from the revit model room passt in
     '''
     # set up data class object
     dataR = dRoom.DataRoom()
+
     # get room geometry (boundary points)
     revitGeometryPointGroups = Get2DPointsFromRevitRoom(revitRoom)
-    roomPointGroupsAsDoubles = []
-    for roomPointGroup in revitGeometryPointGroups:
-        convertedRoompointGroup = []
-        for point in roomPointGroup:
-            convertedRoompointGroup.append(rGeo.GetPointAsDoubles(point))
-        roomPointGroupsAsDoubles.append(convertedRoompointGroup)
-    dataR.geometry = roomPointGroupsAsDoubles
-    # get other data
-    dataR.id = revitRoom.Id.IntegerValue
-    dataR.name = Element.Name.GetValue(revitRoom)
-    dataR.number = revitRoom.Number
-    dataR.levelName = Element.Name.GetValue(revitRoom.Level)
-    dataR.levelId = revitRoom.Level.Id.IntegerValue
-    return dataR
+    if(len(revitGeometryPointGroups) > 0):
+        roomPointGroupsAsDoubles = []
+        for roomPointGroupByPoly in revitGeometryPointGroups:
+            dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, roomPointGroupByPoly)
+            roomPointGroupsAsDoubles.append(dgeoConverted)
+        dataR.geometry = roomPointGroupsAsDoubles
+        # get other data
+        dataR.id = revitRoom.Id.IntegerValue
+        dataR.name = Element.Name.GetValue(revitRoom).encode('utf-8')
+        dataR.number = revitRoom.Number.encode('utf-8')
+        dataR.functionNumber = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number').encode('utf-8')
+        dataR.levelName = Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+        dataR.levelId = revitRoom.Level.Id.IntegerValue
+        return dataR
+    else:
+        return None

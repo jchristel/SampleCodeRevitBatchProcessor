@@ -24,6 +24,8 @@
 from collections import namedtuple
 from Autodesk.Revit.DB import *
 
+import DataGeometry as dGeometry
+
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):
     return str(point.X) + ' : ' + str(point.Y) + ' : ' + str(point.Z)
@@ -113,6 +115,21 @@ def FlattenXYZPointListOfLists(  polygons ):
         a.append( FlattenXYZPointList( polygon ) )
     return a
 
+
+def GetCoordinateSystemTranslationAndRotation(doc):
+    '''
+    returns then translation as a 1 x 3 matrix and the rotation as a 3 x 3 matrix of the shared cordinate system active
+    in document
+    '''
+    plAtive = doc.ActiveProjectLocation
+    totalTransform = plAtive.GetTotalTransform().Inverse
+    nBasisX = GetPointAsDoubles(totalTransform.BasisX)
+    nBasisY = GetPointAsDoubles(totalTransform.BasisY)
+    nBasisZ = GetPointAsDoubles(totalTransform.BasisZ)
+    nOrigin = GetPointAsDoubles(totalTransform.Origin)
+    return [nBasisX, nBasisY, nBasisZ],nOrigin
+    pass
+
 # --------------------------------------- is point in polygon ---------------------------------------
 # from  https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
 # ---------------------------------------------------------------------------------------------------
@@ -146,7 +163,8 @@ def X_intercept(p, q, y ):
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
     '''
     if(0 != ( p.V - q.V )):
-        print('unexpected horizontal segment')
+        #print('unexpected horizontal segment')
+        pass
     
     return q.U - ( ( q.V - y ) * ( ( p.U - q.U ) / ( p.V - q.V ) ) )
 
@@ -175,7 +193,6 @@ def IsPointWithinPolygon(polygon, point):
     '''
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
     '''
-
     # initialize
     quad = GetQuadrant(polygon[ 0 ], point )
     angle = 0
@@ -249,12 +266,36 @@ def ConvertEdgeArraysIntoListOfPoints(edgeArrays):
 # edge          Revit Edge objectS
 def GetEdgePoints(edge):
     '''
-    returns the two Revit XYZ points defining an edge
+    returns the Revit XYZ points defining an edge (curves get tesselated!)
     '''
     points = []
     for p in  edge.Tessellate():
         points.append(p)
     return points
+
+# doc                   current revit document
+# dgObject              a data geometry object
+def ConvertXYZInDataGeometry(doc, dgObject):
+    '''
+    converts revit XYZ objects to groups of doubles and populates translation and rotation matrix data of coordinate system information
+    '''
+    dgeo = dGeometry.DataGeometry()
+    outerLoop = []
+    for xyzPoint in dgObject.outerLoop:
+        pdouble = GetPointAsDoubles(xyzPoint)
+        outerLoop.append(pdouble)
+    innerLoops = []
+    for innerLoop in dgObject.innerLoops:
+        innerLoopPoints = []
+        for xyzPoint in innerLoop:
+            pdouble = GetPointAsDoubles(xyzPoint)
+            innerLoopPoints.append(pdouble)
+        innerLoops.append(innerLoopPoints)
+    dgeo.outerLoop = outerLoop
+    dgeo.innerLoops = innerLoops
+    # add coordinate system translation and rotation data
+    dgeo.rotationCoord, dgeo.translationCoord = GetCoordinateSystemTranslationAndRotation(doc)
+    return dgeo
 
 # edges         list of Revit Edge objects
 # edge          Revit Edge objectS
@@ -432,7 +473,7 @@ def GetUniqueHorizontalFaces(faces):
 
 # exteriorLoop        a polygon loop describing the external boundary of a face
 # otherLoop           a polygon loop which is to be checked as to whether it is within the exterioir loop and the any hole loops
-# holeLoops           a list of UV polygon loops whiuch ahve been identified as creating holes in the exteriorLoop 
+# holeLoops           a list of named tuples containing .loop property which is a list of UV points formning a polygon which have been identified as creating a hole in the exteriorLoop 
 def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops):
     '''
     checks whether any of the other loops is within the exterior loop and if so
@@ -443,14 +484,14 @@ def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops
     # get any point on the loop to check...if it is within the other loop then the entire loop is within the other loop
     # since revit does not allow for overlapping sketches
     point = otherLoop[0]
-    # checkj whether point is within the other polygon loop
+    # check whether point is within the other polygon loop
     if (IsPointWithinPolygon(exteriorLoop, point)):
         returnValue = True
         # check whether this point is within the polygon loops identified as holes
         # if so it is actually an island and will be accounted for seperately
         if(len(holeLoops) > 0):
             for hLoop in holeLoops:
-                if (IsPointWithinPolygon(hLoop, point)):
+                if (IsPointWithinPolygon(hLoop.loop, point)):
                     returnValue = False
                     break
     return returnValue
@@ -480,7 +521,7 @@ def BuildLoopsDictionary(loops):
             copyLoops.pop(0)
             # loop over remaining loops and work out which ones are holes ... if any
             for loop in copyLoops:
-                # build list of hole loops already known belonging tro this exterior loop
+                # build list of hole loops already known belonging to this exterior loop
                 holeLoops = []
                 for geoLoop in returnValue[key]:
                     holeLoops.append(geoLoop)
@@ -500,6 +541,7 @@ def BuildLoopsDictionary(loops):
         # only one exterior loop exists, no interior loops
         returnValue[key]=[]
     return returnValue
+
 
 # solid         a Revit Solid element
 def ConvertSolidToFlattened2DPoints(solid):
@@ -559,17 +601,19 @@ def ConvertSolidToFlattened2DPoints(solid):
         # sort loops into exterior and hole loops
         loopDic = BuildLoopsDictionary(uvloops)
         for key in loopDic:
-            listPerExteriorPoly = []
+            dgeo = dGeometry.DataGeometry()
             keyList =[]
             # find matching loop by id
             for x in uvloops:
                 if x.id == key:
                     keyList = x
                     break
-            listPerExteriorPoly.append(keyList.threeDPoly)
+            dgeo.outerLoop = keyList.threeDPoly
             if(len(loopDic[key])>0):
                 for hole in loopDic[key]:
-                    listPerExteriorPoly.append(hole.threeDPoly)
-            loopsByFace.append(listPerExteriorPoly)
+                    dgeo.innerLoops.append(hole.threeDPoly)
+            else:
+                dgeo.innerLoops = []
+            loopsByFace.append(dgeo)
     ceilingGeos.append (loopsByFace)
     return ceilingGeos

@@ -30,7 +30,7 @@ import RevitFamilyUtils as rFam
 import RevitGeometry as rGeo
 import DataCeiling as dCeiling
 import Utility as util
-
+import DataGeometry as dGeometry
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -250,39 +250,41 @@ def GetAllCeilingData(doc):
     ceilings = GetAllCeilingInstancesInModelByCategory(doc)
     for ceiling in ceilings:
         cd = PopulateDataCeilingObject(doc, ceiling)
-        allCeilingData.append(cd)
+        if(cd is not None):
+            allCeilingData.append(cd)
     return allCeilingData
-    
-# revitCeiling        Revit ceiling element
+
+# doc                   current revit document
+# revitCeiling          Revit ceiling element
 def PopulateDataCeilingObject(doc, revitCeiling):
     '''
     returns a custom ceiling data objects populated with some data from the revit model ceiling passt in
     '''
     # set up data class object
     dataC = dCeiling.DataCeiling()
+    print('element id ', revitCeiling.Id)
     # get room geometry (boundary points)
     revitGeometryPointGroups = Get2DPointsFromRevitCeiling(revitCeiling)
-    roomPointGroupsAsDoubles = []
-    for allCeilingPointGroups in revitGeometryPointGroups:
-        # loop over lists containing exterior poly lines and associates hole poly lines
-        for ceilingPointGroupByPoly in allCeilingPointGroups:
-            convertedCeilingPointGroupByPoly = []
-            # loop over exterior and their associated hole poly lines
-            for groupByLoop in ceilingPointGroupByPoly:
-                convertedGroupByLoop = []
-                # convert each point per polyline into doubles
-                for point in groupByLoop:
-                    convertedGroupByLoop.append(rGeo.GetPointAsDoubles(point))
-                convertedCeilingPointGroupByPoly.append(convertedGroupByLoop)
-            roomPointGroupsAsDoubles.append(convertedCeilingPointGroupByPoly)
-    dataC.geometry = roomPointGroupsAsDoubles
-    # get other data
-    ceilingTypeId = revitCeiling.GetTypeId()
-    ceilingType = doc.GetElement(ceilingTypeId)
-    dataC.id = revitCeiling.Id.IntegerValue
-    dataC.typeName = Element.Name.GetValue(revitCeiling)
-    dataC.mark = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
-    dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, BuiltInParameter.ALL_MODEL_TYPE_MARK)
-    dataC.levelName = Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId))
-    dataC.levelId = revitCeiling.LevelId.IntegerValue
-    return dataC
+    if(len(revitGeometryPointGroups) > 0):
+        ceilingPointGroupsAsDoubles = []
+        for allCeilingPointGroups in revitGeometryPointGroups:
+            # loop over lists containing exterior poly lines and associates hole poly lines
+            for ceilingPointGroupByPoly in allCeilingPointGroups:
+                dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, ceilingPointGroupByPoly)
+                ceilingPointGroupsAsDoubles.append(dgeoConverted)
+  
+        dataC.geometry = ceilingPointGroupsAsDoubles
+    
+        # get other data
+        ceilingTypeId = revitCeiling.GetTypeId()
+        ceilingType = doc.GetElement(ceilingTypeId)
+        dataC.id = revitCeiling.Id.IntegerValue
+        dataC.typeName = Element.Name.GetValue(revitCeiling).encode('utf-8')
+        dataC.mark = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
+        dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, BuiltInParameter.ALL_MODEL_TYPE_MARK)
+        dataC.levelName = Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
+        dataC.levelId = revitCeiling.LevelId.IntegerValue
+        dataC.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        return dataC
+    else:
+        return None

@@ -90,12 +90,27 @@ def GetParameterValueUTF8String(para):
 # parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string
 def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
     '''
-    Returns the built in parameter value specified by the the defintion. If parameter does not exist on element None will be returned!!
+    Returns the built in parameter value specified by the defintion. If parameter does not exist on element None will be returned!!
     '''
     parameterValue = None
     paras = element.GetOrderedParameters()
     for para in paras:
         if(para.Definition.BuiltInParameter == builtInParameterDef):
+            parameterValue = parameterValueGetter(para)
+            break
+    return parameterValue
+
+# element                   the revit element containing the parameter of which the value is to be returned
+# parameterName             the parameter name
+# parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string
+def GetParameterValueByName(element, parameterName, parameterValueGetter = GetParameterValueUTF8String):
+    '''
+    Returns the value of the parameter specified by its name. If parameter does not exist on element None will be returned!!
+    '''
+    parameterValue = None
+    paras = element.GetOrderedParameters()
+    for para in paras:
+        if(para.Definition.Name == parameterName):
             parameterValue = parameterValueGetter(para)
             break
     return parameterValue

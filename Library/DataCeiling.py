@@ -22,6 +22,7 @@
 #
 
 import json
+import DataGeometry
 
 class DataCeiling():
     def __init__(self, j = {}):
@@ -32,13 +33,26 @@ class DataCeiling():
         self.mark = '-'
         self.levelName = '-'
         self.levelId = '-'
+        self.offsetFromLevel = 0.0
         self.geometry = [[]]
         self.associatedElements = []
         if(len(j) > 0 ):
             self.__dict__ = json.loads(j)
+            # custom desirialisation code...
+            geoDataList = []
+            for item in self.geometry:
+                if('dataType' in item):
+                    if(item['dataType']):
+                        dummy = DataGeometry.DataGeometry(item)
+                        geoDataList.append(dummy)
+                    else:
+                        print('no data type in item')
+            self.geometry = geoDataList
 
     def to_json(self):
         '''
         convert the instance of this class to json
         '''
         return json.dumps(self, indent = None, default=lambda o: o.__dict__)
+        
+        

@@ -22,6 +22,7 @@
 #
 
 import json
+import DataGeometry
 
 class DataRoom():
     def __init__(self, j = {}):
@@ -36,6 +37,15 @@ class DataRoom():
         self.associatedElements = []
         if(len(j) > 0 ):
             self.__dict__ = json.loads(j)
+            geoDataList = []
+            for item in self.geometry:
+                if('dataType' in item):
+                    if(item['dataType']):
+                        dummy = DataGeometry.DataGeometry(item)
+                        geoDataList.append(dummy)
+                else:
+                    print('no data type in item')
+            self.geometry = geoDataList
 
     def to_json(self):
         '''

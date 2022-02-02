@@ -261,20 +261,15 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     returns a custom ceiling data objects populated with some data from the revit model ceiling passt in
     '''
     # set up data class object
-    dataC = dCeiling.DataCeiling()
-    print('element id ', revitCeiling.Id)
-    # get room geometry (boundary points)
+    dataC = dCeiling.DataCeiling() 
+    # get ceiling geometry (boundary points)
     revitGeometryPointGroups = Get2DPointsFromRevitCeiling(revitCeiling)
     if(len(revitGeometryPointGroups) > 0):
         ceilingPointGroupsAsDoubles = []
         for allCeilingPointGroups in revitGeometryPointGroups:
-            # loop over lists containing exterior poly lines and associates hole poly lines
-            for ceilingPointGroupByPoly in allCeilingPointGroups:
-                dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, ceilingPointGroupByPoly)
-                ceilingPointGroupsAsDoubles.append(dgeoConverted)
-  
+            dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, allCeilingPointGroups)
+            ceilingPointGroupsAsDoubles.append(dgeoConverted)
         dataC.geometry = ceilingPointGroupsAsDoubles
-    
         # get other data
         ceilingTypeId = revitCeiling.GetTypeId()
         ceilingType = doc.GetElement(ceilingTypeId)

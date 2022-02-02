@@ -584,7 +584,6 @@ def ConvertSolidToFlattened2DPoints(solid):
     hotizontalFaces = GetUniqueHorizontalFaces(sortedBySizeFaces)
     # loop of all horizontal faces and extract loops
     for hf in hotizontalFaces:
-        loopsByFace = []
         edgeLoops = ConvertEdgeArraysIntoListOfPoints(hf.EdgeLoops)
         # convert in UV coordinates
         edgeLoopsFlattened = FlattenXYZPointListOfLists(edgeLoops)
@@ -614,6 +613,5 @@ def ConvertSolidToFlattened2DPoints(solid):
                     dgeo.innerLoops.append(hole.threeDPoly)
             else:
                 dgeo.innerLoops = []
-            loopsByFace.append(dgeo)
-    ceilingGeos.append (loopsByFace)
+            ceilingGeos.append(dgeo)
     return ceilingGeos

@@ -201,7 +201,6 @@ def PopulateDataRoomObject(doc, revitRoom):
     '''
     # set up data class object
     dataR = dRoom.DataRoom()
-
     # get room geometry (boundary points)
     revitGeometryPointGroups = Get2DPointsFromRevitRoom(revitRoom)
     if(len(revitGeometryPointGroups) > 0):
@@ -214,8 +213,16 @@ def PopulateDataRoomObject(doc, revitRoom):
         dataR.id = revitRoom.Id.IntegerValue
         dataR.name = Element.Name.GetValue(revitRoom).encode('utf-8')
         dataR.number = revitRoom.Number.encode('utf-8')
-        dataR.functionNumber = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number').encode('utf-8')
-        dataR.levelName = Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+        funcNumberValue = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number')
+        if(funcNumberValue != None):
+            dataR.functionNumber = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number').encode('utf-8')
+        else:
+            # use default instead
+            pass
+        try:
+            dataR.levelName = Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+        except:
+            dataR.levelName = 'no level'
         dataR.levelId = revitRoom.Level.Id.IntegerValue
         return dataR
     else:

@@ -21,8 +21,8 @@
 #
 #
 
-import System
-import clr
+#import System
+#import clr
 
 #a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
 class Result: 

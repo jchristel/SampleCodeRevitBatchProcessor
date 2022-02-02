@@ -21,8 +21,8 @@
 #
 #
 
-import clr
-import System
+#import clr
+#import System
 from System.IO import Path
 import glob
 import datetime

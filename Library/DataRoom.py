@@ -25,6 +25,7 @@ import json
 import DataGeometry
 
 class DataRoom():
+    dataType = 'room'
     def __init__(self, j = {}):
         self.dataType = 'room'
         self.id = -1

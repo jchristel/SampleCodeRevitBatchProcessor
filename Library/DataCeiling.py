@@ -25,6 +25,7 @@ import json
 import DataGeometry
 
 class DataCeiling():
+    dataType = 'ceiling'
     def __init__(self, j = {}):
         self.dataType = 'ceiling'
         self.id = -1
@@ -48,6 +49,13 @@ class DataCeiling():
                     else:
                         print('no data type in item')
             self.geometry = geoDataList
+
+    @property
+    def DataType(self):
+        '''
+        This is the getter method
+        '''
+        return self.dataType
 
     def to_json(self):
         '''

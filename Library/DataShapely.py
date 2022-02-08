@@ -324,23 +324,25 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
     if(len(dataReader.data) > 0):
         # build dictionary of objects by level and object type
         dicObjects = BuildDictionaryByLevelAndDataType(dataReader)
-        # key level name, value tuple ( rooms and ceilings)
-        # loop over dic and process each key:
+        # key level name, value tuple ( rooms [index 0] and ceilings [index 1])
+        # loop over dic and process each key (level):
         #       - check if rooms and ceilings
         #       - intersection check
         #       - update room object with ceiling match
         for levelName in dicObjects:
+            # check rooms are on this level
             if(len(dicObjects[levelName][0]) > 0):
+                # check ceilings are on this level
                 if(len(dicObjects[levelName][1]) > 0):
-                    
                     polygonsByType = {}
+                    # convert geometry data off all rooms and ceilings into dictionaries : key is Revit element id, values are shapely polygons
                     roomPolygons = GetShapelyPolygonsFromGeoObject(dicObjects[levelName][0], dr.DataRoom.dataType)
                     ceilingPolygons = GetShapelyPolygonsFromGeoObject(dicObjects[levelName][1], dc.DataCeiling.dataType)
                     polygonsByType[dr.DataRoom.dataType] = roomPolygons
                     polygonsByType[dc.DataCeiling.dataType] = ceilingPolygons
-                    
+                    # loop over rooms ids
                     for roomPolyId in polygonsByType[dr.DataRoom.dataType]:
-                        # check if valid room poly ( just in case that is a room in schedule only, or unbound)
+                        # check if valid room poly ( just in case that is a room in schedule only >> not placed in model , or unbound, or overlapping with other room)
                         if(len(roomPolygons[roomPolyId]) > 0):
                             # loop over each room polygon per room...there should only be one...
                             for rPolygon in roomPolygons[roomPolyId]:
@@ -348,48 +350,61 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                 intersections = {}
                                 for ceilingPolyId in polygonsByType[dc.DataCeiling.dataType]:
                                     for cPolygon in ceilingPolygons[ceilingPolyId]:
-                                        # debug
-                                        match = False
-                                        # check what exactly is happening
-                                        if(cPolygon.intersects(rPolygon)):
-                                            # calculates percentage of overlapping ceiling area vs room area
-                                            # anything less then 0.1 will be ignored...
-                                            areaIntersectionPercentageOfCeilingVsRoom = (cPolygon.intersection(rPolygon).area/rPolygon.area)*100
-                                            # check what percentage the overlap area is...if less then 0.1 percent ignore!
-                                            if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
-                                                # ceiling overlap area is to small...not in room
-                                                pass
-                                            else:
-                                                # ceiling is within the room add to room data object
-                                                
-                                                dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
-
-                                                dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
-                                                #print('adding to data object: ', dataObjectRoom.to_json() , '\n', 'added object: ', dataObjectCeiling.to_json())  
-                                                dataObjectRoom.associatedElements.append(dataObjectCeiling)
-                                            # debug output
-                                            if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
-                                                # ceiling is within the room
-                                                if('toSmall' in intersections):
-                                                    intersections['toSmall'].append(cPolygon)
-                                                else:
-                                                    intersections['toSmall']= [cPolygon]
-                                            else:
-                                                # ceiling is within the room
-                                                if('intersects' in intersections):
-                                                    intersections['intersects'].append(cPolygon)
-                                                else:
-                                                    intersections['intersects']= [cPolygon]
+                                        # add some exception handling here in case intersect check throws an error
+                                        try:
                                             # debug
-                                            match = True
-                                        # debug
-                                        if(match == False):
-                                            if('disjointed' in intersections):
-                                                intersections['disjointed'].append(cPolygon)
-                                            else:
-                                                intersections['disjointed']= [cPolygon]
+                                            match = False
+                                            # check what exactly is happening
+                                            if(cPolygon.intersects(rPolygon)):
+                                                # calculates percentage of overlapping ceiling area vs room area
+                                                # anything less then 0.1 will be ignored...
+                                                areaIntersectionPercentageOfCeilingVsRoom = (cPolygon.intersection(rPolygon).area/rPolygon.area)*100
+                                                # check what percentage the overlap area is...if less then 0.1 percent ignore!
+                                                if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
+                                                    # ceiling overlap area is to small...not in room
+                                                    pass
+                                                else:
+                                                    # ceiling is within the room: add to room data object
+                                                    # get the room object by its Revit ID
+                                                    dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
+                                                    # get the ceiling object by its Revit id
+                                                    dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
+                                                    # add ceiling object to associated elements list of room object 
+                                                    dataObjectRoom.associatedElements.append(dataObjectCeiling)
+                                                # debug output
+                                                if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
+                                                    # ceiling is within the room
+                                                    if('toSmall' in intersections):
+                                                        intersections['toSmall'].append(cPolygon)
+                                                    else:
+                                                        intersections['toSmall']= [cPolygon]
+                                                else:
+                                                    # ceiling is within the room
+                                                    if('intersects' in intersections):
+                                                        intersections['intersects'].append(cPolygon)
+                                                    else:
+                                                        intersections['intersects']= [cPolygon]
+                                                # debug
+                                                match = True
+                                            # debug
+                                            if(match == False):
+                                                if('disjointed' in intersections):
+                                                    intersections['disjointed'].append(cPolygon)
+                                                else:
+                                                    intersections['disjointed']= [cPolygon]
+                                        except Exception as e:
+                                            # get the offending elements:
+                                            dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
+                                            dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
+                                            result.AppendMessage(
+                                                'Exception: ' + str(e) + '\n' +
+                                                'offending room: room name '+ dataObjectRoom.name+ ' room number '+ dataObjectRoom.number + ' room id ' + str(dataObjectRoom.id) + ' is valid polytgon ' + str(rPolygon.is_valid) +  '\n' +
+                                                'offending ceiling id ' + str(dataObjectCeiling.id) + ' is valid polytgon ' + str(cPolygon.is_valid)
+                                                )
                                 # plot room and all intersectiong ceilings into a single diagram
+                                
                                 if(len(intersections) > 0):
+                                    pass
                                     poly = []
                                     for i in intersections:
                                         for polyLoop in intersections[i]:
@@ -404,14 +419,14 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                         print(e)
 
                 else:
-                    result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName]))
+                    result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName][0][0].levelName))
             else:
                 result.AppendMessage('No rooms found for level: ' + str(dicObjects[levelName]))
         # write data out:
         # loop over dic
         # write single row for room and matching ceiling ( multiple rows for single rrom if multiple ceilings)
         reportData = GetReportData(dicObjects)
-        writeReportData(outputFilePath, ['room function nuber', 'room number','room name', 'level name', 'room revit id','eiling type mark', 'ceiling type name', 'offset from level', 'level name', 'ceiling revit id'], reportData)
+        writeReportData(outputFilePath, ['room function nuber', 'room number','room name', 'room level name', 'room revit id','eiling type mark', 'ceiling type name', 'offset from level', 'ceiling level name', 'ceiling revit id'], reportData)
         result.UpdateSep(True, 'Wrote data to file: ' + outputFilePath)
     else:
         result.UpdateSep(False, 'No data was fond in: ' + dataSourcePath)

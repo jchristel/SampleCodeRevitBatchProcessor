@@ -221,9 +221,10 @@ def PopulateDataRoomObject(doc, revitRoom):
             pass
         try:
             dataR.levelName = Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+            dataR.levelId = revitRoom.Level.Id.IntegerValue
         except:
             dataR.levelName = 'no level'
-        dataR.levelId = revitRoom.Level.Id.IntegerValue
+            dataR.levelId = -1
         return dataR
     else:
         return None

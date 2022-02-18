@@ -70,11 +70,11 @@ CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[BuiltInCategory] ([
 # returns all curtain panel element types in a model
 # doc:   current model document
 def GetAllCurtainWallElementTypesByCategory(doc):
-    """ this will return a filtered element collector of all curtain wall element types in the model:
+    ''' this will return a filtered element collector of all curtain wall element types in the model:
     - curtain wall panels
     - curtain wall mullions
     - family symbols!
-    """
+    '''
     multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
@@ -82,7 +82,7 @@ def GetAllCurtainWallElementTypesByCategory(doc):
 # collector   fltered element collector containing ReplaceMe type elments of family symbols representing in place families
 # dic         dictionary containing key: curtainwall element type family name, value: list of ids
 def BuildCurtainWallElementTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -103,13 +103,13 @@ def SortCurtainWallElementTypesByFamilyName(doc):
 
 # doc   current model document
 def GetCurtainWallElementInstancesInModelByCategory(doc):
-    """ returns all CurtainWallElement elements placed in model"""
+    ''' returns all CurtainWallElement elements placed in model'''
     multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
     return FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
-    """ returns all CurtainWallElement element type ids available in model """
+    ''' returns all CurtainWallElement element type ids available in model '''
     ids = []
     colCat = GetAllCurtainWallElementTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -118,10 +118,10 @@ def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
 # returns all CurtainWallElement types in a model
 # doc:   current model document
 def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
-    """ this will return a filtered element collector of all CurtainWallElement types in the model:
+    ''' this will return a filtered element collector of all CurtainWallElement types in the model:
     - curtain wall panels
     - curtain wall mullions
-    """
+    '''
     collector = GetAllCurtainWallElementTypesByCategory(doc)
     elements=[]
     for c in collector:
@@ -132,10 +132,10 @@ def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
 # returns all CurtainWallElement types in a model
 # doc:   current model document
 def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
-    """ this will return a filtered element collector of all CurtainWallElement type Ids in the model:
+    ''' this will return a filtered element collector of all CurtainWallElement type Ids in the model:
     - curtain wall panels
     - curtain wall mullions
-    """
+    '''
     collector = GetAllCurtainWallElementTypesByCategory(doc)
     ids=[]
     for c in collector:
@@ -145,14 +145,14 @@ def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
 
 # doc   current document
 def GetUsedCurtainWallElementTypeIds(doc):
-    """ returns all used in CurtainWallElement type ids """
+    ''' returns all used in CurtainWallElement type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -162,10 +162,10 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
-    """ returns all unused CurtainWallElement type ids for:
+    ''' returns all unused CurtainWallElement type ids for:
     - curtain wall panels
     - curtain wall mullions
-    it will therefore not return any family types ..."""
+    it will therefore not return any family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallElementTypeIdsByCategoryExclSymbols, 0)
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
@@ -176,38 +176,36 @@ def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
 
 # doc   current document
 def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
-    """ this will return a list of all loadable non shared symbols (types) in the model:
+    ''' 
+    this will return a list of all loadable non shared symbols (types) in the model:
     - curtain wall panels
     - curtain wall mullions
-    """
+    '''
     ids = []
     multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     for c in collector:
         if(c.GetType() == FamilySymbol):
             fam = c.Family
-            paras = fam.GetOrderedParameters()
-            for p in paras:
-                #print(p.Definition.Name)
-                if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
-                    if(com.getParameterValue(p) == 'No' and c.Id not in ids):
-                        ids.append(c.Id)
+            pValue = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
+            if(pValue != None and  pValue == 'No' and c.Id not in ids):
+                ids.append(c.Id)
     return ids
 
 # doc   current document
 def GetUsedCurtainWallSymbolIds(doc):
-    """ returns all used loadable symbol (type) ids """
+    ''' returns all used loadable symbol (type) ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallNonSharedSymbolIdsByCategory, 1)
     return ids
 
 # doc   current document
 def GetUnusedCurtainWallSymbolIds(doc):
-    """ returns all unused loadable symbol (type) ids """
+    ''' returns all unused loadable symbol (type) ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallNonSharedSymbolIdsByCategory, 0)
     return ids
 
 # doc   current document
 def GetUnusedICurtainWallSymbolIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of loadable symbols which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of loadable symbols which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedCurtainWallSymbolIds)
     return ids

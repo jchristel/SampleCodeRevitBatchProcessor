@@ -62,13 +62,11 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
         parameterMatch = False
         # get the family object to checkwhether it is a shared family
         fam = c.Family
-        paras = fam.GetOrderedParameters()
-        for p in paras:
-            if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
-                parameterMatch = True
-                if(com.getParameterValue(p) == 'No' and c.Id not in ids):
-                    ids.append(c.Id)
-                    break
+        id = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
+        if(id != None):
+            parameterMatch = True
+            if(id == 'No' and c.Id not in ids):
+                ids.append(c.Id)
         if(parameterMatch == False):
             # family cant be of type shared...
             ids.append(c.Id)

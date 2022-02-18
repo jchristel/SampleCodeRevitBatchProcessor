@@ -44,19 +44,19 @@ REPORT_GRIDS_HEADER = ['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXT
 
 # doc:   current model document
 def GetAllGridHeadsByCategory(doc):
-    """ this will return a filtered element collector of all grid head types in the model"""
+    ''' this will return a filtered element collector of all grid head types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllGridTypesByCategory(doc):
-    """ this will return a filtered element collector of all grid types in the model"""
+    ''' this will return a filtered element collector of all grid types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Grids).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllGridTypeIdsByCategory(doc):
-    """ this will return a filtered element collector of all grid types ids in the model"""
+    ''' this will return a filtered element collector of all grid types ids in the model'''
     collector = GetAllGridTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(collector)
     return ids
@@ -259,12 +259,12 @@ def GetGridReportData(doc, revitFilePath):
 
 # doc             current document
 def GetUnusedGridTypesForPurge(doc):
-    """ this will return all ids of unused grid types in the model to be purged"""
+    ''' this will return all ids of unused grid types in the model to be purged'''
     return com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 0, 8)
 
 # doc             current document
 def GetAllGridHeadFamilyTypeIds(doc):
-    """ this will return all ids grid head family types in the model"""
+    ''' this will return all ids grid head family types in the model'''
     ids = []
     filter = ElementCategoryFilter(BuiltInCategory.OST_GridHeads)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
@@ -273,7 +273,7 @@ def GetAllGridHeadFamilyTypeIds(doc):
 
 # doc             current document
 def GetUnusedGridHeadFamilies(doc):
-    """ this will return all ids of unused family symbols (types) of grid head families"""
+    ''' this will return all ids of unused family symbols (types) of grid head families'''
     usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllGridTypeIdsByCategory, 1, 8)
     headsInUseIds = []
     for Id in usedTypes:
@@ -290,5 +290,5 @@ def GetUnusedGridHeadFamilies(doc):
 
 # doc             current document
 def GetUnusedGridHeadFamiliesForPurge(doc):
-    """ this will return all ids of unused grid head symbols and families to be purged"""
+    ''' this will return all ids of unused grid head symbols and families to be purged'''
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGridHeadFamilies)

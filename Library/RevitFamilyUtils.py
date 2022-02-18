@@ -42,8 +42,8 @@ from Autodesk.Revit.DB import *
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def ModifyLoadFamilies(doc, revitFilePath, familyData):
-    """reloads a number of families with settings:
-    - parameter values overwritten: true"""
+    '''reloads a number of families with settings:
+    - parameter values overwritten: true'''
     result = res.Result()
     try:
         for loadFam in familyData:
@@ -56,8 +56,8 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
 # doc               current model document
 # familyFilePath    the fully qualified file path of the family to be loaded
 def LoadFamily(doc, familyFilePath):
-    """loads or reloads a single family with settings:
-    - parameter values overwritten: true"""
+    '''loads or reloads a single family with settings:
+    - parameter values overwritten: true'''
     result = res.Result()
     try:
         # set upo reload action
@@ -302,7 +302,7 @@ def GetAllInPlaceFamilies(doc):
 # doc   current document
 # typeIds   in place family type ids available in model
 def GetSymbolsFromType(doc, typeIds):
-    """returns dictionary where key is the family and value are symbol(family type) ids"""
+    '''returns dictionary where key is the family and value are symbol(family type) ids'''
     fams = {}
     for tId in typeIds:
         # get family element
@@ -317,7 +317,7 @@ def GetSymbolsFromType(doc, typeIds):
 # doc:      current model document
 # typeId:   symbol type id
 def GetFamilyInstancesBySymbolTypeId(doc, typeId):
-    """returns all instances of a given family symbol"""
+    '''returns all instances of a given family symbol'''
     pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
     equals = FilterNumericEquals()
     idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
@@ -328,7 +328,7 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
-    """ returns true if all symbols (types) of a family are in use in a model"""
+    ''' returns true if all symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in usedTypeIds):
@@ -338,7 +338,7 @@ def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
 
 # doc   current document
 def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
-    """ returns type ids off all available in place families of category wall """
+    ''' returns type ids off all available in place families of category wall '''
     filter = ElementCategoryFilter(famBuiltInCategory)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     ids = []
@@ -352,7 +352,7 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
 # doc                   current document
 # unusedTypeGetter      returns ids of unused symbols (family types)
 def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged'''
     unusedIds = []
     unusedFamilyIds = []
     # get all unused type Ids
@@ -377,7 +377,7 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 # doc             current document
 # cats          list of builtin categories to filter by
 def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
-    """"returns a list of family symbols belonging to categories passt in"""
+    '''"returns a list of family symbols belonging to categories passt in'''
     ids = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
@@ -401,7 +401,7 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
 
 # doc             current document
 def GetAllNonSharedFamilySymbolIds(doc):
-    """"returns a list of all non shared family symbol ids in the model based on hard coded family category lists!"""
+    '''"returns a list of all non shared family symbol ids in the model based on hard coded family category lists!'''
     ids = []
     allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
     allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
@@ -412,7 +412,7 @@ def GetAllNonSharedFamilySymbolIds(doc):
 # useTyep         0, no dependent elements; 1: has dependent elements
 # typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
-    """returns either used or unused type ids"""
+    '''returns either used or unused type ids'''
     # get all types elements available
     allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD, excludeSharedFam)
     allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags, excludeSharedFam)
@@ -427,12 +427,12 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
 
 # doc             current document
 def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
-    """returns all unused family type ids in model"""
+    '''returns all unused family type ids in model'''
     ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
     return ids
 
 # doc             current document
 def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
-    """returns all unused non shared family types and symbol ids in model"""
+    '''returns all unused non shared family types and symbol ids in model'''
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
     return idsUnused 

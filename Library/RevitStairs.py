@@ -73,60 +73,60 @@ STAIR_RUN_TYPE_PARAS = [
 
 # doc:   current model document
 def GetAllStairTypesByCategory(doc):
-    """ this will return a filtered element collector of all Stair types in the model:
+    ''' this will return a filtered element collector of all Stair types in the model:
     - Stair
     - Assembled Stair
     - Precast Stair
     - Cast-In-Place Stair
     - In place families or loaded families
-    """
+    '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Stairs).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetStairTypesByClass(doc):
-    """ this will return a filtered element collector of all Stair types in the model:
+    ''' this will return a filtered element collector of all Stair types in the model:
     - Assembled Stair
     - Precast Stair
     - Cast-In-Place Stair
-    it will therefore not return any in place family types or Stair types..."""
+    it will therefore not return any in place family types or Stair types...'''
     return  FilteredElementCollector(doc).OfClass(StairsType)
 
 # doc   current model document
 def GetStairPathTypesByClass(doc):
-    """ this will return a filtered element collector of all Stair path types in the model """
+    ''' this will return a filtered element collector of all Stair path types in the model '''
     return  FilteredElementCollector(doc).OfClass(StairsPathType)
 
 def GetAllStairPathElementsInModel(doc):
-    """ this will return a filtered element collector of all Stair path elements in the model """
+    ''' this will return a filtered element collector of all Stair path elements in the model '''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetStairLandingTypesByClass(doc):
-    """ this will return a filtered element collector of all Stair landing types in the model """
+    ''' this will return a filtered element collector of all Stair landing types in the model '''
     return  FilteredElementCollector(doc).OfClass(StairsLandingType)
 
 # doc   current model document
 def GetStairRunTypesByClass(doc):
-    """ this will return a filtered element collector of all Stair run types in the model """
+    ''' this will return a filtered element collector of all Stair run types in the model '''
     return  FilteredElementCollector(doc).OfClass(StairsRunType)
 
 # doc   current model document
 def GetStairCutMarkTypesByClass(doc):
-    """ this will return a filtered element collector of all cut mark types in the model """
+    ''' this will return a filtered element collector of all cut mark types in the model '''
     return  FilteredElementCollector(doc).OfClass(CutMarkType)
 
 # returns all stringers and carriage types in a model
 # doc:   current model document
 def GetAllStairStringersCarriageByCategory(doc):
-    """ this will return a filtered element collector of all Stair stringers and cariage types in the model"""
+    ''' this will return a filtered element collector of all Stair stringers and cariage types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
     return collector
 
 # collector   fltered element collector containing Stair type elments of family symbols representing in place families
 # dic         dictionary containing key: stair type family name, value: list of ids
 def BuildStairTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -150,17 +150,17 @@ def SortStairTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllStairInstancesInModelByCategory(doc):
-    """ returns all Stair elements placed in model...ignores in place families"""
+    ''' returns all Stair elements placed in model...ignores in place families'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Stairs).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllStairInstancesInModelByClass(doc):
-    """ returns all Stair elements placed in model...ignores Stair soffits(???)"""
+    ''' returns all Stair elements placed in model...ignores Stair soffits(???)'''
     return FilteredElementCollector(doc).OfClass(Stair).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByCategory(doc):
-    """ returns all Stair element types available in model """
+    ''' returns all Stair element types available in model '''
     ids = []
     colCat = GetAllStairTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -168,7 +168,7 @@ def GetAllStairTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByClass(doc):
-    """ returns all Stair element types available in model """
+    ''' returns all Stair element types available in model '''
     ids = []
     colClass = GetStairTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -176,7 +176,7 @@ def GetAllStairTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairPathTypeIdsInModelByClass(doc):
-    """ returns all Stair path element type ids available in model """
+    ''' returns all Stair path element type ids available in model '''
     ids = []
     colClass = GetStairPathTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -184,7 +184,7 @@ def GetAllStairPathTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairLandingTypeIdsInModelByClass(doc):
-    """ returns all Stair landing element type ids available in model """
+    ''' returns all Stair landing element type ids available in model '''
     ids = []
     colClass = GetStairLandingTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -192,7 +192,7 @@ def GetAllStairLandingTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairRunTypeIdsInModelByClass(doc):
-    """ returns all Stair run element type ids available in model """
+    ''' returns all Stair run element type ids available in model '''
     ids = []
     colClass = GetStairRunTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -200,7 +200,7 @@ def GetAllStairRunTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairCutMarkTypeIdsInModelByClass(doc):
-    """ returns all Stair cut mark element type ids available in model """
+    ''' returns all Stair cut mark element type ids available in model '''
     ids = []
     colClass = GetStairCutMarkTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -208,7 +208,7 @@ def GetAllStairCutMarkTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
-    """ returns all Stair stringers and carriage element type ids available in model """
+    ''' returns all Stair stringers and carriage element type ids available in model '''
     ids = []
     colCat = GetAllStairStringersCarriageByCategory (doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -216,14 +216,14 @@ def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
 
 # doc   current document
 def GetUsedStairTypeIds(doc):
-    """ returns all used in Stair type ids """
+    ''' returns all used in Stair type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -235,11 +235,11 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
 
 # doc   current document
 def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
-    """ returns all unused Stair type ids for:
+    ''' returns all unused Stair type ids for:
     - Stair Soffit
     - Compound Stair
     - Basic Stair
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByClass, 0)
     # make sure there is at least on Stair type per system family left in model
@@ -255,7 +255,7 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
 
 # doc   current document
 def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
-    """ gets the ids returned from stair type belonging to parameter list passt in"""
+    ''' gets the ids returned from stair type belonging to parameter list passt in'''
     ids = []
     stairType = doc.GetElement(stairTypeId)
     for pDef in paras:
@@ -267,7 +267,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
 # doc   current document
 # ids   list of system type ids
 def GetAllSimilarTypeIds(doc, ids):
-    """returns all ids of similar types of elemet ids passed in"""
+    '''returns all ids of similar types of elemet ids passed in'''
     simIds = []
     for id in ids:
          el = doc.GetElement(id)
@@ -280,7 +280,7 @@ def GetAllSimilarTypeIds(doc, ids):
 # doc   current document
 # ids   list of system type ids
 def BuildSystemFamilyDictionary(doc, ids):
-    """returns dictionary where key is the system family name and values available types of that system family"""
+    '''returns dictionary where key is the system family name and values available types of that system family'''
     dic = {}
     for id in ids:
         el = doc.GetElement(id)
@@ -294,8 +294,8 @@ def BuildSystemFamilyDictionary(doc, ids):
 # ids   list of ids to check
 # leaveOneBehind        flag default is true: leave at least one type of a system family behind
 def CheckSystemFamilies(doc, ids, leaveOneBehind):
-    """check whether a list of ids of system family is the entire list of types avaialble
-    if so it will remove one type id per system family to allow purging"""
+    '''check whether a list of ids of system family is the entire list of types avaialble
+    if so it will remove one type id per system family to allow purging'''
     dicToCheck = BuildSystemFamilyDictionary(doc, ids)
     similarIds = GetAllSimilarTypeIds(doc, ids)
     dicReference = BuildSystemFamilyDictionary(doc, similarIds)
@@ -318,7 +318,7 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
 # paras                 list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
 # leaveOneBehind        flag default is true: leave at least one type of a system family behind
 def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
-    """ returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function """
+    ''' returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function '''
     ids = []
     # get all available type ids and then check against all Stair type ids
     idsAvailable = availavbleIdsGetter(doc)
@@ -340,7 +340,7 @@ def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
 
 # doc   current document
 def GetUnusedStairPathTypeIdsToPurge(doc):
-    """ returns all unused Stair path ids to purge, will elave on path type id behinf ber system family"""
+    ''' returns all unused Stair path ids to purge, will elave on path type id behinf ber system family'''
     idsUsed = []
     availableTypes = GetAllStairPathTypeIdsInModelByClass(doc)
     col = GetAllStairPathElementsInModel(doc)
@@ -356,25 +356,25 @@ def GetUnusedStairPathTypeIdsToPurge(doc):
 
 # doc   current document
 def GetUnusedStairLandingTypeIdsToPurge(doc):
-    """ returns all unused Stair landing ids"""
+    ''' returns all unused Stair landing ids'''
     ids = GetUsedSubTypes(doc, GetAllStairLandingTypeIdsInModelByClass, STAIR_LANDING_TYPE_PARAS)
     return ids
 
 # doc   current document
 def GetUnusedStairRunTypeIdsToPurge(doc):
-    """ returns all unused Stair landing ids"""
+    ''' returns all unused Stair landing ids'''
     ids = GetUsedSubTypes(doc, GetAllStairRunTypeIdsInModelByClass, STAIR_RUN_TYPE_PARAS)
     return ids
 
 # doc   current document
 def GetUnusedStairCutMarkTypeIdsToPurge(doc):
-    """ returns all unused Stair cut mark type ids"""
+    ''' returns all unused Stair cut mark type ids'''
     ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUTMARK_TYPE_PARAS)
     return ids
 
 # doc   current document
 def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
-    """ returns all unused Stair stringer / carriage type ids"""
+    ''' returns all unused Stair stringer / carriage type ids'''
     ids = GetUsedSubTypes(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
     return ids
 
@@ -382,7 +382,7 @@ def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceStairFamilyInstances(doc):
-    """ returns all instances in place families of category stair """
+    ''' returns all instances in place families of category stair '''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -392,24 +392,24 @@ def GetInPlaceStairFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceStairTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category stair """
+    ''' returns type ids off all available in place families of category stair '''
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Stairs)
     return ids
 
 # doc   current document
 def GetUsedInPlaceStairTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceStairTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceStairIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place Stair familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place Stair familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceStairTypeIds)
     return ids

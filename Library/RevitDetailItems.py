@@ -59,13 +59,13 @@ DETAIL_COMPONENT_TYPES = [
 
 # doc:   current model document
 def GetAllDetailTypesByCategory(doc):
-    """ this will return a filtered element collector of all detail component types in the model"""
+    ''' this will return a filtered element collector of all detail component types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DetailComponents).WhereElementIsElementType()
     return collector
 
 # collector   filtered element collector detail component types
 def BuildDetailTypeIdsDictionary(collector):
-    """returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids"""
+    '''returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids'''
     dic = {}
     for c in collector:
         if(dic.has_key(str(c.GetType()))):
@@ -78,7 +78,7 @@ def BuildDetailTypeIdsDictionary(collector):
 # doc:   current model document
 # collector   filtered element collector detail component types
 def BuildDependentElementsDictionary(doc, collector):
-    """returns the dictionary keys is autodesk.revit.db element type as string and values are elements"""
+    '''returns the dictionary keys is autodesk.revit.db element type as string and values are elements'''
     dic = {}
     for c in collector:
         el = doc.GetElement(c)
@@ -93,7 +93,7 @@ def BuildDependentElementsDictionary(doc, collector):
 
 # doc:   current model document
 def GetAllRepeatingDetailTypeIdsAvailable(doc):
-    """get all repeating detail types in model"""
+    '''get all repeating detail types in model'''
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
         return dic[ELEMENT_TYPE]
@@ -102,19 +102,19 @@ def GetAllRepeatingDetailTypeIdsAvailable(doc):
 
 # doc   current document
 def GetUsedRepeatingDetailTypeIds(doc):
-    """get all used repeating detail type ids"""
+    '''get all used repeating detail type ids'''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
     return ids
 
 # doc   current document
 def GetUnUsedRepeatingDetailTypeIds(doc):
-    """get all unused repeating detail type ids"""
+    '''get all unused repeating detail type ids'''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     return ids
 
 # doc   current document
 def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
-    """get all unused repeating detail type ids"""
+    '''get all unused repeating detail type ids'''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     allIds = GetAllRepeatingDetailTypeIdsAvailable(doc)
     # need to keep at least one
@@ -126,7 +126,7 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
 
 # doc:   current model document
 def GetAllDetailSymbolIdsAvailable(doc):
-    """get all detail symbol types in model"""
+    '''get all detail symbol types in model'''
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
         return dic[FAMILY_SYMBOL]
@@ -136,7 +136,7 @@ def GetAllDetailSymbolIdsAvailable(doc):
 # doc:   current model document
 # idsRepeatDet:   repeating detail types
 def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
-    """returns the ids of all symbols used in repeating details"""
+    '''returns the ids of all symbols used in repeating details'''
     ids = []
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
@@ -147,7 +147,7 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
 
 # doc:   current model document
 def GetAllUsedDetailSymbolIds(doc):
-    """get all used detail symbol type ids in model"""
+    '''get all used detail symbol type ids in model'''
     ids = []
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
@@ -173,7 +173,7 @@ def GetAllUsedDetailSymbolIds(doc):
 
 # doc:   current model document
 def GetAllUnUsedDetailSymbolIds(doc):
-    """get all unused detail symbol type ids in model"""
+    '''get all unused detail symbol type ids in model'''
     ids = []
     allAvailableIds = GetAllDetailSymbolIdsAvailable(doc)
     allUsedIds = GetAllUsedDetailSymbolIds(doc)
@@ -184,7 +184,7 @@ def GetAllUnUsedDetailSymbolIds(doc):
 
 # doc:   current model document
 def GetAllUnUsedDetailSymbolIdsForPurge(doc):
-    """get all unused detail symbol type ids in model to be purged (leaves one behind)"""
+    '''get all unused detail symbol type ids in model to be purged (leaves one behind)'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
     return ids
     #ids = GetAllUnUsedDetailSymbolIds(doc)
@@ -198,7 +198,7 @@ def GetAllUnUsedDetailSymbolIdsForPurge(doc):
 
 # doc   current document
 def GetAllFilledRegionTypeIdsAvailable(doc):
-    """get all filled regions types in model"""
+    '''get all filled regions types in model'''
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(FILLED_REGION_TYPE)):
         return dic[FILLED_REGION_TYPE]
@@ -207,7 +207,7 @@ def GetAllFilledRegionTypeIdsAvailable(doc):
 
 # doc   current document
 def GetUsedFilledRegionTypeIds(doc):
-    """get all used filled regions types in model"""
+    '''get all used filled regions types in model'''
     ids = []
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
@@ -219,7 +219,7 @@ def GetUsedFilledRegionTypeIds(doc):
 
 # doc   current document
 def GetUnUsedFilledRegionTypeIds(doc):
-    """get all un used filled regions types in model"""
+    '''get all un used filled regions types in model'''
     ids = []
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
@@ -231,7 +231,7 @@ def GetUnUsedFilledRegionTypeIds(doc):
 
 # doc   current document
 def GetUnUsedFilledRegionTypeIdsForPurge(doc):
-    """get all un used filled regions types in model"""
+    '''get all un used filled regions types in model'''
     ids = GetUnUsedFilledRegionTypeIds(doc)
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     # need to keep at least one

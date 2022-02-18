@@ -38,26 +38,26 @@ from Autodesk.Revit.DB import *
 
 # doc:   current model document
 def Deprecated_GetAllCallOutTypesByCategory(doc):
-    """ this will return an EMPTY filtered element collector of all call out types in the model in Revit 2019"""
+    ''' this will return an EMPTY filtered element collector of all call out types in the model in Revit 2019'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Callouts).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def Deprecated_GetAllReferenceViewTypesByCategory(doc):
-    """this will return an EMPTY filtered element collector of all reference view types in the model in Revit 2019"""
+    '''this will return an EMPTY filtered element collector of all reference view types in the model in Revit 2019'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewer).WhereElementIsElementType()
     return collector
  
 # doc:   current model document
 def Deprecated_GetAllCallOutTypeIdsByCategory(doc):
-    """ this will return an EMPTY filtered element collector of all call out type ids in the model"""
+    ''' this will return an EMPTY filtered element collector of all call out type ids in the model'''
     collector = Deprecated_GetAllCallOutTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
 # doc:   current model document
 def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
-    """ this will return an EMPTY filtered element collector of all reference view types in the model"""
+    ''' this will return an EMPTY filtered element collector of all reference view types in the model'''
     collector = Deprecated_GetAllReferenceViewTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(collector)
     return ids
@@ -66,31 +66,31 @@ def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
 
 # doc:   current model document
 def GetAllCallOutHeadsByCategory(doc):
-    """ this will return a filtered element collector of all callOut Head symbol (types) in the model"""
+    ''' this will return a filtered element collector of all callOut Head symbol (types) in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CalloutHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllElevationHeadsByCategory(doc):
-    """ this will return a filtered element collector of all elevation symbols (types) in the model"""
+    ''' this will return a filtered element collector of all elevation symbols (types) in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ElevationMarks).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllSectionHeadsByCategory(doc):
-    """ this will return a filtered element collector of all section symbols (types) in the model"""
+    ''' this will return a filtered element collector of all section symbols (types) in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_SectionHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllViewContinuationMarkersByCategory(doc):
-    """ this will return a filtered element collector of all view contiunation symbols (types) in the model"""
+    ''' this will return a filtered element collector of all view contiunation symbols (types) in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewerSymbol)
     return collector
 
 # doc:   current model document
 def GetAllReferenceViewElementsByCategory(doc):
-    """this will return an filtered element collector of all reference elements in the model"""
+    '''this will return an filtered element collector of all reference elements in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewer)
     return collector
 
@@ -121,7 +121,7 @@ VIEWREF_CATEGORYFILTER = List[BuiltInCategory] ([
     ])
 
 def GetReferenceTypeIdsFromViewType(viewType):
-    """returns all reference type ids used in view type"""
+    '''returns all reference type ids used in view type'''
     dic = {}
     for pDef in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
         pValue = com.GetBuiltInParameterValue(viewType, pDef)
@@ -135,9 +135,9 @@ def GetReferenceTypeIdsFromViewType(viewType):
 
 # doc:   current model document
 def GetUsedViewReferenceTypeIdData(doc):
-    """returns all view references types in use in the model in a dictionary
+    '''returns all view references types in use in the model in a dictionary
     key is the reference tag type: callout, section or elevation
-    values are the type ids in use"""
+    values are the type ids in use'''
     dic = {}
     col = rView.GetViewTypes(doc)
     for c in col:
@@ -155,9 +155,9 @@ def GetUsedViewReferenceTypeIdData(doc):
 
 # doc:   current model document
 def GetAllViewReferenceTypeIdData(doc):
-    """returns all view references types available in the model in a dictionary
+    '''returns all view references types available in the model in a dictionary
     key is the reference type: callout, section or elevation
-    values are the symbol ids"""
+    values are the symbol ids'''
     dic = {}
     col = rView.GetViewTypes(doc)
     for c in col:
@@ -179,7 +179,7 @@ def GetAllViewReferenceTypeIdData(doc):
 
 # doc:   current model document
 def GetAllViewReferenceTypeIdDataAsList(doc):
-    """returns all view references type id s available in the model in a list"""
+    '''returns all view references type id s available in the model in a list'''
     dic = GetAllViewReferenceTypeIdData(doc)
     ids = []
     for key, value in dic.items():
@@ -189,7 +189,7 @@ def GetAllViewReferenceTypeIdDataAsList(doc):
 
 # doc:   current model document
 def GetAllViewContinuationTypeIds(doc):
-    """returns all view continuation types available in the model"""
+    '''returns all view continuation types available in the model'''
     ids = []
     syms = GetAllReferenceViewElementsByCategory(doc)
     for sym in syms:
@@ -201,7 +201,7 @@ def GetAllViewContinuationTypeIds(doc):
 
 # doc:   current model document
 def GetUsedViewContinuationTypeIds(doc):
-    """returns all view continuation types available in the model"""
+    '''returns all view continuation types available in the model'''
     ids = []
     syms = GetAllReferenceViewElementsByCategory(doc)
     for sym in syms:
@@ -211,7 +211,7 @@ def GetUsedViewContinuationTypeIds(doc):
 
 # doc:   current model document
 def GetAllViewReferenceSymbolIds(doc):
-    """returns the ids of all view reference family symbols(types) in the model"""
+    '''returns the ids of all view reference family symbols(types) in the model'''
     ids = []
     multiCatFilter = ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
@@ -223,7 +223,7 @@ def GetAllViewReferenceSymbolIds(doc):
 # doc:   current model document
 # viewRefTypesIds   list of view reference type ids
 def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
-    """returns the ids of all view family symbols(types) from given view ref types or continuation types the model"""
+    '''returns the ids of all view family symbols(types) from given view ref types or continuation types the model'''
     ids = []
     for vrtId in viewRefTypesIds:
         el = doc.GetElement(vrtId)
@@ -235,8 +235,8 @@ def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
 
 # doc:   current model document
 def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) and view continuations symbols (types) used by 
-    view reference types and view continuation types in the model"""
+    '''returns the ids of all view reference symbols(types) and view continuations symbols (types) used by 
+    view reference types and view continuation types in the model'''
     ids = []
     viewContTypes = GetAllViewContinuationTypeIds(doc)
     viewReftypes = GetAllViewReferenceTypeIdData(doc)
@@ -254,7 +254,7 @@ def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
     return ids
 
 def GetNestedFamilyMarkerNames(doc, usedIds):
-    """returns nested family names"""
+    '''returns nested family names'''
     names = []
     for usedSymbolId in usedIds:
         if(usedSymbolId != ElementId.InvalidElementId):
@@ -275,7 +275,7 @@ def GetNestedFamilyMarkerNames(doc, usedIds):
     return names
 
 def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
-    """returns true if symbol belongs to family in list passt in"""
+    '''returns true if symbol belongs to family in list passt in'''
     flag = False
     famSymb = doc.GetElement(id)
     fam = famSymb.Family
@@ -285,7 +285,7 @@ def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
 
 # doc:   current model document
 def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
-    """returns the ids of all view reference symbols(types) and view continuation types not used in the model"""
+    '''returns the ids of all view reference symbols(types) and view continuation types not used in the model'''
     ids = []
     # compare used vs available in view ref types
     # whatever is marked as unused: check for any instances in the model...placed on legends!
@@ -309,7 +309,7 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
 
 # doc:   current model document
 def GetUnusedViewReferenceTypeIdsForPurge(doc):
-    """returns all unused view references type ids in model for purge"""
+    '''returns all unused view references type ids in model for purge'''
     ids = []
     allAvailableTypeIds = GetAllViewReferenceTypeIdData(doc)
     allUsedTypeIds = GetUsedViewReferenceTypeIdData(doc)
@@ -328,7 +328,7 @@ def GetUnusedViewReferenceTypeIdsForPurge(doc):
 
 # doc:   current model document
 def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
-    """returns all unused view continuation type ids in model for purge"""
+    '''returns all unused view continuation type ids in model for purge'''
     ids = []
     allAvailableTypeIds = GetAllViewContinuationTypeIds(doc)
     allUsedTypeIds = GetUsedViewContinuationTypeIds(doc)
@@ -341,5 +341,5 @@ def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
 
 # doc:   current model document
 def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
-    """returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging"""
+    '''returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging'''
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)

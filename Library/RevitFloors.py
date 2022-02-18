@@ -48,26 +48,26 @@ BUILTIN_FLOOR_TYPE_FAMILY_NAMES = [
 
 # doc:   current model document
 def GetAllFloorTypesByCategory(doc):
-    """ this will return a filtered element collector of all floor types in the model:
+    ''' this will return a filtered element collector of all floor types in the model:
     - Floor
     - In place families or loaded families
     it will therefore not return any foundation slab types ..
-    """
+    '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetFloorTypesByClass(doc):
-    """ this will return a filtered element collector of all floor types in the model:
+    ''' this will return a filtered element collector of all floor types in the model:
     - Floor
     - Foundation Slab
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     return  FilteredElementCollector(doc).OfClass(FloorType)
 
 # collector   fltered element collector containing Floor type elments of family symbols representing in place families
 # dic         dictionary containing key: floor type family name, value: list of ids
 def BuildFloorTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -91,17 +91,17 @@ def SortFloorTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllFloorInstancesInModelByCategory(doc):
-    """ returns all Floor elements placed in model...ignores in foundation slabs"""
+    ''' returns all Floor elements placed in model...ignores in foundation slabs'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllFloorInstancesInModelByClass(doc):
-    """ returns all Floor elements placed in model...ignores in place"""
+    ''' returns all Floor elements placed in model...ignores in place'''
     return FilteredElementCollector(doc).OfClass(Floor).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllFloorTypeIdsInModelByCategory(doc):
-    """ returns all Floor element types available placed in model """
+    ''' returns all Floor element types available placed in model '''
     ids = []
     colCat = GetAllFloorTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -109,7 +109,7 @@ def GetAllFloorTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllFloorTypeIdsInModelByClass(doc):
-    """ returns all Floor element types available placed in model """
+    ''' returns all Floor element types available placed in model '''
     ids = []
     colClass = GetFloorTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
@@ -117,14 +117,14 @@ def GetAllFloorTypeIdsInModelByClass(doc):
 
 # doc   current document
 def GetUsedFloorTypeIds(doc):
-    """ returns all used in Floor type ids """
+    ''' returns all used in Floor type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -134,10 +134,10 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
-    """ returns all unused Floor type ids for:
+    ''' returns all unused Floor type ids for:
     - Floor
     - foundation slab
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByClass, 0)
     # make sure there is at least on Floor type per system family left in model
@@ -153,7 +153,7 @@ def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceFloorFamilyInstances(doc):
-    """ returns all instances in place families of category floor"""
+    ''' returns all instances in place families of category floor'''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -163,24 +163,24 @@ def GetInPlaceFloorFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceFloorTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category floor"""
+    ''' returns type ids off all available in place families of category floor'''
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Floors)
     return ids
 
 # doc   current document
 def GetUsedInPlaceFloorTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceFloorTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceFloorIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place floor familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place floor familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceFloorTypeIds)
     return ids

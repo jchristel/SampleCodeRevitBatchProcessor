@@ -66,7 +66,7 @@ def GetAllLinePatterns(doc):
 
 # doc     current model document
 def BuildPatternsDictionaryByName(doc):
-    """builds a dictionary wher line pattern name is key, values are all ids of line patterns with the exact same name"""
+    '''builds a dictionary wher line pattern name is key, values are all ids of line patterns with the exact same name'''
     lpDic = {}
     lps = FilteredElementCollector(doc).OfClass(LinePatternElement)
     for lp in lps:
@@ -78,7 +78,7 @@ def BuildPatternsDictionaryByName(doc):
 
 # doc     current model document
 def DeleteDuplicatLinePatterNames(doc):
-    """deletes all but the first line pattern by Id with the exact same name"""
+    '''deletes all but the first line pattern by Id with the exact same name'''
     returnvalue = res.Result()
     returnvalue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name

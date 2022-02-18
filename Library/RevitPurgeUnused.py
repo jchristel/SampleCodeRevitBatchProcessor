@@ -70,7 +70,7 @@ def PurgeUnplacedElements (doc,
     transactionName, 
     unUsedElementNameHeader,
     isDebug = False):
-    """purges all unplaced elements provided through a passed in element id getter method from a model"""
+    '''purges all unplaced elements provided through a passed in element id getter method from a model'''
     resultValue = res.Result()
     try:
         unusedElementIds = getUnusedElementIds(doc)
@@ -171,7 +171,7 @@ tOverall = Timer()
 # doc   current document
 # returns a Result object
 def PurgeUnused(doc, revitFilePath, isDebug):
-    """calls all available purge actions defined in global list """
+    '''calls all available purge actions defined in global list '''
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
@@ -201,7 +201,7 @@ def PurgeUnused(doc, revitFilePath, isDebug):
 # outputFilePath            location of file
 # counter                   action counter, if 0 the report file will be created from scratch, any othe value means append to existing report file
 def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, counter):
-    """gets all available type ids from passed in type id getter and writes result to file"""
+    '''gets all available type ids from passed in type id getter and writes result to file'''
     resultValue = res.Result()
     writeType = 'a'
     if(counter == 0):
@@ -229,7 +229,7 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
 # first     base line dictionary
 # second    dictionary to be checked against base line
 def CompareReportDictioanries(first,second):
-    """comparison will return all elements which are in first dictionary only, True if none are missing"""
+    '''comparison will return all elements which are in first dictionary only, True if none are missing'''
     resultValue = res.Result()
     for key,value in first.items():
         if(key not in COMPARISON_IGNORE):
@@ -257,7 +257,7 @@ def CompareReportDictioanries(first,second):
 
 # data      list of list of strings
 def ConvertReportDataIntoDictionary(data):
-    """build a dictionary where key is the first entry in each list, values are all subsequent entries in the same list"""
+    '''build a dictionary where key is the first entry in each list, values are all subsequent entries in the same list'''
     dic = {}
     for d in data:
         dic[d[0]] = []
@@ -270,8 +270,8 @@ def ConvertReportDataIntoDictionary(data):
 # fileTest              file to check against the benchmark
 def CompareReportData(fileSource, fileTest):
     resultValue = res.Result()
-    """used to compare a bench mark results file containing type ids against a new results file
-    will report missing or additional ids in results file"""
+    '''used to compare a bench mark results file containing type ids against a new results file
+    will report missing or additional ids in results file'''
     sourceRows = util.ReadTabSeparatedFile(fileSource)
     testRows = util.ReadTabSeparatedFile(fileTest)
     sourceDic = ConvertReportDataIntoDictionary(sourceRows)
@@ -304,7 +304,7 @@ def CompareReportData(fileSource, fileTest):
 # doc           current document
 # filePath      fully qualified report file path
 def ReportAvailableTypeIds(doc, filePath):
-    """calls all available type id getter functions and writes results to file"""
+    '''calls all available type id getter functions and writes results to file'''
     resultValue = res.Result()
     tOverall.start()
     counter = 0 #any counter value greater then 0 means append to report file rather then creating a new file

@@ -53,7 +53,7 @@ def ConvertBIM360FilePath(path):
 
 # doc       current model document
 def GetModelBIM360Ids(doc):
-    """returns project id, model id, human readable path"""
+    '''returns project id, model id, human readable path'''
     path = doc.GetCloudModelPath()
     modelGuid = path.GetModelGUID()
     projectGuid = path.GetProjectGUID()
@@ -65,7 +65,7 @@ def GetModelBIM360Ids(doc):
 
 # doc       current model document
 def GetModelFileSize(doc):
-    """returns BIM360 file size, if file not exists on local cache it will return -1"""
+    '''returns BIM360 file size, if file not exists on local cache it will return -1'''
     fileSize = -1
     path = doc.GetCloudModelPath()
     fullPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)

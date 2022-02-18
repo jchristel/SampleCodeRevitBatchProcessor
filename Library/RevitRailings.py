@@ -63,25 +63,25 @@ RAILING_CATEGORYFILTER = List[BuiltInCategory] ([
 
 # doc:   current model document
 def GetAllRailingTypesByCategory(doc):
-    """ this will return a filtered element collector of all Railing types in the model:
+    ''' this will return a filtered element collector of all Railing types in the model:
     - Top Rail
     - support
     - hand rail
     - In place families or loaded families
     it will therefore not return any Rail types ..
-    """
+    '''
     multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllRailingTypesByCategoryExclInPlace(doc):
-    """ this will return a filtered element collector of all Railing types in the model:
+    ''' this will return a filtered element collector of all Railing types in the model:
     - Top Rail
     - support
     - hand rail
     it will therefore not return any Rail types ..
-    """
+    '''
     multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     elements=[]
@@ -92,15 +92,15 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
     
 # doc   current model document
 def GetRailingTypesByClass(doc):
-    """ this will return a filtered element collector of all Railing types in the model:
+    ''' this will return a filtered element collector of all Railing types in the model:
     - Railing
-    it will therefore not return any top rail or hand rail or in place family types ..."""
+    it will therefore not return any top rail or hand rail or in place family types ...'''
     return  FilteredElementCollector(doc).OfClass(RailingType)
 
 # collector   fltered element collector containing Railing type elments of family symbols representing in place families
 # dic         dictionary containing key: rail type family name, value: list of ids
 def BuildRailingTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -124,18 +124,18 @@ def SortRailingTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllRailingInstancesInModelByCategory(doc):
-    """ returns all Railing elements placed in model...ignores in foundation slabs"""
+    ''' returns all Railing elements placed in model...ignores in foundation slabs'''
     multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     return FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllRailingInstancesInModelByClass(doc):
-    """ returns all Railing elements placed in model...ignores in place"""
+    ''' returns all Railing elements placed in model...ignores in place'''
     return FilteredElementCollector(doc).OfClass(Railing).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByCategory(doc):
-    """ returns all Railing element types available in model """
+    ''' returns all Railing element types available in model '''
     ids = []
     colCat = GetAllRailingTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -143,7 +143,7 @@ def GetAllRailingTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByClass(doc):
-    """ returns all Railing element types available in model """
+    ''' returns all Railing element types available in model '''
     ids = []
     colClass = GetRailingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
@@ -151,7 +151,7 @@ def GetAllRailingTypeIdsInModelByClass(doc):
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
-    """ returns all Railing element types available in model excluding in place types"""
+    ''' returns all Railing element types available in model excluding in place types'''
     ids = []
     colClass = GetRailingTypesByClass(doc)
     idsClass = com.GetIdsFromElementCollector(colClass)
@@ -167,14 +167,14 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
 
 # doc   current document
 def GetUsedRailingTypeIds(doc):
-    """ returns all used in Railing type ids """
+    ''' returns all used in Railing type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -184,11 +184,11 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
-    """ returns all unused Railing type ids for:
+    ''' returns all unused Railing type ids for:
     - Railing
     - Hand rail
     - Top Rail
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
@@ -204,7 +204,7 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceRailingFamilyInstances(doc):
-    """ returns all instances in place families of category Railing"""
+    ''' returns all instances in place families of category Railing'''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -214,7 +214,7 @@ def GetInPlaceRailingFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceRailingTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category Railing"""
+    ''' returns type ids off all available in place families of category Railing'''
     ids = []
     for cat in RAILING_CATEGORYFILTER: 
         idsByCat = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, cat)
@@ -224,19 +224,19 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
 
 # doc   current document
 def GetUsedInPlaceRailingTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRailingTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRailingIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
     return ids
 
@@ -298,13 +298,13 @@ def GetUsedBalusterPerTread(bPlacement):
 
 # doc   current document
 def GetAllBalusterSymbols(doc):
-    """ returns all baluster symbols in project"""
+    ''' returns all baluster symbols in project'''
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsRailingBaluster).WhereElementIsElementType()
     return col
 
  # doc   current document
 def GetAllBalusterSymbolIds(doc):
-    """ returns all baluster symbol ids in project"""
+    ''' returns all baluster symbol ids in project'''
     ids = []
     col = GetAllBalusterSymbols(doc)
     ids = com.GetIdsFromElementCollector (col)
@@ -333,7 +333,7 @@ def GetBalusterTypesFromRailings(doc):
 
 # doc   current document
 def GetUsedBalusterTypeIds(doc):
-    """ returns all used baluster type ids """
+    ''' returns all used baluster type ids '''
     ids = []
     idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
     idsUsedInRailings = GetBalusterTypesFromRailings(doc)
@@ -343,7 +343,7 @@ def GetUsedBalusterTypeIds(doc):
 
 # doc   current document
 def GetUnUsedBalusterTypeIds(doc):
-    """ returns all unused baluster type ids """
+    ''' returns all unused baluster type ids '''
     ids = []
     idsUsed = GetUsedBalusterTypeIds(doc)
     idsAvailable = GetAllBalusterSymbolIds(doc)
@@ -354,7 +354,7 @@ def GetUnUsedBalusterTypeIds(doc):
 
 # doc   current document
 def GetUnUsedBalusterTypeIdsForPurge(doc):
-    """get all un used baluster type ids"""
+    '''get all un used baluster type ids'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
     return ids
     # no need to keep anything...?

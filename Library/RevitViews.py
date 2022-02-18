@@ -44,11 +44,11 @@ REPORT_SHEETS_HEADER = ['HOSTFILE','Id']
 
 # doc: current model
 def GetViewTypes(doc):
-    """returns all view family types in a model"""
+    '''returns all view family types in a model'''
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
 
 def GetViewTypeIds(doc):
-    """returns all view family type ids in a model"""
+    '''returns all view family type ids in a model'''
     ids = []
     col = FilteredElementCollector(doc).OfClass(ViewFamilyType)
     ids = com.GetIdsFromElementCollector(col)
@@ -56,7 +56,7 @@ def GetViewTypeIds(doc):
 
 # doc   current model document
 def GetUsedViewTypeIdsInTheModel(doc):
-    """returns all view family types in the model"""
+    '''returns all view family types in the model'''
     viewTypeIdsUsed = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -73,7 +73,7 @@ def GetUsedViewTypeIdsInTheModel(doc):
 
 # doc   current model document
 def GetUnusedViewTypeIdsInModel(doc):
-    """returns ID of unused view family types in the model"""
+    '''returns ID of unused view family types in the model'''
     filteredUnusedViewTypeIds = com.GetUnusedTypeIdsInModel(doc, GetViewTypes, GetUsedViewTypeIdsInTheModel)
     return filteredUnusedViewTypeIds
  
@@ -81,7 +81,7 @@ def GetUnusedViewTypeIdsInModel(doc):
 
 # doc   current model document
 def GetViewsTemplatesInInModel(doc):
-    """get all templates in a model"""
+    '''get all templates in a model'''
     viewTemplates = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -92,7 +92,7 @@ def GetViewsTemplatesInInModel(doc):
 
 # doc   current model document
 def GetViewsTemplateIdsInInModel(doc):
-    """get all template ids in a model"""
+    '''get all template ids in a model'''
     ids = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -103,7 +103,7 @@ def GetViewsTemplateIdsInInModel(doc):
 
 # doc   current model document
 def GetUsedViewTemplateIdsInTheModel(doc):
-    """returns view templates used in views in the model only"""
+    '''returns view templates used in views in the model only'''
     viewTemplateIdsUsed = []
     # get all view templates assigned to views
     col = FilteredElementCollector(doc).OfClass(View)
@@ -121,7 +121,7 @@ def GetUsedViewTemplateIdsInTheModel(doc):
 
 # doc   current model document
 def GetDefaultViewTypeTemplateIds(doc):
-    """returns view template Id's used as default by view types"""
+    '''returns view template Id's used as default by view types'''
     viewTemplateIdsUsed = []
     # get all templates assigned to view family types:
     vfts = com.GetSimilarTypeFamiliesByType(doc, GetViewTypes)
@@ -136,7 +136,7 @@ def GetDefaultViewTypeTemplateIds(doc):
 
 # doc   current model document
 def GetAllViewTemplateIdsUsedInModel(doc):
-    """returns view template Id's used as default by view types and by views"""
+    '''returns view template Id's used as default by view types and by views'''
     vtv = GetUsedViewTemplateIdsInTheModel(doc)
     vfts = GetDefaultViewTypeTemplateIds(doc)
     for id in vfts:
@@ -147,7 +147,7 @@ def GetAllViewTemplateIdsUsedInModel(doc):
 # doc   current model document
 # filterByType:   list of view types of which to return view templates from
 def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
-    """get all templates in a model of given type"""
+    '''get all templates in a model of given type'''
     viewTemplates = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -161,7 +161,7 @@ def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
 
 # doc   current model document
 def GetAllUnusedViewTemplateIdsInModel(doc):
-    """returns all view template Id's not used by view types and by views"""
+    '''returns all view template Id's not used by view types and by views'''
     usedVts = GetAllViewTemplateIdsUsedInModel(doc)
     vtInModel = GetViewsTemplatesInInModel(doc)
     unusedVts = []
@@ -177,13 +177,13 @@ VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [ViewType.FloorPlan, ViewType.CeilingPlan, Vi
 
 # doc   current model document
 def GetAllAvailableFiltersInModel(doc):
-    """returns all filters in document as a collector"""
+    '''returns all filters in document as a collector'''
     collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
     return collector
 
 # doc   current model document
 def GetAllAvailableFilterIdsInModel(doc):
-    """returns all view filter ids in document"""
+    '''returns all view filter ids in document'''
     ids = []
     col = GetAllAvailableFiltersInModel(doc)
     ids = com.GetIdsFromElementCollector(col)
@@ -192,7 +192,7 @@ def GetAllAvailableFilterIdsInModel(doc):
 # view   view from which to get the filters from
 # uniqueList    list of filters of which to add new filters to (not already in list)
 def GetFilterIdsFromViewByFilter(view, uniqueList):
-    """returns passed in list of filter id's plus new filter id's from view (not already in list passt in)"""
+    '''returns passed in list of filter id's plus new filter id's from view (not already in list passt in)'''
     filters = view.GetFilters()
     if len(filters) != 0:
         for j in filters:
@@ -202,7 +202,7 @@ def GetFilterIdsFromViewByFilter(view, uniqueList):
 
 # doc   current model document
 def GetFiltersFromTemplates(doc):
-    """returns all filters used in templates only"""
+    '''returns all filters used in templates only'''
     filtersInUse = []
     # get view filters used in templates only
     # include templates which do not enforce filters but still may have some set
@@ -215,7 +215,7 @@ def GetFiltersFromTemplates(doc):
 # doc   current model document
 # filterByType:   list of view types of which to return view templates from
 def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
-    """get all filters from views which dont have a template applied"""
+    '''get all filters from views which dont have a template applied'''
     filtersInUse = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -232,7 +232,7 @@ def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
 
 # doc   current model document
 def GetAllUnUsedViewFilters(doc):
-    """gets id's of all unused view filters in a model"""
+    '''gets id's of all unused view filters in a model'''
     unUsedViewFilterIds = []
     allAvailableFilters = GetAllAvailableFiltersInModel(doc)
     allFilterIdsByTemplate = GetFiltersFromTemplates(doc)
@@ -247,7 +247,7 @@ def GetAllUnUsedViewFilters(doc):
 # ----------------------------------------------------------------------------------------
 
 def GetScheduleIdsOnSheets(doc):
-    """returns view ids of all schedules on a sheet"""
+    '''returns view ids of all schedules on a sheet'''
     ids=[]
     col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
     for s in col:
@@ -257,7 +257,7 @@ def GetScheduleIdsOnSheets(doc):
  
 # excludes templates!
 def GetViewsofType(doc, viewtype):
-    """returns all views in a model of a given type"""
+    '''returns all views in a model of a given type'''
     views=[]
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -266,13 +266,13 @@ def GetViewsofType(doc, viewtype):
     return views
 
 def GetSheetsInModel(doc):
-    """ returns all sheets in a model"""
+    ''' returns all sheets in a model'''
     return GetViewsofType(doc, ViewType.DrawingSheet)
 
 # doc:      current document
 # sheets:   all sheets to retrieve view ports from
 def GetViewportOnSheets(doc, sheets):
-    """returns all view ports in the model"""
+    '''returns all view ports in the model'''
     viewports = []
     for sheet in sheets:
         try:
@@ -286,21 +286,21 @@ def GetViewportOnSheets(doc, sheets):
     return viewports
 
 def FilterRevisionSchedules(view):
-    """returns true if the view name starts with '<', otherwise false"""
+    '''returns true if the view name starts with '<', otherwise false'''
     if(view.Name.startswith('<')):
         return False
     else:
         return True
 
 def GetViewsInModel(doc, filter):
-    """eturns all views in a model which are
+    '''eturns all views in a model which are
     not template views
     not system browser
     not project broser
     not undefined
     not Internal
     not sheets
-    match a filter"""
+    match a filter'''
     views = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -315,7 +315,7 @@ def GetViewsInModel(doc, filter):
     return views
 
 def GetScheduleIdsNotOnSheets(doc):
-    """returns all schedules not on a sheet"""
+    '''returns all schedules not on a sheet'''
     schedulesNotOnSheets = []
     # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
@@ -329,7 +329,7 @@ def GetScheduleIdsNotOnSheets(doc):
 
 # excludes schedules
 def GetViewsNotOnSheet(doc):
-    """returns all views not on a sheet"""
+    '''returns all views not on a sheet'''
     viewsNotOnSheet = []
     # get all sheets
     sheetsInModel = GetSheetsInModel(doc)
@@ -379,7 +379,7 @@ def DeleteViews(doc, viewRules, collectorViews):
     return result
 
 def DeleteViewsNotOnSheets(doc, filter):
-    """deletes all views not placed on sheets includes schedules and legends"""
+    '''deletes all views not placed on sheets includes schedules and legends'''
     ids = []
     returnvalue = res.Result()
     viewsNotOnSheets = GetViewsNotOnSheet(doc)
@@ -397,7 +397,7 @@ def DeleteViewsNotOnSheets(doc, filter):
     return returnvalue
 
 def DeleteUnusedElevationViewMarkers(doc):
-    """deletes unused elevation markers"""
+    '''deletes unused elevation markers'''
     returnvalue = res.Result()
     ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
     # items to be deleted
@@ -418,7 +418,7 @@ def DeleteUnusedElevationViewMarkers(doc):
     return returnvalue
 
 def DeleteSheets(doc, viewRules, collectorViews):
-    """deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]"""
+    '''deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]'''
     ids = []
     for v in collectorViews:
         if(v.ViewType == ViewType.DrawingSheet):
@@ -435,7 +435,7 @@ def DeleteSheets(doc, viewRules, collectorViews):
     return result
 
 def DeleteAllSheetsInModel(doc):
-    """deletes all sheets in a model"""
+    '''deletes all sheets in a model'''
     returnvalue = res.Result()
     ids = []
     collectorSheets = FilteredElementCollector(doc).OfClass(View)
@@ -450,7 +450,7 @@ def DeleteAllSheetsInModel(doc):
 
 # view rules: array in format [parameter name, condition test method, value to test against]
 def GetSheetsByFilters(doc, viewRules = None):
-    """returns sheets matching filters provided"""
+    '''returns sheets matching filters provided'''
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collectorViews:
@@ -475,7 +475,7 @@ def GetSheetsByFilters(doc, viewRules = None):
 # doc:          current model document
 # fileName:     fully qualified file path
 def WriteSheetData(doc, fileName, currentFileName):
-    """writes out sheet data to file"""
+    '''writes out sheet data to file'''
     returnvalue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
@@ -492,7 +492,7 @@ def WriteSheetData(doc, fileName, currentFileName):
 # doc:          current model document
 # fileName:     fully qualified file path
 def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
-    """writes to file sheet properties as nominated in passt in list """
+    '''writes to file sheet properties as nominated in passt in list '''
     returnvalue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
@@ -515,7 +515,7 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
 # headers               list of property names
 # sheetProperties       list of sheet properties to be extracted from data
 def FilterDataByProperties(data, headers, sheetProperties):
-    """filters sheet data by supplied property names"""
+    '''filters sheet data by supplied property names'''
     # add default headers to propertie to be filtered first
     dataIndexList= [iter for iter in range(len(REPORT_SHEETS_HEADER))]
     # build index pointer list of data to be kept
@@ -534,7 +534,7 @@ def FilterDataByProperties(data, headers, sheetProperties):
 # doc       the current revit document
 # hostanme  the file hostname, which is added to data returned
 def GetSheetReportData(doc, hostName):
-    """returns sheet data including file name and sheet id"""
+    '''returns sheet data including file name and sheet id'''
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collectorViews:
@@ -553,7 +553,7 @@ def GetSheetReportData(doc, hostName):
 
 # doc       the current revit document
 def GetReportHeaders(doc):
-    """returns sheet data including file name and sheet id"""
+    '''returns sheet data including file name and sheet id'''
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     # copy headers list
     headers = REPORT_SHEETS_HEADER[:]

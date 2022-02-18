@@ -47,9 +47,9 @@ REPORT_RAMPS_HEADER = ['HOSTFILE', 'RAMPTYPEID', 'RAMPTYPENAME']
 
 # doc:   current model document
 def GetAllRampTypesByCategory(doc):
-    """ this will return a filtered element collector of all Ramp types in the model:
+    ''' this will return a filtered element collector of all Ramp types in the model:
     - Ramp
-    """
+    '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ramps).WhereElementIsElementType()
     return collector
 
@@ -57,7 +57,7 @@ def GetAllRampTypesByCategory(doc):
 # collector   fltered element collector containing Ramp type elments of family symbols representing in place families
 # dic         dictionary containing key: ramp type family name, value: list of ids
 def BuildRampTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -78,12 +78,12 @@ def SortRampTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllRampInstancesInModelByCategory(doc):
-    """ returns all Ramp elements placed in model...ignores in place families"""
+    ''' returns all Ramp elements placed in model...ignores in place families'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ramps).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRampTypeIdsInModelByCategory(doc):
-    """ returns all Ramp element type ids by category available in model """
+    ''' returns all Ramp element type ids by category available in model '''
     ids = []
     colCat = GetAllRampTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -91,14 +91,14 @@ def GetAllRampTypeIdsInModelByCategory(doc):
 
 # doc   current document
 def GetUsedRampTypeIds(doc):
-    """ returns all used in Ramp type ids """
+    ''' returns all used in Ramp type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -108,9 +108,9 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
-    """ returns all unused Ramp type ids for:
+    ''' returns all unused Ramp type ids for:
     - Ramp 
-    ramps do not have in place families ..."""
+    ramps do not have in place families ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
     # make sure there is at least on Ramp type per system family left in model

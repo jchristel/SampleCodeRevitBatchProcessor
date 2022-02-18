@@ -48,14 +48,14 @@ REPORT_GENERIC_ANNOTATIONS_HEADER = ['HOSTFILE', 'GENERICANNOTATIONTYPEID', 'GEN
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
 def GetAllGenericAnnotationTypesByCategory(doc):
-    """ this will return a filtered element collector of all GenericAnnotation types in the model """
+    ''' this will return a filtered element collector of all GenericAnnotation types in the model '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_GenericAnnotation).WhereElementIsElementType()
     return collector
 
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
 def GetAllGenericAnnotationTypeIdsByCategory(doc):
-    """ this will return a filtered element collector of all GenericAnnotation types (symbols) in the model excluding shared families"""
+    ''' this will return a filtered element collector of all GenericAnnotation types (symbols) in the model excluding shared families'''
     ids = []
     col = GetAllGenericAnnotationTypesByCategory(doc)
     for c in col:
@@ -75,7 +75,7 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
 # collector   fltered element collector containing GenericAnnotation type elments of family symbols 
 # dic         dictionary containing key: GenericAnnotation type family name, value: list of ids
 def BuildGenericAnnotationTypesDictionary(collector, dic):
-    """returns the dictionary passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictionary passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -95,7 +95,7 @@ def SortGenericAnnotationTypesByFamilyName(doc):
 
 # doc   current model document
 def GetUsedGenericAnnotationTypeIds(doc):
-    """returns all used generic annotation symbol ids ( used in model as well as dimension types)"""
+    '''returns all used generic annotation symbol ids ( used in model as well as dimension types)'''
     ids = []
     # get ids from symbols used in dim types
     idsDimTypes = rAnno.GetSymbolIdsFromDimTypes(doc)
@@ -116,7 +116,7 @@ def GetUsedGenericAnnotationTypeIds(doc):
     
 # doc   current model document
 def GetUnusedGenericAnnotationTypeIds(doc):
-    """returns all unsued annotation symbol ids ( unused in model as well as dimension types)"""
+    '''returns all unsued annotation symbol ids ( unused in model as well as dimension types)'''
     ids = []
     idsUsed = GetUsedGenericAnnotationTypeIds(doc)
     idsAll = GetAllGenericAnnotationTypeIdsByCategory(doc)
@@ -129,6 +129,6 @@ def GetUnusedGenericAnnotationTypeIds(doc):
 
 # doc   current document
 def GetUnusedGenericAnnotationIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in generic anno familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in generic anno familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGenericAnnotationTypeIds)
     return ids

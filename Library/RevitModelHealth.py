@@ -56,7 +56,7 @@ FAILED_TO_RETRIEVE_VALUE = -1
 
 # doc   current document
 def GetInstancesOfModelHealth(doc):
-    """gets all instances of the model health tracker family in a model"""
+    '''gets all instances of the model health tracker family in a model'''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -70,7 +70,7 @@ def GetInstancesOfModelHealth(doc):
 # famInstance   an instance of the family model health tracker
 # doc           current document
 def GetParametersOfInstance(famInstance, doc):
-    """update parameter values of model tracker family instance"""
+    '''update parameter values of model tracker family instance'''
     resultValue = res.Result()
     flagUpdate = False
     for p in famInstance.GetOrderedParameters():
@@ -431,7 +431,7 @@ PARAM_ACTIONS = {
 # updates any instances of model health tracking family in a project
 # doc   current document
 def UpdateModelHealthTracerFamily(doc, revitFilePath):
-    """updates model health tracker family"""
+    '''updates model health tracker family'''
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     instances = GetInstancesOfModelHealth(doc)
@@ -446,7 +446,7 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
 # doc   current document
 # revitFilePath     path of the curren document
 def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
-    """write out health tracker data"""
+    '''write out health tracker data'''
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     # get values and write them out

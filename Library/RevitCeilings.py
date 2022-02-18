@@ -55,28 +55,28 @@ BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
 
 # doc:   current model document
 def GetAllCeilingTypesByCategory(doc):
-    """ this will return a filtered element collector of all ceiling types in the model:
+    ''' this will return a filtered element collector of all ceiling types in the model:
     - Compound Ceiling
     - In place families or loaded families
     - Basic Ceiling
     it will therefore not return any in roof soffit types ..
-    """
+    '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ceilings).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetCeilingTypesByClass(doc):
-    """ this will return a filtered element collector of all ceiling types in the model:
+    ''' this will return a filtered element collector of all ceiling types in the model:
     - Roof Soffit
     - Compound Ceiling
     - Basic Ceiling
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     return  FilteredElementCollector(doc).OfClass(CeilingType)
 
 # collector   filtered element collector containing ceiling type elments of family symbols representing in place families
 # dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -100,17 +100,17 @@ def SortCeilingTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllCeilingInstancesInModelByCategory(doc):
-    """ returns all ceiling elements placed in model...ignores roof soffits"""
+    ''' returns all ceiling elements placed in model...ignores roof soffits'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ceilings).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllCeilingInstancesInModelByClass(doc):
-    """ returns all ceiling elements placed in model...ignores in place"""
+    ''' returns all ceiling elements placed in model...ignores in place'''
     return FilteredElementCollector(doc).OfClass(Ceiling).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByCategory(doc):
-    """ returns all ceiling element type ids available placed in model """
+    ''' returns all ceiling element type ids available placed in model '''
     ids = []
     colCat = GetAllCeilingTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(colCat)
@@ -118,7 +118,7 @@ def GetAllCeilingTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByClass(doc):
-    """ returns all ceiling element type ids available in model """
+    ''' returns all ceiling element type ids available in model '''
     ids = []
     colClass = GetCeilingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
@@ -126,14 +126,14 @@ def GetAllCeilingTypeIdsInModelByClass(doc):
 
 # doc   current document
 def GetUsedCeilingTypeIds(doc):
-    """ returns all used in ceiling type ids """
+    ''' returns all used in ceiling type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -143,11 +143,11 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
-    """ returns all unused ceiling type ids for:
+    ''' returns all unused ceiling type ids for:
     - Roof Soffit
     - Compound Ceiling
     - Basic Ceiling
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByClass, 0)
     # make sure there is at least on ceiling type per system family left in model
@@ -163,7 +163,7 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceCeilingFamilyInstances(doc):
-    """ returns all instances in place families of category ceiling"""
+    ''' returns all instances in place families of category ceiling'''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -173,25 +173,25 @@ def GetInPlaceCeilingFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceCeilingTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category ceiling"""
+    ''' returns type ids off all available in place families of category ceiling'''
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Ceilings)
     return ids
 
 # doc   current document
 def GetUsedInPlaceCeilingTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceCeilingTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceCeilingIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
     return ids
 

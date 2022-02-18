@@ -63,7 +63,7 @@ def GetDateStamp(format):
     return d.strftime(format)
 
 def GetLocalAppDataPath():
-    """return directory path to local app data folder"""
+    '''return directory path to local app data folder'''
     return os.environ['LOCALAPPDATA']
 
 # ---------------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
 # fileSuffix        file name end on suffix
 # fileExtension     file extension in format '.ext'
 def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
-    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    '''returns all files in directory and nested subdirectories where file name matches filters value'''
     filesFound = []
     for root, dirs, files in os.walk(folderPath):
         for name in files:
@@ -94,7 +94,7 @@ def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, f
 # folderPath              root directory to start fiel search in
 # fileExtension     file must have this extension
 def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
-    """returns all files in directory and nested subdirectories where file name matches filters value"""
+    '''returns all files in directory and nested subdirectories where file name matches filters value'''
     filesFound = []
     filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
     return filesFound
@@ -105,10 +105,10 @@ def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
 # fileExtension     file extension in format '.ext'
 # includeSubDirs    whether to include subdirectories in search
 def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
-    """returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
+    '''returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
     - key file name without extension
     - values: list of directories where this file occures (based on file name only!)
-    use case: check for duplicaes by file name only"""
+    use case: check for duplicaes by file name only'''
     filesFound = []
     # set up a dictionary
     fileDic = {}
@@ -132,7 +132,7 @@ def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, include
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
-    """used to combine report files into one file (assumes all files have the same number of columns)"""
+    '''used to combine report files into one file (assumes all files have the same number of columns)'''
     file_list = fileGetter (folderPath, filePrefix, fileSuffix, fileExtension)
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
@@ -152,7 +152,7 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def AppendToSingleFiles(sourceFile, appendFile):
-    """used to append one file to another, assumes same number of headers)"""
+    '''used to append one file to another, assumes same number of headers)'''
     flag = True
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
@@ -266,21 +266,21 @@ def writeReportData(fileName, header, data, writeType = 'w'):
 
 # file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
-    """returns a list of files from a given folder with a given file extension"""
+    '''returns a list of files from a given folder with a given file extension'''
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
     return file_list
 
 # file extension in format '.txt'
 # file filter is in 'something*'
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
-    """returns a list of files from a given folder with a given file extension and a file name filter"""
+    '''returns a list of files from a given folder with a given file extension and a file name filter'''
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
 
 # path      root directory to start fiel search in
 # filter    file name must contain filter value
 def GetFilesFromDirectoryWalker(path, filter):
-    """returns all files in directory and nested subdirectories where file name contains filter value"""
+    '''returns all files in directory and nested subdirectories where file name contains filter value'''
     filesFound = []
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -428,7 +428,7 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
 
 # filePathCSV      fully qualified file path to tab separated file
 def ReadCSVfile(filepathCSV):
-    """read a csv files into a list of rows"""
+    '''read a csv files into a list of rows'''
     rowList = []
     try:
         with open(filepathCSV) as csvfile:
@@ -442,7 +442,7 @@ def ReadCSVfile(filepathCSV):
 
 # filePath      fully qualified file path to tab separated file
 def ReadTabSeparatedFile(filePath):
-    """read a tab delimited files into a list of rows"""
+    '''read a tab delimited files into a list of rows'''
     rowList = []
     try:
         with codecs.open (filePath,'r',encoding='utf-8') as f:
@@ -546,7 +546,7 @@ def IndexOf(list, item):
 # sourcelist    list to remove items from
 # removeList    list containing items to be removed from source
 def RemoveItemsFromList(sourceList, removeIdsList):
-    """helper removes ids from a source list"""
+    '''helper removes ids from a source list'''
     try:
         for item in removeIdsList:
             sourceList.remove(item)

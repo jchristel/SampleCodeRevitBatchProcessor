@@ -81,7 +81,7 @@ def Output(message = ''):
 # -------------
 
 def renameLoadedFamilies(doc):
-    """loops over global family list and renames all matches"""
+    '''loops over global family list and renames all matches'''
     eq = FilteredElementCollector(doc).OfClass(Family)
     counter = 0
     for e in eq:
@@ -105,7 +105,7 @@ def renameLoadedFamilies(doc):
     Output('Renamed: ' + str(counter) + ' families')
 
 def readFamilyNames():
-    """reads family list from csv file"""
+    '''reads family list from csv file'''
     try:
         with open(FAMILY_NAME_FILE_PATH) as csvfile:
             reader = csv.reader(csvfile)

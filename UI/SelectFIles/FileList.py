@@ -48,7 +48,7 @@ clr.ImportExtensions(System.Linq)
 # directory              directory containing files to be retrived
 # fileExtension         file extenision in format .rvt
 def getRevitFiles(directory, fileExtension):
-    """helper method retrieving files in a given directory and of a given file extension"""
+    '''helper method retrieving files in a given directory and of a given file extension'''
     files = []
     listOfFiles = os.listdir(directory)
     for f in listOfFiles:
@@ -67,7 +67,7 @@ def getRevitFiles(directory, fileExtension):
 # directory              directory containing files to be retrived
 # fileExtension         file extenision in format .rvt
 def getRevitFilesInclSubDirs(directory, fileExtension):
-    """helper method retrieving files in a given directory and its subdirectories with a give extension"""
+    '''helper method retrieving files in a given directory and its subdirectories with a give extension'''
     files = []
     # Get the list of all files in directory tree at given path
     listOfFiles = list()
@@ -86,7 +86,7 @@ def getRevitFilesInclSubDirs(directory, fileExtension):
 
 # filePath      file path without the file extension!
 def isBackUpFile(filePath):
-    """checks whether a given file is a backup file"""
+    '''checks whether a given file is a backup file'''
     flag = False
     try:
         index = filePath.rindex('.')

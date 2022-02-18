@@ -50,26 +50,26 @@ BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
 
 # doc:   current model document
 def GetAllRoofTypesByCategory(doc):
-    """ this will return a filtered element collector of all Roof types in the model:
+    ''' this will return a filtered element collector of all Roof types in the model:
     - Basic Roof
     - In place families or loaded families
     - sloped glazing
-    """
+    '''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Roofs).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetRoofTypesByClass(doc):
-    """ this will return a filtered element collector of all Roof types in the model:
+    ''' this will return a filtered element collector of all Roof types in the model:
     - Basic Roof
     - sloped glazing
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     return  FilteredElementCollector(doc).OfClass(RoofType)
 
 # collector   fltered element collector containing Roof type elments of family symbols representing in place families
 # dic         dictionary containing key: roof type family name, value: list of ids
 def BuildRoofTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -93,17 +93,17 @@ def SortRoofTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllRoofInstancesInModelByCategory(doc):
-    """ returns all Roof elements placed in model...ignores in place families"""
+    ''' returns all Roof elements placed in model...ignores in place families'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllRoofInstancesInModelByClass(doc):
-    """ returns all Roof elements placed in model...ignores roof soffits(???)"""
+    ''' returns all Roof elements placed in model...ignores roof soffits(???)'''
     return FilteredElementCollector(doc).OfClass(Roof).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByCategory(doc):
-    """ returns all Roof element types available in model """
+    ''' returns all Roof element types available in model '''
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -111,7 +111,7 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByClass(doc):
-    """ returns all Roof element types available in model """
+    ''' returns all Roof element types available in model '''
     ids = []
     colClass = GetRoofTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
@@ -119,14 +119,14 @@ def GetAllRoofTypeIdsInModelByClass(doc):
 
 # doc   current document
 def GetUsedRoofTypeIds(doc):
-    """ returns all used in Roof type ids """
+    ''' returns all used in Roof type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -136,11 +136,11 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
-    """ returns all unused Roof type ids for:
+    ''' returns all unused Roof type ids for:
     - Roof Soffit
     - Compound Roof
     - Basic Roof
-    it will therefore not return any in place family types ..."""
+    it will therefore not return any in place family types ...'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
     # make sure there is at least on Roof type per system family left in model
@@ -156,7 +156,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceRoofFamilyInstances(doc):
-    """ returns all instances in place families of category roof """
+    ''' returns all instances in place families of category roof '''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -166,24 +166,24 @@ def GetInPlaceRoofFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceRoofTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category roof """
+    ''' returns type ids off all available in place families of category roof '''
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Roofs)
     return ids
 
 # doc   current document
 def GetUsedInPlaceRoofTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRoofTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRoofIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place Roof familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place Roof familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRoofTypeIds)
     return ids

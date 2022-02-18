@@ -59,14 +59,14 @@ def GetAllWallTypes(doc):
 
 # doc   current model document
 def GetWallTypesByClass(doc):
-    """ this will return a filtered element collector of all wall types in the model
-    it will therefore not return any in place wall types since revit treats those as Families..."""
+    ''' this will return a filtered element collector of all wall types in the model
+    it will therefore not return any in place wall types since revit treats those as Families...'''
     return  FilteredElementCollector(doc).OfClass(WallType)
 
 # collector   fltered element collector containing walltype elments of family symbols representing in place families
 # dic         dictionary containing key: wall type family name, value: list of ids
 def BuildWallTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             # todo : check WallKind Enum???
@@ -78,7 +78,7 @@ def BuildWallTypeDictionary(collector, dic):
 
 # doc   current model document
 def SortWallTypesByFamilyName(doc):
-    """returns a dictionary where key is the build in wall family name, values are ids of associated wall types"""
+    '''returns a dictionary where key is the build in wall family name, values are ids of associated wall types'''
     # get all Wall Type Elements
     wts = GetWallTypesByClass(doc)
     # get all wall types including in place wall families
@@ -92,15 +92,15 @@ def SortWallTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllStackedWallInstancesInModel(doc):
-    """ returns all stacked wall elements placed in model...ignores legend elements"""
+    ''' returns all stacked wall elements placed in model...ignores legend elements'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsNotElementType()
 
 def GetAllStackedWallTypesInModel(doc):
-    """ returns all stacked wall element types used by instances placed in model """
+    ''' returns all stacked wall element types used by instances placed in model '''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
 
 def GetAllStackedWallTypeIdsInModel(doc):
-    """ returns all stacked wall element types available in model """
+    ''' returns all stacked wall element types available in model '''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
@@ -108,13 +108,13 @@ def GetAllStackedWallTypeIdsInModel(doc):
 
 # doc   current document
 def GetUsedStackedWallTypeIds(doc):
-    """ returns all used stack wall type ids """
+    ''' returns all used stack wall type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedStackedWallTypeIdsToPurge(doc):
-    """ returns all unused stack wall type ids, will leave one behind if none is used """
+    ''' returns all unused stack wall type ids, will leave one behind if none is used '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
@@ -125,7 +125,7 @@ def GetUnusedStackedWallTypeIdsToPurge(doc):
 
 # doc   current document
 def GetInPlaceWallFamilyInstances(doc):
-    """ returns all instances in place families of category wall """
+    ''' returns all instances in place families of category wall '''
     # built in parameter containing family name when filtering familyInstance elements:
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
@@ -135,7 +135,7 @@ def GetInPlaceWallFamilyInstances(doc):
 
 # doc   current document
 def GetAllInPlaceWallTypeIdsInModel(doc):
-    """ returns type ids off all available in place families of category wall """
+    ''' returns type ids off all available in place families of category wall '''
     ids = []
     filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
@@ -144,19 +144,19 @@ def GetAllInPlaceWallTypeIdsInModel(doc):
 
 # doc   current document
 def GetUsedInPlaceWallTypeIds(doc):
-    """ returns all used in place type ids """
+    ''' returns all used in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceWallTypeIds(doc):
-    """ returns all unused in place type ids """
+    ''' returns all unused in place type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceWallIdsForPurge(doc):
-    """returns symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be purged"""
+    '''returns symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be purged'''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceWallTypeIds)
     return ids
 
@@ -164,7 +164,7 @@ def GetUnusedInPlaceWallIdsForPurge(doc):
 
 # doc   current document
 def GetAllCurtainWallTypeIdsInModel(doc):
-    """ returns type ids off all available curtain wall types"""
+    ''' returns type ids off all available curtain wall types'''
     ids = []
     dic = SortWallTypesByFamilyName(doc)
     if(dic.has_key(CURTAIN_WALL_FAMILY_NAME)):
@@ -174,7 +174,7 @@ def GetAllCurtainWallTypeIdsInModel(doc):
 # doc           current model document
 # availableIds  type ids to check for use a curtain panel
 def GetAllCurtainWallInstancesInModel(doc, availableIds):
-    """ returns all stacked wall elements placed in model...ignores legend elements"""
+    ''' returns all stacked wall elements placed in model...ignores legend elements'''
     instances = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -185,7 +185,7 @@ def GetAllCurtainWallInstancesInModel(doc, availableIds):
 # doc           current model document
 # availableIds  type ids to check for use a curtain panel
 def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
-    """ returns all stacked wall elements placed in model...ignores legend elements"""
+    ''' returns all stacked wall elements placed in model...ignores legend elements'''
     instances = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -195,13 +195,13 @@ def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
 
 # doc   current document
 def GetUsedCurtainWallTypeIds(doc):
-    """ returns type ids off all used curtain wall types """
+    ''' returns type ids off all used curtain wall types '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnUsedCurtainWallTypeIdsToPurge(doc):
-    """ returns type ids off all unused curtain wall types, will leave one behind if none is used"""
+    ''' returns type ids off all unused curtain wall types, will leave one behind if none is used'''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllCurtainWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
@@ -212,7 +212,7 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
 
 # doc   current document
 def GetAllBasicWallTypeIdsInModel(doc):
-    """ returns type ids off all available basic wall types"""
+    ''' returns type ids off all available basic wall types'''
     ids = []
     dic = SortWallTypesByFamilyName(doc)
     if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
@@ -222,7 +222,7 @@ def GetAllBasicWallTypeIdsInModel(doc):
 # doc           current model document
 # availableIds  type ids to check for use as basic wall type
 def GetAllBasicWallInstancesInModel(doc, availableIds):
-    """ returns all basic wall elements placed in model...ignores legend elements"""
+    ''' returns all basic wall elements placed in model...ignores legend elements'''
     instances = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -233,7 +233,7 @@ def GetAllBasicWallInstancesInModel(doc, availableIds):
 # doc           current model document
 # availableIds  type ids to check for use a curtain panel
 def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
-    """ returns all basic wall type elements used in model"""
+    ''' returns all basic wall type elements used in model'''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -243,13 +243,13 @@ def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
 
 # doc   current document
 def GetUsedBasicWallTypeIds(doc):
-    """ returns type ids off all used basic wall types """
+    ''' returns type ids off all used basic wall types '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 1)
     return ids
 
 # doc   current document
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
-    """ returns type ids off all unused basic wall types, will leave one behind if none is used"""
+    ''' returns type ids off all unused basic wall types, will leave one behind if none is used'''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
     # argh GetStackedWallMemberIds() is only available on wall element but not walltype. Why?

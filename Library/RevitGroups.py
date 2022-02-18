@@ -42,22 +42,22 @@ REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTAN
 
 # doc   current document
 def GetModelGroups(doc):
-    """returns a list of model groups from the model"""
+    '''returns a list of model groups from the model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType().ToList()
 
 # doc   current document
 def GetDetailGroups(doc):
-    """returns a list of detail groups from the model"""
+    '''returns a list of detail groups from the model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType().ToList()
 
 # doc   current document
 def GetNestedDetailGroups(doc):
-    """returns a list of nested detail groups from the model"""
+    '''returns a list of nested detail groups from the model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType().ToList()
 
 # doc   current document
 def GetModelGroupIds(doc):
-    """returns a list of model group ids from the model"""
+    '''returns a list of model group ids from the model'''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
@@ -65,7 +65,7 @@ def GetModelGroupIds(doc):
 
 # doc   current document
 def GetDetailGroupIds(doc):
-    """returns a list of detail groups from the model"""
+    '''returns a list of detail groups from the model'''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
@@ -73,7 +73,7 @@ def GetDetailGroupIds(doc):
 
 # doc   current document
 def GetNestedDetailGroupIds(doc):
-    """returns a list of nested detail groups from the model"""
+    '''returns a list of nested detail groups from the model'''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
@@ -82,7 +82,7 @@ def GetNestedDetailGroupIds(doc):
 # doc   current document
 # groupCategory     either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
 def GetNotPlacedGroups(doc, groupCategory):
-    """returns a list of unplaced groups from the model"""
+    '''returns a list of unplaced groups from the model'''
     def getterTypes(doc):
         return FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType()
     def getterInstances(doc):
@@ -95,14 +95,14 @@ def GetNotPlacedGroups(doc, groupCategory):
 
 # doc   current document
 def GetUnplacedDetailGroups(doc):
-    """returns a list of unplaced detail groups from the model
-    this will not include any attached detail groups!!"""
+    '''returns a list of unplaced detail groups from the model
+    this will not include any attached detail groups!!'''
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
 
 # doc   current document
 def GetUnplacedDetailGroupIds(doc):
-    """returns a list of unplaced detail groups Ids from the model
-    this will not include any attached detail groups!!"""
+    '''returns a list of unplaced detail groups Ids from the model
+    this will not include any attached detail groups!!'''
     unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSDetailGroups)
     ids = []
     for unplaced in unplacedGroups:
@@ -111,12 +111,12 @@ def GetUnplacedDetailGroupIds(doc):
 
 # doc   current document
 def GetUnplacedNestedDetailGroups(doc):
-    """returns a list of unplaced nested detail groups from the model"""
+    '''returns a list of unplaced nested detail groups from the model'''
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
 
 # doc   current document
 def GetUnplacedNestedDetailGroupIds(doc):
-    """returns a list of unplaced nested detail group Ids from the model. This will not list any none nested detail groups!!"""
+    '''returns a list of unplaced nested detail group Ids from the model. This will not list any none nested detail groups!!'''
     unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSAttachedDetailGroups)
     ids = []
     for unplaced in unplacedGroups:
@@ -125,12 +125,12 @@ def GetUnplacedNestedDetailGroupIds(doc):
 
 # doc   current document
 def GetUnplacedModelGroups(doc):
-    """returns a list of unplaced model groups from the model"""
+    '''returns a list of unplaced model groups from the model'''
     return GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSModelGroups)
 
 # doc   current document
 def GetUnplacedModelGroupIds(doc):
-    """returns a list of unplaced model group Ids from the model"""
+    '''returns a list of unplaced model group Ids from the model'''
     unplacedGroups = GetNotPlacedGroups(doc, BuiltInCategory.OST_IOSModelGroups)
     ids = []
     for unplaced in unplacedGroups:

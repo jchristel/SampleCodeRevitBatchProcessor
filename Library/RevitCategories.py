@@ -175,7 +175,7 @@ def GetCategoryGraphicStyleIds(cat):
 
 #  cat    revit category
 def GetCategoryMaterial(cat):
-    """ returns the material properties name and id as a dictionary where key is property description and value the property value"""
+    ''' returns the material properties name and id as a dictionary where key is property description and value the property value'''
     dicMaterial = {}
     dicMaterial[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
     dicMaterial[PROPERTY_MATERIAL_ID] = ElementId.InvalidElementId
@@ -187,15 +187,15 @@ def GetCategoryMaterial(cat):
 
 #  cat    revit category
 def GetCategoryLinePattern(cat, doc):
-    """ returns the line pattern properties name and id as a dictionary where key is property description and value the property value"""
+    ''' returns the line pattern properties name and id as a dictionary where key is property description and value the property value'''
     dicPattern = {}
     dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
     dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(GraphicsStyleType.Projection)
-    """check for 'solid' pattern which apparently is not a pattern at all
+    '''check for 'solid' pattern which apparently is not a pattern at all
     *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
     * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
     * Solid is visible to the user when selecting line patterns. 
-    """
+    '''
     if(patternId != LinePatternElement.GetSolidPatternId()):
         # not a solid line pattern
         collector = FilteredElementCollector(doc).OfClass(LinePatternElement)
@@ -207,7 +207,7 @@ def GetCategoryLinePattern(cat, doc):
 
 #  cat    revit category
 def GetCategoryLineWeights(cat):
-    """ returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value"""
+    ''' returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value'''
     dicLineWeights = {}
     dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(GraphicsStyleType.Projection)
     dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(GraphicsStyleType.Cut)
@@ -215,7 +215,7 @@ def GetCategoryLineWeights(cat):
 
 #  cat    revit category
 def GetCategoryColour(cat):
-    """ returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value"""
+    ''' returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value'''
     dicColour = {}
     dicColour[PROPERTY_LINECOLOUR_RED_NAME] = 0
     dicColour[PROPERTY_LINECOLOUR_GREEN_NAME] = 0
@@ -252,7 +252,7 @@ def GetCategoryProperties(cat, doc):
 # properties    list of dictionaries in format as per GetCategoryProperties(cat) method
 # propNames     list of proprty names of which the values are to be returned
 def GetSavedCategoryPropertyByName(properties, propNames):
-    """returns property values matching property names in saved category data"""
+    '''returns property values matching property names in saved category data'''
     propValues = []
     for propName in propNames:
         match = False

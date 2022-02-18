@@ -72,7 +72,7 @@ def getParameterValue(para):
 
 # para      revit parameter to get value of
 def GetParameterValueUTF8String(para):
-    """ returns parameter values as utf-8 encoded strings"""
+    ''' returns parameter values as utf-8 encoded strings'''
     pValue = 'no Value'
     if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
         if(para.AsValueString()!= None and para.AsValueString() != ''):
@@ -219,7 +219,7 @@ def GetSheetRevByNumber(doc, sheetNumber):
 # typeIds       types to check whether they have been placed as legend components
 # doc           current model document
 def GetLegendComponentsInModel(doc, typeIds):
-    """ returns all type ids which have been placed as legend components"""
+    ''' returns all type ids which have been placed as legend components'''
     ids = []
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
     for c in col:
@@ -234,8 +234,8 @@ def GetLegendComponentsInModel(doc, typeIds):
 # doc   current model document
 # typeGetter    method needs to accept the current document as argument and need to return a collector of Autodesk.Revit.DB ElementType
 def GetSimilarTypeFamiliesByType(doc, typeGetter):
-    """returns a list of uniqe types and similar family types in format:
-    [[type, similar type id, similar type id,...]]"""
+    '''returns a list of uniqe types and similar family types in format:
+    [[type, similar type id, similar type id,...]]'''
     simTypes=[]
     types = typeGetter(doc)
     for t in types:
@@ -253,10 +253,10 @@ def GetSimilarTypeFamiliesByType(doc, typeGetter):
 # existingTypes     list in format [[type, similar type id, similar type id,...]]
 # newTypeData       list in format [type, similar type id, similar type id,...] 
 def CheckUniqueTypeData(existingTypes, newTypeData):
-    """checking whether we have type and associated similar types already
+    '''checking whether we have type and associated similar types already
     returns true:
     -if type is not in list existing Types passed in or
-    -if ids of similar family types do not match any similar types already in list"""
+    -if ids of similar family types do not match any similar types already in list'''
     result = True
     for s in existingTypes:
         # check for matching family name
@@ -281,7 +281,7 @@ def CheckUniqueTypeData(existingTypes, newTypeData):
 # typeGetter: method asccepting current document as argument and returning a collector of types in model
 # instanceGetter: method asccepting current document as argument and returning a list of instances in model
 def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
-    """returns ID of unused family types in the model"""
+    '''returns ID of unused family types in the model'''
     # get all  types available and associated family types
     familTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
     # get used type ids
@@ -339,9 +339,9 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
 # getTypes:         available types getter. Needs to accept doc as argument and return a collector of type foo
 # getInstances:     placed instances getter. Needs to accept doc as argument and return a collector of instances foo
 def GetNotPlacedTypes(doc, getTypes, getInstances):
-    """
+    '''
     returns a list of unused Types foo by compring type Ids of placed instances with all avialable types
-    """
+    '''
     availTypes = getTypes(doc)
     placedInstances = getInstances(doc)
     notPlaced = []
@@ -368,10 +368,10 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
 # typeIds   types ids to check for matches in group
 # group     to check for matching type id
 def CheckGroupForTypeIds(doc, groupType, typeIds):
-    """
+    '''
     Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
     This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!
-    """
+    '''
     unusedTypeIds = []
     usedTypeIds = []
     # get the first group from the group type and get its members
@@ -393,10 +393,10 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
 # groupType     group to be checked whether it contains elements of types passt in
 # typeIds       list of type ids to confirm whether they are in use a group
 def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
-    """
+    '''
     checks all elements in groups passt in whether type Id is matching any type ids passt in
     returns all type ids not matched
-    """
+    '''
     for groupType in groupTypes:
         typeIds = CheckGroupForTypeIds(doc, groupType, typeIds)
         # check if all type ids where matched up
@@ -407,9 +407,9 @@ def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
 # doc   current document
 # typeIds   types ids to check for matches in groups
 def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
-    """checks elements in nested detail groups and detail groupd whether their type ID is in the list passt in.
+    '''checks elements in nested detail groups and detail groupd whether their type ID is in the list passt in.
     Returns all type Ids from list passt in not found in group definitions
-    This only returns valid data if at least one instance of the group is placed in the model!!"""
+    This only returns valid data if at least one instance of the group is placed in the model!!'''
     unusedTypeIds = []
     nestedDetailGroups = rGroup.GetNestedDetailGroups(doc)
     detailGroups = rGroup.GetDetailGroups(doc)
@@ -446,7 +446,7 @@ def BuildCategoryDictionary(doc, elementIds):
 # doc           current model document
 # elementIds    dependent elements of which to  check whether orphaned legend components
 def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, elementIds):
-    """ returns True if all but one dependent element are orphaned legend components"""
+    ''' returns True if all but one dependent element are orphaned legend components'''
     flag = True
     categoryName = 'Legend Components'
     # build dependent type dictionary
@@ -475,8 +475,8 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
 # doc                 current model document
 # dependentElements   list of elements ids               
 def FilterOutWarnings(doc, dependentElements):
-    """attempts to filter out any warnings from ids supplied by checking the workset name
-    of each element for 'Reviewable Warnings'"""
+    '''attempts to filter out any warnings from ids supplied by checking the workset name
+    of each element for 'Reviewable Warnings''''
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)
@@ -492,7 +492,7 @@ def FilterOutWarnings(doc, dependentElements):
 #             are dependent on this element (stacked walls for instance return as a minimum 2 elements: the stacked wall type and the legend component
 #             available for this type
 def HasDependentElements(doc, el, filter = None, threshold = 2):
-    """ returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured"""
+    ''' returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured'''
     value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)
@@ -526,7 +526,7 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
 def DeleteByElementIds(doc, ids, transactionName, elementName):
-    """method deleting elements by list of element id's"""
+    '''method deleting elements by list of element id's'''
     returnvalue = res.Result()
     def action():
         actionReturnValue = res.Result()
@@ -543,7 +543,7 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
 # transactionName : name the transaction will be given
 # elementName: will appear in description of what got deleted
 def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
-    """method deleting elements by list of element id's one at the time"""
+    '''method deleting elements by list of element id's one at the time'''
     returnvalue = res.Result()
     for id in ids:
         def action():
@@ -562,7 +562,7 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
 
 # col    element collector
 def GetIdsFromElementCollector(col):
-    """ this will return a list of all element ids in collector """
+    ''' this will return a list of all element ids in collector '''
     ids = []
     for c in col:
         ids.append(c.Id)
@@ -714,7 +714,7 @@ def SaveAsWorksharedFile(doc, fullFileName):
 # currentFullFileName:      fully qualified file name of the current Revit file
 # name data:                list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
 def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rfa', compactFile = False):
-    """save a family file under new name in given location"""
+    '''save a family file under new name in given location'''
     returnvalue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
@@ -771,7 +771,7 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension =
 
 # doc: the document to be saved
 def SaveFile(doc, compactFile = False):
-    """to be used for families and non workshared revit files only"""
+    '''to be used for families and non workshared revit files only'''
     returnvalue = res.Result()
     try:
         so = SaveOptions()

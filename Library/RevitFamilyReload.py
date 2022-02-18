@@ -43,9 +43,9 @@ from Autodesk.Revit.DB import *
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
-    """reloads a number of families with settings:
+    '''reloads a number of families with settings:
     - parameter values overwritten: true
-    retuns True if any of the reload actions was succesful"""
+    retuns True if any of the reload actions was succesful'''
     result = res.Result()
     # if a family is reloaded it may bring in new typs not present in the model at reload
     # this list contains the ids of those types (symbols)
@@ -132,7 +132,7 @@ def getFamilyIdsFromSymbols(doc):
 # preLoadSymbolIdList      list of Ids of symbols prior the reload
 # afterLoadSymbolList       list of ids of symbols after the reload
 def getNewSymboldIds(preLoadSymbolIdList, afterLoadSymbolList):
-    """returns a list of symbol ids not present prior to reload"""
+    '''returns a list of symbol ids not present prior to reload'''
     ids = []
     for id in afterLoadSymbolList:
         if (id not in preLoadSymbolIdList):

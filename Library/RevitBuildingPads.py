@@ -48,21 +48,21 @@ BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
 
 # doc:   current model document
 def GetAllBuildingPadTypesByCategory(doc):
-    """ this will return a filtered element collector of all BuildingPad types in the model:
-    - Basic BuildingPad"""
+    ''' this will return a filtered element collector of all BuildingPad types in the model:
+    - Basic BuildingPad'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_BuildingPad).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetBuildingPadTypesByClass(doc):
-    """ this will return a filtered element collector of all BuildingPad types in the model:
-    - Basic BuildingPad."""
+    ''' this will return a filtered element collector of all BuildingPad types in the model:
+    - Basic BuildingPad.'''
     return  FilteredElementCollector(doc).OfClass(BuildingPadType)
 
 # collector   fltered element collector containing BuildingPad type elments of family symbols representing in place families
 # dic         dictionary containing key: pad type family name, value: list of ids
 def BuildBuildingPadTypeDictionary(collector, dic):
-    """returns the dictioanry passt in with keys and or values added retrieved from collector passt in"""
+    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -86,17 +86,17 @@ def SortBuildingPadTypesByFamilyName(doc):
 
 # doc   current model document
 def GetAllBuildingPadInstancesInModelByCategory(doc):
-    """ returns all BuildingPad elements placed in model"""
+    ''' returns all BuildingPad elements placed in model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllBuildingPadInstancesInModelByClass(doc):
-    """ returns all BuildingPad elements placed in model"""
+    ''' returns all BuildingPad elements placed in model'''
     return FilteredElementCollector(doc).OfClass(BuildingPad).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllBuildingPadTypeIdsInModelByCategory(doc):
-    """ returns all BuildingPad element types available placed in model """
+    ''' returns all BuildingPad element types available placed in model '''
     ids = []
     colCat = GetAllBuildingPadTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
@@ -104,7 +104,7 @@ def GetAllBuildingPadTypeIdsInModelByCategory(doc):
 
 # doc   current model document
 def GetAllBuildingPadTypeIdsInModelByClass(doc):
-    """ returns all BuildingPad element types available placed in model """
+    ''' returns all BuildingPad element types available placed in model '''
     ids = []
     colClass = GetBuildingPadTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
@@ -112,14 +112,14 @@ def GetAllBuildingPadTypeIdsInModelByClass(doc):
 
 # doc   current document
 def GetUsedBuildingPadTypeIds(doc):
-    """ returns all used in BuildingPad type ids """
+    ''' returns all used in BuildingPad type ids '''
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByCategory, 1)
     return ids
 
 # famTypeIds        symbol(type) ids of a family
 # usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    """ returns false if any symbols (types) of a family are in use in a model"""
+    ''' returns false if any symbols (types) of a family are in use in a model'''
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -129,8 +129,8 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
-    """ returns all unused BuildingPad type ids for:
-    - Basic BuildingPad"""
+    ''' returns all unused BuildingPad type ids for:
+    - Basic BuildingPad'''
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByClass, 0)
     # make sure there is at least on BuildingPad type per system family left in model

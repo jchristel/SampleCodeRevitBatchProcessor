@@ -29,14 +29,14 @@ PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
 class TimerError(Exception):
-    """A custom exception used to report errors in use of Timer class"""
+    '''A custom exception used to report errors in use of Timer class'''
 
 class Timer:
     def __init__(self):
         self._stopWatch = None
 
     def start(self):
-        """Start a new timer"""
+        '''Start a new timer'''
         if self._stopWatch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
 
@@ -44,7 +44,7 @@ class Timer:
         self._stopWatch.Start()
 
     def stop(self):
-        """Stop the timer, and report the elapsed time"""
+        '''Stop the timer, and report the elapsed time'''
         if self._stopWatch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stopWatch.Stop()

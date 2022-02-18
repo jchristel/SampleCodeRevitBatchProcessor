@@ -70,19 +70,19 @@ REPORT_CAD_LINKS_HEADER = [
 
 # doc   current model document
 def GetAllCADLinkTypes(doc):
-    """returns all CAD link types in a model"""
+    '''returns all CAD link types in a model'''
     collector = FilteredElementCollector(doc).OfClass(CADLinkType)
     return collector
 
 # doc   current model document
 def GetAllCADLinkInstances(doc):
-    """returns all CAD link instances in a model"""
+    '''returns all CAD link instances in a model'''
     collector = FilteredElementCollector(doc).OfClass(ImportInstance)
     return collector
 
 # doc   current model document
 def GetCADTypeImportsOnly(doc):
-    """returns all CAD imports in a model"""
+    '''returns all CAD imports in a model'''
     cadImports = []
     collector = FilteredElementCollector(doc).OfClass(CADLinkType)
     for cad in collector:
@@ -92,7 +92,7 @@ def GetCADTypeImportsOnly(doc):
 
 # doc   current model document
 def SortCADLinkTypesByModelOrViewSpecific(doc):
-    """returns two lists: First one: cad links types linked by view, second one cad link types linked into model"""
+    '''returns two lists: First one: cad links types linked by view, second one cad link types linked into model'''
     cadLinksByView = []
     cadLinksByModel = []
     collectorCADTypes = GetAllCADLinkTypes(doc)
@@ -112,19 +112,19 @@ def SortCADLinkTypesByModelOrViewSpecific(doc):
 
 # doc   current odel document
 def GetAllCADLinkTypeByViewOnly(doc):
-    """returns all CAD links by view in a model"""
+    '''returns all CAD links by view in a model'''
     cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
     return cadLinksByView
 
 # doc   current model document
 def GetAllCADLinkTypeInModelOnly(doc):
-    """returns all CAD links by view in a model"""
+    '''returns all CAD links by view in a model'''
     cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
     return cadLinksByModel
 
 # doc:              the current model document
 def DeleteCADLinks(doc):
-    """deletes all CAD links in a file"""
+    '''deletes all CAD links in a file'''
     ids = []
     returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfClass(ImportInstance):
@@ -136,7 +136,7 @@ def DeleteCADLinks(doc):
 # link locations: a list of directories where the revit files can be located
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
-    """reloads CAD links from a given location based on the original link type name (starts with)"""
+    '''reloads CAD links from a given location based on the original link type name (starts with)'''
     returnvalue = res.Result()
     try:
         # get all CAD link types in model
@@ -172,7 +172,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
 # doc:              the current model document
 # returns 'unknown' if path is not a valid external file reference
 def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
-    """extract the path from CAD link type"""
+    '''extract the path from CAD link type'''
     #default values
     modelPath = 'unknown'
     for p in FilteredElementCollector(doc).OfClass(CADLinkType):
@@ -191,7 +191,7 @@ def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
 # revitFilePath: fully qualified file path of Revit file
 # returns a list of lists
 def GetCADReportData(doc, revitFilePath):
-    """gets CAD links data ready for being printed to file"""
+    '''gets CAD links data ready for being printed to file'''
     data = []
     collector = GetAllCADLinkInstances(doc)
     for c in collector:
@@ -224,21 +224,21 @@ def GetCADReportData(doc, revitFilePath):
 # -------------------------------------------- Revit Links -------------------------------------------------
 
 # doc   current model document
-"""returns all Revit link instances in a model"""
+'''returns all Revit link instances in a model'''
 def GetAllRevitLinkInstances(doc):
     collector = FilteredElementCollector(doc).OfClass(RevitLinkInstance)
     return collector
 
 # doc   current model document
 def GetAllRevitLinkTypes(doc):
-    """returns all Revit link types in a model"""
+    '''returns all Revit link types in a model'''
     collector = FilteredElementCollector(doc).OfClass(RevitLinkType)
     return collector
 
 # doc               current model document
 # linkInstance:     the linkinstance the type of is to be returned
 def GetRevitLinkTypeFromInstance(doc, linkInstance):
-    """returns all Revit link type from a given instance"""
+    '''returns all Revit link type from a given instance'''
     revitLinkTypes = GetAllRevitLinkTypes(doc)
     for lt in revitLinkTypes:
         if(lt.Id == linkInstance.GetTypeId()):
@@ -246,7 +246,7 @@ def GetRevitLinkTypeFromInstance(doc, linkInstance):
 
 # doc:      current model document
 def DeleteRevitLinks(doc):
-    """deletes all revit links in a file"""
+    '''deletes all revit links in a file'''
     ids = []
     returnvalue = res.Result()
     for p in FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks):
@@ -259,7 +259,7 @@ def DeleteRevitLinks(doc):
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 # worksetconfig: None: to use the previously apllied workset config
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
-    """reloads revit links from a given location based on the original link type name (starts with)"""
+    '''reloads revit links from a given location based on the original link type name (starts with)'''
     returnvalue = res.Result()
     try:
         # get all revit link types in model
@@ -291,7 +291,7 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
 # dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 # worksetconfig: None: to use the previously apllied workset config
 def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
-    """reloads revit links from a given location based on the original link type name (starts with)"""
+    '''reloads revit links from a given location based on the original link type name (starts with)'''
     returnvalue = res.Result()
     try:
         # loop over links supplied
@@ -320,7 +320,7 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
 
 # returns None if multiple or no matches where found
 def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
-    """returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations"""
+    '''returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations'''
     linkPath = None
     counter = 0
     try:
@@ -346,12 +346,12 @@ def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
 # which returns the name unchanged
 # could be replaced with something which i.e. truncates the revision...
 def DefaultLinkName(name):
-    """default 'do something with link name' method"""
+    '''default 'do something with link name' method'''
     return name
 
 # None in this case reloads a link with the last used workset settings
 def DefaultWorksetConfigForReload():
-    """default method for returning a workset configuration"""
+    '''default method for returning a workset configuration'''
     return None
 
 # ------------------------------------------------------- Revit link reporting --------------------------------------------------------------------
@@ -359,7 +359,7 @@ def DefaultWorksetConfigForReload():
 # doc:      current model document
 # revitLinkType:    the revit link type element to get data from
 def GetRevitLinkTypeData(doc, revitLinkType):
-    """returns Revit Link Type data for reporting"""
+    '''returns Revit Link Type data for reporting'''
     # default values
     modelPath = 'unknown'
     isLoaded = False
@@ -387,7 +387,7 @@ def GetRevitLinkTypeData(doc, revitLinkType):
 # doc:      current model document
 # revitFilePath:    the revit host file path
 def GetRevitLinkReportData(doc, revitFilePath):
-    """returns Revit Link data for reporting"""
+    '''returns Revit Link data for reporting'''
     data = []
     collector = GetAllRevitLinkInstances(doc)
     for c in collector:
@@ -417,12 +417,12 @@ def GetRevitLinkReportData(doc, revitFilePath):
 
 # doc   current model document
 def GetImagesTypesInModel(doc):
-    """returns all image link types and image link instances in a model"""
+    '''returns all image link types and image link instances in a model'''
     collector = FilteredElementCollector(doc).OfClass(ImageType)
     return collector
 
 def GetImagesTypeIdsInModel(doc):
-    """returns all image link type Ids and image link instance ids in a model"""
+    '''returns all image link type Ids and image link instance ids in a model'''
     ids = []
     col = GetImagesTypesInModel(doc)
     ids = com.GetIdsFromElementCollector(col)
@@ -430,7 +430,7 @@ def GetImagesTypeIdsInModel(doc):
 
 # doc   current model document
 def SortImageLinkTypesByImportOrLinked(doc):
-    """returns two lists: First one: images linked into model, secon one images saved into model from model itself (no external file reference)"""
+    '''returns two lists: First one: images linked into model, secon one images saved into model from model itself (no external file reference)'''
     imageLink = []
     imageImport = []
     collectorImageTypes = GetImagesTypesInModel(doc)
@@ -443,29 +443,29 @@ def SortImageLinkTypesByImportOrLinked(doc):
 
 # doc   current model document
 def GetAllImageLinkTypeLinkedInModel(doc):
-    """returns all image link types which are external referenced in a model"""
+    '''returns all image link types which are external referenced in a model'''
     imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
     return imageLinks
 
 # doc   current model document
 def GetAllImageLinkTypeImportedInModel(doc):
-    """returns all iamge link types which are imported in a model"""
+    '''returns all iamge link types which are imported in a model'''
     imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
     return imageImport
 
 # doc   current model document
 def GetImageTypeInModel(doc):
-    """returns all image types in a model"""
+    '''returns all image types in a model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RasterImages).WhereElementIsElementType()
 
 # doc   current model document
 def GetImageInstancesInModel(doc):
-    """returns all images placed in a model"""
+    '''returns all images placed in a model'''
     return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RasterImages).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllUnusedImagetypeIdsInModel(doc):
-    """returns all image types placed in a model"""
+    '''returns all image types placed in a model'''
     unusedImages = com.GetNotPlacedTypes(doc, GetImageTypeInModel, GetImageInstancesInModel)
     unusedTypeIds = []
     for i in unusedImages:
@@ -474,9 +474,9 @@ def GetAllUnusedImagetypeIdsInModel(doc):
 
 # doc   current model document
 def GetAllUnusedImagetypeIdsInModelWithGroupCheck(doc):
-    """returns all image types placed in a model but includes group definition check
+    '''returns all image types placed in a model but includes group definition check
     this only returns valid data if at least one instance of the group is placed in the model!!
-    otherwise images in groups which are not placed will not be flagged by this filter!"""
+    otherwise images in groups which are not placed will not be flagged by this filter!'''
     unusedTypeIds = GetAllUnusedImagetypeIdsInModel(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
     unusedTypeIds = com.GetUnusedTypeIdsFromDetailGroups(doc, unusedTypeIds)

@@ -44,7 +44,7 @@ REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 
 # doc:   current model document
 def GetLevelsListAscending(doc):
-    """ this will return a filtered element collector of all levels in the model ascending by project elevation"""
+    ''' this will return a filtered element collector of all levels in the model ascending by project elevation'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToList().OrderBy(lambda l: l.ProjectElevation)
     return collector
 
@@ -68,19 +68,19 @@ def GetLevelReportData(doc, revitFilePath):
 
 # doc:   current model document
 def GetAllLevelHeadsByCategory(doc):
-    """ this will return a filtered element collector of all level head types in the model"""
+    ''' this will return a filtered element collector of all level head types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllLevelTypesByCategory(doc):
-    """ this will return a filtered element collector of all level types in the model"""
+    ''' this will return a filtered element collector of all level types in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllLevelTypeIdsByCategory(doc):
-    """ this will return a filtered element collector of all level type ids in the model"""
+    ''' this will return a filtered element collector of all level type ids in the model'''
     collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(collector)
     return ids
@@ -89,12 +89,12 @@ def GetAllLevelTypeIdsByCategory(doc):
 
 # doc             current document
 def GetUnusedLevelTypesForPurge(doc):
-    """ this will return all ids of unused level types in the model to be purged"""
+    ''' this will return all ids of unused level types in the model to be purged'''
     return com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 0, 6)
 
 # doc             current document
 def GetUnusedLevelHeadFamilies(doc):
-    """ this will return all ids of unused family symbols (types) of level head families"""
+    ''' this will return all ids of unused family symbols (types) of level head families'''
     usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
@@ -114,7 +114,7 @@ def GetUnusedLevelHeadFamilies(doc):
 
 # doc             current document
 def GetAllLevelHeadfamilyTypeIds(doc):
-    """ this will return all ids level head family types in the model"""
+    ''' this will return all ids level head family types in the model'''
     ids = []
     filter = ElementCategoryFilter(BuiltInCategory.OST_LevelHeads)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
@@ -123,5 +123,5 @@ def GetAllLevelHeadfamilyTypeIds(doc):
 
 # doc             current document
 def GetUnusedLevelHeadFamiliesForPurge(doc):
-    """ this will return all ids of unused level head symbols and families to be purged"""
+    ''' this will return all ids of unused level head symbols and families to be purged'''
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedLevelHeadFamilies)

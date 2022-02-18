@@ -37,9 +37,9 @@ class ReadDataFromFile:
 
     # filePath      fully qualified file path to tab separated file
     def _read_tab_separated_file(self, filePath):
-        """
+        '''
         read a tab delimited files into a list of rows
-        """
+        '''
         rowList = []
         try:
             with codecs.open (filePath,'r',encoding='utf-8') as f:

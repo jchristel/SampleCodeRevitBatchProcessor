@@ -123,15 +123,14 @@ VIEWREF_CATEGORYFILTER = List[BuiltInCategory] ([
 def GetReferenceTypeIdsFromViewType(viewType):
     """returns all reference type ids used in view type"""
     dic = {}
-    paras = viewType.GetOrderedParameters()
-    for p in paras:
-        if(p.Definition.BuiltInParameter in VIEW_REFERENCE_PARAMETER_DEF_NAMES):
-            pvalue = com.getParameterValue(p)
+    for pDef in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
+        pValue = com.GetBuiltInParameterValue(viewType, pDef)
+        if(pValue != None):
             # there should only ever be one value per key!
-            if(dic.has_key(p.Definition.BuiltInParameter)):
-                dic[p.Definition.BuiltInParameter].append(pvalue)
+            if(dic.has_key(pDef)):
+                dic[pDef].append(pValue)
             else:
-                dic[p.Definition.BuiltInParameter] = [pvalue]
+                dic[pDef] = [pValue]
     return dic
 
 # doc:   current model document
@@ -228,12 +227,10 @@ def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
     ids = []
     for vrtId in viewRefTypesIds:
         el = doc.GetElement(vrtId)
-        paras = el.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter in VIEW_TAG_SYMBOL_PARAMETER_DEF):
-                pvalue = com.getParameterValue(p)
-                if(pvalue not in ids):
-                    ids.append(pvalue)
+        for pDef in VIEW_TAG_SYMBOL_PARAMETER_DEF:
+            pValue = com.GetBuiltInParameterValue(el, pDef)
+            if (pValue != None and pValue not in ids):
+                ids.append(pValue)
     return ids
 
 # doc:   current model document

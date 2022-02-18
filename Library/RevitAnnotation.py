@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+from xml.etree.ElementTree import PI
 import clr
 import System
 
@@ -44,12 +45,16 @@ REPORT_TEXT_HEADER = ['HOSTFILE','ID', 'NAME']
 
 # doc: current model document
 def GetDimTypes(doc):
-    """returns all dimension types in a model"""
+    '''
+    returns all dimension types in a model
+    '''
     return FilteredElementCollector(doc).OfClass(DimensionType)
 
 # doc: current model document
 def GetDimTypeIds(doc):
-    """returns all dimension type ids in a model"""
+    '''
+    returns all dimension type ids in a model
+    '''
     ids = []
     col = FilteredElementCollector(doc).OfClass(DimensionType)
     ids = com.GetIdsFromElementCollector(col)
@@ -57,7 +62,9 @@ def GetDimTypeIds(doc):
 
 # doc   current model document
 def GetUsedDimTypeIdsInTheModel(doc):
-    """returns all dimension type Ids in the model"""
+    '''
+    returns all dimension type Ids in the model
+    '''
     dimTypeIdsUsed = []
     col = GetAllDimensionElements(doc)
     for v in col:
@@ -67,17 +74,23 @@ def GetUsedDimTypeIdsInTheModel(doc):
 
 # doc   current model document
 def GetAllDimensionElements(doc):
-    """returns all dimension elements in the model"""
+    '''
+    returns all dimension elements in the model
+    '''
     return FilteredElementCollector(doc).OfClass(Dimension)
 
 # doc   current model document
 def GetAllMultiRefAnnotationTypes(doc):
-    """returns all multireference annotation types in the model"""
+    '''
+    returns all multireference annotation types in the model
+    '''
     return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
 
 # doc   current model document
 def GetAllMultiRefAnnotationTypeIds(doc):
-    """returns all multireference annotation type ids in the model"""
+    '''
+    returns all multireference annotation type ids in the model
+    '''
     ids = []
     col = FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
     ids = com.GetIdsFromElementCollector(col)
@@ -85,12 +98,16 @@ def GetAllMultiRefAnnotationTypeIds(doc):
 
 # doc   current model document
 def GetAllMultiRefAnnotationElements(doc):
-    """returns all multireference annotation elements in the model"""
+    '''
+    returns all multireference annotation elements in the model
+    '''
     return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotation)
 
 # doc   current model document
 def GetUsedMultiRefDimTypeIdsInTheModel(doc):
-    """returns all ids of multireference types used by elements in the model"""
+    '''
+    returns all ids of multireference types used by elements in the model
+    '''
     dimTypeIdsUsed = []
     col = GetAllMultiRefAnnotationElements(doc)
     for v in col:
@@ -100,14 +117,18 @@ def GetUsedMultiRefDimTypeIdsInTheModel(doc):
 
 # doc   current model document
 def GetAllSimilarMultiReferenceAnnoTypes(doc):
-    """returns all multireference annotation types from similar types in the model"""
+    '''
+    returns all multireference annotation types from similar types in the model
+    '''
     multiReferenceAnnoTypes = com.GetSimilarTypeFamiliesByType(doc, GetAllMultiRefAnnotationTypes)
     return multiReferenceAnnoTypes 
 
 # doc   current model document
 # multiReferenceAnnoTypes   :list in format [[multireftype, [element ids of similar multi ref types, ...]]]
 def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
-    """returns all dimension styles used in multi ref annotation"""
+    '''
+    returns all dimension styles used in multi ref annotation
+    '''
     dimTypeIdsUsed = []
     for mType in multiReferenceAnnoTypes:
         for t in mType[1]:
@@ -118,12 +139,16 @@ def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
 
 # doc   current model document
 def GetAllUnusedMultiRefDimTypeIdsInModel(doc):
-    """returns IDs of unused multiref dimension types in the model"""
+    '''
+    returns IDs of unused multiref dimension types in the model
+    '''
     return com.GetUnusedTypeIdsInModel(doc, GetAllMultiRefAnnotationTypes, GetUsedMultiRefDimTypeIdsInTheModel)
 
 # doc   current model document
 def GetAllUnusedDimTypeIdsInModel(doc):
-    """returns ID of unused dim types in the model"""
+    '''
+    returns ID of unused dim types in the model
+    '''
     # get unused dimension type ids
     filteredUnusedDimTypeIds = com.GetUnusedTypeIdsInModel(doc, GetDimTypes, GetUsedDimTypeIdsInTheModel)
     # get all multiref dimension types in model
@@ -141,12 +166,14 @@ def GetAllUnusedDimTypeIdsInModel(doc):
 
 # doc   current model document
 def GetAllTextTypes(doc):
-    """returns all text types in the model"""
+    '''
+    returns all text types in the model
+    '''
     return FilteredElementCollector(doc).OfClass(TextElementType)
 
 # doc   current model document
 def GetAllTextTypeIds(doc):
-    """returns all text type ids in the model"""
+    '''returns all text type ids in the model'''
     ids = []
     col = FilteredElementCollector(doc).OfClass(TextElementType)
     ids = com.GetIdsFromElementCollector(col)
@@ -154,12 +181,16 @@ def GetAllTextTypeIds(doc):
 
 # doc   current model document
 def GetAllTextAnnotationElements(doc):
-    """returns all text annotation elements in the model"""
+    '''
+    returns all text annotation elements in the model
+    '''
     return FilteredElementCollector(doc).OfClass(TextElement)
 
 # doc   current model document
 def GetUsedTextTypeIdsInTheModel(doc):
-    """returns all ids of text types used by elements in the model, includes types used in schedules (appearance)!"""
+    '''
+    returns all ids of text types used by elements in the model, includes types used in schedules (appearance)!
+    '''
     textTypeIdsUsed = []
     col = GetAllTextAnnotationElements(doc)
     for t in col:
@@ -178,7 +209,9 @@ def GetUsedTextTypeIdsInTheModel(doc):
 
 # doc   current model document
 def GetAllUnusedTextTypeIdsInModel(doc):
-    """returns ID of unused text types in the model"""
+    '''
+    returns ID of unused text types in the model
+    '''
     filteredUnusedTextTypeIds = com.GetUnusedTypeIdsInModel(doc, GetAllTextTypes, GetUsedTextTypeIdsInTheModel)
     return filteredUnusedTextTypeIds
 
@@ -193,12 +226,13 @@ ARROWHEAD_PARAS_DIM = [
     BuiltInParameter.WITNS_LINE_TICK_MARK
 ]
 
-""" list of built in parameters attached to 
+''' 
+list of built in parameters attached to 
       - text 
       - independent tags 
       - Annotation symbols
     containing arrow head ids
-"""
+'''
 ARROWHEAD_PARAS_TEXT = [
     BuiltInParameter.LEADER_ARROWHEAD
 ]
@@ -218,32 +252,35 @@ ARROWHEAD_PARAS_STAIRS_PATH = [
 
 # doc: current model
 def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
-    """returns all arrow head ids used in dim types in a model"""
+    '''
+    returns all arrow head ids used in dim types in a model
+    '''
     usedIds = []
     types = typeGetter(doc)
     for t in types:
-        paras = t.GetOrderedParameters()
-        for p in paras:
-            for pInt in parameterList:
-                if (p.Definition.BuiltInParameter == pInt):
-                    id = com.getParameterValue(p)
-                    if(id not in usedIds and id != ElementId.InvalidElementId):
-                        usedIds.append(id)
-                    break
+        for pInt in parameterList:
+            id = com.GetBuiltInParameterValue(t, pInt)
+            if(id not in usedIds and id != ElementId.InvalidElementId and id != None):
+                usedIds.append(id)
+            break
     return usedIds
 
 #--------------------------------------
 
 # doc: current model
 def GetDimTypeArrowHeadIds(doc):
-    """returns all arrow head ids used in dim types in a model"""
+    '''
+    returns all arrow head ids used in dim types in a model
+    '''
     usedIds = GetArrowHeadIdsFromType(doc, GetDimTypes, ARROWHEAD_PARAS_DIM)
     return usedIds
                         
 #--------------------------------------
 
 def GetTextTypeArrowHeadIds(doc):
-    """returns all arrow head ids used in text types in a model"""
+    '''
+    returns all arrow head ids used in text types in a model
+    '''
     usedIds = GetArrowHeadIdsFromType(doc, GetAllTextTypes, ARROWHEAD_PARAS_TEXT)
     return usedIds
 
@@ -251,34 +288,38 @@ def GetTextTypeArrowHeadIds(doc):
 
 # doc   current model document
 def GetAllIndependentTags(doc):
-    """returns all text types in the model"""
+    '''
+    returns all text types in the model
+    '''
     return FilteredElementCollector(doc).OfClass(IndependentTag)
 
 def GetIndependentTagTypeArrowHeadIds(doc):
-    """returns all arrow head ids used in independent tag types in a model"""
+    '''
+    returns all arrow head ids used in independent tag types in a model
+    '''
     usedIds = []
     tags = GetAllIndependentTags(doc)
     for t in tags:
         tTypeId = t.GetTypeId()
         tTypeElement = doc.GetElement(tTypeId)
-        paras = tTypeElement.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter == BuiltInParameter.LEADER_ARROWHEAD):
-                id = com.getParameterValue(p)
-                if(id not in usedIds and id != ElementId.	InvalidElementId):
-                    usedIds.append(id)
-                break
+        id = com.GetBuiltInParameterValue(tTypeElement, BuiltInParameter.LEADER_ARROWHEAD)
+        if(id not in usedIds and id != ElementId.InvalidElementId and id != None):
+            usedIds.append(id)
     return usedIds
 
 # -----------------------------------------------
 
 # doc   current model document
 def GetAllSpotDimTypes(doc):
-    """returns all spot Dim types in the model"""
+    '''
+    returns all spot Dim types in the model
+    '''
     return FilteredElementCollector(doc).OfClass(SpotDimensionType)
 
 def GetSpotTypeArrowHeadIds(doc):
-    """returns all arrow head ids used in text types in a model"""
+    '''
+    returns all arrow head ids used in text types in a model
+    '''
     usedIds = GetArrowHeadIdsFromType(doc, GetAllSpotDimTypes, ARROWHEAD_PARAS_SPOT_DIMS)
     return usedIds
 
@@ -286,7 +327,9 @@ def GetSpotTypeArrowHeadIds(doc):
 
 # doc   current model document
 def GetAllAnnoSymbolTypes(doc):
-    """returns all annotation symbol types, area tag types, room tag types in the model"""
+    '''
+    returns all annotation symbol types, area tag types, room tag types in the model
+    '''
     types = []
     col = FilteredElementCollector(doc).OfClass(FamilySymbol)
     for c in col:
@@ -295,7 +338,9 @@ def GetAllAnnoSymbolTypes(doc):
     return types
 
 def GetAnnoSymbolArrowHeadIds(doc):
-    """returns all arrow head ids used in text types in a model"""
+    '''
+    returns all arrow head ids used in text types in a model
+    '''
     usedIds = GetArrowHeadIdsFromType(doc, GetAllAnnoSymbolTypes, ARROWHEAD_PARAS_TEXT)
     return usedIds
 
@@ -303,11 +348,15 @@ def GetAnnoSymbolArrowHeadIds(doc):
 
 # doc   current model document
 def GetAllStairPathTypes(doc):
-    """returns all stairs path types in the model"""
+    '''
+    returns all stairs path types in the model
+    '''
     return FilteredElementCollector(doc).OfClass(StairsPathType)
         
 def GetStairsPathArrowHeadIds(doc):
-    """returns all arrow head ids used in stairs path types in a model"""
+    '''
+    returns all arrow head ids used in stairs path types in a model
+    '''
     usedIds = GetArrowHeadIdsFromType(doc, GetAllStairPathTypes, ARROWHEAD_PARAS_STAIRS_PATH)
     return usedIds
 
@@ -315,8 +364,10 @@ def GetStairsPathArrowHeadIds(doc):
 
 # doc   current model document
 def GetAllUsedArrowHeadTypeIdsInModel(doc):
-    """returns all used arrow types in the model considering dimension, text, 
-    independent tags, spot dims, annotation symbols (incl room and area tags), stairs path"""
+    '''
+    returns all used arrow types in the model considering dimension, text, 
+    independent tags, spot dims, annotation symbols (incl room and area tags), stairs path
+    '''
     usedIds = []
     usedIds = usedIds + GetDimTypeArrowHeadIds(doc)
     usedIds = usedIds + GetTextTypeArrowHeadIds(doc)
@@ -332,7 +383,9 @@ def GetAllUsedArrowHeadTypeIdsInModel(doc):
 
 # doc   current model document
 def GetArrowTypesInModel(doc):
-    """returns all arrow types in the model"""
+    '''
+    returns all arrow types in the model
+    '''
     types = []
     similarTypes = []
     col = FilteredElementCollector(doc).OfClass(ElementType)
@@ -346,7 +399,9 @@ def GetArrowTypesInModel(doc):
 
 # doc   current model document
 def GetArrowTypesIdsInModel(doc):
-    """returns all arrow type ids in the model"""
+    '''
+    returns all arrow type ids in the model
+    '''
     arrowTypes = GetArrowTypesInModel(doc)
     ids = []
     for at in arrowTypes:
@@ -356,7 +411,9 @@ def GetArrowTypesIdsInModel(doc):
 
 # doc   current model document
 def GetAllUnusedArrowTypeIdsInModel(doc):
-    """returns all unused arrow type ids in the model"""
+    '''
+    returns all unused arrow type ids in the model
+    '''
     unusedIds = []
     usedIds = GetAllUsedArrowHeadTypeIdsInModel(doc)
     availableIds = GetArrowTypesIdsInModel(doc)
@@ -371,62 +428,61 @@ def GetAllUnusedArrowTypeIdsInModel(doc):
 
 # doc   current model document
 def GetSymbolIdsFromDimTypes(doc):
-    '''returns all symbol ids used as centre line symbol from all dim styles in the model'''
+    '''
+    returns all symbol ids used as centre line symbol from all dim styles in the model
+    '''
     ids = []
     dimTs = GetDimTypes(doc)
     for t in dimTs:
-        paras = t.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter == BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL):
-                id = com.getParameterValue(p)
-                if(id not in ids and id != ElementId.InvalidElementId):
-                    ids.append(id)
-                break
+        id = com.GetBuiltInParameterValue(t, BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
+        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+            ids.append(id)
     return ids
 
 # doc   current model document
 def GetSymbolIdsFromSpotTypes(doc):
-    '''returns all symbol ids used as symbol from all spot elevation and coordinate'''
+    '''
+    returns all symbol ids used as symbol from all spot elevation and coordinate
+    '''
     ids = []
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        paras = t.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter == BuiltInParameter.SPOT_ELEV_SYMBOL):
-                id = com.getParameterValue(p)
-                if(id not in ids and id != ElementId.InvalidElementId):
-                    ids.append(id)
-                break
+        id = com.GetBuiltInParameterValue(t, BuiltInParameter.SPOT_ELEV_SYMBOL)
+        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+            ids.append(id)
     return ids
 
 # doc   current model document
 def GetAllSpotElevationSymbolsInModel(doc):
-    '''returns all symbol of category Spot Elevation Symbol in model'''
+    '''
+    returns all symbol of category Spot Elevation Symbol in model
+    '''
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_SpotElevSymbols)
     return col
 
 # doc   current model document
 def GetAllSpotElevationSymbolIdsInModel(doc):
-    '''returns all symbol of category Spot Elevation Symbol in model'''
+    '''
+    returns all symbol of category Spot Elevation Symbol in model
+    '''
     col = GetAllSpotElevationSymbolsInModel(doc)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
 # doc   current model document
 def GetUnusedSymbolIdsFromSpotTypes(doc):
-    '''returns all symbol ids not used as symbol from all spot elevation and coordinate'''
+    '''
+    returns all symbol ids not used as symbol from all spot elevation and coordinate
+    '''
     ids = []
     idsUsed = []
     idsAvailable = GetAllSpotElevationSymbolIdsInModel(doc)
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        paras = t.GetOrderedParameters()
-        for p in paras:
-            if (p.Definition.BuiltInParameter == BuiltInParameter.SPOT_ELEV_SYMBOL):
-                id = com.getParameterValue(p)
-                if(id not in idsUsed and id != ElementId.InvalidElementId):
-                    idsUsed.append(id)
-                break
+        id = com.GetBuiltInParameterValue(t, BuiltInParameter.SPOT_ELEV_SYMBOL)
+        if(id not in idsUsed and id != ElementId.InvalidElementId and id != None):
+            idsUsed.append(id)
+                
     # get unused ids
     for id in idsAvailable:
         if(id not in idsUsed):
@@ -435,8 +491,8 @@ def GetUnusedSymbolIdsFromSpotTypes(doc):
 
 # doc   current model document
 def GetUnusedSymbolIdsFromSpotTypesToPurge(doc):
-    """get all un used symbol ids of category
+    '''get all un used symbol ids of category
     BuiltInCategory.OST_SpotElevSymbols
-    """
+    '''
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedSymbolIdsFromSpotTypes)
     return ids

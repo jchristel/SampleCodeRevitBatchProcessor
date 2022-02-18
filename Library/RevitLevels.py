@@ -100,12 +100,9 @@ def GetUnusedLevelHeadFamilies(doc):
     # get family symbol in use at level as symbol
     for lId in usedTypes:
         type = doc.GetElement(lId)
-        paras = type.GetOrderedParameters()
-        for p in paras:
-            if(p.Definition.BuiltInParameter == BuiltInParameter.LEVEL_HEAD_TAG):
-                if (com.getParameterValue(p) not in headsInUseIds):
-                    headsInUseIds.append(com.getParameterValue(p))
-                break
+        id = com.GetBuiltInParameterValue(type, BuiltInParameter.LEVEL_HEAD_TAG)
+        if(id != None and id not in headsInUseIds):
+            headsInUseIds.append(id)
     # get all level head symbols available
     allSymbolsInModel = GetAllLevelHeadsByCategory(doc)
     unusedSymbolIds = []

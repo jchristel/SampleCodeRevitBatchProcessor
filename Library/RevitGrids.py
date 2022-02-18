@@ -109,11 +109,9 @@ def GetGridTypeIdByName (doc, gridtypeName):
 def FilterGridByParameterAndValue(g, paraName, paraCondition, conditionValue):
     ruleMatch = False
     # loop over parameters and compare value as required
-    paras = g.GetOrderedParameters()
-    for p in paras:
-        if(p.Definition.Name == paraName):
-            ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
-            break
+    pValue = com.GetParameterValueByName(g, paraName)
+    if (pValue != None):
+        ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
     return ruleMatch
 
 # returns true if a given grid and its type match the condition supplied
@@ -132,12 +130,10 @@ def FilterGridByTypeName(doc, g, paraCondition, conditionValue):
 # paraCondition: the test condition method
 # conditionValue: the parameter condition value to check against
 def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
-    paras = g.GetOrderedParameters()
     ruleMatch = False
-    for p in paras:
-        if(p.Definition.Name == paraName):
-            ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
-            break
+    pValue = com.GetParameterValueByName(g, paraName)
+    if (pValue != None):
+        ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
     return ruleMatch
 
 # returns the maximum extent of a grid as a string:
@@ -282,12 +278,9 @@ def GetUnusedGridHeadFamilies(doc):
     headsInUseIds = []
     for Id in usedTypes:
         type = doc.GetElement(Id)
-        paras = type.GetOrderedParameters()
-        for p in paras:
-            if(p.Definition.BuiltInParameter == BuiltInParameter.GRID_HEAD_TAG):
-                if (com.getParameterValue(p) not in headsInUseIds):
-                    headsInUseIds.append(com.getParameterValue(p))
-                break
+        id = com.GetBuiltInParameterValue(type, BuiltInParameter.GRID_HEAD_TAG)
+        if (id != None and id not in headsInUseIds):
+            headsInUseIds.append(id)
     allSymbolsInModel = GetAllGridHeadsByCategory(doc)
     unusedSymbolIds = []
     for  symbolInModel in  allSymbolsInModel:

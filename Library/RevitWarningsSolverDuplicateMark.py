@@ -55,12 +55,10 @@ class RevitWarningsSolverDuplicateMark:
                     # check whether element passes filter
                     if(self.filter(doc, elid, self.filterValues)):
                         try:
-                            #p = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
-                            paras = element.GetOrderedParameters()
-                            for p in paras:
-                                if(p.Definition.BuiltInParameter == BuiltInParameter.ALL_MODEL_MARK):
-                                    result = com.setParameterValue(p, '', doc)
-                                    returnvalue.Update(result)
+                            pValue = com.GetBuiltInParameterValue(element, BuiltInParameter.ALL_MODEL_MARK)
+                            if (pValue != None):
+                                result = com.setParameterValue(p, '', doc)
+                                returnvalue.Update(result)
                         except Exception as e:
                             returnvalue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
                     else:

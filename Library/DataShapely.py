@@ -417,7 +417,6 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                         pass
                                     except Exception as e:
                                         print(e)
-
                 else:
                     result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName][0][0].levelName))
             else:

@@ -385,14 +385,11 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
         for el in elements:
             if(excludeSharedFam):
                 fam = el.Family
-                paras = fam.GetOrderedParameters()
-                parameterMatch = False
-                for p in paras:
-                    if(p.Definition.BuiltInParameter == BuiltInParameter.FAMILY_SHARED):
-                        parameterMatch = True
-                        if(com.getParameterValue(p) == 'No' and el.Id not in ids):
-                            ids.append(el.Id)
-                        break
+                pValue = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
+                if(pValue != None):
+                    parameterMatch = True
+                    if(pValue == 'No' and el.Id not in ids):
+                        ids.append(el.Id)
                 if(parameterMatch == False):
                     # family cant be of type shared...
                     ids.append(el.Id)

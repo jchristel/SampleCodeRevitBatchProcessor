@@ -258,12 +258,10 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     """ gets the ids returned from stair type belonging to parameter list passt in"""
     ids = []
     stairType = doc.GetElement(stairTypeId)
-    typeParas = stairType.GetOrderedParameters()
-    for tp in typeParas:
-        if(tp.Definition.BuiltInParameter in paras):
-            pvalue = com.getParameterValue(tp)
-            if(pvalue not in ids):
-                ids.append(pvalue)
+    for pDef in paras:
+        pValue = com.GetBuiltInParameterValue(stairType, pDef)
+        if(pValue !=None and pValue not in ids):
+            ids.append(pValue)
     return ids
 
 # doc   current document

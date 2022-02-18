@@ -140,13 +140,9 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
     ids = []
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
-        paras = repeatDetail.GetOrderedParameters()
-        for p in paras:
-            if(p.Definition.BuiltInParameter == BuiltInParameter.REPEATING_DETAIL_ELEMENT):
-                id = com.getParameterValue(p)
-                if(id not in ids and id != ElementId.InvalidElementId):
-                    ids.append(id)
-                break
+        id = com.GetBuiltInParameterValue(repeatDetail, BuiltInParameter.REPEATING_DETAIL_ELEMENT)
+        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+            ids.append(id)
     return ids
 
 # doc:   current model document

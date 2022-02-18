@@ -444,10 +444,9 @@ def GetAllModelTextElementsInFamily(doc):
 
 def SortElementsByCategory(elements, elementDic):
     for el in elements:
-        paras = el.GetOrderedParameters()
-        for p in paras:
-            if(p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB ):
-                value = com.getParameterValue(p)
+        for builinDef in ELEMENTS_PARAS_SUB:
+            value = com.GetBuiltInParameterValue(el, builinDef)
+            if (value != None):
                 if(value in elementDic):
                     elementDic[value].append(el.Id)
                 else:

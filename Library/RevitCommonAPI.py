@@ -476,7 +476,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
 # dependentElements   list of elements ids               
 def FilterOutWarnings(doc, dependentElements):
     '''attempts to filter out any warnings from ids supplied by checking the workset name
-    of each element for 'Reviewable Warnings''''
+    of each element for 'Reviewable Warnings'''
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)

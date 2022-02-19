@@ -23,6 +23,7 @@
 
 import json
 import DataGeometry
+import DataDesignSetOption
 
 class DataRoom():
     dataType = 'room'
@@ -34,6 +35,7 @@ class DataRoom():
         self.levelName = '-'
         self.levelId = '-'
         self.geometry = [[]]
+        self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
         self.functionNumber = '-'
         self.associatedElements = []
         if(len(j) > 0 ):

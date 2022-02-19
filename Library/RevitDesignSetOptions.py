@@ -40,16 +40,19 @@ REPORT_DESIGNSET_HEADER = ['HOSTFILE','ID', 'NAME', 'PRIMARY OPTION', 'OTHER OPT
 
 # --------------------------------------------- utility functions ------------------
 
-# returns a collector containing all design options in a model
 # doc   current document
 def GetDesignOptions(doc):
+    '''
+    returns a collector containing all design options in a model
+    '''
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     return collector
 
-
-# returns a list of all the design sets in a model
 # doc   current document
 def GetDesignSets(doc):
+    '''
+    returns a list of all the design sets in a model
+    '''
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     designSets = []
     designSetNames = []
@@ -60,3 +63,55 @@ def GetDesignSets(doc):
             designSets.append(do)
             designSetNames.append(designSetName)
     return designSets
+
+# doc                 current document
+# designSetName       the name (string) of the design set the option belongs to
+# designOptionName    the name (string) of the design option to be checked
+def IsDesignOptionPrimary(doc, designSetName, designOptionName):
+    '''
+    returns bool if design option is primary
+    '''
+    collector = FilteredElementCollector(doc).OfClass(DesignOption)
+    isPrimary = False
+    # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
+    for do in collector:
+        designOName = Element.Name.GetValue(do)
+        # check if primray in name if so remove...( this is language agnostic!!!!!)
+        if (designOName.endswith(' (primary)')):
+            designOName = designOName[:-len(' (primary)')]
+        # design set
+        e = doc.GetElement(do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId())
+        designSName = Element.Name.GetValue(e)
+        # check for match on both set and option
+        if(designSName == designSetName and designOName == designOptionName):
+            # get isPriamry property on design option
+            isPrimary = do.IsPrimary
+            break
+    return isPrimary
+
+# doc   current document
+# element   the element of which thes desin set/option  data is to be returned
+def GetDesignSetOptionInfo(doc, element):
+    '''
+    returns tuple: 
+    index 0   Design Set Name (can be either Main Model or the design set name)
+    index 1   Design Option Name (empty string if Main Model
+    index 2   Bool indicating whether design option is primary (true also if Main Model)
+    '''
+    # keys match properties in DataDesignSetOption class!!
+    new_key= ['designSetName','designOptionName','isPrimary']
+    new_value= ['Main Model','-',True]
+    dic = dict(zip(new_key,new_value))
+    # get design option data from element
+    pValue = com.GetBuiltInParameterValue(element, BuiltInParameter.DESIGN_OPTION_PARAM)
+    if(pValue != None):
+        designOptionData = pValue.split(':')
+        # check if main model ( length is 1! )
+        if(len(designOptionData) > 1):
+            dic['designSetName'] = designOptionData[0].Trim()
+            dic['designOptionName'] = designOptionData[1].Trim()
+            dic['isPrimary'] = IsDesignOptionPrimary(doc, dic['designSetName'], dic['designOptionName'])
+        else:
+            # use default values
+            pass
+    return dic

@@ -29,6 +29,7 @@ import RevitCommonAPI as com
 import Result as res
 import Utility as util
 import RevitGeometry as rGeo
+import RevitDesignSetOptions as rDesignO
 import DataRoom as dRoom
 import DataGeometry as dGeometry
 
@@ -210,6 +211,7 @@ def PopulateDataRoomObject(doc, revitRoom):
             roomPointGroupsAsDoubles.append(dgeoConverted)
         dataR.geometry = roomPointGroupsAsDoubles
         # get other data
+        dataR.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
         dataR.id = revitRoom.Id.IntegerValue
         dataR.name = Element.Name.GetValue(revitRoom).encode('utf-8')
         dataR.number = revitRoom.Number.encode('utf-8')

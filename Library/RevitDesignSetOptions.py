@@ -93,10 +93,10 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
 # element   the element of which thes desin set/option  data is to be returned
 def GetDesignSetOptionInfo(doc, element):
     '''
-    returns tuple: 
-    index 0   Design Set Name (can be either Main Model or the design set name)
-    index 1   Design Option Name (empty string if Main Model
-    index 2   Bool indicating whether design option is primary (true also if Main Model)
+    returns dictionary: 
+    designSetName       Design Set Name (can be either Main Model or the design set name)
+    designOptionName    Design Option Name (empty string if Main Model
+    isPrimary           Bool indicating whether design option is primary (true also if Main Model)
     '''
     # keys match properties in DataDesignSetOption class!!
     new_key= ['designSetName','designOptionName','isPrimary']

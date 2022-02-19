@@ -23,6 +23,7 @@
 
 import json
 import DataGeometry
+import DataDesignSetOption
 
 class DataCeiling():
     dataType = 'ceiling'
@@ -36,10 +37,11 @@ class DataCeiling():
         self.levelId = '-'
         self.offsetFromLevel = 0.0
         self.geometry = [[]]
+        self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
         self.associatedElements = []
         if(len(j) > 0 ):
             self.__dict__ = json.loads(j)
-            # custom desirialisation code...
+            # custom deserialisation code...
             geoDataList = []
             for item in self.geometry:
                 if('dataType' in item):

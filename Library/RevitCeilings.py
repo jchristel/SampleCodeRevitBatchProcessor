@@ -28,9 +28,11 @@ import System
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 import RevitGeometry as rGeo
+import RevitDesignSetOptions as rDesignO
 import DataCeiling as dCeiling
 import Utility as util
 import DataGeometry as dGeometry
+
 
 # import Autodesk
 from Autodesk.Revit.DB import *
@@ -271,6 +273,7 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             ceilingPointGroupsAsDoubles.append(dgeoConverted)
         dataC.geometry = ceilingPointGroupsAsDoubles
         # get other data
+        dataC.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)
         ceilingTypeId = revitCeiling.GetTypeId()
         ceilingType = doc.GetElement(ceilingTypeId)
         dataC.id = revitCeiling.Id.IntegerValue

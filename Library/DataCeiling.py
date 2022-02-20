@@ -51,6 +51,8 @@ class DataCeiling():
                     else:
                         print('no data type in item')
             self.geometry = geoDataList
+            # initialise design option
+            self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(self.designSetAndOption)
 
     @property
     def DataType(self):

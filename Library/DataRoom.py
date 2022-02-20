@@ -49,6 +49,8 @@ class DataRoom():
                 else:
                     print('no data type in item')
             self.geometry = geoDataList
+            # initialise design option
+            self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(self.designSetAndOption)
 
     def to_json(self):
         '''

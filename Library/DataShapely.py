@@ -22,17 +22,10 @@
 #
 
 import sys
-from collections import namedtuple
 import codecs
-import json
 
 import shapely.geometry as sg
 import shapely.ops as so
-
-import matplotlib.pyplot as plt
-from matplotlib.path import Path
-from matplotlib.patches import PathPatch
-from matplotlib.collections import PatchCollection
 
 import numpy as np
 
@@ -40,60 +33,6 @@ import Result as res
 import DataCeiling as dc
 import DataRoom as dr
 import DataReadFromFile as dReader
-
-# --------------- printing to matplotlib ------------------
-# mat plot lib is used to visually check whether code generates the right shapely objects
-
-colourKeysInterSectTypes = {
-    'contains' : (0.2, 0.4, 1.0, 0.8), # royal blue (65,105,225) 
-    'covers' : (0.5, 0.9, 0.5, 0.8), # light green (144,238,144)
-    'toSmall' : (0.9, 0.5, 0.5, 0.8), # light coral (240,128,128)
-    'crosses' : (0.1, 0.5, 0.1, 0.8), # forest green (34,139,34)
-    'overlaps' : (1.0, 0.0, 0.5, 0.8), # deep pink (255,20,147)
-    'intersects' : (0.0, 0.7, 1.0, 0.8),  # deep sky blue (0,191,255)
-    'disjointed' : (0.1, 0.1, 0.1, 0.3) # light grey
-}
-
-def plot_polygon(ax, poly, **kwargs):
-    '''
-    # Plots a Polygon to pyplot `ax`
-    https://stackoverflow.com/questions/55522395/how-do-i-plot-shapely-polygons-and-objects-using-matplotlib
-    '''
-    path = Path.make_compound_path(
-        Path(np.asarray(poly.exterior.coords)[:, :2]),
-        *[Path(np.asarray(ring.coords)[:, :2]) for ring in poly.interiors])
-
-    patch = PathPatch(path, **kwargs)
-    collection = PatchCollection([patch], **kwargs)
-    
-    ax.add_collection(collection, autolim=True)
-    ax.autoscale_view()
-    return collection
-
-plotPolygonData = namedtuple('plotPolygonData', 'polygon foreGroundColour edgecolor, lineWeight')
-
-# polygons                  named tuple with properties
-#       polygon            shapely polygons
-#       foreGroundColour    forground colour
-def plotPolygons(polygons, fileName = ''):
-    '''
-    prints polygons
-    '''
-    multiPolygons = []
-    for p in polygons:
-        multiPolygons.append(p.polygon)
-    new_shape = sg.MultiPolygon(multiPolygons)
-    fig, axs = plt.subplots()
-    axs.set_aspect('equal', 'datalim')
-
-    counter = 0
-    for geom in new_shape:
-        plot_polygon(axs, geom, facecolor=polygons[counter].foreGroundColour, edgecolor=polygons[counter].edgecolor, linewidth=polygons[counter].lineWeight)
-        counter += 1
-    if(fileName == ''):
-        plt.show()
-    else:
-        plt.savefig(fileName)
 
 # --------------- generics shape creation ------------------
 
@@ -238,13 +177,14 @@ def ReadData(filePath):
 
 # --------------- data processing ------------------
 
-
-# method writing out report information
 # fileName:         fully qualified file path
 # header:           list of column headers, provide empty list if not required!
 # data:             list of list of strings representing row data
 # writeType         w: new file, a: append to existing file...
 def writeReportData(fileName, header, data, writeType = 'w'):
+    '''
+    method writing out report information
+    '''
     with codecs.open(fileName, writeType, encoding='utf-8') as f:
         # check if header is required
         if(len(header) > 0):
@@ -259,7 +199,15 @@ def writeReportData(fileName, header, data, writeType = 'w'):
                     f.write(d[0] + '\n')
         f.close()
 
+# dataReader        ReadDataFromFile class instance
 def BuildDictionaryByLevelAndDataType(dataReader):
+    '''
+    returns a dictionary where 
+    - key is the level name
+    - values is a list of list of data objects
+    -       first list rooms
+    -       second list ceilings
+    '''
     dic = {}
     for dObject in dataReader.data:
         if(dObject.levelName not in dic):
@@ -268,11 +216,15 @@ def BuildDictionaryByLevelAndDataType(dataReader):
             dic[dObject.levelName] = (roomsByLevel, ceilingsByLevel)
     return dic
 
-
-
-
+# geoObjects        a list of instances of the the same type (i.e DataRoom)
+# dataType          string humna raadable identifying the data type ( each Data... class hass this as a static field: dr.DataRoom.dataType)
 def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
-
+    '''
+    convertes polygon points from DataGeoemtry instances to shapely polygon instances
+    and returnts them as a dictionary where
+    - key is the geometry objects id
+    - value is a list of shapely polygons
+    '''
     multiPolygons = {}
     for i in range (len(geoObjects)):
         multiPolygons[geoObjects[i].id] = []
@@ -282,34 +234,91 @@ def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
                 multiPolygons[geoObjects[i].id].append(p)
     return multiPolygons
 
+# associatedDataRows    list of list of strings
+def SortMultipleDataRows(associatedDataRows, roomData):
+    '''
+    collapses multiple ceilings of one type in one with multiple ids
+    works for ceilings only in the moment
+    '''
+    data = []
+    if (len(associatedDataRows)>0):
+        # build dictionary based on unique keys
+        dic = {}
+        for row in associatedDataRows:
+            # Build unique key from type mark, offset from level, design set name, design option name, isPrimary
+            key = row[0] + row[2] + row[5] + row[6] + row[7]
+            if(key in dic):
+                dic[key].append(row)
+            else:
+                dic[key] = [row]
+        # loop over dic and check whether some have multiple entries
+        for entry in dic:
+            if(len(dic[entry]) > 1):
+                # get all ids
+                ids = []
+                for d in dic[entry]:
+                    ids.append(d[4])
+                # build rest of data but replace id field
+                newDataRow = list(roomData)
+                counter = 0
+                for d in dic[entry][0]:
+                    if(counter == 4):
+                        newDataRow.append(','.join(ids))
+                    else:
+                        newDataRow.append(d)
+                    counter = counter + 1
+                data.append(newDataRow)
+            else:
+                newDataRow = list(roomData)
+                for dList in dic[entry]:
+                    for d in dList:
+                        newDataRow.append(d)
+                data.append(newDataRow)
+    else:
+        # just return the room data since no matching ceiling was found
+        data.append(roomData)
+    return data
+
+# dicObject         dictionary where key is the level name and values is a lsit of DataRoom instances
 def GetReportData(dicObject):
+    '''
+    convertes a dictionary of DataRoom objects by level into list of lists of data entries per room
+    '''
     data = []
     for levelName in dicObject:
         for room in dicObject[levelName][0]:
-            datarow = [room.functionNumber, room.number, room.name, room.levelName, str(room.id)]
+            datarow = [
+                room.functionNumber, 
+                room.number, 
+                room.name, 
+                room.levelName, 
+                str(room.id),
+                room.designSetAndOption.designSetName,
+                room.designSetAndOption.designOptionName,
+                str(room.designSetAndOption.isPrimary)
+                ]
             associatedDataRows = []
             for associatedElement in room.associatedElements:
                 # only add ceiling data for now
                 if(associatedElement.dataType == dc.DataCeiling.dataType):
-                    associatedDataRow = [associatedElement.typeMark, associatedElement.typeName, str(associatedElement.offsetFromLevel), associatedElement.levelName, str(associatedElement.id)]
+                    associatedDataRow = [
+                        associatedElement.typeMark, 
+                        associatedElement.typeName, 
+                        str(associatedElement.offsetFromLevel), 
+                        associatedElement.levelName, 
+                        str(associatedElement.id),
+                        associatedElement.designSetAndOption.designSetName,
+                        associatedElement.designSetAndOption.designOptionName,
+                        str(associatedElement.designSetAndOption.isPrimary)
+                        ]
                     associatedDataRows.append(associatedDataRow)
-            if(len(associatedDataRows) > 1):
-                # multiple ceilings found
-                for d in associatedDataRows:
-                    newDataRow = list(datarow)
-                    for entry in d:
-                        newDataRow.append(entry)
-                    data.append(newDataRow)
-            else:
-                # single ceiling entry found
-                for d in associatedDataRows:
-                    for entry in d:
-                        datarow.append(entry)
-                data.append(datarow)
-    return data
-        
             
-
+            # get the data as list of strings. Collapse multiple ceilings of the same type into one entry
+            # with mutliplt ids
+            dataBySomething = SortMultipleDataRows(associatedDataRows, datarow)
+            for d in dataBySomething:
+                data.append(d)
+    return data
 
 # dataSourcePath            (fully qualified file path) of json formatted data file containing room and ceiling data
 # outputFilePath            (fully qualified file path) of output report 
@@ -371,27 +380,6 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                                     dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
                                                     # add ceiling object to associated elements list of room object 
                                                     dataObjectRoom.associatedElements.append(dataObjectCeiling)
-                                                # debug output
-                                                if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
-                                                    # ceiling is within the room
-                                                    if('toSmall' in intersections):
-                                                        intersections['toSmall'].append(cPolygon)
-                                                    else:
-                                                        intersections['toSmall']= [cPolygon]
-                                                else:
-                                                    # ceiling is within the room
-                                                    if('intersects' in intersections):
-                                                        intersections['intersects'].append(cPolygon)
-                                                    else:
-                                                        intersections['intersects']= [cPolygon]
-                                                # debug
-                                                match = True
-                                            # debug
-                                            if(match == False):
-                                                if('disjointed' in intersections):
-                                                    intersections['disjointed'].append(cPolygon)
-                                                else:
-                                                    intersections['disjointed']= [cPolygon]
                                         except Exception as e:
                                             # get the offending elements:
                                             dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
@@ -401,22 +389,6 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                                 'offending room: room name '+ dataObjectRoom.name+ ' room number '+ dataObjectRoom.number + ' room id ' + str(dataObjectRoom.id) + ' is valid polytgon ' + str(rPolygon.is_valid) +  '\n' +
                                                 'offending ceiling id ' + str(dataObjectCeiling.id) + ' is valid polytgon ' + str(cPolygon.is_valid)
                                                 )
-                                # plot room and all intersectiong ceilings into a single diagram
-                                
-                                if(len(intersections) > 0):
-                                    pass
-                                    poly = []
-                                    for i in intersections:
-                                        for polyLoop in intersections[i]:
-                                            poly.append(plotPolygonData(polyLoop,  colourKeysInterSectTypes[i], 'grey', 1))
-                                    # add room last
-                                    poly.append(plotPolygonData(rPolygon,'none', 'red', 2))
-                                    try:
-                                        #plotPolygons(poly, r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\SamplePLT' + '\\' + levelName + '_' + str(roomPolyId))
-                                        #plotPolygons(poly)
-                                        pass
-                                    except Exception as e:
-                                        print(e)
                 else:
                     result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName][0][0].levelName))
             else:
@@ -425,7 +397,24 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
         # loop over dic
         # write single row for room and matching ceiling ( multiple rows for single rrom if multiple ceilings)
         reportData = GetReportData(dicObjects)
-        writeReportData(outputFilePath, ['room function nuber', 'room number','room name', 'room level name', 'room revit id','eiling type mark', 'ceiling type name', 'offset from level', 'ceiling level name', 'ceiling revit id'], reportData)
+        writeReportData(outputFilePath, [       # header
+            'room function nuber', 
+            'room number',
+            'room name', 
+            'room level name', 
+            'room revit id', 
+            'room design set name',
+            'room design option name',
+            'room design option is primary',
+            'ceiling type mark', 
+            'ceiling type name', 
+            'offset from level', 
+            'ceiling level name', 
+            'ceiling revit id',
+            'ceiling design set name',
+            'ceiling design option name',
+            'ceiling design option is primary'
+            ], reportData)
         result.UpdateSep(True, 'Wrote data to file: ' + outputFilePath)
     else:
         result.UpdateSep(False, 'No data was fond in: ' + dataSourcePath)

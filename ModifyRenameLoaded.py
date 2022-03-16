@@ -93,15 +93,15 @@ def renameLoadedFamilies(doc):
                 newname = newname[:-4]
             if oldname == e.Name:
                 counter = counter + 1
-            	Output ('Found: ' + oldname)
+                Output ('Found: ' + oldname)
             	# rename
-            	def action():
-                	Output ('Attempting to rename family: '+ oldname)
-                	e.Name = newname
-                	Output ('old: ' + oldname + ' new: ' + newname)
-                	return
-            	transaction = Transaction(doc, 'Renaming: ' + newname)
-            	com.InTransaction(transaction, action)
+                def action():
+                    Output ('Attempting to rename family: '+ oldname)
+                    e.Name = newname
+                    Output ('old: ' + oldname + ' new: ' + newname)
+                    return
+                transaction = Transaction(doc, 'Renaming: ' + newname)
+                com.InTransaction(transaction, action)
     Output('Renamed: ' + str(counter) + ' families')
 
 def readFamilyNames():

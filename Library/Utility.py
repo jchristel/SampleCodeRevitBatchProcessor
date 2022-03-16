@@ -23,6 +23,7 @@
 
 #import clr
 #import System
+#from numpy import empty
 from System.IO import Path
 import glob
 import datetime
@@ -184,7 +185,16 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
                 # read the headers in file
                 if (lineCounter == 0):
                     headersInFile = line.split('\t')
+                    # replace any empty strings in header
+                    fileName = GetFileNameWithoutExt(file_)
+                    emptyHeaderCounter = 0
+                    for i in range(len(headersInFile)):
+                        # reformat any empty headers to be unique
+                        if(headersInFile[i] == ''):
+                            headersInFile[i] = fileName +  '.Empty.' + str(emptyHeaderCounter)
+                            emptyHeaderCounter = emptyHeaderCounter + 1
                     # match up unique headers with headers from this file
+                    # build header mapping
                     for uh in headers:
                         if (uh in headersInFile):
                             columnMapper.append(headersInFile.index(uh))
@@ -213,21 +223,29 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
                 lineCounter += 1
             fileCounter += 1
 
-# returns a unique list of headers retrieved from text files
-# assumes: 
-#   - first row is header row
-#   - headers are separated by <tab> character
-# returns alphabeticaly sorted list of strings
+# files         list of fully qualified file path to text files
 def GetUniqueHeaders(files):
-    headersInAllFiles = []
+    '''
+    returns a unique list of headers retrieved from text files
+    assumes: 
+    - first row is header row
+    - headers are separated by <tab> character
+    returns alphabeticaly sorted list of strings
+    '''
+    headersInAllFiles = {}
     for f in files:
         data = GetFirstRowInFile(f)
         if (data is not None):
             rowSplit = data.split('\t')
-            headersInAllFiles.append(rowSplit)
+            headersInAllFiles[GetFileNameWithoutExt(f)] = rowSplit
     headersUnique = []
     for headerByfile in headersInAllFiles:
-        for header in headerByfile:
+        emptyHeaderCounter = 0
+        for header in headersInAllFiles[headerByfile]:
+            # reformat any empty headers to be unique
+            if(header == ''):
+                header = headerByfile +  '.Empty.' + str(emptyHeaderCounter)
+                emptyHeaderCounter = emptyHeaderCounter + 1
             if(header not in headersUnique):
                 headersUnique.append(header)
     return sorted(headersUnique)

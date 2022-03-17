@@ -85,6 +85,15 @@ def GetParameterValueUTF8String(para):
             pValue = str(para.AsElementId()).encode('utf-8')
     return pValue
 
+# para      revit parameter to get value of
+def GetParameterValueAsInteger(para):
+    ''' returns parameter values as integer
+    any non integer parameter storage types will return -1'''
+    pValue = -1
+    if(para.StorageType == StorageType.Integer):
+        pValue = para.AsInteger()
+    return pValue
+
 # element                   the revit element containing the built in parameter of which the value is to be returned
 # builtInParameterDef       the built in parameter defintion
 # parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string

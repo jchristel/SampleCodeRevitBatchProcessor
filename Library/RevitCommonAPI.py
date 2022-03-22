@@ -185,6 +185,24 @@ def setParameterValue(para, valueAsString, doc):
         returnvalue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
     return returnvalue
 
+# doc                       trhe current document
+# element                   the revit element containing the built in parameter of which the value is to be returned
+# builtInParameterDef       the built in parameter defintion
+# valueAsString             the new parameter value as string
+# parameterValueSetter      function updating the parameter values. method needs to accept these args: parameter, new parameter value as string, document
+def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, parameterValueSetter = setParameterValue):
+    '''
+    Sets the built in parameter value specified by the defintion. If parameter does not exist false will be returned in status!!
+    '''
+    returnvalue = res.Result()
+    returnvalue.UpdateSep(False, 'Parameter not found')
+    paras = element.GetOrderedParameters()
+    for para in paras:
+        if(para.Definition.BuiltInParameter == builtInParameterDef):
+            returnvalue = parameterValueSetter(para, valueAsString, doc)
+            break
+    return returnvalue
+
 # returns the mark value of an element
 # e:    the element
 # returns 'Can not retrieve mark value!' if an exception occured

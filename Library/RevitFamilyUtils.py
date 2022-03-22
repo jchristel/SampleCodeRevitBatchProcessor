@@ -435,4 +435,42 @@ def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
 def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
     '''returns all unused non shared family types and symbol ids in model'''
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
-    return idsUnused 
+    return idsUnused
+
+# doc             current document
+def SetRefPlanesToNotAReference(doc):
+    ''' 
+    will set any strong or weak reference plane within a family to a 'not a reference
+    '''
+    '''
+    ('ref name ', 'Back', ' reference type as int ', 5, ' reference type as string ', 'Back')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
+    ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
+    ('ref name ', 'Front', ' reference type as int ', 3, ' reference type as string ', 'Front')
+    ('ref name ', 'Left', ' reference type as int ', 0, ' reference type as string ', 'Left')
+    ('ref name ', 'Right', ' reference type as int ', 2, ' reference type as string ', 'Right')
+    ('ref name ', 'Top', ' reference type as int ', 8, ' reference type as string ', 'Top')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 4, ' reference type as string ', 'Center (Front/Back)')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 6, ' reference type as string ', 'Bottom')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 7, ' reference type as string ', 'Center (Elevation)')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
+    '''
+    result = res.Result()
+    collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
+    for refP in collectorRefPlanes:
+        valueInt = com.GetBuiltInParameterValue(
+            refP, 
+            BuiltInParameter.ELEM_REFERENCE_NAME, 
+            com.GetParameterValueAsInteger)
+        # check if an update is required (id is greater then 12)
+        if (valueInt > 12):
+            result = com.SetBuiltInParameterValue(
+                doc, 
+                refP, 
+                BuiltInParameter.ELEM_REFERENCE_NAME,
+                '12'
+                )
+    return result

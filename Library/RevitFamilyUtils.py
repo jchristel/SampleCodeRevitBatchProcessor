@@ -437,28 +437,59 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
     return idsUnused
 
+# -------------------------- family elements  ----------------
+
+# types of lines in family available
+LINE_NAMES = ['Model Lines', 'Symbolic Lines']
+
+# doc                   current family document
+def GetAllGenericFormsInFamily(doc):
+    '''returns an element collector of all generic forms (3D extrusions) in family'''
+    col = FilteredElementCollector(doc).OfClass(GenericForm)
+    return col
+
+# doc                   current family document
+def GetAllCurveBasedElementsInFamily(doc):
+    '''returns a list of all curve elements in family with name:
+    - Symbolic Lines
+    - Model Lines'''
+    elements = []
+    col = FilteredElementCollector(doc).OfClass(CurveElement)
+    for c in col:
+        if(Element.Name.GetValue(c) in LINE_NAMES):
+            elements.append(c)
+    return elements
+
+# doc                   current family document
+def GetAllModelTextElementsInFamily(doc):
+    '''returns an element collector of all model text elements in family'''
+    col = FilteredElementCollector(doc).OfClass(ModelText)
+    return col
+
+# -------------------------- ref planes  ----------------
+
 # doc             current document
 def SetRefPlanesToNotAReference(doc):
     ''' 
     will set any strong or weak reference plane within a family to a 'not a reference
     '''
     '''
-    ('ref name ', 'Back', ' reference type as int ', 5, ' reference type as string ', 'Back')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
-    ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
-    ('ref name ', 'Front', ' reference type as int ', 3, ' reference type as string ', 'Front')
     ('ref name ', 'Left', ' reference type as int ', 0, ' reference type as string ', 'Left')
+    ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
     ('ref name ', 'Right', ' reference type as int ', 2, ' reference type as string ', 'Right')
-    ('ref name ', 'Top', ' reference type as int ', 8, ' reference type as string ', 'Top')
+    ('ref name ', 'Front', ' reference type as int ', 3, ' reference type as string ', 'Front')
     ('ref name ', 'Reference Plane', ' reference type as int ', 4, ' reference type as string ', 'Center (Front/Back)')
+    ('ref name ', 'Back', ' reference type as int ', 5, ' reference type as string ', 'Back')
     ('ref name ', 'Reference Plane', ' reference type as int ', 6, ' reference type as string ', 'Bottom')
     ('ref name ', 'Reference Plane', ' reference type as int ', 7, ' reference type as string ', 'Center (Elevation)')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
-    ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
+    ('ref name ', 'Top', ' reference type as int ', 8, ' reference type as string ', 'Top')
     ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
+    ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
     ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
     '''
     result = res.Result()
+    result.UpdateSep(True, 'Changing reference status of reference planes...')
+    matchAtAll = False
     collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
     for refP in collectorRefPlanes:
         valueInt = com.GetBuiltInParameterValue(
@@ -467,10 +498,58 @@ def SetRefPlanesToNotAReference(doc):
             com.GetParameterValueAsInteger)
         # check if an update is required (id is greater then 12)
         if (valueInt > 12):
-            result = com.SetBuiltInParameterValue(
+            resultChange = com.SetBuiltInParameterValue(
                 doc, 
                 refP, 
                 BuiltInParameter.ELEM_REFERENCE_NAME,
                 '12'
                 )
+            # set overall flag to indicate that at leasst one element was changed
+            if(resultChange.status == True and matchAtAll == False):
+                matchAtAll = True
+            result.Update(resultChange)
+    if(matchAtAll == False):
+        result.status = False
+        result.message = 'No reference planes found requiring reference type update'
+    return result
+
+# -------------------------- symbolic and model lines  ----------------
+
+# doc             current document
+def SetSymbolicAndModelLinesToNotAReference(doc):
+    ''' 
+    will set any weak reference of a model or symbolic linee to a 'not a reference'
+    '''
+    '''
+    ('ref name ', 'Model Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
+    ('ref name ', 'Model Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
+    ('ref name ', 'Model Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
+    ('ref name ', 'Symbolic Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
+    ('ref name ', 'Symbolic Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
+    ('ref name ', 'Symbolic Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
+    '''
+    result = res.Result()
+    result.UpdateSep(True, 'Changing reference status of model and symbolic curves...')
+    matchAtAll = False
+    curves = GetAllCurveBasedElementsInFamily(doc)
+    for curve in curves:
+        valueInt = com.GetBuiltInParameterValue(
+            curve, 
+            BuiltInParameter.ELEM_IS_REFERENCE, 
+            com.GetParameterValueAsInteger)
+        # check if an update is required (id equals 1)
+        if (valueInt == 1):
+            resultChange = com.SetBuiltInParameterValue(
+                doc, 
+                curve, 
+                BuiltInParameter.ELEM_IS_REFERENCE,
+                '0'
+                )
+            # set overall flag to indicate that at leasst one element was changed
+            if(resultChange.status == True and matchAtAll == False):
+                matchAtAll = True
+            result.Update(resultChange)
+    if(matchAtAll == False):
+        result.status = False
+        result.message = 'No curve elements found requiring reference type update'
     return result

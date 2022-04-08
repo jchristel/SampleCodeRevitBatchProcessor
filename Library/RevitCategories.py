@@ -30,6 +30,7 @@ import sys
 sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
 
 import RevitCommonAPI as com
+import RevitFamilyUtils as rFamUtils
 import Result as res
 
 clr.AddReference('System.Core')
@@ -40,10 +41,6 @@ from Autodesk.Revit.DB import *
 CAT_RENAMING = {
     'Clearance Zones': 'AMAZING'
 }
-
-
-# types of lines in family available
-LINE_NAMES = ['Model Lines', 'Symbolic Lines']
 
 # list of built in parameters attached to elements containing subcategory ids
 ELEMENTS_PARAS_SUB = [
@@ -418,30 +415,6 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
         returnvalue.UpdateSep(False, 'This is not a family document!')
     return returnvalue
 
-# doc                   current family document
-def GetAllGenericFormsInFamily(doc):
-    '''returns an element collector of all generic forms (3D extrusions) in family'''
-    col = FilteredElementCollector(doc).OfClass(GenericForm)
-    return col
-
-# doc                   current family document
-def GetAllCurveBasedElementsInFamily(doc):
-    '''returns a list of all curve elements in family with name:
-    - Symbolic Lines
-    - Model Lines'''
-    elements = []
-    col = FilteredElementCollector(doc).OfClass(CurveElement)
-    for c in col:
-        if(Element.Name.GetValue(c) in LINE_NAMES):
-            elements.append(c)
-    return elements
-
-# doc                   current family document
-def GetAllModelTextElementsInFamily(doc):
-    '''returns an element collector of all model text elements in family'''
-    col = FilteredElementCollector(doc).OfClass(ModelText)
-    return col
-
 def SortElementsByCategory(elements, elementDic):
     for el in elements:
         for builinDef in ELEMENTS_PARAS_SUB:
@@ -460,9 +433,9 @@ def GetElementsByCategory(doc, cat):
     '''returns elements in family assign to a specific category'''
     # get all elements in family
     dic = {}
-    elCurve = GetAllCurveBasedElementsInFamily(doc)
-    elForms = GetAllGenericFormsInFamily(doc)
-    elMText = GetAllModelTextElementsInFamily(doc)
+    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
+    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
+    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
     # build dictionary where key is category or graphic styl;e id of  a category
     dic = SortElementsByCategory(elCurve, dic)
     dic = SortElementsByCategory(elForms, dic)

@@ -45,6 +45,7 @@ from BIM.IFC.Export.UI import IFCExportConfiguration
 # import common library
 import RevitCommonAPI as com
 import RevitViews as rView
+import RevitExportIFCConfig as ifcCon
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
@@ -70,7 +71,8 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
             # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
             actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
-            actionReturnValue.result = [directoryPath, fileName]
+            # needs to be a list in a list to stay together when combined with previous results in the update status result code
+            actionReturnValue.result = [[directoryPath, fileName]]
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
@@ -78,93 +80,45 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     returnvalue = com.InTransaction(transaction, action)
     return returnvalue
 
+# doc               current model document
+# ifc version       ifc version used for export
+def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
+    '''returns the 3rd party ifc config for export by view depending on revit version'''
+    # get the revit version:
+    revitVersion = doc.Application.VersionNumber
+    ifcConfig = None
+    if (revitVersion == '2019'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion)
+    elif (revitVersion == '2020'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2020(ifcVersion)
+    elif (revitVersion == '2021'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion)
+    elif (revitVersion == '2022'):
+        pass
+    else:
+        # this is a non supported revit version!
+        raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
+    return ifcConfig
 
-# method returning an IFC export configuration using the open source third party IFC exporter plug in supported bu AutoDesk
-# this configuration allows export by view
-def IFCGetThirdPartyExportConfifgByView(ifcVersion):
-    
-    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
-    ifcExportConfig.Name = 'DefaultIFCByViewSetup'
-    # set up IFC version
-    if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
-    else:  
-        ifcExportConfig.IFCVersion = ifcVersion
-
-    ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
-    ifcExportConfig.ExportBaseQuantities = True
-    ifcExportConfig.SplitWallsAndColumns = True
-    ifcExportConfig.VisibleElementsOfCurrentView = True # by view
-    ifcExportConfig.Use2DRoomBoundaryForVolume = False
-    ifcExportConfig.UseFamilyAndTypeNameForReference = True
-    ifcExportConfig.ExportInternalRevitPropertySets = True
-    ifcExportConfig.ExportIFCCommonPropertySets = True
-    ifcExportConfig.Export2DElements = False
-    ifcExportConfig.ExportPartsAsBuildingElements = True
-    ifcExportConfig.ExportBoundingBox = False
-    ifcExportConfig.ExportSolidModelRep = False
-    ifcExportConfig.ExportSchedulesAsPsets = False
-    ifcExportConfig.ExportUserDefinedPsets = False
-    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
-    ifcExportConfig.ExportLinkedFiles = False
-    ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
-    ifcExportConfig.ExportSpecificSchedules = False
-    ifcExportConfig.TessellationLevelOfDetail = 0
-    ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
-    # revit 2019.1
-    ifcExportConfig.UseOnlyTriangulation = False
-    ifcExportConfig.IncludeSteelElements = True
-    ifcExportConfig.COBieCompanyInfo = 'Company Name'
-    ifcExportConfig.COBieProjectInfo = 'Project Info'
-    
-    return ifcExportConfig
-
-# method returning an IFC export configuration using the open source third party IFC exporter plug in supported bu AutoDesk
-# this configuration exports the entire model
-def IFCGetThirdPartyExportConfifgByModel(ifcVersion):
-
-    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
-    ifcExportConfig.Name = 'DefaultIFCByModelSetup'
-    
-    # set up IFC version
-    if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
-    else:  
-        ifcExportConfig.IFCVersion = ifcVersion
-
-    ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
-    ifcExportConfig.ExportBaseQuantities = True
-    ifcExportConfig.SplitWallsAndColumns = True
-    ifcExportConfig.VisibleElementsOfCurrentView = False # by model
-    ifcExportConfig.Use2DRoomBoundaryForVolume = False
-    ifcExportConfig.UseFamilyAndTypeNameForReference = True
-    ifcExportConfig.ExportInternalRevitPropertySets = True
-    ifcExportConfig.ExportIFCCommonPropertySets = True
-    ifcExportConfig.Export2DElements = False
-    ifcExportConfig.ExportPartsAsBuildingElements = True
-    ifcExportConfig.ExportBoundingBox = False
-    ifcExportConfig.ExportSolidModelRep = False
-    ifcExportConfig.ExportSchedulesAsPsets = False
-    ifcExportConfig.ExportUserDefinedPsets = False
-    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
-    ifcExportConfig.ExportLinkedFiles = False
-    ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # by model
-    ifcExportConfig.ExportSpecificSchedules = False
-    ifcExportConfig.TessellationLevelOfDetail = 0
-    ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
-    # revit 2019.1
-    ifcExportConfig.UseOnlyTriangulation = False
-    ifcExportConfig.IncludeSteelElements = True
-    ifcExportConfig.COBieCompanyInfo = 'Company Name'
-    ifcExportConfig.COBieProjectInfo = 'Project Info'
-    
-    return ifcExportConfig
+# doc               current model document
+# ifc version       ifc version used for export
+def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
+    '''returns the 3rd party ifc config for export by model depending on revit version'''
+    # get the revit version:
+    revitVersion = doc.Application.VersionNumber
+    ifcConfig = None
+    if (revitVersion == '2019'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2019(ifcVersion)
+    elif (revitVersion == '2020'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2020(ifcVersion)
+    elif (revitVersion == '2021'):
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2021(ifcVersion)
+    elif (revitVersion == '2022'):
+        raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
+    else:
+        # this is a non supported revit version!
+        raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
+    return ifcConfig
 
 # method assigning view Id to active export config if it is exporting by view
 # and returning an IFCExportOptions object
@@ -291,7 +245,8 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
         # export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
         returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
-        returnvalue.result = [directoryPath, fileName]
+        # needs to be a list in a list to stay together when combined with previous results in the update status result code
+        returnvalue.result = [[directoryPath, fileName]]
     except Exception as e:
         returnvalue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
     return returnvalue

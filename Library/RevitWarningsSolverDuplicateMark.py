@@ -57,7 +57,7 @@ class RevitWarningsSolverDuplicateMark:
                         try:
                             pValue = com.GetBuiltInParameterValue(element, BuiltInParameter.ALL_MODEL_MARK)
                             if (pValue != None):
-                                result = com.setParameterValue(p, '', doc)
+                                result = com.SetBuiltInParameterValue(doc, element, BuiltInParameter.ALL_MODEL_MARK, '')
                                 returnvalue.Update(result)
                         except Exception as e:
                             returnvalue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))

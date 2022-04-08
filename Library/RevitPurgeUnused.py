@@ -225,7 +225,6 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
         resultValue.UpdateSep(False,'Terminated purge unused ' + reportHeader + ' with exception: '+ str(e))
     return resultValue
 
-
 # first     base line dictionary
 # second    dictionary to be checked against base line
 def CompareReportDictioanries(first,second):

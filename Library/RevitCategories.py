@@ -100,7 +100,8 @@ REPORT_CATEGORIES_HEADER = [
 
 # doc   current family document
 def GetMainSubCategories(doc):
-    '''reports all subcategories of the family category in a dictionary where
+    '''
+    reports all subcategories of the family category in a dictionary where
     key: sub category name
     data: sub category 
     '''
@@ -119,7 +120,8 @@ def GetMainSubCategories(doc):
 
 # doc   current family document
 def GetFamilyCategory(doc):
-    '''reports family category in a dictionary where
+    '''
+    reports family category in a dictionary where
     key: category name
     data: category 
     '''
@@ -131,7 +133,8 @@ def GetFamilyCategory(doc):
 
 # doc   current family document
 def GetOtherSubCategories(doc):
-    '''reports all family sub categories which do not belong to the actual family category
+    '''
+    reports all family sub categories which do not belong to the actual family category
     note: custom categories have an Id greater 0
     key: category name
     data: dictionary : key sub cat name, data: subcategory
@@ -154,7 +157,9 @@ def GetOtherSubCategories(doc):
 
 #  cat    revit category
 def GetCategoryGraphicStyleIds(cat):
-    '''returns dic with keys: Proejction, Cut, 3D and their respective ids'''
+    '''
+    returns dic with keys: Projection, Cut, 3D and their respective ids
+    '''
     iDGraphicStyleProjection = cat.GetGraphicsStyle(GraphicsStyleType.Projection).Id
     
     # check if this category has a cut style ( some families always appear in elevation only!)
@@ -172,7 +177,9 @@ def GetCategoryGraphicStyleIds(cat):
 
 #  cat    revit category
 def GetCategoryMaterial(cat):
-    ''' returns the material properties name and id as a dictionary where key is property description and value the property value'''
+    '''
+    returns the material properties name and id as a dictionary where key is property description and value the property value
+    '''
     dicMaterial = {}
     dicMaterial[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
     dicMaterial[PROPERTY_MATERIAL_ID] = ElementId.InvalidElementId
@@ -184,7 +191,9 @@ def GetCategoryMaterial(cat):
 
 #  cat    revit category
 def GetCategoryLinePattern(cat, doc):
-    ''' returns the line pattern properties name and id as a dictionary where key is property description and value the property value'''
+    '''
+    returns the line pattern properties name and id as a dictionary where key is property description and value the property value
+    '''
     dicPattern = {}
     dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
     dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(GraphicsStyleType.Projection)
@@ -204,7 +213,9 @@ def GetCategoryLinePattern(cat, doc):
 
 #  cat    revit category
 def GetCategoryLineWeights(cat):
-    ''' returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value'''
+    '''
+    returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value
+    '''
     dicLineWeights = {}
     dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(GraphicsStyleType.Projection)
     dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(GraphicsStyleType.Cut)
@@ -212,7 +223,9 @@ def GetCategoryLineWeights(cat):
 
 #  cat    revit category
 def GetCategoryColour(cat):
-    ''' returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value'''
+    '''
+    returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value
+    '''
     dicColour = {}
     dicColour[PROPERTY_LINECOLOUR_RED_NAME] = 0
     dicColour[PROPERTY_LINECOLOUR_GREEN_NAME] = 0
@@ -223,10 +236,11 @@ def GetCategoryColour(cat):
         dicColour[PROPERTY_LINECOLOUR_BLUE_NAME] = cat.LineColor.Blue
     return dicColour
 
-
 # cat   category
 def GetCategoryProperties(cat, doc):
-    '''returns a dictionary where keys are property names and value is the associated property value'''
+    '''
+    returns a dictionary where keys are property names and value is the associated property value
+    '''
     properties = []
     
     # material
@@ -249,7 +263,9 @@ def GetCategoryProperties(cat, doc):
 # properties    list of dictionaries in format as per GetCategoryProperties(cat) method
 # propNames     list of proprty names of which the values are to be returned
 def GetSavedCategoryPropertyByName(properties, propNames):
-    '''returns property values matching property names in saved category data'''
+    '''
+    returns property values matching property names in saved category data
+    '''
     propValues = []
     for propName in propNames:
         match = False
@@ -267,7 +283,9 @@ def GetSavedCategoryPropertyByName(properties, propNames):
 # cat           category
 # materialId    material id to be assigned to category
 def SetCategoryMaterial(doc, cat, materialId):
-    '''updates material property of a given category'''
+    '''
+    updates material property of a given category
+    '''
     flag = True
     try:
         mat = doc.GetElement(materialId)
@@ -284,7 +302,9 @@ def SetCategoryMaterial(doc, cat, materialId):
 # cat               category
 # linePatternId     line pattern id to be assigned to category
 def SetCategoryLinePattern(doc, cat, linePatternId):
-    '''updates line pattern property of a given category'''
+    '''
+    updates line pattern property of a given category
+    '''
     flag = True
     try:
         def action():
@@ -302,7 +322,9 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
 # lineThickNessCut            integer value
 # lineThickNessProjection     integer value
 def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
-    '''updates line weight properties of a given category'''
+    '''
+    updates line weight properties of a given category
+    '''
     flag = True
     try:
         def action():
@@ -321,7 +343,9 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
 # green   byte value for green
 # blue    byte value for blue
 def SetCategoryColour(doc, cat, red, green, blue):
-    '''updates colour properties of a given category'''
+    '''
+    updates colour properties of a given category
+    '''
     flag = True
     try:
         def action():
@@ -337,7 +361,9 @@ def SetCategoryColour(doc, cat, red, green, blue):
 # cat   category of which properties are to be changed
 # properties    list of dictionaries in format as per GetCategoryProperties(cat) method
 def SetCategoryProperties(cat, properties):
-    '''updates property values of a given category'''
+    '''
+    updates property values of a given category
+    '''
     flag = True
     
     # material
@@ -363,8 +389,10 @@ def SetCategoryProperties(cat, properties):
 # doc                       current family document
 # newCategoryName           the name of the new familyncategory
 def SetFamilyCategory(doc, newCategoryName):
-    '''changes the family category to new one specified by name.
-    Returns true only if the category was changed. Any other case is false! (that includes situations when the family is already of the new catgeory)'''
+    '''
+    changes the family category to new one specified by name.
+    Returns true only if the category was changed. Any other case is false! (that includes situations when the family is already of the new catgeory)
+    '''
     returnvalue = res.Result()
     cat = doc.OwnerFamily.FamilyCategory
     if (cat.Name != newCategoryName):
@@ -386,8 +414,10 @@ def SetFamilyCategory(doc, newCategoryName):
 # doc                   current family document
 # newSubCategoryName    the new subcategroy name
 def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
-    '''creates a new subcategory to the family category and returns it
-    returns exception "The name 'xys' is already in use" if category with the same name is already in file'''
+    '''
+    creates a new subcategory to the family category and returns it
+    returns exception "The name 'xys' is already in use" if category with the same name is already in file
+    '''
     returnvalue = res.Result()
     if (doc.IsFamilyDocument):
         # get the family category
@@ -415,7 +445,13 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
         returnvalue.UpdateSep(False, 'This is not a family document!')
     return returnvalue
 
+# elements              list of revit elements
+# elememtDic            dictionary where key is category and values are element ids
 def SortElementsByCategory(elements, elementDic):
+    '''
+    returns a dicionary of element ids where key is the 
+    category
+    '''
     for el in elements:
         for builinDef in ELEMENTS_PARAS_SUB:
             value = com.GetBuiltInParameterValue(el, builinDef)
@@ -430,13 +466,15 @@ def SortElementsByCategory(elements, elementDic):
 # doc                   current family document
 # cat                   category to which the elements are assigned
 def GetElementsByCategory(doc, cat):
-    '''returns elements in family assign to a specific category'''
+    '''
+    returns elements in family assign to a specific category
+    '''
     # get all elements in family
     dic = {}
     elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
     elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
     elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
-    # build dictionary where key is category or graphic styl;e id of  a category
+    # build dictionary where key is category or graphic style id of  a category
     dic = SortElementsByCategory(elCurve, dic)
     dic = SortElementsByCategory(elForms, dic)
     dic = SortElementsByCategory(elMText, dic)
@@ -444,9 +482,9 @@ def GetElementsByCategory(doc, cat):
     categoryIds = GetCategoryGraphicStyleIds(cat)
     # check whether category past in is same as owner family category
     if(doc.OwnerFamily.FamilyCategory.Name == cat.Name):
-        # 3d elements within family which have subcategory set to none belong to owner family
+        # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
-        # my get parameter value translats that into -1 (invalid element id)
+        # my get parameter value translates that into -1 (invalid element id)
         categoryIds[CATEGORY_GRAPHICSTYLE_3D] = ElementId.InvalidElementId
     dicFiltered = {}
     # filter elements by category ids
@@ -459,11 +497,29 @@ def GetElementsByCategory(doc, cat):
     return dicFiltered
 
 # doc                   current family document
+def GetUsedCategoryIds(doc):
+    '''
+    returns all category ids in a family which have an element assigned to them
+    '''
+    # get all elements in family
+    dic = {}
+    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
+    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
+    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
+    # build dictionary where key is category or graphic style id of a category
+    dic = SortElementsByCategory(elCurve, dic)
+    dic = SortElementsByCategory(elForms, dic)
+    dic = SortElementsByCategory(elMText, dic)
+    return dic.keys ()
+
+# doc                   current family document
 # newCatName            name of category to be created
 # existingCatName       exisitng category of which to clone properties
 def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
-    '''creates a new category and applies properties from existing category, Returns new category
-    if category already exists in file it will return that'''
+    '''
+    creates a new category and applies properties from existing category, Returns new category
+    if category already exists in file it will return that
+    '''
     returnvalue = res.Result()
     cats = GetMainSubCategories(doc)
     # check if existing category actually exists in family
@@ -485,8 +541,10 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
 # newCatName            name of category to be created
 # savedCatProps         existtng category properties
 def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
-    '''creates a new category and applies properties stored , Returns new category
-    if category already exists in file it will return that'''
+    '''
+    creates a new category and applies properties stored , Returns new category
+    if category already exists in file it will return that
+    '''
     returnvalue = res.Result()
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
     if(resultNewSubCat.result):
@@ -503,7 +561,9 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
 # fromCategoryName            name of source category
 # toCategoryName              name of destination category
 def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryName):
-    '''moves elements from one category to another specified by their names'''
+    '''
+    moves elements from one category to another specified by their names
+    '''
     returnvalue = res.Result()
     # check whether source and destination category exist in file
     cats = GetMainSubCategories(doc)
@@ -526,7 +586,9 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
 # toCategoryName                name of destination category
 # destinationCatIds             dictionary of ids of graphic styleids, key are graphic style names
 def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
-    '''moves elements provided in dictionary another category specified by their names'''
+    '''
+    moves elements provided in dictionary another category specified by their names
+    '''
     returnvalue = res.Result()
     # check whether destination category exist in file
     cats = GetMainSubCategories(doc)
@@ -550,8 +612,10 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
 # doc                       current family document
 # newCategoryName           the name of the new familyncategory
 def ChangeFamilyCategory(doc, newCategoryName):
-    '''changes the current family category to the new one specified
-    it will also transfer any user created subcategories to the new category and assign elements to it'''
+    '''
+    changes the current family category to the new one specified
+    it will also transfer any user created subcategories to the new category and assign elements to it
+    '''
     returnvalue = res.Result()
     # get sub categories in family
     subCats = GetMainSubCategories (doc)
@@ -593,7 +657,9 @@ def ChangeFamilyCategory(doc, newCategoryName):
 # mainCatName                   hard coded revit category name
 # docFilePath                   family file path
 def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
-    ''' formats category properties into lists for reports'''
+    '''
+    formats category properties into lists for reports
+    '''
     data = []
     for key in dic:
         row = [str(docFilePath).encode('utf-8'), 
@@ -631,7 +697,9 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
 # doc                           current family document
 # revitFilePath                 document file path
 def GetReportData(doc, revitFilePath):
-    '''reports all categories, properties and all elements belonging to them'''
+    '''
+    reports all categories, properties and all elements belonging to them
+    '''
     data = []
     # get all sub categories in family and associates elements;
     subCats = GetMainSubCategories(doc)

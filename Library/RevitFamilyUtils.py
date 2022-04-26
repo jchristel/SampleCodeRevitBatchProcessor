@@ -32,18 +32,34 @@ from System.Collections.Generic import List
 
 # import common library
 import RevitCommonAPI as com
+# utility functions for most coomonly used Revit API tasks
 import Utility as util
+# utilities
 import Result as res
+# class used for stats reporting
 import RevitFamilyLoadOption as famLoadOpt
+# implementation of Revit API callback required when loading families into a Revit model
 from RevitFamilyLoadOption import *
+# load everything required from family load call back 
 
 from Autodesk.Revit.DB import *
+# import everything from Autodesk Revit DataBase namespace (Revit API)
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def ModifyLoadFamilies(doc, revitFilePath, familyData):
-    '''reloads a number of families with settings:
-    - parameter values overwritten: true'''
+    '''
+    reloads a number of families with settings:
+    - parameter values overwritten: true
+
+    Parameters:
+    doc - current revit model document
+    revitFilePath - not used (TODO: omit!)
+    familyData - list 
+
+    returns: result class instance containing reload status of each revit family (refer to LoadFamily() method for exact content)
+    '''
+
     result = res.Result()
     try:
         for loadFam in familyData:
@@ -53,11 +69,24 @@ def ModifyLoadFamilies(doc, revitFilePath, familyData):
         result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
     return result
 
-# doc               current model document
-# familyFilePath    the fully qualified file path of the family to be loaded
 def LoadFamily(doc, familyFilePath):
-    '''loads or reloads a single family with settings:
-    - parameter values overwritten: true'''
+    '''
+    loads or reloads a single family with settings:
+    - parameter values overwritten: true
+
+    Parameters:
+    doc - current revit model document
+    familyFilePath - the fully qualified file path of the family to be loaded
+
+    returns: result class instance 
+    - reload status (bool) returned in result.status
+    - reload status returned from revit in result.message property,
+    - return family reference stored in result.result property on succesful reload only
+    on exception:
+    - reload.status is False
+    - reload.message: the exception message
+    '''
+
     result = res.Result()
     try:
         # set upo reload action
@@ -88,6 +117,8 @@ def LoadFamily(doc, familyFilePath):
 
 # ---------------- preset builtin category lists of categories which represent loadable families used in filtering
 
+# this list contains 3D element categories and is used in obsolete revit family purge function
+# any revit category commented out with note 'purged else where' can be found in list 'catsLoadableThreeDOther'
 catsLoadableThreeD = List[BuiltInCategory] ([
     #BuiltInCategory.OST_CableTrayFitting,  purged else where
     BuiltInCategory.OST_Casework,
@@ -131,6 +162,8 @@ catsLoadableThreeD = List[BuiltInCategory] ([
     BuiltInCategory.OST_Windows
 ])
 
+# contains 3D family categories which needed specific purge code, rather then checking for unplaced family instances
+# i.e. built in revit type settings
 catsLoadableThreeDOther = List[BuiltInCategory] ([
     BuiltInCategory.OST_CableTrayFitting,
     BuiltInCategory.OST_ConduitFitting,
@@ -145,7 +178,8 @@ catsLoadableThreeDOther = List[BuiltInCategory] ([
     BuiltInCategory.OST_StairsRailingBaluster
 ])
 
-
+# this list contains 2D element categories and is used in obsolete revit family purge function
+# any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
 catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_CurtainWallPanelTags,
     BuiltInCategory.OST_AreaTags,
@@ -233,6 +267,8 @@ catsLoadableTags = List[BuiltInCategory] ([
     BuiltInCategory.OST_WindowTags
 ])
 
+# contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
+# i.e. built in revit type settings
 catsLoadableTagsOther = List[BuiltInCategory] ([
     BuiltInCategory.OST_CalloutHeads,
     BuiltInCategory.OST_ElevationMarks,
@@ -247,13 +283,18 @@ catsLoadableTagsOther = List[BuiltInCategory] ([
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------
 
-# doc   current model document
-# returns all family symbols belonging to a list of built in categories
-# cats needs to be an ICollection:
-#       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
-
 def GetFamilySymbols(doc, cats):
-    '''returns all family symbols (types) of given built in categories'''
+    '''
+    Filters all family symbols (revit family types) of given built in categories from the revit model
+    
+    Parameters:
+    doc - current model document
+    cats - needs to be an ICollection:
+    cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+    
+    returns revit collector of revit elements matching filter
+    '''
+
     elements = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
@@ -262,11 +303,18 @@ def GetFamilySymbols(doc, cats):
     except Exception:
         return elements
 
-# doc   current model document
-# cats needs to be an ICollection:
-#       cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
 def GetFamilyInstancesByBuiltInCategories(doc, cats):
-    '''returns all family instances of given built in categories'''
+    '''
+    Filters all family instances of given built in categories from the revit model
+    
+    Parameters:
+    doc - current model document
+    cats - needs to be an ICollection:
+    cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+    
+    returns revit collector of revit elements matching filter
+    '''
+    
     elements = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
@@ -275,49 +323,86 @@ def GetFamilyInstancesByBuiltInCategories(doc, cats):
     except Exception:
         return elements
 
-# doc           current model document
-# builtinCat    single revit builInCategory Enum value
 def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
-    '''returns all family instances of a given built in category'''
+    '''
+    Filters all family instances of a single given built in category from the revit model
+    
+    Parameters:
+    doc - current model document
+    builtinCat - single revit builInCategory Enum value
+    
+    returns revit collector of revit elements matching filter
+    '''
+
     filter = ElementCategoryFilter(builtinCat)
     col = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
     return col
 
-# returns a list of in editable and not in place families
-# doc   current model document
 def GetAllLoadableFamilies(doc):
+    '''
+    Filters all families in revit model by whether it is not an InPlace family
+    (note: slow filter due to use of lambda and cast to list)
+    
+    Parameters:
+    doc - current model document
+    
+    returns a list of revit family objects matching filter
+    '''
+
     collector = FilteredElementCollector(doc)
     families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     return families
 
-# returns a list of in place families
-# doc   current model document
 def GetAllInPlaceFamilies(doc):
+    '''
+    Filters all families in revit model by whether it is an InPlace family
+    (note: slow filter due to use of lambda and cast to list)
+    
+    Parameters:
+    doc - current model document
+    
+    returns a list of revit family objects matching filter
+    '''
     collector = FilteredElementCollector(doc)
     families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
 
 # --------------------------family data ----------------
 
-# doc   current document
-# typeIds   in place family type ids available in model
 def GetSymbolsFromType(doc, typeIds):
-    '''returns dictionary where key is the family and value are symbol(family type) ids'''
+    '''
+    Get all family types belonging to the same family as types passt in
+
+    Parameters:
+    doc - current model document
+    typeIds - list of element id's representing family symbols (fmaily types)
+    
+    returns dictionary where key is the family id and value is a list of all symbol(family type) ids belonging to the family
+    '''
+
     fams = {}
     for tId in typeIds:
         # get family element
         typeEl = doc.GetElement(tId)
         famEl = typeEl.Family
-        # get all available family types
-        sIds = famEl.GetFamilySymbolIds().ToList()
+        # check whether family was already processed
         if(famEl.Id not in fams):
+            # get all available family types
+            sIds = famEl.GetFamilySymbolIds().ToList()
             fams[famEl.Id] = sIds
     return fams
 
-# doc:      current model document
-# typeId:   symbol type id
 def GetFamilyInstancesBySymbolTypeId(doc, typeId):
-    '''returns all instances of a given family symbol'''
+    '''
+    Filters all family instances of a single given family symbol (type)
+    
+    Parameters:
+    doc - current model document
+    typeId - symbol (type) id
+    
+    returns revit collector of revit family symbols (types) matching filter
+    '''
+
     pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
     equals = FilterNumericEquals()
     idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
@@ -325,10 +410,17 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
     collector = FilteredElementCollector(doc).WherePasses( efilter )
     return collector
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
-def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
-    ''' returns true if all symbols (types) of a family are in use in a model'''
+def FamilyAllTypesInUse(famTypeIds, usedTypeIds):
+    ''' 
+    checks if symbols (types) of a family are in use in a model
+    
+    Parameters:
+    famTypeIds - list of symbol(type) ids of a family
+    usedTypeIds - list of symbol(type) ids in use in a project
+    
+    returns False if a single symbol id  contained in list famTypeIds has a match in list usedTypeIds otherwise True
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in usedTypeIds):
@@ -336,9 +428,18 @@ def FamilyAllTypesInUse(famTypeIds,usedTypeIds):
             break
     return match
 
-# doc   current document
 def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
-    ''' returns type ids off all available in place families of category wall '''
+    ''' 
+    Filters family symbol (type) ids off all available in place families of single given built in category
+    
+    Parameters:
+    doc - current model document
+    famBuiltInCategory - built in revit category 
+    
+    returns list of revit family symbol (type) id's matching filter
+    '''
+
+    # filter model for family symbols of given built in category
     filter = ElementCategoryFilter(famBuiltInCategory)
     col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
     ids = []
@@ -349,10 +450,18 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
             ids.append(c.Id)
     return ids
 
-# doc                   current document
-# unusedTypeGetter      returns ids of unused symbols (family types)
 def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place familis of system types which can be purged'''
+    '''
+    filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
+    Since these are not in juse they can be purged
+
+    Parameters:
+    doc - current model document
+    unusedTypeGetter - function returning ids of unused symbols (family types) as a list, requires as argument the current model doc only
+
+    returns list of revit family symbol (type) id's and or family id's matching filter
+    '''
+
     unusedIds = []
     unusedFamilyIds = []
     # get all unused type Ids
@@ -374,24 +483,33 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 
 # --------------------------family purge  ----------------
 
-# doc             current document
-# cats          list of builtin categories to filter by
 def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
-    '''"returns a list of family symbols belonging to categories passt in'''
+    '''
+    filters family symbols belonging to categories passt in
+    
+    Parameters:
+    doc - current model document
+    cats - list of builtin categories to filter by, needs to be an ICollection:
+    cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+    excludeSharedFam - bool: default is True (exclude any shared families from filter result)
+    
+    returns list of id's of family symbols (types) matching filter
+    '''
+
     ids = []
     try:
         multiCatFilter = ElementMulticategoryFilter(cats)
         elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
         for el in elements:
+            # check if shared fams are to be excluded from return list
             if(excludeSharedFam):
                 fam = el.Family
                 pValue = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
                 if(pValue != None):
-                    parameterMatch = True
                     if(pValue == 'No' and el.Id not in ids):
                         ids.append(el.Id)
-                if(parameterMatch == False):
-                    # family cant be of type shared...
+                else:
+                    # some revit families cant be of type shared...()
                     ids.append(el.Id)
             else:
                 ids.append(el.Id)
@@ -399,20 +517,35 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     except Exception:
         return ids
 
-# doc             current document
 def GetAllNonSharedFamilySymbolIds(doc):
-    '''"returns a list of all non shared family symbol ids in the model based on hard coded family category lists!'''
+    '''
+    filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)
+    
+    Parameters:
+    doc - current model document
+
+    returns list of id's of family symbols (types) matching filter
+    '''
+
     ids = []
     allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
     allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
     ids = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
     return ids
 
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
-    '''returns either used or unused type ids'''
+    '''
+    filers types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family
+
+    Parameters:
+    doc - current model document
+    typeIdGetter -  function returning ids of symbols (family types) as a list, requires as argument: 
+        the current model doc, ICollection of built in categories, bool: exclude shared families
+    useType - int: 0, no dependent elements (not used); 1: has dependent elements(is in use)
+    
+    returns list of id's of family symbols (types) matching filter
+    '''
+
     # get all types elements available
     allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD, excludeSharedFam)
     allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags, excludeSharedFam)
@@ -425,15 +558,30 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
             ids.append(typeId)
     return ids
 
-# doc             current document
 def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
-    '''returns all unused family type ids in model'''
+    '''
+    filters unused non shared family (symbols) type ids in model
+
+    Parameters:
+    doc - current model document
+    excludeSharedFam - bool: default is True (exclude any shared families from filter result)
+
+    returns list of family symbol (type) id's
+    '''
+
     ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
     return ids
 
-# doc             current document
 def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
-    '''returns all unused non shared family types and symbol ids in model'''
+    '''
+    filters unused non shared and in place family (symbols) type ids in model
+
+    Parameters:
+    doc - current model document
+    
+    returns list of family symbol (type) id's
+    '''
+
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
     return idsUnused
 
@@ -442,17 +590,31 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
 # types of lines in family available
 LINE_NAMES = ['Model Lines', 'Symbolic Lines']
 
-# doc                   current family document
 def GetAllGenericFormsInFamily(doc):
-    '''returns an element collector of all generic forms (3D extrusions) in family'''
+    '''
+    filters all generic forms (3D extrusions) in family
+
+    Parameters:
+    doc - current model document
+
+    returns revit collector of revit API GenericForm objects
+    '''
+
     col = FilteredElementCollector(doc).OfClass(GenericForm)
     return col
 
-# doc                   current family document
 def GetAllCurveBasedElementsInFamily(doc):
-    '''returns a list of all curve elements in family with name:
+    '''
+    filters all curve based elements in family with name:
     - Symbolic Lines
-    - Model Lines'''
+    - Model Lines
+    
+    Parameters:
+    doc - current model document
+
+    returns list of revit API CurveElement objects
+    '''
+
     elements = []
     col = FilteredElementCollector(doc).OfClass(CurveElement)
     for c in col:
@@ -460,9 +622,16 @@ def GetAllCurveBasedElementsInFamily(doc):
             elements.append(c)
     return elements
 
-# doc                   current family document
 def GetAllModelTextElementsInFamily(doc):
-    '''returns an element collector of all model text elements in family'''
+    '''
+    filters all model text elements in family
+
+    Parameters:
+    doc - current model document
+    
+    returns revit collector of revit API ModelText objects
+    '''
+
     col = FilteredElementCollector(doc).OfClass(ModelText)
     return col
 
@@ -471,9 +640,19 @@ def GetAllModelTextElementsInFamily(doc):
 # doc             current document
 def SetRefPlanesToNotAReference(doc):
     ''' 
-    will set any strong or weak reference plane within a family to a 'not a reference
+    Method will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'
+    
+    Parameters:
+    doc - current model document
+    
+    returns: result class instance 
+    - result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
+    - result.message: one row entry per reference plane requiring reference type change
+    - result.result: not used
     '''
-    '''
+
+    '''    
+    Revit API reference types and their int value:
     ('ref name ', 'Left', ' reference type as int ', 0, ' reference type as string ', 'Left')
     ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
     ('ref name ', 'Right', ' reference type as int ', 2, ' reference type as string ', 'Right')
@@ -486,7 +665,9 @@ def SetRefPlanesToNotAReference(doc):
     ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
     ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
     ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
+    
     '''
+
     result = res.Result()
     result.UpdateSep(True, 'Changing reference status of reference planes...')
     matchAtAll = False
@@ -497,7 +678,7 @@ def SetRefPlanesToNotAReference(doc):
             BuiltInParameter.ELEM_REFERENCE_NAME, 
             com.GetParameterValueAsInteger)
         # check if an update is required (id is greater then 12)
-        if (valueInt > 12):
+        if (valueInt > 13):
             resultChange = com.SetBuiltInParameterValue(
                 doc, 
                 refP, 
@@ -518,9 +699,19 @@ def SetRefPlanesToNotAReference(doc):
 # doc             current document
 def SetSymbolicAndModelLinesToNotAReference(doc):
     ''' 
-    will set any weak reference of a model or symbolic linee to a 'not a reference'
+    Method will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'
+
+    Parameters:
+    doc - current model document
+    
+    returns: result class instance 
+    - result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
+    - result.message: one row entry per curve element requiring reference type change
+    - result.result: not used
     '''
+    
     '''
+    Revit API
     ('ref name ', 'Model Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
     ('ref name ', 'Model Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
     ('ref name ', 'Model Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
@@ -528,6 +719,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     ('ref name ', 'Symbolic Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
     ('ref name ', 'Symbolic Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
     '''
+
     result = res.Result()
     result.UpdateSep(True, 'Changing reference status of model and symbolic curves...')
     matchAtAll = False

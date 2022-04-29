@@ -25,22 +25,14 @@ import clr
 import System
 import sys
 
-
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
-# path to 3rd party IFC exporter for Revit 2019
-ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2019.bundle\Contents\2019\IFCExportUIOverride.dll'
-clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
 
 # custom result class
 import Result as res
 
 from System.IO import Path
 from Autodesk.Revit.DB import *
-
-# import the BIM namespace which includes 
-# IFCExportConfiguration and IFCExportConfigurationMaps classes
-from BIM.IFC.Export.UI import IFCExportConfiguration
 
 # import common library
 import RevitCommonAPI as com

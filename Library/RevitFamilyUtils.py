@@ -31,19 +31,19 @@ from System.Collections.Generic import List
 
 
 # import common library
-import RevitCommonAPI as com
 # utility functions for most coomonly used Revit API tasks
-import Utility as util
+import RevitCommonAPI as com
 # utilities
-import Result as res
+import Utility as util
 # class used for stats reporting
-import RevitFamilyLoadOption as famLoadOpt
+import Result as res
 # implementation of Revit API callback required when loading families into a Revit model
-from RevitFamilyLoadOption import *
+import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
-
-from Autodesk.Revit.DB import *
+from RevitFamilyLoadOption import *
 # import everything from Autodesk Revit DataBase namespace (Revit API)
+from Autodesk.Revit.DB import *
+
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
@@ -463,15 +463,15 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 
 def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     '''
-    filters family symbols belonging to categories passt in
+    Filters family symbols belonging to list of built in categories passt in.
     
-    Parameters:
-    doc - current model document
-    cats - list of builtin categories to filter by, needs to be an ICollection:
-    cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
-    excludeSharedFam - bool: default is True (exclude any shared families from filter result)
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param ICollection cats: 
+        ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+        :cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
     
-    returns list of id's of family symbols (types) matching filter
+    :return list:
+        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
     '''
 
     ids = []
@@ -497,12 +497,12 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
 
 def GetAllNonSharedFamilySymbolIds(doc):
     '''
-    filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)
+    Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)
     
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
 
-    returns list of id's of family symbols (types) matching filter
+    :return list:
+        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
     '''
 
     ids = []
@@ -513,15 +513,18 @@ def GetAllNonSharedFamilySymbolIds(doc):
 
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     '''
-    filers types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family
+    Filters types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family
 
-    Parameters:
-    doc - current model document
-    typeIdGetter -  function returning ids of symbols (family types) as a list, requires as argument: 
-        the current model doc, ICollection of built in categories, bool: exclude shared families
-    useType - int: 0, no dependent elements (not used); 1: has dependent elements(is in use)
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param function typeIdGetter: 
+        A function returning ids of symbols (family types) as a list, requires as argument: 
+        the current model doc, 
+        ICollection of built in categories, 
+        bool: exclude shared families
+    :param int useType: 0, no dependent elements (not used); 1: has dependent elements(is in use)
     
-    returns list of id's of family symbols (types) matching filter
+    :return list:
+        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
     '''
 
     # get all types elements available
@@ -538,13 +541,13 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
 
 def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
     '''
-    filters unused non shared family (symbols) type ids in model
+    Filters unused non shared family (symbols) type ids in model.
 
-    Parameters:
-    doc - current model document
-    excludeSharedFam - bool: default is True (exclude any shared families from filter result)
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param bool excludeSharedFam: Default is True (exclude any shared families from filter result)
 
-    returns list of family symbol (type) id's
+    :return list:
+        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
     '''
 
     ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
@@ -552,12 +555,12 @@ def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
 
 def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
     '''
-    filters unused non shared and in place family (symbols) type ids in model
+    Filters unused, non shared and in place family (symbols) type ids in model which can be purged from the model.
 
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     
-    returns list of family symbol (type) id's
+    :return list:
+        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
     '''
 
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
@@ -570,12 +573,11 @@ LINE_NAMES = ['Model Lines', 'Symbolic Lines']
 
 def GetAllGenericFormsInFamily(doc):
     '''
-    filters all generic forms (3D extrusions) in family
+    Filters all generic forms (3D extrusions) in family.
 
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
 
-    returns revit collector of revit API GenericForm objects
+    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.GenericForm. 
     '''
 
     col = FilteredElementCollector(doc).OfClass(GenericForm)
@@ -583,14 +585,15 @@ def GetAllGenericFormsInFamily(doc):
 
 def GetAllCurveBasedElementsInFamily(doc):
     '''
-    filters all curve based elements in family with name:
-    - Symbolic Lines
-    - Model Lines
-    
-    Parameters:
-    doc - current model document
+    Filters all curve based elements in family.
 
-    returns list of revit API CurveElement objects
+    These are:
+        - Symbolic Lines
+        - Model Lines
+    
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+
+    :return list: A list of Autodesk.Revit.DB.CurveElement.
     '''
 
     elements = []
@@ -602,12 +605,11 @@ def GetAllCurveBasedElementsInFamily(doc):
 
 def GetAllModelTextElementsInFamily(doc):
     '''
-    filters all model text elements in family
+    Filters all model text elements in family.
 
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     
-    returns revit collector of revit API ModelText objects
+    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.ModelText. 
     '''
 
     col = FilteredElementCollector(doc).OfClass(ModelText)
@@ -618,15 +620,14 @@ def GetAllModelTextElementsInFamily(doc):
 # doc             current document
 def SetRefPlanesToNotAReference(doc):
     ''' 
-    Method will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'
+    This will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
     
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     
-    returns: result class instance 
-    - result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
-    - result.message: one row entry per reference plane requiring reference type change
-    - result.result: not used
+    :return Result: 
+        result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
+        result.message: one row entry per reference plane requiring reference type change
+        result.result: not used
     '''
 
     '''    
@@ -677,15 +678,14 @@ def SetRefPlanesToNotAReference(doc):
 # doc             current document
 def SetSymbolicAndModelLinesToNotAReference(doc):
     ''' 
-    Method will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'
+    This will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
 
-    Parameters:
-    doc - current model document
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     
-    returns: result class instance 
-    - result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
-    - result.message: one row entry per curve element requiring reference type change
-    - result.result: not used
+    :return Result: 
+        result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
+        result.message: one row entry per curve element requiring reference type change
+        result.result: not used
     '''
     
     '''
@@ -703,6 +703,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     matchAtAll = False
     curves = GetAllCurveBasedElementsInFamily(doc)
     for curve in curves:
+        # get the current reference type
         valueInt = com.GetBuiltInParameterValue(
             curve, 
             BuiltInParameter.ELEM_IS_REFERENCE, 
@@ -715,7 +716,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
                 BuiltInParameter.ELEM_IS_REFERENCE,
                 '0'
                 )
-            # set overall flag to indicate that at leasst one element was changed
+            # set overall flag to indicate that at least one element was changed
             if(resultChange.status == True and matchAtAll == False):
                 matchAtAll = True
             result.Update(resultChange)

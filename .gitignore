@@ -182,3 +182,6 @@ x64/
 .metadata
 *.pyc
 /.vs/slnx.sqlite
+
+# Mac OS
+.DS_Store

@@ -1,3 +1,2 @@
 # Code samples for the Revit Batch Processor
-
-A short description of the purpose of each script can be found in the header section of each script.
+This repository contains code samples for the [Revit Batch Processor](https://github.com/bvn-architecture/RevitBatchProcessor)

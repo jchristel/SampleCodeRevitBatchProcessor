@@ -187,5 +187,5 @@ x64/
 .DS_Store
 
 #Sphinx
-/docsource
+/docsource/build
 /docs/doctrees

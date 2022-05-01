@@ -34,6 +34,235 @@
             
   <section id="module-DataRoom">
 <span id="code-documentation"></span><h1>Code documentation<a class="headerlink" href="#module-DataRoom" title="Permalink to this headline">¶</a></h1>
+<section id="module-RevitCommonAPI">
+<span id="revit-common-api-functions"></span><h2>Revit common api functions<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupForTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckGroupForTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckGroupForTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters passed in list of type ids by type ids found in group and returns list of unmatched Id’s
+This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupsForMatchingTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckGroupsForMatchingTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckGroupsForMatchingTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks all elements in groups passt in whether type Id is matching any type ids passt in
+returns all type ids not matched</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.CheckParameterValue">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks a paramter value based on passed in condition</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.CheckUniqueTypeData">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckUniqueTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existingTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newTypeData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckUniqueTypeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>checking whether we have type and associated similar types already
+returns true:
+-if type is not in list existing Types passed in or
+-if ids of similar family types do not match any similar types already in list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns True if all but one dependent element are orphaned legend components</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.DeleteByElementIds">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">DeleteByElementIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transactionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.DeleteByElementIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>method deleting elements by list of element id’s</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.DeleteByElementIdsOneByOne">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">DeleteByElementIdsOneByOne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transactionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.DeleteByElementIdsOneByOne" title="Permalink to this definition">¶</a></dt>
+<dd><p>method deleting elements by list of element id’s one at the time</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.FilterOutWarnings">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">FilterOutWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependentElements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.FilterOutWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>attempts to filter out any warnings from ids supplied by checking the workset name
+of each element for ‘Reviewable Warnings</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetBuiltInParameterValue">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the built in parameter value specified by the defintion. If parameter does not exist on element None will be returned!!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetIdsFromElementCollector">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetIdsFromElementCollector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetIdsFromElementCollector" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a list of all element ids in collector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetLegendComponentsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetLegendComponentsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetLegendComponentsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all type ids which have been placed as legend components</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetNotPlacedTypes">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetNotPlacedTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getInstances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetNotPlacedTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of unused Types foo by compring type Ids of placed instances with all avialable types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueAsInteger">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueAsInteger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueAsInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns parameter values as integer
+any non integer parameter storage types will return -1</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueByName">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the parameter specified by its name. If parameter does not exist on element None will be returned!!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueUTF8String">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueUTF8String</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueUTF8String" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns parameter values as utf-8 encoded strings</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetSimilarTypeFamiliesByType">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetSimilarTypeFamiliesByType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetSimilarTypeFamiliesByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of uniqe types and similar family types in format:
+[[type, similar type id, similar type id,…]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetUnusedTypeIdsFromDetailGroups">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetUnusedTypeIdsFromDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetUnusedTypeIdsFromDetailGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks elements in nested detail groups and detail groupd whether their type ID is in the list passt in.
+Returns all type Ids from list passt in not found in group definitions
+This only returns valid data if at least one instance of the group is placed in the model!!</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetUnusedTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetUnusedTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instanceGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetUnusedTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns ID of unused family types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.HasDependentElements">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">HasDependentElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.HasDependentElements" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsElementNotOfBuiltInCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsElementNotOfBuiltInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtinCategories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsElementNotOfBuiltInCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether an element is of not one of the built in categories passt in (true) if not returns false</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsElementOfBuiltInCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsElementOfBuiltInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtinCategories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsElementOfBuiltInCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether an element is of one of the built in categories passt in (true) if not returns false</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstance">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether the family name of a given family instance matches filter value: True, otherwise False)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceContains">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether the family name of a given family instance contains filter value: True, otherwise False)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether the family name of a given family instance does not contains filter value: True, otherwise False)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceContains">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether the symbol name of a given family instance contains filter value: True, otherwise False)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether the symbol name of a given family instance does not contains filter value: True, otherwise False)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SaveAsFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rfa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAsFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>save a family file under new name in given location</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SaveFile">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>to be used for families and non workshared revit files only</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SetBuiltInParameterValue">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueAsString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueSetter=&lt;function</span> <span class="pre">setParameterValue&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the built in parameter value specified by the defintion. If parameter does not exist false will be returned in status!!</p>
+</dd></dl>
+
+</section>
+<section id="module-RevitWarningsSolver">
+<span id="revit-warnings"></span><h2>Revit Warnings<a class="headerlink" href="#module-RevitWarningsSolver" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-RevitWarningsSolverDuplicateMark"></span><span class="target" id="module-RevitWarningsSolverRoomTagToRoom"></span></section>
+<section id="module-RevitWorksets">
+<span id="revit-worksets"></span><h2>Revit Worksets<a class="headerlink" href="#module-RevitWorksets" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.GetActionChangeElementWorkset">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">GetActionChangeElementWorkset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.GetActionChangeElementWorkset" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the required action to change a single elements workset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.GetElementWorksetName">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">GetElementWorksetName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.GetElementWorksetName" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the name of the workset an element is on, or invalid workset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.GetWorksetReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">GetWorksetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.GetWorksetReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets workset data ready for being printed to file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.IsElementOnWorksetById">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">IsElementOnWorksetById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.IsElementOnWorksetById" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether an element is on a given workset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.IsElementOnWorksetByName">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">IsElementOnWorksetByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.IsElementOnWorksetByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether an element is on a given workset</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWorksets.UpdateWorksetDefaultVisibiltyFromReport">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">UpdateWorksetDefaultVisibiltyFromReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.UpdateWorksetDefaultVisibiltyFromReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates the default visbility of worksets based on a workset report file</p>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -55,7 +284,12 @@
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Code documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">Revit common api functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">

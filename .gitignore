@@ -185,3 +185,7 @@ x64/
 
 # Mac OS
 .DS_Store
+
+#Sphinx
+/docsource
+/docs/doctrees

@@ -1,6 +1,9 @@
+'''
+This module contains a number of commonly required Revit API utility functions. 
+'''
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#
 #License:
 #
 #
@@ -21,19 +24,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#
 
 #import datetime
 import System
 import clr
 import glob
+# class used for stats reporting
 import Result as res
 
-#from System.IO import Path
+# import everything from Autodesk Revit DataBase namespace (Revit API)
 from Autodesk.Revit.DB import *
 import os.path as path
-
+# utilities
 import Utility as util
+# importing revit gropups module
 import RevitGroups as rGroup
 
 clr.ImportExtensions(System.Linq)
@@ -41,22 +45,58 @@ clr.ImportExtensions(System.Linq)
 
 #----------------------------------------parameters-----------------------------------------------
 
-# para              the parameter containiung value to be checked
-# paraCondition     the condition to be applied
-# conditionValue    the value to be checked for
 def CheckParameterValue(para, paraCondition, conditionValue):
     '''
-    checks a paramter value based on passed in condition  
+    Checks a parameter value based on passed in condition function.
+
+    This extracts the value of the passt in parameter and compares it against a passt in value using 
+    the also passt in compare function. 
+    Note that values will be passt into compare function as ASCII encoded.
+
+    :param Autodesk.Revit.DB.Parameter para: Parameter of which the value is to be checked.
+    :param function paraCondition:
+        Function taking 2 arguments:
+        First argument is the value to be checked against
+        Second argument is the actual parameter value
+        Needs to return a bool!
+        Both arguments will be ASCII encoded at passing in.
+    :param var conditionValue: The value to be checked for
+    :raise: Any exception will need to be managed by the function caller.
+
+    :return bool:
+        True if condition value is evaluated to be True by passt in function paraCondition.
+        Will return False if compare function returns None or a False.
+    
     '''
+    # set default return value
     isMatch = False
     pValue = getParameterValue(para)
-    isMatch = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(pValue))
+    # evaluate parameter value with passt in value using passt in function
+    compareOutCome = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(pValue))
+    # check the return value for a bool (True) only. Everything else will return False
+    if (compareOutCome == True):
+        isMatch = True
     return isMatch
 
-# returns a parameter value as string
 def getParameterValue(para):
+    '''
+    Returns a parameter value as string.
+
+    Returns a parameter value as string independent of its storage type.
+
+    :param Autodesk.Revit.DB.Parameter para: Parameter of which the value is to be returned.
+    :raise: If an exception occurs the exception message will be returned as the parameter value prefixed with 'Exception: '
+
+    :return string:
+        Default value is 'no Value' if parameter value is empty.
+        Otherwise the actual parameter value.
+        Will return 'Exception: ' + exception message if an exception occured.
+    '''
+
+    # set return value default 
     pValue = 'no Value'
     try:
+        # extract parameter value depending on its storage type
         if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
             if(para.AsValueString()!= None and para.AsValueString() != ''):
                 pValue = para.AsValueString()
@@ -70,10 +110,24 @@ def getParameterValue(para):
         pValue = 'Exception: '+str(e)
     return pValue
 
-# para      revit parameter to get value of
 def GetParameterValueUTF8String(para):
-    ''' returns parameter values as utf-8 encoded strings'''
+    '''
+    Returns the parameter value as utf-8 encoded string.
+
+    Returns the parameter value as utf-8 string independent of its storage type.
+
+    :param Autodesk.Revit.DB.Parameter para: Parameter of which the value is to be returned.
+    :raise: If an exception occurs the exception message will be returned as the parameter value prefixed with 'Exception: '
+
+    :return string:
+        Default value is 'no Value' if parameter value is empty.
+        Otherwise the actual parameter value.
+        Will return 'Exception: ' + exception message if an exception occured.
+    '''
+
+    # set return value default 
     pValue = 'no Value'
+    # extract parameter value depending on its storage type
     if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
         if(para.AsValueString()!= None and para.AsValueString() != ''):
             pValue = para.AsValueString().encode('utf-8')
@@ -85,22 +139,45 @@ def GetParameterValueUTF8String(para):
             pValue = str(para.AsElementId()).encode('utf-8')
     return pValue
 
-# para      revit parameter to get value of
 def GetParameterValueAsInteger(para):
-    ''' returns parameter values as integer
-    any non integer parameter storage types will return -1'''
+    '''
+    Returns the parameter value as integer.
+
+    Returns the parameter value as integer only if the storage type is integer.
+
+    :param Autodesk.Revit.DB.Parameter para: Parameter of which the value is to be returned.
+    :raise: Any exception will need to be managed by the function caller.
+
+    :return int:
+        Default value is -1 if parameter value is empty or storage type is not integer.
+        Otherwise the actual parameter value.
+    '''
+
+    # set return value default
     pValue = -1
+    # extract parameter value depending on whether its storage type is integer, otherwise default value
     if(para.StorageType == StorageType.Integer):
         pValue = para.AsInteger()
     return pValue
 
-# element                   the revit element containing the built in parameter of which the value is to be returned
-# builtInParameterDef       the built in parameter defintion
-# parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string
 def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
     '''
-    Returns the built in parameter value specified by the defintion. If parameter does not exist on element None will be returned!!
+    Returns the built-in parameter value.
+
+    Returns the built-in parameter value. Return value type depends on passt in value getter function. Default is UTF-8 encoded string.
+
+    :param Autodesk.Revit.DB.Element element: Element to which the built-in parameter belongs.
+    :param Autodesk.Revit.DB.Definition builtInParameterDef: The parameters built-in definition of which the value is to be returned.
+    :param function parameterValueGetter:
+        The function which takes the parameter as an argument and returns it's value.
+    :raise: As per value getter method.
+
+    :return var:
+        Default value is None if parameter does not exist on element.
+        Otherwise the actual parameter value as per value getter method.
     '''
+
+    # set return value default
     parameterValue = None
     paras = element.GetOrderedParameters()
     for para in paras:
@@ -109,13 +186,24 @@ def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter 
             break
     return parameterValue
 
-# element                   the revit element containing the parameter of which the value is to be returned
-# parameterName             the parameter name
-# parameterValueGetter      function returning the parameter value. Default is UTF8 formatted string
 def GetParameterValueByName(element, parameterName, parameterValueGetter = GetParameterValueUTF8String):
     '''
-    Returns the value of the parameter specified by its name. If parameter does not exist on element None will be returned!!
+    Returns the parameter value by parameter name.
+
+    Returns the parameter value by the parameter name. Return value type depends on passt in value getter function. Default is UTF-8 encoded string.
+
+    :param Autodesk.Revit.DB.Element element: Element to which the built-in parameter belongs.
+    :param string parameterName: The parameters name of which the value is to be returned.
+    :param function parameterValueGetter:
+        The function which takes the parameter as an argument and returns it's value.
+    :raise: As per value getter method.
+
+    :return var:
+        Default value is None if parameter does not exist on element.
+        Otherwise the actual parameter value as per value getter method.
     '''
+
+    # set return value default
     parameterValue = None
     paras = element.GetOrderedParameters()
     for para in paras:
@@ -124,14 +212,38 @@ def GetParameterValueByName(element, parameterName, parameterValueGetter = GetPa
             break
     return parameterValue
 
-# sets a parameter value by trying to convert the past in string representing the value into the appropriate value type:
 def setParameterValue(para, valueAsString, doc):
+    '''
+    Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param Autodesk.Revit.DB.Parameter para: Parameter of which the value is to be set.
+    :param string valueAsString: The new parameter value.
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :raise: Any exception will need to be managed by the function caller.
+
+    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters
+
+    :return Result: 
+        Result class instance.
+        Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
+        Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+        On exception:
+        Set parameter.status (bool) will be False.
+        Set parameter.message will contain the exception message.
+    '''
+
     returnvalue = res.Result()
     oldValue = getParameterValue(para)
     transactionName = 'Update to parameter value'
+    # different parameter storage types will require different actions due to value type passt in is a string which will need converting
+    # first before applied to the parameter
     if(para.StorageType == StorageType.ElementId):
         newId = ElementId(int(valueAsString))
+        # changing parameter value is required to run inside a transaction
         def action():
+            # set up a result instance to be returned to caller with transaction outcome
             actionReturnValue = res.Result()
             try:
                 para.Set(newId)
@@ -185,15 +297,32 @@ def setParameterValue(para, valueAsString, doc):
         returnvalue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
     return returnvalue
 
-# doc                       trhe current document
-# element                   the revit element containing the built in parameter of which the value is to be returned
-# builtInParameterDef       the built in parameter defintion
-# valueAsString             the new parameter value as string
-# parameterValueSetter      function updating the parameter values. method needs to accept these args: parameter, new parameter value as string, document
 def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, parameterValueSetter = setParameterValue):
     '''
-    Sets the built in parameter value specified by the defintion. If parameter does not exist false will be returned in status!!
+    Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.
+
+    Changing a parameter value requires this action to run inside a transaction.
+
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param Autodesk.Revit.DB.Element element: Element to which the built-in parameter belongs.
+    :param Autodesk.Revit.DB.Definition builtInParameterDef: The parameters built-in definition of which the value is to be returned.
+    :param string valueAsString: The new parameter value.
+    :param function parameterValueSetter:
+        The function which takes the parameter as an argument and changes it's value to.
+        The function needs to accept these args: parameter, new parameter value as string, document
+    :raise: As per value setter method.
+    
+    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters
+
+    :return Result: 
+        Result class instance.
+        Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
+        Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+        On exception:
+        Set parameter.status (bool) will be False.
+        Set parameter.message will contain the exception message.
     '''
+    
     returnvalue = res.Result()
     returnvalue.UpdateSep(False, 'Parameter not found')
     paras = element.GetOrderedParameters()
@@ -203,23 +332,42 @@ def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, p
             break
     return returnvalue
 
-# returns the mark value of an element
-# e:    the element
-# returns 'Can not retrieve mark value!' if an exception occured
 def GetElementMark(e):
+    '''
+    Returns the mark value of an element.
+
+    :param Autodesk.Revit.DB.Element e: The element.
+
+    :return string:
+        The element mark value.  
+        If an exception occured, the message will be 'Failed with exception: ' + the exception string.
+    '''
+
     mark = ''
     try:
         paraMark = e.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
         mark = '' if paraMark == None else paraMark.AsString()
-    except:
-        mark = 'Can not retrieve mark value!'
+    except Exception as e:
+        mark = 'Failed with exception: ' + str(e)
     return mark
+
 #----------------------------- revisions ----------------
 
-# returns the revision of a sheet by its name
-# since multiple sheets can have the same name it will return the revision of the first match...
-# default value is '-'
 def GetSheetRevByName(doc, sheetName):
+    '''
+    Returns the revision of a sheet identified by its name. Default value is '-'.
+
+    Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
+
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param string sheetName: The name of the sheet of which the revision is to be returned.
+    :raise: Any exception will need to be managed by the function caller.
+
+    :return string:
+        The sheets current revision value.  
+        If no matching sheet is found, '-' is returned.
+    '''
+
     revValue = '-'
     collector = FilteredElementCollector(doc).OfClass(ViewSheet).Where(lambda e: e.Name == sheetName)
     results = collector.ToList()
@@ -229,9 +377,19 @@ def GetSheetRevByName(doc, sheetName):
         revValue = util.PadSingleDigitNumericString(revP.AsString())
     return revValue
 
-# returns the revision of a sheet by its number
-# default value is '-'
 def GetSheetRevByNumber(doc, sheetNumber):
+    '''
+    Returns the revision of a sheet identified by its number. Default value is '-'.
+
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param string sheetNumber: The number of the sheet of which the revision is to be returned.
+    :raise: Any exception will need to be managed by the function caller.
+
+    :return string:
+        The sheets current revision value.  
+        If no matching sheet is found, '-' is returned.
+    '''
+
     revValue = '-'
     collector = FilteredElementCollector(doc).OfClass(ViewSheet).Where(lambda e: e.SheetNumber == sheetNumber)
     results = collector.ToList()
@@ -243,11 +401,19 @@ def GetSheetRevByNumber(doc, sheetNumber):
 
 #----------------------------------------Legend Components -----------------------------------------------
 
-# typeIds       types to check whether they have been placed as legend components
-# doc           current model document
 def GetLegendComponentsInModel(doc, typeIds):
-    ''' returns all type ids which have been placed as legend components'''
+    ''' 
+    Returns all symbol (type) ids of families which have been placed as legend components and have match in list past in.
+    
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param list string typeIds: List of typeIds to check against.
+
+    :return list of string:
+        Values are representing symbol (type) ids of legend components in models filtered by ids passt in.
+    '''
+
     ids = []
+    # get all legend components in the model to check against list past in
     col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
     for c in col:
         id = GetBuiltInParameterValue(c, BuiltInParameter.LEGEND_COMPONENT, getParameterValue)

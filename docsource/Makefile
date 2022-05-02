@@ -19,6 +19,8 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+# github pages specific build command. This will build html pages and then copy them into
+# the /docs folder from which github loads it's pages
 github:
 	@make html
 	@rm -rf ../docs/*

@@ -1,10 +1,10 @@
-Code documentation
-==================
-.. automodule:: DataRoom
-    :members:
+Revit API Library documentation
 
-Revit common api functions
---------------------------
+The following modules from part of the library of functions around the Revit API.
+=================================================================================
+
+Revit common API functions. This library contains often used wrapper functions for Revit API tasks.
+---------------------------------------------------------------------------------------------------
 
 .. automodule:: RevitCommonAPI
     :members:
@@ -23,4 +23,9 @@ Revit Worksets
 --------------
 
 .. automodule:: RevitWorksets
+    :members:
+
+The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit. 
+---------------------------------------------------------------------------------------------------------------------------------
+.. automodule:: DataRoom
     :members:

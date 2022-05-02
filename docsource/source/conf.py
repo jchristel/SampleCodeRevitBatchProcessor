@@ -47,6 +47,8 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# mocking clr and system imports
+autodoc_mock_imports = ["clr", 'System', 'Autodesk']
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -60,5 +62,7 @@ html_theme = 'alabaster'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-# mocking clr and system imports
-autodoc_mock_imports = ["clr", 'System', 'Autodesk']
+
+# If true, the current module name will be prepended to all description
+# unit titles (such as .. function::).
+add_module_names = False

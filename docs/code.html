@@ -170,8 +170,11 @@ If an exception occured, the message will be ‘Failed with exception: ‘ + the
 <li><p><strong>typeIds</strong> (<em>list string</em>) – List of typeIds to check against.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return list of string</dt>
-<dd class="field-even"><p>Values are representing symbol (type) ids of legend components in models filtered by ids passt in.</p>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Return list of string</dt>
+<dd class="field-odd"><p>Values are representing symbol (type) ids of legend components in models filtered by ids passt in.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,8 +293,21 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetSimilarTypeFamiliesByType">
 <span class="sig-name descname"><span class="pre">GetSimilarTypeFamiliesByType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetSimilarTypeFamiliesByType" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of uniqe types and similar family types in format:
-[[type, similar type id, similar type id,…]]</p>
+<dd><p>Returns a list of uniqe types its similar family (symbol) types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeGetter</strong> (<em>function</em>) – The function which takes the document as an argument and returns a list of family symbols (types).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Return list of Autodesk.Revit.DB.Symbol and Autodesk.Revit.DB.ElementId</dt>
+<dd class="field-odd"><p>Format [[symbol, similar type id, similar type id,…]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -496,6 +512,7 @@ Set parameter.message will contain the exception message.</p>
 </section>
 <section id="module-DataRoom">
 <span id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit"></span><h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#module-DataRoom" title="Permalink to this headline">¶</a></h2>
+<p>Data storage class for revit room properties used to write and read json data.</p>
 </section>
 </section>
 

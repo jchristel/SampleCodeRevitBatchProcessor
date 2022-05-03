@@ -407,6 +407,7 @@ def GetLegendComponentsInModel(doc, typeIds):
     
     :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     :param list string typeIds: List of typeIds to check against.
+    :raise: Any exception will need to be managed by the function caller.
 
     :return list of string:
         Values are representing symbol (type) ids of legend components in models filtered by ids passt in.
@@ -424,11 +425,19 @@ def GetLegendComponentsInModel(doc, typeIds):
 
 #----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-# doc   current model document
-# typeGetter    method needs to accept the current document as argument and need to return a collector of Autodesk.Revit.DB ElementType
 def GetSimilarTypeFamiliesByType(doc, typeGetter):
-    '''returns a list of uniqe types and similar family types in format:
-    [[type, similar type id, similar type id,...]]'''
+    '''
+    Returns a list of uniqe types its similar family (symbol) types.
+    
+    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param function typeGetter:
+        The function which takes the document as an argument and returns a list of family symbols (types).
+    :raise: Any exception will need to be managed by the function caller.
+    
+    :return list of Autodesk.Revit.DB.Symbol and Autodesk.Revit.DB.ElementId:
+        Format [[symbol, similar type id, similar type id,...]]
+    '''
+
     simTypes=[]
     types = typeGetter(doc)
     for t in types:

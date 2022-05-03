@@ -1,3 +1,7 @@
+
+'''
+Data storage class for revit room properties used to write and read json data.
+'''
 #
 #License:
 #

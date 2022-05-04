@@ -1,3 +1,6 @@
+'''
+Geometry data storage class.
+'''
 #
 #License:
 #

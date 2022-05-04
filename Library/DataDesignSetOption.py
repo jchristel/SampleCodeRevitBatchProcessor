@@ -1,3 +1,6 @@
+'''
+Data storage class for Revit desing option properties.
+'''
 #
 #License:
 #

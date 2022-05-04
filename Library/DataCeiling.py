@@ -1,3 +1,6 @@
+'''
+Data storage class for Revit ceiling properties.
+'''
 #
 #License:
 #
@@ -28,6 +31,9 @@ import DataDesignSetOption
 class DataCeiling():
     dataType = 'ceiling'
     def __init__(self, j = {}):
+        '''
+        constructor
+        '''
         self.dataType = 'ceiling'
         self.id = -1
         self.typeName = '-'
@@ -57,13 +63,13 @@ class DataCeiling():
     @property
     def DataType(self):
         '''
-        This is the getter method
+        This is the getter method.
         '''
         return self.dataType
 
     def to_json(self):
         '''
-        convert the instance of this class to json
+        Convert the instance of this class to json
         '''
         return json.dumps(self, indent = None, default=lambda o: o.__dict__)
         

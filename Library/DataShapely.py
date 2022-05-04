@@ -1,3 +1,6 @@
+'''
+Module containing utility functions converting data retrieved from Revit into shapely geometry.
+'''
 #
 #License:
 #

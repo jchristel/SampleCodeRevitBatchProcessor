@@ -48,7 +48,9 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 # mocking clr and system imports
-autodoc_mock_imports = ["clr", 'System', 'Autodesk']
+# also includes RevitFamilyLoadOption module since class defined in there inherits from an AutoDesk API class
+# which is tripping sphinx
+autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'RevitFamilyLoadOption']
 
 # -- Options for HTML output -------------------------------------------------
 

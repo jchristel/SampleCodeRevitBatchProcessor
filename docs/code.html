@@ -36,7 +36,7 @@
 <section id="the-following-modules-from-part-of-the-library-of-functions-around-the-revit-api">
 <h1>The following modules from part of the library of functions around the Revit API.<a class="headerlink" href="#the-following-modules-from-part-of-the-library-of-functions-around-the-revit-api" title="Permalink to this headline">¶</a></h1>
 <section id="module-RevitCommonAPI">
-<span id="revit-common-api-functions-this-library-contains-often-used-wrapper-functions-for-revit-api-tasks"></span><h2>Revit common API functions. This library contains often used wrapper functions for Revit API tasks.<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
+<span id="revitcommonapi-this-module-contains-often-used-wrapper-functions-for-revit-api-tasks"></span><h2>RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
 <p>This module contains a number of commonly required Revit API utility functions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupForTypeIds">
@@ -510,9 +510,103 @@ Set parameter.message will contain the exception message.</p>
 </dd></dl>
 
 </section>
-<section id="module-DataRoom">
-<span id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit"></span><h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#module-DataRoom" title="Permalink to this headline">¶</a></h2>
-<p>Data storage class for revit room properties used to write and read json data.</p>
+<section id="module-DataCeiling">
+<span id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit"></span><h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#module-DataCeiling" title="Permalink to this headline">¶</a></h2>
+<p>Data storage class for Revit ceiling properties.</p>
+<span class="target" id="module-DataDesignSetOption"></span><p>Data storage class for Revit desing option properties.</p>
+<span class="target" id="module-DataGeometry"></span><p>Geometry data storage class.</p>
+<span class="target" id="module-DataReadFromFile"></span><span class="target" id="module-DataRoom"></span><p>Data storage class for Revit room properties.</p>
+<span class="target" id="module-DataShapely"></span><p>Module containing utility functions converting data retrieved from Revit into shapely geometry.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.BuildDictionaryByLevelAndDataType">
+<span class="sig-name descname"><span class="pre">BuildDictionaryByLevelAndDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataReader</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.BuildDictionaryByLevelAndDataType" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a dictionary where 
+- key is the level name
+- values is a list of list of data objects
+-       first list rooms
+-       second list ceilings</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetCeilingsByRoom">
+<span class="sig-name descname"><span class="pre">GetCeilingsByRoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataSourcePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetCeilingsByRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads geo data from json formatted text file and does an intersection check between rooms and ceilings
+writes a report to provided path containing a row per room and ceiling within room</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetInnerLoopsAsShape">
+<span class="sig-name descname"><span class="pre">GetInnerLoopsAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetInnerLoopsAsShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the inner loops (holes) of an object as list of shapely points. 
+Points are translated with passed in matrix 
+loops within inner loops will be ignored</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetOuterLoopAsShape">
+<span class="sig-name descname"><span class="pre">GetOuterLoopAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetOuterLoopAsShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the boundary loop of an object as list of shapely points. 
+Points are translated with passed in matrix</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetReportData">
+<span class="sig-name descname"><span class="pre">GetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>convertes a dictionary of DataRoom objects by level into list of lists of data entries per room</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromDataInstance">
+<span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromDataInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataInstance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromDataInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of of shapely polygons from data instances passt in.
+Polygons may contain holes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromGeoObject">
+<span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromGeoObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromGeoObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>convertes polygon points from DataGeoemtry instances to shapely polygon instances
+and returnts them as a dictionary where
+- key is the geometry objects id
+- value is a list of shapely polygons</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetTranslationMatrix">
+<span class="sig-name descname"><span class="pre">GetTranslationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetTranslationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the rotation/ translation matrix from the geometry object</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.ReadData">
+<span class="sig-name descname"><span class="pre">ReadData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.ReadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads text files into data objects within data reader class which is returned</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.SortMultipleDataRows">
+<span class="sig-name descname"><span class="pre">SortMultipleDataRows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">associatedDataRows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roomData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.SortMultipleDataRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>collapses multiple ceilings of one type in one with multiple ids
+works for ceilings only in the moment</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.buildShapelyPolygon">
+<span class="sig-name descname"><span class="pre">buildShapelyPolygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapeS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.buildShapelyPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates shapely polygons from list of polygons passt in
+assumptions is first polygone describes the boundary loop 
+any subsequent polygons are describing holes within the boundary</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.writeReportData">
+<span class="sig-name descname"><span class="pre">writeReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.writeReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>method writing out report information</p>
+</dd></dl>
+
+</section>
+<section id="module-BatchProcessorLogUtils">
+<span id="misc-modules"></span><h2>Misc modules<a class="headerlink" href="#module-BatchProcessorLogUtils" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
@@ -536,10 +630,11 @@ Set parameter.message will contain the exception message.</p>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The following modules from part of the library of functions around the Revit API.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">Revit common API functions. This library contains often used wrapper functions for Revit API tasks.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-DataRoom">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-DataCeiling">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-BatchProcessorLogUtils">Misc modules</a></li>
 </ul>
 </li>
 </ul>

@@ -621,9 +621,21 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 
 #----------------------------------------elements-----------------------------------------------
 
-# doc           current model document
-# elementIds    elements of which to build a dictionary by category
 def BuildCategoryDictionary(doc, elementIds):
+    '''
+    Builds a dictionary from elementId s passt in.
+
+    Dictionary key is the element category and values are all the elements of that category.
+    If no category can be found the key 'invalid category' will be used.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param elementIds: List of element id of which to build the dictionary from.
+    :type elementIds: list of AutoDesk.Revit.DB.ElementId
+    :return: Dictionary key is the element category and values are all the elements of that category.
+    :rtype: dictioanry, key is string, value is list of AutoDesk.Revit.DB.Element
+    '''
+
     dic = {}
     for elId in elementIds:
         try:
@@ -645,10 +657,18 @@ def BuildCategoryDictionary(doc, elementIds):
                 dic['invalid element'] = [el]
     return dic
 
-# doc           current model document
-# elementIds    dependent elements of which to  check whether orphaned legend components
 def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, elementIds):
-    ''' returns True if all but one dependent element are orphaned legend components'''
+    '''
+    Check if element are orphaned legend components
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param elementIds: List of elements to check
+    :type elementIds: list of AutoDesk.Revit.DB.ElementId
+    :return: True if all but one element are orphaned legend components.
+    :rtype: bool
+    '''
+
     flag = True
     categoryName = 'Legend Components'
     # build dependent type dictionary
@@ -673,12 +693,20 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     else:
         flag = False
     return flag
-
-# doc                 current model document
-# dependentElements   list of elements ids               
+           
 def FilterOutWarnings(doc, dependentElements):
-    '''attempts to filter out any warnings from ids supplied by checking the workset name
-    of each element for 'Reviewable Warnings'''
+    '''
+    Attempts to filter out any warnings from ids supplied by checking the workset name
+    of each element for 'Reviewable Warnings'
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param dependentElements: List of elements to check.
+    :type dependentElements: list of AutoDesk.Revit.DB.Element
+    :return: A list of elements id where the workset name of the element is not 'Reviewable Warnings'
+    :rtype: list of AutoDesk.Revit.DB.Element
+    '''
+    
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)
@@ -687,14 +715,25 @@ def FilterOutWarnings(doc, dependentElements):
             ids.append(id)
     return ids
 
-# doc   current model document
-# el    the element of which to check for dependent elements
-# filter  what type of dependent elements to filter, Default is None whcih will return all dependent elements
-# threshold   once there are more elements depending on element passed in then specified in threshold value it is deemed that other elements 
-#             are dependent on this element (stacked walls for instance return as a minimum 2 elements: the stacked wall type and the legend component
-#             available for this type
 def HasDependentElements(doc, el, filter = None, threshold = 2):
-    ''' returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured'''
+    '''
+    Checks whether an element has dependent elements.
+
+    The dependent elements are collected via Element.GetDependentElements(filter).
+    This also includes a check as to whether elements returned as dependent are orphaned. (for lack of better words)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param el: The element to be checked for dependent elements.
+    :type el: AutoDesk.Revit.DB.Element
+    :param filter: What type of dependent elements to filter, defaults to None which will return all dependent elements
+    :type filter: Autodesk.Revit.DB.ElementFilter , optional
+    :param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
+    :type threshold: int, optional
+    :return: returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured
+    :rtype: int
+    '''
+
     value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
     try:
         dependentElements = el.GetDependentElements(filter)
@@ -711,10 +750,24 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
         value = -1
     return value
 
-# doc             current document
-# useTyep         0, no dependent elements; 1: has dependent elements
-# typeIdGetter    list of type ids to be checked for dependent elements
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
+    '''
+    Gets either the used or not used type Ids provided by typeIdGetter.
+
+    Whether the used or unused type ids depends on the useType value.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param typeIdGetter: Function returning type ids
+    :type typeIdGetter: list of Autodesk.Revit.DB.ElementId
+    :param useType: 0, no dependent elements; 1: has dependent elements, defaults to 0
+    :type useType: int, optional
+    :param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
+    :type threshold: int, optional
+    :return: A list of either all used or unused element ids. Depends on useType. 
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     # get all types elements available
     allTypeIds = typeIdGetter(doc)
     ids = []
@@ -725,10 +778,24 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
             ids.append(typeId)
     return ids
 
-# transactionName : name the transaction will be given
-# elementName: will appear in description of what got deleted
 def DeleteByElementIds(doc, ids, transactionName, elementName):
-    '''method deleting elements by list of element id's'''
+    '''
+    Deleting elements in list all at once.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: List containing ids of all elements to be deleted.
+    :type ids: list of Autodesk.Revit.DB.ElementId
+    :param transactionName: The transaction name used for the deletion.
+    :type transactionName: str
+    :param elementName: The element name added to deletion status message.
+    :type elementName: str
+    :return: Result class instance.
+        .result = True if succsesfully deleted all elements. Otherwise False.
+        .message will contain deletion status
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     def action():
         actionReturnValue = res.Result()
@@ -742,10 +809,25 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     returnvalue = InTransaction(transaction, action)
     return returnvalue
 
-# transactionName : name the transaction will be given
-# elementName: will appear in description of what got deleted
 def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
-    '''method deleting elements by list of element id's one at the time'''
+    '''
+    Deleting elements in list one at the time.
+
+    Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: List containing ids of all elements to be deleted.
+    :type ids: list of Autodesk.Revit.DB.ElementId
+    :param transactionName: The transaction name used for the deletion.
+    :type transactionName: str
+    :param elementName: The name of the element (?) Not used!!
+    :type elementName: str
+    :return: Result class instance.
+        .result = True if succsesfully deleted all elements. Otherwise False.
+        .message will contain each id and its deletion status
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
     returnvalue = res.Result()
     for id in ids:
         def action():
@@ -762,18 +844,40 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
         returnvalue.Update( InTransaction(transaction, action))
     return returnvalue
 
-# col    element collector
 def GetIdsFromElementCollector(col):
-    ''' this will return a list of all element ids in collector '''
+    '''
+    This will return a list of all element ids in collector.
+
+    Any element in collector which is invalid will be ignored.
+    
+    :param col: A filtered element collector.
+    :type col: Autodesk.Revit.DB.FilteredElementCollector 
+    :return: list of all element ids of valid elements in collector.
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     for c in col:
-        ids.append(c.Id)
+        try:   
+            ids.append(c.Id)
+        except Exception as e:
+            pass
     return ids
 
-# elId                  element Id to be checked
-# builtinCategories     list of builtin categories  
 def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
-    '''checks whether an element is of one of the built in categories passt in (true) if not returns false'''
+    '''
+    Checks whether an element is of the built in categories passt in.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param elId: The id of the element to be tested.
+    :type elId: Autodesk.Revit.DB.ElementId
+    :param builtinCategories: The builtin category the element does needs to match.
+    :type builtinCategories: Autodesk.Revit.DB.Definition
+    :return: True if element's builtin category does equals the test category, otherwise False.
+    :rtype: bool
+    '''
+
     match = False
     el = doc.GetElement(elId)
     enumCategoryId = el.Category.Id.IntegerValue.ToString()
@@ -782,11 +886,21 @@ def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
             match = True
             break
     return match
-        
-# elId                  element Id to be checked
-# builtinCategories     list of builtin categories  
+         
 def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
-    '''checks whether an element is of not one of the built in categories passt in (true) if not returns false'''
+    '''
+    Checks whether an element is not of the built in categories passt in.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param elId: The id of the element to be tested.
+    :type elId: Autodesk.Revit.DB.ElementId
+    :param builtinCategories: The builtin category the element does not needs to match.
+    :type builtinCategories: Autodesk.Revit.DB.Definition
+    :return: True if element's builtin category does not equals the test category, otherwise False.
+    :rtype: bool
+    '''
+
     match = True
     el = doc.GetElement(elId)
     enumCategoryId = el.Category.Id.IntegerValue.ToString()
@@ -796,11 +910,20 @@ def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
             break
     return match
 
-# doc           current model
-# familyName    the family name to be tested for
-# elementId     the id of the element to be tested
 def IsFamilyNameFromInstance(doc, familyName, elementId):
-    '''checks whether the family name of a given family instance matches filter value: True, otherwise False)'''
+    '''
+    Checks whether the family name of a given family instance matches filter value.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param familyName: The string the name of the family needs to match.
+    :type familyName: str
+    :param elementId: The id of the element to be tested.
+    :type elementId: Autodesk.Revit.DB.ElementId
+    :return: True if family equals the test string, otherwise False.
+    :rtype: bool
+    '''
+
     el = doc.GetElement(elementId)
     flag = True
     try:
@@ -810,11 +933,20 @@ def IsFamilyNameFromInstance(doc, familyName, elementId):
         flag = False
     return flag
 
-# doc           current model
-# containsValue    the string the name of the family is to be tested for
-# elementId     the id of the element to be tested
 def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
-    '''checks whether the family name of a given family instance contains filter value: True, otherwise False)'''
+    '''
+    Checks whether the family name of a given family instance contains filter value.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param containsValue: The string the name of the family instance is to be tested for.
+    :type containsValue: str
+    :param elementId: The id of the element to be tested.
+    :type elementId:  Autodesk.Revit.DB.ElementId
+    :return: True if family name does contain the test string, otherwise False.
+    :rtype: bool
+    '''
+
     el = doc.GetElement(elementId)
     flag = True
     try:
@@ -824,11 +956,20 @@ def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-# doc           current model
-# containsValue    the string the name of the family is to be tested for
-# elementId     the id of the element to be tested
 def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
-    '''checks whether the family name of a given family instance does not contains filter value: True, otherwise False)'''
+    '''
+    Checks whether the family name of a given family instance does not contains filter value.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param containsValue: The string the name of the family instance is to be tested for.
+    :type containsValue: str
+    :param elementId: The id of the element to be tested.
+    :type elementId: Autodesk.Revit.DB.ElementId
+    :return: True if family name does not contain the test string, otherwise False.
+    :rtype: bool
+    '''
+
     el = doc.GetElement(elementId)
     flag = True
     try:
@@ -838,11 +979,20 @@ def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-# doc           current model
-# containsValue    the string the name of the family is to be tested for
-# elementId     the id of the element to be tested
 def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
-    '''checks whether the symbol name of a given family instance contains filter value: True, otherwise False)'''
+    '''
+    Checks whether the family symbol name of a given family instance contains filter value.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param containsValue: The string the name of the family instance is to be tested for.
+    :type containsValue: str
+    :param elementId: The id of the element to be tested.
+    :type elementId: Autodesk.Revit.DB.ElementId
+    :return: : True if family name does contain the test string, otherwise False.
+    :rtype: bool
+    '''
+
     el = doc.GetElement(elementId)
     flag = True
     try:
@@ -852,11 +1002,20 @@ def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-# doc           current model
-# containsValue    the string the name of the family is to be tested for
-# elementId     the id of the element to be tested
 def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
-    '''checks whether the symbol name of a given family instance does not contains filter value: True, otherwise False)'''
+    '''
+    Checks whether the family symbol name of a given family instance does not contains filter value.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param containsValue: The string the name of the family is to be tested for.
+    :type containsValue: string
+    :param elementId: The id of the element to be tested.
+    :type elementId: Autodesk.Revit.DB.ElementId
+    :return: True if symbol name does not contain the test string, otherwise False.
+    :rtype: bool
+    '''
+
     el = doc.GetElement(elementId)
     flag = True
     try:
@@ -867,13 +1026,20 @@ def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
     return flag
 
 #-------------------------------------------------------file IO --------------------------------------
-# synchronises a Revit central file
-# doc: the document to be synced
-# compactCentralFile: option to compact the central file ... default is False (no compacting)
-# returns:
-#   - true if sync without exception been thrown
-#   - false if an exception occured
+
 def SyncFile (doc, compactCentralFile = False):
+    '''
+    Synchronises a Revit central file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param compactCentralFile: option to compact the central file, defaults to False
+    :type compactCentralFile: bool, optional
+    :return: Result class instance.
+        .result = True if succsesfully synced file. Otherwise False.
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     # set up sync settings
     ro = RelinquishOptions(True)
@@ -896,6 +1062,24 @@ def SyncFile (doc, compactCentralFile = False):
 
 # saves a new central file to given location
 def SaveAsWorksharedFile(doc, fullFileName):
+    '''
+    Saves a Revit project file as a worrkshared file.
+
+    Save as options are:
+    Workset connfiguration is : Ask users on open to specify.
+    Any existing file will be overwritten.
+    Number of backups is 5
+    File will bew compacted on save.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param fullFileName: The fully qualified file path of where to save the file.
+    :type fullFileName: string
+    :return: Result class instance.
+            .result = True if succsesfully saved file, otherwise False.
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     try:
         workSharingSaveAsOption = WorksharingSaveAsOptions()
@@ -912,15 +1096,32 @@ def SaveAsWorksharedFile(doc, fullFileName):
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-# targetFolderPath:         directory path of where the file is to be saved
-# currentFullFileName:      fully qualified file name of the current Revit file
-# name data:                list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
 def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rfa', compactFile = False):
-    '''save a family file under new name in given location'''
+    '''
+    Saves a family file under new name in given location.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param targetFolderPath: The directory path of where to save the file.
+    :type targetFolderPath: str
+    :param currentFullFileName: The current (old) name of the file.
+    :type currentFullFileName: str
+    :param nameData:  Old name and new name are revit file names without file extension. Used to rename the family on save from old name to new name.
+    :type nameData: List of string arrays in format[[oldname, newName]]
+    :param fileExtension: The file extension used for the new file, defaults to '.rfa'
+    :type fileExtension: str, optional
+    :param compactFile: Flag whether family is to be compactred on save, defaults to False
+    :type compactFile: bool, optional
+    :return: Result class instance.
+            .result = True if succsesfully saved file, otherwise False.
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
     match = False
+    # find new file name in list past in
     for oldName, newName in nameData:
         if (revitFileName.startswith(oldName)):
             match = True
@@ -933,6 +1134,7 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
         newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
         returnvalue.message = 'Found no file name match for: ' + currentFullFileName
     try:
+        # setup save as option
         so = SaveAsOptions()
         so.OverwriteExistingFile = True
         so.MaximumBackups = 5
@@ -949,6 +1151,24 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
 # currentFullFileName: fully qualified file name of the current Revit file
 # name data: list of arrays in format[[oldname, newName]] where old name and new name are revit file names without file extension
 def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rvt'):
+    '''
+    Saves a project file under new name in given location.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param targetFolderPath: The directory path of where to save the file.
+    :type targetFolderPath: str
+    :param currentFullFileName: The current (old) name of the file.
+    :type currentFullFileName: str
+    :param nameData: Old name and new name are revit file names without file extension. Used to rename the model on save from old name to new name.
+    :type nameData: List of string arrays in format[[oldname, newName]]
+    :param fileExtension: The file extension used for the new file, defaults to '.rvt'
+    :type fileExtension: str, optional
+    :return: Result class instance.
+        .result = True if succsesfully saved file, otherwise False.
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
@@ -996,12 +1216,21 @@ def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', wor
 
 #--------------------------------------------Transactions-----------------------------------------
 
-# transaction wrapper
-# returns:
-#   - False if something went wrong
-#   - True if the action has no return value specified and no exception occured
-# expects the actiooon to return a class object of type Result!!!
 def InTransaction(tranny, action):
+    '''
+    Revit transaction wrapper.
+
+    This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.
+
+    :param tranny: The transaction to be executed.
+    :type tranny: Autodesk.Revit.DB.Transaction 
+    :param action: The action to be nested within the transaction. This needs to return a Result class instance!
+    :type action: action().
+    :return: Result class instance.
+        .result = True if succsesfully saved file, otherwise False.
+    :rtype: SampleCodeRevitBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     try:
         tranny.Start()

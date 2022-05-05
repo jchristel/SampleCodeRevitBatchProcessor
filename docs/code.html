@@ -39,6 +39,28 @@
 <span id="revitcommonapi-this-module-contains-often-used-wrapper-functions-for-revit-api-tasks"></span><h2>RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
 <p>This module contains a number of commonly required Revit API utility functions.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.BuildCategoryDictionary">
+<span class="sig-name descname"><span class="pre">BuildCategoryDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.BuildCategoryDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a dictionary from elementId s passt in.</p>
+<p>Dictionary key is the element category and values are all the elements of that category.
+If no category can be found the key ‘invalid category’ will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elementIds</strong> (<em>list of AutoDesk.Revit.DB.ElementId</em>) – List of element id of which to build the dictionary from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary key is the element category and values are all the elements of that category.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictioanry, key is string, value is list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupForTypeIds">
 <span class="sig-name descname"><span class="pre">CheckGroupForTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckGroupForTypeIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters passed in list of type ids by type ids found in group and returns list of unmatched Id’s
@@ -93,26 +115,91 @@ returns true:
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents">
 <span class="sig-name descname"><span class="pre">CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns True if all but one dependent element are orphaned legend components</p>
+<dd><p>Check if element are orphaned legend components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elementIds</strong> (<em>list of AutoDesk.Revit.DB.ElementId</em>) – List of elements to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all but one element are orphaned legend components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.DeleteByElementIds">
 <span class="sig-name descname"><span class="pre">DeleteByElementIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transactionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.DeleteByElementIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>method deleting elements by list of element id’s</p>
+<dd><p>Deleting elements in list all at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – List containing ids of all elements to be deleted.</p></li>
+<li><p><strong>transactionName</strong> (<em>str</em>) – The transaction name used for the deletion.</p></li>
+<li><p><strong>elementName</strong> (<em>str</em>) – The element name added to deletion status message.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully deleted all elements. Otherwise False.
+.message will contain deletion status</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.DeleteByElementIdsOneByOne">
 <span class="sig-name descname"><span class="pre">DeleteByElementIdsOneByOne</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transactionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.DeleteByElementIdsOneByOne" title="Permalink to this definition">¶</a></dt>
-<dd><p>method deleting elements by list of element id’s one at the time</p>
+<dd><p>Deleting elements in list one at the time.</p>
+<p>Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – List containing ids of all elements to be deleted.</p></li>
+<li><p><strong>transactionName</strong> (<em>str</em>) – The transaction name used for the deletion.</p></li>
+<li><p><strong>elementName</strong> (<em>str</em>) – The name of the element (?) Not used!!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully deleted all elements. Otherwise False.
+.message will contain each id and its deletion status</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.FilterOutWarnings">
 <span class="sig-name descname"><span class="pre">FilterOutWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependentElements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.FilterOutWarnings" title="Permalink to this definition">¶</a></dt>
-<dd><p>attempts to filter out any warnings from ids supplied by checking the workset name
-of each element for ‘Reviewable Warnings</p>
+<dd><p>Attempts to filter out any warnings from ids supplied by checking the workset name
+of each element for ‘Reviewable Warnings’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>dependentElements</strong> (<em>list of AutoDesk.Revit.DB.Element</em>) – List of elements to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of elements id where the workset name of the element is not ‘Reviewable Warnings’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -156,7 +243,19 @@ If an exception occured, the message will be ‘Failed with exception: ‘ + the
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetIdsFromElementCollector">
 <span class="sig-name descname"><span class="pre">GetIdsFromElementCollector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetIdsFromElementCollector" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a list of all element ids in collector</p>
+<dd><p>This will return a list of all element ids in collector.</p>
+<p>Any element in collector which is invalid will be ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of all element ids of valid elements in collector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -325,57 +424,294 @@ This only returns valid data if at least one instance of the group is placed in 
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.GetUsedUnusedTypeIds">
+<span class="sig-name descname"><span class="pre">GetUsedUnusedTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIdGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetUsedUnusedTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets either the used or not used type Ids provided by typeIdGetter.</p>
+<p>Whether the used or unused type ids depends on the useType value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeIdGetter</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – Function returning type ids</p></li>
+<li><p><strong>useType</strong> (<em>int</em><em>, </em><em>optional</em>) – 0, no dependent elements; 1: has dependent elements, defaults to 0</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of how many dependant elements an element can have but still be considered not used, defaults to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of either all used or unused element ids. Depends on useType.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.HasDependentElements">
 <span class="sig-name descname"><span class="pre">HasDependentElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.HasDependentElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured</p>
+<dd><p>Checks whether an element has dependent elements.</p>
+<p>The dependent elements are collected via Element.GetDependentElements(filter).
+This also includes a check as to whether elements returned as dependent are orphaned. (for lack of better words)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>el</strong> (<em>AutoDesk.Revit.DB.Element</em>) – The element to be checked for dependent elements.</p></li>
+<li><p><strong>filter</strong> (<em>Autodesk.Revit.DB.ElementFilter</em><em> , </em><em>optional</em>) – What type of dependent elements to filter, defaults to None which will return all dependent elements</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of how many dependant elements an element can have but still be considered not used, defaults to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.InTransaction">
+<span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit transaction wrapper.</p>
+<p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tranny</strong> (<em>Autodesk.Revit.DB.Transaction</em>) – The transaction to be executed.</p></li>
+<li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the transaction. This needs to return a Result class instance!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsElementNotOfBuiltInCategory">
 <span class="sig-name descname"><span class="pre">IsElementNotOfBuiltInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtinCategories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsElementNotOfBuiltInCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether an element is of not one of the built in categories passt in (true) if not returns false</p>
+<dd><p>Checks whether an element is not of the built in categories passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+<li><p><strong>builtinCategories</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The builtin category the element does not needs to match.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if element’s builtin category does not equals the test category, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsElementOfBuiltInCategory">
 <span class="sig-name descname"><span class="pre">IsElementOfBuiltInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtinCategories</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsElementOfBuiltInCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether an element is of one of the built in categories passt in (true) if not returns false</p>
+<dd><p>Checks whether an element is of the built in categories passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+<li><p><strong>builtinCategories</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The builtin category the element does needs to match.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if element’s builtin category does equals the test category, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstance">
 <span class="sig-name descname"><span class="pre">IsFamilyNameFromInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstance" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether the family name of a given family instance matches filter value: True, otherwise False)</p>
+<dd><p>Checks whether the family name of a given family instance matches filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>familyName</strong> (<em>str</em>) – The string the name of the family needs to match.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if family equals the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceContains">
 <span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether the family name of a given family instance contains filter value: True, otherwise False)</p>
+<dd><p>Checks whether the family name of a given family instance contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>containsValue</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if family name does contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains">
 <span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether the family name of a given family instance does not contains filter value: True, otherwise False)</p>
+<dd><p>Checks whether the family name of a given family instance does not contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>containsValue</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if family name does not contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceContains">
 <span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether the symbol name of a given family instance contains filter value: True, otherwise False)</p>
+<dd><p>Checks whether the family symbol name of a given family instance contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>containsValue</strong> (<em>str</em>) – The string the name of the family instance is to be tested for.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>: True if family name does contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains">
 <span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks whether the symbol name of a given family instance does not contains filter value: True, otherwise False)</p>
+<dd><p>Checks whether the family symbol name of a given family instance does not contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>containsValue</strong> (<em>string</em>) – The string the name of the family is to be tested for.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be tested.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if symbol name does not contain the test string, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SaveAs">
+<span class="sig-name descname"><span class="pre">SaveAs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a project file under new name in given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>targetFolderPath</strong> (<em>str</em>) – The directory path of where to save the file.</p></li>
+<li><p><strong>currentFullFileName</strong> (<em>str</em>) – The current (old) name of the file.</p></li>
+<li><p><strong>nameData</strong> (<em>List of string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are revit file names without file extension. Used to rename the model on save from old name to new name.</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension used for the new file, defaults to ‘.rvt’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveAsFamily">
 <span class="sig-name descname"><span class="pre">SaveAsFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rfa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAsFamily" title="Permalink to this definition">¶</a></dt>
-<dd><p>save a family file under new name in given location</p>
+<dd><p>Saves a family file under new name in given location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>targetFolderPath</strong> (<em>str</em>) – The directory path of where to save the file.</p></li>
+<li><p><strong>currentFullFileName</strong> (<em>str</em>) – The current (old) name of the file.</p></li>
+<li><p><strong>nameData</strong> (<em>List of string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are revit file names without file extension. Used to rename the family on save from old name to new name.</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension used for the new file, defaults to ‘.rfa’</p></li>
+<li><p><strong>compactFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag whether family is to be compactred on save, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SaveAsWorksharedFile">
+<span class="sig-name descname"><span class="pre">SaveAsWorksharedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAsWorksharedFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a Revit project file as a worrkshared file.</p>
+<p>Save as options are:
+Workset connfiguration is : Ask users on open to specify.
+Any existing file will be overwritten.
+Number of backups is 5
+File will bew compacted on save.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>fullFileName</strong> (<em>string</em>) – The fully qualified file path of where to save the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully saved file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -413,6 +749,27 @@ Result.message property updated in format: Changed parameter value of type x [�
 On exception:
 Set parameter.status (bool) will be False.
 Set parameter.message will contain the exception message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.SyncFile">
+<span class="sig-name descname"><span class="pre">SyncFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactCentralFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SyncFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronises a Revit central file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>compactCentralFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – option to compact the central file, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if succsesfully synced file. Otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
 </dd>
 </dl>
 </dd></dl>
@@ -510,13 +867,82 @@ Set parameter.message will contain the exception message.</p>
 </dd></dl>
 
 </section>
-<section id="module-DataCeiling">
-<span id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit"></span><h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#module-DataCeiling" title="Permalink to this headline">¶</a></h2>
-<p>Data storage class for Revit ceiling properties.</p>
-<span class="target" id="module-DataDesignSetOption"></span><p>Data storage class for Revit desing option properties.</p>
-<span class="target" id="module-DataGeometry"></span><p>Geometry data storage class.</p>
-<span class="target" id="module-DataReadFromFile"></span><span class="target" id="module-DataRoom"></span><p>Data storage class for Revit room properties.</p>
-<span class="target" id="module-DataShapely"></span><p>Module containing utility functions converting data retrieved from Revit into shapely geometry.</p>
+<section id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">
+<h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="DataCeiling.DataCeiling">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataCeiling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataCeiling.DataCeiling" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py property">
+<dt class="sig sig-object py" id="DataCeiling.DataCeiling.DataType">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataType</span></span><a class="headerlink" href="#DataCeiling.DataCeiling.DataType" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the getter method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DataCeiling.DataCeiling.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataCeiling.DataCeiling.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the instance of this class to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DataDesignSetOption.DataDesignSetOption">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataDesignSetOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataDesignSetOption.DataDesignSetOption" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DataDesignSetOption.DataDesignSetOption.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataDesignSetOption.DataDesignSetOption.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the instance of this class to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DataGeometry.DataGeometry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataGeometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataGeometry.DataGeometry" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DataGeometry.DataGeometry.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataGeometry.DataGeometry.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the instance of this class to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ReadDataFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level">
+<span class="sig-name descname"><span class="pre">get_data_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all data objects where level name equals passt in value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType">
+<span class="sig-name descname"><span class="pre">get_data_by_level_and_dataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all data objects where level name and datattype equal passt in values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.load_Data">
+<span class="sig-name descname"><span class="pre">load_Data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.load_Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>load json formatted rows into data objects</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="DataRoom.DataRoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataRoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataRoom.DataRoom" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="DataRoom.DataRoom.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataRoom.DataRoom.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the instance of this class to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-DataShapely"></span><p>Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.BuildDictionaryByLevelAndDataType">
 <span class="sig-name descname"><span class="pre">BuildDictionaryByLevelAndDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataReader</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.BuildDictionaryByLevelAndDataType" title="Permalink to this definition">¶</a></dt>
@@ -633,7 +1059,7 @@ any subsequent polygons are describing holes within the boundary</p>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-DataCeiling">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-BatchProcessorLogUtils">Misc modules</a></li>
 </ul>
 </li>

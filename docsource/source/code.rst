@@ -30,19 +30,19 @@ Revit Worksets
 The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit. 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-.. automodule:: DataCeiling
+.. autoclass:: DataCeiling.DataCeiling
     :members:
 
-.. automodule:: DataDesignSetOption
+.. autoclass:: DataDesignSetOption.DataDesignSetOption
     :members:
 
-.. automodule:: DataGeometry
+.. autoclass:: DataGeometry.DataGeometry
     :members:
 
-.. automodule:: DataReadFromFile
+.. autoclass:: DataReadFromFile.ReadDataFromFile
     :members:
 
-.. automodule:: DataRoom
+.. autoclass:: DataRoom.DataRoom
     :members:
 
 .. automodule:: DataShapely

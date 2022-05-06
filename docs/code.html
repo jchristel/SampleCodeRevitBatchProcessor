@@ -41,7 +41,7 @@
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The following modules from part of the library of functions around the Revit API.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">RevitCommonAPI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
@@ -81,8 +81,8 @@
 <section id="the-following-modules-from-part-of-the-library-of-functions-around-the-revit-api">
 <h1>The following modules from part of the library of functions around the Revit API.<a class="headerlink" href="#the-following-modules-from-part-of-the-library-of-functions-around-the-revit-api" title="Permalink to this headline">¶</a></h1>
 <section id="module-RevitCommonAPI">
-<span id="revitcommonapi-this-module-contains-often-used-wrapper-functions-for-revit-api-tasks"></span><h2>RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of commonly required Revit API utility functions.</p>
+<span id="revitcommonapi"></span><h2>RevitCommonAPI<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of commonly used Revit API utility functions.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.BuildCategoryDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">BuildCategoryDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.BuildCategoryDictionary" title="Permalink to this definition">¶</a></dt>
@@ -108,15 +108,44 @@ If no category can be found the key ‘invalid category’ will be used.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupForTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckGroupForTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckGroupForTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters passed in list of type ids by type ids found in group and returns list of unmatched Id’s
-This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!</p>
+<dd><p>Filters passed in list of type ids by type ids found in group and returns list of unmatched Id’s</p>
+<p>This only returns valid data if at least one instance of the group is placed in the model, otherwise GetMemberIds() returns empty!!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>groupTypes</strong> (<em>Autodesk.Revit.DB.GroupType</em>) – Group to be checked whether they contains elements of types passt in.</p></li>
+<li><p><strong>typeIds</strong> (<em>list of Autodesk.Revot.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns all type ids not matched</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revot.Db.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckGroupsForMatchingTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckGroupsForMatchingTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckGroupsForMatchingTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks all elements in groups passt in whether type Id is matching any type ids passt in
-returns all type ids not matched</p>
+<dd><p>Checks all elements in groups passt in whether group inlcudes element of which type Id is matching any type ids passt in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>groupTypes</strong> (<em>list of Autodesk.Revit.DB.GroupType</em>) – Groups to be checked whether they contains elements of types passt in.</p></li>
+<li><p><strong>typeIds</strong> (<em>list of Autodesk.Revot.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns all type ids not matched</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revot.Db.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -141,9 +170,12 @@ Both arguments will be ASCII encoded at passing in.</p></li>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return bool</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>True if condition value is evaluated to be True by passt in function paraCondition.
 Will return False if compare function returns None or a False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -151,10 +183,24 @@ Will return False if compare function returns None or a False.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckUniqueTypeData">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckUniqueTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">existingTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newTypeData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckUniqueTypeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>checking whether we have type and associated similar types already
-returns true:
--if type is not in list existing Types passed in or
--if ids of similar family types do not match any similar types already in list</p>
+<dd><p>Compares two lists of types and their similar types (ids).</p>
+<p>Assumes that second list past in has only one occurence of type and its similar types
+Compares types by name and if match their similar types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>existingTypes</strong> (<em>List of List in format</em><em> [</em><em>[</em><em>Autodesk.Revit.DB.ElementType</em><em> , </em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em><em>,</em><em>]</em>) – Source list</p></li>
+<li><p><strong>newTypeData</strong> (<em>List in format</em><em> [</em><em>Autodesk.Revit.DB.ElementType</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em>) – Comparison list</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True, if new type is not in list existing Types passed in or
+if ids of similar family types do not match any similar types already in list</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -263,9 +309,12 @@ of each element for ‘Reviewable Warnings’</p>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>As per value getter method.</p>
 </dd>
-<dt class="field-odd">Return var</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Default value is None if parameter does not exist on element.
 Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>var</p>
 </dd>
 </dl>
 </dd></dl>
@@ -278,9 +327,12 @@ Otherwise the actual parameter value as per value getter method.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>e</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element.</p>
 </dd>
-<dt class="field-even">Return string</dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The element mark value.  
 If an exception occured, the message will be ‘Failed with exception: ‘ + the exception string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,14 +363,17 @@ If an exception occured, the message will be ‘Failed with exception: ‘ + the
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>typeIds</strong> (<em>list string</em>) – List of typeIds to check against.</p></li>
+<li><p><strong>typeIds</strong> (<em>list str</em>) – List of typeIds to check against.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return list of string</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Values are representing symbol (type) ids of legend components in models filtered by ids passt in.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,7 +381,22 @@ If an exception occured, the message will be ‘Failed with exception: ‘ + the
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetNotPlacedTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetNotPlacedTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getTypes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getInstances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetNotPlacedTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unused Types foo by compring type Ids of placed instances with all avialable types</p>
+<dd><p>returns a list of unused types foo by comparing type Ids of placed instances with types passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>getTypes</strong> (<em>func</em><em> (</em><em>doc</em><em>)</em>) – Types getter function. Needs to accept doc as argument and return a collector of type foo</p></li>
+<li><p><strong>getInstances</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – Instances getter function. Needs to accept doc as argument and return a collector of instances foo</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns a list of unused types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of type foo</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -341,9 +411,12 @@ If an exception occured, the message will be ‘Failed with exception: ‘ + the
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return int</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Default value is -1 if parameter value is empty or storage type is not integer.
 Otherwise the actual parameter value.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -357,16 +430,19 @@ Otherwise the actual parameter value.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
-<li><p><strong>parameterName</strong> (<em>string</em>) – The parameters name of which the value is to be returned.</p></li>
+<li><p><strong>parameterName</strong> (<em>str</em>) – The parameters name of which the value is to be returned.</p></li>
 <li><p><strong>parameterValueGetter</strong> (<em>function</em>) – The function which takes the parameter as an argument and returns it’s value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>As per value getter method.</p>
 </dd>
-<dt class="field-odd">Return var</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Default value is None if parameter does not exist on element.
 Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>var</p>
 </dd>
 </dl>
 </dd></dl>
@@ -383,10 +459,13 @@ Otherwise the actual parameter value as per value getter method.</p>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
 </dd>
-<dt class="field-odd">Return string</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
 Otherwise the actual parameter value.
 Will return ‘Exception: ‘ + exception message if an exception occured.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -400,15 +479,18 @@ Will return ‘Exception: ‘ + exception message if an exception occured.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>sheetName</strong> (<em>string</em>) – The name of the sheet of which the revision is to be returned.</p></li>
+<li><p><strong>sheetName</strong> (<em>str</em>) – The name of the sheet of which the revision is to be returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return string</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The sheets current revision value.  
 If no matching sheet is found, ‘-’ is returned.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -421,15 +503,18 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>sheetNumber</strong> (<em>string</em>) – The number of the sheet of which the revision is to be returned.</p></li>
+<li><p><strong>sheetNumber</strong> (<em>str</em>) – The number of the sheet of which the revision is to be returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return string</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The sheets current revision value.  
 If no matching sheet is found, ‘-’ is returned.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -448,8 +533,11 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
 </dd>
-<dt class="field-odd">Return list of Autodesk.Revit.DB.Symbol and Autodesk.Revit.DB.ElementId</dt>
-<dd class="field-odd"><p>Format [[symbol, similar type id, similar type id,…]]</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Symbol and Autodesk.Revit.DB.ElementId:</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,…],]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,15 +545,44 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetUnusedTypeIdsFromDetailGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetUnusedTypeIdsFromDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetUnusedTypeIdsFromDetailGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>checks elements in nested detail groups and detail groupd whether their type ID is in the list passt in.
-Returns all type Ids from list passt in not found in group definitions
-This only returns valid data if at least one instance of the group is placed in the model!!</p>
+<dd><p>Checks elements in nested detail groups and detail groups whether their type ElementId is in the list passt in.</p>
+<p>This only returns valid data if at least one instance of the group is placed in the model!!!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeIds</strong> (<em>list of Autodesk.Revot.Db.ElementId</em>) – List of type ids to confirm whether they are in use a group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Returns all type Ids from list passt in not found in group definitions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revot.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetUnusedTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetUnusedTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instanceGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetUnusedTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns ID of unused family types in the model</p>
+<dd><p>Returns ID of unused family types in the model.</p>
+<p>Used in purge code since it leaves at least one type behind (built in families require at least one type in the model)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeGetter</strong> (<em>func</em>) – Function asccepting current document as argument and returning a collector of types in model</p></li>
+<li><p><strong>instanceGetter</strong> (<em>func</em>) – Function asccepting current document as argument and returning a list of instances in model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of type ids which can be purged from the model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -776,7 +893,7 @@ File will bew compacted on save.</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
 <li><p><strong>builtInParameterDef</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The parameters built-in definition of which the value is to be returned.</p></li>
-<li><p><strong>valueAsString</strong> (<em>string</em>) – The new parameter value.</p></li>
+<li><p><strong>valueAsString</strong> (<em>str</em>) – The new parameter value.</p></li>
 <li><p><strong>parameterValueSetter</strong> (<em>function</em>) – The function which takes the parameter as an argument and changes it’s value to.
 The function needs to accept these args: parameter, new parameter value as string, document</p></li>
 </ul>
@@ -787,13 +904,16 @@ The function needs to accept these args: parameter, new parameter value as strin
 </dl>
 <p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return Result</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Result class instance.
 Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
 Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.
 On exception:
 Set parameter.status (bool) will be False.
 Set parameter.message will contain the exception message.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>SampleCodeBatchProcessor.Result</p>
 </dd>
 </dl>
 </dd></dl>
@@ -831,10 +951,13 @@ Set parameter.message will contain the exception message.</p>
 <dt class="field-even">Raise</dt>
 <dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
 </dd>
-<dt class="field-odd">Return string</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
 Otherwise the actual parameter value.
 Will return ‘Exception: ‘ + exception message if an exception occured.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -848,7 +971,7 @@ Will return ‘Exception: ‘ + exception message if an exception occured.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be set.</p></li>
-<li><p><strong>valueAsString</strong> (<em>string</em>) – The new parameter value.</p></li>
+<li><p><strong>valueAsString</strong> (<em>str</em>) – The new parameter value.</p></li>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 </ul>
 </dd>
@@ -858,13 +981,16 @@ Will return ‘Exception: ‘ + exception message if an exception occured.</p>
 </dl>
 <p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return Result</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Result class instance.
 Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
 Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.
 On exception:
 Set parameter.status (bool) will be False.
 Set parameter.message will contain the exception message.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>SampleCodeBatchProcessor.Result</p>
 </dd>
 </dl>
 </dd></dl>

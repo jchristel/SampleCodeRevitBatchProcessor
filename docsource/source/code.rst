@@ -3,8 +3,8 @@ Revit API Library documentation
 The following modules from part of the library of functions around the Revit API.
 =================================================================================
 
-RevitCommonAPI. This module contains often used wrapper functions for Revit API tasks.
---------------------------------------------------------------------------------------
+RevitCommonAPI
+--------------
 
 .. automodule:: RevitCommonAPI
     :members:

@@ -1,3 +1,6 @@
+'''
+This module contains a number of functions around Revit annotation objects. 
+'''
 #
 #License:
 #
@@ -20,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-from xml.etree.ElementTree import PI
+
 import clr
 import System
 
@@ -31,8 +34,11 @@ import Utility as util
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB.Architecture import *
+from Autodesk.Revit.DB import FilteredElementCollector, ElementId, Dimension, DimensionType, MultiReferenceAnnotationType, MultiReferenceAnnotation,\
+    TextElement, TextElementType, BuiltInParameter, ViewSchedule, IndependentTag, FamilySymbol, AnnotationSymbolType, AreaTagType, ElementType,\
+    BuiltInCategory, SpotDimensionType
+
+from Autodesk.Revit.DB.Architecture import RoomTagType, StairsPathType
 
 clr.ImportExtensions(System.Linq)
 
@@ -228,11 +234,13 @@ ARROWHEAD_PARAS_DIM = [
 
 ''' 
 list of built in parameters attached to 
-      - text 
-      - independent tags 
-      - Annotation symbols
+    - text 
+    - independent tags 
+    - Annotation symbols
+
     containing arrow head ids
 '''
+
 ARROWHEAD_PARAS_TEXT = [
     BuiltInParameter.LEADER_ARROWHEAD
 ]
@@ -333,7 +341,7 @@ def GetAllAnnoSymbolTypes(doc):
     types = []
     col = FilteredElementCollector(doc).OfClass(FamilySymbol)
     for c in col:
-        if (c.GetType() == AnnotationSymbolType or c.GetType == AreaTagType or c.GetType() == Architecture.RoomTagType):
+        if (c.GetType() == AnnotationSymbolType or c.GetType == AreaTagType or c.GetType() == RoomTagType):
             types.append(c)
     return types
 

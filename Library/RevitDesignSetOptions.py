@@ -1,3 +1,7 @@
+'''
+This module contains a number of functions around Revit Design Sets and Design Options. 
+'''
+
 #
 #License:
 #
@@ -40,19 +44,29 @@ REPORT_DESIGNSET_HEADER = ['HOSTFILE','ID', 'NAME', 'PRIMARY OPTION', 'OTHER OPT
 
 # --------------------------------------------- utility functions ------------------
 
-# doc   current document
 def GetDesignOptions(doc):
     '''
-    returns a collector containing all design options in a model
+    Gets all design options in a model,
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Design options in current model
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
+
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     return collector
 
-# doc   current document
 def GetDesignSets(doc):
     '''
-    returns a list of all the design sets in a model
+    Gets all the design sets in a model,
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Design sets in the current model
+    :rtype: list of Autodesk.Revit.DB.Element
     '''
+
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     designSets = []
     designSetNames = []
@@ -60,17 +74,24 @@ def GetDesignSets(doc):
         e = doc.GetElement(do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId())
         designSetName = Element.Name.GetValue(e)
         if(designSetName not in designSetNames):
-            designSets.append(do)
+            designSets.append(e)
             designSetNames.append(designSetName)
     return designSets
 
-# doc                 current document
-# designSetName       the name (string) of the design set the option belongs to
-# designOptionName    the name (string) of the design option to be checked
 def IsDesignOptionPrimary(doc, designSetName, designOptionName):
     '''
-    returns bool if design option is primary
+    Checks whether a design option is the primary option within a design set.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param designSetName: The name of the design set the option belongs to,
+    :type designSetName: str
+    :param designOptionName: The name of the design option to be checked,
+    :type designOptionName: str
+    :return: True if this option is primary otherwise False
+    :rtype: bool
     '''
+
     collector = FilteredElementCollector(doc).OfClass(DesignOption)
     isPrimary = False
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
@@ -89,15 +110,24 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
             break
     return isPrimary
 
-# doc   current document
-# element   the element of which thes desin set/option  data is to be returned
 def GetDesignSetOptionInfo(doc, element):
     '''
-    returns dictionary: 
-    designSetName       Design Set Name (can be either Main Model or the design set name)
-    designOptionName    Design Option Name (empty string if Main Model
-    isPrimary           Bool indicating whether design option is primary (true also if Main Model)
+    Get the design set, design option information of an element.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param element: The element of which the desin set/option data is to be returned.
+    :type element: Autodesk.Revit.DB.Element
+    :return: Dictionary
+        Design Set Name: (can be either Main Model or the design set name)
+        designOptionName:    Design Option Name (empty string if Main Model
+        isPrimary:           Indicating whether design option is primary (true also if Main Model)
+    :rtype: Dictionary
+        designSetName:str
+        designOptionName:str
+        isPrimary:bool
     '''
+
     # keys match properties in DataDesignSetOption class!!
     new_key= ['designSetName','designOptionName','isPrimary']
     new_value= ['Main Model','-',True]

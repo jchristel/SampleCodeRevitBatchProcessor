@@ -1,3 +1,6 @@
+'''
+This module contains a number of functions around Revit BIM360. 
+'''
 #
 #License:
 #
@@ -23,16 +26,11 @@
 
 import System
 import clr
-import glob
-import Result as res
-import csv
-import FileItem as fi
-import os
 import Utility as util
 
 #from System.IO import Path
-from Autodesk.Revit.DB import *
-import os.path as path
+from Autodesk.Revit.DB import ModelPathUtils
+
 
 # return human readable BIM 360 path
 def GetBim360Path(doc):

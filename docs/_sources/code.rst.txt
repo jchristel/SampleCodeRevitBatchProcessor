@@ -9,6 +9,42 @@ RevitCommonAPI
 .. automodule:: RevitCommonAPI
     :members:
 
+Revit Annotation
+----------------
+.. automodule:: RevitAnnotation
+    :members:
+
+Revit BIM 360
+-------------
+.. automodule:: RevitBIM360
+    :members:
+
+Revit Building Pads
+-------------------
+.. automodule:: RevitBuildingPads
+    :members:
+
+Revit Categories
+----------------
+.. automodule:: RevitCategories
+    :members:
+
+Revit Ceilings
+--------------
+.. automodule:: RevitCeilings
+    :members:
+
+Revit Curtain Wall
+------------------
+.. automodule:: RevitCurtainWallElements
+    :members:
+
+Revit Detail Items
+------------------
+
+.. automodule:: RevitDetailItems
+    :members:
+
 Revit Design Options and Design Sets
 ------------------------------------
 
@@ -18,6 +54,22 @@ Revit Design Options and Design Sets
 Revit Element Filtering
 ------------------------------------
 .. autoclass:: RevitCustomElementFilter.RevitCustomElementFilter
+    :members:
+
+Revit Export
+------------
+.. automodule:: RevitExport
+    :members:
+
+.. autoclass:: RevitExport.IFCCoords
+    :members:
+    :noindex:
+
+.. autoclass:: RevitExport.IFCSpaceBoundaries
+    :members:
+    :noindex:
+
+.. automodule:: RevitExportIFCConfig
     :members:
 
 Revit Family
@@ -30,23 +82,6 @@ Revit Family
 
 .. autoclass:: RevitFamilyLoadOption.FamilyLoadOption
     :members:
-
-Revit Export
-------------
-.. automodule:: RevitExport
-    :members:
-
-.. autoclass:: RevitExport.IFCCoords
-    :members:
-    :noindex:
-    
-.. autoclass:: RevitExport.IFCSpaceBoundaries
-    :members:
-    :noindex:
-
-.. automodule:: RevitExportIFCConfig
-    :members:
-
 
 Revit Warnings
 --------------
@@ -87,8 +122,11 @@ The following modules are classes used to store varies data retrieved from Revit
 .. automodule:: DataShapely
     :members:
     
-Misc modules
-------------
+Misc modules and classes
+------------------------
+
+.. autoclass:: Result.Result
+    :members:
 
 .. automodule:: BatchProcessorLogUtils
     :members:

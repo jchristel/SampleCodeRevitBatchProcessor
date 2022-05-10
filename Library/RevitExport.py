@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of functions around exporting from Revit to varies file formats. 
+'''
+#
 #License:
 #
 #
@@ -32,29 +35,59 @@ clr.ImportExtensions(System.Linq)
 import Result as res
 
 from System.IO import Path
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import  Transaction, ElementId, IFCExportOptions, ViewType, NavisworksExportOptions, NavisworksCoordinates, NavisworksExportScope
+#from Autodesk.Revit.DB import *
 
 # import common library
 import RevitCommonAPI as com
 import RevitViews as rView
+# this imports 3rd party ifc exporters depending on version of Revit in use.
 import RevitExportIFCConfig as ifcCon
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
-# Using enum class for IFC coordinates options
+
 class IFCCoords:
+    '''
+    Using enum class for IFC coordinates options.
+    '''
     SharedCoordinates = '0'
     SiteSurveyPoint = '1'
     ProjectBasePoint = '2'
     InternalCoordinates = '3'
 
 class IFCSpaceBoundaries:
+    '''
+    Using enum class for IFC space boundary options.
+    '''
     noBoundaries = 0
     firstLevel = 1
     secondLevel = 2
 
-# method exporting either entire model or view to IFC
 def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
+    '''
+    Exports to IFC either the entire model or a view only using 3rd party exporter.
+
+    What gets exported is defined in the ifcExportOption.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ifcExportOption: The settings for the IFC export.
+    :type ifcExportOption: BIM.IFC.Export.UI.IFCExportConfiguration
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param fileName: The file name under which the export is being saved.
+    :type fileName: str
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     # ifc export needs to run in a transaction
     returnvalue = res.Result()
     def action():
@@ -72,10 +105,20 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     returnvalue = com.InTransaction(transaction, action)
     return returnvalue
 
-# doc               current model document
-# ifc version       ifc version used for export
 def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
-    '''returns the 3rd party ifc config for export by view depending on revit version'''
+    '''
+    Returns the 3rd party ifc config for export by view depending on revit version.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :raises ValueError: Raises an exception if the revit version in use is not supported by this script.
+    
+    :return: An ifc export config instance based on the Revit version.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    '''
+
     # get the revit version:
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
@@ -92,10 +135,20 @@ def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
     return ifcConfig
 
-# doc               current model document
-# ifc version       ifc version used for export
 def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
-    '''returns the 3rd party ifc config for export by model depending on revit version'''
+    '''
+    Returns the 3rd party ifc config for export by model depending on revit version.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :raises ValueError: Raises an exception if the revit version in use is not supported by this script.
+    
+    :return: An ifc export config instance based on the Revit version.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    '''
+
     # get the revit version:
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
@@ -112,9 +165,23 @@ def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
     return ifcConfig
 
-# method assigning view Id to active export config if it is exporting by view
-# and returning an IFCExportOptions object
 def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coordOption = IFCCoords.SharedCoordinates):
+    '''
+    Function assigning a view Id to export ifc config if it is exporting by view.
+
+    By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead.
+
+    :param exportConfig: The ifc export configuration used.
+    :type exportConfig: BIM.IFC.Export.UI.IFCExportConfiguration
+    :param viewId: The id of the view to be exported, defaults to ElementId.InvalidElementId
+    :type viewId: Autodesk.Revit.DB.ElementId, optional
+    :param coordOption: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
+    :type coordOption: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
+    
+    :return: An updated ifc export config instance.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    '''
+
     if(exportConfig.UseActiveViewGeometry == True):
         exportConfig.ActiveViewId = viewId.IntegerValue
     else:
@@ -128,8 +195,31 @@ def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coor
 
     return exIFC
 
-# method exporting the entire model to IFC
 def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption = IFCCoords.SharedCoordinates):
+    '''
+    Function exporting the entire model to IFC using 3rd party exporter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ifcExportOption: The IFC export option.
+    :type ifcExportOption: Autodesk.Revit.DB.IFCExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param fileName: The file name under which the export is being saved.
+    :type fileName: str
+    :param coordOption: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
+    :type coordOption: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
+    
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     # need to create an export option from the export config
     exIFC = IFCExportOptions()
@@ -142,9 +232,37 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
     returnvalue.Update(returnvalueByModel)
     return returnvalue
 
-# method exporting 3D views matching a filter (view starts with) to IFC
+# 
 # doSomethingWithViewName method will accept view name as arg only
 def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates, doSomethingWithViewName = None):
+    '''
+    Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
+
+    By default the file name of the export will be same as the name of the view exported.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewFilter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :type viewFilter: str
+    :param ifcExportOption: The IFC export option.
+    :type ifcExportOption: Autodesk.Revit.DB.IFCExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param ifcCoordinatesSystem: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
+    :type ifcCoordinatesSystem: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
+    :param doSomethingWithViewName: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
+    :type doSomethingWithViewName: function , optional
+    
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
@@ -165,6 +283,19 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     return returnvalue
 
 def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
+    '''
+    Function modifying the passt in view name and returns a file name.
+
+    :param viewName: The view name to be used as file name.
+    :type viewName: str
+    :param viewFilterRule: A prefix which will be removed from the view name.
+    :type viewFilterRule: str
+    :param fileExtension: The file extension to be used. Format is '.something'
+    :type fileExtension: str
+    :return: A file name.
+    :rtype: str
+    '''
+
     # check if file extension is not none
     if (fileExtension is None):
         fileExtension = '.tbc'
@@ -178,8 +309,19 @@ def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
 
 #-------------------------------------------- IFC default -------------------------------------
 
-# Revit build in IFC export options
 def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noBoundaries):
+    '''
+    Returns an IFC export configuration for the built in IFC exporter.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :param ifcSpaceBounds: IFC space boundary setting, defaults to IFCSpaceBoundaries.noBoundaries
+    :type ifcSpaceBounds: SampleCodeBatchProcessor.RevitExport.IFCSpaceBoundaries, optional
+    
+    :return: an IFC export option
+    :rtype: Autodesk.Revit.DB.IFCExportOptions
+    '''
+
     exIFC = IFCExportOptions()
     exIFC.ExportBaseQuantities = True
     exIFC.FileVersion = ifcVersion
@@ -187,8 +329,29 @@ def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.no
     exIFC.WallAndColumnSplitting = True
     return exIFC
 
-# method exporting 3D views matching a filter (view starts with) to IFC using the default built in exporter
 def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
+    '''
+    Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewFilter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :type viewFilter: str
+    :param ifcExportOption: The IFC export option.
+    :type ifcExportOption: Autodesk.Revit.DB.IFCExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
@@ -210,12 +373,40 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
 
 #-------------------------------------------- NWC EXPORT -------------------------------------
 
-# Return an NWC Export Options object with shared coordinates, export by View
 def SetUpNWCDefaultExportOptionSharedByView():
+    '''
+    Return an NWC Export Options object with shared coordinates, export by View.
+
+    :return: A navisworks .nwc export option.
+    :rtype: Autodesk.Revit.DB.NavisworksExportOptions
+    '''
     return SetUpNWCCustomExportOption(True, False, False, True, True, False, False, False)
 
-# Return an NWC Export Options object 
 def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
+    '''
+    Return an NWC Export Options object as per values passt oin.
+
+    :param usingSharedCoordinates: True shared coordinates will be used, otherwise project internal
+    :type usingSharedCoordinates: bool
+    :param exportEntireModel: True entire model will be exported, otherwise specific view.
+    :type exportEntireModel: bool
+    :param exportLinks: True: Revit links will also be exported, otherwise not.
+    :type exportLinks: bool
+    :param splitModelByLevel: True: model elements will be split by level, otherwise not.
+    :type splitModelByLevel: bool
+    :param exportParts: True parts will be exported, otherwise not.
+    :type exportParts: bool
+    :param exportRoomAsAttributes: True room proprties will be eported (can be slow!), otherwise not.
+    :type exportRoomAsAttributes: bool
+    :param exportRoomGeometry: True room geometry will be exported, otherwise not.
+    :type exportRoomGeometry: bool
+    :param findMissingMaterials: True exxporter will attempt to find missing materials, otherwise not
+    :type findMissingMaterials: bool
+
+    :return: A navisworks .nwc export option.
+    :rtype: Autodesk.Revit.DB.NavisworksExportOptions
+    '''
+
     exNWC = NavisworksExportOptions()
     exNWC.Coordinates = NavisworksCoordinates.Shared if usingSharedCoordinates == True else NavisworksCoordinates.Internal
     exNWC.ExportScope = NavisworksExportScope.Model if exportEntireModel == True else NavisworksExportScope.View
@@ -229,8 +420,28 @@ def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, export
     
     return exNWC
 
-# method exporting either entire model or view to NWC
 def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
+    '''
+    Function exporting either entire model or view to NWC
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param nwcExportOption: A navisworks .nwc export option.
+    :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param fileName: The file name under which the export is being saved.
+    :type fileName: str
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     # nwc export does not need to run in a transaction
     returnvalue = res.Result()
     try:
@@ -243,16 +454,58 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
         returnvalue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
     return returnvalue
 
-# method exporting the entire model to NWC
 def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
+    '''
+    Function exporting the entire model to NWC.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param nwcExportOption: A navisworks .nwc export option.
+    :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param fileName: The file name under which the export is being saved.
+    :type fileName: str
+    
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     returnvalueByModel = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
     returnvalue.Update(returnvalueByModel)
     return returnvalue
 
-# method exporting 3D views matching a filter (view starts with) to NWC
-# doSomethingWithViewName method will accept view name as arg only
 def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
+    '''
+    Function exporting 3D views matching a filter (view starts with) to NWC.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewFilter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+    :type viewFilter: str
+    :param nwcExportOption: A navisworks .nwc export option.
+    :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param doSomethingWithViewName: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
+    :type doSomethingWithViewName: function , optional
+    
+    :return: 
+        Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported

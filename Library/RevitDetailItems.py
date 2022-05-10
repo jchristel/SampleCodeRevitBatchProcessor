@@ -1,3 +1,6 @@
+'''
+This module contains a number of functions around Revit detail items. 
+'''
 #
 #License:
 #
@@ -26,12 +29,10 @@ import System
 
 # import common library modules
 import RevitCommonAPI as com
-import Result as res
-import Utility as util
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, FilledRegion, BuiltInCategory, ElementId, BuiltInParameter
 
 clr.ImportExtensions(System.Linq)
 

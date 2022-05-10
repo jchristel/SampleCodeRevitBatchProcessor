@@ -41,10 +41,11 @@ import Result as res
 import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
 from RevitFamilyLoadOption import *
-# import everything from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import *
-
-
+# import from Autodesk Revit DataBase namespace (Revit API)
+from Autodesk.Revit.DB import Element, BuiltInCategory, Transaction, ElementMulticategoryFilter, FilteredElementCollector, \
+    FamilySymbol, FamilyInstance, ElementCategoryFilter, Family, ParameterValueProvider, ElementId, BuiltInParameter,\
+    FilterNumericEquals, FilterElementIdRule, ElementParameterFilter, GenericForm, CurveElement, ModelText,\
+    ReferencePlane
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def LoadFamily(doc, familyFilePath):

@@ -1,3 +1,6 @@
+'''
+This module contains a number of functions around Revit categories. 
+'''
 #
 #License:
 #
@@ -26,16 +29,14 @@ import clr
 import System
 from System.Collections.Generic import List
 
-import sys
-sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
-
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFamUtils
 import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import BuiltInParameter, GraphicsStyleType, Element, ElementId, LinePatternElement, FilteredElementCollector,\
+    Transaction, Color
 
 
 CAT_RENAMING = {
@@ -360,7 +361,7 @@ def SetCategoryColour(doc, cat, red, green, blue):
 
 # cat   category of which properties are to be changed
 # properties    list of dictionaries in format as per GetCategoryProperties(cat) method
-def SetCategoryProperties(cat, properties):
+def SetCategoryProperties(doc, cat, properties):
     '''
     updates property values of a given category
     '''

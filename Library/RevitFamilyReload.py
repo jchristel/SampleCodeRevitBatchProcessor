@@ -38,7 +38,7 @@ import RevitFamilyUtils as rFamUtil
 import RevitFamilyLoadOption as famLoadOpt
 from RevitFamilyLoadOption import *
 
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import Element, BuiltInCategory
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 

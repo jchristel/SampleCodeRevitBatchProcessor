@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of functions around Revit ceilings. 
+'''
+#
 #License:
 #
 #
@@ -30,12 +33,10 @@ import RevitFamilyUtils as rFam
 import RevitGeometry as rGeo
 import RevitDesignSetOptions as rDesignO
 import DataCeiling as dCeiling
-import Utility as util
-import DataGeometry as dGeometry
-
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, CeilingType, Ceiling, ElementCategoryFilter, FamilyInstance,\
+    Options, Ceiling, Solid, Element, BuiltInParameter
 
 clr.ImportExtensions(System.Linq)
 

@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of functions around Revit building pads. 
+'''
+#
 #License:
 #
 #
@@ -30,7 +33,7 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuildingPadType, BuildingPad
 
 clr.ImportExtensions(System.Linq)
 

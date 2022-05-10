@@ -1,4 +1,8 @@
-﻿#
+﻿'''
+This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit. 
+'''
+
+#
 #License:
 #
 #
@@ -28,21 +32,22 @@ import sys
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-
-# custom result class
-import Result as res
-
-from System.IO import Path
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import IFCVersion, ElementId
 
 #-------------------------------------------- IFC EXPORT Revit 2019 -------------------------------------
 
-# ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByView2019(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration allows export by view
+    Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2019.bundle\Contents\2019\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
@@ -92,9 +97,16 @@ def IFCGetThirdPartyExportConfigByView2019(ifcVersion):
 # ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration exports the entire model
+    Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2019.bundle\Contents\2019\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
@@ -148,9 +160,16 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
 # ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration allows export by view
+    Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2020.bundle\Contents\2020\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
@@ -201,9 +220,16 @@ def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
 # ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByModel2020(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration exports the entire model
+    Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2020.bundle\Contents\2020\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
@@ -258,9 +284,16 @@ def IFCGetThirdPartyExportConfigByModel2020(ifcVersion):
 # ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByView2021(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration allows export by view
+    Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2021.bundle\Contents\2021\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
@@ -311,9 +344,16 @@ def IFCGetThirdPartyExportConfigByView2021(ifcVersion):
 # ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByModel2021(ifcVersion):
     '''
-    method returning an IFC export configuration using the open source third party IFC exporter plug in supported by AutoDesk
-    this configuration exports the entire model
+    Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
+
     # load version specific assemblies
     ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2021.bundle\Contents\2021\IFCExportUIOverride.dll'
     clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)

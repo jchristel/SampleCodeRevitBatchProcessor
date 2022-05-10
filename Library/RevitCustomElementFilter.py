@@ -1,3 +1,6 @@
+'''
+Customizeable element filter class. 
+'''
 #
 #License:
 #
@@ -21,29 +24,40 @@
 #
 #
 
-import RevitCommonAPI as com
-import Result as res
-
-
 # import Autodesk
 from Autodesk.Revit.DB import *
 
 class RevitCustomElementFilter:
 
-    # class constructor taking two args:
-    # elementFilters            list of methods which accept as arguments the current document, and the element id of the element to check
-    # isLogicalANDFilter        if True this acts like and AND: all filters must return True in order to return true overall, if false this acts like an ORL just one of the filters need to return true
-    #                           to return True overall
     def __init__(self, elementFilters = [] , isLogicalANDFilter = True):
-        '''constructor: this takes a list of element filters and a flag whether it is a logical AND filter (default)'''
+        '''
+        Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)
+
+        :param elementFilters: List of element filter functions which will need to accept document and elementId as their arguments, defaults to []
+        :type elementFilters: list of functions, optional
+        :param isLogicalANDFilter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logicla AND)
+        :type isLogicalANDFilter: bool, optional
+        '''
+
         self.elementFilters = elementFilters
         self.isLogicalANDFilter = isLogicalANDFilter
     
-
-    # doc           current drevit document
-    # elementId     revit element id
     def CheckElement(self, doc, elementId):
-        '''filter checking whether element meets criteria'''
+        '''
+        Filter checking whether element meets criteria.
+
+        This function will loop over all the filters passt in through the class constructor and test the element for each filter.
+        Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
+        it will return True if one of them evaluates to True, otherwise False will be returned.
+
+        :param doc: Current Revit model document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param elementId: The id of the element to be checked against the filter.
+        :type elementId: Autodesk.Revit.DB.ElementId
+        :return: True if it matches the filter(s), otherwise False
+        :rtype: bool
+        '''
+
         if(self.isLogicalANDFilter):
             filterOverAll = True
         else:

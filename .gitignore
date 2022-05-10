@@ -189,3 +189,4 @@ x64/
 #Sphinx
 /docsource/build
 /docs/doctrees
+docs/.buildinfo

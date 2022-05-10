@@ -42,6 +42,10 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">The following modules from part of the library of functions around the Revit API.</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitCommonAPI">RevitCommonAPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#revit-element-filtering">Revit Element Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitFamilyUtils">Revit Family</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitExport">Revit Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
@@ -996,6 +1000,1054 @@ Set parameter.message will contain the exception message.</p>
 </dd></dl>
 
 </section>
+<section id="module-RevitDesignSetOptions">
+<span id="revit-design-options-and-design-sets"></span><h2>Revit Design Options and Design Sets<a class="headerlink" href="#module-RevitDesignSetOptions" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of functions around Revit Design Sets and Design Options.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignOptions">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all design options in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design options in current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSetOptionInfo">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSetOptionInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSetOptionInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design set, design option information of an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the desin set/option data is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary
+Design Set Name: (can be either Main Model or the design set name)
+designOptionName:    Design Option Name (empty string if Main Model
+isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary
+designSetName:str
+designOptionName:str
+isPrimary:bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSets">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the design sets in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design sets in the current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.IsDesignOptionPrimary">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">IsDesignOptionPrimary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designSetName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designOptionName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.IsDesignOptionPrimary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a design option is the primary option within a design set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>designSetName</strong> (<em>str</em>) – The name of the design set the option belongs to,</p></li>
+<li><p><strong>designOptionName</strong> (<em>str</em>) – The name of the design option to be checked,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if this option is primary otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="revit-element-filtering">
+<h2>Revit Element Filtering<a class="headerlink" href="#revit-element-filtering" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitCustomElementFilter.</span></span><span class="sig-name descname"><span class="pre">RevitCustomElementFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementFilters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isLogicalANDFilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elementFilters</strong> (<em>list of functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
+<li><p><strong>isLogicalANDFilter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logicla AND)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter.CheckElement">
+<span class="sig-name descname"><span class="pre">CheckElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter.CheckElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter checking whether element meets criteria.</p>
+<p>This function will loop over all the filters passt in through the class constructor and test the element for each filter.
+Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
+it will return True if one of them evaluates to True, otherwise False will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked against the filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it matches the filter(s), otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-RevitFamilyUtils">
+<span id="revit-family"></span><h2>Revit Family<a class="headerlink" href="#module-RevitFamilyUtils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.FamilyAllTypesInUse">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">FamilyAllTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.FamilyAllTypesInUse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if symbols (types) of a family are in use in a model.</p>
+<p>Check is done by comparing entries of famTypeIds with usedTypeIds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famTypeIds</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – list of symbol(type) ids of a family</p></li>
+<li><p><strong>usedTypeIds</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – list of symbol(type) ids in use in a project</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return bool</dt>
+<dd class="field-even"><p>False if a single symbol id contained in list famTypeIds has a match in list usedTypeIds
+otherwise True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllCurveBasedElementsInFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllCurveBasedElementsInFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllCurveBasedElementsInFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all curve based elements in family.</p>
+<dl class="simple">
+<dt>These are:</dt><dd><ul class="simple">
+<li><p>Symbolic Lines</p></li>
+<li><p>Model Lines</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.CurveElement.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllGenericFormsInFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllGenericFormsInFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllGenericFormsInFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all generic forms (3D extrusions) in family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.GenericForm.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllInPlaceFamilies">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllInPlaceFamilies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all families in revit model by whether it is an InPlace family.</p>
+<p>Note: slow filter due to use of lambda and cast to list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.Family matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllInPlaceTypeIdsInModelOfCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceTypeIdsInModelOfCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">famBuiltInCategory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllInPlaceTypeIdsInModelOfCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbol (type) ids off all available in place families of single given built in category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>famBuiltInCategory</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – built in revit category</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllLoadableFamilies">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllLoadableFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllLoadableFamilies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all families in revit model by whether it is not an InPlace family.</p>
+<p>Note: slow filter due to use of lambda and cast to list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.Family matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllModelTextElementsInFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllModelTextElementsInFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllModelTextElementsInFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all model text elements in family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.ModelText.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetAllNonSharedFamilySymbolIds">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetAllNonSharedFamilySymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetAllNonSharedFamilySymbolIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetFamilyInstancesByBuiltInCategories">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetFamilyInstancesByBuiltInCategories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetFamilyInstancesByBuiltInCategories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of given built in categories from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetFamilyInstancesBySymbolTypeId">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetFamilyInstancesBySymbolTypeId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetFamilyInstancesBySymbolTypeId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of a single given family symbol (type).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The symbol (type) id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetFamilyInstancesOfBuiltInCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetFamilyInstancesOfBuiltInCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtinCat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetFamilyInstancesOfBuiltInCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of a single given built in category from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>builtinCat</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – single revit builInCategory Enum value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetFamilySymbols">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetFamilySymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetFamilySymbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family symbols (Revit family types) of given built in categories from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetFamilySymbolsIds">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetFamilySymbolsIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludeSharedFam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetFamilySymbolsIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbols belonging to list of built in categories passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetSymbolsFromType">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetSymbolsFromType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetSymbolsFromType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all family types belonging to the same family as types passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – <ul>
+<li><p>list of element id’s representing family symbols (fmaily types)</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns dictionary</dt>
+<dd class="field-even"><p>where key is the family id as Autodesk.Revit.DB.ElementId
+value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId belonging to the family</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetUnusedFamilyTypes">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetUnusedFamilyTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludeSharedFam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetUnusedFamilyTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters unused non shared family (symbols) type ids in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>excludeSharedFam</strong> (<em>bool</em>) – Default is True (exclude any shared families from filter result)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetUnusedInPlaceIdsForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unusedTypeGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetUnusedInPlaceIdsForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.</p>
+<p>The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
+in terms of purging its faster to delete an entire family definition rather then deleting it’s symbols first and then the 
+definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>unusedTypeGetter</strong> (<em>function</em>) – A function returning ids of unused symbols (family types) as a list. 
+It requires as argument the current model document only.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols and or family id’s matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters unused, non shared and in place family (symbols) type ids in model which can be purged from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.GetUsedUnusedTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetUsedUnusedTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIdGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludeSharedFam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetUsedUnusedTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeIdGetter</strong> (<em>function</em>) – A function returning ids of symbols (family types) as a list, requires as argument: 
+the current model doc, 
+ICollection of built in categories, 
+bool: exclude shared families</p></li>
+<li><p><strong>useType</strong> (<em>int</em>) – 0, no dependent elements (not used); 1: has dependent elements(is in use)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.LoadFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">LoadFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.LoadFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads or reloads a single family into a Revit document.</p>
+<p>Will load/ reload family provided in in path. By default the parameter values in the project file will be overwritten
+with parameter values in family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>familyFilePath</strong> (<em>str</em>) – The fully qualified file path of the family to be loaded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return Result</dt>
+<dd class="field-odd"><p>Result class instance.
+Reload status (bool) returned in result.status.
+Reload status returned from Revit in result.message property.
+Return family reference stored in result.result property on succesful reload only         On exception
+Reload.status (bool) will be False
+Reload.message will contain the exception message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.SetRefPlanesToNotAReference">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">SetRefPlanesToNotAReference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.SetRefPlanesToNotAReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will set any reference plane with reference type ‘weak’ within a family to reference type ‘not a reference’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return Result</dt>
+<dd class="field-even"><p>result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
+result.message: one row entry per reference plane requiring reference type change
+result.result: not used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyUtils.SetSymbolicAndModelLinesToNotAReference">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">SetSymbolicAndModelLinesToNotAReference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.SetSymbolicAndModelLinesToNotAReference" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will set any model or symbolic curve in a family with reference type ‘weak’ to reference type ‘not a reference’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Return Result</dt>
+<dd class="field-even"><p>result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
+result.message: one row entry per curve element requiring reference type change
+result.result: not used</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-RevitFamilyReload"></span><dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyReload.ReloadAllFamilies">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">ReloadAllFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">libraryLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubFolders</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.ReloadAllFamilies" title="Permalink to this definition">¶</a></dt>
+<dd><p>reloads a number of families with settings:
+- parameter values overwritten: true
+retuns True if any of the reload actions was succesful</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyReload.getFamilyIdsFromSymbols">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getFamilyIdsFromSymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getFamilyIdsFromSymbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all loadable family ids in file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitFamilyReload.getNewSymboldIds">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getNewSymboldIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preLoadSymbolIdList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afterLoadSymbolList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getNewSymboldIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of symbol ids not present prior to reload</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitFamilyLoadOption.FamilyLoadOption">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitFamilyLoadOption.</span></span><span class="sig-name descname"><span class="pre">FamilyLoadOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyLoadOption.FamilyLoadOption" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="RevitFamilyLoadOption.FamilyLoadOption.OnFamilyFound">
+<span class="sig-name descname"><span class="pre">OnFamilyFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">familyInUse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwriteParameterValues</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyLoadOption.FamilyLoadOption.OnFamilyFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines behavior when a family is found in the model.</p>
+<p>Overwrite parameter values is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>familyInUse</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>overwriteParameterValues</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitFamilyLoadOption.FamilyLoadOption.OnSharedFamilyFound">
+<span class="sig-name descname"><span class="pre">OnSharedFamilyFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sharedFamily</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyInUse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwriteParameterValues</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyLoadOption.FamilyLoadOption.OnSharedFamilyFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines behavior when a shared family is found in the model.</p>
+<p>Overwrite parameter values is set to True. In case of any shared subcomponents allready in the model but different in family loaded, the project version will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sharedFamily</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>familyInUse</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>source</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>overwriteParameterValues</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-RevitExport">
+<span id="revit-export"></span><h2>Revit Export<a class="headerlink" href="#module-RevitExport" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of functions around exporting from Revit to varies file formats.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.BuildExportFileNameFromView">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">BuildExportFileNameFromView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewFilterRule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.BuildExportFileNameFromView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function modifying the passt in view name and returns a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>viewName</strong> (<em>str</em>) – The view name to be used as file name.</p></li>
+<li><p><strong>viewFilterRule</strong> (<em>str</em>) – A prefix which will be removed from the view name.</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em>) – The file extension to be used. Format is ‘.something’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A file name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.Export3DViewsToIFC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">Export3DViewsToIFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewFilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcCoordinatesSystem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doSomethingWithViewName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.Export3DViewsToIFC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.</p>
+<p>By default the file name of the export will be same as the name of the view exported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewFilter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)</p></li>
+<li><p><strong>ifcExportOption</strong> (<em>Autodesk.Revit.DB.IFCExportOptions</em>) – The IFC export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>ifcCoordinatesSystem</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCCoords</em><em>, </em><em>optional</em>) – Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates</p></li>
+<li><p><strong>doSomethingWithViewName</strong> (<em>function</em><em> , </em><em>optional</em>) – A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.Export3DViewsToIFCDefault">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">Export3DViewsToIFCDefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewFilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.Export3DViewsToIFCDefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewFilter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)</p></li>
+<li><p><strong>ifcExportOption</strong> (<em>Autodesk.Revit.DB.IFCExportOptions</em>) – The IFC export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.Export3DViewsToNWC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">Export3DViewsToNWC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewFilter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doSomethingWithViewName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.Export3DViewsToNWC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting 3D views matching a filter (view starts with) to NWC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewFilter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>doSomethingWithViewName</strong> (<em>function</em><em> , </em><em>optional</em>) – A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.ExportModelToIFC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">ExportModelToIFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordOption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.ExportModelToIFC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting the entire model to IFC using 3rd party exporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ifcExportOption</strong> (<em>Autodesk.Revit.DB.IFCExportOptions</em>) – The IFC export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+<li><p><strong>coordOption</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCCoords</em><em>, </em><em>optional</em>) – Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.ExportModelToNWC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">ExportModelToNWC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.ExportModelToNWC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting the entire model to NWC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.ExportToIFC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">ExportToIFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.ExportToIFC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports to IFC either the entire model or a view only using 3rd party exporter.</p>
+<p>What gets exported is defined in the ifcExportOption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ifcExportOption</strong> (<em>BIM.IFC.Export.UI.IFCExportConfiguration</em>) – The settings for the IFC export.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.ExportToNWC">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">ExportToNWC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwcExportOption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.ExportToNWC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting either entire model or view to NWC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Export status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path of the exported file.
+On exception:
+result.status (bool) will be False.
+result.message will contain the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitExport.IFCCoords">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCCoords</span></span><a class="headerlink" href="#RevitExport.IFCCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using enum class for IFC coordinates options.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.IFCGetExportConfifgByView">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCGetExportConfifgByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcSpaceBounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.IFCGetExportConfifgByView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an IFC export configuration for the built in IFC exporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p></li>
+<li><p><strong>ifcSpaceBounds</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCSpaceBoundaries</em><em>, </em><em>optional</em>) – IFC space boundary setting, defaults to IFCSpaceBoundaries.noBoundaries</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an IFC export option</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.IFCExportOptions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.IFCGetThirdPartyExportConfigByModel">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.IFCGetThirdPartyExportConfigByModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the 3rd party ifc config for export by model depending on revit version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raises an exception if the revit version in use is not supported by this script.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An ifc export config instance based on the Revit version.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.IFCGetThirdPartyExportConfigByView">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.IFCGetThirdPartyExportConfigByView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the 3rd party ifc config for export by view depending on revit version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raises an exception if the revit version in use is not supported by this script.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An ifc export config instance based on the Revit version.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitExport.IFCSpaceBoundaries">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCSpaceBoundaries</span></span><a class="headerlink" href="#RevitExport.IFCSpaceBoundaries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using enum class for IFC space boundary options.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.SetUpIFCExportOption">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">SetUpIFCExportOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exportConfig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewId</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ElementId.InvalidElementId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordOption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.SetUpIFCExportOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function assigning a view Id to export ifc config if it is exporting by view.</p>
+<p>By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exportConfig</strong> (<em>BIM.IFC.Export.UI.IFCExportConfiguration</em>) – The ifc export configuration used.</p></li>
+<li><p><strong>viewId</strong> (<em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>optional</em>) – The id of the view to be exported, defaults to ElementId.InvalidElementId</p></li>
+<li><p><strong>coordOption</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCCoords</em><em>, </em><em>optional</em>) – Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An updated ifc export config instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.SetUpNWCCustomExportOption">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">SetUpNWCCustomExportOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usingSharedCoordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportEntireModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportLinks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splitModelByLevel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportParts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportRoomAsAttributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportRoomGeometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">findMissingMaterials</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.SetUpNWCCustomExportOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NWC Export Options object as per values passt oin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>usingSharedCoordinates</strong> (<em>bool</em>) – True shared coordinates will be used, otherwise project internal</p></li>
+<li><p><strong>exportEntireModel</strong> (<em>bool</em>) – True entire model will be exported, otherwise specific view.</p></li>
+<li><p><strong>exportLinks</strong> (<em>bool</em>) – True: Revit links will also be exported, otherwise not.</p></li>
+<li><p><strong>splitModelByLevel</strong> (<em>bool</em>) – True: model elements will be split by level, otherwise not.</p></li>
+<li><p><strong>exportParts</strong> (<em>bool</em>) – True parts will be exported, otherwise not.</p></li>
+<li><p><strong>exportRoomAsAttributes</strong> (<em>bool</em>) – True room proprties will be eported (can be slow!), otherwise not.</p></li>
+<li><p><strong>exportRoomGeometry</strong> (<em>bool</em>) – True room geometry will be exported, otherwise not.</p></li>
+<li><p><strong>findMissingMaterials</strong> (<em>bool</em>) – True exxporter will attempt to find missing materials, otherwise not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A navisworks .nwc export option.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExport.SetUpNWCDefaultExportOptionSharedByView">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">SetUpNWCDefaultExportOptionSharedByView</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.SetUpNWCDefaultExportOptionSharedByView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NWC Export Options object with shared coordinates, export by View.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A navisworks .nwc export option.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCCoords</span></span></dt>
+<dd><p>Using enum class for IFC coordinates options.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCSpaceBoundaries</span></span></dt>
+<dd><p>Using enum class for IFC space boundary options.</p>
+</dd></dl>
+
+<span class="target" id="module-RevitExportIFCConfig"></span><p>This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2019">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2019" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2020">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2020" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2021">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2021" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2019">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2019" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2020">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2020" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2021">
+<span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2021" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
+<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An IFCExportconfig object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-RevitWarningsSolver">
 <span id="revit-warnings"></span><h2>Revit Warnings<a class="headerlink" href="#module-RevitWarningsSolver" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-RevitWarningsSolverDuplicateMark"></span><span class="target" id="module-RevitWarningsSolverRoomTagToRoom"></span></section>
@@ -1043,7 +2095,8 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="DataCeiling.DataCeiling">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DataCeiling.</span></span><span class="sig-name descname"><span class="pre">DataCeiling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataCeiling.DataCeiling" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py property">
+<dd><p>constructor</p>
+<dl class="py property">
 <dt class="sig sig-object py" id="DataCeiling.DataCeiling.DataType">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataType</span></span><a class="headerlink" href="#DataCeiling.DataCeiling.DataType" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the getter method.</p>

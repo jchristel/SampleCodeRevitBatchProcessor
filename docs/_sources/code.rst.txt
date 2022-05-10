@@ -9,6 +9,45 @@ RevitCommonAPI
 .. automodule:: RevitCommonAPI
     :members:
 
+Revit Design Options and Design Sets
+------------------------------------
+
+.. automodule:: RevitDesignSetOptions
+    :members:
+
+Revit Element Filtering
+------------------------------------
+.. autoclass:: RevitCustomElementFilter.RevitCustomElementFilter
+    :members:
+
+Revit Family
+------------
+.. automodule:: RevitFamilyUtils
+    :members:
+
+.. automodule:: RevitFamilyReload
+    :members:
+
+.. autoclass:: RevitFamilyLoadOption.FamilyLoadOption
+    :members:
+
+Revit Export
+------------
+.. automodule:: RevitExport
+    :members:
+
+.. autoclass:: RevitExport.IFCCoords
+    :members:
+    :noindex:
+    
+.. autoclass:: RevitExport.IFCSpaceBoundaries
+    :members:
+    :noindex:
+
+.. automodule:: RevitExportIFCConfig
+    :members:
+
+
 Revit Warnings
 --------------
 

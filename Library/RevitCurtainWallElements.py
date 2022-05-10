@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of functions around Revit curtain walls. 
+'''
+#
 #License:
 #
 #
@@ -30,7 +33,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import BuiltInCategory, ElementMulticategoryFilter, FilteredElementCollector, FamilySymbol, BuiltInParameter
 
 clr.ImportExtensions(System.Linq)
 

@@ -38,7 +38,8 @@ release = '1.0.0'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'sphinx.ext.autosummary'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -52,7 +53,11 @@ exclude_patterns = []
 # mocking clr and system imports
 # also includes RevitFamilyLoadOption module since class defined in there inherits from an AutoDesk API class
 # which is tripping sphinx
-autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'RevitFamilyLoadOption']
+#, 'RevitFamilyLoadOption'
+autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely']
+
+# include __init__ docs in classes
+autoclass_content = 'both'
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -29,6 +29,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
+from Autodesk.Revit.DB import View, ViewType, ViewFamilyType, ViewSheet, FilteredElementCollector, ElementId, ParameterFilterElement, ScheduleSheetInstance, ElevationMarker
 from Autodesk.Revit.DB import *
 
 clr.ImportExtensions(System.Linq)

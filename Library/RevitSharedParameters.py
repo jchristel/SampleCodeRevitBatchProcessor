@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit shared parameters. 
+'''
 #
 #License:
 #
@@ -30,7 +33,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, SharedParameterElement, Element
 
 clr.ImportExtensions(System.Linq)
 

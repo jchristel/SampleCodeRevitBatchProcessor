@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit links, CAD links and image links. 
+'''
 #
 #License:
 #
@@ -28,9 +31,13 @@ import System
 import RevitCommonAPI as com
 import Result as res
 import Utility as util
+import glob
+import os
+from os import path
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, CADLinkType, ImportInstance, Element, BuiltInParameter, Transaction, ModelPathUtils,\
+    RevitLinkInstance, RevitLinkType, BuiltInCategory, ImageType
 
 clr.ImportExtensions(System.Linq)
 

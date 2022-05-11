@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit grids. 
+'''
 #
 #License:
 #
@@ -32,7 +35,8 @@ import Utility as util
 import RevitFamilyUtils as rFamU
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Element, ElementId, Grid, ElementCategoryFilter, FamilySymbol,\
+    BuiltInParameter
 
 clr.ImportExtensions(System.Linq)
 

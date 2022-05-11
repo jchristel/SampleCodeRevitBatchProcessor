@@ -83,6 +83,81 @@ Revit Family
 .. autoclass:: RevitFamilyLoadOption.FamilyLoadOption
     :members:
 
+Revit Floors
+------------
+.. automodule:: RevitFloors
+    :members:
+
+Revit Generic Annotation
+------------------------
+.. automodule:: RevitGenericAnnotation
+    :members:
+
+Revit Geometry
+------------------------
+.. automodule:: RevitGeometry
+    :members:
+
+Revit Groups
+------------------------
+.. automodule:: RevitGroups
+    :members:
+
+Revit Grids
+------------------------
+.. automodule:: RevitGrids
+    :members:
+
+Revit Levels
+------------------------
+.. automodule:: RevitLevels
+    :members:
+
+Revit Line Styles and Patterns
+------------------------------
+.. automodule:: RevitLineStylesPatterns
+    :members:
+
+Revit Links
+------------------------
+.. automodule:: RevitLinks
+    :members:
+
+Revit Materials
+------------------------
+.. automodule:: RevitMaterials
+    :members:
+
+Revit MEP Systems
+------------------------
+.. automodule:: RevitMEPSystems
+    :members:
+
+Revit Purge Unused using eTransmit
+----------------------------------
+.. automodule:: RevitPurgeUnusedeTransmit
+    :members:
+
+Revit Railings
+------------------------
+.. automodule:: RevitRailings
+    :members:
+
+Revit Ramps
+------------------------
+.. automodule:: RevitRamps
+    :members:
+
+Revit Roofs
+------------------------
+.. automodule:: RevitRoofs
+    :members:
+
+Revit Rooms
+------------------------
+.. automodule:: RevitRooms
+    :members:
+
 Revit Warnings
 --------------
 

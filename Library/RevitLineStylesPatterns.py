@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit line styles and line patterns. 
+'''
 #
 #License:
 #
@@ -29,7 +32,7 @@ import RevitCommonAPI as com
 import Result as res
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, ElementId, LinePatternElement, BuiltInCategory, FillPatternElement
 
 clr.ImportExtensions(System.Linq)
 

@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit rooms. 
+'''
 #
 #License:
 #
@@ -34,7 +37,7 @@ import DataRoom as dRoom
 import DataGeometry as dGeometry
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, SpatialElementBoundaryOptions, Transaction, Element, SpatialElementBoundaryLocation
 
 clr.ImportExtensions(System.Linq)
 

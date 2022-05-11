@@ -1,15 +1,30 @@
-# based on building coder article:
-# https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
+'''
+This module contains a function to bind a shared parameter to a category.
 
-from Autodesk.Revit.DB import *
+based on building coder article:
+https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
+
+'''
+
+
+from Autodesk.Revit.DB import TypeBinding, InstanceBinding, ExternalDefinitionCreationOptions, Transaction
 
 # custom result class
 import Result as res
 # import InTransaction from common module
 import RevitCommonAPI as com
 
-# opens a shared parameter file
 def LoadSharedParameterFile(doc, path):
+    '''
+    Loads a shared parameter file.
+
+    :param doc: _description_
+    :type doc: _type_
+    :param path: _description_
+    :type path: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
     app = doc.Application
     app.SharedParametersFilename = path
     return app.OpenSharedParameterFile()

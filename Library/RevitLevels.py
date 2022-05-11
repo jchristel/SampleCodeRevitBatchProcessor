@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit levels. 
+'''
 #
 #License:
 #
@@ -32,7 +35,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Level, BuiltInParameter, ElementCategoryFilter, FamilySymbol
 
 clr.ImportExtensions(System.Linq)
 

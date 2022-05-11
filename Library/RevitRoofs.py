@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Revit roofs. 
+'''
+#
 #License:
 #
 #
@@ -25,12 +28,10 @@ import clr
 import System
 
 import RevitCommonAPI as com
-import Result as res
 import RevitFamilyUtils as rFam
-import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Roof, RoofType, ElementCategoryFilter, FamilyInstance
 
 clr.ImportExtensions(System.Linq)
 

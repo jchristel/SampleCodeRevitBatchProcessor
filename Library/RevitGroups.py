@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit groups. 
+'''
 #
 #License:
 #
@@ -26,11 +29,9 @@ import System
 
 # import common library modules
 import RevitCommonAPI as com
-import Result as res
-import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory
 
 clr.ImportExtensions(System.Linq)
 

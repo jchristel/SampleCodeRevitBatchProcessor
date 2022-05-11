@@ -68,7 +68,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRamps">Revit Ramps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRoofs">Revit Roofs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRooms">Revit Rooms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitWarningsSolver">Revit Warnings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitSharedParameterAdd">Revit Shared Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitStairs">Revit Stairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitViewReferencing">Revit Views and Views Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitWalls">Revit Walls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitWarnings">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#misc-modules-and-classes">Misc modules and classes</a></li>
@@ -4561,9 +4565,821 @@ all loops are implicitly closed ( last point is not the first point again!)</p>
 </dd></dl>
 
 </section>
-<section id="module-RevitWarningsSolver">
-<span id="revit-warnings"></span><h2>Revit Warnings<a class="headerlink" href="#module-RevitWarningsSolver" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-RevitWarningsSolverDuplicateMark"></span><span class="target" id="module-RevitWarningsSolverRoomTagToRoom"></span></section>
+<section id="module-RevitSharedParameterAdd">
+<span id="revit-shared-parameters"></span><h2>Revit Shared Parameters<a class="headerlink" href="#module-RevitSharedParameterAdd" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a function to bind a shared parameter to a category.</p>
+<p>based on building coder article:
+<a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html">https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameterAdd.LoadSharedParameterFile">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameterAdd.</span></span><span class="sig-name descname"><span class="pre">LoadSharedParameterFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterAdd.LoadSharedParameterFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a shared parameter file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>path</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-RevitSharedParameters"></span><p>This module contains a number of helper functions relating to Revit shared parameters.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameters.CheckWhetherSharedParametersAreInFile">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">CheckWhetherSharedParametersAreInFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterGuids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameters.CheckWhetherSharedParametersAreInFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the passt in list filtered by whether the shared parameter are in the file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameters.DeleteSharedParameterByGUID">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">DeleteSharedParameterByGUID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameters.DeleteSharedParameterByGUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes a single shared parameter based on a guid provided</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameters.DeleteSharedParameters">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">DeleteSharedParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterGuids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameters.DeleteSharedParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes shared parameters by GUID from document</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameters.GetSharedParameterReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">GetSharedParameterReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameters.GetSharedParameterReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets shared parameter data ready for being printed to file</p>
+</dd></dl>
+
+</section>
+<section id="module-RevitStairs">
+<span id="revit-stairs"></span><h2>Revit Stairs<a class="headerlink" href="#module-RevitStairs" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of helper functions relating to Revit stairs.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.BuildStairTypeDictionary">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BuildStairTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.BuildStairTypeDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.BuildSystemFamilyDictionary">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BuildSystemFamilyDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.BuildSystemFamilyDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns dictionary where key is the system family name and values available types of that system family</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.CheckSystemFamilies">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">CheckSystemFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.CheckSystemFamilies" title="Permalink to this definition">¶</a></dt>
+<dd><p>check whether a list of ids of system family is the entire list of types avaialble
+if so it will remove one type id per system family to allow purging</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.FamilyNoTypesInUse">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns false if any symbols (types) of a family are in use in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllInPlaceStairTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceStairTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllInPlaceStairTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all available in place families of category stair</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllSimilarTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllSimilarTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllSimilarTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all ids of similar types of elemet ids passed in</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairCutMarkTypeIdsInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairCutMarkTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairCutMarkTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair cut mark element type ids available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairInstancesInModelByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair elements placed in model…ignores in place families</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairInstancesInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair elements placed in model…ignores Stair soffits(???)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairLandingTypeIdsInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairLandingTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairLandingTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair landing element type ids available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairPathElementsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairPathElementsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairPathElementsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair path elements in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairPathTypeIdsInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairPathTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairPathTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair path element type ids available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairRunTypeIdsInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairRunTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairRunTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair run element type ids available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairStringersCarriageByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairStringersCarriageByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairStringersCarriageByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair stringers and cariage types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairTypeIdsInModelByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair element types available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairTypeIdsInModelByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair element types available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairTypesByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypesByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair types in the model:
+- Stair
+- Assembled Stair
+- Precast Stair
+- Cast-In-Place Stair
+- In place families or loaded families</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetAllStairstringCarriageTypeIdsInModelByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairstringCarriageTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairstringCarriageTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all Stair stringers and carriage element type ids available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetInPlaceStairFamilyInstances">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetInPlaceStairFamilyInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetInPlaceStairFamilyInstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all instances in place families of category stair</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetStairCutMarkTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairCutMarkTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairCutMarkTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all cut mark types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetStairLandingTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairLandingTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairLandingTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair landing types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetStairPathTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairPathTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairPathTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair path types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetStairRunTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairRunTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairRunTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair run types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetStairTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all Stair types in the model:
+- Assembled Stair
+- Precast Stair
+- Cast-In-Place Stair
+it will therefore not return any in place family types or Stair types…</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedInPlaceStairIdsForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceStairIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedInPlaceStairIdsForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns symbol(type) ids and family ids (when no type is in use) of in place Stair familis which can be purged</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedInPlaceStairTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedInPlaceStairTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused in place type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedNonInPlaceStairTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonInPlaceStairTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedNonInPlaceStairTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair type ids for:
+- Stair Soffit
+- Compound Stair
+- Basic Stair
+it will therefore not return any in place family types …</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedStairCutMarkTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairCutMarkTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairCutMarkTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair cut mark type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedStairLandingTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairLandingTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairLandingTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair landing ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedStairPathTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairPathTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairPathTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair path ids to purge, will elave on path type id behinf ber system family</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedStairRunTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairRunTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairRunTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair landing ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairStringersCarriageTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused Stair stringer / carriage type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUsedInPlaceStairTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedInPlaceStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedInPlaceStairTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all used in place type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUsedStairTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedStairTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all used in Stair type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypeIdsFromStairType">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypeIdsFromStairType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stairTypeId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypeIdsFromStairType" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets the ids returned from stair type belonging to parameter list passt in</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypes">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availavbleIdsGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function</p>
+</dd></dl>
+
+</section>
+<section id="module-RevitViewReferencing">
+<span id="revit-views-and-views-referencing"></span><h2>Revit Views and Views Referencing<a class="headerlink" href="#module-RevitViewReferencing" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of helper functions relating to Revit view referencing.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllCallOutTypeIdsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">Deprecated_GetAllCallOutTypeIdsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.Deprecated_GetAllCallOutTypeIdsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return an EMPTY filtered element collector of all call out type ids in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllCallOutTypesByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">Deprecated_GetAllCallOutTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.Deprecated_GetAllCallOutTypesByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return an EMPTY filtered element collector of all call out types in the model in Revit 2019</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllReferenceViewTypeIdsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">Deprecated_GetAllReferenceViewTypeIdsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.Deprecated_GetAllReferenceViewTypeIdsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return an EMPTY filtered element collector of all reference view types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllReferenceViewTypesByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">Deprecated_GetAllReferenceViewTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.Deprecated_GetAllReferenceViewTypesByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return an EMPTY filtered element collector of all reference view types in the model in Revit 2019</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllCallOutHeadsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllCallOutHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllCallOutHeadsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all callOut Head symbol (types) in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllElevationHeadsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllElevationHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllElevationHeadsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all elevation symbols (types) in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllReferenceViewElementsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllReferenceViewElementsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllReferenceViewElementsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return an filtered element collector of all reference elements in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllSectionHeadsByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllSectionHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllSectionHeadsByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all section symbols (types) in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewContinuationMarkersByCategory">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewContinuationMarkersByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewContinuationMarkersByCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all view contiunation symbols (types) in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewContinuationTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewContinuationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewContinuationTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view continuation types available in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceSymbolIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceSymbolIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all view reference family symbols(types) in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceTypeIdData">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceTypeIdData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceTypeIdData" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view references types available in the model in a dictionary
+key is the reference type: callout, section or elevation
+values are the symbol ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceTypeIdDataAsList">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceTypeIdDataAsList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceTypeIdDataAsList" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view references type id s available in the model in a list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetNestedFamilyMarkerNames">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetNestedFamilyMarkerNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usedIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetNestedFamilyMarkerNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns nested family names</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetReferenceTypeIdsFromViewType">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetReferenceTypeIdsFromViewType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetReferenceTypeIdsFromViewType" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all reference type ids used in view type</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetSymbolIdsFromTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsFromTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRefTypesIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetSymbolIdsFromTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all view family symbols(types) from given view ref types or continuation types the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUnusedContinuationMarkerTypeIdsForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUnusedContinuationMarkerTypeIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUnusedContinuationMarkerTypeIdsForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused view continuation type ids in model for purge</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewRefAndContinuationMarkerFamiliesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUnusedViewRefAndContinuationMarkerSymbolIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewRefAndContinuationMarkerSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUnusedViewRefAndContinuationMarkerSymbolIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all view reference symbols(types) and view continuation types not used in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUnusedViewReferenceTypeIdsForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewReferenceTypeIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUnusedViewReferenceTypeIdsForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused view references type ids in model for purge</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUsedViewContinuationTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewContinuationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUsedViewContinuationTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view continuation types available in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUsedViewReferenceAndContinuationMarkerSymbolIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewReferenceAndContinuationMarkerSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUsedViewReferenceAndContinuationMarkerSymbolIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the ids of all view reference symbols(types) and view continuations symbols (types) used by 
+view reference types and view continuation types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.GetUsedViewReferenceTypeIdData">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewReferenceTypeIdData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUsedViewReferenceTypeIdData" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view references types in use in the model in a dictionary
+key is the reference tag type: callout, section or elevation
+values are the type ids in use</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViewReferencing.IsNestedFamilySymbol">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">IsNestedFamilySymbol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nestedFamilyNames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.IsNestedFamilySymbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns true if symbol belongs to family in list passt in</p>
+</dd></dl>
+
+<span class="target" id="module-RevitViews"></span><p>This module contains a number of helper functions relating to Revit views.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.DeleteAllSheetsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteAllSheetsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteAllSheetsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes all sheets in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.DeleteSheets">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collectorViews</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.DeleteUnusedElevationViewMarkers">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteUnusedElevationViewMarkers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteUnusedElevationViewMarkers" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes unused elevation markers</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.DeleteViewsNotOnSheets">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteViewsNotOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteViewsNotOnSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes all views not placed on sheets includes schedules and legends</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.FilterDataByProperties">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">FilterDataByProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.FilterDataByProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>filters sheet data by supplied property names</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.FilterRevisionSchedules">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">FilterRevisionSchedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.FilterRevisionSchedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns true if the view name starts with ‘&lt;’, otherwise false</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetAllAvailableFilterIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllAvailableFilterIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllAvailableFilterIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view filter ids in document</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetAllAvailableFiltersInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllAvailableFiltersInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllAvailableFiltersInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all filters in document as a collector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetAllUnUsedViewFilters">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllUnUsedViewFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllUnUsedViewFilters" title="Permalink to this definition">¶</a></dt>
+<dd><p>gets id’s of all unused view filters in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetAllUnusedViewTemplateIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedViewTemplateIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllUnusedViewTemplateIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view template Id’s not used by view types and by views</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetAllViewTemplateIdsUsedInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllViewTemplateIdsUsedInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllViewTemplateIdsUsedInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns view template Id’s used as default by view types and by views</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetDefaultViewTypeTemplateIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetDefaultViewTypeTemplateIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetDefaultViewTypeTemplateIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns view template Id’s used as default by view types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetFilterIdsFromViewByFilter">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFilterIdsFromViewByFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniqueList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFilterIdsFromViewByFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns passed in list of filter id’s plus new filter id’s from view (not already in list passt in)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetFilterIdsFromViewsWithoutTemplate">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFilterIdsFromViewsWithoutTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterByType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFilterIdsFromViewsWithoutTemplate" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all filters from views which dont have a template applied</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetFiltersFromTemplates">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFiltersFromTemplates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFiltersFromTemplates" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all filters used in templates only</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetReportHeaders">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetReportHeaders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetReportHeaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns sheet data including file name and sheet id</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetScheduleIdsNotOnSheets">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetScheduleIdsNotOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetScheduleIdsNotOnSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all schedules not on a sheet</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetScheduleIdsOnSheets">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetScheduleIdsOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetScheduleIdsOnSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns view ids of all schedules on a sheet</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetSheetReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns sheet data including file name and sheet id</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetSheetsByFilters">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetsByFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetsByFilters" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns sheets matching filters provided</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetSheetsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all sheets in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetTemplateIdsWhichCanHaveFilters">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetTemplateIdsWhichCanHaveFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterByType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetTemplateIdsWhichCanHaveFilters" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all templates in a model of given type</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetUnusedViewTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUnusedViewTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns ID of unused view family types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetUsedViewTemplateIdsInTheModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewTemplateIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUsedViewTemplateIdsInTheModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns view templates used in views in the model only</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetUsedViewTypeIdsInTheModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUsedViewTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view family types in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view family type ids in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewTypes">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view family types in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewportOnSheets">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewportOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewportOnSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all view ports in the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>eturns all views in a model which are
+not template views
+not system browser
+not project broser
+not undefined
+not Internal
+not sheets
+match a filter</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewsNotOnSheet">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsNotOnSheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsNotOnSheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all views not on a sheet</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewsTemplateIdsInInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsTemplateIdsInInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsTemplateIdsInInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all template ids in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewsTemplatesInInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsTemplatesInInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsTemplatesInInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all templates in a model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.GetViewsofType">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsofType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewtype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsofType" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all views in a model of a given type</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.WriteSheetData">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">WriteSheetData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.WriteSheetData" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes out sheet data to file</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.WriteSheetDataByPropertyNames">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">WriteSheetDataByPropertyNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.WriteSheetDataByPropertyNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>writes to file sheet properties as nominated in passt in list</p>
+</dd></dl>
+
+</section>
+<section id="module-RevitWalls">
+<span id="revit-walls"></span><h2>Revit Walls<a class="headerlink" href="#module-RevitWalls" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of helper functions relating to Revit walls.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.BuildWallTypeDictionary">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">BuildWallTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.BuildWallTypeDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllBasicWallInstancesInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllBasicWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllBasicWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all basic wall elements placed in model…ignores legend elements</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllBasicWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllBasicWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllBasicWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all available basic wall types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllCurtainWallInstancesInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllCurtainWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllCurtainWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllCurtainWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all available curtain wall types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllInPlaceWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllInPlaceWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all available in place families of category wall</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallInstancesInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all stacked wall element types available in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallTypesInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallTypesInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all stacked wall element types used by instances placed in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetInPlaceWallFamilyInstances">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetInPlaceWallFamilyInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetInPlaceWallFamilyInstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all instances in place families of category wall</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetPlacedBasicWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetPlacedBasicWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetPlacedBasicWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all basic wall type elements used in model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetPlacedCurtainWallTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetPlacedCurtainWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetPlacedCurtainWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUnUsedBasicWallTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedBasicWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnUsedBasicWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all unused basic wall types, will leave one behind if none is used</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUnUsedCurtainWallTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCurtainWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnUsedCurtainWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all unused curtain wall types, will leave one behind if none is used</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUnusedInPlaceWallIdsForPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceWallIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedInPlaceWallIdsForPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be purged</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUnusedInPlaceWallTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedInPlaceWallTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused in place type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUnusedStackedWallTypeIdsToPurge">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStackedWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedStackedWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all unused stack wall type ids, will leave one behind if none is used</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUsedBasicWallTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedBasicWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedBasicWallTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all used basic wall types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUsedCurtainWallTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedCurtainWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedCurtainWallTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns type ids off all used curtain wall types</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUsedInPlaceWallTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedInPlaceWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedInPlaceWallTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all used in place type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetUsedStackedWallTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedStackedWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedStackedWallTypeIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all used stack wall type ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetWallTypesByClass">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetWallTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetWallTypesByClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>this will return a filtered element collector of all wall types in the model
+it will therefore not return any in place wall types since revit treats those as Families…</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.SortWallTypesByFamilyName">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">SortWallTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.SortWallTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a dictionary where key is the build in wall family name, values are ids of associated wall types</p>
+</dd></dl>
+
+</section>
+<section id="module-RevitWarnings">
+<span id="revit-warnings"></span><h2>Revit Warnings<a class="headerlink" href="#module-RevitWarnings" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a number of helper functions relating to Revit warnings.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWarnings.GetWarnings">
+<span class="sig-prename descclassname"><span class="pre">RevitWarnings.</span></span><span class="sig-name descname"><span class="pre">GetWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarnings.GetWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of warnings from the model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWarnings.GetWarningsByGuid">
+<span class="sig-prename descclassname"><span class="pre">RevitWarnings.</span></span><span class="sig-name descname"><span class="pre">GetWarningsByGuid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarnings.GetWarningsByGuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns al failur message objects where failure definition has matching GUID</p>
+</dd></dl>
+
+<span class="target" id="module-RevitWarningsSolver"></span><span class="target" id="module-RevitWarningsSolverDuplicateMark"></span><span class="target" id="module-RevitWarningsSolverRoomTagToRoom"></span></section>
 <section id="module-RevitWorksets">
 <span id="revit-worksets"></span><h2>Revit Worksets<a class="headerlink" href="#module-RevitWorksets" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -4823,7 +5639,9 @@ any subsequent polygons are describing holes within the boundary</p>
 
 </dd></dl>
 
-<span class="target" id="module-BatchProcessorLogUtils"></span></section>
+<span class="target" id="module-BatchProcessorLogUtils"></span><span class="target" id="module-SolibriIFCOptimizer"></span><p>This module contains a number of helper functions relating to Solibri IFC optimnizer.</p>
+<span class="target" id="module-SystemProcess"></span><p>This module contains a number of helper functions relating to system processes.</p>
+</section>
 </section>
 
 

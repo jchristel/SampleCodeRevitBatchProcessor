@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit MEP systems. 
+'''
 #
 #License:
 #
@@ -26,17 +29,15 @@ import System
 from System.Collections.Generic import List
 
 import sys
-sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
 
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
-from timer import Timer
 
 # import Autodesk
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB.Mechanical import *
-from Autodesk.Revit.DB.Electrical import *
-from Autodesk.Revit.DB.Plumbing import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, RoutingPreferenceRuleGroupType, ElementMulticategoryFilter, ElementId, FamilySymbol
+from Autodesk.Revit.DB.Mechanical import DuctType, FlexDuctType
+from Autodesk.Revit.DB.Electrical import ConduitType, CableTrayType
+from Autodesk.Revit.DB.Plumbing import PipeType
 
 
 clr.ImportExtensions(System.Linq)

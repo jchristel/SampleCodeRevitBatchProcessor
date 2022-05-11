@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit views. 
+'''
 #
 #License:
 #
@@ -30,7 +33,7 @@ import Utility as util
 
 # import Autodesk
 from Autodesk.Revit.DB import View, ViewType, ViewFamilyType, ViewSheet, FilteredElementCollector, ElementId, ParameterFilterElement, ScheduleSheetInstance, ElevationMarker
-from Autodesk.Revit.DB import *
+#from Autodesk.Revit.DB import *
 
 clr.ImportExtensions(System.Linq)
 

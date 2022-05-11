@@ -1,4 +1,10 @@
-﻿#
+﻿'''
+This module contains a purge unused function using Autodesk's own eTransmit plug in.
+based on the building coder article:
+https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-camel.html
+'''
+
+#
 #License:
 #
 #
@@ -20,8 +26,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# based on the building coder article:
-# https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-camel.html
 
 
 import clr

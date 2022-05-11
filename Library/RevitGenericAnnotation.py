@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit generic annotation. 
+'''
 #
 #License:
 #
@@ -25,16 +28,15 @@ import clr
 import System
 
 import sys
-sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
+#sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
 
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 import RevitAnnotation as rAnno
-from timer import Timer
 
 # import Autodesk
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB.Architecture import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuiltInParameter
+# from Autodesk.Revit.DB.Architecture import *
 
 clr.ImportExtensions(System.Linq)
 

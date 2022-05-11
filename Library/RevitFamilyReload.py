@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions to load or reload families. 
+'''
 #
 #License:
 #

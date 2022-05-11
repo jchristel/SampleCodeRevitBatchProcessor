@@ -1,3 +1,6 @@
+'''
+This class is the default implementation for family load call backs. 
+'''
 import os
 import clr
 

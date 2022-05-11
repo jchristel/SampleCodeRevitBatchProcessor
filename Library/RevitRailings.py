@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Revit railings. 
+'''
+#
 #License:
 #
 #
@@ -29,8 +32,8 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB.Architecture import *
+from Autodesk.Revit.DB import ElementId, BuiltInCategory, ElementMulticategoryFilter, FilteredElementCollector, FamilySymbol, FamilyInstance
+from Autodesk.Revit.DB.Architecture import Railing, RailingType
 
 clr.ImportExtensions(System.Linq)
 

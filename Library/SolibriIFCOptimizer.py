@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Solibri IFC optimnizer. 
+'''
+#
 #License:
 #
 #
@@ -21,10 +24,6 @@
 #
 #
 
-#commonlibraryDebugLocation_ = r'P:\17\1712011.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\_Common'
-#set path to common library
-#import sys
-#sys.path.append(commonlibraryDebugLocation_)
 
 import subprocess
 from System.IO import Path

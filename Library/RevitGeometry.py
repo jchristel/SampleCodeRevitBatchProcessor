@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit geometry extraction. 
+'''
 #
 #License:
 #
@@ -22,7 +25,7 @@
 #
 
 from collections import namedtuple
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import UV, PlanarFace
 
 import DataGeometry as dGeometry
 
@@ -546,9 +549,14 @@ def BuildLoopsDictionary(loops):
 # solid         a Revit Solid element
 def ConvertSolidToFlattened2DPoints(solid):
     '''
-    returns a list of lists of Revit XYZ points describing the outline of a solid projected onto a plane
+    returns a list of lists of Revit XYZ points describing the outline of a solid projected onto a plane.
+
     first nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list
     arcs, circles will be tesselated to polygons
+
+    '''
+
+    '''
     sample for a sold with mutltiple sketches:
     [
         [
@@ -558,9 +566,7 @@ def ConvertSolidToFlattened2DPoints(solid):
             [external polyline] # without any holes
         ]
     ]
-    '''
     
-    '''
     sort faces into groupes by volumne:
     This may be required because a solid can be made up of multiple volumnes (extrusion, sweeps etc)
     Turns out a solid returns a single face for multiple sketches. In order to work out whether these are multiple non overlapping polygons I will need to check
@@ -576,7 +582,9 @@ def ConvertSolidToFlattened2DPoints(solid):
     - > sort all edges by their connections (need to be connected by a point) so they descibe a loop <- seems to be ok as revit provides them
     
     extract points of edges
+
     '''
+
     ceilingGeos = []
     # sort faces by size
     sortedBySizeFaces = GetFacesSortedByAreaFromSolid(solid)

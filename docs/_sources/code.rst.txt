@@ -158,8 +158,37 @@ Revit Rooms
 .. automodule:: RevitRooms
     :members:
 
+Revit Shared Parameters
+------------------------
+.. automodule:: RevitSharedParameterAdd
+    :members:
+
+.. automodule:: RevitSharedParameters
+    :members:
+
+Revit Stairs
+------------------------
+.. automodule:: RevitStairs
+    :members:
+
+Revit Views and Views Referencing
+---------------------------------
+.. automodule:: RevitViewReferencing
+    :members:
+
+.. automodule:: RevitViews
+    :members:
+
+Revit Walls
+--------------
+.. automodule:: RevitWalls
+    :members:
+
+
 Revit Warnings
 --------------
+.. automodule:: RevitWarnings
+    :members:
 
 .. automodule:: RevitWarningsSolver
     :members:
@@ -204,4 +233,10 @@ Misc modules and classes
     :members:
 
 .. automodule:: BatchProcessorLogUtils
+    :members:
+
+.. automodule:: SolibriIFCOptimizer
+    :members:
+    
+.. automodule:: SystemProcess
     :members:

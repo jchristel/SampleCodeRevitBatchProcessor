@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Revit ramps. 
+'''
+#
 #License:
 #
 #
@@ -25,8 +28,6 @@ import clr
 import System
 
 import RevitCommonAPI as com
-import Result as res
-import Utility as util
 
 BASIC_RAMP_FAMILY_NAME = 'Ramp'
 
@@ -35,7 +36,7 @@ BUILTIN_RAMP_TYPE_FAMILY_NAMES = [
 ]
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory
 
 clr.ImportExtensions(System.Linq)
 

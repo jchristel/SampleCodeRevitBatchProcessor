@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Revit floors. 
+'''
+#
 #License:
 #
 #
@@ -28,7 +31,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, FloorType, Floor, ElementCategoryFilter, FamilyInstance
 
 clr.ImportExtensions(System.Linq)
 

@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit walls. 
+'''
 #
 #License:
 #
@@ -31,7 +34,7 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, WallType, ElementCategoryFilter, FamilyInstance, FamilySymbol, Element
 
 clr.ImportExtensions(System.Linq)
 

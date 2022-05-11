@@ -1,4 +1,7 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to Revit stairs. 
+'''
+#
 #License:
 #
 #
@@ -30,8 +33,8 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
-from Autodesk.Revit.DB.Architecture import *
+from Autodesk.Revit.DB import BuiltInParameter, BuiltInCategory, FilteredElementCollector, ElementCategoryFilter, FamilyInstance
+from Autodesk.Revit.DB.Architecture import Stairs, StairsType, StairsPathType, StairsLandingType, StairsRunType, CutMarkType
 
 clr.ImportExtensions(System.Linq)
 
@@ -156,7 +159,7 @@ def GetAllStairInstancesInModelByCategory(doc):
 # doc   current model document
 def GetAllStairInstancesInModelByClass(doc):
     ''' returns all Stair elements placed in model...ignores Stair soffits(???)'''
-    return FilteredElementCollector(doc).OfClass(Stair).WhereElementIsNotElementType()
+    return FilteredElementCollector(doc).OfClass(Stairs).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByCategory(doc):

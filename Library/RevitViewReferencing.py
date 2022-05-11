@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit view referencing. 
+'''
 #
 #License:
 #
@@ -31,7 +34,7 @@ import RevitFamilyUtils as rFamU
 import RevitViews as rView
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuiltInParameter, ElementMulticategoryFilter, ElementId
 
 # ------------------------ deprecated -----------------------
 # the following element collectors dont seem to return any types ...

@@ -33,7 +33,7 @@ import glob
 import Result as res
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
 import Utility as util
@@ -103,13 +103,13 @@ def getParameterValue(para):
     pValue = 'no Value'
     try:
         # extract parameter value depending on its storage type
-        if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+        if(para.StorageType == rdb.StorageType.Double or para.StorageType == rdb.StorageType.Integer):
             if(para.AsValueString()!= None and para.AsValueString() != ''):
                 pValue = para.AsValueString()
-        elif(para.StorageType == StorageType.String):
+        elif(para.StorageType == rdb.StorageType.String):
             if(para.AsString() != None and para.AsString() != ''):
                 pValue = para.AsString()
-        elif(para.StorageType == StorageType.ElementId):
+        elif(para.StorageType == rdb.StorageType.ElementId):
             if(para.AsElementId() != None):
                 pValue = para.AsElementId()
     except  Exception as e:
@@ -136,13 +136,13 @@ def GetParameterValueUTF8String(para):
     # set return value default 
     pValue = 'no Value'
     # extract parameter value depending on its storage type
-    if(para.StorageType == StorageType.Double or para.StorageType == StorageType.Integer):
+    if(para.StorageType == rdb.StorageType.Double or para.StorageType == rdb.StorageType.Integer):
         if(para.AsValueString()!= None and para.AsValueString() != ''):
             pValue = para.AsValueString().encode('utf-8')
-    elif(para.StorageType == StorageType.String):
+    elif(para.StorageType == rdb.StorageType.String):
         if(para.AsString() != None and para.AsString() != ''):
             pValue = para.AsString().encode('utf-8')
-    elif(para.StorageType == StorageType.ElementId):
+    elif(para.StorageType == rdb.StorageType.ElementId):
         if(para.AsElementId() != None):
             pValue = str(para.AsElementId()).encode('utf-8')
     return pValue
@@ -166,7 +166,7 @@ def GetParameterValueAsInteger(para):
     # set return value default
     pValue = -1
     # extract parameter value depending on whether its storage type is integer, otherwise default value
-    if(para.StorageType == StorageType.Integer):
+    if(para.StorageType == rdb.StorageType.Integer):
         pValue = para.AsInteger()
     return pValue
 
@@ -261,8 +261,8 @@ def setParameterValue(para, valueAsString, doc):
     transactionName = 'Update to parameter value'
     # different parameter storage types will require different actions due to value type passt in is a string which will need converting
     # first before applied to the parameter
-    if(para.StorageType == StorageType.ElementId):
-        newId = ElementId(int(valueAsString))
+    if(para.StorageType == rdb.StorageType.ElementId):
+        newId = rdb.ElementId(int(valueAsString))
         # changing parameter value is required to run inside a transaction
         def action():
             # set up a result instance to be returned to caller with transaction outcome
@@ -273,9 +273,9 @@ def setParameterValue(para, valueAsString, doc):
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
-        transaction = Transaction(doc,transactionName)
+        transaction = rdb.Transaction(doc,transactionName)
         returnvalue = InTransaction(transaction, action)
-    elif(para.StorageType == StorageType.Double):
+    elif(para.StorageType == rdb.StorageType.Double):
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to 
         # be in whatever the current DisplayUnitType (units of measure) the document is set to 
@@ -290,9 +290,9 @@ def setParameterValue(para, valueAsString, doc):
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
-        transaction = Transaction(doc,transactionName)
+        transaction = rdb.Transaction(doc,transactionName)
         returnvalue = InTransaction(transaction, action)
-    elif (para.StorageType == StorageType.Integer):
+    elif (para.StorageType == rdb.StorageType.Integer):
         def action():
             actionReturnValue = res.Result()
             try:
@@ -301,9 +301,9 @@ def setParameterValue(para, valueAsString, doc):
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
-        transaction = Transaction(doc,transactionName)
+        transaction = rdb.Transaction(doc,transactionName)
         returnvalue = InTransaction(transaction, action)
-    elif (para.StorageType == StorageType.String):
+    elif (para.StorageType == rdb.StorageType.String):
         def action():
             actionReturnValue = res.Result()
             try:
@@ -312,7 +312,7 @@ def setParameterValue(para, valueAsString, doc):
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
-        transaction = Transaction(doc,transactionName)
+        transaction = rdb.Transaction(doc,transactionName)
         returnvalue = InTransaction(transaction, action)
     else:  
         # dead end
@@ -375,7 +375,7 @@ def GetElementMark(e):
 
     mark = ''
     try:
-        paraMark = e.get_Parameter(BuiltInParameter.ALL_MODEL_MARK)
+        paraMark = e.get_Parameter(rdb.BuiltInParameter.ALL_MODEL_MARK)
         mark = '' if paraMark == None else paraMark.AsString()
     except Exception as e:
         mark = 'Failed with exception: ' + str(e)
@@ -402,11 +402,11 @@ def GetSheetRevByName(doc, sheetName):
     '''
 
     revValue = '-'
-    collector = FilteredElementCollector(doc).OfClass(ViewSheet).Where(lambda e: e.Name == sheetName)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.Name == sheetName)
     results = collector.ToList()
     if (len(results)>0):
         sheet = results[0]
-        revP = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
+        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
         revValue = util.PadSingleDigitNumericString(revP.AsString())
     return revValue
 
@@ -427,11 +427,11 @@ def GetSheetRevByNumber(doc, sheetNumber):
     '''
 
     revValue = '-'
-    collector = FilteredElementCollector(doc).OfClass(ViewSheet).Where(lambda e: e.SheetNumber == sheetNumber)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.SheetNumber == sheetNumber)
     results = collector.ToList()
     if (len(results)>0):
         sheet = results[0]
-        revP = sheet.get_Parameter(BuiltInParameter.SHEET_CURRENT_REVISION)
+        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
         revValue = revP.AsString()
     return revValue
 
@@ -453,9 +453,9 @@ def GetLegendComponentsInModel(doc, typeIds):
 
     ids = []
     # get all legend components in the model to check against list past in
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LegendComponents)
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LegendComponents)
     for c in col:
-        id = GetBuiltInParameterValue(c, BuiltInParameter.LEGEND_COMPONENT, getParameterValue)
+        id = GetBuiltInParameterValue(c, rdb.BuiltInParameter.LEGEND_COMPONENT, getParameterValue)
         if (id in typeIds and id not in ids):
             ids.append(id)
             break
@@ -776,7 +776,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
         if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
             # this should be the only code path returning true...
             for value in dic[categoryName]:
-                if value.OwnerViewId != ElementId.InvalidElementId:
+                if value.OwnerViewId != rdb.ElementId.InvalidElementId:
                     flag = False
                     break
         else:
@@ -801,7 +801,7 @@ def FilterOutWarnings(doc, dependentElements):
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)
-        pValue = GetBuiltInParameterValue(el, BuiltInParameter.ELEM_PARTITION_PARAM, getParameterValue)
+        pValue = GetBuiltInParameterValue(el, rdb.BuiltInParameter.ELEM_PARTITION_PARAM, getParameterValue)
         if(pValue != 'Reviewable Warnings'):
             ids.append(id)
     return ids
@@ -891,12 +891,12 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     def action():
         actionReturnValue = res.Result()
         try:
-            doc.Delete(ids.ToList[ElementId]())
+            doc.Delete(ids.ToList[rdb.ElementId]())
             actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
         return actionReturnValue
-    transaction = Transaction(doc,transactionName)
+    transaction = rdb.Transaction(doc,transactionName)
     returnvalue = InTransaction(transaction, action)
     return returnvalue
 
@@ -924,14 +924,14 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
         def action():
             actionReturnValue = res.Result()
             element = doc.GetElement(id)
-            n = Element.Name.GetValue(element)
+            n = rdb.Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
                 actionReturnValue.message = 'Deleted [' + str(id) + '] ' + n
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return actionReturnValue
-        transaction = Transaction(doc,transactionName)
+        transaction = rdb.Transaction(doc,transactionName)
         returnvalue.Update( InTransaction(transaction, action))
     return returnvalue
 
@@ -1018,7 +1018,7 @@ def IsFamilyNameFromInstance(doc, familyName, elementId):
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(Element.Name.GetValue(el.Symbol.Family) != familyName):
+        if(rdb.Element.Name.GetValue(el.Symbol.Family) != familyName):
             flag = False
     except Exception:
         flag = False
@@ -1041,7 +1041,7 @@ def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue not in Element.Name.GetValue(el.Symbol.Family)):
+        if(containsValue not in rdb.Element.Name.GetValue(el.Symbol.Family)):
             flag = False
     except Exception:
         flag = False
@@ -1064,7 +1064,7 @@ def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue in Element.Name.GetValue(el.Symbol.Family)):
+        if(containsValue in rdb.Element.Name.GetValue(el.Symbol.Family)):
             flag = False
     except Exception:
         flag = False
@@ -1087,7 +1087,7 @@ def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue not in Element.Name.GetValue(el.Symbol)):
+        if(containsValue not in rdb.Element.Name.GetValue(el.Symbol)):
             flag = False
     except Exception:
         flag = False
@@ -1110,7 +1110,7 @@ def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue in Element.Name.GetValue(el.Symbol)):
+        if(containsValue in rdb.Element.Name.GetValue(el.Symbol)):
             flag = False
     except Exception:
         flag = False
@@ -1133,9 +1133,9 @@ def SyncFile (doc, compactCentralFile = False):
 
     returnvalue = res.Result()
     # set up sync settings
-    ro = RelinquishOptions(True)
-    transActOptions = TransactWithCentralOptions()
-    sync = SynchronizeWithCentralOptions()
+    ro = rdb.RelinquishOptions(True)
+    transActOptions = rdb.TransactWithCentralOptions()
+    sync = rdb.SynchronizeWithCentralOptions()
     sync.Comment = 'Synchronised by Revit Batch Processor'
     sync.Compact = compactCentralFile
     sync.SetRelinquishOptions(ro)
@@ -1145,7 +1145,7 @@ def SyncFile (doc, compactCentralFile = False):
         doc.Save()
         doc.SynchronizeWithCentral(transActOptions, sync)
         # relinquish all
-        WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
+        rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
         returnvalue.message = 'Succesfully synched file.'
     except Exception as e:
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
@@ -1172,10 +1172,10 @@ def SaveAsWorksharedFile(doc, fullFileName):
 
     returnvalue = res.Result()
     try:
-        workSharingSaveAsOption = WorksharingSaveAsOptions()
-        workSharingSaveAsOption.OpenWorksetsDefault = SimpleWorksetConfiguration.AskUserToSpecify
+        workSharingSaveAsOption = rdb.WorksharingSaveAsOptions()
+        workSharingSaveAsOption.OpenWorksetsDefault = rdb.SimpleWorksetConfiguration.AskUserToSpecify
         workSharingSaveAsOption.SaveAsCentral = True
-        saveOption = SaveAsOptions()
+        saveOption = rdb.SaveAsOptions()
         saveOption.OverwriteExistingFile = True
         saveOption.SetWorksharingOptions(workSharingSaveAsOption)
         saveOption.MaximumBackups = 5
@@ -1225,7 +1225,7 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
         returnvalue.message = 'Found no file name match for: ' + currentFullFileName
     try:
         # setup save as option
-        so = SaveAsOptions()
+        so = rdb.SaveAsOptions()
         so.OverwriteExistingFile = True
         so.MaximumBackups = 5
         so.SetWorksharingOptions(None)
@@ -1281,7 +1281,7 @@ def SaveFile(doc, compactFile = False):
     '''to be used for families and non workshared revit files only'''
     returnvalue = res.Result()
     try:
-        so = SaveOptions()
+        so = rdb.SaveOptions()
         so.Compact = compactFile
         doc.Save(so)
         returnvalue.UpdateSep(True, 'Saved revit file!')

@@ -4,9 +4,9 @@ This class is the default implementation for family load call backs.
 import os
 import clr
 
-from Autodesk.Revit.DB import IFamilyLoadOptions, FamilySource
+import Autodesk.Revit.DB as rdb
 
-class FamilyLoadOption(IFamilyLoadOptions):
+class FamilyLoadOption(rdb.IFamilyLoadOptions):
 
 	def OnFamilyFound(self, familyInUse, overwriteParameterValues):
 		'''
@@ -41,6 +41,6 @@ class FamilyLoadOption(IFamilyLoadOptions):
 		:return: True
 		:rtype: bool
 		'''
-		source = FamilySource.Project
+		source = rdb.FamilySource.Project
 		overwriteParameterValues = True
 		return True

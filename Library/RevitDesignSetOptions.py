@@ -34,7 +34,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -54,7 +54,7 @@ def GetDesignOptions(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    collector = FilteredElementCollector(doc).OfClass(DesignOption)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
     return collector
 
 def GetDesignSets(doc):
@@ -67,12 +67,12 @@ def GetDesignSets(doc):
     :rtype: list of Autodesk.Revit.DB.Element
     '''
 
-    collector = FilteredElementCollector(doc).OfClass(DesignOption)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
     designSets = []
     designSetNames = []
     for do in collector:
-        e = doc.GetElement(do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId())
-        designSetName = Element.Name.GetValue(e)
+        e = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
+        designSetName = rdb.Element.Name.GetValue(e)
         if(designSetName not in designSetNames):
             designSets.append(e)
             designSetNames.append(designSetName)
@@ -92,17 +92,17 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
     :rtype: bool
     '''
 
-    collector = FilteredElementCollector(doc).OfClass(DesignOption)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
     isPrimary = False
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
     for do in collector:
-        designOName = Element.Name.GetValue(do)
+        designOName = rdb.Element.Name.GetValue(do)
         # check if primray in name if so remove...( this is language agnostic!!!!!)
         if (designOName.endswith(' (primary)')):
             designOName = designOName[:-len(' (primary)')]
         # design set
-        e = doc.GetElement(do.get_Parameter(BuiltInParameter.OPTION_SET_ID).AsElementId())
-        designSName = Element.Name.GetValue(e)
+        e = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
+        designSName = rdb.Element.Name.GetValue(e)
         # check for match on both set and option
         if(designSName == designSetName and designOName == designOptionName):
             # get isPriamry property on design option
@@ -133,7 +133,7 @@ def GetDesignSetOptionInfo(doc, element):
     new_value= ['Main Model','-',True]
     dic = dict(zip(new_key,new_value))
     # get design option data from element
-    pValue = com.GetBuiltInParameterValue(element, BuiltInParameter.DESIGN_OPTION_PARAM)
+    pValue = com.GetBuiltInParameterValue(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
     if(pValue != None):
         designOptionData = pValue.split(':')
         # check if main model ( length is 1! )

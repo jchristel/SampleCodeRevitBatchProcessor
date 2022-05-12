@@ -32,7 +32,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, FilledRegion, BuiltInCategory, ElementId, BuiltInParameter
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -45,7 +45,7 @@ REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'ITEM TYPE']
 # returns a list of filled region elements from the model
 # doc   current document
 def GetFilledRegionsInModel(doc):
-    return FilteredElementCollector(doc).OfClass(FilledRegion).ToList()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FilledRegion).ToList()
 
 
 ELEMENT_TYPE = 'Autodesk.Revit.DB.ElementType'
@@ -61,7 +61,7 @@ DETAIL_COMPONENT_TYPES = [
 # doc:   current model document
 def GetAllDetailTypesByCategory(doc):
     ''' this will return a filtered element collector of all detail component types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DetailComponents).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_DetailComponents).WhereElementIsElementType()
     return collector
 
 # collector   filtered element collector detail component types
@@ -141,8 +141,8 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
     ids = []
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
-        id = com.GetBuiltInParameterValue(repeatDetail, BuiltInParameter.REPEATING_DETAIL_ELEMENT)
-        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+        id = com.GetBuiltInParameterValue(repeatDetail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
+        if(id not in ids and id != rdb.ßElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
 

@@ -2611,7 +2611,7 @@ otherwise True</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+:cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
@@ -2663,7 +2663,7 @@ otherwise True</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+:cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return Autodesk.Revit.DB.FilteredElementCollector</dt>
@@ -2681,7 +2681,7 @@ otherwise True</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>ICollection</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-:cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])</p></li>
+:cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return list</dt>
@@ -2847,21 +2847,63 @@ result.result: not used</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFamilyReload.ReloadAllFamilies">
 <span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">ReloadAllFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">libraryLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubFolders</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.ReloadAllFamilies" title="Permalink to this definition">¶</a></dt>
-<dd><p>reloads a number of families with settings:
-- parameter values overwritten: true
-retuns True if any of the reload actions was succesful</p>
+<dd><p>Reloads a number of families with setting: parameter values overwritten: True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>libraryLocation</strong> (<em>str</em>) – _description_</p></li>
+<li><p><strong>includeSubFolders</strong> (<em>bool</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>UserWarning</strong> – _description_</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Retuns True if any of the reload actions was succesful.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFamilyReload.getFamilyIdsFromSymbols">
 <span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getFamilyIdsFromSymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getFamilyIdsFromSymbols" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all loadable family ids in file</p>
+<dd><p>Get all loadable family ids in file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing loadable families.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFamilyReload.getNewSymboldIds">
 <span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getNewSymboldIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preLoadSymbolIdList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afterLoadSymbolList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getNewSymboldIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of symbol ids not present prior to reload</p>
+<dd><p>Returns a list of symbol ids not present prior to reload.</p>
+<p>Compares passt in list of id’s and returns ids not in preloadSymbolIdList</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preLoadSymbolIdList</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – List of Ids of symbols prior the reload.</p></li>
+<li><p><strong>afterLoadSymbolList</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – List of ids of symbols after the reload.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing Family Symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -2920,7 +2962,7 @@ retuns True if any of the reload actions was succesful</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFloors.BuildFloorTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">BuildFloorTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.BuildFloorTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>returns the dictionary passt in with keys and or values added retrieved from collector passt in</p>
 </dd></dl>
 
 <dl class="py function">
@@ -2956,10 +2998,22 @@ retuns True if any of the reload actions was succesful</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFloors.GetAllFloorTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">GetAllFloorTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.GetAllFloorTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all floor types in the model:
+<dd><p>Function returning a filtered element collector of all floor types in the model.</p>
+<p>This uses builtincategory as filter. Return types includes:
 - Floor
-- In place families or loaded families
-it will therefore not return any foundation slab types ..</p>
+- In place families or loaded families</p>
+<p>It will therefore not return any foundation slab types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of floor types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2971,10 +3025,23 @@ it will therefore not return any foundation slab types ..</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFloors.GetFloorTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">GetFloorTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.GetFloorTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all floor types in the model:
-- Floor
-- Foundation Slab
-it will therefore not return any in place family types …</p>
+<dd><p>Function returning a filtered element collector of all floor types in the model.</p>
+<ul class="simple">
+<li><p>Floor</p></li>
+<li><p>Foundation Slab</p></li>
+</ul>
+<p>it will therefore not return any in place family types …</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of floor types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -5589,14 +5656,20 @@ any subsequent polygons are describing holes within the boundary</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Result.Result">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Result.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><a class="headerlink" href="#Result.Result" title="Permalink to this definition">¶</a></dt>
-<dd><p>_summary_</p>
+<dd><p>Class constructor.</p>
+<ul class="simple">
+<li><p>message default value is -</p></li>
+<li><p>status default value is True</p></li>
+<li><p>result default value is []</p></li>
+</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="Result.Result.AppendMessage">
 <span class="sig-name descname"><span class="pre">AppendMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.AppendMessage" title="Permalink to this definition">¶</a></dt>
-<dd><p>_summary_</p>
+<dd><p>Appends a new line and new message string to the existing message.</p>
+<p>First message appended will replace the default vaklue of -</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The new message to be appended.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5604,10 +5677,15 @@ any subsequent polygons are describing holes within the boundary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Result.Result.Update">
 <span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">otherResult</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.Update" title="Permalink to this definition">¶</a></dt>
-<dd><p>_summary_</p>
+<dd><p>Will use the passt in result instance to update the instance.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+<li><p>.message is using append (unless other message is default ‘-‘)</p></li>
+<li><p>.result is looping over passt in result and adding it one by one to this .result list (ignores None)</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>otherResult</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>otherResult</strong> (<em>SampleBatchProcessorCode.Result</em>) – Another result class instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5615,12 +5693,16 @@ any subsequent polygons are describing holes within the boundary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Result.Result.UpdateSep">
 <span class="sig-name descname"><span class="pre">UpdateSep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.UpdateSep" title="Permalink to this definition">¶</a></dt>
-<dd><p>_summary_</p>
+<dd><p>Updates the .status and .message property only.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+<li><p>.message is using append (unless other message is default ‘-‘)</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>status</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>message</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>status</strong> (<em>bool</em>) – The status to be added.</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – The message to be appended.</p></li>
 </ul>
 </dd>
 </dl>
@@ -5629,10 +5711,13 @@ any subsequent polygons are describing holes within the boundary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Result.Result.UpdateStatus">
 <span class="sig-name descname"><span class="pre">UpdateStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.UpdateStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>_summary_</p>
+<dd><p>Update .status only.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>status</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>status</strong> (<em>bool</em>) – The status to be added.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5640,6 +5725,81 @@ any subsequent polygons are describing holes within the boundary</p>
 </dd></dl>
 
 <span class="target" id="module-BatchProcessorLogUtils"></span><span class="target" id="module-SolibriIFCOptimizer"></span><p>This module contains a number of helper functions relating to Solibri IFC optimnizer.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="SolibriIFCOptimizer.OptimizeAllIFCFilesinFolder">
+<span class="sig-prename descclassname"><span class="pre">SolibriIFCOptimizer.</span></span><span class="sig-name descname"><span class="pre">OptimizeAllIFCFilesinFolder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SolibriIFCOptimizer.OptimizeAllIFCFilesinFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function applying third party IFC optimizer to all ifc files in a given folder.</p>
+<p>Original files will be deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directoryPath</strong> (<em>str</em>) – The directory path where IFC files are located</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Optimizer status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path(s) of the optimized file(s).
+On exception (handled by optimizer itself!):
+result.status (bool) will be False.
+result.message will contain generic exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SolibriIFCOptimizer.OptimizeIFCFilesInList">
+<span class="sig-prename descclassname"><span class="pre">SolibriIFCOptimizer.</span></span><span class="sig-name descname"><span class="pre">OptimizeIFCFilesInList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcFiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SolibriIFCOptimizer.OptimizeIFCFilesInList" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will optimize all IFC files in a given list of fully qualified file path to ifc files.</p>
+<p>Will check whether Solibri IFC optimizer is installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifcFiles</strong> (<em>list of str</em>) – List containing fully qualified file path of ifc files to be optimized.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – Directory of where the optimized IFC file(s) are to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Optimizer status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path(s) of the optimized file(s).
+On exception (handled by optimizer itself!):
+result.status (bool) will be False.
+result.message will contain generic exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SolibriIFCOptimizer.ProcessIFCFiles">
+<span class="sig-prename descclassname"><span class="pre">SolibriIFCOptimizer.</span></span><span class="sig-name descname"><span class="pre">ProcessIFCFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcFiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SolibriIFCOptimizer.ProcessIFCFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will optimize all IFC files in a given list of fully qualified file path to ifc files.</p>
+<p>Will not check whether Solibri IFC optimizer is installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifcFiles</strong> (<em>list of str</em>) – List containing fully qualified file path of ifc files to be optimized.</p></li>
+<li><p><strong>directoryPath</strong> (<em>str</em>) – Directory of where the optimized IFC file(s) are to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+Optimizer status returned in result.status. False if an exception occured, otherwise True.
+result.message will contain the fully qualified file path(s) of the optimized file(s).
+On exception (handled by optimizer itself!):
+result.status (bool) will be False.
+result.message will contain generic exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
 <span class="target" id="module-SystemProcess"></span><p>This module contains a number of helper functions relating to system processes.</p>
 </section>
 </section>

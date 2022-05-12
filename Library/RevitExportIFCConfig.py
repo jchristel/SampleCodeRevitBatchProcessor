@@ -32,7 +32,7 @@ import sys
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-from Autodesk.Revit.DB import IFCVersion, ElementId
+import Autodesk.Revit.DB as rdb
 
 #-------------------------------------------- IFC EXPORT Revit 2019 -------------------------------------
 
@@ -59,12 +59,12 @@ def IFCGetThirdPartyExportConfigByView2019(ifcVersion):
     ifcExportConfig.Name = 'DefaultIFCByViewSetup'
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = True # by view
@@ -119,12 +119,12 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
     
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = False # by model
@@ -182,12 +182,12 @@ def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
     ifcExportConfig.Name = 'DefaultIFCByViewSetup'
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = True # by view
@@ -243,12 +243,12 @@ def IFCGetThirdPartyExportConfigByModel2020(ifcVersion):
     
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = False # by model
@@ -306,12 +306,12 @@ def IFCGetThirdPartyExportConfigByView2021(ifcVersion):
     ifcExportConfig.Name = 'DefaultIFCByViewSetup'
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = True # by view
@@ -367,12 +367,12 @@ def IFCGetThirdPartyExportConfigByModel2021(ifcVersion):
     
     # set up IFC version
     if(ifcVersion is None or ifcVersion == ''):
-        ifcExportConfig.IFCVersion = IFCVersion.Default
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
     else:  
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = False # by model

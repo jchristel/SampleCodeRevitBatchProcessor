@@ -33,7 +33,7 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuildingPadType, BuildingPad
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -53,14 +53,14 @@ BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
 def GetAllBuildingPadTypesByCategory(doc):
     ''' this will return a filtered element collector of all BuildingPad types in the model:
     - Basic BuildingPad'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_BuildingPad).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetBuildingPadTypesByClass(doc):
     ''' this will return a filtered element collector of all BuildingPad types in the model:
     - Basic BuildingPad.'''
-    return  FilteredElementCollector(doc).OfClass(BuildingPadType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPadType)
 
 # collector   fltered element collector containing BuildingPad type elments of family symbols representing in place families
 # dic         dictionary containing key: pad type family name, value: list of ids
@@ -90,12 +90,12 @@ def SortBuildingPadTypesByFamilyName(doc):
 # doc   current model document
 def GetAllBuildingPadInstancesInModelByCategory(doc):
     ''' returns all BuildingPad elements placed in model'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllBuildingPadInstancesInModelByClass(doc):
     ''' returns all BuildingPad elements placed in model'''
-    return FilteredElementCollector(doc).OfClass(BuildingPad).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPad).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllBuildingPadTypeIdsInModelByCategory(doc):

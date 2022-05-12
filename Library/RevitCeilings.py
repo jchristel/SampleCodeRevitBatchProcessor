@@ -35,8 +35,7 @@ import RevitDesignSetOptions as rDesignO
 import DataCeiling as dCeiling
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, CeilingType, Ceiling, ElementCategoryFilter, FamilyInstance,\
-    Options, Ceiling, Solid, Element, BuiltInParameter
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -64,7 +63,7 @@ def GetAllCeilingTypesByCategory(doc):
     - Basic Ceiling
     it will therefore not return any in roof soffit types ..
     '''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ceilings).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsElementType()
     return collector
 
 # doc   current model document
@@ -74,7 +73,7 @@ def GetCeilingTypesByClass(doc):
     - Compound Ceiling
     - Basic Ceiling
     it will therefore not return any in place family types ...'''
-    return  FilteredElementCollector(doc).OfClass(CeilingType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdb.CeilingType)
 
 # collector   filtered element collector containing ceiling type elments of family symbols representing in place families
 # dic         dictionary containing key: ceiling type family name, value: list of ids
@@ -104,12 +103,12 @@ def SortCeilingTypesByFamilyName(doc):
 # doc   current model document
 def GetAllCeilingInstancesInModelByCategory(doc):
     ''' returns all ceiling elements placed in model...ignores roof soffits'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ceilings).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllCeilingInstancesInModelByClass(doc):
     ''' returns all ceiling elements placed in model...ignores in place'''
-    return FilteredElementCollector(doc).OfClass(Ceiling).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.Ceiling).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllCeilingTypeIdsInModelByCategory(doc):
@@ -171,13 +170,13 @@ def GetInPlaceCeilingFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Ceilings)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Ceilings)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceCeilingTypeIdsInModel(doc):
     ''' returns type ids off all available in place families of category ceiling'''
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Ceilings)
+    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Ceilings)
     return ids
 
 # doc   current document
@@ -209,13 +208,13 @@ def Get2DPointsFromRevitCeiling(ceiling):
     '''
     allCeilingPoints = []
     # get geometry from ceiling
-    opt = Options()
+    opt = rdb.Options()
     fr1_geom = ceiling.get_Geometry(opt)
     solids = []
     # check geometry for Solid elements
     # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
-        if(type(item) is Solid):
+        if(type(item) is rdb.Solid):
             solids.append(item)
    
     # process solids to points 
@@ -278,12 +277,12 @@ def PopulateDataCeilingObject(doc, revitCeiling):
         ceilingTypeId = revitCeiling.GetTypeId()
         ceilingType = doc.GetElement(ceilingTypeId)
         dataC.id = revitCeiling.Id.IntegerValue
-        dataC.typeName = Element.Name.GetValue(revitCeiling).encode('utf-8')
-        dataC.mark = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
-        dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, BuiltInParameter.ALL_MODEL_TYPE_MARK)
-        dataC.levelName = Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
+        dataC.typeName = rdb.Element.Name.GetValue(revitCeiling).encode('utf-8')
+        dataC.mark = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
+        dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, rdb.BuiltInParameter.ALL_MODEL_TYPE_MARK)
+        dataC.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
         dataC.levelId = revitCeiling.LevelId.IntegerValue
-        dataC.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        dataC.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
         return dataC
     else:
         return None

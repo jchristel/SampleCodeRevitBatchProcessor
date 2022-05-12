@@ -33,13 +33,29 @@ import Result as res
 import Utility as util
 
 
-# default install path for solibri ifc optimizer
+'''
+default install path for solibri ifc optimizer
+'''
 solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe'
 
-# this will optimize all IFC files in a given folder
-# will delete the original files
-# rename the new (optimized) files so file name is the same as original file
 def OptimizeAllIFCFilesinFolder(directoryPath):
+    '''
+    Function applying third party IFC optimizer to all ifc files in a given folder.
+
+    Original files will be deleted.
+
+    :param directoryPath: The directory path where IFC files are located
+    :type directoryPath: str
+    :return: 
+        Result class instance.
+        Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path(s) of the optimized file(s).
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     # check if ifc optimizer is installed:
     if(util.FileExist(solibriInstallPath_)):
@@ -54,10 +70,26 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
         returnvalue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
     return returnvalue
 
-# this will optimize all IFC files in a given list of fully qualified file path to ifc files
-# will delete the original files
-# rename the new (optimized) files so file name is the same as original file
 def OptimizeIFCFilesInList(ifcFiles, directoryPath):
+    '''
+    This function will optimize all IFC files in a given list of fully qualified file path to ifc files.
+
+    Will check whether Solibri IFC optimizer is installed.
+
+    :param ifcFiles: List containing fully qualified file path of ifc files to be optimized.
+    :type ifcFiles: list of str
+    :param directoryPath: Directory of where the optimized IFC file(s) are to be saved.
+    :type directoryPath: str
+    :return: 
+        Result class instance.
+        Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path(s) of the optimized file(s).
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     # check if ifc optimizer is installed:
     if(util.FileExist(solibriInstallPath_)):
@@ -75,6 +107,25 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
 # will delete the original files
 # rename the new (optimized) files so file name is the same as original file
 def ProcessIFCFiles(ifcFiles, directoryPath):
+    '''
+    This function will optimize all IFC files in a given list of fully qualified file path to ifc files.
+
+    Will not check whether Solibri IFC optimizer is installed.
+    
+    :param ifcFiles: List containing fully qualified file path of ifc files to be optimized.
+    :type ifcFiles: list of str
+    :param directoryPath: Directory of where the optimized IFC file(s) are to be saved.
+    :type directoryPath: str
+    :return: 
+        Result class instance.
+        Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path(s) of the optimized file(s).
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     filesToDelete = []
     filesToRename = []

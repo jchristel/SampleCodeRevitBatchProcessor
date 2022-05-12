@@ -29,18 +29,26 @@ This module contains a class used to return status, messages and objects back to
 class Result: 
     def __init__(self):
         '''
-        _summary_
+        Class constructor.
+
+        - message default value is -
+        - status default value is True
+        - result default value is []
+        
         '''
+
         self.message = '-'
         self.status = True
         self.result = []
     
     def AppendMessage(self, message):
         '''
-        _summary_
+        Appends a new line and new message string to the existing message.
 
-        :param message: _description_
-        :type message: _type_
+        First message appended will replace the default vaklue of -
+
+        :param message: The new message to be appended.
+        :type message: str
         '''
         try:
             if(self.message == '-'):
@@ -53,10 +61,14 @@ class Result:
 
     def Update(self, otherResult):
         '''
-        _summary_
+        Will use the passt in result instance to update the instance.
 
-        :param otherResult: _description_
-        :type otherResult: _type_
+        - .status is using a logical AND 
+        - .message is using append (unless other message is default '-')
+        - .result is looping over passt in result and adding it one by one to this .result list (ignores None)
+
+        :param otherResult: Another result class instance.
+        :type otherResult: SampleBatchProcessorCode.Result
         '''
         try:
             # check if default message string, if so do not update
@@ -73,13 +85,17 @@ class Result:
     
     def UpdateSep (self, status, message):
         '''
-        _summary_
-
-        :param status: _description_
-        :type status: _type_
-        :param message: _description_
-        :type message: _type_
+        Updates the .status and .message property only.
+        
+        - .status is using a logical AND 
+        - .message is using append (unless other message is default '-')
+        
+        :param status: The status to be added.
+        :type status: bool
+        :param message: The message to be appended.
+        :type message: str
         '''
+        
         try:
             self.AppendMessage(message)
             # self.message = self.message + '\n' + message
@@ -90,10 +106,12 @@ class Result:
 
     def UpdateStatus(self, status):
         '''
-        _summary_
+        Update .status only.
 
-        :param status: _description_
-        :type status: _type_
+        - .status is using a logical AND 
+
+        :param status: The status to be added.
+        :type status: bool
         '''
         try:
             self.status = self.status & status

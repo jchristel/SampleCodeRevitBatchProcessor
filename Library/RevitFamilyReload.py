@@ -41,14 +41,28 @@ import RevitFamilyUtils as rFamUtil
 import RevitFamilyLoadOption as famLoadOpt
 from RevitFamilyLoadOption import *
 
-from Autodesk.Revit.DB import Element, BuiltInCategory
+import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
-    '''reloads a number of families with settings:
-    - parameter values overwritten: true
-    retuns True if any of the reload actions was succesful'''
+    '''
+    Reloads a number of families with setting: parameter values overwritten: True
+
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param libraryLocation: _description_
+    :type libraryLocation: str
+    :param includeSubFolders: _description_
+    :type includeSubFolders: bool
+    
+    :raises UserWarning: _description_
+    
+    :return: Retuns True if any of the reload actions was succesful.
+    :rtype: bool
+    '''
+
     result = res.Result()
     # if a family is reloaded it may bring in new typs not present in the model at reload
     # this list contains the ids of those types (symbols)
@@ -69,7 +83,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
             result.AppendMessage('Found ' + str(len(familyIds)) + ' loadable families in file.')
             for famId in familyIds:
                 fam = doc.GetElement(famId)
-                famName = Element.Name.GetValue(fam)
+                famName = rdb.Element.Name.GetValue(fam)
                 if(famName in library):
                     result.AppendMessage('Found match for: ' + famName)
                     if(len(library[famName]) == 1 ):
@@ -115,12 +129,20 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
         result.UpdateSep(False, message)
     return result
 
-# doc       current document
 def getFamilyIdsFromSymbols(doc):
-    ''' get all loadable family ids in file'''
+    '''
+    Get all loadable family ids in file
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing loadable families.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     familyIds = []
     # build list of all categories we want families to be reloaded of
-    famCats = List[BuiltInCategory] (rFamUtil.catsLoadableTags)
+    famCats = List[rdb.BuiltInCategory] (rFamUtil.catsLoadableTags)
     famCats.AddRange(rFamUtil.catsLoadableTagsOther) 
     famCats.AddRange(rFamUtil.catsLoadableThreeD)
     famCats.AddRange(rFamUtil.catsLoadableThreeDOther)
@@ -132,10 +154,21 @@ def getFamilyIdsFromSymbols(doc):
             familyIds.append(famSymbol.Family.Id)
     return familyIds
 
-# preLoadSymbolIdList      list of Ids of symbols prior the reload
-# afterLoadSymbolList       list of ids of symbols after the reload
 def getNewSymboldIds(preLoadSymbolIdList, afterLoadSymbolList):
-    '''returns a list of symbol ids not present prior to reload'''
+    '''
+    Returns a list of symbol ids not present prior to reload.
+
+    Compares passt in list of id's and returns ids not in preloadSymbolIdList
+
+    :param preLoadSymbolIdList: List of Ids of symbols prior the reload.
+    :type preLoadSymbolIdList: list of Autodesk.Revit.DB.ElementId
+    :param afterLoadSymbolList: List of ids of symbols after the reload.
+    :type afterLoadSymbolList: list of Autodesk.Revit.DB.ElementId
+    
+    :return: List of element ids representing Family Symbols.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     for id in afterLoadSymbolList:
         if (id not in preLoadSymbolIdList):

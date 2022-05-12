@@ -35,8 +35,7 @@ import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
-from Autodesk.Revit.DB import BuiltInParameter, GraphicsStyleType, Element, ElementId, LinePatternElement, FilteredElementCollector,\
-    Transaction, Color
+import Autodesk.Revit.DB as rdb
 
 
 CAT_RENAMING = {
@@ -45,9 +44,9 @@ CAT_RENAMING = {
 
 # list of built in parameters attached to elements containing subcategory ids
 ELEMENTS_PARAS_SUB = [
-    BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
-    BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,
-    BuiltInParameter.FAMILY_ELEM_SUBCATEGORY
+    rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
+    rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,
+    rdb.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY
 ]
 
 
@@ -161,14 +160,14 @@ def GetCategoryGraphicStyleIds(cat):
     '''
     returns dic with keys: Projection, Cut, 3D and their respective ids
     '''
-    iDGraphicStyleProjection = cat.GetGraphicsStyle(GraphicsStyleType.Projection).Id
+    iDGraphicStyleProjection = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Projection).Id
     
     # check if this category has a cut style ( some families always appear in elevation only!)
-    graphicStyleCut = cat.GetGraphicsStyle(GraphicsStyleType.Cut)
+    graphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut)
     # set as default the same as the projection style since that seems to be always available
     iDGraphicStyleCut = iDGraphicStyleProjection
     if(graphicStyleCut != None):
-        iDGraphicStyleCut = cat.GetGraphicsStyle(GraphicsStyleType.Cut).Id
+        iDGraphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
     # build category dictioanry where key is the style type, values is the coresponding Id
     dic = {}
     dic[CATEGORY_GRAPHICSTYLE_PROJECTION] = iDGraphicStyleProjection 
@@ -183,10 +182,10 @@ def GetCategoryMaterial(cat):
     '''
     dicMaterial = {}
     dicMaterial[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
-    dicMaterial[PROPERTY_MATERIAL_ID] = ElementId.InvalidElementId
+    dicMaterial[PROPERTY_MATERIAL_ID] = rdb.ElementId.InvalidElementId
     material = cat.Material
     if(material != None):
-        dicMaterial[PROPERTY_MATERIAL_NAME] = Element.Name.GetValue(material)
+        dicMaterial[PROPERTY_MATERIAL_NAME] = rdb.Element.Name.GetValue(material)
         dicMaterial[PROPERTY_MATERIAL_ID] = material.Id
     return dicMaterial
 
@@ -197,19 +196,19 @@ def GetCategoryLinePattern(cat, doc):
     '''
     dicPattern = {}
     dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
-    dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(GraphicsStyleType.Projection)
+    dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
     '''check for 'solid' pattern which apparently is not a pattern at all
     *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
     * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
     * Solid is visible to the user when selecting line patterns. 
     '''
-    if(patternId != LinePatternElement.GetSolidPatternId()):
+    if(patternId != rdb.LinePatternElement.GetSolidPatternId()):
         # not a solid line pattern
-        collector = FilteredElementCollector(doc).OfClass(LinePatternElement)
+        collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
         linePatternElement = None
         for c in collector:
             if(patternId == c.Id):
-                dicPattern[PROPERTY_PATTERN_NAME] = Element.Name.GetValue(c)         
+                dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
     return dicPattern
 
 #  cat    revit category
@@ -218,8 +217,8 @@ def GetCategoryLineWeights(cat):
     returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value
     '''
     dicLineWeights = {}
-    dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(GraphicsStyleType.Projection)
-    dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(GraphicsStyleType.Cut)
+    dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
+    dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
     return dicLineWeights
 
 #  cat    revit category
@@ -292,7 +291,7 @@ def SetCategoryMaterial(doc, cat, materialId):
         mat = doc.GetElement(materialId)
         def action():
             cat.Material = mat
-        transaction = Transaction(doc,'Updating subcategory material: ' + str(Element.Name.GetValue(mat)))
+        transaction = rdb.Transaction(doc,'Updating subcategory material: ' + str(rdb.Element.Name.GetValue(mat)))
         updateMat = com.InTransaction(transaction, action)
     except Exception as e:
         print('SetCategoryMaterial ' + str(e))
@@ -309,9 +308,9 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
     flag = True
     try:
         def action():
-            cat.SetLinePatternId(linePatternId, GraphicsStyleType.Cut)
-            cat.SetLinePatternId(linePatternId, GraphicsStyleType.Projection)
-        transaction = Transaction(doc,'Updating subcategory line pattern')
+            cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Cut)
+            cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Projection)
+        transaction = rdb.Transaction(doc,'Updating subcategory line pattern')
         updateLinePattern = com.InTransaction(transaction, action)
     except Exception as e:
         print('SetCategoryLinePattern ' + str(e))
@@ -329,9 +328,9 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
     flag = True
     try:
         def action():
-            cat.SetLineWeight(lineThickNessCut, GraphicsStyleType.Cut)
-            cat.SetLineWeight(lineThicknessProjection, GraphicsStyleType.Projection)
-        transaction = Transaction(doc,'Updating subcategory line weights')
+            cat.SetLineWeight(lineThickNessCut, rdb.GraphicsStyleType.Cut)
+            cat.SetLineWeight(lineThicknessProjection, rdb.GraphicsStyleType.Projection)
+        transaction = rdb.Transaction(doc,'Updating subcategory line weights')
         updateLineWeights = com.InTransaction(transaction, action)
     except Exception as e:
         print('SetCategoryLineWeights:' + str(e))
@@ -350,9 +349,9 @@ def SetCategoryColour(doc, cat, red, green, blue):
     flag = True
     try:
         def action():
-            newColour = Color(red, green, blue)
+            newColour = rdb.Color(red, green, blue)
             cat.LineColor = newColour
-        transaction = Transaction(doc,'Updating subcategory colour')
+        transaction = rdb.Transaction(doc,'Updating subcategory colour')
         updateColour = com.InTransaction(transaction, action)
     except Exception as e:
         print('SetCategoryColour ' + str(e))
@@ -400,7 +399,7 @@ def SetFamilyCategory(doc, newCategoryName):
         if (doc.Settings.Categories.Contains(newCategoryName)):
             def action():
                 doc.OwnerFamily.FamilyCategory = doc.Settings.Categories.get_Item(newCategoryName)
-            transaction = Transaction(doc,'Changing family category to:' + str(newCategoryName))
+            transaction = rdb.Transaction(doc,'Changing family category to:' + str(newCategoryName))
             changeCat = com.InTransaction(transaction, action)
             if(changeCat.status):
                 returnvalue.UpdateSep(True, 'Succesfully changed family category to: '+str(newCategoryName))
@@ -438,7 +437,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
                 except Exception as e:
                     actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
                 return actionReturnValue
-            transaction = Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
+            transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
             returnvalue = com.InTransaction(transaction, action)
         else:
           returnvalue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
@@ -486,7 +485,7 @@ def GetElementsByCategory(doc, cat):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        categoryIds[CATEGORY_GRAPHICSTYLE_3D] = ElementId.InvalidElementId
+        categoryIds[CATEGORY_GRAPHICSTYLE_3D] = rdb.ElementId.InvalidElementId
     dicFiltered = {}
     # filter elements by category ids
     for key,value in categoryIds.items():

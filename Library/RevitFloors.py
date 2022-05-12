@@ -31,7 +31,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, FloorType, Floor, ElementCategoryFilter, FamilyInstance
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -51,26 +51,45 @@ BUILTIN_FLOOR_TYPE_FAMILY_NAMES = [
 
 # doc:   current model document
 def GetAllFloorTypesByCategory(doc):
-    ''' this will return a filtered element collector of all floor types in the model:
+    '''
+    Function returning a filtered element collector of all floor types in the model.
+
+    This uses builtincategory as filter. Return types includes:
     - Floor
     - In place families or loaded families
-    it will therefore not return any foundation slab types ..
+
+    It will therefore not return any foundation slab types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector of floor types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsElementType()
+
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Floors).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetFloorTypesByClass(doc):
-    ''' this will return a filtered element collector of all floor types in the model:
+    '''
+    Function returning a filtered element collector of all floor types in the model.
+
     - Floor
     - Foundation Slab
-    it will therefore not return any in place family types ...'''
-    return  FilteredElementCollector(doc).OfClass(FloorType)
+
+    it will therefore not return any in place family types ...
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector of floor types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    return  rdb.FilteredElementCollector(doc).OfClass(rdb.FloorType)
 
 # collector   fltered element collector containing Floor type elments of family symbols representing in place families
 # dic         dictionary containing key: floor type family name, value: list of ids
 def BuildFloorTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''returns the dictionary passt in with keys and or values added retrieved from collector passt in'''
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -95,12 +114,12 @@ def SortFloorTypesByFamilyName(doc):
 # doc   current model document
 def GetAllFloorInstancesInModelByCategory(doc):
     ''' returns all Floor elements placed in model...ignores in foundation slabs'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Floors).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Floors).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllFloorInstancesInModelByClass(doc):
     ''' returns all Floor elements placed in model...ignores in place'''
-    return FilteredElementCollector(doc).OfClass(Floor).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.Floor).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllFloorTypeIdsInModelByCategory(doc):
@@ -161,13 +180,13 @@ def GetInPlaceFloorFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Floors)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Floors)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceFloorTypeIdsInModel(doc):
     ''' returns type ids off all available in place families of category floor'''
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Floors)
+    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Floors)
     return ids
 
 # doc   current document

@@ -33,7 +33,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import BuiltInCategory, ElementMulticategoryFilter, FilteredElementCollector, FamilySymbol, BuiltInParameter
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -62,9 +62,9 @@ BUILTIN_ReplaceMe_TYPE_FAMILY_NAMES = [
 ]
 
 # category filter for all element filters by category
-CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[BuiltInCategory] ([
-        BuiltInCategory.OST_CurtainWallPanels,
-        BuiltInCategory.OST_CurtainWallMullions
+CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+        rdb.BuiltInCategory.OST_CurtainWallPanels,
+        rdb.BuiltInCategory.OST_CurtainWallMullions
     ])
 
 
@@ -78,8 +78,8 @@ def GetAllCurtainWallElementTypesByCategory(doc):
     - curtain wall mullions
     - family symbols!
     '''
-    multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
 # collector   fltered element collector containing ReplaceMe type elments of family symbols representing in place families
@@ -107,8 +107,8 @@ def SortCurtainWallElementTypesByFamilyName(doc):
 # doc   current model document
 def GetCurtainWallElementInstancesInModelByCategory(doc):
     ''' returns all CurtainWallElement elements placed in model'''
-    multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
-    return FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
@@ -128,7 +128,7 @@ def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
     collector = GetAllCurtainWallElementTypesByCategory(doc)
     elements=[]
     for c in collector:
-        if(c.GetType() != FamilySymbol):
+        if(c.GetType() != rdb.FamilySymbol):
             elements.append(c)
     return elements
 
@@ -142,7 +142,7 @@ def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
     collector = GetAllCurtainWallElementTypesByCategory(doc)
     ids=[]
     for c in collector:
-        if(c.GetType() != FamilySymbol):
+        if(c.GetType() != rdb.FamilySymbol):
             ids.append(c.Id)
     return ids
 
@@ -185,12 +185,12 @@ def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
     - curtain wall mullions
     '''
     ids = []
-    multiCatFilter = ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     for c in collector:
-        if(c.GetType() == FamilySymbol):
+        if(c.GetType() == rdb.FamilySymbol):
             fam = c.Family
-            pValue = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
+            pValue = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
             if(pValue != None and  pValue == 'No' and c.Id not in ids):
                 ids.append(c.Id)
     return ids

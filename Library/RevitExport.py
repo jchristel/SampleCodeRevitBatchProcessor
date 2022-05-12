@@ -35,8 +35,7 @@ clr.ImportExtensions(System.Linq)
 import Result as res
 
 from System.IO import Path
-from Autodesk.Revit.DB import  Transaction, ElementId, IFCExportOptions, ViewType, NavisworksExportOptions, NavisworksCoordinates, NavisworksExportScope
-#from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 # import common library
 import RevitCommonAPI as com
@@ -101,7 +100,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
-    transaction = Transaction(doc,'Export to IFC')
+    transaction = rdb.Transaction(doc,'Export to IFC')
     returnvalue = com.InTransaction(transaction, action)
     return returnvalue
 
@@ -165,7 +164,7 @@ def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
     return ifcConfig
 
-def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coordOption = IFCCoords.SharedCoordinates):
+def SetUpIFCExportOption(exportConfig, viewId = rdb.ElementId.InvalidElementId, coordOption = IFCCoords.SharedCoordinates):
     '''
     Function assigning a view Id to export ifc config if it is exporting by view.
 
@@ -187,7 +186,7 @@ def SetUpIFCExportOption(exportConfig, viewId = ElementId.InvalidElementId, coor
     else:
         exportConfig.ActiveViewId = -1
     # set up the ifc export options object
-    exIFC = IFCExportOptions()
+    exIFC = rdb.IFCExportOptions()
     exportConfig.UpdateOptions(exIFC, viewId)
 
     # set the coordinate system to use
@@ -222,9 +221,9 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
 
     returnvalue = res.Result()
     # need to create an export option from the export config
-    exIFC = IFCExportOptions()
+    exIFC = rdb.IFCExportOptions()
     # pass in invalid element ID to export entire model
-    ifcExportOption.UpdateOptions(exIFC, ElementId.InvalidElementId)
+    ifcExportOption.UpdateOptions(exIFC, rdb.ElementId.InvalidElementId)
 
     # set the coordinate system to use
     exIFC.AddOption('SitePlacement', coordOption)
@@ -266,7 +265,7 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
@@ -322,7 +321,7 @@ def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.no
     :rtype: Autodesk.Revit.DB.IFCExportOptions
     '''
 
-    exIFC = IFCExportOptions()
+    exIFC = rdb.IFCExportOptions()
     exIFC.ExportBaseQuantities = True
     exIFC.FileVersion = ifcVersion
     exIFC.SpaceBoundaryLevel = ifcSpaceBounds
@@ -355,7 +354,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
@@ -407,9 +406,9 @@ def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, export
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     '''
 
-    exNWC = NavisworksExportOptions()
-    exNWC.Coordinates = NavisworksCoordinates.Shared if usingSharedCoordinates == True else NavisworksCoordinates.Internal
-    exNWC.ExportScope = NavisworksExportScope.Model if exportEntireModel == True else NavisworksExportScope.View
+    exNWC = rdb.NavisworksExportOptions()
+    exNWC.Coordinates = rdb.NavisworksCoordinates.Shared if usingSharedCoordinates == True else rdb.NavisworksCoordinates.Internal
+    exNWC.ExportScope = rdb.NavisworksExportScope.Model if exportEntireModel == True else rdb.NavisworksExportScope.View
     exNWC.ExportLinks = exportLinks
     exNWC.DivideFileIntoLevels = splitModelByLevel
     exNWC.ExportParts =  exportParts
@@ -509,7 +508,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, ViewType.ThreeD)
+    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)

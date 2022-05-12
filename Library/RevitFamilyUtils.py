@@ -44,11 +44,10 @@ import Result as res
 import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
 from RevitFamilyLoadOption import *
-# import from Autodesk Revit DataBase namespace (Revit API)
-from Autodesk.Revit.DB import Element, BuiltInCategory, Transaction, ElementMulticategoryFilter, FilteredElementCollector, \
-    FamilySymbol, FamilyInstance, ElementCategoryFilter, Family, ParameterValueProvider, ElementId, BuiltInParameter,\
-    FilterNumericEquals, FilterElementIdRule, ElementParameterFilter, GenericForm, CurveElement, ModelText,\
-    ReferencePlane
+# import Autodesk Revit DataBase namespace
+import Autodesk.Revit.DB as rdb
+
+
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
 def LoadFamily(doc, familyFilePath):
@@ -76,7 +75,7 @@ def LoadFamily(doc, familyFilePath):
         # set up load / reload action to be run within a transaction
         def action():
             # set up return value for the load / reload
-            returnFamily = clr.Reference[Autodesk.Revit.DB.Family]()
+            returnFamily = clr.Reference[rdb.Family]()
             actionReturnValue = res.Result()
             try:
                 reloadStatus = doc.LoadFamily(
@@ -89,7 +88,7 @@ def LoadFamily(doc, familyFilePath):
             except Exception as e:
                 actionReturnValue.UpdateSep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
             return actionReturnValue
-        transaction = Transaction(doc, 'Loading Family: ' + str(util.GetFileNameWithoutExt(familyFilePath)))
+        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.GetFileNameWithoutExt(familyFilePath)))
         dummy = com.InTransaction(transaction, action)
         result.Update(dummy)
     except Exception as e:
@@ -103,166 +102,166 @@ def LoadFamily(doc, familyFilePath):
 
 # this list contains 3D element categories and is used in obsolete revit family purge function
 # any revit category commented out with note 'purged else where' can be found in list 'catsLoadableThreeDOther'
-catsLoadableThreeD = List[BuiltInCategory] ([
-    #BuiltInCategory.OST_CableTrayFitting,  purged else where
-    BuiltInCategory.OST_Casework,
-    BuiltInCategory.OST_Columns,
-    BuiltInCategory.OST_CommunicationDevices,
-    # BuiltInCategory.OST_ConduitFitting,  purged else where
-    # BuiltInCategory.OST_CurtainWallPanels, purged else where
-    BuiltInCategory.OST_DataDevices,
-    # BuiltInCategory.OST_DetailComponents, purged else where
-    BuiltInCategory.OST_Doors,
-    #BuiltInCategory.OST_DuctAccessory,  purged else where
-    #BuiltInCategory.OST_DuctTerminal, purged else where
-    #BuiltInCategory.OST_DuctFitting,  purged else where
-    BuiltInCategory.OST_ElectricalEquipment,
-    BuiltInCategory.OST_ElectricalFixtures,
-    BuiltInCategory.OST_Entourage,
-    BuiltInCategory.OST_FireAlarmDevices,
-    BuiltInCategory.OST_Furniture,
-    BuiltInCategory.OST_FurnitureSystems,
-    BuiltInCategory.OST_GenericModel,
-    BuiltInCategory.OST_LightingFixtures,
-    BuiltInCategory.OST_LightingDevices,
-    BuiltInCategory.OST_MechanicalEquipment,
-    BuiltInCategory.OST_NurseCallDevices,
-    BuiltInCategory.OST_Parking,
-    #BuiltInCategory.OST_PipeAccessory,  purged else where
-    #BuiltInCategory.OST_PipeFitting,  purged else where
-    BuiltInCategory.OST_Planting,
-    BuiltInCategory.OST_PlumbingFixtures,
-    #BuiltInCategory.OST_ProfileFamilies, #purged elsewhere
-    BuiltInCategory.OST_SecurityDevices,
-    BuiltInCategory.OST_Site,
-    BuiltInCategory.OST_SpecialityEquipment,
-    BuiltInCategory.OST_Sprinklers,
-    #BuiltInCategory.OST_StairsRailingBaluster, #purged else where
-    BuiltInCategory.OST_StructuralColumns,
-    BuiltInCategory.OST_StructuralFoundation,
-    BuiltInCategory.OST_StructuralFraming,
-    BuiltInCategory.OST_TitleBlocks,
-    BuiltInCategory.OST_TelephoneDevices,
-    BuiltInCategory.OST_Windows
+catsLoadableThreeD = List[rdb.BuiltInCategory] ([
+    #rdb.BuiltInCategory.OST_CableTrayFitting,  purged else where
+    rdb.BuiltInCategory.OST_Casework,
+    rdb.BuiltInCategory.OST_Columns,
+    rdb.BuiltInCategory.OST_CommunicationDevices,
+    # rdb.BuiltInCategory.OST_ConduitFitting,  purged else where
+    # rdb.BuiltInCategory.OST_CurtainWallPanels, purged else where
+    rdb.BuiltInCategory.OST_DataDevices,
+    # rdb.BuiltInCategory.OST_DetailComponents, purged else where
+    rdb.BuiltInCategory.OST_Doors,
+    #rdb.BuiltInCategory.OST_DuctAccessory,  purged else where
+    #rdb.BuiltInCategory.OST_DuctTerminal, purged else where
+    #rdb.BuiltInCategory.OST_DuctFitting,  purged else where
+    rdb.BuiltInCategory.OST_ElectricalEquipment,
+    rdb.BuiltInCategory.OST_ElectricalFixtures,
+    rdb.BuiltInCategory.OST_Entourage,
+    rdb.BuiltInCategory.OST_FireAlarmDevices,
+    rdb.BuiltInCategory.OST_Furniture,
+    rdb.BuiltInCategory.OST_FurnitureSystems,
+    rdb.BuiltInCategory.OST_GenericModel,
+    rdb.BuiltInCategory.OST_LightingFixtures,
+    rdb.BuiltInCategory.OST_LightingDevices,
+    rdb.BuiltInCategory.OST_MechanicalEquipment,
+    rdb.BuiltInCategory.OST_NurseCallDevices,
+    rdb.BuiltInCategory.OST_Parking,
+    #rdb.BuiltInCategory.OST_PipeAccessory,  purged else where
+    #rdb.BuiltInCategory.OST_PipeFitting,  purged else where
+    rdb.BuiltInCategory.OST_Planting,
+    rdb.BuiltInCategory.OST_PlumbingFixtures,
+    #rdb.BuiltInCategory.OST_ProfileFamilies, #purged elsewhere
+    rdb.BuiltInCategory.OST_SecurityDevices,
+    rdb.BuiltInCategory.OST_Site,
+    rdb.BuiltInCategory.OST_SpecialityEquipment,
+    rdb.BuiltInCategory.OST_Sprinklers,
+    #rdb.BuiltInCategory.OST_StairsRailingBaluster, #purged else where
+    rdb.BuiltInCategory.OST_StructuralColumns,
+    rdb.BuiltInCategory.OST_StructuralFoundation,
+    rdb.BuiltInCategory.OST_StructuralFraming,
+    rdb.BuiltInCategory.OST_TitleBlocks,
+    rdb.BuiltInCategory.OST_TelephoneDevices,
+    rdb.BuiltInCategory.OST_Windows
 ])
 
 # contains 3D family categories which needed specific purge code, rather then checking for unplaced family instances
 # i.e. built in revit type settings
-catsLoadableThreeDOther = List[BuiltInCategory] ([
-    BuiltInCategory.OST_CableTrayFitting,
-    BuiltInCategory.OST_ConduitFitting,
-    BuiltInCategory.OST_CurtainWallPanels,
-    BuiltInCategory.OST_DetailComponents,
-    BuiltInCategory.OST_DuctAccessory,
-    BuiltInCategory.OST_DuctTerminal,
-    BuiltInCategory.OST_DuctFitting,
-    BuiltInCategory.OST_PipeAccessory,
-    BuiltInCategory.OST_PipeFitting,
-    BuiltInCategory.OST_ProfileFamilies,
-    BuiltInCategory.OST_StairsRailingBaluster
+catsLoadableThreeDOther = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_CableTrayFitting,
+    rdb.BuiltInCategory.OST_ConduitFitting,
+    rdb.BuiltInCategory.OST_CurtainWallPanels,
+    rdb.BuiltInCategory.OST_DetailComponents,
+    rdb.BuiltInCategory.OST_DuctAccessory,
+    rdb.BuiltInCategory.OST_DuctTerminal,
+    rdb.BuiltInCategory.OST_DuctFitting,
+    rdb.BuiltInCategory.OST_PipeAccessory,
+    rdb.BuiltInCategory.OST_PipeFitting,
+    rdb.BuiltInCategory.OST_ProfileFamilies,
+    rdb.BuiltInCategory.OST_StairsRailingBaluster
 ])
 
 # this list contains 2D element categories and is used in obsolete revit family purge function
 # any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
-catsLoadableTags = List[BuiltInCategory] ([
-    BuiltInCategory.OST_CurtainWallPanelTags,
-    BuiltInCategory.OST_AreaTags,
-    BuiltInCategory.OST_CaseworkTags,
-    #BuiltInCategory.OST_CalloutHeads, #purged separately
-    BuiltInCategory.OST_CeilingTags,
-    BuiltInCategory.OST_DataDeviceTags,
-    BuiltInCategory.OST_DetailComponentTags,
-    BuiltInCategory.OST_DoorTags,
-    BuiltInCategory.OST_DuctAccessoryTags,
-    BuiltInCategory.OST_DuctFittingTags,
-    BuiltInCategory.OST_DuctInsulationsTags,
-    BuiltInCategory.OST_DuctLiningsTags,
-    BuiltInCategory.OST_DuctTags,
-    BuiltInCategory.OST_DuctTerminalTags,
-    BuiltInCategory.OST_ElectricalCircuitTags,
-    BuiltInCategory.OST_ElectricalEquipmentTags,
-    BuiltInCategory.OST_ElectricalFixtureTags,
-    #BuiltInCategory.OST_ElevationMarks, #purged separately
-    BuiltInCategory.OST_FabricAreaTags,
-    BuiltInCategory.OST_FabricReinforcementTags,
-    BuiltInCategory.OST_FireAlarmDeviceTags,
-    BuiltInCategory.OST_FlexDuctTags,
-    BuiltInCategory.OST_FlexPipeTags,
-    BuiltInCategory.OST_FloorTags,
-    BuiltInCategory.OST_FoundationSlabAnalyticalTags,
-    BuiltInCategory.OST_FurnitureSystemTags,
-    BuiltInCategory.OST_GenericModelTags,
-    #BuiltInCategory.OST_GenericAnnotation, # purged separately tricky one...some of these might be used in dimensions for instance...
-    #BuiltInCategory.OST_GridHeads, # purged separately
-    BuiltInCategory.OST_InternalAreaLoadTags,
-    BuiltInCategory.OST_InternalLineLoadTags,
-    BuiltInCategory.OST_InternalPointLoadTags,
-    BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
-    BuiltInCategory.OST_KeynoteTags,
+catsLoadableTags = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_CurtainWallPanelTags,
+    rdb.BuiltInCategory.OST_AreaTags,
+    rdb.BuiltInCategory.OST_CaseworkTags,
+    #rdb.BuiltInCategory.OST_CalloutHeads, #purged separately
+    rdb.BuiltInCategory.OST_CeilingTags,
+    rdb.BuiltInCategory.OST_DataDeviceTags,
+    rdb.BuiltInCategory.OST_DetailComponentTags,
+    rdb.BuiltInCategory.OST_DoorTags,
+    rdb.BuiltInCategory.OST_DuctAccessoryTags,
+    rdb.BuiltInCategory.OST_DuctFittingTags,
+    rdb.BuiltInCategory.OST_DuctInsulationsTags,
+    rdb.BuiltInCategory.OST_DuctLiningsTags,
+    rdb.BuiltInCategory.OST_DuctTags,
+    rdb.BuiltInCategory.OST_DuctTerminalTags,
+    rdb.BuiltInCategory.OST_ElectricalCircuitTags,
+    rdb.BuiltInCategory.OST_ElectricalEquipmentTags,
+    rdb.BuiltInCategory.OST_ElectricalFixtureTags,
+    #rdb.BuiltInCategory.OST_ElevationMarks, #purged separately
+    rdb.BuiltInCategory.OST_FabricAreaTags,
+    rdb.BuiltInCategory.OST_FabricReinforcementTags,
+    rdb.BuiltInCategory.OST_FireAlarmDeviceTags,
+    rdb.BuiltInCategory.OST_FlexDuctTags,
+    rdb.BuiltInCategory.OST_FlexPipeTags,
+    rdb.BuiltInCategory.OST_FloorTags,
+    rdb.BuiltInCategory.OST_FoundationSlabAnalyticalTags,
+    rdb.BuiltInCategory.OST_FurnitureSystemTags,
+    rdb.BuiltInCategory.OST_GenericModelTags,
+    #rdb.BuiltInCategory.OST_GenericAnnotation, # purged separately tricky one...some of these might be used in dimensions for instance...
+    #rdb.BuiltInCategory.OST_GridHeads, # purged separately
+    rdb.BuiltInCategory.OST_InternalAreaLoadTags,
+    rdb.BuiltInCategory.OST_InternalLineLoadTags,
+    rdb.BuiltInCategory.OST_InternalPointLoadTags,
+    rdb.BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
+    rdb.BuiltInCategory.OST_KeynoteTags,
     #uiltInCategory.OST_LevelHeads, #purged separately
-    BuiltInCategory.OST_LightingDeviceTags,
-    BuiltInCategory.OST_LightingFixtureTags,
-    BuiltInCategory.OST_LineLoadTags,
-    BuiltInCategory.OST_LinkAnalyticalTags,
-    BuiltInCategory.OST_MassTags,
-    BuiltInCategory.OST_MaterialTags,
-    BuiltInCategory.OST_MechanicalEquipmentTags,
-    BuiltInCategory.OST_MEPSpaceTags,
-    BuiltInCategory.OST_MultiCategoryTags,
-    BuiltInCategory.OST_NodeAnalyticalTags,
-    BuiltInCategory.OST_NurseCallDeviceTags,
-    BuiltInCategory.OST_ParkingTags,
-    BuiltInCategory.OST_PartTags,
-    BuiltInCategory.OST_PathReinTags,
-    BuiltInCategory.OST_PipeAccessoryTags,
-    BuiltInCategory.OST_PipeFittingTags,
-    BuiltInCategory.OST_PipeInsulationsTags,
-    BuiltInCategory.OST_PipeTags,
-    BuiltInCategory.OST_PlantingTags,
-    BuiltInCategory.OST_PlumbingFixtureTags,
-    BuiltInCategory.OST_RailingSystemTags,
-    BuiltInCategory.OST_RebarTags,
-    #BuiltInCategory.OST_ReferenceViewerSymbol, #purged separately
-    BuiltInCategory.OST_RevisionCloudTags,
-    BuiltInCategory.OST_RoofTags,
-    BuiltInCategory.OST_RoomTags,
-    #BuiltInCategory.OST_SectionHeads, #purged separately
-    BuiltInCategory.OST_SecurityDeviceTags,
-    BuiltInCategory.OST_SitePropertyLineSegmentTags,
-    BuiltInCategory.OST_SitePropertyTags,
-    BuiltInCategory.OST_SpecialityEquipmentTags,
-    #BuiltInCategory.OST_SpotElevSymbols, #purged elsewhere
-    BuiltInCategory.OST_SprinklerTags,
-    BuiltInCategory.OST_StairsLandingTags,
-    BuiltInCategory.OST_StairsRailingTags,
-    BuiltInCategory.OST_StairsRunTags,
-    BuiltInCategory.OST_StairsSupportTags,
-    BuiltInCategory.OST_StairsTags,
-    BuiltInCategory.OST_StairsTriserTags,
-    BuiltInCategory.OST_StructConnectionTags,
-    BuiltInCategory.OST_StructuralColumnTags,
-    BuiltInCategory.OST_StructuralFoundationTags,
-    BuiltInCategory.OST_StructuralFramingTags,
-    BuiltInCategory.OST_StructuralStiffenerTags,
-    BuiltInCategory.OST_TelephoneDeviceTags,
-    BuiltInCategory.OST_TrussTags,
-    #BuiltInCategory.OST_ViewportLabel, #purged elsewhere
-    BuiltInCategory.OST_WallTags,
-    BuiltInCategory.OST_WindowTags
+    rdb.BuiltInCategory.OST_LightingDeviceTags,
+    rdb.BuiltInCategory.OST_LightingFixtureTags,
+    rdb.BuiltInCategory.OST_LineLoadTags,
+    rdb.BuiltInCategory.OST_LinkAnalyticalTags,
+    rdb.BuiltInCategory.OST_MassTags,
+    rdb.BuiltInCategory.OST_MaterialTags,
+    rdb.BuiltInCategory.OST_MechanicalEquipmentTags,
+    rdb.BuiltInCategory.OST_MEPSpaceTags,
+    rdb.BuiltInCategory.OST_MultiCategoryTags,
+    rdb.BuiltInCategory.OST_NodeAnalyticalTags,
+    rdb.BuiltInCategory.OST_NurseCallDeviceTags,
+    rdb.BuiltInCategory.OST_ParkingTags,
+    rdb.BuiltInCategory.OST_PartTags,
+    rdb.BuiltInCategory.OST_PathReinTags,
+    rdb.BuiltInCategory.OST_PipeAccessoryTags,
+    rdb.BuiltInCategory.OST_PipeFittingTags,
+    rdb.BuiltInCategory.OST_PipeInsulationsTags,
+    rdb.BuiltInCategory.OST_PipeTags,
+    rdb.BuiltInCategory.OST_PlantingTags,
+    rdb.BuiltInCategory.OST_PlumbingFixtureTags,
+    rdb.BuiltInCategory.OST_RailingSystemTags,
+    rdb.BuiltInCategory.OST_RebarTags,
+    #rdb.BuiltInCategory.OST_ReferenceViewerSymbol, #purged separately
+    rdb.BuiltInCategory.OST_RevisionCloudTags,
+    rdb.BuiltInCategory.OST_RoofTags,
+    rdb.BuiltInCategory.OST_RoomTags,
+    #rdb.BuiltInCategory.OST_SectionHeads, #purged separately
+    rdb.BuiltInCategory.OST_SecurityDeviceTags,
+    rdb.BuiltInCategory.OST_SitePropertyLineSegmentTags,
+    rdb.BuiltInCategory.OST_SitePropertyTags,
+    rdb.BuiltInCategory.OST_SpecialityEquipmentTags,
+    #rdb.BuiltInCategory.OST_SpotElevSymbols, #purged elsewhere
+    rdb.BuiltInCategory.OST_SprinklerTags,
+    rdb.BuiltInCategory.OST_StairsLandingTags,
+    rdb.BuiltInCategory.OST_StairsRailingTags,
+    rdb.BuiltInCategory.OST_StairsRunTags,
+    rdb.BuiltInCategory.OST_StairsSupportTags,
+    rdb.BuiltInCategory.OST_StairsTags,
+    rdb.BuiltInCategory.OST_StairsTriserTags,
+    rdb.BuiltInCategory.OST_StructConnectionTags,
+    rdb.BuiltInCategory.OST_StructuralColumnTags,
+    rdb.BuiltInCategory.OST_StructuralFoundationTags,
+    rdb.BuiltInCategory.OST_StructuralFramingTags,
+    rdb.BuiltInCategory.OST_StructuralStiffenerTags,
+    rdb.BuiltInCategory.OST_TelephoneDeviceTags,
+    rdb.BuiltInCategory.OST_TrussTags,
+    #rdb.BuiltInCategory.OST_ViewportLabel, #purged elsewhere
+    rdb.BuiltInCategory.OST_WallTags,
+    rdb.BuiltInCategory.OST_WindowTags
 ])
 
 # contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
 # i.e. built in revit type settings
-catsLoadableTagsOther = List[BuiltInCategory] ([
-    BuiltInCategory.OST_CalloutHeads,
-    BuiltInCategory.OST_ElevationMarks,
-    BuiltInCategory.OST_GenericAnnotation,
-    BuiltInCategory.OST_GridHeads,
-    BuiltInCategory.OST_LevelHeads,
-    BuiltInCategory.OST_ReferenceViewerSymbol,
-    BuiltInCategory.OST_SectionHeads,
-    BuiltInCategory.OST_SpotElevSymbols,
-    BuiltInCategory.OST_ViewportLabel
+catsLoadableTagsOther = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_CalloutHeads,
+    rdb.BuiltInCategory.OST_ElevationMarks,
+    rdb.BuiltInCategory.OST_GenericAnnotation,
+    rdb.BuiltInCategory.OST_GridHeads,
+    rdb.BuiltInCategory.OST_LevelHeads,
+    rdb.BuiltInCategory.OST_ReferenceViewerSymbol,
+    rdb.BuiltInCategory.OST_SectionHeads,
+    rdb.BuiltInCategory.OST_SpotElevSymbols,
+    rdb.BuiltInCategory.OST_ViewportLabel
 ])
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------
@@ -274,14 +273,14 @@ def GetFamilySymbols(doc, cats):
     :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     :param ICollection cats: 
         ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-        :cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+        :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
     :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.Element matching filter.
     '''
 
     elements = []
     try:
-        multiCatFilter = ElementMulticategoryFilter(cats)
-        elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter).ToElements()
+        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter).ToElements()
         return elements
     except Exception:
         return elements
@@ -293,14 +292,14 @@ def GetFamilyInstancesByBuiltInCategories(doc, cats):
     :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     :param ICollection cats: 
         ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-        :cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+        :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
     :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.Element matching filter.
     '''
     
     elements = []
     try:
-        multiCatFilter = ElementMulticategoryFilter(cats)
-        elements = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(multiCatFilter).ToElements()
+        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(multiCatFilter).ToElements()
         return elements
     except Exception:
         return elements
@@ -314,8 +313,8 @@ def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
     :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
     '''
 
-    filter = ElementCategoryFilter(builtinCat)
-    col = FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(builtinCat)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
     return col
 
 def GetAllLoadableFamilies(doc):
@@ -328,8 +327,8 @@ def GetAllLoadableFamilies(doc):
     :return list: A list of Autodesk.Revit.DB.Family matching filter.
     '''
 
-    collector = FilteredElementCollector(doc)
-    families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == False)).ToList()
+    collector = rdb.FilteredElementCollector(doc)
+    families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     return families
 
 def GetAllInPlaceFamilies(doc):
@@ -341,8 +340,8 @@ def GetAllInPlaceFamilies(doc):
     :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     :return list: A list of Autodesk.Revit.DB.Family matching filter.
     '''
-    collector = FilteredElementCollector(doc)
-    families = collector.OfClass(Family).Where(lambda e: (e.IsInPlace == True)).ToList()
+    collector = rdb.FilteredElementCollector(doc)
+    families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
 
 # --------------------------family data ----------------
@@ -380,11 +379,11 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
         A collector of Autodesk.Revit.DB.FamilyInstance matching filter
     '''
 
-    pvpSymbol = ParameterValueProvider(ElementId( BuiltInParameter.SYMBOL_ID_PARAM ) )
-    equals = FilterNumericEquals()
-    idFilter = FilterElementIdRule( pvpSymbol, equals, typeId)
-    efilter =  ElementParameterFilter( idFilter )
-    collector = FilteredElementCollector(doc).WherePasses( efilter )
+    pvpSymbol = rdb.ParameterValueProvider(rdb.ElementId( rdb.BuiltInParameter.SYMBOL_ID_PARAM ) )
+    equals = rdb.FilterNumericEquals()
+    idFilter = rdb.FilterElementIdRule( pvpSymbol, equals, typeId)
+    efilter =  rdb.ElementParameterFilter( idFilter )
+    collector = rdb.FilteredElementCollector(doc).WherePasses( efilter )
     return collector
 
 def FamilyAllTypesInUse(famTypeIds, usedTypeIds):
@@ -418,8 +417,8 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
     '''
 
     # filter model for family symbols of given built in category
-    filter = ElementCategoryFilter(famBuiltInCategory)
-    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(famBuiltInCategory)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = []
     for c in col:
         fam = c.Family
@@ -472,7 +471,7 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     :param Autodesk.Revit.DB.Document doc: Current Revit model document.
     :param ICollection cats: 
         ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-        :cats sample: cats = List[BuiltInCategory] ([BuiltInCategory.OST_Furniture, BuiltInCategory.OST_Parking])
+        :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
     
     :return list:
         A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
@@ -480,13 +479,13 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
 
     ids = []
     try:
-        multiCatFilter = ElementMulticategoryFilter(cats)
-        elements = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
+        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
         for el in elements:
             # check if shared fams are to be excluded from return list
             if(excludeSharedFam):
                 fam = el.Family
-                pValue = com.GetBuiltInParameterValue(fam, BuiltInParameter.FAMILY_SHARED)
+                pValue = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
                 if(pValue != None):
                     if(pValue == 'No' and el.Id not in ids):
                         ids.append(el.Id)
@@ -584,7 +583,7 @@ def GetAllGenericFormsInFamily(doc):
     :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.GenericForm. 
     '''
 
-    col = FilteredElementCollector(doc).OfClass(GenericForm)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.GenericForm)
     return col
 
 def GetAllCurveBasedElementsInFamily(doc):
@@ -601,9 +600,9 @@ def GetAllCurveBasedElementsInFamily(doc):
     '''
 
     elements = []
-    col = FilteredElementCollector(doc).OfClass(CurveElement)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.CurveElement)
     for c in col:
-        if(Element.Name.GetValue(c) in LINE_NAMES):
+        if(rdb.Element.Name.GetValue(c) in LINE_NAMES):
             elements.append(c)
     return elements
 
@@ -616,7 +615,7 @@ def GetAllModelTextElementsInFamily(doc):
     :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.ModelText. 
     '''
 
-    col = FilteredElementCollector(doc).OfClass(ModelText)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ModelText)
     return col
 
 # -------------------------- ref planes  ----------------
@@ -654,18 +653,18 @@ def SetRefPlanesToNotAReference(doc):
     result = res.Result()
     result.UpdateSep(True, 'Changing reference status of reference planes...')
     matchAtAll = False
-    collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
+    collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     for refP in collectorRefPlanes:
         valueInt = com.GetBuiltInParameterValue(
             refP, 
-            BuiltInParameter.ELEM_REFERENCE_NAME, 
+            rdb.BuiltInParameter.ELEM_REFERENCE_NAME, 
             com.GetParameterValueAsInteger)
         # check if an update is required (id is greater then 12)
         if (valueInt > 13):
             resultChange = com.SetBuiltInParameterValue(
                 doc, 
                 refP, 
-                BuiltInParameter.ELEM_REFERENCE_NAME,
+                rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
                 '12'
                 )
             # set overall flag to indicate that at leasst one element was changed
@@ -710,14 +709,14 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
         # get the current reference type
         valueInt = com.GetBuiltInParameterValue(
             curve, 
-            BuiltInParameter.ELEM_IS_REFERENCE, 
+            rdb.BuiltInParameter.ELEM_IS_REFERENCE, 
             com.GetParameterValueAsInteger)
         # check if an update is required (id equals 1)
         if (valueInt == 1):
             resultChange = com.SetBuiltInParameterValue(
                 doc, 
                 curve, 
-                BuiltInParameter.ELEM_IS_REFERENCE,
+                rdb.BuiltInParameter.ELEM_IS_REFERENCE,
                 '0'
                 )
             # set overall flag to indicate that at least one element was changed

@@ -34,9 +34,7 @@ import Utility as util
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, ElementId, Dimension, DimensionType, MultiReferenceAnnotationType, MultiReferenceAnnotation,\
-    TextElement, TextElementType, BuiltInParameter, ViewSchedule, IndependentTag, FamilySymbol, AnnotationSymbolType, AreaTagType, ElementType,\
-    BuiltInCategory, SpotDimensionType
+import Autodesk.Revit.DB as rdb
 
 from Autodesk.Revit.DB.Architecture import RoomTagType, StairsPathType
 
@@ -54,7 +52,7 @@ def GetDimTypes(doc):
     '''
     returns all dimension types in a model
     '''
-    return FilteredElementCollector(doc).OfClass(DimensionType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
 
 # doc: current model document
 def GetDimTypeIds(doc):
@@ -62,7 +60,7 @@ def GetDimTypeIds(doc):
     returns all dimension type ids in a model
     '''
     ids = []
-    col = FilteredElementCollector(doc).OfClass(DimensionType)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -83,14 +81,14 @@ def GetAllDimensionElements(doc):
     '''
     returns all dimension elements in the model
     '''
-    return FilteredElementCollector(doc).OfClass(Dimension)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.Dimension)
 
 # doc   current model document
 def GetAllMultiRefAnnotationTypes(doc):
     '''
     returns all multireference annotation types in the model
     '''
-    return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
 
 # doc   current model document
 def GetAllMultiRefAnnotationTypeIds(doc):
@@ -98,7 +96,7 @@ def GetAllMultiRefAnnotationTypeIds(doc):
     returns all multireference annotation type ids in the model
     '''
     ids = []
-    col = FilteredElementCollector(doc).OfClass(MultiReferenceAnnotationType)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -107,7 +105,7 @@ def GetAllMultiRefAnnotationElements(doc):
     '''
     returns all multireference annotation elements in the model
     '''
-    return FilteredElementCollector(doc).OfClass(MultiReferenceAnnotation)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotation)
 
 # doc   current model document
 def GetUsedMultiRefDimTypeIdsInTheModel(doc):
@@ -175,13 +173,13 @@ def GetAllTextTypes(doc):
     '''
     returns all text types in the model
     '''
-    return FilteredElementCollector(doc).OfClass(TextElementType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
 
 # doc   current model document
 def GetAllTextTypeIds(doc):
     '''returns all text type ids in the model'''
     ids = []
-    col = FilteredElementCollector(doc).OfClass(TextElementType)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -190,7 +188,7 @@ def GetAllTextAnnotationElements(doc):
     '''
     returns all text annotation elements in the model
     '''
-    return FilteredElementCollector(doc).OfClass(TextElement)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElement)
 
 # doc   current model document
 def GetUsedTextTypeIdsInTheModel(doc):
@@ -203,7 +201,7 @@ def GetUsedTextTypeIdsInTheModel(doc):
         if(t.GetTypeId() not in textTypeIdsUsed):
             textTypeIdsUsed.append(t.GetTypeId())
     # get all schedules and check their appearance text proprties!
-    col = FilteredElementCollector(doc).OfClass(ViewSchedule)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSchedule)
     for c in col:
         if(c.BodyTextTypeId not in textTypeIdsUsed):
             textTypeIdsUsed.append(c.BodyTextTypeId)
@@ -225,11 +223,11 @@ def GetAllUnusedTextTypeIdsInModel(doc):
 
 # list of built in parameters attached to dimensions containing arrow head ids
 ARROWHEAD_PARAS_DIM = [
-    BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,
-    BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,
-    BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,
-    BuiltInParameter.DIM_LEADER_ARROWHEAD,
-    BuiltInParameter.WITNS_LINE_TICK_MARK
+    rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,
+    rdb.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,
+    rdb.BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,
+    rdb.BuiltInParameter.DIM_LEADER_ARROWHEAD,
+    rdb.BuiltInParameter.WITNS_LINE_TICK_MARK
 ]
 
 ''' 
@@ -242,19 +240,19 @@ list of built in parameters attached to
 '''
 
 ARROWHEAD_PARAS_TEXT = [
-    BuiltInParameter.LEADER_ARROWHEAD
+    rdb.BuiltInParameter.LEADER_ARROWHEAD
 ]
 
 # list of built in parameters attached to spot dims containing arrow head ids
 # and symbols used
 ARROWHEAD_PARAS_SPOT_DIMS = [
-    BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
-    BuiltInParameter.SPOT_ELEV_SYMBOL
+    rdb.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
+    rdb.BuiltInParameter.SPOT_ELEV_SYMBOL
 ]
 
 # list of built in parameters attached to stair path types containing arrow head ids
 ARROWHEAD_PARAS_STAIRS_PATH = [
-    BuiltInParameter.ARROWHEAD_TYPE
+    rdb.BuiltInParameter.ARROWHEAD_TYPE
 ]
 
 
@@ -268,7 +266,7 @@ def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
     for t in types:
         for pInt in parameterList:
             id = com.GetBuiltInParameterValue(t, pInt)
-            if(id not in usedIds and id != ElementId.InvalidElementId and id != None):
+            if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
                 usedIds.append(id)
             break
     return usedIds
@@ -299,7 +297,7 @@ def GetAllIndependentTags(doc):
     '''
     returns all text types in the model
     '''
-    return FilteredElementCollector(doc).OfClass(IndependentTag)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.IndependentTag)
 
 def GetIndependentTagTypeArrowHeadIds(doc):
     '''
@@ -310,8 +308,8 @@ def GetIndependentTagTypeArrowHeadIds(doc):
     for t in tags:
         tTypeId = t.GetTypeId()
         tTypeElement = doc.GetElement(tTypeId)
-        id = com.GetBuiltInParameterValue(tTypeElement, BuiltInParameter.LEADER_ARROWHEAD)
-        if(id not in usedIds and id != ElementId.InvalidElementId and id != None):
+        id = com.GetBuiltInParameterValue(tTypeElement, rdb.BuiltInParameter.LEADER_ARROWHEAD)
+        if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
             usedIds.append(id)
     return usedIds
 
@@ -322,7 +320,7 @@ def GetAllSpotDimTypes(doc):
     '''
     returns all spot Dim types in the model
     '''
-    return FilteredElementCollector(doc).OfClass(SpotDimensionType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.SpotDimensionType)
 
 def GetSpotTypeArrowHeadIds(doc):
     '''
@@ -339,9 +337,9 @@ def GetAllAnnoSymbolTypes(doc):
     returns all annotation symbol types, area tag types, room tag types in the model
     '''
     types = []
-    col = FilteredElementCollector(doc).OfClass(FamilySymbol)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
     for c in col:
-        if (c.GetType() == AnnotationSymbolType or c.GetType == AreaTagType or c.GetType() == RoomTagType):
+        if (c.GetType() == rdb.AnnotationSymbolType or c.GetType == rdb.AreaTagType or c.GetType() == RoomTagType):
             types.append(c)
     return types
 
@@ -359,7 +357,7 @@ def GetAllStairPathTypes(doc):
     '''
     returns all stairs path types in the model
     '''
-    return FilteredElementCollector(doc).OfClass(StairsPathType)
+    return rdb.FilteredElementCollector(doc).OfClass(StairsPathType)
         
 def GetStairsPathArrowHeadIds(doc):
     '''
@@ -396,7 +394,7 @@ def GetArrowTypesInModel(doc):
     '''
     types = []
     similarTypes = []
-    col = FilteredElementCollector(doc).OfClass(ElementType)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ElementType)
     for c in col:
         if (c.FamilyName == 'Arrowhead'):
             similarTypes = c.GetSimilarTypes()
@@ -442,8 +440,8 @@ def GetSymbolIdsFromDimTypes(doc):
     ids = []
     dimTs = GetDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
-        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
+        if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
 
@@ -455,8 +453,8 @@ def GetSymbolIdsFromSpotTypes(doc):
     ids = []
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, BuiltInParameter.SPOT_ELEV_SYMBOL)
-        if(id not in ids and id != ElementId.InvalidElementId and id != None):
+        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
+        if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
 
@@ -465,7 +463,7 @@ def GetAllSpotElevationSymbolsInModel(doc):
     '''
     returns all symbol of category Spot Elevation Symbol in model
     '''
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_SpotElevSymbols)
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_SpotElevSymbols)
     return col
 
 # doc   current model document
@@ -487,8 +485,8 @@ def GetUnusedSymbolIdsFromSpotTypes(doc):
     idsAvailable = GetAllSpotElevationSymbolIdsInModel(doc)
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, BuiltInParameter.SPOT_ELEV_SYMBOL)
-        if(id not in idsUsed and id != ElementId.InvalidElementId and id != None):
+        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
+        if(id not in idsUsed and id != rdb.ElementId.InvalidElementId and id != None):
             idsUsed.append(id)
                 
     # get unused ids

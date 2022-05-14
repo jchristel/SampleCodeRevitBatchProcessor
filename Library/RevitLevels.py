@@ -35,7 +35,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Level, BuiltInParameter, ElementCategoryFilter, FamilySymbol
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -48,7 +48,7 @@ REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 # doc:   current model document
 def GetLevelsListAscending(doc):
     ''' this will return a filtered element collector of all levels in the model ascending by project elevation'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToList().OrderBy(lambda l: l.ProjectElevation)
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToList().OrderBy(lambda l: l.ProjectElevation)
     return collector
 
 # ------------------------------------------------------- Level reporting --------------------------------------------------------------------
@@ -58,7 +58,7 @@ def GetLevelsListAscending(doc):
 # revitFilePath: fully qualified file path of Revit file
 def GetLevelReportData(doc, revitFilePath):
     data = []
-    for p in FilteredElementCollector(doc).OfClass(Level):
+    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
         data.append([
             util.GetFileNameWithoutExt(revitFilePath), 
             str(p.Id.IntegerValue), 
@@ -72,19 +72,19 @@ def GetLevelReportData(doc, revitFilePath):
 # doc:   current model document
 def GetAllLevelHeadsByCategory(doc):
     ''' this will return a filtered element collector of all level head types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllLevelTypesByCategory(doc):
     ''' this will return a filtered element collector of all level types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllLevelTypeIdsByCategory(doc):
     ''' this will return a filtered element collector of all level type ids in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Levels).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
@@ -103,7 +103,7 @@ def GetUnusedLevelHeadFamilies(doc):
     # get family symbol in use at level as symbol
     for lId in usedTypes:
         type = doc.GetElement(lId)
-        id = com.GetBuiltInParameterValue(type, BuiltInParameter.LEVEL_HEAD_TAG)
+        id = com.GetBuiltInParameterValue(type, rdb.BuiltInParameter.LEVEL_HEAD_TAG)
         if(id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     # get all level head symbols available
@@ -119,8 +119,8 @@ def GetUnusedLevelHeadFamilies(doc):
 def GetAllLevelHeadfamilyTypeIds(doc):
     ''' this will return all ids level head family types in the model'''
     ids = []
-    filter = ElementCategoryFilter(BuiltInCategory.OST_LevelHeads)
-    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_LevelHeads)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 

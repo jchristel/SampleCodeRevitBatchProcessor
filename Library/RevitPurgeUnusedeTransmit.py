@@ -30,14 +30,18 @@ https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-
 
 import clr
 
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 import Result as res
 from timer import Timer
 
 def _purge(doc, dllPath):
-    '''this method uses the purge unused functionality of the eTransmit tool provided by Autodesk
-    - returns a bool indicating whether purge was succesfull (true) or failed (false) '''
+    '''
+    this method uses the purge unused functionality of the eTransmit tool provided by Autodesk
+    - returns a bool indicating whether purge was succesfull (true) or failed (false) 
+    
+    '''
+    
     clr.AddReferenceToFileAndPath(dllPath)
     # import the eTransmit name space which includes 
     # purge unused functionality

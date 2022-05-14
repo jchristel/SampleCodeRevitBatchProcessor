@@ -31,7 +31,7 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Roof, RoofType, ElementCategoryFilter, FamilyInstance
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -56,7 +56,7 @@ def GetAllRoofTypesByCategory(doc):
     - In place families or loaded families
     - sloped glazing
     '''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Roofs).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsElementType()
     return collector
 
 # doc   current model document
@@ -65,7 +65,7 @@ def GetRoofTypesByClass(doc):
     - Basic Roof
     - sloped glazing
     it will therefore not return any in place family types ...'''
-    return  FilteredElementCollector(doc).OfClass(RoofType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdb.RoofType)
 
 # collector   fltered element collector containing Roof type elments of family symbols representing in place families
 # dic         dictionary containing key: roof type family name, value: list of ids
@@ -95,12 +95,12 @@ def SortRoofTypesByFamilyName(doc):
 # doc   current model document
 def GetAllRoofInstancesInModelByCategory(doc):
     ''' returns all Roof elements placed in model...ignores in place families'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllRoofInstancesInModelByClass(doc):
     ''' returns all Roof elements placed in model...ignores roof soffits(???)'''
-    return FilteredElementCollector(doc).OfClass(Roof).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.Roof).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRoofTypeIdsInModelByCategory(doc):
@@ -162,13 +162,13 @@ def GetInPlaceRoofFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Roofs)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Roofs)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceRoofTypeIdsInModel(doc):
     ''' returns type ids off all available in place families of category roof '''
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Roofs)
+    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Roofs)
     return ids
 
 # doc   current document

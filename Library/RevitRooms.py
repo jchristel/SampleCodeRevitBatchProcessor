@@ -30,14 +30,13 @@ import System
 # import common library modules
 import RevitCommonAPI as com
 import Result as res
-import Utility as util
 import RevitGeometry as rGeo
 import RevitDesignSetOptions as rDesignO
 import DataRoom as dRoom
 import DataGeometry as dGeometry
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, SpatialElementBoundaryOptions, Transaction, Element, SpatialElementBoundaryLocation
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -50,13 +49,13 @@ REPORT_ROOMS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTANC
 # doc   current document
 def GetAllRooms(doc):
     '''returns a list of rooms from the model'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms).ToList()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms).ToList()
 
 
 # doc   current document
 def GetUnplacedRooms(doc):
     '''returns a list of unplaced rooms from the model'''
-    coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
+    coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     for r in coll:
         if(r.Location == None):
@@ -67,9 +66,9 @@ def GetUnplacedRooms(doc):
 # doc   current document
 def GetNotEnclosedRooms(doc):
     '''returns a list of not enclosed rooms from the model'''
-    coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
+    coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
-    boundaryOption = SpatialElementBoundaryOptions()
+    boundaryOption = rdb.SpatialElementBoundaryOptions()
     for r in coll:
         boundarySegments = r.GetBoundarySegments(boundaryOption)
         if(r.Area == 0.0 and r.Location != None and (boundarySegments == None or len(boundarySegments)) == 0):
@@ -79,9 +78,9 @@ def GetNotEnclosedRooms(doc):
 # doc   current document
 def GetRedundantRooms(doc):
     '''returns a list of redundants rooms from the model'''
-    coll = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Rooms)
+    coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
-    boundaryOption = SpatialElementBoundaryOptions()
+    boundaryOption = rdb.SpatialElementBoundaryOptions()
     for r in coll:
         boundarySegments = r.GetBoundarySegments(boundaryOption)
         if(r.Area == 0.0 and(boundarySegments != None and len(boundarySegments) > 0)):
@@ -96,7 +95,7 @@ def MoveTagToRoom(doc, tagId):
     rt = doc.GetElement(tagId)
     roomTagPoint = rt.Location.Point
     roomLocationPoint = rt.Room.Location.Point
-    roomData = str(rt.Room.Number) + ' ' + str(Element.Name.GetValue(rt.Room))
+    roomData = str(rt.Room.Number) + ' ' + str(rdb.Element.Name.GetValue(rt.Room))
     translation =  roomLocationPoint - roomTagPoint
     def action():
         actionReturnValue = res.Result()
@@ -106,7 +105,7 @@ def MoveTagToRoom(doc, tagId):
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Failed to move tag to room ' + roomData + ' with exception: ' + str(e))
         return actionReturnValue
-    transaction = Transaction(doc, 'Moving room tag to room : ' + roomData)
+    transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + roomData)
     returnvalue.Update(com.InTransaction(transaction, action))
     return returnvalue
 
@@ -119,9 +118,9 @@ def GetRoomBoundaryLoops(revitRoom):
     '''
     allBoundaryLoops = []
     # set up spatial boundary option
-    spatialBoundaryOption = SpatialElementBoundaryOptions()
+    spatialBoundaryOption = rdb.SpatialElementBoundaryOptions()
     spatialBoundaryOption.StoreFreeBoundaryFaces = True
-    spatialBoundaryOption.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center
+    spatialBoundaryOption.SpatialElementBoundaryLocation = rdb.SpatialElementBoundaryLocation.Center
     # get loops
     loops = revitRoom.GetBoundarySegments(spatialBoundaryOption)
     allBoundaryLoops.append(loops)
@@ -216,7 +215,7 @@ def PopulateDataRoomObject(doc, revitRoom):
         # get other data
         dataR.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
         dataR.id = revitRoom.Id.IntegerValue
-        dataR.name = Element.Name.GetValue(revitRoom).encode('utf-8')
+        dataR.name = rdb.Element.Name.GetValue(revitRoom).encode('utf-8')
         dataR.number = revitRoom.Number.encode('utf-8')
         funcNumberValue = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number')
         if(funcNumberValue != None):
@@ -225,7 +224,7 @@ def PopulateDataRoomObject(doc, revitRoom):
             # use default instead
             pass
         try:
-            dataR.levelName = Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+            dataR.levelName = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
             dataR.levelId = revitRoom.Level.Id.IntegerValue
         except:
             dataR.levelName = 'no level'

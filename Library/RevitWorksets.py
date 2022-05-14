@@ -30,7 +30,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -44,8 +44,8 @@ REPORT_WORKSETS_HEADER = ['HOSTFILE','ID', 'NAME', 'ISVISIBLEBYDEFAULT']
 # returns the element id of a workset identified by its name
 # returns invalid Id (-1) if no such workset exists
 def GetWorksetIdByName(doc, worksetName):
-    id = ElementId.InvalidElementId
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
+    id = rdb.ElementId.InvalidElementId
+    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
         if(p.Name == worksetName):
             id = p.Id
             break
@@ -55,7 +55,7 @@ def GetWorksetIdByName(doc, worksetName):
 # return 'unknown' if no matching workset was found
 def GetWorksetNameById(doc, idInteger):
     name = 'unknown'
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
+    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
         if(p.Id.IntegerValue == idInteger):
             name = p.Name
             break
@@ -65,20 +65,20 @@ def GetWorksetNameById(doc, idInteger):
 # doc:      current model document
 def GetWorksetIds(doc):
     id = []
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
+    for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
       id.append(p.Id)
     return id
 
 # get user defined worksets
 # doc:      current model document
 def GetWorksets(doc):
-    worksets = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset).ToList()
+    worksets = rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset).ToList()
     return worksets
 
 # get user defined worksets as a collector
 # doc:      current model document
 def GetWorksetsFromCollector(doc):
-    collector = FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset)
+    collector = rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset)
     return collector
 
 # this is based on a hack from the AutoDesk forum:
@@ -91,11 +91,11 @@ def OpenWorksetsWithElementsHack(doc):
     worksetIds = GetWorksetIds(doc)
     # loop over workset and open if anythin is on them
     for wId in worksetIds:
-        fworkset = ElementWorksetFilter(wId)
-        elemIds = FilteredElementCollector(doc).WherePasses(fworkset).ToElementIds()
+        fworkset = rdb.ElementWorksetFilter(wId)
+        elemIds = rdb.FilteredElementCollector(doc).WherePasses(fworkset).ToElementIds()
         if (len(elemIds)>0):
             # this will force Revit to open the workset containing this element
-            uidoc.ShowElements(elemIds.First())
+           rdb.uidoc.ShowElements(elemIds.First())
 
 # attemps to change the worksets of elements provided through an element collector
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
@@ -106,18 +106,18 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     counterSuccess = 0
     counterFailure = 0
     # check if invalid id came back..workset no longer exists..
-    if(defaultId != ElementId.InvalidElementId):
+    if(defaultId != rdb.ElementId.InvalidElementId):
         # get all elements in collector and check their workset
         for p in collector:
             if (p.WorksetId != defaultId):
                 # get the element name
                 elementName = 'Unknown Element Name'
                 try:
-                    elementName = Element.Name.GetValue(p)
+                    elementName = rdb.Element.Name.GetValue(p)
                 except Exception :
                     pass
                 # move element to new workset
-                transaction = Transaction(doc, "Changing workset: " + elementName)
+                transaction = rdb.Transaction(doc, "Changing workset: " + elementName)
                 trannyStatus = com.InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
                 if (trannyStatus.status == True):
                     counterSuccess += 1
@@ -139,7 +139,7 @@ def GetActionChangeElementWorkset(el, defaultId):
     def action():
         actionReturnValue = res.Result()
         try:
-            wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+            wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
             wsparam.Set(defaultId.IntegerValue)
             actionReturnValue.message = 'Changed element workset.'
         except Exception as e:
@@ -153,7 +153,7 @@ def IsElementOnWorksetById(doc, el, worksetId):
     '''checks whether an element is on a given workset'''
     flag = True
     try:
-        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         currentWorksetName = com.getParameterValue(wsparam)
         compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
         if(compareToWorksetName != currentWorksetName):
@@ -169,7 +169,7 @@ def IsElementOnWorksetByName(el, worksetName):
     '''checks whether an element is on a given workset'''
     flag = True
     try:
-        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         currentWorksetName = com.getParameterValue(wsparam)
         if(worksetName != currentWorksetName):
             flag = False
@@ -184,7 +184,7 @@ def GetElementWorksetName(el):
     '''returns the name of the workset an element is on, or invalid workset'''
     workSetname = 'invalid workset'
     try:
-        wsparam = el.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         workSetname = com.getParameterValue(wsparam)
     except Exception as e:
         print ("GetElementWorksetName: " + str(e))
@@ -212,7 +212,7 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
                 if (workset.IsVisibleByDefault != worksetDataForFile[str(workset.Id)]):
                     def action():
                         actionReturnValue = res.Result()
-                        defaultVisibility  = WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
+                        defaultVisibility  = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
                         try:
                             defaultVisibility.SetWorksetVisibility(workset.Id, worksetDataForFile[str(workset.Id)])
                             actionReturnValue.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(worksetDataForFile[str(workset.Id)]) + ']')
@@ -220,7 +220,7 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
                             actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     # move element to new workset
-                    transaction = Transaction(doc, workset.Name + ": Changing default workset visibility")
+                    transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
                     trannyStatus = com.InTransaction(transaction, action)
                     returnvalue.Update(trannyStatus)
                 else:

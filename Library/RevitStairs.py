@@ -33,9 +33,8 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import BuiltInParameter, BuiltInCategory, FilteredElementCollector, ElementCategoryFilter, FamilyInstance
-from Autodesk.Revit.DB.Architecture import Stairs, StairsType, StairsPathType, StairsLandingType, StairsRunType, CutMarkType
-
+import Autodesk.Revit.DB as rdb
+import Autodesk.Revit.DB.Architecture as rdba
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
@@ -57,21 +56,21 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
 
 # list of built in parameters attached to stair sub types
 STAIR_LANDING_TYPE_PARAS = [
-    BuiltInParameter.STAIRSTYPE_LANDING_TYPE
+    rdb.BuiltInParameter.STAIRSTYPE_LANDING_TYPE
 ]
 
 STAIR_CUTMARK_TYPE_PARAS = [
-    BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
+    rdb.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
 ]
 
 STAIR_SUPPORT_TYPE_PARAS = [
-    BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
-    BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
-    BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
+    rdb.BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
+    rdb.BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
+    rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
 ]
 
 STAIR_RUN_TYPE_PARAS = [
-    BuiltInParameter.STAIRSTYPE_RUN_TYPE
+    rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE
 ]
 
 # doc:   current model document
@@ -83,7 +82,7 @@ def GetAllStairTypesByCategory(doc):
     - Cast-In-Place Stair
     - In place families or loaded families
     '''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Stairs).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsElementType()
     return collector
 
 # doc   current model document
@@ -93,37 +92,37 @@ def GetStairTypesByClass(doc):
     - Precast Stair
     - Cast-In-Place Stair
     it will therefore not return any in place family types or Stair types...'''
-    return  FilteredElementCollector(doc).OfClass(StairsType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsType)
 
 # doc   current model document
 def GetStairPathTypesByClass(doc):
     ''' this will return a filtered element collector of all Stair path types in the model '''
-    return  FilteredElementCollector(doc).OfClass(StairsPathType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsPathType)
 
 def GetAllStairPathElementsInModel(doc):
     ''' this will return a filtered element collector of all Stair path elements in the model '''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetStairLandingTypesByClass(doc):
     ''' this will return a filtered element collector of all Stair landing types in the model '''
-    return  FilteredElementCollector(doc).OfClass(StairsLandingType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsLandingType)
 
 # doc   current model document
 def GetStairRunTypesByClass(doc):
     ''' this will return a filtered element collector of all Stair run types in the model '''
-    return  FilteredElementCollector(doc).OfClass(StairsRunType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsRunType)
 
 # doc   current model document
 def GetStairCutMarkTypesByClass(doc):
     ''' this will return a filtered element collector of all cut mark types in the model '''
-    return  FilteredElementCollector(doc).OfClass(CutMarkType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.CutMarkType)
 
 # returns all stringers and carriage types in a model
 # doc:   current model document
 def GetAllStairStringersCarriageByCategory(doc):
     ''' this will return a filtered element collector of all Stair stringers and cariage types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
     return collector
 
 # collector   fltered element collector containing Stair type elments of family symbols representing in place families
@@ -154,12 +153,12 @@ def SortStairTypesByFamilyName(doc):
 # doc   current model document
 def GetAllStairInstancesInModelByCategory(doc):
     ''' returns all Stair elements placed in model...ignores in place families'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Stairs).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllStairInstancesInModelByClass(doc):
     ''' returns all Stair elements placed in model...ignores Stair soffits(???)'''
-    return FilteredElementCollector(doc).OfClass(Stairs).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdba.Stairs).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllStairTypeIdsInModelByCategory(doc):
@@ -390,13 +389,13 @@ def GetInPlaceStairFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Stairs)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Stairs)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceStairTypeIdsInModel(doc):
     ''' returns type ids off all available in place families of category stair '''
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, BuiltInCategory.OST_Stairs)
+    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Stairs)
     return ids
 
 # doc   current document

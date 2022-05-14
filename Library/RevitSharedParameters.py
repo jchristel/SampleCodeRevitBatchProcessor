@@ -33,7 +33,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, SharedParameterElement, Element
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -46,7 +46,7 @@ REPORT_SHAREDPARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBI
 # returns all shared parameters in a model
 # doc   current model document
 def GetAllSharedParameters(doc):  
-    collector = FilteredElementCollector(doc).OfClass(SharedParameterElement)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
 
 # ------------------------------------------------------- parameter utilitis --------------------------------------------------------------------
@@ -76,7 +76,7 @@ def DeleteSharedParameterByGUID(doc, guid):
         if(p.GuidValue.ToString() == guid):
             deleteIds.append(p.Id)
             # there should just be one match
-            parameterName = util.EncodeAscii(Element.Name.GetValue(p))
+            parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
         returnvalue = com.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
@@ -128,12 +128,12 @@ def GetSharedParameterReportData(doc, revitFilePath):
         pbindings = []
         # parameter bindings do not exist in a family document
         if(doc.IsFamilyDocument == False):
-            pbindings = ParamBindingExists(doc, Element.Name.GetValue(p), pdef.ParameterType)
+            pbindings = ParamBindingExists(doc, rdb.Element.Name.GetValue(p), pdef.ParameterType)
         
         # just in case parameter name is not unicode
         parameterName = 'unknonw'
         try:   
-            parameterName = util.EncodeAscii(Element.Name.GetValue(p))
+            parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
         except Exception as ex:
             parameterName = 'Exception: ' + str(ex)
         # build data

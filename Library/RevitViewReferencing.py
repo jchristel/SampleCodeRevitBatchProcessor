@@ -34,7 +34,7 @@ import RevitFamilyUtils as rFamU
 import RevitViews as rView
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuiltInParameter, ElementMulticategoryFilter, ElementId
+import Autodesk.Revit.DB as rdb
 
 # ------------------------ deprecated -----------------------
 # the following element collectors dont seem to return any types ...
@@ -42,13 +42,13 @@ from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, BuiltIn
 # doc:   current model document
 def Deprecated_GetAllCallOutTypesByCategory(doc):
     ''' this will return an EMPTY filtered element collector of all call out types in the model in Revit 2019'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Callouts).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Callouts).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def Deprecated_GetAllReferenceViewTypesByCategory(doc):
     '''this will return an EMPTY filtered element collector of all reference view types in the model in Revit 2019'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewer).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewer).WhereElementIsElementType()
     return collector
  
 # doc:   current model document
@@ -70,57 +70,57 @@ def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
 # doc:   current model document
 def GetAllCallOutHeadsByCategory(doc):
     ''' this will return a filtered element collector of all callOut Head symbol (types) in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CalloutHeads).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_CalloutHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllElevationHeadsByCategory(doc):
     ''' this will return a filtered element collector of all elevation symbols (types) in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ElevationMarks).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ElevationMarks).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllSectionHeadsByCategory(doc):
     ''' this will return a filtered element collector of all section symbols (types) in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_SectionHeads).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_SectionHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllViewContinuationMarkersByCategory(doc):
     ''' this will return a filtered element collector of all view contiunation symbols (types) in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewerSymbol)
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewerSymbol)
     return collector
 
 # doc:   current model document
 def GetAllReferenceViewElementsByCategory(doc):
     '''this will return an filtered element collector of all reference elements in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_ReferenceViewer)
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewer)
     return collector
 
 # ---------------------- view ref types  -----------------------
 
 # contains the builtin parameter definitions for Call out type ids, section type ids, elevation type ids
 VIEW_REFERENCE_PARAMETER_DEF_NAMES = [
-    BuiltInParameter.ELEVATN_TAG,
-    BuiltInParameter.CALLOUT_TAG,
-    BuiltInParameter.SECTION_TAG
+    rdb.BuiltInParameter.ELEVATN_TAG,
+    rdb.BuiltInParameter.CALLOUT_TAG,
+    rdb.BuiltInParameter.SECTION_TAG
 ]
 
 # contains the builtin parameter definitions for Callout symbol tag ids, section symbol tag ids, elevation symbol tag ids
 VIEW_TAG_SYMBOL_PARAMETER_DEF = [
-    BuiltInParameter.CALLOUT_ATTR_HEAD_TAG,
-    BuiltInParameter.ELEV_SYMBOL_ID,
-    BuiltInParameter.SECTION_ATTR_HEAD_TAG,
-    BuiltInParameter.SECTION_ATTR_TAIL_TAG,
-    BuiltInParameter.REFERENCE_VIEWER_ATTR_TAG
+    rdb.BuiltInParameter.CALLOUT_ATTR_HEAD_TAG,
+    rdb.BuiltInParameter.ELEV_SYMBOL_ID,
+    rdb.BuiltInParameter.SECTION_ATTR_HEAD_TAG,
+    rdb.BuiltInParameter.SECTION_ATTR_TAIL_TAG,
+    rdb.BuiltInParameter.REFERENCE_VIEWER_ATTR_TAG
 ]
 
 # category filter for all view ref categories
-VIEWREF_CATEGORYFILTER = List[BuiltInCategory] ([
-        BuiltInCategory.OST_CalloutHeads,
-        BuiltInCategory.OST_ElevationMarks,
-        BuiltInCategory.OST_SectionHeads,
-        BuiltInCategory.OST_ReferenceViewerSymbol
+VIEWREF_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+        rdb.BuiltInCategory.OST_CalloutHeads,
+        rdb.BuiltInCategory.OST_ElevationMarks,
+        rdb.BuiltInCategory.OST_SectionHeads,
+        rdb.BuiltInCategory.OST_ReferenceViewerSymbol
     ])
 
 def GetReferenceTypeIdsFromViewType(viewType):
@@ -216,8 +216,8 @@ def GetUsedViewContinuationTypeIds(doc):
 def GetAllViewReferenceSymbolIds(doc):
     '''returns the ids of all view reference family symbols(types) in the model'''
     ids = []
-    multiCatFilter = ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
@@ -260,7 +260,7 @@ def GetNestedFamilyMarkerNames(doc, usedIds):
     '''returns nested family names'''
     names = []
     for usedSymbolId in usedIds:
-        if(usedSymbolId != ElementId.InvalidElementId):
+        if(usedSymbolId != rdb.ElementId.InvalidElementId):
             # get the family
             elSymbol = doc.GetElement(usedSymbolId)
             fam = elSymbol.Family

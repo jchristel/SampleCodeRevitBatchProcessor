@@ -7,7 +7,7 @@ https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-
 '''
 
 
-from Autodesk.Revit.DB import TypeBinding, InstanceBinding, ExternalDefinitionCreationOptions, Transaction
+import Autodesk.Revit.DB as rdb
 
 # custom result class
 import Result as res
@@ -70,12 +70,12 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                                 return returnvalue
                             #check binding type
                             if(isInstance):
-                                if(elemBind.GetType() != InstanceBinding):
+                                if(elemBind.GetType() != rdb.InstanceBinding):
                                     returnvalue.status = False
                                     returnvalue.message = parameterName + ': wrong binding type (looking for instance but got type)'
                                     return returnvalue
                             else:
-                                if(elemBind.GetType() != TypeBinding):
+                                if(elemBind.GetType() != rdb.TypeBinding):
                                     returnvalue.status = False
                                     returnvalue.message = parameterName + ': wrong binding type (looking for type but got instance)'
                                     return returnvalue
@@ -102,7 +102,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
         if defGroup.Definitions.Contains(defGroup.Definitions.Item[parameterName]):
             definition = defGroup.Definitions.Item[parameterName]
         else:
-            opt = ExternalDefinitionCreationOptions(parameterName, parameterType)
+            opt = rdb.ExternalDefinitionCreationOptions(parameterName, parameterType)
             opt.Visible = isVisible
             definition = defGroup.Definitions.Create(opt)
 
@@ -141,7 +141,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                 actionReturnValue.status = False
                 actionReturnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
             return actionReturnValue
-        transaction = Transaction(doc,'Binding parameter')
+        transaction = rdb.Transaction(doc,'Binding parameter')
         returnvalue = com.InTransaction(transaction, action)    
         return returnvalue
 

@@ -36,7 +36,7 @@ BUILTIN_RAMP_TYPE_FAMILY_NAMES = [
 ]
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -51,7 +51,7 @@ def GetAllRampTypesByCategory(doc):
     ''' this will return a filtered element collector of all Ramp types in the model:
     - Ramp
     '''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ramps).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ramps).WhereElementIsElementType()
     return collector
 
 
@@ -80,7 +80,7 @@ def SortRampTypesByFamilyName(doc):
 # doc   current model document
 def GetAllRampInstancesInModelByCategory(doc):
     ''' returns all Ramp elements placed in model...ignores in place families'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Ramps).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ramps).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRampTypeIdsInModelByCategory(doc):

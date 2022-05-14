@@ -24,7 +24,10 @@
 import Utility as util
 import Result as res
 
-# process name of work sharing monitor
+''' 
+process name of work sharing monitor
+'''
+
 PROCESS_NAME_WSM = 'WorksharingMonitor.exe'
 PROCESS_MARKER_FILENAME = 'WSMProcessList'
 PROCESS_MARKER_FILEEXTENSION = '.plist'

@@ -31,6 +31,12 @@ import DataRoom as dr
 
 class ReadDataFromFile:
     def __init__(self, filePath):
+        '''
+        _summary_
+
+        :param filePath: _description_
+        :type filePath: _type_
+        '''
         self.dataFilePath = filePath
         self.dataType = ''
         self.data = []

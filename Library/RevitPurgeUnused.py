@@ -53,7 +53,7 @@ import RevitWalls as rWall
 from timer import Timer
 import RevitPurgeAction as pA
 
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 from collections import namedtuple
 
@@ -78,7 +78,7 @@ def PurgeUnplacedElements (doc,
         if(isDebug):
             unusedElementNames.append(unUsedElementNameHeader)
             for unusedId in unusedElementIds:
-                unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ Element.Name.GetValue(doc.GetElement(unusedId)))
+                unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ rdb.Element.Name.GetValue(doc.GetElement(unusedId)))
         else:
             unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
         purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))

@@ -44,7 +44,7 @@ import RevitGroups as rGrp
 import RevitRooms as rRooms
 import RevitDetailItems as rDetItems
 
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 from collections import namedtuple
 
@@ -61,11 +61,11 @@ def GetInstancesOfModelHealth(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    provider = ParameterValueProvider(ElementId(BuiltInParameter.ELEM_FAMILY_PARAM))
-    evaluator = FilterStringEquals()
-    rule = FilterStringRule( provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True )
-    filter = ElementParameterFilter( rule )
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter).ToList()
+    provider = rdb.ParameterValueProvider(rdb.ElementId(rdb.BuiltInParameter.ELEM_FAMILY_PARAM))
+    evaluator = rdb.FilterStringEquals()
+    rule = rdb.FilterStringRule( provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True )
+    filter = rdb.ElementParameterFilter( rule )
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter).ToList()
 
 # famInstance   an instance of the family model health tracker
 # doc           current document

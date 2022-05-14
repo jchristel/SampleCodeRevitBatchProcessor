@@ -29,7 +29,7 @@ import clr
 import Utility as util
 
 #from System.IO import Path
-from Autodesk.Revit.DB import ModelPathUtils
+import Autodesk.Revit.DB as rdb
 
 
 # return human readable BIM 360 path
@@ -38,7 +38,7 @@ def GetBim360Path(doc):
     revitFilePath = ''
     try:
         path = doc.GetCloudModelPath()
-        revitFilePath = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+        revitFilePath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     except Exception as e:
         revitFilePath = ''
     return revitFilePath
@@ -58,7 +58,7 @@ def GetModelBIM360Ids(doc):
     # check whether this is a cloud model
     isCloudModel = path.CloudPath
     # get human reeadable path
-    human = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+    human = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     return projectGuid,modelGuid,str(human)
 
 # doc       current model document
@@ -66,7 +66,7 @@ def GetModelFileSize(doc):
     '''returns BIM360 file size, if file not exists on local cache it will return -1'''
     fileSize = -1
     path = doc.GetCloudModelPath()
-    fullPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+    fullPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     if (fullPath.StartsWith("BIM 360")):
         # get user envirnoment
         hostName = util.GetLocalAppDataPath()

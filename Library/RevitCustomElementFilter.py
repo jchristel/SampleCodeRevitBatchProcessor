@@ -25,7 +25,7 @@ Customizeable element filter class.
 #
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+#import Autodesk.Revit.DB as rdb
 
 class RevitCustomElementFilter:
 

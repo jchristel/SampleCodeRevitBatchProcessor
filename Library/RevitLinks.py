@@ -36,8 +36,7 @@ import os
 from os import path
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, CADLinkType, ImportInstance, Element, BuiltInParameter, Transaction, ModelPathUtils,\
-    RevitLinkInstance, RevitLinkType, BuiltInCategory, ImageType
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -78,20 +77,20 @@ REPORT_CAD_LINKS_HEADER = [
 # doc   current model document
 def GetAllCADLinkTypes(doc):
     '''returns all CAD link types in a model'''
-    collector = FilteredElementCollector(doc).OfClass(CADLinkType)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType)
     return collector
 
 # doc   current model document
 def GetAllCADLinkInstances(doc):
     '''returns all CAD link instances in a model'''
-    collector = FilteredElementCollector(doc).OfClass(ImportInstance)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance)
     return collector
 
 # doc   current model document
 def GetCADTypeImportsOnly(doc):
     '''returns all CAD imports in a model'''
     cadImports = []
-    collector = FilteredElementCollector(doc).OfClass(CADLinkType)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType)
     for cad in collector:
         if(cad.IsExternalFileReference() == False):
             cadImports.append(cad)
@@ -134,7 +133,7 @@ def DeleteCADLinks(doc):
     '''deletes all CAD links in a file'''
     ids = []
     returnvalue = res.Result()
-    for p in FilteredElementCollector(doc).OfClass(ImportInstance):
+    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance):
         ids.append(p.Id)
     # delete all links at once
     returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
@@ -147,8 +146,8 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
     returnvalue = res.Result()
     try:
         # get all CAD link types in model
-        for p in FilteredElementCollector(doc).OfClass(CADLinkType):
-            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+        for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
+            linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.dwg')
@@ -162,7 +161,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
                         except Exception as e:
                             actionReturnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
                         return actionReturnValue
-                    transaction = Transaction(doc, 'Reloading: ' + linkTypeName)
+                    transaction = rdb.Transaction(doc, 'Reloading: ' + linkTypeName)
                     reloadResult = com.InTransaction(transaction, action)
                     returnvalue.Update(reloadResult)
                 else:
@@ -182,12 +181,12 @@ def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
     '''extract the path from CAD link type'''
     #default values
     modelPath = 'unknown'
-    for p in FilteredElementCollector(doc).OfClass(CADLinkType):
-        if (Element.Name.GetValue(p) == cadLinkName):
+    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
+        if (rdb.Element.Name.GetValue(p) == cadLinkName):
             try:
                 exFileRef = p.GetExternalFileReference()
                 if(exFileRef.IsValidExternalFileReference(exFileRef)):
-                    modelPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
+                    modelPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
                     modelPath = util.ConvertRelativePathToFullPath(modelPath, revitFilePath)
                 break
             except Exception as e:
@@ -203,13 +202,13 @@ def GetCADReportData(doc, revitFilePath):
     collector = GetAllCADLinkInstances(doc)
     for c in collector:
         # get the workset
-        wsParam = c.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsParam = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         # get the design option
-        doParam = c.get_Parameter(BuiltInParameter.DESIGN_OPTION_ID)
+        doParam = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
         # get the link name, link type name and shared coordinates (true or false)
-        lNameParam = c.get_Parameter(BuiltInParameter.IMPORT_SYMBOL_NAME)
+        lNameParam = c.get_Parameter(rdb.BuiltInParameter.IMPORT_SYMBOL_NAME)
         # get the draw layer
-        lDrawLayerParam = c.get_Parameter(BuiltInParameter.IMPORT_BACKGROUND)
+        lDrawLayerParam = c.get_Parameter(rdb.BuiltInParameter.IMPORT_BACKGROUND)
         # get shared location?
         # lSharedParam = cadLink.get_Parameter(BuiltInParameter.GEO_LOCATION)
         isViewSpecific= c.ViewSpecific
@@ -233,13 +232,13 @@ def GetCADReportData(doc, revitFilePath):
 # doc   current model document
 '''returns all Revit link instances in a model'''
 def GetAllRevitLinkInstances(doc):
-    collector = FilteredElementCollector(doc).OfClass(RevitLinkInstance)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance)
     return collector
 
 # doc   current model document
 def GetAllRevitLinkTypes(doc):
     '''returns all Revit link types in a model'''
-    collector = FilteredElementCollector(doc).OfClass(RevitLinkType)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType)
     return collector
 
 # doc               current model document
@@ -256,7 +255,7 @@ def DeleteRevitLinks(doc):
     '''deletes all revit links in a file'''
     ids = []
     returnvalue = res.Result()
-    for p in FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RvtLinks):
+    for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     # delete all links at once
     returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
@@ -270,13 +269,13 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
     returnvalue = res.Result()
     try:
         # get all revit link types in model
-        for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
-            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+        for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
+            linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
-                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
@@ -303,12 +302,12 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
     try:
         # loop over links supplied
         for p in linkTypesTobReloaded:
-            linkTypeName = doSomethingWithLinkName(Element.Name.GetValue(p))
+            linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
                 newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
-                    mp = ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
@@ -376,13 +375,13 @@ def GetRevitLinkTypeData(doc, revitLinkType):
     isFromLocalPath = revitLinkType.IsFromLocalPath()
     exFileRef = revitLinkType.GetExternalFileReference()
     # get the workset of the link type (this can bew different to the workset of the link instance)
-    wsparam = revitLinkType.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+    wsparam = revitLinkType.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     if(exFileRef.IsValidExternalFileReference(exFileRef)):
-        modelPath = ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
+        modelPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
         pathType = exFileRef.PathType.ToString()
 
     data=[
-        Element.Name.GetValue(revitLinkType),
+        rdb.Element.Name.GetValue(revitLinkType),
         str(isLoaded), 
         str(wsparam.AsValueString()), 
         str(isFromLocalPath), 
@@ -399,9 +398,9 @@ def GetRevitLinkReportData(doc, revitFilePath):
     collector = GetAllRevitLinkInstances(doc)
     for c in collector:
         # get the workset
-        wsparam = c.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsparam = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         # get the design option
-        doparam = c.get_Parameter(BuiltInParameter.DESIGN_OPTION_ID)
+        doparam = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
         # get whether link is shared or not (only works when link is loaded)
         if ('<Not Shared>' in c.Name):
             lS = False 
@@ -425,7 +424,7 @@ def GetRevitLinkReportData(doc, revitFilePath):
 # doc   current model document
 def GetImagesTypesInModel(doc):
     '''returns all image link types and image link instances in a model'''
-    collector = FilteredElementCollector(doc).OfClass(ImageType)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ImageType)
     return collector
 
 def GetImagesTypeIdsInModel(doc):
@@ -463,12 +462,12 @@ def GetAllImageLinkTypeImportedInModel(doc):
 # doc   current model document
 def GetImageTypeInModel(doc):
     '''returns all image types in a model'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RasterImages).WhereElementIsElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsElementType()
 
 # doc   current model document
 def GetImageInstancesInModel(doc):
     '''returns all images placed in a model'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_RasterImages).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllUnusedImagetypeIdsInModel(doc):

@@ -379,6 +379,7 @@ def SetUpNWCDefaultExportOptionSharedByView():
     :return: A navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     '''
+    
     return SetUpNWCCustomExportOption(True, False, False, True, True, False, False, False)
 
 def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
@@ -505,6 +506,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
         result.message will contain the exception message.
     :rtype: SampleCodeBatchProcessor.Result
     '''
+
     returnvalue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported

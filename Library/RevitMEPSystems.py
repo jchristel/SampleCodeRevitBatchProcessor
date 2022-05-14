@@ -34,10 +34,10 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, RoutingPreferenceRuleGroupType, ElementMulticategoryFilter, ElementId, FamilySymbol
-from Autodesk.Revit.DB.Mechanical import DuctType, FlexDuctType
-from Autodesk.Revit.DB.Electrical import ConduitType, CableTrayType
-from Autodesk.Revit.DB.Plumbing import PipeType
+import Autodesk.Revit.DB as rdb
+import Autodesk.Revit.DB.Mechanical as rdbm
+import Autodesk.Revit.DB.Electrical as rdbe
+import Autodesk.Revit.DB.Plumbing as rdbp
 
 
 clr.ImportExtensions(System.Linq)
@@ -112,57 +112,57 @@ def MergeIntoUniquList(listSource, listMerge):
 # doc:   current model document
 def GetAllDuctTypesByCategory(doc):
     ''' this will return a filtered element collector of all duct types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DuctCurves).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_DuctCurves).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetDuctTypesByClass(doc):
     ''' this will return a filtered element collector of all duct types in the model'''
-    return  FilteredElementCollector(doc).OfClass(DuctType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbm.DuctType)
 
 # doc:   current model document
 def GetAllFlexDuctTypesByCategory(doc):
     ''' this will return a filtered element collector of all flex duct types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_FlexDuctCurves).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_FlexDuctCurves).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetFlexDuctTypesByClass(doc):
     ''' this will return a filtered element collector of all flex duct types in the model'''
-    return  FilteredElementCollector(doc).OfClass(FlexDuctType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbm.FlexDuctType)
 
 # doc:   current model document
 def GetAllConduitTypesByCategory(doc):
     ''' this will return a filtered element collector of all conduit types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Conduit).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Conduit).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetConduitTypesByClass(doc):
     ''' this will return a filtered element collector of all conduit types in the model'''
-    return  FilteredElementCollector(doc).OfClass(ConduitType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.ConduitType)
 
 # doc:   current model document
 def GetAllCableTrayTypesByCategory(doc):
     ''' this will return a filtered element collector of all cable tray types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CableTray).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_CableTray).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetCableTrayTypesByClass(doc):
     ''' this will return a filtered element collector of all cable tray types in the model'''
-    return  FilteredElementCollector(doc).OfClass(CableTrayType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.CableTrayType)
 
 # doc:   current model document
 def GetAllPipeTypesByCategory(doc):
     ''' this will return a filtered element collector of all pipe types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_PipeCurves).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_PipeCurves).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetPipeTypesByClass(doc):
     ''' this will return a filtered element collector of all pipe types in the model'''
-    return  FilteredElementCollector(doc).OfClass(PipeType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbp.PipeType)
 
 # -------------------------------- none in place instances -------------------------------------------------------
 
@@ -171,55 +171,55 @@ def GetPipeTypesByClass(doc):
 # doc   current model document
 def GetAllDuctInstancesInModelByCategory(doc):
     ''' returns all Duct elements placed in model by category...'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_DuctCurves).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_DuctCurves).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllDuctInstancesInModelByClass(doc):
     ''' returns all duct elements placed in model by class...ignores in place'''
-    return FilteredElementCollector(doc).OfClass(DuctType).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbm.DuctType).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllFlexDuctInstancesInModelByCategory(doc):
     ''' returns all flex flex Duct elements placed in model by category...'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_FlexDuctCurves).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_FlexDuctCurves).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllFlexDuctInstancesInModelByClass(doc):
     ''' returns all flex duct elements placed in model by class...ignores in place'''
-    return FilteredElementCollector(doc).OfClass(FlexDuctType).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbm.FlexDuctType).WhereElementIsNotElementType()
 
 # doc:   current model document
 def GetAllConduitInstancesByCategory(doc):
     ''' this will return a filtered element collector of all conduit instances in the model by category'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Conduit).WhereElementIsNotElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Conduit).WhereElementIsNotElementType()
     return collector
 
 # doc   current model document
 def GetConduitInstancesByClass(doc):
     ''' this will return a filtered element collector of all conduit instances in the model by class'''
-    return  FilteredElementCollector(doc).OfClass(ConduitType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.ConduitType).WhereElementIsNotElementType()
 
 # doc:   current model document
 def GetAllCableTrayInstancesByCategory(doc):
     ''' this will return a filtered element collector of all cable tray instances in the model by category'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_CableTray).WhereElementIsNotElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_CableTray).WhereElementIsNotElementType()
     return collector
 
 # doc   current model document
 def GetCableTrayInstancesByClass(doc):
     ''' this will return a filtered element collector of all cable tray instances in the model by class'''
-    return  FilteredElementCollector(doc).OfClass(CableTrayType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.CableTrayType).WhereElementIsNotElementType()
 
 # doc:   current model document
 def GetAllPipeInstancesByCategory(doc):
     ''' this will return a filtered element collector of all pipe instances in the model by category'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_PipeCurves).WhereElementIsNotElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_PipeCurves).WhereElementIsNotElementType()
     return collector
 
 # doc   current model document
 def GetPipeInstancesByClass(doc):
     ''' this will return a filtered element collector of all pipe instances in the model by class'''
-    return  FilteredElementCollector(doc).OfClass(PipeType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbp.PipeType).WhereElementIsNotElementType()
 
 # -------------------------------- MEP system types -------------------------------------------------------
 
@@ -468,40 +468,40 @@ Transition
 Union
 '''
 # loadable family categories for duct related elements
-CATS_LOADABLE_DUCSTS = List[BuiltInCategory] ([
-    BuiltInCategory.OST_DuctAccessory,
-    BuiltInCategory.OST_DuctTerminal,
-    BuiltInCategory.OST_DuctFitting
+CATS_LOADABLE_DUCSTS = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_DuctAccessory,
+    rdb.BuiltInCategory.OST_DuctTerminal,
+    rdb.BuiltInCategory.OST_DuctFitting
 ])
 
 # loadable family categories for cable tray related elements
-CATS_LOADABLE_CABLETRAYS = List[BuiltInCategory] ([
-    BuiltInCategory.OST_CableTrayFitting
+CATS_LOADABLE_CABLETRAYS = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_CableTrayFitting
 ])
 
 # loadable family categories for conduit related elements
-CATS_LOADABLE_CONDUITS = List[BuiltInCategory] ([
-    BuiltInCategory.OST_ConduitFitting
+CATS_LOADABLE_CONDUITS = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_ConduitFitting
 ])
 
 # loadable family categories for pipe related elements
-CATS_LOADABLE_PIPES = List[BuiltInCategory] ([
-    BuiltInCategory.OST_PipeAccessory,
-    BuiltInCategory.OST_PipeFitting
+CATS_LOADABLE_PIPES = List[rdb.BuiltInCategory] ([
+    rdb.BuiltInCategory.OST_PipeAccessory,
+    rdb.BuiltInCategory.OST_PipeFitting
 ])
 
 ROUTING_PREF_RULE_GROUP_TYPES = [
-  RoutingPreferenceRuleGroupType.Segments,
-  RoutingPreferenceRuleGroupType.Elbows,
-  RoutingPreferenceRuleGroupType.Junctions,
-  RoutingPreferenceRuleGroupType.Crosses,
-  RoutingPreferenceRuleGroupType.Transitions,
-  RoutingPreferenceRuleGroupType.Unions,
-  RoutingPreferenceRuleGroupType.MechanicalJoints,
-  RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,
-  RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,
-  RoutingPreferenceRuleGroupType.TransitionsOvalToRound,
-  RoutingPreferenceRuleGroupType.Caps
+  rdb.RoutingPreferenceRuleGroupType.Segments,
+  rdb.RoutingPreferenceRuleGroupType.Elbows,
+  rdb.RoutingPreferenceRuleGroupType.Junctions,
+  rdb.RoutingPreferenceRuleGroupType.Crosses,
+  rdb.RoutingPreferenceRuleGroupType.Transitions,
+  rdb.RoutingPreferenceRuleGroupType.Unions,
+  rdb.RoutingPreferenceRuleGroupType.MechanicalJoints,
+  rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,
+  rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,
+  rdb.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,
+  rdb.RoutingPreferenceRuleGroupType.Caps
 ]
 
 # doc   current document
@@ -522,7 +522,7 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
         unfilteredElements = [el.Cross, el.Elbow, el.MultiShapeTransition, el.Tap, el.Tee, el.Transition, el.Union]
         for unfilteredel in unfilteredElements:
             if (unfilteredel != None):
-                if (unfilteredel.Id != ElementId.InvalidElementId and unfilteredel.Id not in ids):
+                if (unfilteredel.Id != rdb.ElementId.InvalidElementId and unfilteredel.Id not in ids):
                     ids.append(unfilteredel.Id)
         #check if there is a RoutingPreferenceManager object...it may have some more symbols in its rules
         if(el.RoutingPreferenceManager != None):
@@ -611,8 +611,8 @@ def GetSymbolIdsForMEPSystemTypes(doc, catgeoryList, systemTypeName):
     '''returns list of symbol ids used in system types'''
     ids = []
     try:
-        multiCatFilter = ElementMulticategoryFilter(catgeoryList)
-        col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(multiCatFilter)
+        multiCatFilter = rdb.ElementMulticategoryFilter(catgeoryList)
+        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
         ids = com.GetIdsFromElementCollector (col)
     except Exception as ex:
         print (systemTypeName+ ' threw exception: ' + str(ex))

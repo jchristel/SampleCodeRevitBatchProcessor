@@ -32,6 +32,12 @@ import DataDesignSetOption
 class DataRoom():
     dataType = 'room'
     def __init__(self, j = {}):
+        '''
+        _summary_
+
+        :param j: _description_, defaults to {}
+        :type j: dict, optional
+        '''
         self.dataType = 'room'
         self.id = -1
         self.name = '-'

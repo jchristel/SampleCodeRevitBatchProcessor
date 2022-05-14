@@ -33,7 +33,7 @@ import Result as res
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, Material, Element
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -46,7 +46,7 @@ REPORT_MATERIALS_HEADER = ['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'P
 # returns all materials in a model
 # doc:   current model document
 def GetAllMaterials(doc):  
-    collector = FilteredElementCollector(doc).OfClass(Material)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Material)
     return collector
 
 # returns a material element based on a material id
@@ -66,7 +66,7 @@ def GetMaterialNameById(doc, id):
     mats = GetAllMaterials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
-            mName = Element.Name.GetValue(m)
+            mName = rdb.Element.Name.GetValue(m)
             name = '' if mName == None else mName
     return name
 # ------------------------------------------------------- Material reporting --------------------------------------------------------------------
@@ -86,7 +86,7 @@ def GetMaterialReportData(doc, revitFilePath):
                 data.append(
                     [revitFilePath,
                     str(mat.Id),
-                    util.EncodeAscii(Element.Name.GetValue(mat)),
+                    util.EncodeAscii(rdb.Element.Name.GetValue(mat)),
                     util.EncodeAscii(paraName),
                     util.EncodeAscii(pValue)]
                 )                  
@@ -94,6 +94,6 @@ def GetMaterialReportData(doc, revitFilePath):
             data.append([
                 util.GetFileNameWithoutExt(revitFilePath), 
                 str(mat.Id),
-                util.EncodeAscii(Element.Name.GetValue(mat))
+                util.EncodeAscii(rdb.Element.Name.GetValue(mat))
             ])
     return data

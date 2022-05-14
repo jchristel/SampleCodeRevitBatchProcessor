@@ -27,14 +27,6 @@ This module contains a number of helper functions relating to Revit warnings.
 import clr
 import System
 
-# import common library modules
-import RevitCommonAPI as com
-import Result as res
-import Utility as util
-
-# import Autodesk
-from Autodesk.Revit.DB import *
-
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------

@@ -32,8 +32,8 @@ import RevitCommonAPI as com
 import RevitFamilyUtils as rFam
 
 # import Autodesk
-from Autodesk.Revit.DB import ElementId, BuiltInCategory, ElementMulticategoryFilter, FilteredElementCollector, FamilySymbol, FamilyInstance
-from Autodesk.Revit.DB.Architecture import Railing, RailingType
+import Autodesk.Revit.DB as rdb
+import Autodesk.Revit.DB.Architecture as rdba
 
 clr.ImportExtensions(System.Linq)
 
@@ -52,14 +52,14 @@ BUILTIN_RAILING_TYPE_FAMILY_NAMES = [
 ]
 
 # category filter for all element filters by category
-RAILING_CATEGORYFILTER = List[BuiltInCategory] ([
-        BuiltInCategory.OST_Railings,
-        BuiltInCategory.OST_RailingBalusterRail,
-        BuiltInCategory.OST_RailingHandRail,
-        BuiltInCategory.OST_RailingSupport,
-        BuiltInCategory.OST_RailingSystem,
-        BuiltInCategory.OST_RailingTermination,
-        BuiltInCategory.OST_RailingTopRail,
+RAILING_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+        rdb.BuiltInCategory.OST_Railings,
+        rdb.BuiltInCategory.OST_RailingBalusterRail,
+        rdb.BuiltInCategory.OST_RailingHandRail,
+        rdb.BuiltInCategory.OST_RailingSupport,
+        rdb.BuiltInCategory.OST_RailingSystem,
+        rdb.BuiltInCategory.OST_RailingTermination,
+        rdb.BuiltInCategory.OST_RailingTopRail,
     ])
 
 # --------------------------------------------- utility functions ------------------
@@ -73,8 +73,8 @@ def GetAllRailingTypesByCategory(doc):
     - In place families or loaded families
     it will therefore not return any Rail types ..
     '''
-    multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
@@ -85,11 +85,11 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
     - hand rail
     it will therefore not return any Rail types ..
     '''
-    multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
-    collector = FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     elements=[]
     for c in collector:
-        if(c.GetType() != FamilySymbol):
+        if(c.GetType() != rdb.FamilySymbol):
             elements.append(c)
     return elements
     
@@ -98,7 +98,7 @@ def GetRailingTypesByClass(doc):
     ''' this will return a filtered element collector of all Railing types in the model:
     - Railing
     it will therefore not return any top rail or hand rail or in place family types ...'''
-    return  FilteredElementCollector(doc).OfClass(RailingType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdba.RailingType)
 
 # collector   fltered element collector containing Railing type elments of family symbols representing in place families
 # dic         dictionary containing key: rail type family name, value: list of ids
@@ -128,13 +128,13 @@ def SortRailingTypesByFamilyName(doc):
 # doc   current model document
 def GetAllRailingInstancesInModelByCategory(doc):
     ''' returns all Railing elements placed in model...ignores in foundation slabs'''
-    multiCatFilter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
-    return FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
     
 # doc   current model document
 def GetAllRailingInstancesInModelByClass(doc):
     ''' returns all Railing elements placed in model...ignores in place'''
-    return FilteredElementCollector(doc).OfClass(Railing).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdba.Railing).WhereElementIsNotElementType()
 
 # doc   current model document
 def GetAllRailingTypeIdsInModelByCategory(doc):
@@ -212,8 +212,8 @@ def GetInPlaceRailingFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceRailingTypeIdsInModel(doc):
@@ -262,10 +262,10 @@ def GetBalustersUsedInPattern(bpattern):
     ids = []
     for i in range(0, bpattern.GetBalusterCount()):
         balInfo = bpattern.GetBaluster(i)
-        if(balInfo.BalusterFamilyId not in ids and balInfo.BalusterFamilyId != ElementId.InvalidElementId ):
+        if(balInfo.BalusterFamilyId not in ids and balInfo.BalusterFamilyId != rdb.ElementId.InvalidElementId ):
             ids.append(balInfo.BalusterFamilyId)
     # add excess pattern baluster id
-    if (bpattern.ExcessLengthFillBalusterId not in ids and bpattern.ExcessLengthFillBalusterId != ElementId.InvalidElementId):
+    if (bpattern.ExcessLengthFillBalusterId not in ids and bpattern.ExcessLengthFillBalusterId != rdb.ElementId.InvalidElementId):
         ids.append(bpattern.ExcessLengthFillBalusterId)
     return ids
 
@@ -278,13 +278,13 @@ def GetUsedBalusterPostIds(bPostPattern):
     '''
     ids = []
     # get corner post
-    if(bPostPattern.CornerPost.BalusterFamilyId != ElementId.InvalidElementId):
+    if(bPostPattern.CornerPost.BalusterFamilyId != rdb.ElementId.InvalidElementId):
         ids.append(bPostPattern.CornerPost.BalusterFamilyId)
     # get end post id
-    if(bPostPattern.EndPost.BalusterFamilyId != ElementId.InvalidElementId and bPostPattern.EndPost.BalusterFamilyId not in ids):
+    if(bPostPattern.EndPost.BalusterFamilyId != rdb.ElementId.InvalidElementId and bPostPattern.EndPost.BalusterFamilyId not in ids):
         ids.append(bPostPattern.EndPost.BalusterFamilyId)
     # get start post id
-    if(bPostPattern.StartPost.BalusterFamilyId != ElementId.InvalidElementId and bPostPattern.StartPost.BalusterFamilyId not in ids):
+    if(bPostPattern.StartPost.BalusterFamilyId != rdb.ElementId.InvalidElementId and bPostPattern.StartPost.BalusterFamilyId not in ids):
         ids.append(bPostPattern.StartPost.BalusterFamilyId)
     return ids
 
@@ -293,7 +293,7 @@ def GetUsedBalusterPerTread(bPlacement):
     ''' gets the id of the baluster per tread'''
     ids = []
     # get baluster per tread
-    if(bPlacement.BalusterPerTreadFamilyId != ElementId.InvalidElementId):
+    if(bPlacement.BalusterPerTreadFamilyId != rdb.ElementId.InvalidElementId):
         ids.append(bPlacement.BalusterPerTreadFamilyId)
     return ids
 
@@ -302,7 +302,7 @@ def GetUsedBalusterPerTread(bPlacement):
 # doc   current document
 def GetAllBalusterSymbols(doc):
     ''' returns all baluster symbols in project'''
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StairsRailingBaluster).WhereElementIsElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsRailingBaluster).WhereElementIsElementType()
     return col
 
  # doc   current document

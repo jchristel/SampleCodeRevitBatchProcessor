@@ -26,7 +26,7 @@ import Result as res
 
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 class RevitWarningsSolverDuplicateMark:
 
@@ -55,14 +55,14 @@ class RevitWarningsSolverDuplicateMark:
                     # check whether element passes filter
                     if(self.filter(doc, elid, self.filterValues)):
                         try:
-                            pValue = com.GetBuiltInParameterValue(element, BuiltInParameter.ALL_MODEL_MARK)
+                            pValue = com.GetBuiltInParameterValue(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
                             if (pValue != None):
-                                result = com.SetBuiltInParameterValue(doc, element, BuiltInParameter.ALL_MODEL_MARK, '')
+                                result = com.SetBuiltInParameterValue(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
                                 returnvalue.Update(result)
                         except Exception as e:
                             returnvalue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
                     else:
-                        returnvalue.UpdateSep(True,'Element removed by filter:' + self.filterName + ' : ' + Element.Name.GetValue(element))
+                        returnvalue.UpdateSep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
         else:
             returnvalue.UpdateSep(True,'No warnings of type: duplicate mark in model.')
         return returnvalue

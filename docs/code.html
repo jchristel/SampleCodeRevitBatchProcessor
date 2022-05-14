@@ -3090,37 +3090,106 @@ it will therefore not return any in place family types …</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.BuildGenericAnnotationTypesDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">BuildGenericAnnotationTypesDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.BuildGenericAnnotationTypesDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictionary passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Returns the dictionary passt in with keys and or values added retrieved from collector passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – Filtered element collector containing GenericAnnotation type elments of family symbols.</p></li>
+<li><p><strong>dic</strong> (<em>dic: key str</em><em>, </em><em>values list of Autodesk.Revit.DB.ElementId</em>) – Dictionary, the key is the family name and the value a list of element ids representing annotation types.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Passt in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic: key str, values list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetAllGenericAnnotationTypeIdsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllGenericAnnotationTypeIdsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetAllGenericAnnotationTypeIdsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all GenericAnnotation types (symbols) in the model excluding shared families</p>
+<dd><p>This will return a list of all GenericAnnotation types (symbols) id’s in the model excluding shared families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetAllGenericAnnotationTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllGenericAnnotationTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetAllGenericAnnotationTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all GenericAnnotation types in the model</p>
+<dd><p>This will return a filtered element collector of all GenericAnnotation types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetUnusedGenericAnnotationIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGenericAnnotationIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetUnusedGenericAnnotationIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns symbol(type) ids and family ids (when no type is in use) of in generic anno familis which can be purged</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetUnusedGenericAnnotationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGenericAnnotationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetUnusedGenericAnnotationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unsued annotation symbol ids ( unused in model as well as dimension types)</p>
+<dd><p>Returns all unsued annotation symbol ids ( unused in model as well as dimension types)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetUsedGenericAnnotationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedGenericAnnotationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetUsedGenericAnnotationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used generic annotation symbol ids ( used in model as well as dimension types)</p>
+<dd><p>Returns all used generic annotation symbol ids ( used in model as well as dimension types)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -5531,7 +5600,13 @@ it will therefore not return any in place wall types since revit treats those as
 <dl class="py class">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DataReadFromFile.</span></span><span class="sig-name descname"><span class="pre">ReadDataFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level">
 <span class="sig-name descname"><span class="pre">get_data_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns all data objects where level name equals passt in value</p>
@@ -5554,7 +5629,13 @@ it will therefore not return any in place wall types since revit treats those as
 <dl class="py class">
 <dt class="sig sig-object py" id="DataRoom.DataRoom">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DataRoom.</span></span><span class="sig-name descname"><span class="pre">DataRoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataRoom.DataRoom" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – _description_, defaults to {}</p>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="DataRoom.DataRoom.to_json">
 <span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataRoom.DataRoom.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert the instance of this class to json</p>
@@ -5801,6 +5882,62 @@ result.message will contain generic exception message.</p>
 </dd></dl>
 
 <span class="target" id="module-SystemProcess"></span><p>This module contains a number of helper functions relating to system processes.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="SystemProcess.FilterByProcessIds">
+<span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">FilterByProcessIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnMatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.FilterByProcessIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters a provided list of processes by process ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processIds</strong> (<em>_type_</em>) – List of ids to filter by</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes running</p></li>
+<li><p><strong>returnMatch</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true only matches will be returned, if false any non matches will be returned, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SystemProcess.FilterByProcessName">
+<span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">FilterByProcessName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnMatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.FilterByProcessName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters a provided list of processes by process name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processNames</strong> (<em>list of str</em>) – List of names to filter by</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes running.</p></li>
+<li><p><strong>returnMatch</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true only matches will be returned, if false any non matches will be returned, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SystemProcess.GetAllRunningProcesses">
+<span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">GetAllRunningProcesses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.GetAllRunningProcesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a list of all curently running processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

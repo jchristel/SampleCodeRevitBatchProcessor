@@ -28,11 +28,14 @@ import os, signal
 
 import Utility as util
 
-# return a list of lists of all processes running
-#[
-#    [HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]
-#]
 def GetAllRunningProcesses():
+    '''
+    Retrieves a list of all curently running processes.
+
+    :return: a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    :rtype: list of list 
+    '''
+
     # traverse the software list
     Data = subprocess.check_output(['wmic', 'process', 'list', 'brief'])
     a = str(Data)
@@ -67,11 +70,21 @@ def GetAllRunningProcesses():
         print ('Got all running processes')
     return processFiltered
 
-# filters a provided list of processes by process name
-# processNames  list of names to filter by
-# processList   list of processes running ([HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize])
-# returnMatch   if true only matches will be returned, if false any non matches will be returned
 def FilterByProcessName (processNames, processList, returnMatch = True):
+    '''
+    Filters a provided list of processes by process name
+
+    :param processNames: List of names to filter by
+    :type processNames: list of str
+    :param processList: List of processes running.
+    :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    :param returnMatch: If true only matches will be returned, if false any non matches will be returned, defaults to True
+    :type returnMatch: bool, optional
+    
+    :return: List of processes
+    :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    '''
+
     processFilteredByName = []
     for process in  processList:
         match = False
@@ -85,11 +98,24 @@ def FilterByProcessName (processNames, processList, returnMatch = True):
             processFilteredByName.append(process)
     return processFilteredByName
 
-# filters a provided list of processes by process ids
+# 
 # processIds    list of ids to filter by
 # processList   list of processes running ([HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize])
 # returnMatch   if true only matches will be returned, if false any non matches will be returned
 def FilterByProcessIds (processIds, processList, returnMatch = True):
+    '''
+    Filters a provided list of processes by process ids
+
+    :param processIds: List of ids to filter by
+    :type processIds: _type_
+    :param processList: List of processes running 
+    :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    :param returnMatch: If true only matches will be returned, if false any non matches will be returned, defaults to True
+    :type returnMatch: bool, optional
+    :return: List of processes
+    :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    '''
+    
     processFilteredByName = []
     for process in  processList:
         match = False

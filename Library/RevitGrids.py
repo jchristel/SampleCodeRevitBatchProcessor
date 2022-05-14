@@ -35,8 +35,7 @@ import Utility as util
 import RevitFamilyUtils as rFamU
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, Element, ElementId, Grid, ElementCategoryFilter, FamilySymbol,\
-    BuiltInParameter
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -49,13 +48,13 @@ REPORT_GRIDS_HEADER = ['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXT
 # doc:   current model document
 def GetAllGridHeadsByCategory(doc):
     ''' this will return a filtered element collector of all grid head types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
 def GetAllGridTypesByCategory(doc):
     ''' this will return a filtered element collector of all grid types in the model'''
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Grids).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Grids).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
@@ -76,7 +75,7 @@ def GetGridTypeNames (doc, g):
         gridData = []
         gtypeT = doc.GetElement(validGridTypeId)
         gridData.append(validGridTypeId)
-        gridData.append(Element.Name.GetValue(gtypeT))
+        gridData.append(rdb.Element.Name.GetValue(gtypeT))
         validGridTypes.append(gridData)
     return validGridTypes
 
@@ -86,20 +85,20 @@ def GetGridTypeNames (doc, g):
 def GetGridTypeName (doc, g):
     value = 'unknown'
     gtypeT = doc.GetElement(g.GetTypeId())
-    value = Element.Name.GetValue(gtypeT)
+    value = rdb.Element.Name.GetValue(gtypeT)
     return value
 
 # returns the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
 # doc: the current revit document
 # gridtypeName: a grid type name in the model
 def GetGridTypeIdByName (doc, gridtypeName):
-    id = ElementId.InvalidElementId
-    grids = FilteredElementCollector(doc).OfClass(Grid).ToList()
+    id = rdb.ElementId.InvalidElementId
+    grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).ToList()
     if(len(grids) > 0):
         g = grids[0]
         validgridTypeIds = g.GetValidTypes()
         for gridTypId in validgridTypeIds:
-            gtypeTName = Element.Name.GetValue(doc.GetElement(gridTypId))
+            gtypeTName = rdb.Element.Name.GetValue(doc.GetElement(gridTypId))
             if(gtypeTName ==  gridtypeName):
                 id = gridTypId
                 break
@@ -115,7 +114,7 @@ def FilterGridByParameterAndValue(g, paraName, paraCondition, conditionValue):
     # loop over parameters and compare value as required
     pValue = com.GetParameterValueByName(g, paraName)
     if (pValue != None):
-        ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
+        ruleMatch = com.CheckParameterValue(g, paraCondition, conditionValue)
     return ruleMatch
 
 # returns true if a given grid and its type match the condition supplied
@@ -137,7 +136,7 @@ def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
     ruleMatch = False
     pValue = com.GetParameterValueByName(g, paraName)
     if (pValue != None):
-        ruleMatch = com.CheckParameterValue(p, paraCondition, conditionValue)
+        ruleMatch = com.CheckParameterValue(g, paraCondition, conditionValue)
     return ruleMatch
 
 # returns the maximum extent of a grid as a string:
@@ -162,7 +161,7 @@ def GetMaxExtentAsString(g):
 #       ]
 def ModifyGridWorkSetsDefault (doc, worksetRules):
     gridsResults = res.Result()
-    collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
+    collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
     for rule in worksetRules:
         for defaultWorksetName in rule:
             grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
@@ -189,7 +188,7 @@ def ModifyGridWorkSetsByTypeName(doc, worksetRules):
     for defaultWorksetName, typeNameCondition, typeName,  in worksetRules:
         # get the grid type id from the type name
         typeId = GetGridTypeIdByName(doc, typeName)
-        collectorGrids = FilteredElementCollector(doc).OfClass(Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
+        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
         grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
@@ -211,7 +210,7 @@ def ModifyGridWorkSetsByParameterValue(doc, worksetRules):
     # loop over grid parameter filter and address one at the time
     # get all grids matching filter
     for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
-        collectorGrids = FilteredElementCollector(doc).OfClass(Grid).Where(lambda e: GridCheckParameterValue(e, paraName, paraCondition, conditionValue))
+        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: GridCheckParameterValue(e, paraName, paraCondition, conditionValue))
         grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
@@ -250,7 +249,7 @@ def ModifyGridsWorksets(doc, revitFileName, worksetRules):
 # revitFilePath: fully qualified file path of Revit file
 def GetGridReportData(doc, revitFilePath):
     data = []
-    for p in FilteredElementCollector(doc).OfClass(Grid):
+    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
         data.append([
             util.GetFileNameWithoutExt(revitFilePath), 
             str(p.Id.IntegerValue), 
@@ -270,8 +269,8 @@ def GetUnusedGridTypesForPurge(doc):
 def GetAllGridHeadFamilyTypeIds(doc):
     ''' this will return all ids grid head family types in the model'''
     ids = []
-    filter = ElementCategoryFilter(BuiltInCategory.OST_GridHeads)
-    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_GridHeads)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -282,7 +281,7 @@ def GetUnusedGridHeadFamilies(doc):
     headsInUseIds = []
     for Id in usedTypes:
         type = doc.GetElement(Id)
-        id = com.GetBuiltInParameterValue(type, BuiltInParameter.GRID_HEAD_TAG)
+        id = com.GetBuiltInParameterValue(type, rdb.BuiltInParameter.GRID_HEAD_TAG)
         if (id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     allSymbolsInModel = GetAllGridHeadsByCategory(doc)

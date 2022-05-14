@@ -32,7 +32,7 @@ import RevitCommonAPI as com
 import Result as res
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, ElementId, LinePatternElement, BuiltInCategory, FillPatternElement
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -40,23 +40,23 @@ clr.ImportExtensions(System.Linq)
 
 # deletes all line patterns where the names contains a provided string
 def DeleteLinePatternsContains(doc, contains):
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[ElementId]()
+    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
     result = com.DeleteByElementIds(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
     return result
 
 # deletes all line patterns where the name starts with provided string
 def DeleteLinePatternStartsWith(doc, startsWith):
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(startsWith)).ToList[ElementId]()
+    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
     result = com.DeleteByElementIds(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
     return result
 
 # deletes all line patterns where the name does not contain the provided string
 def DeleteLinePatternsWithout(doc, contains):
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps).ToList[ElementId]()
-    idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[ElementId]()
+    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
+    ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
+    idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
     deleteids = list(set(ids)-set(idsContain))
     result = com.DeleteByElementIds(doc,deleteids, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
@@ -64,14 +64,14 @@ def DeleteLinePatternsWithout(doc, contains):
 # return all line patterns in the model
 # doc:      curren document
 def GetAllLinePatterns(doc):
-    return FilteredElementCollector(doc).OfClass(LinePatternElement).ToList()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
 
 
 # doc     current model document
 def BuildPatternsDictionaryByName(doc):
     '''builds a dictionary wher line pattern name is key, values are all ids of line patterns with the exact same name'''
     lpDic = {}
-    lps = FilteredElementCollector(doc).OfClass(LinePatternElement)
+    lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
     for lp in lps:
         if(lpDic.has_key(lp.GetLinePattern().Name)):
             lpDic[lp.GetLinePattern().Name].append(lp.Id)
@@ -99,16 +99,16 @@ def DeleteDuplicatLinePatterNames(doc):
 
 # deletes all line styles where the name starts with provided string
 def DeleteLineStylesStartsWith(doc, startsWith):
-    lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[ElementId]()
+    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
+    ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
     result = com.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
     return result
 
 # return all line styles ids in the model
 # doc:      curren document
 def GetAllLineStyleIds(doc):
-    lc = doc.Settings.Categories[BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories).ToList[ElementId]()
+    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
+    ids = list(c.Id for c in lc.SubCategories).ToList[rdb.ElementId]()
     return ids
 
 # ------------------------------------------------ Fill Patterns ----------------------------------------------
@@ -116,4 +116,4 @@ def GetAllLineStyleIds(doc):
 # return all fill pattern ids in the model
 # doc:      curren document
 def GetAllFillPattern(doc):
-    return FilteredElementCollector(doc).OfClass(FillPatternElement).ToList()
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FillPatternElement).ToList()

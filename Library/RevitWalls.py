@@ -34,7 +34,7 @@ import RevitFamilyUtils as rFam
 import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import FilteredElementCollector, BuiltInCategory, WallType, ElementCategoryFilter, FamilyInstance, FamilySymbol, Element
+import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
 
@@ -57,14 +57,14 @@ BUILTIN_WALL_TYPE_FAMILY_NAMES = [
 # returns all wall types in a model
 # doc:   current model document
 def GetAllWallTypes(doc):  
-    collector = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsElementType()
+    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsElementType()
     return collector
 
 # doc   current model document
 def GetWallTypesByClass(doc):
     ''' this will return a filtered element collector of all wall types in the model
     it will therefore not return any in place wall types since revit treats those as Families...'''
-    return  FilteredElementCollector(doc).OfClass(WallType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
 
 # collector   fltered element collector containing walltype elments of family symbols representing in place families
 # dic         dictionary containing key: wall type family name, value: list of ids
@@ -96,16 +96,16 @@ def SortWallTypesByFamilyName(doc):
 # doc   current model document
 def GetAllStackedWallInstancesInModel(doc):
     ''' returns all stacked wall elements placed in model...ignores legend elements'''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsNotElementType()
 
 def GetAllStackedWallTypesInModel(doc):
     ''' returns all stacked wall element types used by instances placed in model '''
-    return FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
+    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
 
 def GetAllStackedWallTypeIdsInModel(doc):
     ''' returns all stacked wall element types available in model '''
     ids = []
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -133,15 +133,15 @@ def GetInPlaceWallFamilyInstances(doc):
     # BuiltInParameter.ELEM_FAMILY_PARAM
     # this is a faster filter in terms of performance then LINQ query refer to:
     # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
-    return FilteredElementCollector(doc).OfClass(FamilyInstance).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 # doc   current document
 def GetAllInPlaceWallTypeIdsInModel(doc):
     ''' returns type ids off all available in place families of category wall '''
     ids = []
-    filter = ElementCategoryFilter(BuiltInCategory.OST_Walls)
-    col = FilteredElementCollector(doc).OfClass(FamilySymbol).WherePasses(filter)
+    filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -179,7 +179,7 @@ def GetAllCurtainWallTypeIdsInModel(doc):
 def GetAllCurtainWallInstancesInModel(doc, availableIds):
     ''' returns all stacked wall elements placed in model...ignores legend elements'''
     instances = []
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
         if(c.GetTypeId() in availableIds):
             instances.append(c)
@@ -190,7 +190,7 @@ def GetAllCurtainWallInstancesInModel(doc, availableIds):
 def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
     ''' returns all stacked wall elements placed in model...ignores legend elements'''
     instances = []
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
         if(c.GetTypeId() in availableIds):
             instances.append(c.GetTypeId())
@@ -227,7 +227,7 @@ def GetAllBasicWallTypeIdsInModel(doc):
 def GetAllBasicWallInstancesInModel(doc, availableIds):
     ''' returns all basic wall elements placed in model...ignores legend elements'''
     instances = []
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
         if(c.GetTypeId() in availableIds):
             instances.append(c)
@@ -238,7 +238,7 @@ def GetAllBasicWallInstancesInModel(doc, availableIds):
 def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
     ''' returns all basic wall type elements used in model'''
     ids = []
-    col = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
+    col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
         if(c.GetTypeId() in availableIds):
             ids.append(c.GetTypeId())
@@ -271,7 +271,7 @@ def GetWallReportData(doc, revitFilePath):
     wallTypes = GetAllWallTypes(doc)
     for wt in wallTypes:
         try:
-            wallTypeName = str(Element.Name.GetValue(wt))
+            wallTypeName = str(rdb.Element.Name.GetValue(wt))
             cs = wt.GetCompoundStructure()
             if cs != None:
                 csls = cs.GetLayers()

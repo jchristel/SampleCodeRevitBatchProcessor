@@ -142,7 +142,7 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
         id = com.GetBuiltInParameterValue(repeatDetail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
-        if(id not in ids and id != rdb.ßElementId.InvalidElementId and id != None):
+        if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
 

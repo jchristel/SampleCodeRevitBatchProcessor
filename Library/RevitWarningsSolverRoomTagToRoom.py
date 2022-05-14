@@ -25,7 +25,7 @@ import Result as res
 import RevitRooms as rRoom
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 class RevitWarningsSolverRoomTagToRoom:
 

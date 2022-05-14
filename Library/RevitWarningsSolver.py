@@ -32,7 +32,7 @@ import RevitWarningsSolverRoomTagToRoom as rwsRoomTagToRoom
 import RevitWarningsSolverDuplicateMark as rwsDuplicateMark
 
 # import Autodesk
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 # a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
 class RevitWarningsSolver:

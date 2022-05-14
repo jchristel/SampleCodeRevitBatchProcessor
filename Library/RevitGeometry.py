@@ -25,7 +25,7 @@ This module contains a number of helper functions relating to Revit geometry ext
 #
 
 from collections import namedtuple
-from Autodesk.Revit.DB import UV, PlanarFace
+import Autodesk.Revit.DB as rdb
 
 import DataGeometry as dGeometry
 
@@ -86,7 +86,7 @@ def FlattenXYZPoint(point):
     flattens a XYZ pint to a UV by just omitting the Z value
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
     '''
-    return UV( point.X, point.Y )
+    return rdb.UV( point.X, point.Y )
 
 # polygon         list of Revit XYZ points
 def FlattenXYZPointList(polygon):
@@ -462,7 +462,7 @@ def GetUniqueHorizontalFaces(faces):
     facesHorizontal = []
     for f in faces:
         # non planar faces are ignored for the moment...
-        if(type(f) is PlanarFace):
+        if(type(f) is rdb.PlanarFace):
             if (f.FaceNormal.Z != 0.0):
                 facesHorizontal.append(f)
     

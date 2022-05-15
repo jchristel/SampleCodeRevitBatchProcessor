@@ -1,3 +1,6 @@
+'''
+This module contains a number of helper functions relating to Revit worksharing monitor process. 
+'''
 #
 #License:
 #
@@ -25,7 +28,7 @@ import Utility as util
 import Result as res
 
 ''' 
-process name of work sharing monitor
+Process name of work sharing monitor
 '''
 
 PROCESS_NAME_WSM = 'WorksharingMonitor.exe'
@@ -36,15 +39,33 @@ import SystemProcess as sp
 
 # --------------------------------- worksharing monitor specific ---------------------------------------
 
-# get all curently running wsm processes
 def GetWorkSharingMonitorProcesses():
+    '''
+    Get all curently running worksharing monitor processes
+
+    :return: _description_
+    :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    '''
     allProcesses = sp.GetAllRunningProcesses()
     wsmProcesses = sp.FilterByProcessName([PROCESS_NAME_WSM], allProcesses)
     return wsmProcesses
 
-# writes out all running worksharing monitor processes data to file
-# directorypath: directory where to write the file to
 def WriteOutWSMDataToFile(directoryPath):
+    '''
+    Writes out all running worksharing monitor processes data to file
+
+    :param directoryPath: The directory path to where the marker file is to be saved.
+    :type directoryPath: str
+    
+    :return:  Result class instance.
+        Export status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the fully qualified file path of the exported file.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     status = res.Result()
     processList = GetWorkSharingMonitorProcesses()
     statusWriteOut = sp.WriteOutProcessData(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILEEXTENSION)
@@ -54,8 +75,19 @@ def WriteOutWSMDataToFile(directoryPath):
         status.UpdateSep(False, 'Failed to write WSM process marker file to: ' + str(directoryPath))
     return status
 
-# deletes all WSM marker files in a directory
 def DeleteWSMDataFiles(directoryPath):
+    '''
+    Deletes all WSM marker files in a directory.
+
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION 
+
+    :param directoryPath: The directory path containing marker files to be deleted.
+    :type directoryPath: str
+
+    :return: True if all files where deleted successfullt, otherwise False.
+    :rtype: bool
+    '''
+
     status = True
     # get files in directory
     filesToDelete = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILEEXTENSION)
@@ -65,9 +97,19 @@ def DeleteWSMDataFiles(directoryPath):
             statusDelete = statusDelete and util.FileDelete(file)
     return status
 
-# reads in all worksharing monitor processes data from file in a given directory
-# directorypath: directory where to read the data from files
 def ReadWSMDataFromFile(directoryPath):
+    '''
+    Reads all worksharing monitor processes data from marker file(s) in a given directory
+    
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION 
+
+    :param directoryPath: The directory path to where marker files are to be read from.
+    :type directoryPath: str
+    
+    :return: list of list of str
+    :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    '''
+    
     processData = []
     files = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILEEXTENSION)
     if(len(files) > 0):
@@ -77,9 +119,17 @@ def ReadWSMDataFromFile(directoryPath):
                 processData = processData + rows
     return processData
 
-# returns WSM sessions filtered by provided list (not in list)
-# WSMsToKeep: list of worksharing monitor sessions to keep
 def GetWSMSessionsToDelete(WSMsToKeep):
+    '''
+    Returns Worksharing monitor process sessions filtered by provided list (not in list)
+
+    :param WSMsToKeep: List of worksharing monitor sessions to filter by. WSM included in this list will be removed from passt in list.
+    :type WSMsToKeep: List of list of str in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    
+    :return: Filtered list of list of str of worksahring monitor sessions 
+    :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    '''
+
     allRunningWSMProcesses = GetWorkSharingMonitorProcesses()
     if(len(WSMsToKeep) > 0):
         # get ids from list
@@ -91,10 +141,24 @@ def GetWSMSessionsToDelete(WSMsToKeep):
     else:
         return allRunningWSMProcesses
 
-# removes all wsm data marker files in a given directory
-# directoryPath     directory where WSM marker file(s) are stored. These files contain wsm processes already running
-#                   when batch processor started
 def CleanUpWSMDataFiles(directoryPath):
+    '''
+    Removes all wsm data marker files in a given directory.
+
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION.
+
+    :param directoryPath: The directory path containing the marker files to be deleted.
+    :type directoryPath: str
+    
+    :return:  Result class instance.
+        Delete status returned in result.status. False if an exception occured, otherwise True.
+        result.message will confirm succesfull deletion of all files.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     status = res.Result()
     # attempt to delete old marker files
     statusDelete = DeleteWSMDataFiles(directoryPath)
@@ -104,11 +168,26 @@ def CleanUpWSMDataFiles(directoryPath):
         status.UpdateSep(False,'Failed to delete WSM marker file(s)!')
     return status
 
-# kills all WM processes started by Revit during the run of Revit Batch Processor
-# directoryPath     directory where WSM marker file(s) are stored. These files contain wsm processes already running
-#                   when batch processor started
-# ignoreMarkerFiles if true all running WSM sessions will be killed 
 def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
+    '''
+    Kills all worksharing monitor processes currently active.
+
+    Unless merker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.
+
+    :param directoryPath: The directory path to where marker files are to be read from.
+    :type directoryPath: str
+    :param ignoreMarkerFiles: True no marker file data will be read and all WSM sessions running will be killed., defaults to False
+    :type ignoreMarkerFiles: bool, optional
+    
+    :return:  Result class instance.
+        Kill status returned in result.status. False if an exception occured, otherwise True.
+        result.message will confirm succesfull killing of all WSM processes.
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain the exception message.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     status = res.Result()
     try:
         wsmRunningPrior = []

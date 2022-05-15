@@ -23,20 +23,30 @@
 
 from System.Diagnostics import Stopwatch
 
+'''
+    time output formatting.
+'''
 # default 2 digit padding
 PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 # default 3 digit padding
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
 class TimerError(Exception):
-    '''A custom exception used to report errors in use of Timer class'''
+    '''
+    A custom exception used to report errors in use of Timer class
+    '''
 
 class Timer:
     def __init__(self):
         self._stopWatch = None
 
     def start(self):
-        '''Start a new timer'''
+        '''
+        Start a new timer
+
+        :raises TimerError: When timer is running already.
+        '''
+
         if self._stopWatch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
 
@@ -44,7 +54,15 @@ class Timer:
         self._stopWatch.Start()
 
     def stop(self):
-        '''Stop the timer, and report the elapsed time'''
+        '''
+        Stop the timer, and report the elapsed time.
+
+        :raises TimerError: When timer is not running yet.
+        :return: The elapsed time since the timer has started.
+        
+        :rtype: str
+        '''
+
         if self._stopWatch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stopWatch.Stop()

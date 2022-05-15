@@ -5938,6 +5938,394 @@ result.message will contain generic exception message.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="SystemProcess.KillProcesses">
+<span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">KillProcesses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.KillProcesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kills all processes in list provided</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes to be killed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all passt in processes have been killed, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="SystemProcess.WriteOutProcessData">
+<span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">WriteOutProcessData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.WriteOutProcessData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out process data to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes to be written to file.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved (excluding file extension).</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em>) – in format ‘.extension’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the process data was written to file without an exception, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="timer.Timer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">timer.</span></span><span class="sig-name descname"><span class="pre">Timer</span></span><a class="headerlink" href="#timer.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="timer.Timer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a new timer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#timer.TimerError" title="timer.TimerError"><strong>TimerError</strong></a> – When timer is running already.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="timer.Timer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the timer, and report the elapsed time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#timer.TimerError" title="timer.TimerError"><strong>TimerError</strong></a> – When timer is not running yet.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The elapsed time since the timer has started.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="timer.TimerError">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">timer.</span></span><span class="sig-name descname"><span class="pre">TimerError</span></span><a class="headerlink" href="#timer.TimerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>A custom exception used to report errors in use of Timer class</p>
+</dd></dl>
+
+<span class="target" id="module-Utility"></span><dl class="py function">
+<dt class="sig sig-object py" id="Utility.AppendToSingleFiles">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">AppendToSingleFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourceFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">appendFile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.AppendToSingleFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to append one file to another, assumes same number of headers)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.CombineFiles">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">CombineFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outPutFileName='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileGetter=&lt;function</span> <span class="pre">GetFilesSingleFolder&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.CombineFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>used to combine report files into one file (assumes all files have the same number of columns)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.CombineFilesHeaderIndependent">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">CombineFilesHeaderIndependent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outPutFileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.CombineFilesHeaderIndependent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to combine report files into one file, files may have different number / named columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folderPath</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>filePrefix</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘’</p></li>
+<li><p><strong>fileSuffix</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘’</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘.txt’</p></li>
+<li><p><strong>outPutFileName</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘result.txt’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.DirectoryDelete">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">DirectoryDelete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fullDirectoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.DirectoryDelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dletes a directory (even if it contains files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fullDirectoryPath</strong> (<em>str</em>) – Path to directory</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True directory deleted, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.DirectoryEmptyDelete">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">DirectoryEmptyDelete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fullDirectoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.DirectoryEmptyDelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an empty directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fullDirectoryPath</strong> (<em>str</em>) – Path to directory</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True directory deleted, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.FileExist">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FileExist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fullFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.FileExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a file exists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fullFilePath</strong> (<em>str</em>) – Fully qualified file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True file exists, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.FilesAsDictionary">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FilesAsDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubDirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.FilesAsDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
+- key file name without extension
+- values: list of directories where this file occures (based on file name only!)
+use case: check for duplicaes by file name only</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetChildDirectories">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetChildDirectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fullDirectoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetChildDirectories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the immediate subdirectories of directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fullDirectoryPath</strong> (<em>str</em>) – Path to directory</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>any sub directories, empty list if none exist</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetDateStamp">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetDateStamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetDateStamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted using passt in format string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em>) – The date stamp format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFileDateStamp">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFileDateStamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%y_%m_%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFileDateStamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted suitable for a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date stamp format, defaults to FILE_DATE_STAMP_YY_MM_DD</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFileSize">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFileSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFileSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the file size in given units (default is MB)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path</p></li>
+<li><p><strong>unit</strong> (<em>int</em>) – the file size unit, defaults to FILE_SIZE_IN_MB</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file size.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFiles">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of files from a given folder with a given file extension</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFilesFromDirectoryWalker">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFilesFromDirectoryWalker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFilesFromDirectoryWalker" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all files in directory and nested subdirectories where file name contains filter value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFilesFromDirectoryWalkerWithFilters">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFilesFromDirectoryWalkerWithFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFilesFromDirectoryWalkerWithFilters" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all files in directory and nested subdirectories where file name matches filters value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFilesFromDirectoryWalkerWithFiltersSimple">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFilesFromDirectoryWalkerWithFiltersSimple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFilesFromDirectoryWalkerWithFiltersSimple" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns all files in directory and nested subdirectories where file name matches filters value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFilesSingleFolder">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFilesSingleFolder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFilesSingleFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get files from a folder filtered by file prefix, file suffix, file extension</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folderPath</strong> (<em>str</em>) – Folder path from which to get files.</p></li>
+<li><p><strong>filePrefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>fileSuffix</strong> (<em>str</em>) – Filter: File name ends with this value</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this extension</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all the files matching the supplied filters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFilesWithFilter">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFilesWithFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFilesWithFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a list of files from a given folder with a given file extension and a file name filter</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFirstRowInFile">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFirstRowInFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFirstRowInFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first line of a text file and returns it as a single string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The first row of a text file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetFolderDateStamp">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFolderDateStamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%Y%m%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFolderDateStamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted suitable for a folder name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>datetime.now() string formatted using supplied format string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetLocalAppDataPath">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetLocalAppDataPath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetLocalAppDataPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>return directory path to local app data folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Path to local app data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.GetUniqueHeaders">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetUniqueHeaders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetUniqueHeaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a unique list of headers retrieved from text files
+assumes: 
+- first row is header row
+- headers are separated by &lt;tab&gt; character
+returns alphabeticaly sorted list of strings</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.ParsStringToBool">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">ParsStringToBool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.ParsStringToBool" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts a string lower case and then to bool. Will throw an exception if it fails to do so</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.ReadCSVfile">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">ReadCSVfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.ReadCSVfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>read a csv files into a list of rows</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.ReadTabSeparatedFile">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">ReadTabSeparatedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.ReadTabSeparatedFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>read a tab delimited files into a list of rows</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.RemoveItemsFromList">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">RemoveItemsFromList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourceList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removeIdsList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.RemoveItemsFromList" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper removes ids from a source list</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Utility.writeReportData">
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">writeReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.writeReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function writing out report information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – The report fully qualified file path.</p></li>
+<li><p><strong>header</strong> (<em>list of str</em>) – list of column headers</p></li>
+<li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>,</em><em>str</em><em>,</em><em>..</em><em>]</em><em>]</em>) – list of list of strings representing row data</p></li>
+<li><p><strong>writeType</strong> (<em>str</em><em>, </em><em>optional</em>) – Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

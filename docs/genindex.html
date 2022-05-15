@@ -78,6 +78,7 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
@@ -99,6 +100,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#Utility.AppendToSingleFiles">AppendToSingleFiles() (in module Utility)</a>
+</li>
       <li><a href="code.html#RevitGeometry.ArePointsIdentical">ArePointsIdentical() (in module RevitGeometry)</a>
 </li>
       <li><a href="code.html#RevitAnnotation.ARROWHEAD_PARAS_DIM">ARROWHEAD_PARAS_DIM (in module RevitAnnotation)</a>
@@ -184,15 +187,19 @@
 </li>
       <li><a href="code.html#RevitGeometry.CheckSolidIsZeroHeight">CheckSolidIsZeroHeight() (in module RevitGeometry)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitStairs.CheckSystemFamilies">CheckSystemFamilies() (in module RevitStairs)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitCommonAPI.CheckUniqueTypeData">CheckUniqueTypeData() (in module RevitCommonAPI)</a>
 </li>
       <li><a href="code.html#RevitCommonAPI.CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents">CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents() (in module RevitCommonAPI)</a>
 </li>
       <li><a href="code.html#RevitSharedParameters.CheckWhetherSharedParametersAreInFile">CheckWhetherSharedParametersAreInFile() (in module RevitSharedParameters)</a>
+</li>
+      <li><a href="code.html#Utility.CombineFiles">CombineFiles() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.CombineFilesHeaderIndependent">CombineFilesHeaderIndependent() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitGeometry.ConvertEdgeArraysIntoListOfPoints">ConvertEdgeArraysIntoListOfPoints() (in module RevitGeometry)</a>
 </li>
@@ -239,10 +246,10 @@
 </li>
       <li><a href="code.html#RevitCommonAPI.DeleteByElementIdsOneByOne">DeleteByElementIdsOneByOne() (in module RevitCommonAPI)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitLinks.DeleteCADLinks">DeleteCADLinks() (in module RevitLinks)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitLineStylesPatterns.DeleteDuplicatLinePatterNames">DeleteDuplicatLinePatterNames() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="code.html#RevitLinks.DeleteRevitLinks">DeleteRevitLinks() (in module RevitLinks)</a>
@@ -264,6 +271,10 @@
       <li><a href="code.html#RevitViewReferencing.Deprecated_GetAllReferenceViewTypeIdsByCategory">Deprecated_GetAllReferenceViewTypeIdsByCategory() (in module RevitViewReferencing)</a>
 </li>
       <li><a href="code.html#RevitViewReferencing.Deprecated_GetAllReferenceViewTypesByCategory">Deprecated_GetAllReferenceViewTypesByCategory() (in module RevitViewReferencing)</a>
+</li>
+      <li><a href="code.html#Utility.DirectoryDelete">DirectoryDelete() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.DirectoryEmptyDelete">DirectoryEmptyDelete() (in module Utility)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -321,6 +332,10 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#Utility.FileExist">FileExist() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.FilesAsDictionary">FilesAsDictionary() (in module Utility)</a>
+</li>
       <li><a href="code.html#SystemProcess.FilterByProcessIds">FilterByProcessIds() (in module SystemProcess)</a>
 </li>
       <li><a href="code.html#SystemProcess.FilterByProcessName">FilterByProcessName() (in module SystemProcess)</a>
@@ -709,6 +724,8 @@
 </li>
       <li><a href="code.html#RevitCeilings.GetCeilingTypesByClass">GetCeilingTypesByClass() (in module RevitCeilings)</a>
 </li>
+      <li><a href="code.html#Utility.GetChildDirectories">GetChildDirectories() (in module Utility)</a>
+</li>
       <li><a href="code.html#RevitMEPSystems.GetConduitInstancesByClass">GetConduitInstancesByClass() (in module RevitMEPSystems)</a>
 </li>
       <li><a href="code.html#RevitMEPSystems.GetConduitTypesByClass">GetConduitTypesByClass() (in module RevitMEPSystems)</a>
@@ -716,6 +733,8 @@
       <li><a href="code.html#RevitGeometry.GetCoordinateSystemTranslationAndRotation">GetCoordinateSystemTranslationAndRotation() (in module RevitGeometry)</a>
 </li>
       <li><a href="code.html#RevitCurtainWallElements.GetCurtainWallElementInstancesInModelByCategory">GetCurtainWallElementInstancesInModelByCategory() (in module RevitCurtainWallElements)</a>
+</li>
+      <li><a href="code.html#Utility.GetDateStamp">GetDateStamp() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitViews.GetDefaultViewTypeTemplateIds">GetDefaultViewTypeTemplateIds() (in module RevitViews)</a>
 </li>
@@ -765,15 +784,35 @@
 </li>
       <li><a href="code.html#RevitFamilyUtils.GetFamilySymbolsIds">GetFamilySymbolsIds() (in module RevitFamilyUtils)</a>
 </li>
+      <li><a href="code.html#Utility.GetFileDateStamp">GetFileDateStamp() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFiles">GetFiles() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFilesFromDirectoryWalker">GetFilesFromDirectoryWalker() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFilesFromDirectoryWalkerWithFilters">GetFilesFromDirectoryWalkerWithFilters() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFilesFromDirectoryWalkerWithFiltersSimple">GetFilesFromDirectoryWalkerWithFiltersSimple() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFileSize">GetFileSize() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFilesSingleFolder">GetFilesSingleFolder() (in module Utility)</a>
+</li>
+      <li><a href="code.html#Utility.GetFilesWithFilter">GetFilesWithFilter() (in module Utility)</a>
+</li>
       <li><a href="code.html#RevitViews.GetFilterIdsFromViewByFilter">GetFilterIdsFromViewByFilter() (in module RevitViews)</a>
 </li>
       <li><a href="code.html#RevitViews.GetFilterIdsFromViewsWithoutTemplate">GetFilterIdsFromViewsWithoutTemplate() (in module RevitViews)</a>
 </li>
       <li><a href="code.html#RevitViews.GetFiltersFromTemplates">GetFiltersFromTemplates() (in module RevitViews)</a>
 </li>
+      <li><a href="code.html#Utility.GetFirstRowInFile">GetFirstRowInFile() (in module Utility)</a>
+</li>
       <li><a href="code.html#RevitMEPSystems.GetFlexDuctTypesByClass">GetFlexDuctTypesByClass() (in module RevitMEPSystems)</a>
 </li>
       <li><a href="code.html#RevitFloors.GetFloorTypesByClass">GetFloorTypesByClass() (in module RevitFloors)</a>
+</li>
+      <li><a href="code.html#Utility.GetFolderDateStamp">GetFolderDateStamp() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitCommonAPI.GetIdsFromElementCollector">GetIdsFromElementCollector() (in module RevitCommonAPI)</a>
 </li>
@@ -785,6 +824,8 @@
 </li>
       <li><a href="code.html#RevitLinks.GetImageTypeInModel">GetImageTypeInModel() (in module RevitLinks)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitAnnotation.GetIndependentTagTypeArrowHeadIds">GetIndependentTagTypeArrowHeadIds() (in module RevitAnnotation)</a>
 </li>
       <li><a href="code.html#DataShapely.GetInnerLoopsAsShape">GetInnerLoopsAsShape() (in module DataShapely)</a>
@@ -795,8 +836,6 @@
 </li>
       <li><a href="code.html#RevitRailings.GetInPlaceRailingFamilyInstances">GetInPlaceRailingFamilyInstances() (in module RevitRailings)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitRoofs.GetInPlaceRoofFamilyInstances">GetInPlaceRoofFamilyInstances() (in module RevitRoofs)</a>
 </li>
       <li><a href="code.html#RevitStairs.GetInPlaceStairFamilyInstances">GetInPlaceStairFamilyInstances() (in module RevitStairs)</a>
@@ -808,6 +847,8 @@
       <li><a href="code.html#RevitLevels.GetLevelsListAscending">GetLevelsListAscending() (in module RevitLevels)</a>
 </li>
       <li><a href="code.html#RevitLinks.GetLinkPath">GetLinkPath() (in module RevitLinks)</a>
+</li>
+      <li><a href="code.html#Utility.GetLocalAppDataPath">GetLocalAppDataPath() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitGeometry.GetLowestZFromEdgesPointCollection">GetLowestZFromEdgesPointCollection() (in module RevitGeometry)</a>
 </li>
@@ -962,6 +1003,8 @@
       <li><a href="code.html#RevitAnnotation.GetTextTypeArrowHeadIds">GetTextTypeArrowHeadIds() (in module RevitAnnotation)</a>
 </li>
       <li><a href="code.html#DataShapely.GetTranslationMatrix">GetTranslationMatrix() (in module DataShapely)</a>
+</li>
+      <li><a href="code.html#Utility.GetUniqueHeaders">GetUniqueHeaders() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitGeometry.GetUniqueHorizontalFaces">GetUniqueHorizontalFaces() (in module RevitGeometry)</a>
 </li>
@@ -1324,6 +1367,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#SystemProcess.KillProcesses">KillProcesses() (in module SystemProcess)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1437,6 +1488,8 @@
 </li>
         <li><a href="code.html#module-SystemProcess">SystemProcess</a>
 </li>
+        <li><a href="code.html#module-Utility">Utility</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1470,6 +1523,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitGeometry.PairFacesByArea">PairFacesByArea() (in module RevitGeometry)</a>
 </li>
+      <li><a href="code.html#Utility.ParsStringToBool">ParsStringToBool() (in module Utility)</a>
+</li>
       <li><a href="code.html#RevitCeilings.PopulateDataCeilingObject">PopulateDataCeilingObject() (in module RevitCeilings)</a>
 </li>
   </ul></td>
@@ -1486,9 +1541,13 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#Utility.ReadCSVfile">ReadCSVfile() (in module Utility)</a>
+</li>
       <li><a href="code.html#DataShapely.ReadData">ReadData() (in module DataShapely)</a>
 </li>
       <li><a href="code.html#DataReadFromFile.ReadDataFromFile">ReadDataFromFile (class in DataReadFromFile)</a>
+</li>
+      <li><a href="code.html#Utility.ReadTabSeparatedFile">ReadTabSeparatedFile() (in module Utility)</a>
 </li>
       <li><a href="code.html#RevitFamilyReload.ReloadAllFamilies">ReloadAllFamilies() (in module RevitFamilyReload)</a>
 </li>
@@ -1497,6 +1556,8 @@
       <li><a href="code.html#RevitLinks.ReloadRevitLinks">ReloadRevitLinks() (in module RevitLinks)</a>
 </li>
       <li><a href="code.html#RevitLinks.ReloadRevitLinksFromList">ReloadRevitLinksFromList() (in module RevitLinks)</a>
+</li>
+      <li><a href="code.html#Utility.RemoveItemsFromList">RemoveItemsFromList() (in module Utility)</a>
 </li>
       <li><a href="code.html#Result.Result">Result (class in Result)</a>
 </li>
@@ -1621,6 +1682,8 @@
         <li><a href="code.html#module-RevitGrids">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitGroups
 
@@ -1628,8 +1691,6 @@
         <li><a href="code.html#module-RevitGroups">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitLevels
 
@@ -1809,10 +1870,10 @@
 </li>
       <li><a href="code.html#RevitFamilyUtils.SetRefPlanesToNotAReference">SetRefPlanesToNotAReference() (in module RevitFamilyUtils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitFamilyUtils.SetSymbolicAndModelLinesToNotAReference">SetSymbolicAndModelLinesToNotAReference() (in module RevitFamilyUtils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitExport.SetUpIFCExportOption">SetUpIFCExportOption() (in module RevitExport)</a>
 </li>
       <li><a href="code.html#RevitExport.SetUpNWCCustomExportOption">SetUpNWCCustomExportOption() (in module RevitExport)</a>
@@ -1836,6 +1897,10 @@
 </li>
       <li><a href="code.html#RevitWalls.SortWallTypesByFamilyName">SortWallTypesByFamilyName() (in module RevitWalls)</a>
 </li>
+      <li><a href="code.html#timer.Timer.start">start() (timer.Timer method)</a>
+</li>
+      <li><a href="code.html#timer.Timer.stop">stop() (timer.Timer method)</a>
+</li>
       <li><a href="code.html#RevitCommonAPI.SyncFile">SyncFile() (in module RevitCommonAPI)</a>
 </li>
       <li>
@@ -1851,6 +1916,10 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#timer.Timer">Timer (class in timer)</a>
+</li>
+      <li><a href="code.html#timer.TimerError">TimerError (class in timer)</a>
+</li>
       <li><a href="code.html#DataCeiling.DataCeiling.to_json">to_json() (DataCeiling.DataCeiling method)</a>
 
       <ul>
@@ -1871,20 +1940,33 @@
 </li>
       <li><a href="code.html#Result.Result.UpdateSep">UpdateSep() (Result.Result method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#Result.Result.UpdateStatus">UpdateStatus() (Result.Result method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitWorksets.UpdateWorksetDefaultVisibiltyFromReport">UpdateWorksetDefaultVisibiltyFromReport() (in module RevitWorksets)</a>
 </li>
+      <li>
+    Utility
+
+      <ul>
+        <li><a href="code.html#module-Utility">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#DataShapely.writeReportData">writeReportData() (in module DataShapely)</a>
+      <li><a href="code.html#SystemProcess.WriteOutProcessData">WriteOutProcessData() (in module SystemProcess)</a>
 </li>
+      <li><a href="code.html#DataShapely.writeReportData">writeReportData() (in module DataShapely)</a>
+
+      <ul>
+        <li><a href="code.html#Utility.writeReportData">(in module Utility)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitViews.WriteSheetData">WriteSheetData() (in module RevitViews)</a>

@@ -240,3 +240,12 @@ Misc modules and classes
     
 .. automodule:: SystemProcess
     :members:
+
+.. autoclass:: timer.Timer
+    :members:
+
+.. autoclass:: timer.TimerError
+    :members:
+
+.. automodule:: Utility
+    :members:

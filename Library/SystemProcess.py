@@ -62,7 +62,7 @@ def GetAllRunningProcesses():
                         processName = processName + ' ' + dummyList[i+1]
                     fixedProcessData = []
                     fixedProcessData.append(dummyList[0])
-                    fixedProcessData.append(processName)
+                    fixedProcessData.append(processName) 
                     for i in range(dif + 2, len(dummyList),1):
                         fixedProcessData.append(dummyList[i])
                     processFiltered.append(fixedProcessData)
@@ -98,10 +98,6 @@ def FilterByProcessName (processNames, processList, returnMatch = True):
             processFilteredByName.append(process)
     return processFilteredByName
 
-# 
-# processIds    list of ids to filter by
-# processList   list of processes running ([HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize])
-# returnMatch   if true only matches will be returned, if false any non matches will be returned
 def FilterByProcessIds (processIds, processList, returnMatch = True):
     '''
     Filters a provided list of processes by process ids
@@ -115,7 +111,7 @@ def FilterByProcessIds (processIds, processList, returnMatch = True):
     :return: List of processes
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
-    
+
     processFilteredByName = []
     for process in  processList:
         match = False
@@ -129,9 +125,17 @@ def FilterByProcessIds (processIds, processList, returnMatch = True):
             processFilteredByName.append(process)
     return processFilteredByName
 
-# kills all processes in list provided
-# processList   list of processes running ([HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize])
 def KillProcesses(processList):
+    '''
+    Kills all processes in list provided
+
+    :param processList: List of processes to be killed.
+    :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    
+    :return: True if all passt in processes have been killed, otherwise False.
+    :rtype: bool
+    '''
+
     status = True
     for process in  processList:
         try:
@@ -142,8 +146,23 @@ def KillProcesses(processList):
             print (e)
     return status
 
-# writes out process data to file
 def WriteOutProcessData(directoryPath, processList, fileName, fileExtension):
+    '''
+    Writes out process data to file
+
+    :param directoryPath: The directory path to where the export is being saved.
+    :type directoryPath: str
+    :param processList: List of processes to be written to file.
+    :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    :param fileName:  The file name under which the export is being saved (excluding file extension).
+    :type fileName: str
+    :param fileExtension: in format '.extension'
+    :type fileExtension: str
+
+    :return: True if the process data was written to file without an exception, otherwise False.
+    :rtype: bool
+    '''
+
     status = True
     # setup file name
     filePath = directoryPath + '\\' + util.GetFileDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension

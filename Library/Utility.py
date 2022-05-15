@@ -44,27 +44,61 @@ FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 # time stamp using colons
 TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
 
-# get the date stamp prefix of report files
 def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
+    '''
+    Returns a date stamp formatted suitable for a file name.
+
+    :param format: The date stamp format, defaults to FILE_DATE_STAMP_YY_MM_DD
+    :type format: str, optional
+    
+    :return: datetime.now() string formatted using supplied format string
+    :rtype: str
+    '''
+
     d = datetime.datetime.now()
     return d.strftime(format)
 
-# available fodler date formats
+# available folder date formats
 FOLDER_DATE_STAMP_YYMMDD = '%y%m%d'
 FOLDER_DATE_STAMP_YYYYMMDD = '%Y%m%d'
 
-# get the date stamp prefix of report files
 def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
+    '''
+    Returns a date stamp formatted suitable for a folder name.
+
+    :param format: The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD
+    :type format: str, optional
+    
+    :return: datetime.now() string formatted using supplied format string
+    :rtype: str
+    '''
+
     d = datetime.datetime.now()
     return d.strftime(format)
 
 # get the date stamp in provided format
 def GetDateStamp(format):
+    '''
+    Returns a date stamp formatted using passt in format string.
+
+    :param format: The date stamp format
+    :type format: str
+
+    :return: datetime.now() string formatted using supplied format string
+    :rtype: str
+    '''
+
     d = datetime.datetime.now()
     return d.strftime(format)
 
 def GetLocalAppDataPath():
-    '''return directory path to local app data folder'''
+    '''
+    return directory path to local app data folder
+
+    :return: Path to local app data
+    :rtype: str
+    '''
+
     return os.environ['LOCALAPPDATA']
 
 # ---------------------------------------------------------------------------------------------------------------------------------
@@ -74,7 +108,22 @@ def GetLocalAppDataPath():
 # fileSuffix        file name end on suffix
 # fileExtension     file extension in format '.ext'
 def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
-    '''Get files from a folder filtered by file prefix, file suffix, file extension '''
+    '''
+    Get files from a folder filtered by file prefix, file suffix, file extension
+
+    :param folderPath: Folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this extension
+    :type fileExtension: str, format '.extension'
+
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
     fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     return fileList
 
@@ -167,10 +216,24 @@ def AppendToSingleFiles(sourceFile, appendFile):
         flag = False
     return flag
 
-# used to combine report files into one file, files may have different number / named columns
+# 
 # files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
 # prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
+    '''
+    Used to combine report files into one file, files may have different number / named columns
+
+    :param folderPath: _description_
+    :type folderPath: _type_
+    :param filePrefix: _description_, defaults to ''
+    :type filePrefix: str, optional
+    :param fileSuffix: _description_, defaults to ''
+    :type fileSuffix: str, optional
+    :param fileExtension: _description_, defaults to '.txt'
+    :type fileExtension: str, optional
+    :param outPutFileName: _description_, defaults to 'result.txt'
+    :type outPutFileName: str, optional
+    '''
     file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     # build list of unique headers
     headers = GetUniqueHeaders(file_list)
@@ -250,8 +313,17 @@ def GetUniqueHeaders(files):
                 headersUnique.append(header)
     return sorted(headersUnique)
 
-# reads the first line of a text file and returns it as a single string
 def GetFirstRowInFile(filePath):
+    '''
+    Reads the first line of a text file and returns it as a single string
+
+    :param filePath: _description_
+    :type filePath: _type_
+
+    :return: The first row of a text file.
+    :rtype: str
+    '''
+
     row = ''
     try:
         with open(filePath) as f:
@@ -260,12 +332,25 @@ def GetFirstRowInFile(filePath):
         row = None
     return row
 
-# method writing out report information
+# 
 # fileName:         fully qualified file path
 # header:           list of column headers, provide empty list if not required!
-# data:             list of list of strings representing row data
+# data:             
 # writeType         w: new file, a: append to existing file...
 def writeReportData(fileName, header, data, writeType = 'w'):
+    '''
+    Function writing out report information.
+
+    :param fileName: The report fully qualified file path.
+    :type fileName: str
+    :param header: list of column headers
+    :type header: list of str
+    :param data: list of list of strings representing row data
+    :type data: [[str,str,..]]
+    :param writeType: Flag indicating whether existing report file is to be overwritten 'w' or appended to 'a', defaults to 'w'
+    :type writeType: str, optional
+    '''
+
     with codecs.open(fileName, writeType, encoding='utf-8') as f:
         # check if header is required
         if(len(header) > 0):
@@ -311,10 +396,22 @@ FILE_SIZE_IN_KB = 1024
 FILE_SIZE_IN_MB = 1024*1024
 FILE_SIZE_IN_GB = 1024*1024*1024
 
-# get the file size in given units (default is MB)
+# 
 # filePath  fully qualified file path
 # unit      unit of file size to be returned, default is MB
 def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
+    '''
+    Get the file size in given units (default is MB)
+
+    :param filePath: Fully qualified file path
+    :type filePath: str
+    :param unit: the file size unit, defaults to FILE_SIZE_IN_MB
+    :type unit: int
+
+    :return: The file size.
+    :rtype: float
+    '''
+
     # default value if anything goes wrong
     size = -1
     try:
@@ -327,15 +424,23 @@ def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# checks whether a file exists
 def FileExist(fullFilePath):
+    '''
+    Checks whether a file exists
+
+    :param fullFilePath: Fully qualified file path
+    :type fullFilePath: str
+    
+    :return: True file exists, otherwise False
+    :rtype: bool
+    '''
+
     try:
         value = os.path.exists(fullFilePath)
     except Exception:
         value = False
     return value
 
-# deletes file
 def FileDelete(fullFilePath):
     try:
         os.remove(fullFilePath)
@@ -344,8 +449,17 @@ def FileDelete(fullFilePath):
         value = False
     return value
 
-# deletes an empty directory
 def DirectoryEmptyDelete(fullDirectoryPath):
+    '''
+    Deletes an empty directory
+
+    :param fullDirectoryPath: Path to directory
+    :type fullDirectoryPath: str
+    
+    :return: True directory deleted, otherwise False
+    :rtype: bool
+    '''
+
     try:
         os.rmdir(fullDirectoryPath)
         value = True
@@ -353,8 +467,17 @@ def DirectoryEmptyDelete(fullDirectoryPath):
         value = False
     return value
 
-# deletes a directory (even if it contains files)
 def DirectoryDelete(fullDirectoryPath):
+    '''
+    Dletes a directory (even if it contains files)
+
+    :param fullDirectoryPath: Path to directory
+    :type fullDirectoryPath: str
+    
+    :return: True directory deleted, otherwise False
+    :rtype: bool
+    '''
+
     try:
         shutil.rmtree(fullDirectoryPath)
         value = True
@@ -363,8 +486,17 @@ def DirectoryDelete(fullDirectoryPath):
         value = False
     return value
 
-# returns the immediate subdirectories of directory
 def GetChildDirectories(fullDirectoryPath):
+    '''
+    Returns the immediate subdirectories of directory
+
+    :param fullDirectoryPath: Path to directory
+    :type fullDirectoryPath: str
+    
+    :return: any sub directories, empty list if none exist
+    :rtype: list of str
+    '''
+
     subfoldersWithPaths = []
     for root, dirs, files in os.walk(fullDirectoryPath):
         for dir in dirs:

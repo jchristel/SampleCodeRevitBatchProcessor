@@ -28,17 +28,34 @@ import csv
 import FileItem as fi
 import Utility as util
 
-
-# helper method retrieving files in a given directory and of a given file extension
-# filepathCSV           path to CSV to be read
-# extension             is empty place holder...this method is passt into another where it expects 2 arguments...
+        
 def getBIM360RevitFilesFromFileList(filepathCSV, extension):
+    '''
+    Method reading BIM360 file data from a CSV file.
+
+    :param filepathCSV: Fully quaslified file path to CSV to be read.
+    :type filepathCSV: str
+    :param extension: Is an empty place holder...this method is passt into another where it expects 2 arguments...
+    :type extension: TODO
+    :raise: On exception an empty list is returned.
+    
+    :return: List in format [Revit version, Project GUID, File GUID, file size in MB, file name]
+    :rtype: list of str
+    '''
+
     files = GetBIM360Data(filepathCSV)
     return files
 
-# entry point for processing a csv file containing BIM 360 data
-# filepathCSV       path to CSV to be read
 def GetBIM360Data(filepathCSV):
+    '''
+    Reads a csv file containing BIM 360 file data into list of FileItem instances.
+
+    :param filepathCSV: Fully quaslified file path to CSV to be read.
+    :type filepathCSV: str
+    :return: a list of FileItem instances representing BIM360 file data.
+    Will return an empty list of an exception occured.
+    :rtype: list of SampleCodeBatchProcessor.FileItem
+    '''
     revitfiles = []
     try:
         # read the CSV into rows
@@ -57,9 +74,17 @@ def GetBIM360Data(filepathCSV):
         revitfiles = []
     return revitfiles
 
-# reads a row from csv file into file item class object
-# returns None if row is not the right length
 def ProcessBIM360Row (rowData):
+    '''
+    Reads a list of str into file item class object
+
+    :param rowData: the list containing the file data
+    :type rowData: list of str in format [Revit version, Project GUID, File GUID, file size in MB, file name]
+    
+    :return: Initialised file item instance, None if row is not the right length
+    :rtype: SampleCodeBatchProcessor.FileItem
+    '''
+
     # check whether we have the right number of columns
     if(len(rowData) == 5):
         dummy = fi.MyFileItem(rowData[4], int(rowData[3]), rowData[1], rowData[2], rowData[0])

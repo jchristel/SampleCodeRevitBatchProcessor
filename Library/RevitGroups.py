@@ -36,14 +36,22 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTANCES']
 
 # --------------------------------------------- utility functions ------------------
 
 # doc   current document
 def GetModelGroups(doc):
-    '''returns a list of model groups from the model'''
+    '''
+    Get all model group types from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: list of model group types in the model
+    :rtype: list of Autodesk.Revit.DB.
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType().ToList()
 
 # doc   current document

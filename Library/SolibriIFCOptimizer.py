@@ -33,9 +33,8 @@ import Result as res
 import Utility as util
 
 
-'''
-default install path for solibri ifc optimizer
-'''
+
+#: default install path for solibri ifc optimizer
 solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe'
 
 def OptimizeAllIFCFilesinFolder(directoryPath):
@@ -80,6 +79,7 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
     :type ifcFiles: list of str
     :param directoryPath: Directory of where the optimized IFC file(s) are to be saved.
     :type directoryPath: str
+    
     :return: 
         Result class instance.
         Optimizer status returned in result.status. False if an exception occured, otherwise True.
@@ -103,9 +103,6 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
         returnvalue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
     return returnvalue
 
-# this will optimize all IFC files in a given list of fully qualified file path to ifc files
-# will delete the original files
-# rename the new (optimized) files so file name is the same as original file
 def ProcessIFCFiles(ifcFiles, directoryPath):
     '''
     This function will optimize all IFC files in a given list of fully qualified file path to ifc files.
@@ -116,6 +113,7 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
     :type ifcFiles: list of str
     :param directoryPath: Directory of where the optimized IFC file(s) are to be saved.
     :type directoryPath: str
+    
     :return: 
         Result class instance.
         Optimizer status returned in result.status. False if an exception occured, otherwise True.

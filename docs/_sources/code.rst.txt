@@ -190,13 +190,13 @@ Revit Warnings
 .. automodule:: RevitWarnings
     :members:
 
-.. automodule:: RevitWarningsSolver
+.. autoclass:: RevitWarningsSolver.RevitWarningsSolver
     :members:
 
-.. automodule:: RevitWarningsSolverDuplicateMark
+.. autoclass:: RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark
     :members:
 
-.. automodule:: RevitWarningsSolverRoomTagToRoom
+.. autoclass:: RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom
     :members:
 
 Revit Worksets

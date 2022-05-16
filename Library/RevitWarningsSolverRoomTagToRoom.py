@@ -1,3 +1,6 @@
+'''
+Room tag not in room warnings solver class.
+'''
 #
 #License:
 #
@@ -30,17 +33,31 @@ import Autodesk.Revit.DB as rdb
 class RevitWarningsSolverRoomTagToRoom:
 
     def __init__(self):
-        '''empty constructor this solver does not take any further arguments'''
+        '''
+        Empty constructor this solver does not take any further arguments.
+        '''
         self.filterName = 'Room tag outside of room.'
         pass
 
     # --------------------------- room tag not in room ---------------------------
+    #: guid identifying this specific warning
     GUID = '4f0bba25-e17f-480a-a763-d97d184be18a'
     
-    # doc       current drevit document
-    # warnings  list of warnings
     def SolveWarnings(self, doc, warnings):
-        '''solver moving room tags to room location point'''
+        '''
+        Solver moving room tags to room location point.
+
+        :param doc: Current Revit model document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param warnings: List of warnings to be solved.
+        :type warnings: Autodesk.Revit.DB.FailureMessage
+
+        :return: Result class instance.
+           .result = True if all room tags within warnings could be moved to room location point. Otherwise False.
+           .message will be 'moved tag to room xyz'
+        :rtype: SampleCodeBatchProcessor.Result
+        '''
+
         returnvalue = res.Result()
         if(len(warnings) > 0 ):
             for warning in warnings:

@@ -30,21 +30,37 @@ import System
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_WARNINGS_HEADER = ['HOSTFILE','ID', 'NAME', 'WARNING TYPE', 'NUMBER OF WARNINGS']
 
 # --------------------------------------------- utility functions ------------------
 
-
-# doc   current document
 def GetWarnings(doc):
-    '''returns a list of warnings from the model'''
+    '''
+    Returns a list of warnings from the model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of all failure messages in model.
+    :rtype: list of Autodesk.Revit.DB.FailureMessage
+    '''
+
     return doc.GetWarnings()
 
-# doc   current document
-# guid of failure definitions of which to return the warning of
 def GetWarningsByGuid(doc, guid):
-    '''returns al failur message objects where failure definition has matching GUID'''
+    '''
+    Returns all failure message objects where failure definition has matching GUID
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param guid: Filter: Identifying a specific failure of which the coresponding messages are to be returned.
+    :type guid: Autodesk.Revit.DB.Guid
+    
+    :return: list of all failure messages with matching guid
+    :rtype: list of Autodesk.Revit.DB.FailureMessage
+    '''
+
     filteredWarnings = []
     warnings = doc.GetWarnings()
     for warning in warnings:

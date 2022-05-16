@@ -35,15 +35,24 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_WORKSETS_HEADER = ['HOSTFILE','ID', 'NAME', 'ISVISIBLEBYDEFAULT']
 
 # --------------------------------------------- utility functions ------------------
 
-
-# returns the element id of a workset identified by its name
-# returns invalid Id (-1) if no such workset exists
 def GetWorksetIdByName(doc, worksetName):
+    '''
+    Returns the element id of a workset identified by its name, otherwise invalid Id (-1) if no such workset exists
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param worksetName: The name of the workset of which to retrieve the Element Id
+    :type worksetName: str
+    
+    :return: The worsket element id, otherwise invalid Id (-1) if no such workset exists
+    :rtype: Autodesk.Revit.DB.ElementId
+    '''
+
     id = rdb.ElementId.InvalidElementId
     for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
         if(p.Name == worksetName):
@@ -51,9 +60,19 @@ def GetWorksetIdByName(doc, worksetName):
             break
     return id
 
-# returns the name of the workset isnetified by Id
-# return 'unknown' if no matching workset was found
 def GetWorksetNameById(doc, idInteger):
+    '''
+    Returns the name of the workset identified by its Element Id, otherwise 'unkown' if no such workset exists
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param idInteger: The elemenet id as integer value.
+    :type idInteger: int
+    
+    :return: The name of the workset identified by its Id, otherwise 'unknown'
+    :rtype: str
+    '''
+
     name = 'unknown'
     for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
         if(p.Id.IntegerValue == idInteger):
@@ -61,32 +80,63 @@ def GetWorksetNameById(doc, idInteger):
             break
     return name
 
-# gets all ids of all user defined worksets in a model
-# doc:      current model document
 def GetWorksetIds(doc):
+    '''
+    Gets all ids of all user defined worksets in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of all user defined workset element ids
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     id = []
     for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
       id.append(p.Id)
     return id
 
-# get user defined worksets
-# doc:      current model document
 def GetWorksets(doc):
+    '''
+    Returns all user defined worksets in the model as list.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: _description_
+    :rtype: list of Autodesk.Revit.DB.Workset
+    '''
+
     worksets = rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset).ToList()
     return worksets
 
-# get user defined worksets as a collector
-# doc:      current model document
 def GetWorksetsFromCollector(doc):
+    '''
+    Returns all user defined worksets in the model as collector.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered elementc collector of user defined worksets
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset)
     return collector
 
-# this is based on a hack from the AutoDesk forum:
-# https://forums.autodesk.com/t5/revit-api-forum/open-closed-worksets-in-open-document/td-p/6238121
-# and an article from the building coder:
-# https://thebuildingcoder.typepad.com/blog/2018/03/switch-view-or-document-by-showing-elements.html
-# this method will open worksets in a model containing elements only
 def OpenWorksetsWithElementsHack(doc):
+    '''
+    This is based on a hack from the AutoDesk forum and an article from the building coder:
+
+    - https://forums.autodesk.com/t5/revit-api-forum/open-closed-worksets-in-open-document/td-p/6238121
+    - https://thebuildingcoder.typepad.com/blog/2018/03/switch-view-or-document-by-showing-elements.html
+
+    this method will open worksets in a model containing elements only
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    '''
+
     # get worksets in model
     worksetIds = GetWorksetIds(doc)
     # loop over workset and open if anythin is on them
@@ -97,8 +147,27 @@ def OpenWorksetsWithElementsHack(doc):
             # this will force Revit to open the workset containing this element
            rdb.uidoc.ShowElements(elemIds.First())
 
-# attemps to change the worksets of elements provided through an element collector
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
+    '''
+    Attemps to change the worksets of elements provided through an element collector.
+
+    Will return false if target workset does not exist in file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param defaultWorksetName: The name of the workset the elements are to be moved to.
+    :type defaultWorksetName: str
+    :param collector: The element collector containing the elements.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param elementTypeName: A description used in the status message returned.
+    :type elementTypeName: str
+    
+    :return: Result class instance.
+        .result = True if succsesfully moved all elements to new workset. Otherwise False.
+        .message will contain stats in format [success :: failure]
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
     # get the ID of the default grids workset
@@ -132,10 +201,16 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     returnvalue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
     return returnvalue
 
-# el            element
-# defaultId     workset id of the workset the element is to be moved to
 def GetActionChangeElementWorkset(el, defaultId):
-    '''returns the required action to change a single elements workset'''
+    '''
+    Contains the required action to change a single elements workset
+
+    :param el: The element
+    :type el: Autodesk.Revit.DB.Element
+    :param defaultId: The workset element Id
+    :type defaultId: Autodesk.Revit.DB.ElementId
+    '''
+
     def action():
         actionReturnValue = res.Result()
         try:
@@ -147,10 +222,21 @@ def GetActionChangeElementWorkset(el, defaultId):
         return actionReturnValue
     return action
 
-# el            element
-# worksetId     workset id to be checked against 
 def IsElementOnWorksetById(doc, el, worksetId):
-    '''checks whether an element is on a given workset'''
+    '''
+    Checks whether an element is on a given workset
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param el: The element.
+    :type el: Autodesk.Revit.DB.Element
+    :param worksetId: The workset element Id
+    :type worksetId: Autodesk.Revit.DB.ElementId
+    
+    :return: True if element is on given workset, otherwise False
+    :rtype: bool
+    '''
+
     flag = True
     try:
         wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
@@ -163,10 +249,19 @@ def IsElementOnWorksetById(doc, el, worksetId):
         flag = False
     return flag
 
-# el            element
-# worksetId     workset name to be checked against 
 def IsElementOnWorksetByName(el, worksetName):
-    '''checks whether an element is on a given workset'''
+    '''
+    Checks whether an element is on a workset identified by name
+
+    :param el: The element
+    :type el: Autodesk.Revit.DB.Element
+    :param worksetName: The name of the workset
+    :type worksetName: str
+
+    :return: True if element is on given workset, otherwise False
+    :rtype: bool
+    '''
+
     flag = True
     try:
         wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
@@ -178,10 +273,16 @@ def IsElementOnWorksetByName(el, worksetName):
         flag = False
     return flag
 
-# doc:      current model document
-# el            element
 def GetElementWorksetName(el):
-    '''returns the name of the workset an element is on, or invalid workset'''
+    '''
+    Returns the name of the workset an element is on, or 'invalid workset'.
+
+    :param el: The element.
+    :type el: Autodesk.Revit.DB.Element
+    :return: The name of the workset. If an exception occured it wil return 'invalid workset'.
+    :rtype: str
+    '''
+
     workSetname = 'invalid workset'
     try:
         wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
@@ -190,12 +291,34 @@ def GetElementWorksetName(el):
         print ("GetElementWorksetName: " + str(e))
     return workSetname
 
-# doc       current model
-# reportPath        fully qualified path to tab separated report text file same format
-#                   as this module GetWorksetReportData() method
-# revitFilePath     full revit file path
 def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
-    '''updates the default visbility of worksets based on a workset report file'''
+    '''
+    Updates the default visbility of worksets based on a workset report file.
+
+    The data for the report files is generated by GetWorksetReportData() function in this module
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param reportPath: The fully qualified file path to tab separated report text file containing workset data.
+    :type reportPath: str
+    :param revitFilePath: The fully qualified file path of the Revit file. Will be used to identify the file in the report data.
+    :type revitFilePath: str
+
+    :return: Result class instance.
+        .result = True if:
+
+        - succsesfully updated all workset default visibility where different to report
+        - or none needed updating. 
+        
+        Otherwise False:
+
+        - an excpetion occurred
+        - A workset has no matching data in the report.
+
+        .message will each workset and whether it needed updating or not
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     # read report
     worksetData = util.ReadTabSeparatedFile(reportPath)
@@ -233,10 +356,25 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
 
 # ------------------------------------------------------- workset reporting --------------------------------------------------------------------
 
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
+
 def GetWorksetReportData(doc, revitFilePath):
-    '''gets workset data ready for being printed to file'''
+    '''
+    Gets workset data ready for being written to file.
+
+    - HOSTFILE
+    - ID
+    - NAME
+    - ISVISIBLEBYDEFAULT
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The fully qualified file path of Revit file.
+    :type revitFilePath: str
+    
+    :return: The workset data in a nested list of string
+    :rtype: list of list of str
+    '''
+
     data = []
     worksets = GetWorksetsFromCollector(doc)
     for ws in worksets:

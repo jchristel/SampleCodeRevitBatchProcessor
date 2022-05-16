@@ -227,7 +227,7 @@ The following modules are classes used to store varies data retrieved from Revit
     :members:
     
 Misc modules and classes
-------------------------
+========================
 
 .. autoclass:: Result.Result
     :members:
@@ -237,15 +237,22 @@ Misc modules and classes
 
 .. automodule:: SolibriIFCOptimizer
     :members:
-    
+
+
 .. automodule:: SystemProcess
     :members:
+
+Timer
+-----
 
 .. autoclass:: timer.Timer
     :members:
 
 .. autoclass:: timer.TimerError
     :members:
+
+File system utilities
+---------------------
 
 .. automodule:: Utility
     :members:

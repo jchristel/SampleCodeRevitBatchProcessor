@@ -1,3 +1,6 @@
+'''
+Warnings solver utility class.
+'''
 #
 #License:
 #
@@ -37,26 +40,29 @@ import Autodesk.Revit.DB as rdb
 # a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
 class RevitWarningsSolver:
 
-    # --------------------------- available solvers ---------------------------
+    # --------------------------- available filters ---------------------------
 
-    # doc           current model object
-    # element       the elemet to be checked
     def DefaultFilterReturnAll(self, doc, elementId):
-        '''default filter for elements...returns True for any element passt in '''
+        '''
+        Default filter for elements passt into solver...returns True for any element passt in.
+
+        :param doc: Current Revit model document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param elementId: The id of the element to be checked.
+        :type elementId: Autodesk.Revit.DB.ElementId
+        
+        :return: True always.
+        :rtype: bool
+        '''
         return True
     
     # --------------------------- solvers initialise code ---------------------------
-    # named tuple format used in list
-    #Solver = namedtuple("Solver", "guid function")
-
-    # default solver classes
+    
+    #: default solver classes
     solveRoomTagToRoom = rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom()
     solverSameMark = rwsDuplicateMark.RevitWarningsSolverDuplicateMark(DefaultFilterReturnAll)
     
-    # solver tuple list of available warning solvers
-    #solverRoomTag = Solver(solveRoomTagToRoom.SOLVER_TAG_OUTSIDE_ROOM_GUID, rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom())
-    #solverDuplicateMark = Solver(SOLVER_ELEMENT_DUPLICATE_MARK_GUID, SolverElementDuplicateMark)
-
+    #: solver dictionary of available warning solvers by guid 
     AVAILABLE_SOLVERS = {
         solveRoomTagToRoom.GUID:solveRoomTagToRoom,
         solverSameMark.GUID:solverSameMark
@@ -65,19 +71,37 @@ class RevitWarningsSolver:
     # --------------------------- solvers code ---------------------------
 
     def __init__(self): 
+        '''
+        Constructor: assigns the default element filter (pass all) 
+        '''
         self.filterFuncSameMark = self.DefaultFilterReturnAll
     
-    # sameMarkFilterFunction        function to be used to filter elements
-    # sameMarkFilterValuee          list of filter values used by filter function
     def SetSameMarkFilterAndFilterSolver(self, sameMarkFilterSolver):
-        '''over rides default same mark filter class'''
+        '''
+        Method allowing to overide the default filter function
+
+        :param sameMarkFilterSolver: A function to filter elements in warnings by
+        :type sameMarkFilterSolver: func(document, elementId, list of filter values)
+        '''
+
         # replace the old solver
         self.AVAILABLE_SOLVERS[sameMarkFilterSolver.GUID] = sameMarkFilterSolver
         self.solverSameMark = sameMarkFilterSolver
 
-    # doc   current model object
     def SolveWarnings(self,doc):
-        '''attempts to solve some warning in a revit model'''
+        '''
+        Attempts to solve some warning in a revit model using available warnings solver.
+
+        It will get all warnings in model, filter them by available solver GUIDS and finally will attempt to solve the warnings matched up with a solver.
+
+        :param doc: Current Revit model document.
+        :type doc: Autodesk.Revit.DB.Document
+        :return: Result class instance.
+           .result = True if all warnings could be solved. Otherwise False.
+           .message will contain all messages solver returned.
+        :rtype: SampleCodeBatchProcessor.Result
+        '''
+
         returnvalue = res.Result()
         try:
             for solver in self.AVAILABLE_SOLVERS:

@@ -5567,9 +5567,151 @@ it will therefore not return any in place wall types since revit treats those as
 <dd><p>header used in reports</p>
 </dd></dl>
 
-<span class="target" id="module-RevitWarningsSolver"></span><p>Warnings solver utility class.</p>
-<span class="target" id="module-RevitWarningsSolverDuplicateMark"></span><p>Duplicate mark warnings solver class.</p>
-<span class="target" id="module-RevitWarningsSolverRoomTagToRoom"></span><p>Room tag not in room warnings solver class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitWarningsSolver.</span></span><span class="sig-name descname"><span class="pre">RevitWarningsSolver</span></span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor: assigns the default element filter (pass all)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.AVAILABLE_SOLVERS">
+<span class="sig-name descname"><span class="pre">AVAILABLE_SOLVERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'4f0bba25-e17f-480a-a763-d97d184be18a':</span> <span class="pre">&lt;RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom</span> <span class="pre">object&gt;,</span> <span class="pre">'6e1efefe-c8e0-483d-8482-150b9f1da21a':</span> <span class="pre">&lt;RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.AVAILABLE_SOLVERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>solver dictionary of available warning solvers by guid</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.DefaultFilterReturnAll">
+<span class="sig-name descname"><span class="pre">DefaultFilterReturnAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.DefaultFilterReturnAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default filter for elements passt into solver…returns True for any element passt in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True always.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.SetSameMarkFilterAndFilterSolver">
+<span class="sig-name descname"><span class="pre">SetSameMarkFilterAndFilterSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sameMarkFilterSolver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.SetSameMarkFilterAndFilterSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method allowing to overide the default filter function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sameMarkFilterSolver</strong> (<em>func</em><em>(</em><em>document</em><em>, </em><em>elementId</em><em>, </em><em>list of filter values</em><em>)</em>) – A function to filter elements in warnings by</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.SolveWarnings">
+<span class="sig-name descname"><span class="pre">SolveWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.SolveWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to solve some warning in a revit model using available warnings solver.</p>
+<p>It will get all warnings in model, filter them by available solver GUIDS and finally will attempt to solve the warnings matched up with a solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all warnings could be solved. Otherwise False.
+.message will contain all messages solver returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.solveRoomTagToRoom">
+<span class="sig-name descname"><span class="pre">solveRoomTagToRoom</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.solveRoomTagToRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>default solver classes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitWarningsSolverDuplicateMark.</span></span><span class="sig-name descname"><span class="pre">RevitWarningsSolverDuplicateMark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filterFunc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor: this solver takes two arguments: a filter function and a list of values to filter by</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filterFunc</strong> (<em>func</em><em>(</em><em>document</em><em>, </em><em>elementId</em><em>, </em><em>list of filter values</em><em>)</em>) – A function to filter elements in warnings by</p></li>
+<li><p><strong>filterValues</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of filter values, defaults to []</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.GUID">
+<span class="sig-name descname"><span class="pre">GUID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'6e1efefe-c8e0-483d-8482-150b9f1da21a'</span></em><a class="headerlink" href="#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.GUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>guid identifying this specific warning</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.SolveWarnings">
+<span class="sig-name descname"><span class="pre">SolveWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.SolveWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solver setting element mark to nothing, provided it passes the filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>warnings</strong> (<em>Autodesk.Revit.DB.FailureMessage</em>) – List of warnings to be solved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all duplicate mark warnings could be solved. Otherwise False.
+.message will contain stats in format parameter value set to ‘’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitWarningsSolverRoomTagToRoom.</span></span><span class="sig-name descname"><span class="pre">RevitWarningsSolverRoomTagToRoom</span></span><a class="headerlink" href="#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Empty constructor this solver does not take any further arguments.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.GUID">
+<span class="sig-name descname"><span class="pre">GUID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'4f0bba25-e17f-480a-a763-d97d184be18a'</span></em><a class="headerlink" href="#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.GUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>guid identifying this specific warning</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.SolveWarnings">
+<span class="sig-name descname"><span class="pre">SolveWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warnings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.SolveWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solver moving room tags to room location point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>warnings</strong> (<em>Autodesk.Revit.DB.FailureMessage</em>) – List of warnings to be solved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all room tags within warnings could be moved to room location point. Otherwise False.
+.message will be ‘moved tag to room xyz’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-RevitWorksets">
 <span id="revit-worksets"></span><h2>Revit Worksets<a class="headerlink" href="#module-RevitWorksets" title="Permalink to this headline">¶</a></h2>

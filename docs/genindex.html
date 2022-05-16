@@ -99,13 +99,15 @@
 </li>
       <li><a href="code.html#Result.Result.AppendMessage">AppendMessage() (Result.Result method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#Utility.AppendToSingleFiles">AppendToSingleFiles() (in module Utility)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitGeometry.ArePointsIdentical">ArePointsIdentical() (in module RevitGeometry)</a>
 </li>
       <li><a href="code.html#RevitAnnotation.ARROWHEAD_PARAS_DIM">ARROWHEAD_PARAS_DIM (in module RevitAnnotation)</a>
+</li>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver.AVAILABLE_SOLVERS">AVAILABLE_SOLVERS (RevitWarningsSolver.RevitWarningsSolver attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -257,6 +259,8 @@
       </ul></li>
       <li><a href="code.html#DataCeiling.DataCeiling.DataType">DataType (DataCeiling.DataCeiling property)</a>
 </li>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver.DefaultFilterReturnAll">DefaultFilterReturnAll() (RevitWarningsSolver.RevitWarningsSolver method)</a>
+</li>
       <li><a href="code.html#RevitLinks.DefaultLinkName">DefaultLinkName() (in module RevitLinks)</a>
 </li>
       <li><a href="code.html#RevitLinks.DefaultWorksetConfigForReload">DefaultWorksetConfigForReload() (in module RevitLinks)</a>
@@ -267,10 +271,10 @@
 </li>
       <li><a href="code.html#RevitCommonAPI.DeleteByElementIdsOneByOne">DeleteByElementIdsOneByOne() (in module RevitCommonAPI)</a>
 </li>
-      <li><a href="code.html#RevitLinks.DeleteCADLinks">DeleteCADLinks() (in module RevitLinks)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#RevitLinks.DeleteCADLinks">DeleteCADLinks() (in module RevitLinks)</a>
+</li>
       <li><a href="code.html#RevitLineStylesPatterns.DeleteDuplicatLinePatterNames">DeleteDuplicatLinePatterNames() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="code.html#RevitLinks.DeleteRevitLinks">DeleteRevitLinks() (in module RevitLinks)</a>
@@ -875,10 +879,10 @@
 </li>
       <li><a href="code.html#RevitAnnotation.GetIndependentTagTypeArrowHeadIds">GetIndependentTagTypeArrowHeadIds() (in module RevitAnnotation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#DataShapely.GetInnerLoopsAsShape">GetInnerLoopsAsShape() (in module DataShapely)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitCeilings.GetInPlaceCeilingFamilyInstances">GetInPlaceCeilingFamilyInstances() (in module RevitCeilings)</a>
 </li>
       <li><a href="code.html#RevitFloors.GetInPlaceFloorFamilyInstances">GetInPlaceFloorFamilyInstances() (in module RevitFloors)</a>
@@ -1357,6 +1361,12 @@
 </li>
       <li><a href="code.html#RevitWorksets.GetWorksetsFromCollector">GetWorksetsFromCollector() (in module RevitWorksets)</a>
 </li>
+      <li><a href="code.html#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.GUID">GUID (RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark attribute)</a>
+
+      <ul>
+        <li><a href="code.html#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.GUID">(RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1540,12 +1550,6 @@
         <li><a href="code.html#module-RevitWalls">RevitWalls</a>
 </li>
         <li><a href="code.html#module-RevitWarnings">RevitWarnings</a>
-</li>
-        <li><a href="code.html#module-RevitWarningsSolver">RevitWarningsSolver</a>
-</li>
-        <li><a href="code.html#module-RevitWarningsSolverDuplicateMark">RevitWarningsSolverDuplicateMark</a>
-</li>
-        <li><a href="code.html#module-RevitWarningsSolverRoomTagToRoom">RevitWarningsSolverRoomTagToRoom</a>
 </li>
         <li><a href="code.html#module-RevitWorksets">RevitWorksets</a>
 </li>
@@ -1749,6 +1753,8 @@
         <li><a href="code.html#module-RevitGenericAnnotation">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitGeometry
 
@@ -1756,8 +1762,6 @@
         <li><a href="code.html#module-RevitGeometry">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitGrids
 
@@ -1891,27 +1895,12 @@
         <li><a href="code.html#module-RevitWarnings">module</a>
 </li>
       </ul></li>
-      <li>
-    RevitWarningsSolver
-
-      <ul>
-        <li><a href="code.html#module-RevitWarningsSolver">module</a>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver">RevitWarningsSolver (class in RevitWarningsSolver)</a>
 </li>
-      </ul></li>
-      <li>
-    RevitWarningsSolverDuplicateMark
-
-      <ul>
-        <li><a href="code.html#module-RevitWarningsSolverDuplicateMark">module</a>
+      <li><a href="code.html#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark">RevitWarningsSolverDuplicateMark (class in RevitWarningsSolverDuplicateMark)</a>
 </li>
-      </ul></li>
-      <li>
-    RevitWarningsSolverRoomTagToRoom
-
-      <ul>
-        <li><a href="code.html#module-RevitWarningsSolverRoomTagToRoom">module</a>
+      <li><a href="code.html#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom">RevitWarningsSolverRoomTagToRoom (class in RevitWarningsSolverRoomTagToRoom)</a>
 </li>
-      </ul></li>
       <li>
     RevitWorksets
 
@@ -1951,14 +1940,16 @@
 </li>
       <li><a href="code.html#RevitFamilyUtils.SetRefPlanesToNotAReference">SetRefPlanesToNotAReference() (in module RevitFamilyUtils)</a>
 </li>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver.SetSameMarkFilterAndFilterSolver">SetSameMarkFilterAndFilterSolver() (RevitWarningsSolver.RevitWarningsSolver method)</a>
+</li>
       <li><a href="code.html#RevitFamilyUtils.SetSymbolicAndModelLinesToNotAReference">SetSymbolicAndModelLinesToNotAReference() (in module RevitFamilyUtils)</a>
 </li>
       <li><a href="code.html#RevitExport.SetUpIFCExportOption">SetUpIFCExportOption() (in module RevitExport)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitExport.SetUpNWCCustomExportOption">SetUpNWCCustomExportOption() (in module RevitExport)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="code.html#RevitExport.SetUpNWCDefaultExportOptionSharedByView">SetUpNWCDefaultExportOptionSharedByView() (in module RevitExport)</a>
 </li>
       <li>
@@ -1970,6 +1961,16 @@
       </ul></li>
       <li><a href="code.html#SolibriIFCOptimizer.solibriInstallPath_">solibriInstallPath_ (in module SolibriIFCOptimizer)</a>
 </li>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver.solveRoomTagToRoom">solveRoomTagToRoom (RevitWarningsSolver.RevitWarningsSolver attribute)</a>
+</li>
+      <li><a href="code.html#RevitWarningsSolver.RevitWarningsSolver.SolveWarnings">SolveWarnings() (RevitWarningsSolver.RevitWarningsSolver method)</a>
+
+      <ul>
+        <li><a href="code.html#RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark.SolveWarnings">(RevitWarningsSolverDuplicateMark.RevitWarningsSolverDuplicateMark method)</a>
+</li>
+        <li><a href="code.html#RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom.SolveWarnings">(RevitWarningsSolverRoomTagToRoom.RevitWarningsSolverRoomTagToRoom method)</a>
+</li>
+      </ul></li>
       <li><a href="code.html#RevitLinks.SortCADLinkTypesByModelOrViewSpecific">SortCADLinkTypesByModelOrViewSpecific() (in module RevitLinks)</a>
 </li>
       <li><a href="code.html#RevitCategories.SortElementsByCategory">SortElementsByCategory() (in module RevitCategories)</a>

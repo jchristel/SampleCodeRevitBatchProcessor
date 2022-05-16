@@ -1,3 +1,6 @@
+'''
+Duplicate mark warnings solver class.
+'''
 #
 #License:
 #
@@ -30,22 +33,39 @@ import Autodesk.Revit.DB as rdb
 
 class RevitWarningsSolverDuplicateMark:
 
-    # class constructor taking two args:
-    # filterFunc        a function to filter elements in warnings by
-    # filterValues      a list containing the filter values
     def __init__(self, filterFunc, filterValues = []):
-        '''constructor: this solver takes two arguments: a filter function and a list of values to filter by'''
+        '''
+        Constructor: this solver takes two arguments: a filter function and a list of values to filter by
+
+        :param filterFunc: A function to filter elements in warnings by
+        :type filterFunc: func(document, elementId, list of filter values)
+        :param filterValues: A list of filter values, defaults to []
+        :type filterValues: list, optional
+        '''
+
         self.filter = filterFunc
         self.filterValues = filterValues
         self.filterName = 'Duplicate mark value.'
 
-    # --------------------------- room tag not in room ---------------------------
+    # --------------------------- duplicate mark guid ---------------------------
+    #: guid identifying this specific warning
     GUID = '6e1efefe-c8e0-483d-8482-150b9f1da21a'
     
-    # doc       current drevit document
-    # warnings  list of warnings
     def SolveWarnings(self, doc, warnings):
-        '''solver setting element mark to nothing'''
+        '''
+        Solver setting element mark to nothing, provided it passes the filter.
+
+        :param doc: Current Revit model document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param warnings: List of warnings to be solved.
+        :type warnings: Autodesk.Revit.DB.FailureMessage
+
+        :return: Result class instance.
+           .result = True if all duplicate mark warnings could be solved. Otherwise False.
+           .message will contain stats in format parameter value set to ''
+        :rtype: SampleCodeBatchProcessor.Result
+        '''
+
         returnvalue = res.Result()
         if(len(warnings) > 0):
             for warning in warnings:

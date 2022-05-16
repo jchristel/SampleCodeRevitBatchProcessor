@@ -1,4 +1,12 @@
-﻿#
+﻿'''
+This module contains a number of helper functions relating to:
+
+- file system tasks (copy, create, delete...)
+- date stamps (with varies formatting options)
+- write data ( text files )
+
+'''
+#
 #License:
 #
 #
@@ -34,14 +42,18 @@ from os import path
 import codecs
 import csv
 
-# default file stamp date format
+#: default file stamp date format using uderscores as delimiter: 21_03_01
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
+#: file stamp date format using spaces as delimiter: 21 03 01
 FILE_DATE_STAMP_YYMMDD_SPACE = '%y %m %d'
+#: file stamp date format using spaces as delimiter: 2021 03 01
 FILE_DATE_STAMP_YYYYMMDD_SPACE = '%Y %m %d'
+#: file stamp date format using uderscores as delimiter: 2021_03_01
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
+#: file stamp date time format using uderscores as delimiter: 2021_03_01_18_59_59
 FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 
-# time stamp using colons
+#: time stamp using colons: 18:59:59
 TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
 
 def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
@@ -58,8 +70,9 @@ def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
     d = datetime.datetime.now()
     return d.strftime(format)
 
-# available folder date formats
+#: folder date format: no delimiter 210301
 FOLDER_DATE_STAMP_YYMMDD = '%y%m%d'
+#: folder date format: no delimiter 20210301
 FOLDER_DATE_STAMP_YYYYMMDD = '%Y%m%d'
 
 def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
@@ -101,23 +114,19 @@ def GetLocalAppDataPath():
 
     return os.environ['LOCALAPPDATA']
 
-# ---------------------------------------------------------------------------------------------------------------------------------
+#: ---------------------------------------------------------------------------------------------------------------------------------
 
-# folderPath        folder path from which to get files
-# filePrefix        file starts with this value
-# fileSuffix        file name end on suffix
-# fileExtension     file extension in format '.ext'
 def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
     '''
     Get files from a folder filtered by file prefix, file suffix, file extension
 
     :param folderPath: Folder path from which to get files.
     :type folderPath: str
-    :param filePrefix: Filter: File name starts with this value
+    :param filePrefix: Filter: File name starts with this value.
     :type filePrefix: str
-    :param fileSuffix: Filter: File name ends with this value
+    :param fileSuffix: Filter: File name ends with this value.
     :type fileSuffix: str
-    :param fileExtension: Filter: File needs to have this extension
+    :param fileExtension: Filter: File needs to have this file extension
     :type fileExtension: str, format '.extension'
 
     :return: A list of all the files matching the supplied filters.
@@ -127,12 +136,23 @@ def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
     fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     return fileList
 
-# folderPath      root directory to start fiel search in
-# filePrefix        file starts with this value
-# fileSuffix        file name end on suffix
-# fileExtension     file extension in format '.ext'
 def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
-    '''returns all files in directory and nested subdirectories where file name matches filters value'''
+    '''
+    Returns a list of all files in directory and nested sub directories where file name matches filters value.
+
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
     filesFound = []
     for root, dirs, files in os.walk(folderPath):
         for name in files:
@@ -141,24 +161,49 @@ def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, f
                 filesFound.append(root + '\\' + name)
     return filesFound
 
-# folderPath              root directory to start fiel search in
-# fileExtension     file must have this extension
 def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
-    '''returns all files in directory and nested subdirectories where file name matches filters value'''
+    '''
+    Returns a list of all files in directory and nested subdirectories where file name matches file extension filter value
+    
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
     filesFound = []
     filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
     return filesFound
 
-# folderPath        root directory to start fiel search in
-# filePrefix        file starts with this value
-# fileSuffix        file name end on suffix
-# fileExtension     file extension in format '.ext'
-# includeSubDirs    whether to include subdirectories in search
 def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
-    '''returns all files in directory and nested subdirectories where file name contains filter value as dictionary: 
+    '''
+    Returns a dictioanry of all files in directory and nested subdirectories where file name contains filter value. 
+    
     - key file name without extension
     - values: list of directories where this file occures (based on file name only!)
-    use case: check for duplicaes by file name only'''
+
+    Use case: check for duplicaes by file name only
+
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :param includeSubDirs: If True subdirectories will be included in search for files, defaults to False
+    :type includeSubDirs: bool, optional
+    
+    :return: A dictionary where the key is the file name without the file extension. Value is a list of fully qualified file path to instances of that file.
+    :rtype: dictionary
+        key: str
+        value: lit of str
+    '''
+
     filesFound = []
     # set up a dictionary
     fileDic = {}
@@ -179,10 +224,26 @@ def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, include
             fileDic[fileName] = [filePath]
     return fileDic
 
-# files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
-# prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
-    '''used to combine report files into one file (assumes all files have the same number of columns)'''
+    '''
+    Combines multiple text files into a single new file. Assumes same number of headers (columns) in each files.
+
+    The new file will be saved into the same folder as the original files.
+
+    :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :param outPutFileName: The file name of the combined file, defaults to 'result.txt'
+    :type outPutFileName: str, optional
+    :param fileGetter: Function returning list of files to be combined, defaults to GetFilesSingleFolder
+    :type fileGetter: func(folderPath, filePrefix, fileSuffix, fileExtension), optional
+    '''
+
     file_list = fileGetter (folderPath, filePrefix, fileSuffix, fileExtension)
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
@@ -199,10 +260,19 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
             
             fileCounter += 1
 
-# files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
-# prefix is usually the time stamp in format  '%y_%m_%d'
 def AppendToSingleFiles(sourceFile, appendFile):
-    '''used to append one file to another, assumes same number of headers)'''
+    '''
+    Appends one text file to another. Assumes same number of headers (columns) in both files.
+
+    :param sourceFile: The fully qualified file path of the file to which the other file will be appended.
+    :type sourceFile: str
+    :param appendFile: The fully qualified file path of the file to be appended.
+    :type appendFile: str
+
+    :return: If True file was appended without an exception, otherwise False.
+    :rtype: bool
+    '''
+
     flag = True
     try:
         # read file to append into memory...hopefully will never get in GB range in terms of file size
@@ -216,24 +286,24 @@ def AppendToSingleFiles(sourceFile, appendFile):
         flag = False
     return flag
 
-# 
-# files are combined based on this search pattern: folderPath + '\\' + filePreffix + '*' + fileSuffix + fileExtension
-# prefix is usually the time stamp in format  '%y_%m_%d'
 def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
     '''
-    Used to combine report files into one file, files may have different number / named columns
+    Used to combine report files into one file, files may have different number / named columns.
 
-    :param folderPath: _description_
-    :type folderPath: _type_
-    :param filePrefix: _description_, defaults to ''
-    :type filePrefix: str, optional
-    :param fileSuffix: _description_, defaults to ''
-    :type fileSuffix: str, optional
-    :param fileExtension: _description_, defaults to '.txt'
-    :type fileExtension: str, optional
-    :param outPutFileName: _description_, defaults to 'result.txt'
+    Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
+
+    :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :param outPutFileName: The file name of the combined file, defaults to 'result.txt'
     :type outPutFileName: str, optional
     '''
+
     file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     # build list of unique headers
     headers = GetUniqueHeaders(file_list)
@@ -286,15 +356,22 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
                 lineCounter += 1
             fileCounter += 1
 
-# files         list of fully qualified file path to text files
 def GetUniqueHeaders(files):
     '''
-    returns a unique list of headers retrieved from text files
-    assumes: 
-    - first row is header row
+    Gets a list of alphabeticaly sorted headers retrieved from text files.
+    
+    Assumes:
+
+    - first row in each file is the header row
     - headers are separated by <tab> character
-    returns alphabeticaly sorted list of strings
+
+    :param files: List of file path from which the headers are to be returned.
+    :type files: list of str
+    
+    :return: List of headers.
+    :rtype: list of str
     '''
+
     headersInAllFiles = {}
     for f in files:
         data = GetFirstRowInFile(f)
@@ -317,8 +394,8 @@ def GetFirstRowInFile(filePath):
     '''
     Reads the first line of a text file and returns it as a single string
 
-    :param filePath: _description_
-    :type filePath: _type_
+    :param filePath: The fully qualified file path.
+    :type filePath: str
 
     :return: The first row of a text file.
     :rtype: str
@@ -332,16 +409,11 @@ def GetFirstRowInFile(filePath):
         row = None
     return row
 
-# 
-# fileName:         fully qualified file path
-# header:           list of column headers, provide empty list if not required!
-# data:             
-# writeType         w: new file, a: append to existing file...
 def writeReportData(fileName, header, data, writeType = 'w'):
     '''
     Function writing out report information.
 
-    :param fileName: The report fully qualified file path.
+    :param fileName: The reports fully qualified file path.
     :type fileName: str
     :param header: list of column headers
     :type header: list of str
@@ -367,23 +439,53 @@ def writeReportData(fileName, header, data, writeType = 'w'):
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# file extension in format '.txt'
 def GetFiles(folderPath, fileExtension='.rvt'):
-    '''returns a list of files from a given folder with a given file extension'''
+    '''
+    Gets a list of files from a given folder with a given file extension
+
+    :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type fileExtension: str, optional
+    
+    :return: List of file path
+    :rtype: list of str
+    '''
+    
     file_list = glob.glob(folderPath + '\\*' + fileExtension)
     return file_list
 
-# file extension in format '.txt'
-# file filter is in 'something*'
 def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
-    '''returns a list of files from a given folder with a given file extension and a file name filter'''
+    '''
+    Gets a list of files from a given folder with a given file extension and a matching a file name filter.
+
+    :param folderPath: Folder path from which to get files.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type fileExtension: str, optional
+    :param filter: File name filter ('something*'), defaults to '*'
+    :type filter: str, optional
+    
+    :return: List of file path
+    :rtype: list of str
+    '''
+
     file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
     return file_list
 
-# path      root directory to start fiel search in
-# filter    file name must contain filter value
 def GetFilesFromDirectoryWalker(path, filter):
-    '''returns all files in directory and nested subdirectories where file name contains filter value'''
+    '''
+    Gets all files in directory and nested subdirectories where file name contains filter value.
+
+    :param path: Folder path from which to get files.
+    :type path: str
+    :param filter: File name filter ('something*')
+    :type filter: str
+
+    :return: List of file path
+    :rtype: list of str
+    '''
+
     filesFound = []
     for root, dirs, files in os.walk(path):
         for name in files:
@@ -391,14 +493,13 @@ def GetFilesFromDirectoryWalker(path, filter):
                 filesFound.append(root + '\\' + name)
     return filesFound
 
-# number of file size options
+#: file size in KB conversion
 FILE_SIZE_IN_KB = 1024
+#: file size in MB conversion
 FILE_SIZE_IN_MB = 1024*1024
+#: file size in GB conversion
 FILE_SIZE_IN_GB = 1024*1024*1024
 
-# 
-# filePath  fully qualified file path
-# unit      unit of file size to be returned, default is MB
 def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
     '''
     Get the file size in given units (default is MB)
@@ -506,14 +607,33 @@ def GetChildDirectories(fullDirectoryPath):
 
 # get directory from file
 def GetFolderPathFromFile(filePath):
+    '''
+    Extracts directory from file path.
+
+    :param filePath: _description_
+    :type filePath: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
     try:
         value = os.path.dirname(filePath)
     except Exception:
         value = ''
     return value
 
-# rename a file
 def RenameFile(oldName, newName):
+    '''
+    Renames a file.
+
+    :param oldName: Fully qualified file path to file to be renamed.
+    :type oldName: str
+    :param newName: Fully qualified new file name.
+    :type newName: str
+    
+    :return: True file renamed, otherwise False
+    :rtype: bool
+    '''
+
     try:
         os.rename(oldName, newName)
         value = True
@@ -521,8 +641,19 @@ def RenameFile(oldName, newName):
         value = False
     return value
 
-# copies a file
 def CopyFile(oldName, newName):
+    '''
+    Copies a file
+
+    :param oldName: Fully qualified file path to file to be copied.
+    :type oldName: str
+    :param newName: Fully qualified path to new file location and name.
+    :type newName: str
+    
+    :return: True file copied, otherwise False
+    :rtype: bool
+    '''
+
     value = True
     try:
         shutil.copy(oldName, newName)
@@ -532,6 +663,18 @@ def CopyFile(oldName, newName):
 
 # set up folder
 def CreateFolder(root, folderName):
+    '''
+    Create a folder.
+
+    :param root: Directory path in which the new folder is to be created
+    :type root: str
+    :param folderName: New folder name.
+    :type folderName: str
+    
+    :return: True if folder is created, otherwise False
+    :rtype: bool
+    '''
+
     dirName = path.join(root,folderName)
     flag = True
     try:
@@ -542,8 +685,21 @@ def CreateFolder(root, folderName):
             flag = False
     return flag
 
-# checks whether folder exists and if not attempts to create it
 def CreateTargetFolder(rootPath, folderName):
+    '''
+    Create a folder.
+
+    Checks whether folder exists and if not attempts to create it.
+
+    :param root: Directory path in which the new folder is to be created
+    :type root: str
+    :param folderName: New folder name.
+    :type folderName: str
+
+    :return: True if folder is created, otherwise False
+    :rtype: bool
+    '''
+
     #check if folder exists
     flag = True
     if(path.exists(rootPath + '\\' + folderName) == False):
@@ -551,22 +707,58 @@ def CreateTargetFolder(rootPath, folderName):
         flag = CreateFolder(rootPath, folderName)
     return flag
 
-# returns an time stamped output file name based on the revit file name
-# file extension needs to include '.', default is '.txt'
-# file suffix will be appended after the name but before the file extension. Default is blank.
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
+    '''
+    Returns a time stamped output file name based on the passt in file name and file extension.
+
+    :param revitFilePath: Fully qualified file path to file
+    :type revitFilePath: str
+    :param fileExtension: File extension needs to include '.', defaults to '.txt'
+    :type fileExtension: str, optional
+    :param fileSuffix: File suffix will be appended after the name but before the file extension, defaults to ''
+    :type fileSuffix: str, optional
+    
+    :return: File name.
+    :rtype: str
+    '''
+
     # get date prefix for file name
     filePrefix = GetFileDateStamp()
     name = Path.GetFileNameWithoutExtension(revitFilePath)
     return filePrefix + '_' + name + fileSuffix + fileExtension
 
-# returns the revit file name without the file extension
+
 def GetFileNameWithoutExt(filePath):
+    '''
+    Returns the file name without the file extension.
+
+    :param filePath: Fully qualified file path to file
+    :type filePath: str
+    
+    :return: The file name.
+    :rtype: str
+    '''
+    
     name = Path.GetFileNameWithoutExtension(filePath)
     return name
 
-# removes '..\..' or '..\' from relative file path supplied by Revit and replaces it with full path derived from Revit document
 def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
+    '''
+    removes '../..' or '../' from relative file path string and replaces it with full path derived path passt in sample path.
+
+    - relative path sample: 'C:/temp/../myfile.ext'
+    - full file path sample: 'C:/temp/Sample/someOtherFile.ext'
+    - returns: 'C:/temp/Sample/myfile.ext'
+
+    :param relativeFilePath: String containing relative file path annotation.
+    :type relativeFilePath: str
+    :param fullFilePath: A fully qualified file path of which the relative file path is a sub set.
+    :type fullFilePath: str
+    
+    :return: A fully qualified file path.
+    :rtype: str
+    '''
+
     if( r'..\..' in relativeFilePath):
         two_up = path.abspath(path.join(fullFilePath ,r'..\..'))
         return two_up + relativeFilePath[5:]
@@ -576,9 +768,17 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     else:
         return relativeFilePath
 
-# filePathCSV      fully qualified file path to tab separated file
 def ReadCSVfile(filepathCSV):
-    '''read a csv files into a list of rows'''
+    '''
+    Read a csv file into a list of rows, where each row is another list.
+
+    :param filepathCSV: The fully qualified file path to the csv file.
+    :type filepathCSV: str
+
+    :return: A list of list of strings representing the data in each row.
+    :rtype: list of list of str
+    '''
+
     rowList = []
     try:
         with open(filepathCSV) as csvfile:
@@ -590,9 +790,17 @@ def ReadCSVfile(filepathCSV):
         rowList = []
     return rowList
 
-# filePath      fully qualified file path to tab separated file
 def ReadTabSeparatedFile(filePath):
-    '''read a tab delimited files into a list of rows'''
+    '''
+    Read a tab separated text file into a list of rows, where each row is another list.
+
+    :param filePath: The fully qualified file path to the tab separated text file.
+    :type filePath: str
+
+    :return:  A list of list of strings representing the data in each row.
+    :rtype: list of list of str
+    '''
+
     rowList = []
     try:
         with codecs.open (filePath,'r',encoding='utf-8') as f:
@@ -607,30 +815,74 @@ def ReadTabSeparatedFile(filePath):
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# currently known comparisons
-# returns True if valueOne does not match valueTwo
 def ConDoesNotEqual (valueOne, valueTwo):
+    '''
+    Returns True if valueOne does not match valueTwo.
+
+    :param valueOne: a value
+    :type valueOne: var
+    :param valueTwo: another value
+    :type valueTwo: var
+    
+    :return: True if valueOne does not match valueTwo, otherwise False
+    :rtype: bool
+    '''
+
     if (valueOne != valueTwo):
         return True
     else:
         return False
 
-# returns True if valueOne does match valueTwo
+# 
 def ConDoesEqual (valueOne, valueTwo):
+    '''
+    Returns True if valueOne does match valueTwo.
+
+    :param valueOne: a value
+    :type valueOne: var
+    :param valueTwo: another value
+    :type valueTwo: var
+    
+    :return: True if valueOne does match valueTwo, otherwise False
+    :rtype: bool
+    '''
+
     if (valueOne == valueTwo):
         return True
     else:
         return False
 
-# returns True if valueOne starts with valueTwo
 def ConOneStartWithTwo (valueOne, valueTwo):
+    '''
+    Returns True if valueOne starts with valueTwo.
+
+    :param valueOne: a value
+    :type valueOne: str
+    :param valueTwo: another value
+    :type valueTwo: str
+    
+    :return: True if valueOne starts with valueTwo, otherwise False
+    :rtype: bool
+    '''
+
     if (valueOne.startswith(valueTwo)):
         return True
     else:
         return False
 
-# returns True if valueTwo starts with valueOne
 def ConTwoStartWithOne (valueOne, valueTwo):
+    '''
+    Returns True if valueTwo starts with valueOne.
+
+    :param valueOne: a value
+    :type valueOne: str
+    :param valueTwo: another value
+    :type valueTwo: str
+    
+    :return: True if valueTwo starts with valueOne, otherwise False
+    :rtype: bool
+    '''
+
     if (valueTwo.startswith(valueOne)):
         return True
     else:
@@ -638,6 +890,18 @@ def ConTwoStartWithOne (valueOne, valueTwo):
 
 # returns True if valueTwo does not starts with valueOne
 def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
+    '''
+    Returns True if valueTwo does not starts with valueOne.
+
+    :param valueOne: a value
+    :type valueOne: str
+    :param valueTwo: another value
+    :type valueTwo: str
+    
+    :return: True if valueTwo does not starts with valueOne, otherwise False
+    :rtype: bool
+    '''
+
     if (valueTwo.startswith(valueOne)):
         return False
     else:
@@ -645,9 +909,20 @@ def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# text      string to be converted all lower case and then to be converted to a boolean ( 'true' = True, 'false' = False)
 def ParsStringToBool(text):
-    '''converts a string lower case and then to bool. Will throw an exception if it fails to do so'''
+    '''
+    Converts a string to lower case and then to bool. Will throw an exception if it fails to do so.
+
+    ( 'true' = True, 'false' = False)
+
+    :param text: The string representing a bool.
+    :type text: str
+    :raises Exception: If string to bool conversion fails the 'String cant be converted to bool' exception will be raised.
+    
+    :return: True or False
+    :rtype: bool
+    '''
+
     if(text.lower() == 'true'):
         return True
     elif (text.lower() == 'false'):
@@ -657,14 +932,25 @@ def ParsStringToBool(text):
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-# default 2 digit padding
+#: two digit padding
 PAD_SINGLE_DIGIT_TO_TWO = '%02d'
-# three digit padding
+#: three digit padding
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
-# pads a single digit integer (past in as a string) with a leading zero (default)
-# returns a string
+
 def PadSingleDigitNumericString(numericstring, format = PAD_SINGLE_DIGIT_TO_TWO):
+    '''
+    Pads a single digit integer (past in as a string) with a leading zero (default)
+
+    :param numericstring: Integer as string.
+    :type numericstring: str
+    :param format: The integer padding format, defaults to PAD_SINGLE_DIGIT_TO_TWO
+    :type format: str, optional
+    
+    :return: The padded integer as string.
+    :rtype: str
+    '''
+
     # attempt to convert string to int first
     try:
         value = int(numericstring)
@@ -673,30 +959,79 @@ def PadSingleDigitNumericString(numericstring, format = PAD_SINGLE_DIGIT_TO_TWO)
         #string was not an integer...
         return numericstring
 
-#encode string as ascii and replaces all non ascii characters
 def EncodeAscii (string):
+    '''
+    Encode a string as ascii and replaces all non ascii characters
+
+    :param string: The string to be ascii encoded.
+    :type string: str
+
+    :return: ascii encoded string
+    :rtype: str
+    '''
+    
     return string.encode('ascii','replace')
 
-# returns the first value in a list matching condition
-# if no value found returns the specificed default value
 def GetFirst(iterable, default, condition = lambda x: True):
+    '''
+    Returns the first value in a list matching condition. If no value found returns the specificed default value.
+
+    :param iterable: the list to be searched.
+    :type iterable: iterable
+    :param default: The default value
+    :type default: var
+    :param condition: The condition to be checked, defaults to lambdax:True
+    :type condition: _type_, optional
+    
+    :return: First value matching condition, otherwise default value
+    :rtype: var
+    '''
+
     return next((x for x in iterable if condition(x)),default)
 
-# converts feet and inches to mm
 def ConvertImperialToMetricMM(value):
+    '''
+    Converts feet and inches to mm
+
+    :param value: The value in feet to be converted
+    :type value: float
+    
+    :return: The converted value
+    :rtype: float
+    '''
+
     return value * 304.8
 
-# helper method for index of item in list
 def IndexOf(list, item):
+    '''
+    Gets the index of item in list
+
+    :param list: The list
+    :type list: list
+    :param item: The item of which to return the index.
+    :type item: var
+
+    :return: The index of the item in the list, if no match -1 will be returned
+    :rtype: int
+    '''
     try:
         return list.index(item)
     except:
         return -1
 
-# sourcelist    list to remove items from
-# removeList    list containing items to be removed from source
 def RemoveItemsFromList(sourceList, removeIdsList):
-    '''helper removes ids from a source list'''
+    '''
+    helper removes items from a source list
+
+    :param sourceList: The list containing items
+    :type sourceList: list var
+    :param removeIdsList: the list containing items to be removed
+    :type removeIdsList: list var
+    
+    :return: The filtered source list.
+    :rtype: list var
+    '''
+
     try:
         for item in removeIdsList:
             sourceList.remove(item)

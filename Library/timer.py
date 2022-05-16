@@ -23,12 +23,9 @@
 
 from System.Diagnostics import Stopwatch
 
-'''
-    time output formatting.
-'''
-# default 2 digit padding
+#: time output formatting 2 digit padding
 PAD_SINGLE_DIGIT_TO_TWO = '%02d'
-# default 3 digit padding
+#: time output formatting default 3 digit padding
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
 class TimerError(Exception):

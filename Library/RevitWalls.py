@@ -39,13 +39,17 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: Header used in reports
 REPORT_WALLS_HEADER = ['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', 'LAYERMATERIALMARK']
 
+#: Built in wall family name for stacked wall
 STACKED_WALL_FAMILY_NAME = 'Stacked Wall'
+#: Built in wall family name for curtain wall
 CURTAIN_WALL_FAMILY_NAME = 'Curtain Wall'
+#: Built in wall family name for basic wall
 BASIC_WALL_FAMILY_NAME = 'Basic Wall'
 
+#: List of all Built in wall family names
 BUILTIN_WALL_TYPE_FAMILY_NAMES = [
     STACKED_WALL_FAMILY_NAME,
     CURTAIN_WALL_FAMILY_NAME,
@@ -54,22 +58,50 @@ BUILTIN_WALL_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all wall types in a model
-# doc:   current model document
-def GetAllWallTypes(doc):  
+def GetAllWallTypes(doc): 
+    '''
+    Gets all wall types in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing wall types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsElementType()
     return collector
 
-# doc   current model document
 def GetWallTypesByClass(doc):
-    ''' this will return a filtered element collector of all wall types in the model
-    it will therefore not return any in place wall types since revit treats those as Families...'''
+    '''
+    This will return a filtered element collector of all wall types by class in the model
+    
+    It will therefore not return any in place wall types since revit treats those as families...
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing wall types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
 
-# collector   fltered element collector containing walltype elments of family symbols representing in place families
-# dic         dictionary containing key: wall type family name, value: list of ids
 def BuildWallTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    Keys are built in wall family type names.
+
+    :param collector: A filtered element collector containing wall types.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: A dictionary containing key: wall type family name, value: list of ids belonging to that type.
+    :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+
+    :return: A dictionary containing key: built in wall type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             # todo : check WallKind Enum???
@@ -79,9 +111,18 @@ def BuildWallTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortWallTypesByFamilyName(doc):
-    '''returns a dictionary where key is the build in wall family name, values are ids of associated wall types'''
+    '''
+    Returns a dictionary of all wall types in the model where key is the build in wall family name, values are ids of associated wall types.
+
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: built in wall type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     # get all Wall Type Elements
     wts = GetWallTypesByClass(doc)
     # get all wall types including in place wall families
@@ -93,31 +134,79 @@ def SortWallTypesByFamilyName(doc):
 
 # -------------------------------- stacked wall types -------------------------------------------------------
 
-# doc   current model document
 def GetAllStackedWallInstancesInModel(doc):
-    ''' returns all stacked wall elements placed in model...ignores legend elements'''
+    '''
+    Gets all stacked wall elements placed in model...ignores legend elements.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing wall instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsNotElementType()
 
 def GetAllStackedWallTypesInModel(doc):
-    ''' returns all stacked wall element types used by instances placed in model '''
+    '''
+    Gets all stacked wall element types used by instances placed in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stacked wall types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
 
 def GetAllStackedWallTypeIdsInModel(doc):
-    ''' returns all stacked wall element types available in model '''
+    '''
+    Gets all stacked wall element types available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stacked wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current document
 def GetUsedStackedWallTypeIds(doc):
-    ''' returns all used stack wall type ids '''
+    '''
+    Returns all used stack wall type ids. 
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used stacked wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedStackedWallTypeIdsToPurge(doc):
-    ''' returns all unused stack wall type ids, will leave one behind if none is used '''
+    '''
+    Gets all unused stacked wall type id's.
+    
+    This method can be used to safely delete unused wall types:
+    In the case that no wall instance using any of the types is placed this will return all but one type id since\
+        Revit requires at least one wall type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing not used stacked wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStackedWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
@@ -126,58 +215,119 @@ def GetUnusedStackedWallTypeIdsToPurge(doc):
 
 # -------------------------------- in place wall types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceWallFamilyInstances(doc):
-    ''' returns all instances in place families of category wall '''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Returns all instances in place families of category wall in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing  in place wall instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceWallTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category wall '''
+    '''
+    Gets all type ids off all available in place families of category wall.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing in place wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current document
 def GetUsedInPlaceWallTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place type ids in the model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used in place wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceWallTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all unused in place type ids in the model.
+
+    Unused: Not one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in place wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceWallTypeIdsInModel, 0)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceWallIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be purged'''
+    '''
+    Gets symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be savely deleted from the model.
+
+    This method can be used to safely delete unused in place wall types. There is no requirement by Revit to have at least one\
+        in place wall defintion in the model.
+    
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in place wall types and families.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceWallTypeIds)
     return ids
 
 # -------------------------------- curtain wall types -------------------------------------------------------
 
-# doc   current document
 def GetAllCurtainWallTypeIdsInModel(doc):
-    ''' returns type ids off all available curtain wall types'''
+    '''
+    Gets type ids off all available curtain wall types in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing curtain wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     dic = SortWallTypesByFamilyName(doc)
     if(dic.has_key(CURTAIN_WALL_FAMILY_NAME)):
         ids = dic[CURTAIN_WALL_FAMILY_NAME]
     return ids
 
-# doc           current model document
-# availableIds  type ids to check for use a curtain panel
 def GetAllCurtainWallInstancesInModel(doc, availableIds):
-    ''' returns all stacked wall elements placed in model...ignores legend elements'''
+    '''
+    Gets all curtain wall elements placed in model...ignores legend elements.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param availableIds: Filter: curtain wall type ids to check wall instances for.
+    :type availableIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: List of wall instances
+    :rtype: List of Autodesk.Revit.DB.Wall
+    '''
+
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -185,10 +335,19 @@ def GetAllCurtainWallInstancesInModel(doc, availableIds):
             instances.append(c)
     return instances
 
-# doc           current model document
-# availableIds  type ids to check for use a curtain panel
 def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
-    ''' returns all stacked wall elements placed in model...ignores legend elements'''
+    '''
+    Gets all used curtain wall types in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param availableIds: Filter: curtain wall type ids to check wall types for.
+    :type availableIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: List of wall instances
+    :rtype: List of Autodesk.Revit.DB.Wall
+    '''
+
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -196,15 +355,37 @@ def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
             instances.append(c.GetTypeId())
     return instances
 
-# doc   current document
 def GetUsedCurtainWallTypeIds(doc):
-    ''' returns type ids off all used curtain wall types '''
+    '''
+    Gets type ids off all used curtain wall types.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used in curtain wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+    
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnUsedCurtainWallTypeIdsToPurge(doc):
-    ''' returns type ids off all unused curtain wall types, will leave one behind if none is used'''
+    '''
+    Gets type ids off all unused curtain wall types.
+
+    This method can be used to safely delete unused curtain wall types. In the case that no curtain\
+        wall instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one curtain wall type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in curtain wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCurtainWallTypeIdsInModel, 0)
     availableTypeCount = len(GetAllCurtainWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
@@ -213,19 +394,36 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
 
 # -------------------------------- basic wall types -------------------------------------------------------
 
-# doc   current document
 def GetAllBasicWallTypeIdsInModel(doc):
-    ''' returns type ids off all available basic wall types'''
+    '''
+    Gets type ids off all available basic wall types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all basic wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     dic = SortWallTypesByFamilyName(doc)
     if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
         ids = dic[BASIC_WALL_FAMILY_NAME]
     return ids
-    
-# doc           current model document
-# availableIds  type ids to check for use as basic wall type
+
 def GetAllBasicWallInstancesInModel(doc, availableIds):
-    ''' returns all basic wall elements placed in model...ignores legend elements'''
+    '''
+    Gets all basic wall elements placed in model...ignores legend elements.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param availableIds:  Filter: curtain wall type ids to check wall instances for.
+    :type availableIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: List of element ids representing all basic wall instances.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -233,10 +431,21 @@ def GetAllBasicWallInstancesInModel(doc, availableIds):
             instances.append(c)
     return instances
 
-# doc           current model document
-# availableIds  type ids to check for use a curtain panel
 def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
-    ''' returns all basic wall type elements used in model'''
+    '''
+    Gets all basic wall types used in model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param availableIds:  Filter: basic wall type ids to check wall instances for.
+    :type availableIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: List of element ids representing all basic wall types in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
@@ -244,15 +453,37 @@ def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
             ids.append(c.GetTypeId())
     return ids
 
-# doc   current document
 def GetUsedBasicWallTypeIds(doc):
-    ''' returns type ids off all used basic wall types '''
+    '''
+    Gets type ids off all used basic wall types.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all basic wall types in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
-    ''' returns type ids off all unused basic wall types, will leave one behind if none is used'''
+    '''
+    Gets type ids off all unused basic wall types in model.
+
+    This method can be used to safely delete unused basic wall types. In the case that no basic\
+        wall instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one basic wall type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all basic wall types not in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
     # argh GetStackedWallMemberIds() is only available on wall element but not walltype. Why?
@@ -263,10 +494,19 @@ def GetUnUsedBasicWallTypeIdsToPurge(doc):
 
 # ------------------------------------------------------- walls reporting --------------------------------------------------------------------
 
-# gets wall data ready for being printed to file
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
 def GetWallReportData(doc, revitFilePath):
+    '''
+    Gets wall data to be written to report file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The file hostname, which is added to data returned
+    :type revitFilePath: str
+
+    :return: list of list of sheet properties.
+    :rtype: list of list of str
+    '''
+
     data = []
     wallTypes = GetAllWallTypes(doc)
     for wt in wallTypes:

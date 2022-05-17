@@ -3425,19 +3425,53 @@ where a pair are areas with the same measured area</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetDetailGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetDetailGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetDetailGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of detail groups from the model</p>
+<dd><p>Gets a list of all detail group typess from the model.</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetDetailGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetDetailGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of detail groups from the model</p>
+<dd><p>Gets all detail groups in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing detail group types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetModelGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetModelGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetModelGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of model group ids from the model</p>
+<dd><p>Gets a list of all model group type ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of model group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -3460,57 +3494,160 @@ where a pair are areas with the same measured area</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetNestedDetailGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetNestedDetailGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetNestedDetailGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of nested detail groups from the model</p>
+<dd><p>Gets a list of all nested detail group types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of nested detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetNestedDetailGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetNestedDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetNestedDetailGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of nested detail groups from the model</p>
+<dd><p>Gets all nested detail groups in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing nested detail group types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetNotPlacedGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetNotPlacedGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupCategory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetNotPlacedGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced groups from the model</p>
+<dd><p>Gets a list of unplaced groups from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>groupCategory</strong> (<em>either BuiltInCategory.OST_IOSDetailGroups</em><em> or </em><em>BuiltInCategory.OST_IOSModelGroups</em>) – A built in category defining the group category (model vs detail)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced group types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedDetailGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedDetailGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedDetailGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced detail groups Ids from the model
-this will not include any attached detail groups!!</p>
+<dd><p>Gets a list of unplaced detail groups type Ids from the model.</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced detail group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedDetailGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedDetailGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced detail groups from the model
-this will not include any attached detail groups!!</p>
+<dd><p>Gets a list of unplaced detail groups from the model</p>
+<p>This will not include any attached detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced detail group types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedModelGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedModelGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedModelGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced model group Ids from the model</p>
+<dd><p>Gets a list of unplaced model group type Ids from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced model group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedModelGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedModelGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedModelGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced model groups from the model</p>
+<dd><p>Gets a list of unplaced model groups types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced model group types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedNestedDetailGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedNestedDetailGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedNestedDetailGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced nested detail group Ids from the model. This will not list any none nested detail groups!!</p>
+<dd><p>Gets a list of unplaced nested detail group Ids from the model.</p>
+<p>This will not list any none nested detail groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced model group type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetUnplacedNestedDetailGroups">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetUnplacedNestedDetailGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetUnplacedNestedDetailGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of unplaced nested detail groups from the model</p>
+<dd><p>Gets a list of unplaced nested detail groups from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unplaced nested detail group types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py data">

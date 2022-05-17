@@ -40,7 +40,7 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 
 # --------------------------------------------- utility functions ------------------

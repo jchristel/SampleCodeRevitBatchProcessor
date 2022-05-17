@@ -54,44 +54,91 @@ def GetModelGroups(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType().ToList()
 
-# doc   current document
 def GetDetailGroups(doc):
-    '''returns a list of detail groups from the model'''
+    '''
+    Gets all detail groups in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: A list containing detail group types.
+    :rtype: list
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType().ToList()
 
-# doc   current document
 def GetNestedDetailGroups(doc):
-    '''returns a list of nested detail groups from the model'''
+    '''
+    Gets all nested detail groups in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: A list containing nested detail group types.
+    :rtype: list
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType().ToList()
 
-# doc   current document
 def GetModelGroupIds(doc):
-    '''returns a list of model group ids from the model'''
+    '''
+    Gets a list of all model group type ids in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of model group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSModelGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current document
 def GetDetailGroupIds(doc):
-    '''returns a list of detail groups from the model'''
+    '''
+    Gets a list of all detail group typess from the model.
+
+    This will not include any attached detail groups.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of detail group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSDetailGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current document
 def GetNestedDetailGroupIds(doc):
-    '''returns a list of nested detail groups from the model'''
+    '''
+    Gets a list of all nested detail group types from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of nested detail group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_IOSAttachedDetailGroups).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(col)
     return ids
-
-# doc   current document
-# groupCategory     either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
+   
 def GetNotPlacedGroups(doc, groupCategory):
-    '''returns a list of unplaced groups from the model'''
+    '''
+    Gets a list of unplaced groups from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :param groupCategory: A built in category defining the group category (model vs detail)
+    :type groupCategory: either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
+    
+    :return: List of unplaced group types
+    :rtype: list
+    '''
+
     def getterTypes(doc):
         return rdb.FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType()
     def getterInstances(doc):
@@ -102,44 +149,92 @@ def GetNotPlacedGroups(doc, groupCategory):
         getterTypes, 
         getterInstances)
 
-# doc   current document
 def GetUnplacedDetailGroups(doc):
-    '''returns a list of unplaced detail groups from the model
-    this will not include any attached detail groups!!'''
+    '''
+    Gets a list of unplaced detail groups from the model
+    
+    This will not include any attached detail groups.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of unplaced detail group types
+    :rtype: list
+    '''
+
     return GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
 
-# doc   current document
 def GetUnplacedDetailGroupIds(doc):
-    '''returns a list of unplaced detail groups Ids from the model
-    this will not include any attached detail groups!!'''
+    '''
+    Gets a list of unplaced detail groups type Ids from the model.
+    
+    This will not include any attached detail groups.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of unplaced detail group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     unplacedGroups = GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
     ids = []
     for unplaced in unplacedGroups:
         ids.append(unplaced.Id)
     return ids
 
-# doc   current document
 def GetUnplacedNestedDetailGroups(doc):
-    '''returns a list of unplaced nested detail groups from the model'''
+    '''
+    Gets a list of unplaced nested detail groups from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of unplaced nested detail group types
+    :rtype: list
+    '''
+
     return GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
 
-# doc   current document
 def GetUnplacedNestedDetailGroupIds(doc):
-    '''returns a list of unplaced nested detail group Ids from the model. This will not list any none nested detail groups!!'''
+    '''
+    Gets a list of unplaced nested detail group Ids from the model. 
+    
+    This will not list any none nested detail groups.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of unplaced model group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     unplacedGroups = GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
     ids = []
     for unplaced in unplacedGroups:
         ids.append(unplaced.Id)
     return ids
 
-# doc   current document
 def GetUnplacedModelGroups(doc):
-    '''returns a list of unplaced model groups from the model'''
+    '''
+    Gets a list of unplaced model groups types from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of unplaced model group types
+    :rtype: list
+    '''
+
     return GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
 
-# doc   current document
 def GetUnplacedModelGroupIds(doc):
-    '''returns a list of unplaced model group Ids from the model'''
+    '''
+    Gets a list of unplaced model group type Ids from the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of unplaced model group type ids
+    :rtype: List of Autodesk.Revit.DB.ElementId
+    '''
+
     unplacedGroups = GetNotPlacedGroups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
     ids = []
     for unplaced in unplacedGroups:

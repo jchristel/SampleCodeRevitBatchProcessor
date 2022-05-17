@@ -42,7 +42,7 @@ clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 
-# revit links header used in reports
+#: revit links header used in reports
 REPORT_REVIT_LINKS_HEADER = [
     'HOSTFILE',
     'ID', 

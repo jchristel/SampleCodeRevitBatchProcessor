@@ -70,7 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRooms">Revit Rooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitSharedParameterAdd">Revit Shared Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitStairs">Revit Stairs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitViewReferencing">Revit Views and Views Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitViewReferencing">Revit Views, View Filters and Views Referencing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWalls">Revit Walls</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWarnings">Revit Warnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
@@ -3422,7 +3422,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Get all model group types from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>list of model group types in the model</p>
@@ -3539,6 +3539,12 @@ this will not include any attached detail groups!!</p>
 <dt class="sig sig-object py" id="RevitGrids.GetUnusedGridTypesForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGridTypesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetUnusedGridTypesForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused grid types in the model to be purged</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitGrids.REPORT_GRIDS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">REPORT_GRIDS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'WORKSETNAME',</span> <span class="pre">'EXTENTMAX',</span> <span class="pre">'EXTENTMIN']</span></em><a class="headerlink" href="#RevitGrids.REPORT_GRIDS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
 </dd></dl>
 
 </section>
@@ -5008,7 +5014,7 @@ it will therefore not return any in place family types …</p>
 
 </section>
 <section id="module-RevitViewReferencing">
-<span id="revit-views-and-views-referencing"></span><h2>Revit Views and Views Referencing<a class="headerlink" href="#module-RevitViewReferencing" title="Permalink to this headline">¶</a></h2>
+<span id="revit-views-view-filters-and-views-referencing"></span><h2>Revit Views, View Filters and Views Referencing<a class="headerlink" href="#module-RevitViewReferencing" title="Permalink to this headline">¶</a></h2>
 <p>This module contains a number of helper functions relating to Revit view referencing.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllCallOutTypeIdsByCategory">
@@ -5163,361 +5169,1199 @@ values are the type ids in use</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.DeleteAllSheetsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteAllSheetsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteAllSheetsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes all sheets in a model</p>
+<dd><p>Deletes all sheets in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all sheets where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.DeleteSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collectorViews</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]</p>
+<dd><p>Deletes sheets based on rules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewRules</strong> (<em>array in format</em><em> [</em><em>parameter name</em><em>, </em><em>condition test method</em><em>, </em><em>value to test against</em>) – A set of rules. If view matches rule it will be deleted.</p></li>
+<li><p><strong>collectorViews</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing view instances.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all sheets matching filter where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.DeleteUnusedElevationViewMarkers">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteUnusedElevationViewMarkers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteUnusedElevationViewMarkers" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes unused elevation markers</p>
+<dd><p>Deletes all unused elevation markers. (no Elevation is created by the marker)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all unused elevation markers where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitViews.DeleteViews">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteViews</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collectorViews</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteViews" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes views based on view rules supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewRules</strong> (<em>array in format</em><em> [</em><em>[</em><em>parameter name</em><em>, </em><em>condition test method</em><em>, </em><em>value to test against</em><em>]</em><em>]</em>) – Rules used to check whether a view should be deleted. Rules are based on parameters attached to view and their values.</p></li>
+<li><p><strong>collectorViews</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing views.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all views where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.DeleteViewsNotOnSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">DeleteViewsNotOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.DeleteViewsNotOnSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes all views not placed on sheets includes schedules and legends</p>
+<dd><p>Deletes all views not placed on sheets includes schedules and legends matching filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filter</strong> (<em>func</em><em>(</em><em>view</em><em>) </em><em>returns a bool</em>) – Function checking whether view should be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all views where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.FilterDataByProperties">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">FilterDataByProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.FilterDataByProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>filters sheet data by supplied property names</p>
+<dd><p>Filters sheet data by supplied property names.</p>
+<p>Data gets filtered twice: property needs to exist in headers list as well as in sheet properties list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list of list of str</em>) – List of sheet properties to be kept.</p></li>
+<li><p><strong>headers</strong> (<em>list of str</em>) – Filter: list of headers representing property names.</p></li>
+<li><p><strong>sheetProperties</strong> (<em>list of str</em>) – list of sheet properties to be extracted from data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of sheet properties matching filters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.FilterRevisionSchedules">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">FilterRevisionSchedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.FilterRevisionSchedules" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns true if the view name starts with ‘&lt;’, otherwise false</p>
+<dd><p>Checks whether a view is a revision schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view to check.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the view name starts with ‘&lt;’, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetAllAvailableFilterIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllAvailableFilterIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllAvailableFilterIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view filter ids in document</p>
+<dd><p>Gets all view filter ids in document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view filter Id’s which are in the model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetAllAvailableFiltersInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllAvailableFiltersInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllAvailableFiltersInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all filters in document as a collector</p>
+<dd><p>Gets all filters in document as a collector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered Element collector containing Autodesk.Revit.DB.ParameterFilterElement</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetAllUnUsedViewFilters">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllUnUsedViewFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllUnUsedViewFilters" title="Permalink to this definition">¶</a></dt>
-<dd><p>gets id’s of all unused view filters in a model</p>
+<dd><p>Gets id’s of all unused view filters in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List containing filter Id’s.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetAllUnusedViewTemplateIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedViewTemplateIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllUnusedViewTemplateIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view template Id’s not used by view types and by views</p>
+<dd><p>Gets all view template Id’s not used by view types or by views</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates Id’s which are not used in the model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetAllViewTemplateIdsUsedInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetAllViewTemplateIdsUsedInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetAllViewTemplateIdsUsedInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns view template Id’s used as default by view types and by views</p>
+<dd><p>Get all used view template Id’s.</p>
+<p>Templates can either be:</p>
+<ul class="simple">
+<li><p>used as default by view types</p></li>
+<li><p>used by a view</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates Id’s which are used in the model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetDefaultViewTypeTemplateIds">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetDefaultViewTypeTemplateIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetDefaultViewTypeTemplateIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns view template Id’s used as default by view types</p>
+<dd><p>Gets view template Id’s used as default by view types</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates Id’s which are used as default in view types in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetFilterIdsFromViewByFilter">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFilterIdsFromViewByFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uniqueList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFilterIdsFromViewByFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns passed in list of filter id’s plus new filter id’s from view (not already in list passt in)</p>
+<dd><p>Returns passt in list of filter id’s plus new unique filter id’s from view (if not already in list passt in)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view of which to get the filters from.</p></li>
+<li><p><strong>uniqueList</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – List containing view filters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List containing passt in view filters and new view filters.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetFilterIdsFromViewsWithoutTemplate">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFilterIdsFromViewsWithoutTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterByType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFilterIdsFromViewsWithoutTemplate" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all filters from views which dont have a template applied</p>
+<dd><p>Gets all filter id’s from views which dont have a template applied and match a given view type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filterByType</strong> (<em>list of Autodesk.Revit.DB.ViewType</em>) – list of view types of which the filters are to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List containing filter Id’s.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetFiltersFromTemplates">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetFiltersFromTemplates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetFiltersFromTemplates" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all filters used in templates only</p>
+<dd><p>Gets all filter id’s used in view templates only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List containing filter Id’s.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetReportHeaders">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetReportHeaders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetReportHeaders" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns sheet data including file name and sheet id</p>
+<dd><p>A list of headers used in report files</p>
+<p>Hardcoded header list is expanded by parameters added to sheet category in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of headers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetScheduleIdsNotOnSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetScheduleIdsNotOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetScheduleIdsNotOnSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all schedules not on a sheet</p>
+<dd><p>Gets all schedules without an instance placed on a sheet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of schedules without a sheet schedule instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetScheduleIdsOnSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetScheduleIdsOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetScheduleIdsOnSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns view ids of all schedules on a sheet</p>
+<dd><p>Gets view ids of all schedules with instances placed on a sheet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List containing schedule Id’s.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetSheetReportData">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns sheet data including file name and sheet id</p>
+<dd><p>Gets sheet data to be written to report file.</p>
+<p>The data returned includes all sheet properties available in the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>hostName</strong> (<em>str</em>) – The file hostname, which is added to data returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of sheet properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lsit of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetSheetsByFilters">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetsByFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewRules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetsByFilters" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns sheets matching filters provided</p>
+<dd><p>Gets sheets matching filters provided</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewRules</strong> (<em>array in format</em><em> [</em><em>parameter name</em><em>, </em><em>condition test method</em><em>, </em><em>value to test against</em><em>]</em><em>, </em><em>optional</em>) – A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Views matching filter</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetSheetsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetSheetsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetSheetsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all sheets in a model</p>
+<dd><p>Gets all sheets in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of sheet views</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetTemplateIdsWhichCanHaveFilters">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetTemplateIdsWhichCanHaveFilters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filterByType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetTemplateIdsWhichCanHaveFilters" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all templates in a model of given type</p>
+<dd><p>Get all templates in a model of given type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filterByType</strong> (<em>list of Autodesk.Revit.DB.ViewType</em>) – List of view types of which to return view templates from</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetUnusedViewTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUnusedViewTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns ID of unused view family types in the model</p>
+<dd><p>Returnds all unused view family types in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ids of view family types not in use</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetUsedViewTemplateIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewTemplateIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUsedViewTemplateIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns view templates used in views in the model only</p>
+<dd><p>Gets ids of view templates used in views in the model only</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All used view templates Id’s in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetUsedViewTypeIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUsedViewTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view family types in the model</p>
+<dd><p>Returns all view family types in use in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ids of view family types in use</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view family type ids in a model</p>
+<dd><p>Returns all view family type ids in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ids of view family types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view family types in a model</p>
+<dd><p>Returns all view family types in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewportOnSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewportOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewportOnSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view ports in the model</p>
+<dd><p>Getd all view ports on sheets provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheets</strong> (<em>list of Autodesk.Revit.DB.ViewSheet</em>) – list of sheets of which to return the view ports from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of view ports</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Viewport</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>eturns all views in a model which are
-not template views
-not system browser
-not project broser
-not undefined
-not Internal
-not sheets
-match a filter</p>
+<dd><p>Gets all views in a model which are matching a filter and are:</p>
+<ul class="simple">
+<li><p>not template views</p></li>
+<li><p>not system browser</p></li>
+<li><p>not project broser</p></li>
+<li><p>not undefined</p></li>
+<li><p>not Internal</p></li>
+<li><p>not sheets</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>filter</strong> (<em>func</em><em>(</em><em>view</em><em>) </em><em>returning a bool</em>) – function checking view</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of views</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsNotOnSheet">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsNotOnSheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsNotOnSheet" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all views not on a sheet</p>
+<dd><p>Gets all views not placed on a sheet. (Excludes schedules)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of views which are currently not placed on a sheet.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsTemplateIdsInInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsTemplateIdsInInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsTemplateIdsInInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all template ids in a model</p>
+<dd><p>Get all view emplate ids in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates Id’s in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsTemplatesInInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsTemplatesInInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsTemplatesInInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all templates in a model</p>
+<dd><p>Get all view templates in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All view templates in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsofType">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsofType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewtype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsofType" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all views in a model of a given type</p>
+<dd><p>Gets all views in a model of a given type. Excludes templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>viewtype</strong> (<em>Autodesk.Revit.DB.ViewType</em>) – Filter: the view type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of views</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.View</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViews.REPORT_SHEETS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">REPORT_SHEETS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'Id']</span></em><a class="headerlink" href="#RevitViews.REPORT_SHEETS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in sheets report</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViews.REPORT_VIEWS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">REPORT_VIEWS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE']</span></em><a class="headerlink" href="#RevitViews.REPORT_VIEWS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in views report</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViews.VIEW_TYPE_WHICH_CAN_HAVE_FILTERS">
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">VIEW_TYPE_WHICH_CAN_HAVE_FILTERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.ViewType.FloorPlan,</span> <span class="pre">Autodesk.Revit.DB.ViewType.CeilingPlan,</span> <span class="pre">Autodesk.Revit.DB.ViewType.Elevation,</span> <span class="pre">Autodesk.Revit.DB.ViewType.ThreeD,</span> <span class="pre">Autodesk.Revit.DB.ViewType.EngineeringPlan,</span> <span class="pre">Autodesk.Revit.DB.ViewType.AreaPlan,</span> <span class="pre">Autodesk.Revit.DB.ViewType.Section,</span> <span class="pre">Autodesk.Revit.DB.ViewType.Detail,</span> <span class="pre">Autodesk.Revit.DB.ViewType.Walkthrough,</span> <span class="pre">Autodesk.Revit.DB.ViewType.DraftingView,</span> <span class="pre">Autodesk.Revit.DB.ViewType.Legend]</span></em><a class="headerlink" href="#RevitViews.VIEW_TYPE_WHICH_CAN_HAVE_FILTERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of view types which can have filters applied</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.WriteSheetData">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">WriteSheetData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.WriteSheetData" title="Permalink to this definition">¶</a></dt>
-<dd><p>writes out sheet data to file</p>
+<dd><p>Writes to file all sheet properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
+<li><p><strong>currentFileName</strong> (<em>str</em>) – The current revit file name which will be appended to data in the report.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if data was written succesfully. Otherwise False.
+.message will contain write status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.WriteSheetDataByPropertyNames">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">WriteSheetDataByPropertyNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetProperties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.WriteSheetDataByPropertyNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>writes to file sheet properties as nominated in passt in list</p>
+<dd><p>Writes to file sheet properties as nominated in passt in list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
+<li><p><strong>currentFileName</strong> (<em>str</em>) – The current revit file name which will be appended to data in the report.</p></li>
+<li><p><strong>sheetProperties</strong> (<em>list of str</em>) – List of sheet properties to be extracted from sheets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if data was written succesfully. Otherwise False.
+.message will contain write status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-RevitWalls">
 <span id="revit-walls"></span><h2>Revit Walls<a class="headerlink" href="#module-RevitWalls" title="Permalink to this headline">¶</a></h2>
 <p>This module contains a number of helper functions relating to Revit walls.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitWalls.BASIC_WALL_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">BASIC_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Basic</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#RevitWalls.BASIC_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in wall family name for basic wall</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitWalls.BUILTIN_WALL_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_WALL_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Stacked</span> <span class="pre">Wall',</span> <span class="pre">'Curtain</span> <span class="pre">Wall',</span> <span class="pre">'Basic</span> <span class="pre">Wall']</span></em><a class="headerlink" href="#RevitWalls.BUILTIN_WALL_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in wall family names</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.BuildWallTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">BuildWallTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.BuildWallTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Returns the dictionary passt in with keys and or values added retrieved from collector passt in.</p>
+<p>Keys are built in wall family type names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing wall types.</p></li>
+<li><p><strong>dic</strong> (<em>dictionary</em><em> (</em><em>key str</em><em>, </em><em>value list of Autodesk.Revit.DB.ElementId</em><em>)</em>) – A dictionary containing key: wall type family name, value: list of ids belonging to that type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in wall type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitWalls.CURTAIN_WALL_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">CURTAIN_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Curtain</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#RevitWalls.CURTAIN_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in wall family name for curtain wall</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllBasicWallInstancesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllBasicWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllBasicWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all basic wall elements placed in model…ignores legend elements</p>
+<dd><p>Gets all basic wall elements placed in model…ignores legend elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>availableIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – Filter: curtain wall type ids to check wall instances for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing all basic wall instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllBasicWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllBasicWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllBasicWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all available basic wall types</p>
+<dd><p>Gets type ids off all available basic wall types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing all basic wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllCurtainWallInstancesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllCurtainWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+<dd><p>Gets all curtain wall elements placed in model…ignores legend elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>availableIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – Filter: curtain wall type ids to check wall instances for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of wall instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.Wall</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllCurtainWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllCurtainWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all available curtain wall types</p>
+<dd><p>Gets type ids off all available curtain wall types in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing curtain wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllInPlaceWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllInPlaceWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all available in place families of category wall</p>
+<dd><p>Gets all type ids off all available in place families of category wall.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing in place wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallInstancesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallInstancesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+<dd><p>Gets all stacked wall elements placed in model…ignores legend elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing wall instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all stacked wall element types available in model</p>
+<dd><p>Gets all stacked wall element types available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stacked wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetAllStackedWallTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllStackedWallTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllStackedWallTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all stacked wall element types used by instances placed in model</p>
+<dd><p>Gets all stacked wall element types used by instances placed in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stacked wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetAllWallTypes">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetAllWallTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetAllWallTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all wall types in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetInPlaceWallFamilyInstances">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetInPlaceWallFamilyInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetInPlaceWallFamilyInstances" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all instances in place families of category wall</p>
+<dd><p>Returns all instances in place families of category wall in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing  in place wall instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetPlacedBasicWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetPlacedBasicWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetPlacedBasicWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all basic wall type elements used in model</p>
+<dd><p>Gets all basic wall types used in model.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>availableIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – Filter: basic wall type ids to check wall instances for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing all basic wall types in use.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetPlacedCurtainWallTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetPlacedCurtainWallTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetPlacedCurtainWallTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all stacked wall elements placed in model…ignores legend elements</p>
+<dd><p>Gets all used curtain wall types in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>availableIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – Filter: curtain wall type ids to check wall types for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of wall instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of Autodesk.Revit.DB.Wall</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUnUsedBasicWallTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedBasicWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnUsedBasicWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all unused basic wall types, will leave one behind if none is used</p>
+<dd><p>Gets type ids off all unused basic wall types in model.</p>
+<p>This method can be used to safely delete unused basic wall types. In the case that no basic        wall instance using any of the types is placed, this will return all but one type id since        Revit requires at least one basic wall type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing all basic wall types not in use.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUnUsedCurtainWallTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCurtainWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnUsedCurtainWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all unused curtain wall types, will leave one behind if none is used</p>
+<dd><p>Gets type ids off all unused curtain wall types.</p>
+<p>This method can be used to safely delete unused curtain wall types. In the case that no curtain        wall instance using any of the types is placed, this will return all but one type id since        Revit requires at least one curtain wall type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused in curtain wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUnusedInPlaceWallIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceWallIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedInPlaceWallIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be purged</p>
+<dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be savely deleted from the model.</p>
+<p>This method can be used to safely delete unused in place wall types. There is no requirement by Revit to have at least one        in place wall defintion in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused in place wall types and families.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUnusedInPlaceWallTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedInPlaceWallTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in place type ids</p>
+<dd><p>Gets all unused in place type ids in the model.</p>
+<p>Unused: Not one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused in place wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUnusedStackedWallTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStackedWallTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedStackedWallTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused stack wall type ids, will leave one behind if none is used</p>
+<dd><p>Gets all unused stacked wall type id’s.</p>
+<p>This method can be used to safely delete unused wall types:
+In the case that no wall instance using any of the types is placed this will return all but one type id since        Revit requires at least one wall type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing not used stacked wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUsedBasicWallTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedBasicWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedBasicWallTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all used basic wall types</p>
+<dd><p>Gets type ids off all used basic wall types.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing all basic wall types in use.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUsedCurtainWallTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedCurtainWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedCurtainWallTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all used curtain wall types</p>
+<dd><p>Gets type ids off all used curtain wall types.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used in curtain wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUsedInPlaceWallTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedInPlaceWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedInPlaceWallTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in place type ids</p>
+<dd><p>Gets all used in place type ids in the model.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used in place wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetUsedStackedWallTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUsedStackedWallTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUsedStackedWallTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used stack wall type ids</p>
+<dd><p>Returns all used stack wall type ids.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used stacked wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitWalls.GetWallReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetWallReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetWallReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets wall data to be written to report file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The file hostname, which is added to data returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of sheet properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.GetWallTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetWallTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetWallTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all wall types in the model
-it will therefore not return any in place wall types since revit treats those as Families…</p>
+<dd><p>This will return a filtered element collector of all wall types by class in the model</p>
+<p>It will therefore not return any in place wall types since revit treats those as families…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing wall types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitWalls.REPORT_WALLS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">REPORT_WALLS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'WALLTYPEID',</span> <span class="pre">'WALLTYPENAME',</span> <span class="pre">'FUNCTION',</span> <span class="pre">'LAYERWIDTH',</span> <span class="pre">'LAYERMATERIALNAME',</span> <span class="pre">'LAYERMATERIALMARK']</span></em><a class="headerlink" href="#RevitWalls.REPORT_WALLS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Header used in reports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitWalls.STACKED_WALL_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">STACKED_WALL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stacked</span> <span class="pre">Wall'</span></em><a class="headerlink" href="#RevitWalls.STACKED_WALL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in wall family name for stacked wall</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWalls.SortWallTypesByFamilyName">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">SortWallTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.SortWallTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a dictionary where key is the build in wall family name, values are ids of associated wall types</p>
+<dd><p>Returns a dictionary of all wall types in the model where key is the build in wall family name, values are ids of associated wall types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in wall type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

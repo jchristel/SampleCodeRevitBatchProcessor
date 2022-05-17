@@ -46,8 +46,8 @@ def GetModelGroups(doc):
     '''
     Get all model group types from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: list of model group types in the model
     :rtype: list of Autodesk.Revit.DB.
     '''

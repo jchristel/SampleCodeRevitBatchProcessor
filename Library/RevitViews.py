@@ -880,7 +880,7 @@ def GetSheetReportData(doc, hostName):
     :type hostName: str
 
     :return: list of list of sheet properties.
-    :rtype: list of lsit of str
+    :rtype: list of list of str
     '''
 
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)

@@ -171,8 +171,8 @@ Revit Stairs
 .. automodule:: RevitStairs
     :members:
 
-Revit Views and Views Referencing
----------------------------------
+Revit Views, View Filters and Views Referencing
+-----------------------------------------------
 .. automodule:: RevitViewReferencing
     :members:
 

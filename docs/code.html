@@ -1867,6 +1867,12 @@ it will therefore not return any family types …</p>
 <dd><p>get all used repeating detail type ids</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitDetailItems.REPORT_GROUPS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitDetailItems.</span></span><span class="sig-name descname"><span class="pre">REPORT_GROUPS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'ITEM</span> <span class="pre">TYPE']</span></em><a class="headerlink" href="#RevitDetailItems.REPORT_GROUPS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
 </section>
 <section id="module-RevitDesignSetOptions">
 <span id="revit-design-options-and-design-sets"></span><h2>Revit Design Options and Design Sets<a class="headerlink" href="#module-RevitDesignSetOptions" title="Permalink to this headline">¶</a></h2>
@@ -1950,6 +1956,12 @@ isPrimary:bool</p>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.REPORT_DESIGNSET_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">REPORT_DESIGNSET_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PRIMARY</span> <span class="pre">OPTION',</span> <span class="pre">'OTHER</span> <span class="pre">OPTIONS']</span></em><a class="headerlink" href="#RevitDesignSetOptions.REPORT_DESIGNSET_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
 </dd></dl>
 
 </section>
@@ -3087,6 +3099,12 @@ it will therefore not return any in place family types …</p>
 <dd><p>returns all used in place type ids</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitFloors.REPORT_FLOORS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">REPORT_FLOORS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'FLOORTYPEID',</span> <span class="pre">'FLOORTYPENAME']</span></em><a class="headerlink" href="#RevitFloors.REPORT_FLOORS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
 </section>
 <section id="module-RevitGenericAnnotation">
 <span id="revit-generic-annotation"></span><h2>Revit Generic Annotation<a class="headerlink" href="#module-RevitGenericAnnotation" title="Permalink to this headline">¶</a></h2>
@@ -3194,6 +3212,12 @@ it will therefore not return any in place family types …</p>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitGenericAnnotation.REPORT_GENERIC_ANNOTATIONS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">REPORT_GENERIC_ANNOTATIONS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'GENERICANNOTATIONTYPEID',</span> <span class="pre">'GENERICANNOTATIONTYPENAME']</span></em><a class="headerlink" href="#RevitGenericAnnotation.REPORT_GENERIC_ANNOTATIONS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
 </dd></dl>
 
 </section>
@@ -3599,6 +3623,12 @@ this will not include any attached detail groups!!</p>
 <dd><p>this will return all ids of unused level types in the model to be purged</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitLevels.REPORT_LEVELS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">REPORT_LEVELS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'WORKSETNAME',</span> <span class="pre">'ELEVATION']</span></em><a class="headerlink" href="#RevitLevels.REPORT_LEVELS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
 </section>
 <section id="module-RevitLineStylesPatterns">
 <span id="revit-line-styles-and-patterns"></span><h2>Revit Line Styles and Patterns<a class="headerlink" href="#module-RevitLineStylesPatterns" title="Permalink to this headline">¶</a></h2>
@@ -3606,13 +3636,176 @@ this will not include any attached detail groups!!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLineStylesPatterns.BuildPatternsDictionaryByName">
 <span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">BuildPatternsDictionaryByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.BuildPatternsDictionaryByName" title="Permalink to this definition">¶</a></dt>
-<dd><p>builds a dictionary wher line pattern name is key, values are all ids of line patterns with the exact same name</p>
+<dd><p>Returns a dictionary where line pattern name is key, values are all ids of line patterns with the exact same name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where line pattern name is key, values are all ids of line patterns with the exact same name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictinonary(key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLineStylesPatterns.DeleteDuplicatLinePatterNames">
 <span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">DeleteDuplicatLinePatterNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.DeleteDuplicatLinePatterNames" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes all but the first line pattern by Id with the exact same name</p>
+<dd><p>Deletes all but the first line pattern by Id with the exact same name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all views where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.DeleteLinePatternStartsWith">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">DeleteLinePatternStartsWith</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startsWith</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.DeleteLinePatternStartsWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all line patterns where the name starts with provided string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>startsWith</strong> (<em>str</em>) – Filter: pattern name needs to start with this string to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if line pattern where deleted succesfully. Otherwise False.
+.message will contain delete status per pattern.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.DeleteLinePatternsContains">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">DeleteLinePatternsContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.DeleteLinePatternsContains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all line patterns where the names contains a provided string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs to contain this tring to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if line pattern where deleted succesfully. Otherwise False.
+.message will contain delete status per pattern.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.DeleteLinePatternsWithout">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">DeleteLinePatternsWithout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.DeleteLinePatternsWithout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all line patterns where the name does not contain the provided string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs not to contain this string to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if line pattern where deleted succesfully. Otherwise False.
+.message will contain delete status per pattern.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.DeleteLineStylesStartsWith">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">DeleteLineStylesStartsWith</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startsWith</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.DeleteLineStylesStartsWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all line styles where the name starts with provided string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>startsWith</strong> (<em>str</em>) – Filter: style name needs to start with this string to be deleted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all views where deleted. Otherwise False.
+.message will contain deletion status.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.GetAllFillPattern">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">GetAllFillPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.GetAllFillPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all fill pattern element ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all fill pattern elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.FillPatternElement</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.GetAllLinePatterns">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">GetAllLinePatterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.GetAllLinePatterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all line patterns in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of all line pattern elements in model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.LinePatternElement</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLineStylesPatterns.GetAllLineStyleIds">
+<span class="sig-prename descclassname"><span class="pre">RevitLineStylesPatterns.</span></span><span class="sig-name descname"><span class="pre">GetAllLineStyleIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLineStylesPatterns.GetAllLineStyleIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all line styles ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all line style ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -3763,6 +3956,12 @@ otherwise images in groups which are not placed will not be flagged by this filt
 <dt class="sig sig-object py" id="RevitLinks.GetRevitLinkTypeFromInstance">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetRevitLinkTypeFromInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkInstance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetRevitLinkTypeFromInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns all Revit link type from a given instance</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitLinks.REPORT_REVIT_LINKS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">REPORT_REVIT_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISLOADED',</span> <span class="pre">'TYPEWORKSET',</span> <span class="pre">'ISFROMLOCALPATH',</span> <span class="pre">'PATHTYPE',</span> <span class="pre">'FILEPATH',</span> <span class="pre">'SHAREDSITE',</span> <span class="pre">'SHAREDSITENAME',</span> <span class="pre">'INSTANCEWORKSET',</span> <span class="pre">'DESIGNOPTION']</span></em><a class="headerlink" href="#RevitLinks.REPORT_REVIT_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>revit links header used in reports</p>
 </dd></dl>
 
 <dl class="py function">
@@ -5543,7 +5742,7 @@ values are the type ids in use</p>
 <dd class="field-even"><p>list of list of sheet properties.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of lsit of str</p>
+<dd class="field-odd"><p>list of list of str</p>
 </dd>
 </dl>
 </dd></dl>

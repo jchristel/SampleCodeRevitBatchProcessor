@@ -280,9 +280,17 @@
 </li>
       <li><a href="code.html#RevitLinks.DeleteCADLinks">DeleteCADLinks() (in module RevitLinks)</a>
 </li>
+      <li><a href="code.html#RevitLineStylesPatterns.DeleteDuplicatLinePatterNames">DeleteDuplicatLinePatterNames() (in module RevitLineStylesPatterns)</a>
+</li>
+      <li><a href="code.html#RevitLineStylesPatterns.DeleteLinePatternsContains">DeleteLinePatternsContains() (in module RevitLineStylesPatterns)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="code.html#RevitLineStylesPatterns.DeleteDuplicatLinePatterNames">DeleteDuplicatLinePatterNames() (in module RevitLineStylesPatterns)</a>
+      <li><a href="code.html#RevitLineStylesPatterns.DeleteLinePatternStartsWith">DeleteLinePatternStartsWith() (in module RevitLineStylesPatterns)</a>
+</li>
+      <li><a href="code.html#RevitLineStylesPatterns.DeleteLinePatternsWithout">DeleteLinePatternsWithout() (in module RevitLineStylesPatterns)</a>
+</li>
+      <li><a href="code.html#RevitLineStylesPatterns.DeleteLineStylesStartsWith">DeleteLineStylesStartsWith() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="code.html#RevitLinks.DeleteRevitLinks">DeleteRevitLinks() (in module RevitLinks)</a>
 </li>
@@ -526,6 +534,8 @@
 </li>
       <li><a href="code.html#RevitDetailItems.GetAllFilledRegionTypeIdsAvailable">GetAllFilledRegionTypeIdsAvailable() (in module RevitDetailItems)</a>
 </li>
+      <li><a href="code.html#RevitLineStylesPatterns.GetAllFillPattern">GetAllFillPattern() (in module RevitLineStylesPatterns)</a>
+</li>
       <li><a href="code.html#RevitMEPSystems.GetAllFlexDuctInstancesInModelByCategory">GetAllFlexDuctInstancesInModelByCategory() (in module RevitMEPSystems)</a>
 </li>
       <li><a href="code.html#RevitMEPSystems.GetAllFlexDuctInstancesInModelByClass">GetAllFlexDuctInstancesInModelByClass() (in module RevitMEPSystems)</a>
@@ -589,6 +599,10 @@
       <li><a href="code.html#RevitLevels.GetAllLevelTypeIdsByCategory">GetAllLevelTypeIdsByCategory() (in module RevitLevels)</a>
 </li>
       <li><a href="code.html#RevitLevels.GetAllLevelTypesByCategory">GetAllLevelTypesByCategory() (in module RevitLevels)</a>
+</li>
+      <li><a href="code.html#RevitLineStylesPatterns.GetAllLinePatterns">GetAllLinePatterns() (in module RevitLineStylesPatterns)</a>
+</li>
+      <li><a href="code.html#RevitLineStylesPatterns.GetAllLineStyleIds">GetAllLineStyleIds() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="code.html#RevitFamilyUtils.GetAllLoadableFamilies">GetAllLoadableFamilies() (in module RevitFamilyUtils)</a>
 </li>
@@ -890,10 +904,10 @@
 </li>
       <li><a href="code.html#RevitAnnotation.GetIndependentTagTypeArrowHeadIds">GetIndependentTagTypeArrowHeadIds() (in module RevitAnnotation)</a>
 </li>
-      <li><a href="code.html#DataShapely.GetInnerLoopsAsShape">GetInnerLoopsAsShape() (in module DataShapely)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="code.html#DataShapely.GetInnerLoopsAsShape">GetInnerLoopsAsShape() (in module DataShapely)</a>
+</li>
       <li><a href="code.html#RevitCeilings.GetInPlaceCeilingFamilyInstances">GetInPlaceCeilingFamilyInstances() (in module RevitCeilings)</a>
 </li>
       <li><a href="code.html#RevitFloors.GetInPlaceFloorFamilyInstances">GetInPlaceFloorFamilyInstances() (in module RevitFloors)</a>
@@ -1651,9 +1665,23 @@
 </li>
       <li><a href="code.html#Utility.RenameFile">RenameFile() (in module Utility)</a>
 </li>
+      <li><a href="code.html#RevitDesignSetOptions.REPORT_DESIGNSET_HEADER">REPORT_DESIGNSET_HEADER (in module RevitDesignSetOptions)</a>
+</li>
+      <li><a href="code.html#RevitFloors.REPORT_FLOORS_HEADER">REPORT_FLOORS_HEADER (in module RevitFloors)</a>
+</li>
+      <li><a href="code.html#RevitGenericAnnotation.REPORT_GENERIC_ANNOTATIONS_HEADER">REPORT_GENERIC_ANNOTATIONS_HEADER (in module RevitGenericAnnotation)</a>
+</li>
       <li><a href="code.html#RevitGrids.REPORT_GRIDS_HEADER">REPORT_GRIDS_HEADER (in module RevitGrids)</a>
 </li>
-      <li><a href="code.html#RevitGroups.REPORT_GROUPS_HEADER">REPORT_GROUPS_HEADER (in module RevitGroups)</a>
+      <li><a href="code.html#RevitDetailItems.REPORT_GROUPS_HEADER">REPORT_GROUPS_HEADER (in module RevitDetailItems)</a>
+
+      <ul>
+        <li><a href="code.html#RevitGroups.REPORT_GROUPS_HEADER">(in module RevitGroups)</a>
+</li>
+      </ul></li>
+      <li><a href="code.html#RevitLevels.REPORT_LEVELS_HEADER">REPORT_LEVELS_HEADER (in module RevitLevels)</a>
+</li>
+      <li><a href="code.html#RevitLinks.REPORT_REVIT_LINKS_HEADER">REPORT_REVIT_LINKS_HEADER (in module RevitLinks)</a>
 </li>
       <li><a href="code.html#RevitViews.REPORT_SHEETS_HEADER">REPORT_SHEETS_HEADER (in module RevitViews)</a>
 </li>
@@ -1760,6 +1788,8 @@
         <li><a href="code.html#module-RevitFamilyUtils">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitFloors
 
@@ -1767,8 +1797,6 @@
         <li><a href="code.html#module-RevitFloors">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitGenericAnnotation
 

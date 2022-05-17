@@ -38,29 +38,55 @@ from Autodesk.Revit.DB import View, ViewType, ViewFamilyType, ViewSheet, Filtere
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in views report
 REPORT_VIEWS_HEADER = ['HOSTFILE']
+#: header used in sheets report
 REPORT_SHEETS_HEADER = ['HOSTFILE','Id']
 
 # --------------------------------------------- utility functions ------------------
 
 # --------------------------------------------- View Types  ------------------
 
-# doc: current model
 def GetViewTypes(doc):
-    '''returns all view family types in a model'''
+    '''
+    Returns all view family types in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A filtered element collector.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return FilteredElementCollector(doc).OfClass(ViewFamilyType)
 
 def GetViewTypeIds(doc):
-    '''returns all view family type ids in a model'''
+    '''
+    Returns all view family type ids in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: ids of view family types
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = FilteredElementCollector(doc).OfClass(ViewFamilyType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
 def GetUsedViewTypeIdsInTheModel(doc):
-    '''returns all view family types in the model'''
+    '''
+    Returns all view family types in use in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: ids of view family types in use
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     viewTypeIdsUsed = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -75,17 +101,32 @@ def GetUsedViewTypeIdsInTheModel(doc):
                 viewTypeIdsUsed.append(v.GetTypeId())
     return viewTypeIdsUsed
 
-# doc   current model document
 def GetUnusedViewTypeIdsInModel(doc):
-    '''returns ID of unused view family types in the model'''
+    '''
+    Returnds all unused view family types in the model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: ids of view family types not in use
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     filteredUnusedViewTypeIds = com.GetUnusedTypeIdsInModel(doc, GetViewTypes, GetUsedViewTypeIdsInTheModel)
     return filteredUnusedViewTypeIds
  
 # -------------------------------------------View Templates --------------------------------------------
 
-# doc   current model document
 def GetViewsTemplatesInInModel(doc):
-    '''get all templates in a model'''
+    '''
+    Get all view templates in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view templates in the model
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     viewTemplates = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -94,9 +135,17 @@ def GetViewsTemplatesInInModel(doc):
             viewTemplates.append(v)
     return viewTemplates
 
-# doc   current model document
 def GetViewsTemplateIdsInInModel(doc):
-    '''get all template ids in a model'''
+    '''
+    Get all view emplate ids in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view templates Id's in the model
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -105,9 +154,17 @@ def GetViewsTemplateIdsInInModel(doc):
             ids.append(v.Id)
     return ids
 
-# doc   current model document
 def GetUsedViewTemplateIdsInTheModel(doc):
-    '''returns view templates used in views in the model only'''
+    '''
+    Gets ids of view templates used in views in the model only
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All used view templates Id's in the model
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     viewTemplateIdsUsed = []
     # get all view templates assigned to views
     col = FilteredElementCollector(doc).OfClass(View)
@@ -123,9 +180,17 @@ def GetUsedViewTemplateIdsInTheModel(doc):
                 viewTemplateIdsUsed.append(v.ViewTemplateId)
     return viewTemplateIdsUsed
 
-# doc   current model document
 def GetDefaultViewTypeTemplateIds(doc):
-    '''returns view template Id's used as default by view types'''
+    '''
+    Gets view template Id's used as default by view types
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view templates Id's which are used as default in view types in the model
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     viewTemplateIdsUsed = []
     # get all templates assigned to view family types:
     vfts = com.GetSimilarTypeFamiliesByType(doc, GetViewTypes)
@@ -140,7 +205,21 @@ def GetDefaultViewTypeTemplateIds(doc):
 
 # doc   current model document
 def GetAllViewTemplateIdsUsedInModel(doc):
-    '''returns view template Id's used as default by view types and by views'''
+    '''
+    Get all used view template Id's.
+    
+    Templates can either be:
+    
+    - used as default by view types
+    - used by a view 
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view templates Id's which are used in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     vtv = GetUsedViewTemplateIdsInTheModel(doc)
     vfts = GetDefaultViewTypeTemplateIds(doc)
     for id in vfts:
@@ -148,10 +227,19 @@ def GetAllViewTemplateIdsUsedInModel(doc):
             vtv.append(id)
     return vtv
 
-# doc   current model document
-# filterByType:   list of view types of which to return view templates from
 def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
-    '''get all templates in a model of given type'''
+    '''
+    Get all templates in a model of given type
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filterByType: List of view types of which to return view templates from
+    :type filterByType: list of Autodesk.Revit.DB.ViewType
+
+    :return: All view templates in the model
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     viewTemplates = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -163,9 +251,16 @@ def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
                     break
     return viewTemplates
 
-# doc   current model document
 def GetAllUnusedViewTemplateIdsInModel(doc):
-    '''returns all view template Id's not used by view types and by views'''
+    '''
+    Gets all view template Id's not used by view types or by views
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view templates Id's which are not used in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
     usedVts = GetAllViewTemplateIdsUsedInModel(doc)
     vtInModel = GetViewsTemplatesInInModel(doc)
     unusedVts = []
@@ -176,27 +271,51 @@ def GetAllUnusedViewTemplateIdsInModel(doc):
 
 # -------------------------------------------View Filters --------------------------------------------
 
-# all view types which can have filters applied
+#: List of view types which can have filters applied
 VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.Elevation, ViewType.ThreeD, ViewType.EngineeringPlan, ViewType.AreaPlan, ViewType.Section, ViewType.Detail, ViewType.Walkthrough, ViewType.DraftingView, ViewType.Legend]
 
-# doc   current model document
 def GetAllAvailableFiltersInModel(doc):
-    '''returns all filters in document as a collector'''
+    '''
+    Gets all filters in document as a collector
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered Element collector containing Autodesk.Revit.DB.ParameterFilterElement
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
     collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
     return collector
 
-# doc   current model document
 def GetAllAvailableFilterIdsInModel(doc):
-    '''returns all view filter ids in document'''
+    '''
+    Gets all view filter ids in document
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All view filter Id's which are in the model.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = GetAllAvailableFiltersInModel(doc)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# view   view from which to get the filters from
-# uniqueList    list of filters of which to add new filters to (not already in list)
 def GetFilterIdsFromViewByFilter(view, uniqueList):
-    '''returns passed in list of filter id's plus new filter id's from view (not already in list passt in)'''
+    '''
+    Returns passt in list of filter id's plus new unique filter id's from view (if not already in list passt in)
+
+    :param view: The view of which to get the filters from.
+    :type view: Autodesk.Revit.DB.View
+    :param uniqueList: List containing view filters
+    :type uniqueList: list of Autodesk.Revit.DB.ElementId
+
+    :return: List containing passt in view filters and new view filters.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     filters = view.GetFilters()
     if len(filters) != 0:
         for j in filters:
@@ -204,9 +323,17 @@ def GetFilterIdsFromViewByFilter(view, uniqueList):
                 uniqueList.append(j)
     return uniqueList
 
-# doc   current model document
 def GetFiltersFromTemplates(doc):
-    '''returns all filters used in templates only'''
+    '''
+    Gets all filter id's used in view templates only.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List containing filter Id's.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     filtersInUse = []
     # get view filters used in templates only
     # include templates which do not enforce filters but still may have some set
@@ -216,10 +343,19 @@ def GetFiltersFromTemplates(doc):
         filtersInUse = GetFilterIdsFromViewByFilter(temp, filtersInUse)
     return filtersInUse
 
-# doc   current model document
-# filterByType:   list of view types of which to return view templates from
 def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
-    '''get all filters from views which dont have a template applied'''
+    '''
+    Gets all filter id's from views which dont have a template applied and match a given view type.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filterByType: list of view types of which the filters are to be returned.
+    :type filterByType: list of Autodesk.Revit.DB.ViewType
+
+    :return: List containing filter Id's.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     filtersInUse = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -234,9 +370,17 @@ def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
                     break
     return filtersInUse
 
-# doc   current model document
 def GetAllUnUsedViewFilters(doc):
-    '''gets id's of all unused view filters in a model'''
+    '''
+    Gets id's of all unused view filters in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List containing filter Id's.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     unUsedViewFilterIds = []
     allAvailableFilters = GetAllAvailableFiltersInModel(doc)
     allFilterIdsByTemplate = GetFiltersFromTemplates(doc)
@@ -251,7 +395,16 @@ def GetAllUnUsedViewFilters(doc):
 # ----------------------------------------------------------------------------------------
 
 def GetScheduleIdsOnSheets(doc):
-    '''returns view ids of all schedules on a sheet'''
+    '''
+    Gets view ids of all schedules with instances placed on a sheet
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List containing schedule Id's.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids=[]
     col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
     for s in col:
@@ -259,9 +412,19 @@ def GetScheduleIdsOnSheets(doc):
             ids.append(s.ScheduleId)
     return ids
  
-# excludes templates!
 def GetViewsofType(doc, viewtype):
-    '''returns all views in a model of a given type'''
+    '''
+    Gets all views in a model of a given type. Excludes templates.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewtype: Filter: the view type
+    :type viewtype: Autodesk.Revit.DB.ViewType
+
+    :return: list of views
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     views=[]
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -270,13 +433,31 @@ def GetViewsofType(doc, viewtype):
     return views
 
 def GetSheetsInModel(doc):
-    ''' returns all sheets in a model'''
+    '''
+    Gets all sheets in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list of sheet views
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     return GetViewsofType(doc, ViewType.DrawingSheet)
 
-# doc:      current document
-# sheets:   all sheets to retrieve view ports from
 def GetViewportOnSheets(doc, sheets):
-    '''returns all view ports in the model'''
+    '''
+    Getd all view ports on sheets provided.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheets: list of sheets of which to return the view ports from.
+    :type sheets: list of Autodesk.Revit.DB.ViewSheet
+
+    :return: list of view ports
+    :rtype: list of Autodesk.Revit.DB.Viewport
+    '''
+
     viewports = []
     for sheet in sheets:
         try:
@@ -290,21 +471,42 @@ def GetViewportOnSheets(doc, sheets):
     return viewports
 
 def FilterRevisionSchedules(view):
-    '''returns true if the view name starts with '<', otherwise false'''
+    '''
+    Checks whether a view is a revision schedule.
+
+    :param view: The view to check.
+    :type view: Autodesk.Revit.DB.View
+
+    :return: True if the view name starts with '<', otherwise False
+    :rtype: bool
+    '''
+
     if(view.Name.startswith('<')):
         return False
     else:
         return True
 
 def GetViewsInModel(doc, filter):
-    '''eturns all views in a model which are
-    not template views
-    not system browser
-    not project broser
-    not undefined
-    not Internal
-    not sheets
-    match a filter'''
+    '''
+    Gets all views in a model which are matching a filter and are:
+
+    - not template views
+    - not system browser
+    - not project broser
+    - not undefined
+    - not Internal
+    - not sheets
+   
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filter: function checking view
+    :type filter: func(view) returning a bool
+
+    :return: list of views
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     views = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
@@ -319,7 +521,16 @@ def GetViewsInModel(doc, filter):
     return views
 
 def GetScheduleIdsNotOnSheets(doc):
-    '''returns all schedules not on a sheet'''
+    '''
+    Gets all schedules without an instance placed on a sheet.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: list of schedules without a sheet schedule instance.
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     schedulesNotOnSheets = []
     # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
@@ -331,9 +542,17 @@ def GetScheduleIdsNotOnSheets(doc):
             schedulesNotOnSheets.append(schedule)
     return schedulesNotOnSheets
 
-# excludes schedules
 def GetViewsNotOnSheet(doc):
-    '''returns all views not on a sheet'''
+    '''
+    Gets all views not placed on a sheet. (Excludes schedules)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of views which are currently not placed on a sheet.
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+
     viewsNotOnSheet = []
     # get all sheets
     sheetsInModel = GetSheetsInModel(doc)
@@ -355,6 +574,22 @@ def GetViewsNotOnSheet(doc):
 # deletes views based on
 # view rules: array in format [parameter name, condition test method, value to test against]
 def DeleteViews(doc, viewRules, collectorViews):
+    '''
+    Deletes views based on view rules supplied.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewRules: Rules used to check whether a view should be deleted. Rules are based on parameters attached to view and their values.
+    :type viewRules: array in format [[parameter name, condition test method, value to test against]]
+    :param collectorViews: A filtered element collector containing views.
+    :type collectorViews: Autodesk.Revit.DB.FilteredElementCollector
+
+    :return: Result class instance.
+           .result = True if all views where deleted. Otherwise False.
+           .message will contain deletion status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     ids = []
     viewCounter = 0
     for v in collectorViews:
@@ -383,7 +618,20 @@ def DeleteViews(doc, viewRules, collectorViews):
     return result
 
 def DeleteViewsNotOnSheets(doc, filter):
-    '''deletes all views not placed on sheets includes schedules and legends'''
+    '''
+    Deletes all views not placed on sheets includes schedules and legends matching filter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param filter: Function checking whether view should be deleted.
+    :type filter: func(view) returns a bool
+
+    :return: Result class instance.
+           .result = True if all views where deleted. Otherwise False.
+           .message will contain deletion status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     ids = []
     returnvalue = res.Result()
     viewsNotOnSheets = GetViewsNotOnSheet(doc)
@@ -401,7 +649,18 @@ def DeleteViewsNotOnSheets(doc, filter):
     return returnvalue
 
 def DeleteUnusedElevationViewMarkers(doc):
-    '''deletes unused elevation markers'''
+    '''
+    Deletes all unused elevation markers. (no Elevation is created by the marker)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Result class instance.
+           .result = True if all unused elevation markers where deleted. Otherwise False.
+           .message will contain deletion status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
     # items to be deleted
@@ -422,7 +681,22 @@ def DeleteUnusedElevationViewMarkers(doc):
     return returnvalue
 
 def DeleteSheets(doc, viewRules, collectorViews):
-    '''deletes sheets based on view rules: array in format [parameter name, condition test method, value to test against]'''
+    '''
+    Deletes sheets based on rules.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewRules: A set of rules. If view matches rule it will be deleted.
+    :type viewRules: array in format [parameter name, condition test method, value to test against
+    :param collectorViews: A filtered element collector containing view instances.
+    :type collectorViews: Autodesk.Revit.DB.FilteredElementCollector
+    
+    :return: Result class instance.
+           .result = True if all sheets matching filter where deleted. Otherwise False.
+           .message will contain deletion status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     ids = []
     for v in collectorViews:
         if(v.ViewType == ViewType.DrawingSheet):
@@ -439,7 +713,18 @@ def DeleteSheets(doc, viewRules, collectorViews):
     return result
 
 def DeleteAllSheetsInModel(doc):
-    '''deletes all sheets in a model'''
+    '''
+    Deletes all sheets in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: Result class instance.
+           .result = True if all sheets where deleted. Otherwise False.
+           .message will contain deletion status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     ids = []
     collectorSheets = FilteredElementCollector(doc).OfClass(View)
@@ -452,9 +737,19 @@ def DeleteAllSheetsInModel(doc):
         returnvalue.UpdateSep(True, 'No sheets in the model')
     return returnvalue
 
-# view rules: array in format [parameter name, condition test method, value to test against]
 def GetSheetsByFilters(doc, viewRules = None):
-    '''returns sheets matching filters provided'''
+    '''
+    Gets sheets matching filters provided
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewRules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
+    :type viewRules: array in format [parameter name, condition test method, value to test against], optional
+    
+    :return: Views matching filter
+    :rtype: list of Autodesk.Revit.DB.View
+    '''
+    
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collectorViews:
@@ -475,11 +770,22 @@ def GetSheetsByFilters(doc, viewRules = None):
 
 # ------------------------------------------------------- sheet reporting --------------------------------------------------------------------
 
-# method writing out sheet data
-# doc:          current model document
-# fileName:     fully qualified file path
 def WriteSheetData(doc, fileName, currentFileName):
-    '''writes out sheet data to file'''
+    '''
+    Writes to file all sheet properties.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: The fully qualified file path of the report file.
+    :type fileName: str
+    :param currentFileName: The current revit file name which will be appended to data in the report.
+    :type currentFileName: str
+    :return: Result class instance.
+           .result = True if data was written succesfully. Otherwise False.
+           .message will contain write status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
@@ -493,10 +799,25 @@ def WriteSheetData(doc, fileName, currentFileName):
         returnvalue.UpdateSep(False, str(e))
     return returnvalue
 
-# doc:          current model document
-# fileName:     fully qualified file path
 def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
-    '''writes to file sheet properties as nominated in passt in list '''
+    '''
+    Writes to file sheet properties as nominated in passt in list.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: The fully qualified file path of the report file.
+    :type fileName: str
+    :param currentFileName: The current revit file name which will be appended to data in the report.
+    :type currentFileName: str
+    :param sheetProperties: List of sheet properties to be extracted from sheets.
+    :type sheetProperties: list of str
+
+    :return: Result class instance.
+           .result = True if data was written succesfully. Otherwise False.
+           .message will contain write status.
+    :rtype: SampleCodeBatchProcessor.Result
+    '''
+
     returnvalue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
@@ -515,11 +836,23 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
         returnvalue.UpdateSep(False, str(e))
     return returnvalue
 
-# data                  sheet data as a list of lists
-# headers               list of property names
-# sheetProperties       list of sheet properties to be extracted from data
 def FilterDataByProperties(data, headers, sheetProperties):
-    '''filters sheet data by supplied property names'''
+    '''
+    Filters sheet data by supplied property names.
+
+    Data gets filtered twice: property needs to exist in headers list as well as in sheet properties list.
+
+    :param data: List of sheet properties to be kept.
+    :type data: list of list of str
+    :param headers: Filter: list of headers representing property names.
+    :type headers: list of str
+    :param sheetProperties: list of sheet properties to be extracted from data
+    :type sheetProperties: list of str
+
+    :return: List of sheet properties matching filters.
+    :rtype: list of list of str
+    '''
+
     # add default headers to propertie to be filtered first
     dataIndexList= [iter for iter in range(len(REPORT_SHEETS_HEADER))]
     # build index pointer list of data to be kept
@@ -535,10 +868,21 @@ def FilterDataByProperties(data, headers, sheetProperties):
         newData.append(dataRow)
     return newData
 
-# doc       the current revit document
-# hostanme  the file hostname, which is added to data returned
 def GetSheetReportData(doc, hostName):
-    '''returns sheet data including file name and sheet id'''
+    '''
+    Gets sheet data to be written to report file.
+
+    The data returned includes all sheet properties available in the file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param hostName: The file hostname, which is added to data returned
+    :type hostName: str
+
+    :return: list of list of sheet properties.
+    :rtype: list of lsit of str
+    '''
+
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     views = []
     for v in collectorViews:
@@ -555,9 +899,19 @@ def GetSheetReportData(doc, hostName):
         views.append(data)
     return views
 
-# doc       the current revit document
 def GetReportHeaders(doc):
-    '''returns sheet data including file name and sheet id'''
+    '''
+    A list of headers used in report files
+
+    Hardcoded header list is expanded by parameters added to sheet category in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of headers.
+    :rtype: list str
+    '''
+
     collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
     # copy headers list
     headers = REPORT_SHEETS_HEADER[:]

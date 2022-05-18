@@ -40,7 +40,7 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_CEILINGS_HEADER = ['HOSTFILE', 'CEILINGTYPEID', 'CEILINGTYPENAME']
 
 COMPOUND_CEILING_FAMILY_NAME = 'Compound Ceiling'

@@ -32,8 +32,16 @@ import Utility as util
 import Autodesk.Revit.DB as rdb
 
 
-# return human readable BIM 360 path
 def GetBim360Path(doc):
+    '''
+    Gets human readable BIM 360 path.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: The path to the bim360 model. If an exception occured an empty string will be returned.
+    :rtype: str
+    '''
+
     # get bim 360 path
     revitFilePath = ''
     try:
@@ -43,15 +51,30 @@ def GetBim360Path(doc):
         revitFilePath = ''
     return revitFilePath
 
-# pretend this is a file server path rather than cloud model path
 def ConvertBIM360FilePath(path):
+    '''
+    Pretend this is a file server path rather than cloud model path and swap BIM360:// with C:/
+
+    :param path: The model cloud file path starting with BIM360
+    :type path: str
+    :return: A file path without BIM360
+    :rtype: str
+    '''
+
     # hack.. pretend path points to C:\\ rather than BIM 360://
     path = path.replace(r'BIM 360://', r'C:/')
     return path
 
-# doc       current model document
 def GetModelBIM360Ids(doc):
-    '''returns project id, model id, human readable path'''
+    '''
+    Gets project id, model id, human readable path from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: proejct GUID, model GUID, human readble cloud path
+    :rtype: GUID, GUID, str
+    '''
+
     path = doc.GetCloudModelPath()
     modelGuid = path.GetModelGUID()
     projectGuid = path.GetProjectGUID()
@@ -61,9 +84,16 @@ def GetModelBIM360Ids(doc):
     human = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     return projectGuid,modelGuid,str(human)
 
-# doc       current model document
 def GetModelFileSize(doc):
-    '''returns BIM360 file size, if file not exists on local cache it will return -1'''
+    '''
+    Gets BIM360 file size, if file does not exists on local cache it will return -1.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: If file exists the file size in MB, otherwise -1
+    :rtype: float
+    '''
+
     fileSize = -1
     path = doc.GetCloudModelPath()
     fullPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)

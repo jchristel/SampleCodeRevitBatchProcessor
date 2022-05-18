@@ -41,34 +41,55 @@ import Autodesk.Revit.DB.Architecture as rdba
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in dimensions reports
 REPORT_DIMENSIONS_HEADER = ['HOSTFILE','ID', 'NAME']
+#: header used in text reports
 REPORT_TEXT_HEADER = ['HOSTFILE','ID', 'NAME']
 
 # --------------------------------------------- dimensions  ------------------
 
-# doc: current model document
 def GetDimTypes(doc):
     '''
-    returns all dimension types in a model
+    Gets all dimension types in a model
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector of Dimension Types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of DimensionType
     '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
 
-# doc: current model document
 def GetDimTypeIds(doc):
     '''
-    returns all dimension type ids in a model
+    Gets all dimension type ids in a model
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing Dimension Types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
 def GetUsedDimTypeIdsInTheModel(doc):
     '''
-    returns all dimension type Ids in the model
+    Gets all used dimension type Ids in the model.
+    
+    Used: at least one instance using this type is placed in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing Dimension Types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     dimTypeIdsUsed = []
     col = GetAllDimensionElements(doc)
     for v in col:
@@ -76,42 +97,74 @@ def GetUsedDimTypeIdsInTheModel(doc):
             dimTypeIdsUsed.append(v.GetTypeId())
     return dimTypeIdsUsed
 
-# doc   current model document
 def GetAllDimensionElements(doc):
     '''
-    returns all dimension elements in the model
+    Gets all dimension elements placed in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    
+    :return: A filtered element collector of Dimensions
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of Dimension
     '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Dimension)
 
-# doc   current model document
 def GetAllMultiRefAnnotationTypes(doc):
     '''
-    returns all multireference annotation types in the model
+    Gets all multireference annotation types in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector of MultiReferenceAnnotationType
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotationType
     '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
 
-# doc   current model document
 def GetAllMultiRefAnnotationTypeIds(doc):
     '''
-    returns all multireference annotation type ids in the model
+    Gets all multireference annotation type ids in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing Multireference Annotation Types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
 def GetAllMultiRefAnnotationElements(doc):
     '''
-    returns all multireference annotation elements in the model
+    Gets all multireference annotation elements in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    
+    :return: A filtered element collector of MultiReferenceAnnotation
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotation
     '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotation)
 
-# doc   current model document
 def GetUsedMultiRefDimTypeIdsInTheModel(doc):
     '''
-    returns all ids of multireference types used by elements in the model
+    Gets all ids of multireference types used by elements in the model.
+
+    Used: at least one instance using this type is placed in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing Multireference Annotation Types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     dimTypeIdsUsed = []
     col = GetAllMultiRefAnnotationElements(doc)
     for v in col:
@@ -119,20 +172,33 @@ def GetUsedMultiRefDimTypeIdsInTheModel(doc):
             dimTypeIdsUsed.append(v.GetTypeId())
     return dimTypeIdsUsed
 
-# doc   current model document
 def GetAllSimilarMultiReferenceAnnoTypes(doc):
     '''
-    returns all multireference annotation types from similar types in the model
+    Gets all multireference annotation types using get similar types in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: list in format [[multireftype, [element ids of similar multi ref types, ...]]]
+    :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     '''
+
     multiReferenceAnnoTypes = com.GetSimilarTypeFamiliesByType(doc, GetAllMultiRefAnnotationTypes)
     return multiReferenceAnnoTypes 
 
-# doc   current model document
-# multiReferenceAnnoTypes   :list in format [[multireftype, [element ids of similar multi ref types, ...]]]
 def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
     '''
-    returns all dimension styles used in multi ref annotation
+    Gets all dimension styles used in multi ref annotation types.
+
+    :param doc: _description_
+    :type doc: _type_
+    :param multiReferenceAnnoTypes: list in format [[multireftype, [element ids of similar multi ref types, ...]]]
+    :type multiReferenceAnnoTypes: List [[Autodesk.Revit.DB.ElementType, [Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]]
+    
+    :return: List of element ids representing dimension style
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     dimTypeIdsUsed = []
     for mType in multiReferenceAnnoTypes:
         for t in mType[1]:
@@ -141,18 +207,31 @@ def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
                 dimTypeIdsUsed.append(multiRefType.DimensionStyleId)
     return dimTypeIdsUsed
 
-# doc   current model document
 def GetAllUnusedMultiRefDimTypeIdsInModel(doc):
     '''
-    returns IDs of unused multiref dimension types in the model
+    Gets IDs of all unused multiref dimension types in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of element ids representing multi ref dimension types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     return com.GetUnusedTypeIdsInModel(doc, GetAllMultiRefAnnotationTypes, GetUsedMultiRefDimTypeIdsInTheModel)
 
-# doc   current model document
 def GetAllUnusedDimTypeIdsInModel(doc):
     '''
-    returns ID of unused dim types in the model
+    Gets ID of all unused dim types in the model.
+
+    Includes checking multi ref dims for used dim types.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing dimension types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     # get unused dimension type ids
     filteredUnusedDimTypeIds = com.GetUnusedTypeIdsInModel(doc, GetDimTypes, GetUsedDimTypeIdsInTheModel)
     # get all multiref dimension types in model
@@ -168,33 +247,60 @@ def GetAllUnusedDimTypeIdsInModel(doc):
 
 # --------------------------------------------- Text  ------------------
 
-# doc   current model document
 def GetAllTextTypes(doc):
     '''
-    returns all text types in the model
+    Gets all text types in the model
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector of text element types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of text element types
     '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
 
-# doc   current model document
 def GetAllTextTypeIds(doc):
-    '''returns all text type ids in the model'''
+    '''
+    Gets all text type ids in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing text types
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
 def GetAllTextAnnotationElements(doc):
     '''
-    returns all text annotation elements in the model
+    Gets all text annotation elements in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector of text elements
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector of text elements
     '''
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElement)
 
-# doc   current model document
 def GetUsedTextTypeIdsInTheModel(doc):
     '''
-    returns all ids of text types used by elements in the model, includes types used in schedules (appearance)!
+    Gets all ids of text types used by elements in the model, includes types used in schedules (appearance)!
+    
+    Used: at least one instance of this type is placed in the model.
+    
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing used text types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     textTypeIdsUsed = []
     col = GetAllTextAnnotationElements(doc)
     for t in col:
@@ -211,17 +317,23 @@ def GetUsedTextTypeIdsInTheModel(doc):
             textTypeIdsUsed.append(c.TitleTextTypeId)
     return textTypeIdsUsed
 
-# doc   current model document
 def GetAllUnusedTextTypeIdsInModel(doc):
     '''
-    returns ID of unused text types in the model
+    Gets ID of all unused text types in the model.
+    
+    Unused: Not one instance of this type is placed in the model.
+    
+    :param doc: _description_
+    :type doc: _type_
+    :return: List of element ids representing unused text types
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
     filteredUnusedTextTypeIds = com.GetUnusedTypeIdsInModel(doc, GetAllTextTypes, GetUsedTextTypeIdsInTheModel)
     return filteredUnusedTextTypeIds
 
 # --------------------------------------------- Arrow heads  ------------------
 
-# list of built in parameters attached to dimensions containing arrow head ids
+#: list of built in parameters attached to dimensions containing arrow head ids
 ARROWHEAD_PARAS_DIM = [
     rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,
     rdb.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,
@@ -230,27 +342,28 @@ ARROWHEAD_PARAS_DIM = [
     rdb.BuiltInParameter.WITNS_LINE_TICK_MARK
 ]
 
-''' 
-list of built in parameters attached to 
-    - text 
-    - independent tags 
-    - Annotation symbols
+ 
+#:  list of built in parameters attached to
+#:
+#:    - text 
+#:    - independent tags 
+#:    - Annotation symbols
+#:
+#: containing arrow head ids
 
-    containing arrow head ids
-'''
-
+#: paramter containing the arrowhead id in text types
 ARROWHEAD_PARAS_TEXT = [
     rdb.BuiltInParameter.LEADER_ARROWHEAD
 ]
 
-# list of built in parameters attached to spot dims containing arrow head ids
-# and symbols used
+#: list of built in parameters attached to spot dims containing arrow head ids
+#: and symbols used
 ARROWHEAD_PARAS_SPOT_DIMS = [
     rdb.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,
     rdb.BuiltInParameter.SPOT_ELEV_SYMBOL
 ]
 
-# list of built in parameters attached to stair path types containing arrow head ids
+#: list of built in parameters attached to stair path types containing arrow head ids
 ARROWHEAD_PARAS_STAIRS_PATH = [
     rdb.BuiltInParameter.ARROWHEAD_TYPE
 ]
@@ -475,11 +588,18 @@ def GetAllSpotElevationSymbolIdsInModel(doc):
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
 def GetUnusedSymbolIdsFromSpotTypes(doc):
     '''
-    returns all symbol ids not used as symbol from all spot elevation and coordinate
+    Get all symbol ids not used as symbol in any spot elevation or spot coordinate.
+    
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids representing unused spot elevation or coordiante symbols
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
+
     ids = []
     idsUsed = []
     idsAvailable = GetAllSpotElevationSymbolIdsInModel(doc)

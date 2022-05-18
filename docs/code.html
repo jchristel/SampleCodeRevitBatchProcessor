@@ -1036,15 +1036,26 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitAnnotation.ARROWHEAD_PARAS_DIM">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.WITNS_LINE_TICK_MARK]</span></em><a class="headerlink" href="#RevitAnnotation.ARROWHEAD_PARAS_DIM" title="Permalink to this definition">¶</a></dt>
-<dd><dl>
-<dt>list of built in parameters attached to </dt><dd><ul class="simple">
-<li><p>text</p></li>
-<li><p>independent tags</p></li>
-<li><p>Annotation symbols</p></li>
-</ul>
-<p>containing arrow head ids</p>
-</dd>
-</dl>
+<dd><p>list of built in parameters attached to dimensions containing arrow head ids</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitAnnotation.ARROWHEAD_PARAS_SPOT_DIMS">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_SPOT_DIMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_SYMBOL]</span></em><a class="headerlink" href="#RevitAnnotation.ARROWHEAD_PARAS_SPOT_DIMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to spot dims containing arrow head ids
+and symbols used</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitAnnotation.ARROWHEAD_PARAS_STAIRS_PATH">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_STAIRS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.ARROWHEAD_TYPE]</span></em><a class="headerlink" href="#RevitAnnotation.ARROWHEAD_PARAS_STAIRS_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to stair path types containing arrow head ids</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitAnnotation.ARROWHEAD_PARAS_TEXT">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.LEADER_ARROWHEAD]</span></em><a class="headerlink" href="#RevitAnnotation.ARROWHEAD_PARAS_TEXT" title="Permalink to this definition">¶</a></dt>
+<dd><p>paramter containing the arrowhead id in text types</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1056,7 +1067,18 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllDimensionElements">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllDimensionElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllDimensionElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all dimension elements in the model</p>
+<dd><p>Gets all dimension elements placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of Dimensions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of Dimension</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1068,25 +1090,69 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationElements">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all multireference annotation elements in the model</p>
+<dd><p>Gets all multireference annotation elements in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of MultiReferenceAnnotation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotation</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all multireference annotation type ids in the model</p>
+<dd><p>Gets all multireference annotation type ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing Multireference Annotation Types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all multireference annotation types in the model</p>
+<dd><p>Gets all multireference annotation types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of MultiReferenceAnnotationType</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotationType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllSimilarMultiReferenceAnnoTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllSimilarMultiReferenceAnnoTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllSimilarMultiReferenceAnnoTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all multireference annotation types from similar types in the model</p>
+<dd><p>Gets all multireference annotation types using get similar types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list in format [[multireftype, [element ids of similar multi ref types, …]]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,…],]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1116,19 +1182,52 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllTextAnnotationElements">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllTextAnnotationElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllTextAnnotationElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all text annotation elements in the model</p>
+<dd><p>Gets all text annotation elements in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of text elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of text elements</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllTextTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllTextTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllTextTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all text type ids in the model</p>
+<dd><p>Gets all text type ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing text types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllTextTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllTextTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllTextTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all text types in the model</p>
+<dd><p>Gets all text types in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of text element types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of text element types</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1140,19 +1239,54 @@ Set parameter.message will contain the exception message.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllUnusedDimTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedDimTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllUnusedDimTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns ID of unused dim types in the model</p>
+<dd><p>Gets ID of all unused dim types in the model.</p>
+<p>Includes checking multi ref dims for used dim types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing dimension types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllUnusedMultiRefDimTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedMultiRefDimTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllUnusedMultiRefDimTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns IDs of unused multiref dimension types in the model</p>
+<dd><p>Gets IDs of all unused multiref dimension types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing multi ref dimension types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllUnusedTextTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedTextTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllUnusedTextTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns ID of unused text types in the model</p>
+<dd><p>Gets ID of all unused text types in the model.</p>
+<p>Unused: Not one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused text types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1195,13 +1329,35 @@ independent tags, spot dims, annotation symbols (incl room and area tags), stair
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetDimTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetDimTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetDimTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all dimension type ids in a model</p>
+<dd><p>Gets all dimension type ids in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing Dimension Types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetDimTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetDimTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetDimTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all dimension types in a model</p>
+<dd><p>Gets all dimension types in a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of Dimension Types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of DimensionType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1243,7 +1399,18 @@ independent tags, spot dims, annotation symbols (incl room and area tags), stair
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUnusedSymbolIdsFromSpotTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUnusedSymbolIdsFromSpotTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUnusedSymbolIdsFromSpotTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all symbol ids not used as symbol from all spot elevation and coordinate</p>
+<dd><p>Get all symbol ids not used as symbol in any spot elevation or spot coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused spot elevation or coordiante symbols</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1256,25 +1423,87 @@ BuiltInCategory.OST_SpotElevSymbols</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUsedDimTypeIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedDimTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedDimTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all dimension type Ids in the model</p>
+<dd><p>Gets all used dimension type Ids in the model.</p>
+<p>Used: at least one instance using this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing Dimension Types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUsedDimstylesFromMultiRef">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedDimstylesFromMultiRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiReferenceAnnoTypes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedDimstylesFromMultiRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all dimension styles used in multi ref annotation</p>
+<dd><p>Gets all dimension styles used in multi ref annotation types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>multiReferenceAnnoTypes</strong> (<em>List</em><em> [</em><em>[</em><em>Autodesk.Revit.DB.ElementType</em><em>, </em><em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em><em>,</em><em>]</em><em>]</em>) – list in format [[multireftype, [element ids of similar multi ref types, …]]]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing dimension style</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUsedMultiRefDimTypeIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedMultiRefDimTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedMultiRefDimTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ids of multireference types used by elements in the model</p>
+<dd><p>Gets all ids of multireference types used by elements in the model.</p>
+<p>Used: at least one instance using this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing Multireference Annotation Types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUsedTextTypeIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedTextTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedTextTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ids of text types used by elements in the model, includes types used in schedules (appearance)!</p>
+<dd><p>Gets all ids of text types used by elements in the model, includes types used in schedules (appearance)!</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used text types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitAnnotation.REPORT_DIMENSIONS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">REPORT_DIMENSIONS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME']</span></em><a class="headerlink" href="#RevitAnnotation.REPORT_DIMENSIONS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in dimensions reports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitAnnotation.REPORT_TEXT_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">REPORT_TEXT_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME']</span></em><a class="headerlink" href="#RevitAnnotation.REPORT_TEXT_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in text reports</p>
 </dd></dl>
 
 </section>
@@ -1282,15 +1511,71 @@ BuiltInCategory.OST_SpotElevSymbols</p>
 <span id="revit-bim-360"></span><h2>Revit BIM 360<a class="headerlink" href="#module-RevitBIM360" title="Permalink to this headline">¶</a></h2>
 <p>This module contains a number of functions around Revit BIM360.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitBIM360.ConvertBIM360FilePath">
+<span class="sig-prename descclassname"><span class="pre">RevitBIM360.</span></span><span class="sig-name descname"><span class="pre">ConvertBIM360FilePath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBIM360.ConvertBIM360FilePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretend this is a file server path rather than cloud model path and swap BIM360:// with C:/</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The model cloud file path starting with BIM360</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A file path without BIM360</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitBIM360.GetBim360Path">
+<span class="sig-prename descclassname"><span class="pre">RevitBIM360.</span></span><span class="sig-name descname"><span class="pre">GetBim360Path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBIM360.GetBim360Path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets human readable BIM 360 path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the bim360 model. If an exception occured an empty string will be returned.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitBIM360.GetModelBIM360Ids">
 <span class="sig-prename descclassname"><span class="pre">RevitBIM360.</span></span><span class="sig-name descname"><span class="pre">GetModelBIM360Ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBIM360.GetModelBIM360Ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns project id, model id, human readable path</p>
+<dd><p>Gets project id, model id, human readable path from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>proejct GUID, model GUID, human readble cloud path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>GUID, GUID, str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBIM360.GetModelFileSize">
 <span class="sig-prename descclassname"><span class="pre">RevitBIM360.</span></span><span class="sig-name descname"><span class="pre">GetModelFileSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBIM360.GetModelFileSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns BIM360 file size, if file not exists on local cache it will return -1</p>
+<dd><p>Gets BIM360 file size, if file does not exists on local cache it will return -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If file exists the file size in MB, otherwise -1</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -1360,6 +1645,12 @@ BuiltInCategory.OST_SpotElevSymbols</p>
 <dd><p>returns all used in BuildingPad type ids</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitBuildingPads.REPORT_BUILDINGPAD_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">REPORT_BUILDINGPAD_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'BUILDINGPADTYPEID',</span> <span class="pre">'BUILDINGPADTYPENAME']</span></em><a class="headerlink" href="#RevitBuildingPads.REPORT_BUILDINGPAD_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
 </section>
 <section id="module-RevitCategories">
 <span id="revit-categories"></span><h2>Revit Categories<a class="headerlink" href="#module-RevitCategories" title="Permalink to this headline">¶</a></h2>
@@ -1396,6 +1687,12 @@ if category already exists in file it will return that</p>
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewSubCategoryToFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newSubCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewSubCategoryToFamilyCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a new subcategory to the family category and returns it
 returns exception “The name ‘xys’ is already in use” if category with the same name is already in file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.ELEMENTS_PARAS_SUB">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">ELEMENTS_PARAS_SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY]</span></em><a class="headerlink" href="#RevitCategories.ELEMENTS_PARAS_SUB" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to family elements containing subcategory ids</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1671,6 +1968,12 @@ it will therefore not return any in place family types …</p>
 <dt class="sig sig-object py" id="RevitCeilings.PopulateDataCeilingObject">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">PopulateDataCeilingObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitCeiling</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.PopulateDataCeilingObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a custom ceiling data objects populated with some data from the revit model ceiling passt in</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCeilings.REPORT_CEILINGS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">REPORT_CEILINGS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'CEILINGTYPEID',</span> <span class="pre">'CEILINGTYPENAME']</span></em><a class="headerlink" href="#RevitCeilings.REPORT_CEILINGS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
 </dd></dl>
 
 </section>
@@ -3429,7 +3732,7 @@ where a pair are areas with the same measured area</p>
 <p>This will not include any attached detail groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of detail group type ids</p>
@@ -3446,7 +3749,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets all detail groups in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list containing detail group types.</p>
@@ -3463,7 +3766,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets a list of all model group type ids in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of model group type ids</p>
@@ -3497,7 +3800,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets a list of all nested detail group types from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of nested detail group type ids</p>
@@ -3514,7 +3817,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets all nested detail groups in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list containing nested detail group types.</p>
@@ -3532,7 +3835,7 @@ where a pair are areas with the same measured area</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>groupCategory</strong> (<em>either BuiltInCategory.OST_IOSDetailGroups</em><em> or </em><em>BuiltInCategory.OST_IOSModelGroups</em>) – A built in category defining the group category (model vs detail)</p></li>
 </ul>
 </dd>
@@ -3552,7 +3855,7 @@ where a pair are areas with the same measured area</p>
 <p>This will not include any attached detail groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced detail group type ids</p>
@@ -3570,7 +3873,7 @@ where a pair are areas with the same measured area</p>
 <p>This will not include any attached detail groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced detail group types</p>
@@ -3587,7 +3890,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets a list of unplaced model group type Ids from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced model group type ids</p>
@@ -3604,7 +3907,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets a list of unplaced model groups types from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced model group types</p>
@@ -3622,7 +3925,7 @@ where a pair are areas with the same measured area</p>
 <p>This will not list any none nested detail groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced model group type ids</p>
@@ -3639,7 +3942,7 @@ where a pair are areas with the same measured area</p>
 <dd><p>Gets a list of unplaced nested detail groups from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of unplaced nested detail group types</p>
@@ -3669,19 +3972,130 @@ where a pair are areas with the same measured area</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetAllGridHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetAllGridHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetAllGridHeadsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all grid head types in the model</p>
+<dd><p>Gets all grid head types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid head types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetAllGridTypeIdsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetAllGridTypeIdsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetAllGridTypeIdsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all grid types ids in the model</p>
+<dd><p>Gets all grid types ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetAllGridTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetAllGridTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetAllGridTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all grid types in the model</p>
+<dd><p>Gets all grid types in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GetGridTypeIdByName">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridTypeIdByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridtypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridTypeIdByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type Id based on it’s name, if no match found it returns the Revit Invalid Element Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>gridtypeName</strong> (<em>str</em>) – The grid type name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GetGridTypeName">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridTypeName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridTypeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type name of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The grid type name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GetGridTypeNames">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridTypeNames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridTypeNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all valid grid types, based on a passt in grid, available in model.</p>
+<p>Uses grid.GetValidTypes() to get the grid types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A nested set of lists containing grid type id and grid type name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists [[GridTypeId as Revit ElementId, grid type name as string],[…]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GetMaxExtentAsString">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetMaxExtentAsString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetMaxExtentAsString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maximum extent of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string in format [maxX,maxY,maxZ]&lt;tab&gt;[minX,minY,minZ]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -3700,6 +4114,28 @@ where a pair are areas with the same measured area</p>
 <dt class="sig sig-object py" id="RevitGrids.GetUnusedGridTypesForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGridTypesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetUnusedGridTypesForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused grid types in the model to be purged</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GridCheckParameterValue">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GridCheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GridCheckParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if a given parameter on a grid has a value meeting the parameter condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+<li><p><strong>paraName</strong> (<em>str</em>) – A parameter Name.</p></li>
+<li><p><strong>paraCondition</strong> (<em>func</em><em>(</em><em>arg1</em><em>,</em><em>arg2</em><em>)</em>) – A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.</p></li>
+<li><p><strong>conditionValue</strong> (<em>var</em>) – The value to be cjecked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if parameter value is evaluated to True otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py data">
@@ -5114,6 +5550,12 @@ all loops are implicitly closed ( last point is not the first point again!)</p>
 <dd><p>gets shared parameter data ready for being printed to file</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitSharedParameters.REPORT_SHAREDPARAMETERS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">REPORT_SHAREDPARAMETERS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'GUID',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PARAMETERBINDINGS']</span></em><a class="headerlink" href="#RevitSharedParameters.REPORT_SHAREDPARAMETERS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
 </section>
 <section id="module-RevitStairs">
 <span id="revit-stairs"></span><h2>Revit Stairs<a class="headerlink" href="#module-RevitStairs" title="Permalink to this headline">¶</a></h2>
@@ -5346,6 +5788,12 @@ it will therefore not return any in place family types …</p>
 <dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availavbleIdsGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.REPORT_ROOFS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">REPORT_ROOFS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'STAIRTYPEID',</span> <span class="pre">'STAIRTYPENAME']</span></em><a class="headerlink" href="#RevitStairs.REPORT_ROOFS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
 </dd></dl>
 
 </section>

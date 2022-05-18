@@ -42,7 +42,7 @@ CAT_RENAMING = {
     'Clearance Zones': 'AMAZING'
 }
 
-# list of built in parameters attached to elements containing subcategory ids
+#: list of built in parameters attached to family elements containing subcategory ids
 ELEMENTS_PARAS_SUB = [
     rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
     rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,

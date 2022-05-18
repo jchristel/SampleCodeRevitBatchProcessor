@@ -58,8 +58,8 @@ def GetDetailGroups(doc):
     '''
     Gets all detail groups in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: A list containing detail group types.
     :rtype: list
     '''
@@ -70,8 +70,8 @@ def GetNestedDetailGroups(doc):
     '''
     Gets all nested detail groups in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: A list containing nested detail group types.
     :rtype: list
     '''
@@ -82,8 +82,8 @@ def GetModelGroupIds(doc):
     '''
     Gets a list of all model group type ids in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of model group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
@@ -99,8 +99,8 @@ def GetDetailGroupIds(doc):
 
     This will not include any attached detail groups.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of detail group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
@@ -114,8 +114,8 @@ def GetNestedDetailGroupIds(doc):
     '''
     Gets a list of all nested detail group types from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: List of nested detail group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
@@ -130,8 +130,8 @@ def GetNotPlacedGroups(doc, groupCategory):
     '''
     Gets a list of unplaced groups from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param groupCategory: A built in category defining the group category (model vs detail)
     :type groupCategory: either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
     
@@ -155,8 +155,8 @@ def GetUnplacedDetailGroups(doc):
     
     This will not include any attached detail groups.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of unplaced detail group types
     :rtype: list
     '''
@@ -169,8 +169,8 @@ def GetUnplacedDetailGroupIds(doc):
     
     This will not include any attached detail groups.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: List of unplaced detail group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
@@ -186,8 +186,8 @@ def GetUnplacedNestedDetailGroups(doc):
     '''
     Gets a list of unplaced nested detail groups from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: List of unplaced nested detail group types
     :rtype: list
@@ -201,8 +201,8 @@ def GetUnplacedNestedDetailGroupIds(doc):
     
     This will not list any none nested detail groups.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of unplaced model group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
@@ -217,8 +217,8 @@ def GetUnplacedModelGroups(doc):
     '''
     Gets a list of unplaced model groups types from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of unplaced model group types
     :rtype: list
     '''
@@ -229,8 +229,8 @@ def GetUnplacedModelGroupIds(doc):
     '''
     Gets a list of unplaced model group type Ids from the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: List of unplaced model group type ids
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''

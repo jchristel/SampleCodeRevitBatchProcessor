@@ -38,7 +38,7 @@ import Autodesk.Revit.DB.Architecture as rdba
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_ROOFS_HEADER = ['HOSTFILE', 'STAIRTYPEID', 'STAIRTYPENAME']
 
 BASIC_STAIR_FAMILY_NAME = 'Stair'

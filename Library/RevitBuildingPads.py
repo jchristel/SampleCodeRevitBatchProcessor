@@ -38,7 +38,7 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_BUILDINGPAD_HEADER = ['HOSTFILE', 'BUILDINGPADTYPEID', 'BUILDINGPADTYPENAME']
 
 BASIC_BUILDINGPAD_FAMILY_NAME = 'Pad'

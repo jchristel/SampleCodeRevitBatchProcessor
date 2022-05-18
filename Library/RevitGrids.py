@@ -45,30 +45,60 @@ REPORT_GRIDS_HEADER = ['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXT
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetAllGridHeadsByCategory(doc):
-    ''' this will return a filtered element collector of all grid head types in the model'''
+    '''
+    Gets all grid head types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector with grid head types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllGridTypesByCategory(doc):
-    ''' this will return a filtered element collector of all grid types in the model'''
+    '''
+    Gets all grid types in the model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector with grid types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Grids).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllGridTypeIdsByCategory(doc):
-    ''' this will return a filtered element collector of all grid types ids in the model'''
+    '''
+    Gets all grid types ids in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector with grid type ids
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = GetAllGridTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
-# returns a list of list containing a valid grid types available in model
-# format: [[GridTypeId as Revit ElementId, grid type name as string],[...]]
-# doc: the current revit document
-# g: a grid in the model
 def GetGridTypeNames (doc, g):
+    '''
+    Gets all valid grid types, based on a passt in grid, available in model.
+
+    Uses grid.GetValidTypes() to get the grid types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param g: A grid
+    :type g: Autodesk.Revit.DB.Grid
+    :return: A nested set of lists containing grid type id and grid type name
+    :rtype: list of lists [[GridTypeId as Revit ElementId, grid type name as string],[...]]
+    '''
+
     validGridTypes = []
     validgridTypeIds = g.GetValidTypes()
     for validGridTypeId in validgridTypeIds:
@@ -79,19 +109,35 @@ def GetGridTypeNames (doc, g):
         validGridTypes.append(gridData)
     return validGridTypes
 
-# returns the grid type name of a grid
-# doc: the current revit document
-# g: a grid in the model
 def GetGridTypeName (doc, g):
+    '''
+    Gets the grid type name of a grid.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param g: A grid.
+    :type g: Autodesk.Revit.DB.Grid
+    :return: The grid type name.
+    :rtype: str
+    '''
+
     value = 'unknown'
     gtypeT = doc.GetElement(g.GetTypeId())
     value = rdb.Element.Name.GetValue(gtypeT)
     return value
 
-# returns the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
-# doc: the current revit document
-# gridtypeName: a grid type name in the model
 def GetGridTypeIdByName (doc, gridtypeName):
+    '''
+    Gets the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param gridtypeName: The grid type name.
+    :type gridtypeName: str
+    :return: The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId
+    :rtype: Autodesk.Revit.DB.ElementId
+    '''
+
     id = rdb.ElementId.InvalidElementId
     grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).ToList()
     if(len(grids) > 0):
@@ -104,46 +150,37 @@ def GetGridTypeIdByName (doc, gridtypeName):
                 break
     return id
 
-# returns true if a given parameter and its value match the condition supplied
-# g: a grid in the model
-# paraName: the parameter name (by default 'Name' and 'Scope Box' are available)
-# paraCondition: a method comparing the values. Default methods can be found in Utility module: ConDoesNotEqual, ConDoesEqual
-# conditionValue: the value you are comparing the parameter value with
-def FilterGridByParameterAndValue(g, paraName, paraCondition, conditionValue):
-    ruleMatch = False
-    # loop over parameters and compare value as required
-    pValue = com.GetParameterValueByName(g, paraName)
-    if (pValue != None):
-        ruleMatch = com.CheckParameterValue(g, paraCondition, conditionValue)
-    return ruleMatch
-
-# returns true if a given grid and its type match the condition supplied
-# doc: the current revit document
-# g: a grid in the model
-# paraCondition: a method comparing the values. Default methods can be found in Utility module: ConDoesNotEqual, ConDoesEqual
-# conditionValue: the value you are comparing the parameter value with
-def FilterGridByTypeName(doc, g, paraCondition, conditionValue):
-    gridTypeName = GetGridTypeName (doc, g)
-    isMatch = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(gridTypeName))
-    return isMatch
-
-# returns true if a given parameter has a value meeting the parameter condition
-# g: a grid in the model
-# paraName: the parameter name
-# paraCondition: the test condition method
-# conditionValue: the parameter condition value to check against
 def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
+    '''
+    Returns true if a given parameter on a grid has a value meeting the parameter condition.
+
+    :param g: A grid.
+    :type g: Autodesk.Revit.DB.Grid
+    :param paraName: A parameter Name.
+    :type paraName: str
+    :param paraCondition: A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.
+    :type paraCondition: func(arg1,arg2)
+    :param conditionValue: The value to be cjecked against.
+    :type conditionValue: var
+    :return: True if parameter value is evaluated to True otherwise False.
+    :rtype: bool
+    '''
     ruleMatch = False
     pValue = com.GetParameterValueByName(g, paraName)
     if (pValue != None):
         ruleMatch = com.CheckParameterValue(g, paraCondition, conditionValue)
     return ruleMatch
 
-# returns the maximum extent of a grid as a string:
-# g: a grid in the model
-# format:
-#max=[x,y,z]<tab>min[x,y,z]
 def GetMaxExtentAsString(g):
+    '''
+    Gets the maximum extent of a grid.
+
+    :param g: A grid.
+    :type g: Autodesk.Revit.DB.Grid
+    :return: A string in format [maxX,maxY,maxZ]<tab>[minX,minY,minZ]
+    :rtype: str
+    '''
+
     ex = g.GetExtents()
     max = '['+ ','.join([str(ex.MaximumPoint.X), str(ex.MaximumPoint.Y), str(ex.MaximumPoint.Z)]) + ']'
     min = '['+ ','.join([str(ex.MinimumPoint.X), str(ex.MinimumPoint.Y), str(ex.MinimumPoint.Z)]) + ']'    

@@ -56,7 +56,7 @@ def GetBIM360Data(filepathCSV):
     :param filepathCSV: Fully quaslified file path to CSV to be read.
     :type filepathCSV: str
     :return: a list of FileItem instances representing BIM360 file data.
-    Will return an empty list of an exception occured.
+        Will return an empty list of an exception occured.
     :rtype: list of SampleCodeBatchProcessor.FileItem
     '''
     revitfiles = []

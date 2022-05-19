@@ -59,6 +59,10 @@ autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely']
 # include __init__ docs in classes
 autoclass_content = 'both'
 
+# make sure code is document in order of source code
+autodoc_default_options = {
+    'member-order': 'bysource'
+}
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

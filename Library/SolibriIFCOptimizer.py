@@ -1,5 +1,13 @@
 ﻿'''
-This module contains a number of helper functions relating to Solibri IFC optimnizer. 
+=====================================================================================
+A number of helper functions relating to Solibri IFC optimnizer.
+=====================================================================================
+
+List of imports:
+
+- :class:`.Result`
+- :module: Utility
+
 '''
 #
 #License:
@@ -28,13 +36,12 @@ This module contains a number of helper functions relating to Solibri IFC optimn
 import subprocess
 from System.IO import Path
 
-# custom result class
 import Result as res
 import Utility as util
 
 
 
-#: default install path for solibri ifc optimizer
+#: The default install path for solibri ifc optimizer.
 solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe'
 
 def OptimizeAllIFCFilesinFolder(directoryPath):
@@ -52,7 +59,7 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
         On exception (handled by optimizer itself!):
         result.status (bool) will be False.
         result.message will contain generic exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -87,7 +94,7 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
         On exception (handled by optimizer itself!):
         result.status (bool) will be False.
         result.message will contain generic exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -121,7 +128,7 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
         On exception (handled by optimizer itself!):
         result.status (bool) will be False.
         result.message will contain generic exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()

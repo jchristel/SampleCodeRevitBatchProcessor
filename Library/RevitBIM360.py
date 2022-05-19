@@ -1,5 +1,7 @@
 '''
-This module contains a number of functions around Revit BIM360. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Functions around Revit BIM360.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -38,6 +40,7 @@ def GetBim360Path(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: The path to the bim360 model. If an exception occured an empty string will be returned.
     :rtype: str
     '''
@@ -57,6 +60,7 @@ def ConvertBIM360FilePath(path):
 
     :param path: The model cloud file path starting with BIM360
     :type path: str
+
     :return: A file path without BIM360
     :rtype: str
     '''
@@ -71,6 +75,7 @@ def GetModelBIM360Ids(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: proejct GUID, model GUID, human readble cloud path
     :rtype: GUID, GUID, str
     '''
@@ -90,6 +95,7 @@ def GetModelFileSize(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    
     :return: If file exists the file size in MB, otherwise -1
     :rtype: float
     '''

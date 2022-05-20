@@ -36,7 +36,30 @@ def LoadSharedParameterFile(doc, path):
 # groupName: name of group parameter is under in Shared Parameter file
 # category: expects built in category, to which the parameter will be bound
 def BindSharedParameter(doc, category, parameterName, groupName, parameterType, isVisible, isInstance, parameterGrouping, sharedParameterFilepath):
-    
+    '''
+    _summary_
+
+    :param doc: _description_
+    :type doc: _type_
+    :param category: _description_
+    :type category: _type_
+    :param parameterName: _description_
+    :type parameterName: _type_
+    :param groupName: _description_
+    :type groupName: _type_
+    :param parameterType: _description_
+    :type parameterType: _type_
+    :param isVisible: _description_
+    :type isVisible: bool
+    :param isInstance: _description_
+    :type isInstance: bool
+    :param parameterGrouping: _description_
+    :type parameterGrouping: _type_
+    :param sharedParameterFilepath: _description_
+    :type sharedParameterFilepath: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
     returnvalue = res.Result()
     try:
     

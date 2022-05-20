@@ -79,6 +79,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#misc-modules-and-classes">Misc modules and classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#a-number-of-helper-functions-relating-to-solibri-ifc-optimnizer">A number of helper functions relating to Solibri IFC optimnizer.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#this-module-contains-a-number-of-helper-functions-relating-to-system-processes">This module contains a number of helper functions relating to system processes.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#timer">Timer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Utility">File system utilities</a></li>
 </ul>
@@ -1800,7 +1801,8 @@ and symbols used</p>
 </section>
 <section id="module-RevitBuildingPads">
 <span id="revit-building-pads"></span><h2>Revit Building Pads<a class="headerlink" href="#module-RevitBuildingPads" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of functions around Revit building pads.</p>
+<section id="this-module-contains-a-number-of-functions-around-revit-building-pads">
+<h3>This module contains a number of functions around Revit building pads.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-building-pads" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitBuildingPads.REPORT_BUILDINGPAD_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">REPORT_BUILDINGPAD_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'BUILDINGPADTYPEID',</span> <span class="pre">'BUILDINGPADTYPENAME']</span></em><a class="headerlink" href="#RevitBuildingPads.REPORT_BUILDINGPAD_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -1870,6 +1872,7 @@ and symbols used</p>
 - Basic BuildingPad</p>
 </dd></dl>
 
+</section>
 </section>
 <section id="module-RevitCategories">
 <span id="revit-categories"></span><h2>Revit Categories<a class="headerlink" href="#module-RevitCategories" title="Permalink to this headline">¶</a></h2>
@@ -5744,7 +5747,35 @@ List of Lists because a rooms can have holes. First group of points represents e
 </dl>
 </dd></dl>
 
-<span class="target" id="module-RevitSharedParameters"></span><p>This module contains a number of helper functions relating to Revit shared parameters.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameterAdd.BindSharedParameter">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameterAdd.</span></span><span class="sig-name descname"><span class="pre">BindSharedParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isVisible</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isInstance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterGrouping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharedParameterFilepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterAdd.BindSharedParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>category</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>parameterName</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>groupName</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>parameterType</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>isVisible</strong> (<em>bool</em>) – _description_</p></li>
+<li><p><strong>isInstance</strong> (<em>bool</em>) – _description_</p></li>
+<li><p><strong>parameterGrouping</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>sharedParameterFilepath</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-RevitSharedParameters"></span><section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-shared-parameters">
+<h3>This module contains a number of helper functions relating to Revit shared parameters.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-shared-parameters" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitSharedParameters.REPORT_SHAREDPARAMETERS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">REPORT_SHAREDPARAMETERS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'GUID',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PARAMETERBINDINGS']</span></em><a class="headerlink" href="#RevitSharedParameters.REPORT_SHAREDPARAMETERS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -5776,249 +5807,750 @@ List of Lists because a rooms can have holes. First group of points represents e
 </dd></dl>
 
 </section>
+</section>
 <section id="module-RevitStairs">
 <span id="revit-stairs"></span><h2>Revit Stairs<a class="headerlink" href="#module-RevitStairs" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit stairs.</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-stairs">
+<h3>This module contains a number of helper functions relating to Revit stairs.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-stairs" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitStairs.REPORT_ROOFS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">REPORT_ROOFS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'STAIRTYPEID',</span> <span class="pre">'STAIRTYPENAME']</span></em><a class="headerlink" href="#RevitStairs.REPORT_ROOFS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in reports</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.BASIC_STAIR_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BASIC_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stair'</span></em><a class="headerlink" href="#RevitStairs.BASIC_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for basic stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.ASSEMBLED_STAIR_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">ASSEMBLED_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Assembled</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#RevitStairs.ASSEMBLED_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for assembled stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.PRECAST_STAIR_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">PRECAST_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Precast</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#RevitStairs.PRECAST_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for precast stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.CAST_IN_PLACE_STAIR_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">CAST_IN_PLACE_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cast-In-Place</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#RevitStairs.CAST_IN_PLACE_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for cast in place stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.BUILTIN_STAIR_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_STAIR_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Stair',</span> <span class="pre">'Assembled</span> <span class="pre">Stair',</span> <span class="pre">'Precast</span> <span class="pre">Stair',</span> <span class="pre">'Cast-In-Place</span> <span class="pre">Stair']</span></em><a class="headerlink" href="#RevitStairs.BUILTIN_STAIR_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in stair family names</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair types in the model:
+<dd><p>Gets a filtered element collector of all Stair types in the model.</p>
+<p>Return includes:
 - Stair
 - Assembled Stair
 - Precast Stair
 - Cast-In-Place Stair
 - In place families or loaded families</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetStairTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair types in the model:
-- Assembled Stair
-- Precast Stair
-- Cast-In-Place Stair
-it will therefore not return any in place family types or Stair types…</p>
+<dd><p>Gets a filtered element collector of all Stair types in the model.</p>
+<p>Return includes:</p>
+<ul class="simple">
+<li><p>Assembled Stair</p></li>
+<li><p>Precast Stair</p></li>
+<li><p>Cast-In-Place Stair</p></li>
+</ul>
+<p>It will not return any in place family or Stair types! These are internally treated as Families or Family Symbols class objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetStairPathTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairPathTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairPathTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair path types in the model</p>
+<dd><p>Gets a filtered element collector of all Stair path types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair path types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairPathElementsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairPathElementsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairPathElementsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair path elements in the model</p>
+<dd><p>Gets a filtered element collector of all Stair path elements in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair path elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetStairLandingTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairLandingTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairLandingTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair landing types in the model</p>
+<dd><p>Gets a filtered element collector of all Stair landing types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair landing types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetStairRunTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairRunTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairRunTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair run types in the model</p>
+<dd><p>Gets a filtered element collector of all Stair run types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair run types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetStairCutMarkTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetStairCutMarkTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetStairCutMarkTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all cut mark types in the model</p>
+<dd><p>Gets a filtered element collector of all cut mark types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair cut mark types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairStringersCarriageByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairStringersCarriageByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairStringersCarriageByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all Stair stringers and cariage types in the model</p>
+<dd><p>Gets a filtered element collector of all stair stringers and cariage types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair stringers and cariage types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.BuildStairTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BuildStairTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.BuildStairTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Amends dictioanry passt in with keys and or values added retrieved from collector passt in.</p>
+<p>Key values are as per BUILTIN_STAIR_TYPE_FAMILY_NAMES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing Stair type elments.</p></li>
+<li><p><strong>dic</strong> (<em>dic { str:</em><em> [</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – A dictionary containing key: stair type family name, value: list of ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: stair type family name, value: list of ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic { str: [Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitStairs.SortStairTypesByFamilyName">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">SortStairTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.SortStairTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary containing all stair types in the model.</p>
+<p>Key values are as per BUILTIN_STAIR_TYPE_FAMILY_NAMES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: stair type family name, value: list of ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic { str: [Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairInstancesInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair elements placed in model…ignores in place families</p>
+<dd><p>Gets a filtered element collector of all Stair elements placed in model.</p>
+<p>TODO: Confirm it  ignores in place families?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair elements placed in model…ignores Stair soffits(???)</p>
+<dd><p>Gets a filtered element collecto all Stair elements placed in model…</p>
+<p>TODO: Confirm it ignores Stair soffits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing stair instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair element types available in model</p>
+<dd><p>Gets all Stair element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair element types available in model</p>
+<dd><p>Gets all Stair element type ids available in model.</p>
+<p>Ignores in place families of category stair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairPathTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairPathTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairPathTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair path element type ids available in model</p>
+<dd><p>Gets all Stair path element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair path types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairLandingTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairLandingTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairLandingTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair landing element type ids available in model</p>
+<dd><p>Gets all Stair landing element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair landing types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairRunTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairRunTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairRunTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair run element type ids available in model</p>
+<dd><p>Gets all Stair run element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair run types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairCutMarkTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairCutMarkTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairCutMarkTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair cut mark element type ids available in model</p>
+<dd><p>Get all Stair cut mark element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair cut mark types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairstringCarriageTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairstringCarriageTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairstringCarriageTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Stair stringers and carriage element type ids available in model</p>
+<dd><p>Get all Stair stringers and carriage element type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair stringer and carriage types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUsedStairTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedStairTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in Stair type ids</p>
+<dd><p>Gets all used in Stair type ids.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns false if any symbols (types) of a family are in use in a model</p>
+<dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
+<p>TODO: check for more geric list comparison and remove this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – List of family type ids to check.</p></li>
+<li><p><strong>unUsedTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – Reference list of ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if any id from amTypeIds is not in unUsedTypeIds.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedNonInPlaceStairTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonInPlaceStairTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedNonInPlaceStairTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair type ids for:
-- Stair Soffit
-- Compound Stair
-- Basic Stair
-it will therefore not return any in place family types …</p>
+<dd><p>Gets all unused Stair type ids for.</p>
+<p>Included are:</p>
+<ul class="simple">
+<li><p>Stair Soffit</p></li>
+<li><p>Compound Stair</p></li>
+<li><p>Basic Stair</p></li>
+</ul>
+<p>It will therefore not return any in place family types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypeIdsFromStairType">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypeIdsFromStairType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stairTypeId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypeIdsFromStairType" title="Permalink to this definition">¶</a></dt>
-<dd><p>gets the ids returned from stair type belonging to parameter list passt in</p>
+<dd><p>Gets the id of types making up a stair.</p>
+<p>These could be stair landing types, stringer and carriage types etc.
+Types returned depend on parameter definitions passt in. 
+Refer to:</p>
+<ul class="simple">
+<li><p>STAIR_LANDING_TYPE_PARAS,</p></li>
+<li><p>STAIR_CUTMARK_TYPE_PARAS,</p></li>
+<li><p>STAIR_SUPPORT_TYPE_PARAS</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>stairTypeId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – An element id representing a stair type.</p></li>
+<li><p><strong>paras</strong> (<em>list Autodesk.Revit.DB.BuiltInParameterDefinition</em>) – Parameters containing a type making up a stair.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllSimilarTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllSimilarTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllSimilarTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ids of similar types of elemet ids passed in</p>
+<dd><p>Gets all unique ids of similar types of elemet ids passed in.</p>
+<p>TODO: check for similar function elsewhere!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list of Autodesk.Revit.ElementIds</em>) – list of type ids to be added to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids of similar types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.BuildSystemFamilyDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">BuildSystemFamilyDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.BuildSystemFamilyDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns dictionary where key is the system family name and values available types of that system family</p>
+<dd><p>Returns dictionary where key is the system family name and values list of available type ids of that system family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list of Autodesk.Revit.ElementIds</em>) – List of system family ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of unique ids of similar types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: list of Autodesk.Revit.ElementIds }</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.CheckSystemFamilies">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">CheckSystemFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.CheckSystemFamilies" title="Permalink to this definition">¶</a></dt>
-<dd><p>check whether a list of ids of system family is the entire list of types avaialble
-if so it will remove one type id per system family to allow purging</p>
+<dd><p>Check whether a list of ids of system family is the entire list of types available in the model. If so it will remove one    type id per system family to allow safe purging.
+Revit requires at least one type definition per system family to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>ids</strong> (<em>list of Autodesk.Revit.ElementIds</em>) – List of ids to check</p></li>
+<li><p><strong>leaveOneBehind</strong> (<em>bool</em>) – True: at least one type will be omitted from list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids of similar types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availavbleIdsGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function</p>
+<dd><p>Returns a list of type ids which are not used in any stair types.</p>
+<p>Type ids are provided via an id getter function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>availavbleIdsGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – function returning available type ids</p></li>
+<li><p><strong>paras</strong> (<em>list of Autodesk.Revit.DB.BuiltInParameter</em>) – list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)</p></li>
+<li><p><strong>leaveOneBehind</strong> (<em>bool</em><em>, </em><em>optional</em>) – _description_, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairPathTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairPathTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairPathTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair path ids to purge, will elave on path type id behinf ber system family</p>
+<dd><p>Gets all unused Stair path ids to purge, will omit on path type id per system family if none are used.</p>
+<p>This method can be used to safely delete unused stair path types. In the case that no stair        path instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair path type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairLandingTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairLandingTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairLandingTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair landing ids</p>
+<dd><p>Gets all unused Stair landing type ids.</p>
+<p>This method can be used to safely delete unused stair landing types. In the case that no stair        landing instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair landing type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairRunTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairRunTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairRunTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair landing ids</p>
+<dd><p>Gets all unused Stair run type ids.</p>
+<p>This method can be used to safely delete unused stair run types. In the case that no stair        run instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair run type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairCutMarkTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairCutMarkTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairCutMarkTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair cut mark type ids</p>
+<dd><p>Gets all unused Stair cut mark type ids.</p>
+<p>This method can be used to safely delete unused stair cut mark types. In the case that no stair        cut mark instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair cut mark type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairStringersCarriageTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused Stair stringer / carriage type ids</p>
+<dd><p>Gets all unused Stair stringer / carriage type ids.</p>
+<p>This method can be used to safely delete unused stair stringer / cariage types. In the case that no stair        string carriage instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stringer cariage type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetInPlaceStairFamilyInstances">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetInPlaceStairFamilyInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetInPlaceStairFamilyInstances" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all instances in place families of category stair</p>
+<dd><p>Gets all instances in place families of category stair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing in place stair family instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllInPlaceStairTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceStairTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllInPlaceStairTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all available in place families of category stair</p>
+<dd><p>Gets all type ids off all available in place families of category stair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUsedInPlaceStairTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedInPlaceStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedInPlaceStairTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in place type ids</p>
+<dd><p>Gets all used in place stair type ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedInPlaceStairTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceStairTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedInPlaceStairTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in place type ids</p>
+<dd><p>Gets all unused in place stair type ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedInPlaceStairIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceStairIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedInPlaceStairIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns symbol(type) ids and family ids (when no type is in use) of in place Stair familis which can be purged</p>
+<dd><p>Gets symbol (type) ids and family ids (when no type is in use) of in place Stair familis which can be purged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
+</section>
 <section id="module-RevitViewReferencing">
 <span id="revit-views-view-filters-and-views-referencing"></span><h2>Revit Views, View Filters and Views Referencing<a class="headerlink" href="#module-RevitViewReferencing" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit view referencing.</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-view-referencing">
+<h3>This module contains a number of helper functions relating to Revit view referencing.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-view-referencing" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.Deprecated_GetAllCallOutTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">Deprecated_GetAllCallOutTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.Deprecated_GetAllCallOutTypesByCategory" title="Permalink to this definition">¶</a></dt>
@@ -6168,7 +6700,9 @@ view reference types and view continuation types in the model</p>
 <dd><p>returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging</p>
 </dd></dl>
 
-<span class="target" id="module-RevitViews"></span><p>This module contains a number of helper functions relating to Revit views.</p>
+</section>
+<span class="target" id="module-RevitViews"></span><section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-views">
+<h3>This module contains a number of helper functions relating to Revit views.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-views" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitViews.REPORT_VIEWS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">REPORT_VIEWS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE']</span></em><a class="headerlink" href="#RevitViews.REPORT_VIEWS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -6878,9 +7412,11 @@ view reference types and view continuation types in the model</p>
 </dd></dl>
 
 </section>
+</section>
 <section id="module-RevitWalls">
 <span id="revit-walls"></span><h2>Revit Walls<a class="headerlink" href="#module-RevitWalls" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit walls.</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-walls">
+<h3>This module contains a number of helper functions relating to Revit walls.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-walls" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitWalls.REPORT_WALLS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">REPORT_WALLS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'WALLTYPEID',</span> <span class="pre">'WALLTYPENAME',</span> <span class="pre">'FUNCTION',</span> <span class="pre">'LAYERWIDTH',</span> <span class="pre">'LAYERMATERIALNAME',</span> <span class="pre">'LAYERMATERIALMARK']</span></em><a class="headerlink" href="#RevitWalls.REPORT_WALLS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -7368,9 +7904,11 @@ In the case that no wall instance using any of the types is placed this will ret
 </dd></dl>
 
 </section>
+</section>
 <section id="module-RevitWarnings">
 <span id="revit-warnings"></span><h2>Revit Warnings<a class="headerlink" href="#module-RevitWarnings" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit warnings.</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-warnings">
+<h3>This module contains a number of helper functions relating to Revit warnings.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-warnings" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitWarnings.REPORT_WARNINGS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitWarnings.</span></span><span class="sig-name descname"><span class="pre">REPORT_WARNINGS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'WARNING</span> <span class="pre">TYPE',</span> <span class="pre">'NUMBER</span> <span class="pre">OF</span> <span class="pre">WARNINGS']</span></em><a class="headerlink" href="#RevitWarnings.REPORT_WARNINGS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -7414,6 +7952,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </dl>
 </dd></dl>
 
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitWarningsSolver.</span></span><span class="sig-name descname"><span class="pre">RevitWarningsSolver</span></span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver" title="Permalink to this definition">¶</a></dt>
@@ -7562,6 +8101,8 @@ In the case that no wall instance using any of the types is placed this will ret
 </section>
 <section id="module-RevitWorksets">
 <span id="revit-worksets"></span><h2>Revit Worksets<a class="headerlink" href="#module-RevitWorksets" title="Permalink to this headline">¶</a></h2>
+<section id="a-number-of-helper-functions-relating-to-revit-worksets">
+<h3>A number of helper functions relating to Revit worksets.<a class="headerlink" href="#a-number-of-helper-functions-relating-to-revit-worksets" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitWorksets.REPORT_WORKSETS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">REPORT_WORKSETS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'ISVISIBLEBYDEFAULT']</span></em><a class="headerlink" href="#RevitWorksets.REPORT_WORKSETS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -7832,6 +8373,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </dl>
 </dd></dl>
 
+</section>
 </section>
 <section id="the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">
 <h2>The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.<a class="headerlink" href="#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit" title="Permalink to this headline">¶</a></h2>
@@ -8178,7 +8720,8 @@ result.message will contain generic exception message.</p>
 </dd></dl>
 
 </section>
-<span class="target" id="module-SystemProcess"></span><p>This module contains a number of helper functions relating to system processes.</p>
+<span class="target" id="module-SystemProcess"></span><section id="this-module-contains-a-number-of-helper-functions-relating-to-system-processes">
+<h2>This module contains a number of helper functions relating to system processes.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-system-processes" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="SystemProcess.GetAllRunningProcesses">
 <span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">GetAllRunningProcesses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.GetAllRunningProcesses" title="Permalink to this definition">¶</a></dt>
@@ -8274,6 +8817,7 @@ result.message will contain generic exception message.</p>
 </dl>
 </dd></dl>
 
+</section>
 <section id="timer">
 <h2>Timer<a class="headerlink" href="#timer" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -8318,7 +8862,8 @@ result.message will contain generic exception message.</p>
 </section>
 <section id="module-Utility">
 <span id="file-system-utilities"></span><h2>File system utilities<a class="headerlink" href="#module-Utility" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to:</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to">
+<h3>This module contains a number of helper functions relating to:<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>file system tasks (copy, create, delete…)</p></li>
 <li><p>date stamps (with varies formatting options)</p></li>
@@ -9253,6 +9798,7 @@ value: lit of str</p>
 </dl>
 </dd></dl>
 
+</section>
 </section>
 </section>
 

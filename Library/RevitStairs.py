@@ -1,5 +1,7 @@
 ﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit stairs. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -41,12 +43,19 @@ clr.ImportExtensions(System.Linq)
 #: header used in reports
 REPORT_ROOFS_HEADER = ['HOSTFILE', 'STAIRTYPEID', 'STAIRTYPENAME']
 
+#: Built in stair family name for basic stairs
 BASIC_STAIR_FAMILY_NAME = 'Stair'
+
+#: Built in stair family name for assembled stairs
 ASSEMBLED_STAIR_FAMILY_NAME = 'Assembled Stair'
+
+#: Built in stair family name for precast stairs
 PRECAST_STAIR_FAMILY_NAME = 'Precast Stair'
+
+#: Built in stair family name for cast in place stairs
 CAST_IN_PLACE_STAIR_FAMILY_NAME = 'Cast-In-Place Stair'
 
-
+#: List of all Built in stair family names
 BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     BASIC_STAIR_FAMILY_NAME,
     ASSEMBLED_STAIR_FAMILY_NAME,
@@ -59,76 +68,159 @@ STAIR_LANDING_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LANDING_TYPE
 ]
 
+# list of built in parameters for stair cut mark
 STAIR_CUTMARK_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
 ]
 
+# list of built in parameters for stair support types
 STAIR_SUPPORT_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
     rdb.BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
     rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
 ]
 
+# list of built in parameters for stair run type
 STAIR_RUN_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE
 ]
 
-# doc:   current model document
 def GetAllStairTypesByCategory(doc):
-    ''' this will return a filtered element collector of all Stair types in the model:
+    '''
+    Gets a filtered element collector of all Stair types in the model.
+
+    Return includes:
     - Stair
     - Assembled Stair
     - Precast Stair
     - Cast-In-Place Stair
     - In place families or loaded families
+   
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsElementType()
     return collector
 
-# doc   current model document
 def GetStairTypesByClass(doc):
-    ''' this will return a filtered element collector of all Stair types in the model:
+    '''
+    Gets a filtered element collector of all Stair types in the model.
+
+    Return includes:
+
     - Assembled Stair
     - Precast Stair
     - Cast-In-Place Stair
-    it will therefore not return any in place family types or Stair types...'''
+
+    It will not return any in place family or Stair types! These are internally treated as Families or Family Symbols class objects.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsType)
 
-# doc   current model document
 def GetStairPathTypesByClass(doc):
-    ''' this will return a filtered element collector of all Stair path types in the model '''
+    '''
+    Gets a filtered element collector of all Stair path types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair path types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsPathType)
 
 def GetAllStairPathElementsInModel(doc):
-    ''' this will return a filtered element collector of all Stair path elements in the model '''
+    '''
+    Gets a filtered element collector of all Stair path elements in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair path elements.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetStairLandingTypesByClass(doc):
-    ''' this will return a filtered element collector of all Stair landing types in the model '''
+    '''
+    Gets a filtered element collector of all Stair landing types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair landing types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsLandingType)
 
-# doc   current model document
 def GetStairRunTypesByClass(doc):
-    ''' this will return a filtered element collector of all Stair run types in the model '''
+    '''
+    Gets a filtered element collector of all Stair run types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair run types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsRunType)
 
-# doc   current model document
 def GetStairCutMarkTypesByClass(doc):
-    ''' this will return a filtered element collector of all cut mark types in the model '''
+    '''
+    Gets a filtered element collector of all cut mark types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair cut mark types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.CutMarkType)
 
-# returns all stringers and carriage types in a model
-# doc:   current model document
 def GetAllStairStringersCarriageByCategory(doc):
-    ''' this will return a filtered element collector of all Stair stringers and cariage types in the model'''
+    '''
+    Gets a filtered element collector of all stair stringers and cariage types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair stringers and cariage types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
     return collector
 
-# collector   fltered element collector containing Stair type elments of family symbols representing in place families
-# dic         dictionary containing key: stair type family name, value: list of ids
 def BuildStairTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Amends dictioanry passt in with keys and or values added retrieved from collector passt in.
+
+    Key values are as per BUILTIN_STAIR_TYPE_FAMILY_NAMES.
+
+    :param collector: A filtered element collector containing Stair type elments.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: A dictionary containing key: stair type family name, value: list of ids.
+    :type dic: dic { str: [Autodesk.Revit.DB.ElementId]}
+
+    :return: A dictionary containing key: stair type family name, value: list of ids.
+    :rtype: dic { str: [Autodesk.Revit.DB.ElementId]}
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -137,8 +229,19 @@ def BuildStairTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortStairTypesByFamilyName(doc):
+    '''
+    Returns a dictionary containing all stair types in the model.
+
+    Key values are as per BUILTIN_STAIR_TYPE_FAMILY_NAMES.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: stair type family name, value: list of ids.
+    :rtype: dic { str: [Autodesk.Revit.DB.ElementId]}
+    '''
+
     # get all Stair Type Elements
     wts = GetStairTypesByClass(doc)
     # get all stair types including in place stair families
@@ -150,82 +253,181 @@ def SortStairTypesByFamilyName(doc):
 
 # -------------------------------- none in place Stair types -------------------------------------------------------
 
-# doc   current model document
 def GetAllStairInstancesInModelByCategory(doc):
-    ''' returns all Stair elements placed in model...ignores in place families'''
+    '''
+    Gets a filtered element collector of all Stair elements placed in model.
+
+    TODO: Confirm it  ignores in place families?
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing stair instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsNotElementType()
     
-# doc   current model document
 def GetAllStairInstancesInModelByClass(doc):
-    ''' returns all Stair elements placed in model...ignores Stair soffits(???)'''
+    '''
+    Gets a filtered element collecto all Stair elements placed in model...
+    
+    TODO: Confirm it ignores Stair soffits.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A filtered element collector containing stair instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdba.Stairs).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllStairTypeIdsInModelByCategory(doc):
-    ''' returns all Stair element types available in model '''
+    '''
+    Gets all Stair element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of element ids representing stair types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colCat = GetAllStairTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current model document
 def GetAllStairTypeIdsInModelByClass(doc):
-    ''' returns all Stair element types available in model '''
+    '''
+    Gets all Stair element type ids available in model.
+
+    Ignores in place families of category stair.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetStairTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current model document
 def GetAllStairPathTypeIdsInModelByClass(doc):
-    ''' returns all Stair path element type ids available in model '''
+    '''
+    Gets all Stair path element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair path types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetStairPathTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current model document
 def GetAllStairLandingTypeIdsInModelByClass(doc):
-    ''' returns all Stair landing element type ids available in model '''
+    '''
+    Gets all Stair landing element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair landing types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetStairLandingTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current model document
 def GetAllStairRunTypeIdsInModelByClass(doc):
-    ''' returns all Stair run element type ids available in model '''
+    '''
+    Gets all Stair run element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of element ids representing stair run types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetStairRunTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current model document
 def GetAllStairCutMarkTypeIdsInModelByClass(doc):
-    ''' returns all Stair cut mark element type ids available in model '''
+    '''
+    Get all Stair cut mark element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair cut mark types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetStairCutMarkTypesByClass (doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current model document
 def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
-    ''' returns all Stair stringers and carriage element type ids available in model '''
+    '''
+    Get all Stair stringers and carriage element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair stringer and carriage types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colCat = GetAllStairStringersCarriageByCategory (doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current document
 def GetUsedStairTypeIds(doc):
-    ''' returns all used in Stair type ids '''
+    '''
+    Gets all used in Stair type ids.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing stair types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+
+    TODO: check for more geric list comparison and remove this function.
+
+    :param famTypeIds: List of family type ids to check.
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: Reference list of ids.
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if any id from amTypeIds is not in unUsedTypeIds.
+    :rtype: bool
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -235,13 +437,25 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
 
 # -------------------------------- none in place Stair types purge -------------------------------------------------------
 
-# doc   current document
 def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
-    ''' returns all unused Stair type ids for:
+    '''
+    Gets all unused Stair type ids for.
+
+    Included are:
+
     - Stair Soffit
     - Compound Stair
     - Basic Stair
-    it will therefore not return any in place family types ...'''
+
+    It will therefore not return any in place family types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused stair types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllStairTypeIdsInModelByClass, 0)
     # make sure there is at least on Stair type per system family left in model
@@ -255,9 +469,29 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
 
 #--------------------------------utlity functions to ge unused sub types ----------------------
 
-# doc   current document
 def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
-    ''' gets the ids returned from stair type belonging to parameter list passt in'''
+    '''
+    Gets the id of types making up a stair.
+
+    These could be stair landing types, stringer and carriage types etc.
+    Types returned depend on parameter definitions passt in. 
+    Refer to: 
+
+    - STAIR_LANDING_TYPE_PARAS, 
+    - STAIR_CUTMARK_TYPE_PARAS, 
+    - STAIR_SUPPORT_TYPE_PARAS 
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param stairTypeId: An element id representing a stair type. 
+    :type stairTypeId: Autodesk.Revit.DB.ElementId
+    :param paras: Parameters containing a type making up a stair.
+    :type paras: list Autodesk.Revit.DB.BuiltInParameterDefinition
+    
+    :return: List of element ids representing stair types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     stairType = doc.GetElement(stairTypeId)
     for pDef in paras:
@@ -266,10 +500,21 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
             ids.append(pValue)
     return ids
 
-# doc   current document
-# ids   list of system type ids
 def GetAllSimilarTypeIds(doc, ids):
-    '''returns all ids of similar types of elemet ids passed in'''
+    '''
+    Gets all unique ids of similar types of elemet ids passed in.
+
+    TODO: check for similar function elsewhere!
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: list of type ids to be added to.
+    :type ids: list of Autodesk.Revit.ElementIds
+
+    :return: List of unique ids of similar types.
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     simIds = []
     for id in ids:
          el = doc.GetElement(id)
@@ -279,10 +524,19 @@ def GetAllSimilarTypeIds(doc, ids):
                 simIds.append(st)
     return simIds
 
-# doc   current document
-# ids   list of system type ids
 def BuildSystemFamilyDictionary(doc, ids):
-    '''returns dictionary where key is the system family name and values available types of that system family'''
+    '''
+    Returns dictionary where key is the system family name and values list of available type ids of that system family.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: List of system family ids.
+    :type ids: list of Autodesk.Revit.ElementIds
+    
+    :return: Dictionary of unique ids of similar types.
+    :rtype: dictionary {str: list of Autodesk.Revit.ElementIds } 
+    '''
+
     dic = {}
     for id in ids:
         el = doc.GetElement(id)
@@ -292,12 +546,23 @@ def BuildSystemFamilyDictionary(doc, ids):
             dic[el.FamilyName] = [id]
     return dic
 
-# doc   current document
-# ids   list of ids to check
-# leaveOneBehind        flag default is true: leave at least one type of a system family behind
 def CheckSystemFamilies(doc, ids, leaveOneBehind):
-    '''check whether a list of ids of system family is the entire list of types avaialble
-    if so it will remove one type id per system family to allow purging'''
+    '''
+    Check whether a list of ids of system family is the entire list of types available in the model. If so it will remove one\
+    type id per system family to allow safe purging.
+    Revit requires at least one type definition per system family to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ids: List of ids to check
+    :type ids: list of Autodesk.Revit.ElementIds
+    :param leaveOneBehind: True: at least one type will be omitted from list.
+    :type leaveOneBehind: bool
+    
+    :return: List of unique ids of similar types.
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     dicToCheck = BuildSystemFamilyDictionary(doc, ids)
     similarIds = GetAllSimilarTypeIds(doc, ids)
     dicReference = BuildSystemFamilyDictionary(doc, similarIds)
@@ -315,12 +580,25 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
             ids = ids + dicToCheck[key]
     return ids
 
-# doc   current document
-# availavbleIdsGetter   function returning available type ids
-# paras                 list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
-# leaveOneBehind        flag default is true: leave at least one type of a system family behind
 def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
-    ''' returns a list of type ids which are not used in any stair types. Type ids are furnished via an id getter function '''
+    '''
+    Returns a list of type ids which are not used in any stair types. 
+    
+    Type ids are provided via an id getter function
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param availavbleIdsGetter: function returning available type ids
+    :type availavbleIdsGetter: func(doc)
+    :param paras: list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
+    :type paras: list of Autodesk.Revit.DB.BuiltInParameter
+    :param leaveOneBehind: _description_, defaults to True
+    :type leaveOneBehind: bool, optional
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = []
     # get all available type ids and then check against all Stair type ids
     idsAvailable = availavbleIdsGetter(doc)
@@ -340,9 +618,21 @@ def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
 
 # --------------------------------- purging subtypes ------------------------------------------------
 
-# doc   current document
 def GetUnusedStairPathTypeIdsToPurge(doc):
-    ''' returns all unused Stair path ids to purge, will elave on path type id behinf ber system family'''
+    '''
+    Gets all unused Stair path ids to purge, will omit on path type id per system family if none are used.
+
+    This method can be used to safely delete unused stair path types. In the case that no stair\
+        path instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one stair path type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     idsUsed = []
     availableTypes = GetAllStairPathTypeIdsInModelByClass(doc)
     col = GetAllStairPathElementsInModel(doc)
@@ -356,62 +646,146 @@ def GetUnusedStairPathTypeIdsToPurge(doc):
     ids = CheckSystemFamilies(doc, ids, True)
     return ids
 
-# doc   current document
 def GetUnusedStairLandingTypeIdsToPurge(doc):
-    ''' returns all unused Stair landing ids'''
+    '''
+    Gets all unused Stair landing type ids.
+
+    This method can be used to safely delete unused stair landing types. In the case that no stair\
+        landing instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one stair landing type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = GetUsedSubTypes(doc, GetAllStairLandingTypeIdsInModelByClass, STAIR_LANDING_TYPE_PARAS)
     return ids
 
-# doc   current document
 def GetUnusedStairRunTypeIdsToPurge(doc):
-    ''' returns all unused Stair landing ids'''
+    '''
+    Gets all unused Stair run type ids.
+
+    This method can be used to safely delete unused stair run types. In the case that no stair\
+        run instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one stair run type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = GetUsedSubTypes(doc, GetAllStairRunTypeIdsInModelByClass, STAIR_RUN_TYPE_PARAS)
     return ids
 
-# doc   current document
 def GetUnusedStairCutMarkTypeIdsToPurge(doc):
-    ''' returns all unused Stair cut mark type ids'''
+    '''
+    Gets all unused Stair cut mark type ids.
+
+    This method can be used to safely delete unused stair cut mark types. In the case that no stair\
+        cut mark instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one stair cut mark type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUTMARK_TYPE_PARAS)
     return ids
 
-# doc   current document
 def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
-    ''' returns all unused Stair stringer / carriage type ids'''
+    '''
+    Gets all unused Stair stringer / carriage type ids.
+
+    This method can be used to safely delete unused stair stringer / cariage types. In the case that no stair\
+        string carriage instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one stringer cariage type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = GetUsedSubTypes(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
     return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceStairFamilyInstances(doc):
-    ''' returns all instances in place families of category stair '''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances in place families of category stair.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing in place stair family instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Stairs)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceStairTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category stair '''
+    '''
+    Gets all type ids off all available in place families of category stair.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Stairs)
     return ids
 
-# doc   current document
 def GetUsedInPlaceStairTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place stair type ids.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceStairTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all unused in place stair type ids.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceStairTypeIdsInModel, 0)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceStairIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place Stair familis which can be purged'''
+    '''
+    Gets symbol (type) ids and family ids (when no type is in use) of in place Stair familis which can be purged.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids 
+    :rtype: list of Autodesk.Revit.ElementIds
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceStairTypeIds)
     return ids

@@ -63,24 +63,24 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
-# list of built in parameters attached to stair sub types
+#: list of built in parameters attached to stair sub types
 STAIR_LANDING_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LANDING_TYPE
 ]
 
-# list of built in parameters for stair cut mark
+#: list of built in parameters for stair cut mark
 STAIR_CUTMARK_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
 ]
 
-# list of built in parameters for stair support types
+#: list of built in parameters for stair support types
 STAIR_SUPPORT_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE, 
     rdb.BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
     rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
 ]
 
-# list of built in parameters for stair run type
+#: list of built in parameters for stair run type
 STAIR_RUN_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE
 ]

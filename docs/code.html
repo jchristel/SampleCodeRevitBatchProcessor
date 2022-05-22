@@ -5848,6 +5848,30 @@ List of Lists because a rooms can have holes. First group of points represents e
 <dd><p>List of all Built in stair family names</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.STAIR_LANDING_TYPE_PARAS">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">STAIR_LANDING_TYPE_PARAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_LANDING_TYPE]</span></em><a class="headerlink" href="#RevitStairs.STAIR_LANDING_TYPE_PARAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to stair sub types</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.STAIR_CUTMARK_TYPE_PARAS">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">STAIR_CUTMARK_TYPE_PARAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE]</span></em><a class="headerlink" href="#RevitStairs.STAIR_CUTMARK_TYPE_PARAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters for stair cut mark</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.STAIR_SUPPORT_TYPE_PARAS">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">STAIR_SUPPORT_TYPE_PARAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE]</span></em><a class="headerlink" href="#RevitStairs.STAIR_SUPPORT_TYPE_PARAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters for stair support types</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitStairs.STAIR_RUN_TYPE_PARAS">
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">STAIR_RUN_TYPE_PARAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.STAIRSTYPE_RUN_TYPE]</span></em><a class="headerlink" href="#RevitStairs.STAIR_RUN_TYPE_PARAS" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters for stair run type</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairTypesByCategory" title="Permalink to this definition">¶</a></dt>
@@ -6578,31 +6602,104 @@ Revit requires at least one type definition per system family to be in the model
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllCallOutHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllCallOutHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllCallOutHeadsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all callOut Head symbol (types) in the model</p>
+<dd><p>Gets a filtered element collector of all callOut Head symbol (types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing callout head symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllElevationHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllElevationHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllElevationHeadsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all elevation symbols (types) in the model</p>
+<dd><p>Gets a filtered element collector of all elevation symbols (types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing elevation symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllSectionHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllSectionHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllSectionHeadsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all section symbols (types) in the model</p>
+<dd><p>Gets a filtered element collector of all section symbols (types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing section symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewContinuationMarkersByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewContinuationMarkersByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewContinuationMarkersByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all view contiunation symbols (types) in the model</p>
+<dd><p>Gets a filtered element collector of all view contiunation symbols (types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing Continuation Marker symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllReferenceViewElementsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllReferenceViewElementsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllReferenceViewElementsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return an filtered element collector of all reference elements in the model</p>
+<dd><p>Gets filtered element collector of all reference view elements in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing reference view elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViewReferencing.VIEW_REFERENCE_PARAMETER_DEF_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">VIEW_REFERENCE_PARAMETER_DEF_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.ELEVATN_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.CALLOUT_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SECTION_TAG]</span></em><a class="headerlink" href="#RevitViewReferencing.VIEW_REFERENCE_PARAMETER_DEF_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>contains the builtin parameter definitions for Call out type ids, section type ids, elevation type ids</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViewReferencing.VIEW_TAG_SYMBOL_PARAMETER_DEF">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">VIEW_TAG_SYMBOL_PARAMETER_DEF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.CALLOUT_ATTR_HEAD_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.ELEV_SYMBOL_ID,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SECTION_ATTR_HEAD_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SECTION_ATTR_TAIL_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.REFERENCE_VIEWER_ATTR_TAG]</span></em><a class="headerlink" href="#RevitViewReferencing.VIEW_TAG_SYMBOL_PARAMETER_DEF" title="Permalink to this definition">¶</a></dt>
+<dd><p>contains the builtin parameter definitions for Callout symbol tag ids, section symbol tag ids, elevation symbol tag ids</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitViewReferencing.VIEWREF_CATEGORYFILTER">
+<span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">VIEWREF_CATEGORYFILTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CalloutHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_ElevationMarks,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_SectionHeads,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_ReferenceViewerSymbol]</span></em><a class="headerlink" href="#RevitViewReferencing.VIEWREF_CATEGORYFILTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>category filter for all view ref categories</p>
 </dd></dl>
 
 <dl class="py function">
@@ -6614,29 +6711,69 @@ Revit requires at least one type definition per system family to be in the model
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetUsedViewReferenceTypeIdData">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewReferenceTypeIdData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUsedViewReferenceTypeIdData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view references types in use in the model in a dictionary
-key is the reference tag type: callout, section or elevation
-values are the type ids in use</p>
+<dd><p>Gets all view references types in use in the model in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>key is the reference tag type: callout, section or elevation, values are the type ids in use</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceTypeIdData">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceTypeIdData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceTypeIdData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view references types available in the model in a dictionary
-key is the reference type: callout, section or elevation
-values are the symbol ids</p>
+<dd><p>Gets all view references types available in the model in a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>key is the reference type: callout, section or elevation, values are the type ids in use</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceTypeIdDataAsList">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceTypeIdDataAsList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceTypeIdDataAsList" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view references type id s available in the model in a list</p>
+<dd><p>Gets all view references type ids available in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of element ids representing view reference types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewContinuationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewContinuationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewContinuationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all view continuation types available in the model</p>
+<dd><p>Gets all view continuation type ids available in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of view continuation type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -6648,7 +6785,18 @@ values are the symbol ids</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewReferenceSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewReferenceSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewReferenceSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the ids of all view reference family symbols(types) in the model</p>
+<dd><p>Gets the ids of all view reference family symbols(types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of view reference family symbols(types) ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementIds</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

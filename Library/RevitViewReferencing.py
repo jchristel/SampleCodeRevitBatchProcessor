@@ -69,46 +69,85 @@ def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
 
 # ---------------------- utility -----------------------
 
-# doc:   current model document
 def GetAllCallOutHeadsByCategory(doc):
-    ''' this will return a filtered element collector of all callOut Head symbol (types) in the model'''
+    '''
+    Gets a filtered element collector of all callOut Head symbol (types) in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector containing callout head symbols.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_CalloutHeads).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllElevationHeadsByCategory(doc):
-    ''' this will return a filtered element collector of all elevation symbols (types) in the model'''
+    '''
+    Gets a filtered element collector of all elevation symbols (types) in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector containing elevation symbols.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ElevationMarks).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllSectionHeadsByCategory(doc):
-    ''' this will return a filtered element collector of all section symbols (types) in the model'''
+    '''
+    Gets a filtered element collector of all section symbols (types) in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+    :return: A filtered element collector containing section symbols.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_SectionHeads).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllViewContinuationMarkersByCategory(doc):
-    ''' this will return a filtered element collector of all view contiunation symbols (types) in the model'''
+    '''
+    Gets a filtered element collector of all view contiunation symbols (types) in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector containing Continuation Marker symbols.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewerSymbol)
     return collector
 
-# doc:   current model document
 def GetAllReferenceViewElementsByCategory(doc):
-    '''this will return an filtered element collector of all reference elements in the model'''
+    '''
+    Gets filtered element collector of all reference view elements in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector containing reference view elements.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewer)
     return collector
 
 # ---------------------- view ref types  -----------------------
 
-# contains the builtin parameter definitions for Call out type ids, section type ids, elevation type ids
+#: contains the builtin parameter definitions for Call out type ids, section type ids, elevation type ids
 VIEW_REFERENCE_PARAMETER_DEF_NAMES = [
     rdb.BuiltInParameter.ELEVATN_TAG,
     rdb.BuiltInParameter.CALLOUT_TAG,
     rdb.BuiltInParameter.SECTION_TAG
 ]
 
-# contains the builtin parameter definitions for Callout symbol tag ids, section symbol tag ids, elevation symbol tag ids
+#: contains the builtin parameter definitions for Callout symbol tag ids, section symbol tag ids, elevation symbol tag ids
 VIEW_TAG_SYMBOL_PARAMETER_DEF = [
     rdb.BuiltInParameter.CALLOUT_ATTR_HEAD_TAG,
     rdb.BuiltInParameter.ELEV_SYMBOL_ID,
@@ -117,7 +156,7 @@ VIEW_TAG_SYMBOL_PARAMETER_DEF = [
     rdb.BuiltInParameter.REFERENCE_VIEWER_ATTR_TAG
 ]
 
-# category filter for all view ref categories
+#: category filter for all view ref categories
 VIEWREF_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_CalloutHeads,
         rdb.BuiltInCategory.OST_ElevationMarks,
@@ -138,11 +177,17 @@ def GetReferenceTypeIdsFromViewType(viewType):
                 dic[pDef] = [pValue]
     return dic
 
-# doc:   current model document
 def GetUsedViewReferenceTypeIdData(doc):
-    '''returns all view references types in use in the model in a dictionary
-    key is the reference tag type: callout, section or elevation
-    values are the type ids in use'''
+    '''
+    Gets all view references types in use in the model in a dictionary.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: key is the reference tag type: callout, section or elevation, values are the type ids in use
+    :rtype: dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}
+    '''
+
     dic = {}
     col = rView.GetViewTypes(doc)
     for c in col:
@@ -158,11 +203,17 @@ def GetUsedViewReferenceTypeIdData(doc):
               dic[key] = value
     return dic
 
-# doc:   current model document
 def GetAllViewReferenceTypeIdData(doc):
-    '''returns all view references types available in the model in a dictionary
-    key is the reference type: callout, section or elevation
-    values are the symbol ids'''
+    '''
+    Gets all view references types available in the model in a dictionary.
+    
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: key is the reference type: callout, section or elevation, values are the type ids in use
+    :rtype: dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}
+    '''
+
     dic = {}
     col = rView.GetViewTypes(doc)
     for c in col:
@@ -182,9 +233,17 @@ def GetAllViewReferenceTypeIdData(doc):
                             dic[key] = [simTypeId]
     return dic
 
-# doc:   current model document
 def GetAllViewReferenceTypeIdDataAsList(doc):
-    '''returns all view references type id s available in the model in a list'''
+    '''
+    Gets all view references type ids available in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A list of element ids representing view reference types
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     dic = GetAllViewReferenceTypeIdData(doc)
     ids = []
     for key, value in dic.items():
@@ -192,9 +251,17 @@ def GetAllViewReferenceTypeIdDataAsList(doc):
             ids = ids + dic[key]
     return ids
 
-# doc:   current model document
 def GetAllViewContinuationTypeIds(doc):
-    '''returns all view continuation types available in the model'''
+    '''
+    Gets all view continuation type ids available in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of view continuation type ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     syms = GetAllReferenceViewElementsByCategory(doc)
     for sym in syms:
@@ -204,7 +271,6 @@ def GetAllViewContinuationTypeIds(doc):
                 ids.append (simType)
     return ids
 
-# doc:   current model document
 def GetUsedViewContinuationTypeIds(doc):
     '''returns all view continuation types available in the model'''
     ids = []
@@ -214,9 +280,17 @@ def GetUsedViewContinuationTypeIds(doc):
                 ids.append (sym.GetTypeId())
     return ids
 
-# doc:   current model document
 def GetAllViewReferenceSymbolIds(doc):
-    '''returns the ids of all view reference family symbols(types) in the model'''
+    '''
+    Gets the ids of all view reference family symbols(types) in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of view reference family symbols(types) ids.
+    :rtype:  list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     multiCatFilter = rdb.ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()

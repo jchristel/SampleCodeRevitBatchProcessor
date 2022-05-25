@@ -1,5 +1,7 @@
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit rooms. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -41,20 +43,35 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_ROOMS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTANCES']
 
 # --------------------------------------------- utility functions ------------------
 
-# doc   current document
 def GetAllRooms(doc):
-    '''returns a list of rooms from the model'''
+    '''
+    Gets a list of rooms from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All the rooms in the model as a list.
+    :rtype: List Autodesk.Revit.DB.Architecture.Room
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms).ToList()
 
-
-# doc   current document
 def GetUnplacedRooms(doc):
-    '''returns a list of unplaced rooms from the model'''
+    '''
+    Gets a list of unplaced rooms from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All the unplaced rooms in the model as a list.
+    :rtype: List Autodesk.Revit.DB.Architecture.Room
+    '''
+
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     for r in coll:
@@ -62,10 +79,17 @@ def GetUnplacedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-
-# doc   current document
 def GetNotEnclosedRooms(doc):
-    '''returns a list of not enclosed rooms from the model'''
+    '''
+    Gets a list of not enclosed rooms from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All the unenclosed rooms in the model as a list.
+    :rtype: List Autodesk.Revit.DB.Architecture.Room
+    '''
+
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     boundaryOption = rdb.SpatialElementBoundaryOptions()
@@ -75,9 +99,17 @@ def GetNotEnclosedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-# doc   current document
 def GetRedundantRooms(doc):
-    '''returns a list of redundants rooms from the model'''
+    '''
+    Gets a list of redundants rooms from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: All the redundant rooms in the model as a list.
+    :rtype: List Autodesk.Revit.DB.Architecture.Room
+    '''
+
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     boundaryOption = rdb.SpatialElementBoundaryOptions()
@@ -87,10 +119,25 @@ def GetRedundantRooms(doc):
             unplaced.append(r)
     return unplaced
 
-# doc       current document
-# tagId     the element Id of the tag to be moved
 def MoveTagToRoom(doc, tagId):
-    '''moves a tag to the room location point'''
+    '''
+    Moves a room tag to the associated rooms location point.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param tagId: The element id of the tag to be moved to the room.
+    :type tagId: Autopdesk.Revit.DB.ElementId
+
+    :return: 
+        Result class instance.
+        Tag moving status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the name and number of the room.
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain the name and number of the room and the exception message.
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     rt = doc.GetElement(tagId)
     roomTagPoint = rt.Location.Point
@@ -111,11 +158,17 @@ def MoveTagToRoom(doc, tagId):
 
 # -------------------------------- room geometry -------------------------------------------------------
 
-# revitRoom         Revit Room element
 def GetRoomBoundaryLoops(revitRoom):
-    ''' 
-    Returns all boundary loops for each rooms
     '''
+    Returns all boundary loops for a rooms.
+
+    :param revitRoom: The room.
+    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+
+    :return: List of boundary loops defining the room.
+    :rtype: List of lists of Autodesk.Revit.DB.BoundarySegment 
+    '''
+
     allBoundaryLoops = []
     # set up spatial boundary option
     spatialBoundaryOption = rdb.SpatialElementBoundaryOptions()
@@ -126,14 +179,21 @@ def GetRoomBoundaryLoops(revitRoom):
     allBoundaryLoops.append(loops)
     return allBoundaryLoops
 
-# boundaryLoops     Revit Boundary loops
 def GetPointsFromRoomBoundaries(boundaryLoops):
     '''
-    Returns a list of lists of points representing the room boundary loops
-    List of Lists because a room can be made up of multiple loops (holes in rooms!)
-    First nested list represents the outer boundary of a room
-    all loops are implicitly closed ( last point is not the first point again!)
+    Returns a list of lists of points representing the room boundary loops.
+
+    - List of Lists because a room can be made up of multiple loops (holes in rooms!)
+    - First nested list represents the outer boundary of a room
+    - All loops are implicitly closed ( last point is not the first point again!)
+
+    :param boundaryLoops: List of boundary loops defining the room.
+    :type boundaryLoops: List of lists of Autodesk.Revit.DB.BoundarySegment 
+
+    :return: A data geometry instance containing the points defining the boundary loop.
+    :rtype: :class:`.DataGeometry`
     '''
+
     loopCounter = 0
     hasInnerLoops = False
     dgeo = dGeometry.DataGeometry()
@@ -154,12 +214,19 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
         dgeo.innerLoops = []
     return dgeo
 
-# doc       current model document
 def Get2DPointsFromRevitRoom(revitRoom):
     '''
-    Returns a list of lists of points representing the flattened(2D geometry) of each room in the model
-    List of Lists because a rooms can have holes. First group of points represents external boundary of room. Any further list represents a hole in the room.
+    Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
+    
+    List should only have one entry.
+
+    :param revitRoom: The room.
+    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+
+    :return: A list of data geometry instance containing the points defining the boundary loop.
+    :rtype: list of  :class:`.DataGeometry`
     '''
+
     allRoomPoints = []
     boundaryLoops = GetRoomBoundaryLoops(revitRoom)
     if(len(boundaryLoops) > 0):
@@ -167,12 +234,17 @@ def Get2DPointsFromRevitRoom(revitRoom):
         allRoomPoints.append(roomPoints)
     return allRoomPoints
 
-# doc       current model document
 def Get2DPointsFromAllRevitRoomsInModel(doc):
     '''
-    Returns a list of lists of points representing the flattened(2D geometry) of each room in the model
-    List of Lists because a rooms can have holes. First group of points represents external boundary of room. Any further list represents a hole in the room.
+    Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of data geometry instances containing the points defining the boundary loop per room.
+    :rtype: list of  :class:`.DataGeometry`
     '''
+
     allRoomPointGroups = []
     rooms = GetAllRooms(doc)
     for room in rooms:
@@ -183,11 +255,17 @@ def Get2DPointsFromAllRevitRoomsInModel(doc):
 
 # -------------------------------- room data -------------------------------------------------------
 
-# doc       current model document
 def GetAllRoomData(doc):
     '''
-    returns a list of room data objects for each room in the model
+    Returns a list of room data objects for each room in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of room data instances.
+    :rtype: list of  :class:`.DataRoom`
     '''
+
     allRoomData = []
     rooms = GetAllRooms(doc)
     for room in rooms:
@@ -196,12 +274,26 @@ def GetAllRoomData(doc):
             allRoomData.append(rd)
     return allRoomData
 
-# doc                   current revit document
-# revitRoom             Revit Room element
 def PopulateDataRoomObject(doc, revitRoom):
     '''
-    returns a custom room data objects populated with some data from the revit model room passt in
+    Returns a custom room data objects populated with some data from the revit model room passt in.
+
+    data points:
+    
+    - room name, number, id
+    - if exists: parameter value of SP_Room_Function_Number
+    - level name and id (if not placed 'no level' and -1)
+    - Design set and option
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitRoom: The room.
+    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+
+    :return: A room data instance.
+    :rtype: :class:`.DataRoom`
     '''
+
     # set up data class object
     dataR = dRoom.DataRoom()
     # get room geometry (boundary points)

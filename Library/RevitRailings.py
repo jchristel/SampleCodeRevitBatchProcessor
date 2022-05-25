@@ -1,5 +1,7 @@
 ﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit railings. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -38,20 +40,24 @@ import Autodesk.Revit.DB.Architecture as rdba
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_RailingS_HEADER = ['HOSTFILE', 'RAILINGTYPEID', 'RAILINGTYPENAME']
 
+#: Built in railing family name for railing
 RAILING_FAMILY_NAME = 'Railing'
+#: Built in railing family name for top rail
 TOP_RAIL_FAMILY_NAME = 'Top Rail Type'
+#: Built in railing family name for hand rail
 HAND_RAIL_FAMILY_NAME = 'Handrail Type'
 
+#: List of all Built in railing family names
 BUILTIN_RAILING_TYPE_FAMILY_NAMES = [
     RAILING_FAMILY_NAME,
     TOP_RAIL_FAMILY_NAME,
     HAND_RAIL_FAMILY_NAME
 ]
 
-# category filter for all element filters by category
+#: category filter for all railing element filters by category
 RAILING_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_Railings,
         rdb.BuiltInCategory.OST_RailingBalusterRail,

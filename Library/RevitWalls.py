@@ -502,7 +502,7 @@ def GetWallReportData(doc, revitFilePath):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The file hostname, which is added to data returned
+    :param revitFilePath: The file hostname, which is added to data returned.
     :type revitFilePath: str
 
     :return: list of list of sheet properties.

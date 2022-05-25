@@ -40,23 +40,42 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-#: header used in reports
+#: headers used in reports
 REPORT_SHAREDPARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBINDINGS']
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all shared parameters in a model
-# doc   current model document
 def GetAllSharedParameters(doc):  
+    '''
+    Gets all shared parameters in a model
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing shared parameter elements
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
 
 # ------------------------------------------------------- parameter utilitis --------------------------------------------------------------------
 
-# doc               current model document
-# parameterGuids    list of guids to check the document for
 def CheckWhetherSharedParametersAreInFile(doc, parameterGuids):
-    '''returns the passt in list filtered by whether the shared parameter are in the file'''
+    '''
+    Filters the passt in list of shared parameter guids by using the shared parameters in the document.\
+        Only parameter in both will be returned.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :param parameterGuids: list of shared parameter guids as string values
+    :type parameterGuids: list str
+    
+    :return: list of shared parameter guids as string values
+    :rtype: list str
+    '''
+
     filteredGUIDs = []
     paras = GetAllSharedParameters(doc)
     for p in paras:
@@ -66,10 +85,18 @@ def CheckWhetherSharedParametersAreInFile(doc, parameterGuids):
 
 # ------------------------------------------------------- parameter utilitis - delete --------------------------------------------------------------------
 
-# doc   current model document
-# guid  the guid of the shared parameter as string
 def DeleteSharedParameterByGUID(doc, guid):
-    '''deletes a single shared parameter based on a guid provided'''
+    '''
+    Deletes a single shared parameter based on a guid provided.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param guid: A shared parameter GUID as string.
+    :type guid: str
+    :return: True if parameter exists and got deleted succesfully, otherwise False.
+    :rtype: bool
+    '''
+
     returnvalue = res.Result()
     paras = GetAllSharedParameters(doc)
     deleteIds = []
@@ -86,10 +113,25 @@ def DeleteSharedParameterByGUID(doc, guid):
         returnvalue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
     return returnvalue
 
-# doc               current model document
-# parameterGuids    list of guids of shared parameters to be deleted
 def DeleteSharedParameters(doc, parameterGuids):
-    '''deletes shared parameters by GUID from document'''
+    '''
+    Deletes shared parameters by GUID from document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param parameterGuids: List of shared parameter GUIDs as string.
+    :type parameterGuids: list str
+
+    :return: 
+        Result class instance.
+        Parameter deletion status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the name of the shared parameter deleted.
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     deleteGuids = CheckWhetherSharedParametersAreInFile(doc, parameterGuids)
     if(len(deleteGuids) > 0):
@@ -102,11 +144,21 @@ def DeleteSharedParameters(doc, parameterGuids):
 
 # ------------------------------------------------------- parameter reporting --------------------------------------------------------------------
 
-# returns all paramterbindings for a given parameter
-# doc:              the current revit document
-# paramName:        the parameter name
-# paramType:        the parameter type
 def ParamBindingExists(doc, paramName, paramType):
+    '''
+    Gets all paramterbindings for a given parameter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param paramName: The name of the parameter.
+    :type paramName: str
+    :param paramType: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
+    :type paramType: Autodesk.Revit.DB.ParameterType
+
+    :return: List of categories a parameter is attached to.
+    :rtype: list of str
+    '''
+
     categories = []
     map = doc.ParameterBindings
     iterator = map.ForwardIterator()
@@ -119,10 +171,19 @@ def ParamBindingExists(doc, paramName, paramType):
             break
     return categories
 
-# doc:              the current revit document
-# revitFilePath:    fully qualified file path of Revit file
 def GetSharedParameterReportData(doc, revitFilePath):
-    '''gets shared parameter data ready for being printed to file'''
+    '''
+    Gets shared parameter data ready for being printed to file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The file hostname, which is added to data returned.
+    :type revitFilePath: str
+
+    :return: list of list of parameter properties.
+    :rtype: list of list of str
+    '''
+
     data = []
     paras = GetAllSharedParameters(doc)
     for p in paras:

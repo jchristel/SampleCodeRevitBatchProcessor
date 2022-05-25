@@ -1,6 +1,7 @@
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a function to bind a shared parameter to a category.
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 based on building coder article:
 https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-parameter-binding.html
 
@@ -18,48 +19,55 @@ def LoadSharedParameterFile(doc, path):
     '''
     Loads a shared parameter file.
 
-    :param doc: _description_
-    :type doc: _type_
-    :param path: _description_
-    :type path: _type_
-    :return: _description_
-    :rtype: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param path: Fully qualified file path to shared parameter text file.
+    :type path: str
+
+    :return: The opened shared parameter file.
+    :rtype: Autodesk.Revit.DB.DefinitionFile
     '''
+
     app = doc.Application
     app.SharedParametersFilename = path
     return app.OpenSharedParameterFile()
 
-
-# binds a shared parameter to a revit category
-# refer building coder articel referenced in header
-# parameterGrouping : where parameter appears in properties section in UI
-# groupName: name of group parameter is under in Shared Parameter file
-# category: expects built in category, to which the parameter will be bound
 def BindSharedParameter(doc, category, parameterName, groupName, parameterType, isVisible, isInstance, parameterGrouping, sharedParameterFilepath):
     '''
-    _summary_
+    Binds a shared parameter to a revit category.
 
-    :param doc: _description_
-    :type doc: _type_
-    :param category: _description_
-    :type category: _type_
-    :param parameterName: _description_
-    :type parameterName: _type_
-    :param groupName: _description_
-    :type groupName: _type_
-    :param parameterType: _description_
-    :type parameterType: _type_
-    :param isVisible: _description_
+    Refer building coder articel referenced in header
+
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param category: The built in category, to which the parameter will be bound.
+    :type category: Autodesk.Revit.DB.BuiltInCatgeory
+    :param parameterName: The parameter name.
+    :type parameterName: str
+    :param groupName: The group under which the parameter appears in shared parameter text file.
+    :type groupName: str
+    :param paramType: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
+    :type paramType: Autodesk.Revit.DB.ParameterType
+    :param isVisible: Is parmeter visible in UI to users.
     :type isVisible: bool
-    :param isInstance: _description_
+    :param isInstance: True parameter is an instance parameter, otherwise type parameter.
     :type isInstance: bool
-    :param parameterGrouping: _description_
-    :type parameterGrouping: _type_
-    :param sharedParameterFilepath: _description_
-    :type sharedParameterFilepath: _type_
-    :return: _description_
-    :rtype: _type_
+    :param parameterGrouping: Where parameter appears in properties section in UI.
+    :type parameterGrouping: str
+    :param sharedParameterFilepath: Fully qualified file path to shared parameter text file.
+    :type sharedParameterFilepath: str
+
+    :return: 
+        Result class instance.
+        Parameter binding status returned in result.status. False if an exception occured, otherwise True.
+        result.message will contain the name of the shared parameter.
+        On exception (handled by optimizer itself!):
+        result.status (bool) will be False.
+        result.message will contain exception message.
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     try:
     

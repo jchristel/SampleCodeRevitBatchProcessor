@@ -76,6 +76,8 @@ def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
 FOLDER_DATE_STAMP_YYMMDD = '%y%m%d'
 #: folder date format: no delimiter 20210301
 FOLDER_DATE_STAMP_YYYYMMDD = '%Y%m%d'
+#: folder date format: no delimiter 2021
+FOLDER_DATE_STAMP_YYYY = '%Y'
 
 def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
     '''

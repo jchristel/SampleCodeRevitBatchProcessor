@@ -1,5 +1,7 @@
 ﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit roofs. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -36,12 +38,14 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_ROOFS_HEADER = ['HOSTFILE', 'ROOFTYPEID', 'ROOFTYPENAME']
 
+#: Built in roof family name for basic roof
 BASIC_ROOF_FAMILY_NAME = 'Basic Roof'
+#: Built in roof family name for sloped glazing
 SLOPED_GLAZING_FAMILY_NAME = 'Sloped Glazing'
-
+#: List of all Built in roof family names
 BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
     BASIC_ROOF_FAMILY_NAME,
     SLOPED_GLAZING_FAMILY_NAME
@@ -49,28 +53,57 @@ BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetAllRoofTypesByCategory(doc):
-    ''' this will return a filtered element collector of all Roof types in the model:
+    '''
+    Gets a filtered element collector of all roof types in the model.
+
     - Basic Roof
     - In place families or loaded families
     - sloped glazing
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing roof types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsElementType()
     return collector
 
-# doc   current model document
 def GetRoofTypesByClass(doc):
-    ''' this will return a filtered element collector of all Roof types in the model:
+    '''
+    Gets a filtered element collector of all Roof types in the model:
+
     - Basic Roof
     - sloped glazing
-    it will therefore not return any in place family types ...'''
+
+    Since this is based of class roof it will therefore not return any in place family types!
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing roof types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdb.RoofType)
 
-# collector   fltered element collector containing Roof type elments of family symbols representing in place families
-# dic         dictionary containing key: roof type family name, value: list of ids
 def BuildRoofTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    TODO: similar function exists in Walls module. Consider more generic function.
+
+    :param collector: A filtered element collector containing roof type elments of family symbols representing in place families
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: dictionary containing key: roof type family name, value: list of ids
+    :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+
+    :return: A dictionary where key is the family name and values are ids of types belonging to that family.
+    :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -79,55 +112,121 @@ def BuildRoofTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortRoofTypesByFamilyName(doc):
+    '''
+    Returns a dictionary where key is the family name and values are ids of types belonging to that family.
+
+    TODO: similar function exists in Walls module. Consider more generic function.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary where key is the family name and values are ids of types belonging to that family.
+    :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+    '''
+
     # get all Roof Type Elements
-    wts = GetRoofTypesByClass(doc)
+    rts = GetRoofTypesByClass(doc)
     # get all roof types including in place roof families
-    wts_two = GetAllRoofTypesByCategory(doc)
-    usedWts = {}
-    usedWts = BuildRoofTypeDictionary(wts, usedWts)
-    usedWts = BuildRoofTypeDictionary(wts_two, usedWts)
-    return usedWts
+    rts_two = GetAllRoofTypesByCategory(doc)
+    usedRts = {}
+    usedRts = BuildRoofTypeDictionary(rts, usedRts)
+    usedRts = BuildRoofTypeDictionary(rts_two, usedRts)
+    return usedRts
 
 # -------------------------------- none in place Roof types -------------------------------------------------------
 
-# doc   current model document
 def GetAllRoofInstancesInModelByCategory(doc):
-    ''' returns all Roof elements placed in model...ignores in place families'''
+    '''
+    Gets all Roof elements placed in model...ignores in place families (to be confirmed!)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing roof instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
-    
-# doc   current model document
+
 def GetAllRoofInstancesInModelByClass(doc):
-    ''' returns all Roof elements placed in model...ignores roof soffits(???)'''
+    '''
+    Gets all Roof elements placed in model...ignores roof soffits(???)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing roof instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Roof).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllRoofTypeIdsInModelByCategory(doc):
-    ''' returns all Roof element types available in model '''
+    '''
+    Gets all Roof element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current model document
 def GetAllRoofTypeIdsInModelByClass(doc):
-    ''' returns all Roof element types available in model '''
+    '''
+    Gets all Roof element type ids available in model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: List of element ids of roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetRoofTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
-# doc   current document
 def GetUsedRoofTypeIds(doc):
-    ''' returns all used in Roof type ids '''
+    '''
+    Gets all used in Roof type ids in the model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of element ids and returnds False if any element id in first list is not in the second list.
+    
+    Returns False if any symbols (types) of a family (first lists) are in use in a model (second list).
+    
+    TODO: repetetive code...Consider generic function!
+
+    :param famTypeIds: List of family symbols (types).
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: List of unused family symbols (types)
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if all ids in first list are also in second list, otherwise False.
+    :rtype: bool
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -135,13 +234,29 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             break
     return match
  
-# doc   current document
 def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
-    ''' returns all unused Roof type ids for:
+    '''
+    Gets all unused Roof type ids in the model.
+
+    This method can be used to safely delete unused roof types. In the case that no roof\
+        instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one roof type definition to be in the model.
+
+    Unused: Not one instance of this type is placed in the model.
+
     - Roof Soffit
     - Compound Roof
     - Basic Roof
-    it will therefore not return any in place family types ...'''
+
+    It will therefore not return any in place family types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
     # make sure there is at least on Roof type per system family left in model
@@ -155,36 +270,79 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
  
 # -------------------------------- In place Roof types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceRoofFamilyInstances(doc):
-    ''' returns all instances in place families of category roof '''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances of in place families of category roof in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing roof family instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Roofs)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceRoofTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category roof '''
+    '''
+    Gets type ids off all available in place families of category roof in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Roofs)
     return ids
 
-# doc   current document
 def GetUsedInPlaceRoofTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place roof type ids in the model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceRoofTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all unused in place roof type ids in the model.
+
+    Unused: Not one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
     return ids
 
 # doc   current document
 def GetUnusedInPlaceRoofIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place Roof familis which can be purged'''
+    '''
+    Gets symbol(type) ids and family ids (when no type is in use of a family) of in place Roof familis which can be purged.
+    
+    This method can be used to safely delete unused in place roof types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place roof types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRoofTypeIds)
     return ids

@@ -73,8 +73,8 @@ def GetAllCallOutHeadsByCategory(doc):
     '''
     Gets a filtered element collector of all callOut Head symbol (types) in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A filtered element collector containing callout head symbols.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
@@ -87,8 +87,8 @@ def GetAllElevationHeadsByCategory(doc):
     '''
     Gets a filtered element collector of all elevation symbols (types) in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A filtered element collector containing elevation symbols.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
@@ -101,8 +101,8 @@ def GetAllSectionHeadsByCategory(doc):
     '''
     Gets a filtered element collector of all section symbols (types) in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing section symbols.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
@@ -114,8 +114,8 @@ def GetAllViewContinuationMarkersByCategory(doc):
     '''
     Gets a filtered element collector of all view contiunation symbols (types) in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A filtered element collector containing Continuation Marker symbols.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
@@ -128,8 +128,8 @@ def GetAllReferenceViewElementsByCategory(doc):
     '''
     Gets filtered element collector of all reference view elements in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A filtered element collector containing reference view elements.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
@@ -165,7 +165,16 @@ VIEWREF_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
     ])
 
 def GetReferenceTypeIdsFromViewType(viewType):
-    '''returns all reference type ids used in view type'''
+    '''
+    Gets all reference type ids used in view type.
+
+    :param viewType: The view type.
+    :type viewType: Autodesk.Revit.DB.ViewType
+
+    :return: dictionary, key: BuiltinParamterDefinition, value: id of a tag
+    :rtype: dic{Autodesk.Revit.DB.BuiltinParamterDefinition:[Autodesk.Revit.DB.ElementId]}
+    '''
+
     dic = {}
     for pDef in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
         pValue = com.GetBuiltInParameterValue(viewType, pDef)
@@ -181,8 +190,8 @@ def GetUsedViewReferenceTypeIdData(doc):
     '''
     Gets all view references types in use in the model in a dictionary.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: key is the reference tag type: callout, section or elevation, values are the type ids in use
     :rtype: dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}
@@ -207,8 +216,8 @@ def GetAllViewReferenceTypeIdData(doc):
     '''
     Gets all view references types available in the model in a dictionary.
     
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: key is the reference type: callout, section or elevation, values are the type ids in use
     :rtype: dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}
@@ -237,8 +246,8 @@ def GetAllViewReferenceTypeIdDataAsList(doc):
     '''
     Gets all view references type ids available in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A list of element ids representing view reference types
     :rtype: list Autodesk.Revit.DB.ElementIds
@@ -255,8 +264,8 @@ def GetAllViewContinuationTypeIds(doc):
     '''
     Gets all view continuation type ids available in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: List of view continuation type ids.
     :rtype: list Autodesk.Revit.DB.ElementIds
@@ -284,8 +293,8 @@ def GetAllViewReferenceSymbolIds(doc):
     '''
     Gets the ids of all view reference family symbols(types) in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: List of view reference family symbols(types) ids.
     :rtype:  list Autodesk.Revit.DB.ElementIds
@@ -299,10 +308,19 @@ def GetAllViewReferenceSymbolIds(doc):
 
 # ---------------------- view refs and continuation symbols -----------------------
 
-# doc:   current model document
-# viewRefTypesIds   list of view reference type ids
 def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
-    '''returns the ids of all view family symbols(types) from given view ref types or continuation types the model'''
+    '''
+    'Gets the ids of all view family symbols(types) from given view ref types or continuation types the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param viewRefTypesIds: list of ids representing view reference types or continuation types
+    :type viewRefTypesIds: list Autodesk.Revit.DB.ElementId
+
+    :return: List of ids of all view family symbols(types).
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     for vrtId in viewRefTypesIds:
         el = doc.GetElement(vrtId)
@@ -312,10 +330,18 @@ def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
                 ids.append(pValue)
     return ids
 
-# doc:   current model document
 def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
-    '''returns the ids of all view reference symbols(types) and view continuations symbols (types) used by 
-    view reference types and view continuation types in the model'''
+    '''
+    Getd the ids of all view reference symbols(types) and view continuations symbols (types) used by 
+    view reference types and view continuation types in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: List of ids of all view family symbols(types).
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     viewContTypes = GetAllViewContinuationTypeIds(doc)
     viewReftypes = GetAllViewReferenceTypeIdData(doc)
@@ -333,7 +359,21 @@ def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
     return ids
 
 def GetNestedFamilyMarkerNames(doc, usedIds):
-    '''returns nested family names'''
+    '''
+    Gets nested family names from provided symbols.
+
+    - Retrieves a families from the symbols provided. 
+    - Opens the family document and extracts the names off all nested families within.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param usedIds: List of symbol ids.
+    :type usedIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: List of all unique nested family names.
+    :rtype: list str
+    '''
+
     names = []
     for usedSymbolId in usedIds:
         if(usedSymbolId != rdb.ElementId.InvalidElementId):
@@ -354,7 +394,20 @@ def GetNestedFamilyMarkerNames(doc, usedIds):
     return names
 
 def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
-    '''returns true if symbol belongs to family in list passt in'''
+    '''
+    Returns true if symbol belongs to family in list passt in.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param id: The element id of a symbol.
+    :type id: Autodesk.Revit.DB.ElementId
+    :param nestedFamilyNames: list of family names know to be nested families.
+    :type nestedFamilyNames: list str
+    
+    :return: True if family name derived from symbol is in list passt in, otherwise False.
+    :rtype: bool
+    '''
+
     flag = False
     famSymb = doc.GetElement(id)
     fam = famSymb.Family
@@ -362,9 +415,19 @@ def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
         flag = True
     return flag
 
-# doc:   current model document
 def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
-    '''returns the ids of all view reference symbols(types) and view continuation types not used in the model'''
+    '''
+    Gets the ids of all view reference symbols(types) and view continuation symbols (types) not used in the model.
+
+    Not used: These symbols are not used in any view reference types, or nested in any symbols used in view reference types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     # compare used vs available in view ref types
     # whatever is marked as unused: check for any instances in the model...placed on legends!
@@ -386,9 +449,19 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
 
 # ---------------------- purge unused view ref types and symbols -----------------------
 
-# doc:   current model document
 def GetUnusedViewReferenceTypeIdsForPurge(doc):
-    '''returns all unused view references type ids in model for purge'''
+    '''
+    Gets all unused view references type ids in model for purge.
+
+    This method can be used to safely delete all nused view reference types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     allAvailableTypeIds = GetAllViewReferenceTypeIdData(doc)
     allUsedTypeIds = GetUsedViewReferenceTypeIdData(doc)
@@ -405,9 +478,19 @@ def GetUnusedViewReferenceTypeIdsForPurge(doc):
 
 # ---------------------- purge unused view continuation types-----------------------
 
-# doc:   current model document
 def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
-    '''returns all unused view continuation type ids in model for purge'''
+    '''
+    Gets all unused view continuation type ids in model for purge.
+
+    This method can be used to safely delete all unused view continuation marker types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     allAvailableTypeIds = GetAllViewContinuationTypeIds(doc)
     allUsedTypeIds = GetUsedViewContinuationTypeIds(doc)
@@ -418,7 +501,18 @@ def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
 
 # ---------------------- purge unused view ref symbol and continuation symbols -----------------------
 
-# doc:   current model document
 def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
-    '''returns the ids of all view reference symbols(types) ids and or family ids not used in the model for purging'''
+    '''
+    Gets the ids of all view reference symbols(types) ids and or family ids not used in the model for purging.
+
+    This method can be used to safely delete all unused view reference and continuation marker family symbols\
+        or families.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)

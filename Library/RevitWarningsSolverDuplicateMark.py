@@ -66,7 +66,7 @@ class RevitWarningsSolverDuplicateMark:
         :return: Result class instance.
            .result = True if all duplicate mark warnings could be solved. Otherwise False.
            .message will contain stats in format parameter value set to ''
-        :rtype: SampleCodeBatchProcessor.Result
+        :rtype: :class:`.Result`
         '''
 
         returnvalue = res.Result()

@@ -95,7 +95,7 @@ def BuildRoofTypeDictionary(collector, dic):
 
     TODO: similar function exists in Walls module. Consider more generic function.
 
-    :param collector: A filtered element collector containing roof type elments of family symbols representing in place families
+    :param collector: A filtered element collector containing roof type elments of family symbols
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: dictionary containing key: roof type family name, value: list of ids
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}

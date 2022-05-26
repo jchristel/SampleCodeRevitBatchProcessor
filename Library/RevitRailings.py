@@ -70,27 +70,50 @@ RAILING_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetAllRailingTypesByCategory(doc):
-    ''' this will return a filtered element collector of all Railing types in the model:
-    - Top Rail
-    - support
-    - hand rail
-    - In place families or loaded families
-    it will therefore not return any Rail types ..
     '''
+    Gets a filtered element collector of all Railing types in the model.
+
+    Collector will include types of:
+    - Top Rail
+    - Rail support
+    - Hand rail
+    - Rail termination
+    - Railing Systems
+    - In place families or loaded families
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of railing related types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllRailingTypesByCategoryExclInPlace(doc):
-    ''' this will return a filtered element collector of all Railing types in the model:
-    - Top Rail
-    - support
-    - hand rail
-    it will therefore not return any Rail types ..
     '''
+    Gets a filtered element collector of all Railing types in the model.
+
+    Collector will include types of:
+    - Top Rail
+    - Rail support
+    - Hand rail
+    - Rail termination
+    - Railing Systems
+    - loaded families
+
+    Will exlcude any inplace families.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list railing related types
+    :rtype: list of types
+    '''
+
     multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     elements=[]
@@ -98,18 +121,40 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
         if(c.GetType() != rdb.FamilySymbol):
             elements.append(c)
     return elements
-    
-# doc   current model document
+
 def GetRailingTypesByClass(doc):
-    ''' this will return a filtered element collector of all Railing types in the model:
+    '''
+    Gets a filtered element collector of all Railing types in the model:
+    
+    Collector will include types of:
     - Railing
-    it will therefore not return any top rail or hand rail or in place family types ...'''
+
+    It will therefore not return any top rail or hand rail or in place family types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of railing types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdba.RailingType)
 
-# collector   fltered element collector containing Railing type elments of family symbols representing in place families
-# dic         dictionary containing key: rail type family name, value: list of ids
 def BuildRailingTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    TODO: similar function exists in Walls module. Consider more generic function.
+
+    :param collector: A filtered element collector containing railing type elments of family symbols
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: dictionary containing key: railing type family name, value: list of ids
+    :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+
+    :return: A dictionary where key is the family name and values are ids of types belonging to that family.
+    :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -118,8 +163,19 @@ def BuildRailingTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortRailingTypesByFamilyName(doc):
+    '''
+    Returns a dictionary where key is the family name and values are ids of types belonging to that family.
+
+    TODO: similar function exists in Walls module. Consider more generic function.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary where key is the family name and values are ids of types belonging to that family.
+    :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
+    '''
+
     # get all Railing Type Elements
     wts = GetRailingTypesByClass(doc)
     # get all Railing types including in place railing families
@@ -131,36 +187,76 @@ def SortRailingTypesByFamilyName(doc):
 
 # -------------------------------- none in place Railing types -------------------------------------------------------
 
-# doc   current model document
 def GetAllRailingInstancesInModelByCategory(doc):
-    ''' returns all Railing elements placed in model...ignores in foundation slabs'''
+    '''
+    Gets all Railing elements placed in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of railing instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
-    
-# doc   current model document
+
 def GetAllRailingInstancesInModelByClass(doc):
-    ''' returns all Railing elements placed in model...ignores in place'''
+    '''
+    Gets all Railing elements placed in model. Ignores any in place families.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of railing instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdba.Railing).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllRailingTypeIdsInModelByCategory(doc):
-    ''' returns all Railing element types available in model '''
+    '''
+    Gets all railing element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of railing types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+    
     ids = []
     colCat = GetAllRailingTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current model document
 def GetAllRailingTypeIdsInModelByClass(doc):
-    ''' returns all Railing element types available in model '''
+    '''
+    Gets all railing element type ids available in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of railing types.
+    :rtype: List Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetRailingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
-# doc   current model document
 def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
-    ''' returns all Railing element types available in model excluding in place types'''
+    '''
+    Gets all Railing element types available in model excluding in place types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     colClass = GetRailingTypesByClass(doc)
     idsClass = com.GetIdsFromElementCollector(colClass)
@@ -174,16 +270,39 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
             ids.append(idsca)
     return ids
 
-# doc   current document
 def GetUsedRailingTypeIds(doc):
-    ''' returns all used in Railing type ids '''
+    '''
+    Gets all used Railing element types available in model excluding in place types.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of element ids and returnds False if any element id in first list is not in the second list.
+    
+    Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
+    
+    TODO: repetetive code...Consider generic function!
+
+    :param famTypeIds: List of family symbols (types).
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: List of unused family symbols (types)
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if all ids in first list are also in second list, otherwise False.
+    :rtype: bool
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -191,13 +310,29 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             break
     return match
  
-# doc   current document
 def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
-    ''' returns all unused Railing type ids for:
-    - Railing
-    - Hand rail
+    '''
+    Gets all unused Railing type ids for:
+    
     - Top Rail
-    it will therefore not return any in place family types ...'''
+    - Rail support
+    - Hand rail
+    - Rail termination
+    - Railing Systems
+    - loaded families
+
+    Excludes any in place family types.
+    This method can be used to safely delete unused railing types:
+    In the case that no railing instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one railing type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
@@ -211,19 +346,31 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
  
 # -------------------------------- In place Railing types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceRailingFamilyInstances(doc):
-    ''' returns all instances in place families of category Railing'''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances of in place families of category Railing in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of railing instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceRailingTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category Railing'''
+    '''
+    Gets type ids off all available in place families of category Railing.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     for cat in RAILING_CATEGORYFILTER: 
         idsByCat = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, cat)
@@ -231,21 +378,49 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
             ids = ids + idsByCat
     return ids
 
-# doc   current document
 def GetUsedInPlaceRailingTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place railing type ids.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceRailingTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all unused in place railing type ids.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceRailingIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged'''
+    '''
+    Gets symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged.
+
+    This method can be used to safely delete unused in place railing types and families.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of in place railing types.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
     return ids
 
@@ -253,18 +428,38 @@ def GetUnusedInPlaceRailingIdsForPurge(doc):
 # -------------------------------- baluster types -------------------------------------------------------
 # -------------baluster utility -------------
 
-# listSource    list to be added to
-# listMerge     list containing new values to be added to listSource
+
 def MergeIntoUniquList(listSource, listMerge):
-    '''merges the second list into the first by adding elements from second list which are not already in first list'''
+    '''
+    Merges the second list into the first by adding elements from second list which are not already in first list.
+
+    TODO: Consider more generic code!
+
+    :param listSource: List to add unique values to.
+    :type listSource: list var
+    :param listMerge: List containing values.
+    :type listMerge: list var
+
+    :return: List of unique objects.
+    :rtype: list var
+    '''
+
     for i in listMerge:
         if (i not in listSource):
             listSource.append(i)
     return listSource
 
-# bPostPattern    baluster pattern element
 def GetBalustersUsedInPattern(bpattern):
-    '''return list of unique baluster ids used in a pattern only'''
+    '''
+    Gets list of unique baluster family ids used in a pattern only.
+
+    :param bpattern: A revit baluster pattern.
+    :type bpattern: Autodesk.Revit.DB.Architecture.BalusterPattern 
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     for i in range(0, bpattern.GetBalusterCount()):
         balInfo = bpattern.GetBaluster(i)
@@ -275,13 +470,23 @@ def GetBalustersUsedInPattern(bpattern):
         ids.append(bpattern.ExcessLengthFillBalusterId)
     return ids
 
-# bPostPattern    Post pattern element
 def GetUsedBalusterPostIds(bPostPattern):
-    '''return list of unique baluster posts ids only:
+    '''
+    Gets list of unique baluster posts ids only.
+
+    Includes:
+
     - CornerPost
     - EndPost
     - StartPost
+
+    :param bPostPattern: A revit post pattern.
+    :type bPostPattern: Autodesk.Revit.DB.Architecture.PostPattern 
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
     '''
+    
     ids = []
     # get corner post
     if(bPostPattern.CornerPost.BalusterFamilyId != rdb.ElementId.InvalidElementId):
@@ -294,9 +499,17 @@ def GetUsedBalusterPostIds(bPostPattern):
         ids.append(bPostPattern.StartPost.BalusterFamilyId)
     return ids
 
-# bPlacement    baluster placement element
 def GetUsedBalusterPerTread(bPlacement):
-    ''' gets the id of the baluster per tread'''
+    '''
+    Gets the id of the baluster per stair tread.
+
+    :param bPlacement: A baluster placement element.
+    :type bPlacement: Autodesk.Revit.DB.Architecture.BalusterPlacement 
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     # get baluster per tread
     if(bPlacement.BalusterPerTreadFamilyId != rdb.ElementId.InvalidElementId):
@@ -305,23 +518,55 @@ def GetUsedBalusterPerTread(bPlacement):
 
 # -------------baluster utility end-------------
 
-# doc   current document
 def GetAllBalusterSymbols(doc):
-    ''' returns all baluster symbols in project'''
+    '''
+    Gets all baluster symbols (fam types) in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A filtered element collector of baluster symbols (types).
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsRailingBaluster).WhereElementIsElementType()
     return col
 
- # doc   current document
 def GetAllBalusterSymbolIds(doc):
-    ''' returns all baluster symbol ids in project'''
+    '''
+    Gets all baluster symbol (fam type) ids in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = GetAllBalusterSymbols(doc)
     ids = com.GetIdsFromElementCollector (col)
     return ids
 
-# doc   current document
 def GetBalusterTypesFromRailings(doc):
-    '''returns a unique list of all baluster symbol type ids used in railing types in the model'''
+    '''
+    Gets a list of unique baluster symbol (fam type) ids used in railing types in the model.
+
+    Incl:
+    - baluster patterns
+    - baluster posts
+    - baluster per stair 
+    
+    There can be additional baluster symbols in the model. Those belong to loaded families which are not used in\
+        any railing type definition.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     railingTypeIds = GetAllRailingTypeIdsInModelByClassAndCategory(doc)
     for rtId in railingTypeIds:
@@ -340,9 +585,19 @@ def GetBalusterTypesFromRailings(doc):
             pass
     return ids
 
-# doc   current document
 def GetUsedBalusterTypeIds(doc):
-    ''' returns all used baluster type ids '''
+    '''
+    Gets all used baluster type ids in the model.
+
+    Used: at least one instance of this family symbol (type) is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
     idsUsedInRailings = GetBalusterTypesFromRailings(doc)
@@ -350,9 +605,19 @@ def GetUsedBalusterTypeIds(doc):
     ids = MergeIntoUniquList(ids, idsUsedInRailings)
     return ids
 
-# doc   current document
 def GetUnUsedBalusterTypeIds(doc):
-    ''' returns all unused baluster type ids '''
+    '''
+    Gets all unused baluster type ids in the model.
+
+    Unused: Not one instance of this family symbol (type) is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     idsUsed = GetUsedBalusterTypeIds(doc)
     idsAvailable = GetAllBalusterSymbolIds(doc)
@@ -361,9 +626,20 @@ def GetUnUsedBalusterTypeIds(doc):
             ids.append(id)
     return ids
 
-# doc   current document
 def GetUnUsedBalusterTypeIdsForPurge(doc):
-    '''get all un used baluster type ids'''
+    '''
+    Gets all unused baluster type ids in the model.
+
+    Unused: at least one instance of this family symbol (type) is placed in the model.
+    This method can be used to safely delete unused baluster families and symbols.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids of baluster family ids.
+    :rtype: list Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
     return ids
     # no need to keep anything...?
@@ -371,4 +647,4 @@ def GetUnUsedBalusterTypeIdsForPurge(doc):
     # need to keep at least one ( do I ...?)
     #if(len(idsAll) == len(ids)):
     #    ids.pop(0)
-    return ids
+    #return ids

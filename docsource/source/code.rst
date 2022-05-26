@@ -19,6 +19,9 @@ Revit BIM 360
 .. automodule:: RevitBIM360
     :members:
 
+.. automodule:: UtilBIM360
+    :members:
+
 Revit Building Pads
 -------------------
 .. automodule:: RevitBuildingPads
@@ -133,6 +136,16 @@ Revit MEP Systems
 .. automodule:: RevitMEPSystems
     :members:
 
+Revit Purge Unused using custom code
+------------------------------------
+This section is mostly deprecated in favour of the purge unused code using Autodesk eTransmit.
+
+.. automodule:: RevitPurgeUnused
+    :members:
+
+.. autoclass:: RevitPurgeAction.PurgeAction
+    :members:
+
 Revit Purge Unused using eTransmit
 ----------------------------------
 .. automodule:: RevitPurgeUnusedeTransmit
@@ -183,7 +196,6 @@ Revit Walls
 --------------
 .. automodule:: RevitWalls
     :members:
-
 
 Revit Warnings
 --------------
@@ -238,8 +250,10 @@ Misc modules and classes
 .. automodule:: SolibriIFCOptimizer
     :members:
 
-
 .. automodule:: SystemProcess
+    :members:
+
+.. automodule:: WorksharingMonitorProcess
     :members:
 
 Timer

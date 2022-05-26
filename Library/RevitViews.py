@@ -589,7 +589,7 @@ def DeleteViews(doc, viewRules, collectorViews):
     :return: Result class instance.
            .result = True if all views where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     ids = []
@@ -631,7 +631,7 @@ def DeleteViewsNotOnSheets(doc, filter):
     :return: Result class instance.
            .result = True if all views where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     ids = []
@@ -660,7 +660,7 @@ def DeleteUnusedElevationViewMarkers(doc):
     :return: Result class instance.
            .result = True if all unused elevation markers where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -696,7 +696,7 @@ def DeleteSheets(doc, viewRules, collectorViews):
     :return: Result class instance.
            .result = True if all sheets matching filter where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     ids = []
@@ -724,7 +724,7 @@ def DeleteAllSheetsInModel(doc):
     :return: Result class instance.
            .result = True if all sheets where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -785,7 +785,7 @@ def WriteSheetData(doc, fileName, currentFileName):
     :return: Result class instance.
            .result = True if data was written succesfully. Otherwise False.
            .message will contain write status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -817,7 +817,7 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
     :return: Result class instance.
            .result = True if data was written succesfully. Otherwise False.
            .message will contain write status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()

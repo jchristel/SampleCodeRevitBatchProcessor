@@ -50,7 +50,7 @@ def DeleteLinePatternsContains(doc, contains):
     :return: Result class instance.
            .result = True if line pattern where deleted succesfully. Otherwise False.
            .message will contain delete status per pattern.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
@@ -70,7 +70,7 @@ def DeleteLinePatternStartsWith(doc, startsWith):
     :return: Result class instance.
            .result = True if line pattern where deleted succesfully. Otherwise False.
            .message will contain delete status per pattern.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
@@ -90,7 +90,7 @@ def DeleteLinePatternsWithout(doc, contains):
     :return: Result class instance.
            .result = True if line pattern where deleted succesfully. Otherwise False.
            .message will contain delete status per pattern.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
@@ -142,7 +142,7 @@ def DeleteDuplicatLinePatterNames(doc):
     :return: Result class instance.
            .result = True if all views where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -172,7 +172,7 @@ def DeleteLineStylesStartsWith(doc, startsWith):
     :return: Result class instance.
            .result = True if all views where deleted. Otherwise False.
            .message will contain deletion status.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]

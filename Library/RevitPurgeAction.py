@@ -1,3 +1,8 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Purge action storage class for Revit purge unused.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 #
 #License:
 #
@@ -25,7 +30,6 @@
 import System
 import clr
 
-# a class used to store purge actions and associated values
 class PurgeAction: 
     def __init__(
         self, 
@@ -35,6 +39,22 @@ class PurgeAction:
         testReportHeader, # human readable repport header for each test action
         testIdsGetter # functions which returns all availble type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
     ): 
+        '''
+        Class constructor.
+
+        :param purgeTransactionName: The name of the transaction to purge elements under.
+        :type purgeTransactionName: str
+        :param purgeIdsGetter: The function which returns all element ids to be purged
+        :type purgeIdsGetter: func
+        :param purgeReportHeader: Human readable repport header for each purge action
+        :type purgeReportHeader: str
+        :param testReportHeader: Human readable repport header for each test action
+        :type testReportHeader: str
+        :param testIdsGetter: functions which returns all availble type ids in model of same category as purge action.\
+            To be used to compare ids before and after code purge with ids before and after revit built in purge
+        :type testIdsGetter: func
+        '''
+
         self.purgeTransactionName = purgeTransactionName
         self.purgeIdsGetter = purgeIdsGetter
         self.purgeReportHeader = purgeReportHeader

@@ -253,7 +253,7 @@ def setParameterValue(para, valueAsString, doc):
         On exception:
         Set parameter.status (bool) will be False.
         Set parameter.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -348,7 +348,7 @@ def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, p
         On exception:
         Set parameter.status (bool) will be False.
         Set parameter.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
     
     returnvalue = res.Result()

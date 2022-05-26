@@ -108,7 +108,7 @@ def GetWorksets(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     
-    :return: _description_
+    :return: List of worksets
     :rtype: list of Autodesk.Revit.DB.Workset
     '''
 
@@ -170,7 +170,7 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     :return: Result class instance.
         .result = True if succsesfully moved all elements to new workset. Otherwise False.
         .message will contain stats in format [success :: failure]
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -321,7 +321,7 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
         - A workset has no matching data in the report.
 
         .message will each workset and whether it needed updating or not
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()

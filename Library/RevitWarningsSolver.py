@@ -102,7 +102,7 @@ class RevitWarningsSolver:
         :return: Result class instance.
            .result = True if all warnings could be solved. Otherwise False.
            .message will contain all messages solver returned.
-        :rtype: SampleCodeBatchProcessor.Result
+        :rtype: :class:`.Result`
         '''
 
         returnvalue = res.Result()

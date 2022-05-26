@@ -1,3 +1,24 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a purge unused function using standard revit api functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Some functionality provided here exceeds the Revit purge unused or etransmit purge unused command:
+- view types
+- view templates
+- view filters
+
+Others definetly lack:
+
+- Materials
+- Appearance assets
+- loadable Families
+- some MEP systems
+
+Future: just provide improvements over etransmit purge unused in this code section.
+
+'''
+
 #License:
 #
 #
@@ -59,18 +80,33 @@ from collections import namedtuple
 
 # --------------------------------------------- Purge - utility ---------------------------------------------
 
-# doc                       current document
-# getUnusedElementIds       function which returns all ids of elements to be purged
-# transactionName           the transaction name to be used when deleting elements by Id
-# unUsedElementNameHeader   the text to be displayed at the start of the list containing the deleted element names
-# isDebug                   flag: true: will return detailed report and attempt to try to delete elements one by one if an exception occurs
-#                           false:  short report and no attempt to delete elements one by one if an exception is thrown during element list delete
 def PurgeUnplacedElements (doc, 
     getUnusedElementIds, 
     transactionName, 
     unUsedElementNameHeader,
     isDebug = False):
-    '''purges all unplaced elements provided through a passed in element id getter method from a model'''
+    '''
+    
+    Purges all unplaced elements provided through a passed in element id getter method from a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param getUnusedElementIds: A fucntion accepting the current document as the argument and returning element ids which can be purged.
+    :type getUnusedElementIds: func (doc) returning list of Autodesk.Revit.DB.ElementId
+    :param transactionName: A humnan readable description of the transaction containing the purge action.
+    :type transactionName: str
+    :param unUsedElementNameHeader: The text to be displayed at the start of the list containing the deleted element names.
+    :type unUsedElementNameHeader: str
+    :param isDebug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs, defaults to False\
+        Will attempt to delete all elements at once.
+    :type isDebug: bool, optional
+
+    :return: Result class instance.
+           .result = True if all purge actions completed successfully. Otherwise False.
+           .message will be listing each purge action and its status
+    :rtype: :class:`.Result`
+    '''
+
     resultValue = res.Result()
     try:
         unusedElementIds = getUnusedElementIds(doc)
@@ -94,7 +130,7 @@ def PurgeUnplacedElements (doc,
 
 # --------------------------------------------- Main ---------------------------------------------
 
-# list containing purge action names and the purge action method
+#: list containing purge action names and the purge action method
 PURGE_ACTIONS = []
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Model Group(s)', rGrp.GetUnplacedModelGroupIds, 'Model Group(s)', 'Model Group(s)', rGrp.GetModelGroupIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Detail Group(s)', rGrp.GetUnplacedDetailGroupIds, 'Detail Group(s)', 'Detail Group(s)', rGrp.GetDetailGroupIds))
@@ -154,24 +190,31 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Spotelvation Symbols',  rAnn.
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 
-# list containing keys to be ignored in comparison code
-# these keys do not get purged by revits native purge unused and would therefore show up as false positives
-COMPARISON_IGNORE= [
-    'View Family Type(s)',
-    'View Family Templates(s)',
-    'View Filter(s)'
-]
-# indentation for names of items purged
+#: indentation for names of items purged
 SPACER = '...'
 
 # set up a timer objects
 t = Timer()
 tOverall = Timer()
 
-# doc   current document
-# returns a Result object
 def PurgeUnused(doc, revitFilePath, isDebug):
-    '''calls all available purge actions defined in global list '''
+    '''
+    Calls all available purge actions defined in global list.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: Fully qualified file path of current model document. (Not used)
+    :type revitFilePath: strß
+    :param isDebug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs. False\
+        Will attempt to delete all elements at once, less detailed purge report.
+    :type isDebug: bool
+
+    :return: Result class instance.
+           .result = True if all purge actions completed successfully. Otherwise False.
+           .message will be listing each purge action and its status
+    :rtype: :class:`.Result`
+    '''
+
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
@@ -194,6 +237,19 @@ def PurgeUnused(doc, revitFilePath, isDebug):
     return resultValue
 
 # --------------------------------------------- Testing ---------------------------------------------
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Purge unit testing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
+#: list containing keys to be ignored in comparison code
+#: these keys do not get purged by revits native purge unused and would therefore show up as false positives
+COMPARISON_IGNORE= [
+    'View Family Type(s)',
+    'View Family Templates(s)',
+    'View Filter(s)'
+]
 
 # doc                       current document
 # typeIdGetter              function which returns all available type ids

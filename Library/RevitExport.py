@@ -84,7 +84,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     # ifc export needs to run in a transaction
@@ -216,7 +216,7 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -259,7 +259,7 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -348,7 +348,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -439,7 +439,7 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     # nwc export does not need to run in a transaction
@@ -474,7 +474,7 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -504,7 +504,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()

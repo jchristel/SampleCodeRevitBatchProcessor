@@ -65,7 +65,7 @@ def WriteOutWSMDataToFile(directoryPath):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     status = res.Result()
@@ -158,7 +158,7 @@ def CleanUpWSMDataFiles(directoryPath):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     status = res.Result()
@@ -187,7 +187,7 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
         On exception:
         result.status (bool) will be False.
         result.message will contain the exception message.
-    :rtype: SampleCodeBatchProcessor.Result
+    :rtype: :class:`.Result`
     '''
 
     status = res.Result()

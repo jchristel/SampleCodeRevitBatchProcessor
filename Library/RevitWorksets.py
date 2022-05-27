@@ -105,6 +105,8 @@ def GetWorksets(doc):
     '''
     Returns all user defined worksets in the model as list.
 
+    Will return a list of zero length if no worksets in the model.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     

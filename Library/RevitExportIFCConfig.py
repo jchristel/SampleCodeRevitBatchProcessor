@@ -401,3 +401,128 @@ def IFCGetThirdPartyExportConfigByModel2021(ifcVersion):
     ifcExportConfig.COBieProjectInfo = 'Project Info'
     
     return ifcExportConfig
+
+
+    #-------------------------------------------- IFC EXPORT Revit 2022 -------------------------------------
+# need to check for new features in revit 2022
+
+# ifcVersion        which ifc version (2x3 etc...)
+def IFCGetThirdPartyExportConfigByView2022(ifcVersion):
+    '''
+    Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    '''
+
+    # load version specific assemblies
+    ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\IFCExportUIOverride.dll'
+    clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
+    # import the BIM namespace which includes 
+    # IFCExportConfiguration and IFCExportConfigurationMaps classes
+    from BIM.IFC.Export.UI import IFCExportConfiguration
+
+    # set up configuration
+    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
+    ifcExportConfig.Name = 'DefaultIFCByViewSetup'
+    # set up IFC version
+    if(ifcVersion is None or ifcVersion == ''):
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
+    else:  
+        ifcExportConfig.IFCVersion = ifcVersion
+
+    ifcExportConfig.SpaceBoundaries = 1
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
+    ifcExportConfig.ExportBaseQuantities = True
+    ifcExportConfig.SplitWallsAndColumns = True
+    ifcExportConfig.VisibleElementsOfCurrentView = True # by view
+    ifcExportConfig.Use2DRoomBoundaryForVolume = False
+    ifcExportConfig.UseFamilyAndTypeNameForReference = True
+    ifcExportConfig.ExportInternalRevitPropertySets = True
+    ifcExportConfig.ExportIFCCommonPropertySets = True
+    ifcExportConfig.Export2DElements = False
+    ifcExportConfig.ExportPartsAsBuildingElements = True
+    ifcExportConfig.ExportBoundingBox = False
+    ifcExportConfig.ExportSolidModelRep = False
+    ifcExportConfig.ExportSchedulesAsPsets = False
+    ifcExportConfig.ExportUserDefinedPsets = False
+    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
+    ifcExportConfig.ExportLinkedFiles = False
+    ifcExportConfig.IncludeSiteElevation = True
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
+    ifcExportConfig.ExportSpecificSchedules = False
+    ifcExportConfig.TessellationLevelOfDetail = 0
+    ifcExportConfig.StoreIFCGUID = True
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    # revit 2019.1
+    ifcExportConfig.UseOnlyTriangulation = False
+    ifcExportConfig.IncludeSteelElements = True
+    ifcExportConfig.COBieCompanyInfo = 'Company Name'
+    ifcExportConfig.COBieProjectInfo = 'Project Info'
+    
+    return ifcExportConfig
+
+# ifcVersion        which ifc version (2x3 etc...)
+def IFCGetThirdPartyExportConfigByModel2022(ifcVersion):
+    '''
+    Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
+    
+    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+
+    :param ifcVersion: The ifc version used for the export.
+    :type ifcVersion: Autodesk.Revit.DB.IFCVersion
+    :return: An IFCExportconfig object.
+    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    '''
+
+    # load version specific assemblies
+    ifcThirdPartyFolderPath_ = r'C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\IFCExportUIOverride.dll'
+    clr.AddReferenceToFileAndPath(ifcThirdPartyFolderPath_)
+    # import the BIM namespace which includes 
+    # IFCExportConfiguration and IFCExportConfigurationMaps classes
+    from BIM.IFC.Export.UI import IFCExportConfiguration
+
+    # set up configuration
+    ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
+    ifcExportConfig.Name = 'DefaultIFCByModelSetup'
+    
+    # set up IFC version
+    if(ifcVersion is None or ifcVersion == ''):
+        ifcExportConfig.IFCVersion = rdb.IFCVersion.Default
+    else:  
+        ifcExportConfig.IFCVersion = ifcVersion
+
+    ifcExportConfig.SpaceBoundaries = 1
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
+    ifcExportConfig.ExportBaseQuantities = True
+    ifcExportConfig.SplitWallsAndColumns = True
+    ifcExportConfig.VisibleElementsOfCurrentView = False # by model
+    ifcExportConfig.Use2DRoomBoundaryForVolume = False
+    ifcExportConfig.UseFamilyAndTypeNameForReference = True
+    ifcExportConfig.ExportInternalRevitPropertySets = True
+    ifcExportConfig.ExportIFCCommonPropertySets = True
+    ifcExportConfig.Export2DElements = False
+    ifcExportConfig.ExportPartsAsBuildingElements = True
+    ifcExportConfig.ExportBoundingBox = False
+    ifcExportConfig.ExportSolidModelRep = False
+    ifcExportConfig.ExportSchedulesAsPsets = False
+    ifcExportConfig.ExportUserDefinedPsets = False
+    ifcExportConfig.ExportUserDefinedPsetsFileName = ''
+    ifcExportConfig.ExportLinkedFiles = False
+    ifcExportConfig.IncludeSiteElevation = True
+    ifcExportConfig.UseActiveViewGeometry = False # by model
+    ifcExportConfig.ExportSpecificSchedules = False
+    ifcExportConfig.TessellationLevelOfDetail = 0
+    ifcExportConfig.StoreIFCGUID = True
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    # revit 2019.1
+    ifcExportConfig.UseOnlyTriangulation = False
+    ifcExportConfig.IncludeSteelElements = True
+    ifcExportConfig.COBieCompanyInfo = 'Company Name'
+    ifcExportConfig.COBieProjectInfo = 'Project Info'
+    
+    return ifcExportConfig

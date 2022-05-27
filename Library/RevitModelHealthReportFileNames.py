@@ -1,4 +1,9 @@
-﻿#
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Contains file names used by model health report.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+#
 #License:
 #
 #
@@ -21,40 +26,66 @@
 #
 #
 
-# report file name extensions
+#: report file name suffix : worksets
 PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS = '_NumberOfWorksets'
+#: report file name suffix : file size
 PARAM_ACTIONS_FILENAME_FILE_SIZE = '_FileSize'
+#: rreport file name suffix : warnings
 PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS = '_NumberOfWarnings'
+#: report file name suffix : design sets
 PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS = '_NumberOfDesingSets'
+#: rreport file name suffix : design options
 PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS ='_NumberOfDesignOptions'
+#: report file name suffix : sheet
 PARAM_ACTIONS_FILENAME_NO_OF_SHEETS = '_NumberOfSheets'
+#: report file name suffix : views
 PARAM_ACTIONS_FILENAME_NO_OF_VIEWS = '_NumberOfViews'
+#: report file name suffix : views not placed
 PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED = '_NumberOfViewsNotPlaced'
+#: report file name suffix : line styles
 PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES = '_NumberOfLineStyles'
+#: report file name suffix : linbe patterns
 PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS = '_NumberOfLinePatterns'
+#: report file name suffix : fill patterns
 PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS ='_NumberOfFillPatterns'
+#: report file name suffix : CAD imports
 PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS ='_NumberOfCadImports'
+#: report file name suffix : CAD links in model
 PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL = '_NumberOfCadLinksModel'
+#: report file name suffix : CAD links in view
 PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW = '_NumberOfCadLinksView'
+#: report file name suffix : image imports
 PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS = '_NumberOfImageImports'
+#: report file name suffix : image links
 PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS = '_NumberOfImageLinks'
+#: report file name suffix : families in model
 PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES = '_NumberOfFamilies'
+#: report file name suffix : in place families in model
 PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE = '_NumberOfInPlaceFamilies'
+#: report file name suffix : model groups
 PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS = '_NumberOfModelGroups'
+#: report file name suffix : model groups unplaced
 PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED = '_NumberOfUnplacedModelGroups'
+#: report file name suffix : detail groups
 PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS = '_NumberOfDetailGroups'
+#: report file name suffix : detail groups unplaced
 PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED = '_NumberOfUnplacedDetailGroups'
+#: report file name suffix : rooms
 PARAM_ACTIONS_FILENAME_NO_OF_ROOMS = '_NumberOfRooms'
+#: report file name suffix : unplaced rooms
 PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED = '_NumberOfUnplacedRooms'
+#: report file name suffix : not enclosed rooms
 PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED = '_NumberOfNotEnclosedRooms'
+#: report file name suffix : redundant rooms
 PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT = '_NumberOfRedundantRooms'
+#: report file name suffix : filled regions
 PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS = '_NumberOfRegions'
 
 # combined log file for all reports
 PARAM_ACTIONS_FILENAME_MOTHER = '_AllLogs'
 
 
-# list of report file name extensions
+#: list of report file name extensions
 PARAM_ACTIONS_FILENAMES = {
     PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS,
     PARAM_ACTIONS_FILENAME_FILE_SIZE,

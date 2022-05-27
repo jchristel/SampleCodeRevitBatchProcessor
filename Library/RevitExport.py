@@ -126,9 +126,9 @@ def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
     elif (revitVersion == '2020'):
         ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2020(ifcVersion)
     elif (revitVersion == '2021'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2021(ifcVersion)
     elif (revitVersion == '2022'):
-        pass
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2022(ifcVersion)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
@@ -158,7 +158,7 @@ def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
     elif (revitVersion == '2021'):
         ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2021(ifcVersion)
     elif (revitVersion == '2022'):
-        raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2022(ifcVersion)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')

@@ -1,6 +1,6 @@
 ﻿'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A number of helper functions relating to Solibri IFC optimnizer.
+Helper functions relating to Solibri IFC optimnizer.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 List of imports:

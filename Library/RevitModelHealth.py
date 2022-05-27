@@ -1,4 +1,13 @@
-﻿#
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Model health report functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Model health report metrics can either be displayed in a family where each parameter is assigned to a metric 
+and or data can be exported to text files which can be used to visualize key metrics over time.
+
+'''
+#
 #License:
 #
 #
@@ -49,28 +58,49 @@ from System.Collections.Generic import List
 from collections import namedtuple
 
 # constants
-# health tracer family name
+
+#: A revit family displaying the health metrics retrieved by this code.
 MODEL_HEALTH_TRACKER_FAMILY = 'Symbol_GraphicModelHealth_ANN'
-# default value if unable to retrieve value from model
+#: Default value if unable to retrieve a health metric value from model
 FAILED_TO_RETRIEVE_VALUE = -1
 
-# doc   current document
 def GetInstancesOfModelHealth(doc):
-    '''gets all instances of the model health tracker family in a model'''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances of the model health tracker family in a model.
+
+    Built in parameter containing family name when filtering familyInstance elements:
+    BuiltInParameter.ELEM_FAMILY_PARAM
+    This is a faster filter in terms of performance then LINQ query refer to:
+    https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A list containing all model health tracker families in the model.
+    :rtype: list of Autodesk.Revit.DB.FamilyInstance
+    '''
+
     provider = rdb.ParameterValueProvider(rdb.ElementId(rdb.BuiltInParameter.ELEM_FAMILY_PARAM))
     evaluator = rdb.FilterStringEquals()
     rule = rdb.FilterStringRule( provider, evaluator, MODEL_HEALTH_TRACKER_FAMILY, True )
     filter = rdb.ElementParameterFilter( rule )
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter).ToList()
 
-# famInstance   an instance of the family model health tracker
-# doc           current document
 def GetParametersOfInstance(famInstance, doc):
-    '''update parameter values of model tracker family instance'''
+    '''
+    Updates parameter values of model tracker family instance.
+
+    :param famInstance: An instance of the model health tracker family.
+    :type famInstance: Autodesk.Revit.DB.FamilyInstance
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: Result class instance.
+           .result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
+           .message will be 'Failed to get value for'
+    :rtype: :class:`.Result`
+    '''
+
     resultValue = res.Result()
     flagUpdate = False
     for p in famInstance.GetOrderedParameters():
@@ -96,14 +126,30 @@ def GetParametersOfInstance(famInstance, doc):
 
 # --------------------------------------------- GENERAL ---------------------------------------------
 
-# number of worksets in model
-# doc   current document
 def GetWorksetNumber(doc):
+    '''
+    Gets the number of worksets in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: The number of worksets in a model.
+    :rtype: int
+    '''
+
     return len(rWork.GetWorksets(doc))
 
-# get the file size in MB
-# doc   current document
 def GetFileSize(doc):
+    '''
+    Gets the file size in MB.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: File size in MB. On exception it will return -1
+    :rtype: int
+    '''
+
     size = FAILED_TO_RETRIEVE_VALUE
     try:
         # get the path from the document
@@ -120,9 +166,17 @@ def GetFileSize(doc):
         pass
     return size
 
-# number of warnings in a model
-# doc   current document
 def GetNumberOfWarnings(doc):
+    '''
+    Gets the number of warnings in the model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: Number of warnings in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rWarn.GetWarnings(doc))

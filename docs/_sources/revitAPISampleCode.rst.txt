@@ -1,7 +1,8 @@
-Revit API Library documentation
-
-The following modules from part of the library of functions around the Revit API.
+Revit API sample code.
 =================================================================================
+
+Provides python samples on how to use some aspects of the Revit API.
+
 
 RevitCommonAPI
 --------------
@@ -18,6 +19,10 @@ Revit BIM 360
 -------------
 .. automodule:: RevitBIM360
     :members:
+
+..
+    UtilBIM360
+
 
 Revit Building Pads
 -------------------
@@ -212,58 +217,4 @@ Revit Worksets
 --------------
 
 .. automodule:: RevitWorksets
-    :members:
-
-The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit. 
----------------------------------------------------------------------------------------------------------------------------------
-
-.. autoclass:: DataCeiling.DataCeiling
-    :members:
-
-.. autoclass:: DataDesignSetOption.DataDesignSetOption
-    :members:
-
-.. autoclass:: DataGeometry.DataGeometry
-    :members:
-
-.. autoclass:: DataReadFromFile.ReadDataFromFile
-    :members:
-
-.. autoclass:: DataRoom.DataRoom
-    :members:
-
-.. automodule:: DataShapely
-    :members:
-    
-Misc modules and classes
-========================
-
-.. autoclass:: Result.Result
-    :members:
-
-.. automodule:: BatchProcessorLogUtils
-    :members:
-
-.. automodule:: SolibriIFCOptimizer
-    :members:
-
-.. automodule:: SystemProcess
-    :members:
-
-.. automodule:: WorksharingMonitorProcess
-    :members:
-
-Timer
------
-
-.. autoclass:: timer.Timer
-    :members:
-
-.. autoclass:: timer.TimerError
-    :members:
-
-File system utilities
----------------------
-
-.. automodule:: Utility
     :members:

@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.0.0 documentation" href="#" />
-    <link rel="next" title="The following modules from part of the library of functions around the Revit API." href="code.html" />
+    <link rel="next" title="Revit API sample code." href="revitAPISampleCode.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -30,7 +30,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="code.html" title="The following modules from part of the library of functions around the Revit API." accesskey="N">next</a></div>
+            <div class="headerButton"><a href="revitAPISampleCode.html" title="Revit API sample code." accesskey="N">next</a></div>
         </li>
     </ul>
 </div>
@@ -40,8 +40,10 @@
         <ul><li class="toctree-l1"><a href="#">Main Page</a></li></ul>
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code.html">The following modules from part of the library of functions around the Revit API.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="code.html#misc-modules-and-classes">Misc modules and classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 </ul>
 
       <h3>This Page</h3>
@@ -76,50 +78,53 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="code.html">The following modules from part of the library of functions around the Revit API.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitCommonAPI">RevitCommonAPI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitAnnotation">Revit Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitBIM360">Revit BIM 360</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitBuildingPads">Revit Building Pads</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitCategories">Revit Categories</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitCeilings">Revit Ceilings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitCurtainWallElements">Revit Curtain Wall</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitDetailItems">Revit Detail Items</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#revit-element-filtering">Revit Element Filtering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitExport">Revit Export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitFamilyUtils">Revit Family</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitFloors">Revit Floors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitGenericAnnotation">Revit Generic Annotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitGeometry">Revit Geometry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitGroups">Revit Groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitGrids">Revit Grids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitLevels">Revit Levels</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitLineStylesPatterns">Revit Line Styles and Patterns</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitLinks">Revit Links</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitMaterials">Revit Materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitMEPSystems">Revit MEP Systems</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#revit-purge-unused-using-custom-code">Revit Purge Unused using custom code</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitPurgeUnusedeTransmit">Revit Purge Unused using eTransmit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitRailings">Revit Railings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitRamps">Revit Ramps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitRoofs">Revit Roofs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitRooms">Revit Rooms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitSharedParameterAdd">Revit Shared Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitStairs">Revit Stairs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitViewReferencing">Revit Views, View Filters and Views Referencing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitWalls">Revit Walls</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitWarnings">Revit Warnings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-RevitWorksets">Revit Worksets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#the-following-modules-are-classes-used-to-store-varies-data-retrieved-from-revit-to-be-used-for-data-processing-outside-of-revit">The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCommonAPI">RevitCommonAPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitAnnotation">Revit Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitBIM360">Revit BIM 360</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitBuildingPads">Revit Building Pads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCategories">Revit Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCeilings">Revit Ceilings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCurtainWallElements">Revit Curtain Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDetailItems">Revit Detail Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#revit-element-filtering">Revit Element Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitExport">Revit Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitFamilyUtils">Revit Family</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitFloors">Revit Floors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitGenericAnnotation">Revit Generic Annotation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitGeometry">Revit Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitGroups">Revit Groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitGrids">Revit Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitLevels">Revit Levels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitLineStylesPatterns">Revit Line Styles and Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitLinks">Revit Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitMaterials">Revit Materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitMEPSystems">Revit MEP Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#revit-purge-unused-using-custom-code">Revit Purge Unused using custom code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitPurgeUnusedeTransmit">Revit Purge Unused using eTransmit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitRailings">Revit Railings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitRamps">Revit Ramps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitRoofs">Revit Roofs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitRooms">Revit Rooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitSharedParameterAdd">Revit Shared Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitStairs">Revit Stairs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitViewReferencing">Revit Views, View Filters and Views Referencing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitWalls">Revit Walls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitWarnings">Revit Warnings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitWorksets">Revit Worksets</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="code.html#misc-modules-and-classes">Misc modules and classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="code.html#a-number-of-helper-functions-relating-to-solibri-ifc-optimnizer">A number of helper functions relating to Solibri IFC optimnizer.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#this-module-contains-a-number-of-helper-functions-relating-to-system-processes">This module contains a number of helper functions relating to system processes.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#this-module-contains-a-number-of-helper-functions-relating-to-revit-worksharing-monitor-process">This module contains a number of helper functions relating to Revit worksharing monitor process.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#timer">Timer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="code.html#module-Utility">File system utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ModelHealth.html#contains-file-names-used-by-model-health-report">Contains file names used by model health report.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ModelHealth.html#model-health-report-functions">Model health report functions.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="misc.html#misc-code-modules">Misc code modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html#timer">Timer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html#module-Utility">File system utilities</a></li>
 </ul>
 </li>
 </ul>

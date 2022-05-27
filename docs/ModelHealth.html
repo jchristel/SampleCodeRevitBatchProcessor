@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Model Health Reporting. &#8212; Sample Code Revit Batch Processor 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Exports data samples." href="dataExport.html" />
+    <link rel="prev" title="Revit API sample code." href="revitAPISampleCode.html" />
+    <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.0.0 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Model Health Reporting.</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="dataExport.html" title="Exports data samples." accesskey="N">next</a></div>
+            <div class="headerButton"><a href="revitAPISampleCode.html" title="Revit API sample code." accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Model Health Reporting.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contains-file-names-used-by-model-health-report">Contains file names used by model health report.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#model-health-report-functions">Model health report functions.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="_sources/ModelHealth.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="model-health-reporting">
+<h1>Model Health Reporting.<a class="headerlink" href="#model-health-reporting" title="Permalink to this headline">¶</a></h1>
+<p>Reports some metrics about a model to text files which record progress over time. This data can then be visualised in
+order to check how the models performed over time.</p>
+<span class="target" id="module-RevitModelHealthReportFileNames"></span><section id="contains-file-names-used-by-model-health-report">
+<h2>Contains file names used by model health report.<a class="headerlink" href="#contains-file-names-used-by-model-health-report" title="Permalink to this headline">¶</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfWorksets'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : worksets</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_FILE_SIZE">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_FILE_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_FileSize'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_FILE_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : file size</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfWarnings'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS" title="Permalink to this definition">¶</a></dt>
+<dd><p>rreport file name suffix : warnings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDesingSets'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : design sets</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDesignOptions'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>rreport file name suffix : design options</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_SHEETS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfSheets'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : sheet</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfViews'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : views</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfViewsNotPlaced'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : views not placed</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfLineStyles'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : line styles</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfLinePatterns'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : linbe patterns</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfFillPatterns'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : fill patterns</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadImports'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD imports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadLinksModel'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD links in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfCadLinksView'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : CAD links in view</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfImageImports'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : image imports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfImageLinks'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : image links</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfFamilies'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : families in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfInPlaceFamilies'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : in place families in model</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfModelGroups'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : model groups</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedModelGroups'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : model groups unplaced</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfDetailGroups'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : detail groups</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedDetailGroups'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : detail groups unplaced</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRooms'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfUnplacedRooms'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : unplaced rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfNotEnclosedRooms'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : not enclosed rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRedundantRooms'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : redundant rooms</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_NumberOfRegions'</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS" title="Permalink to this definition">¶</a></dt>
+<dd><p>report file name suffix : filled regions</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealthReportFileNames.</span></span><span class="sig-name descname"><span class="pre">PARAM_ACTIONS_FILENAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'_FileSize',</span> <span class="pre">'_NumberOfCadImports',</span> <span class="pre">'_NumberOfCadLinksModel',</span> <span class="pre">'_NumberOfCadLinksView',</span> <span class="pre">'_NumberOfDesignOptions',</span> <span class="pre">'_NumberOfDesingSets',</span> <span class="pre">'_NumberOfDetailGroups',</span> <span class="pre">'_NumberOfFamilies',</span> <span class="pre">'_NumberOfFillPatterns',</span> <span class="pre">'_NumberOfImageImports',</span> <span class="pre">'_NumberOfImageLinks',</span> <span class="pre">'_NumberOfInPlaceFamilies',</span> <span class="pre">'_NumberOfLinePatterns',</span> <span class="pre">'_NumberOfLineStyles',</span> <span class="pre">'_NumberOfModelGroups',</span> <span class="pre">'_NumberOfNotEnclosedRooms',</span> <span class="pre">'_NumberOfRedundantRooms',</span> <span class="pre">'_NumberOfRegions',</span> <span class="pre">'_NumberOfRooms',</span> <span class="pre">'_NumberOfSheets',</span> <span class="pre">'_NumberOfUnplacedDetailGroups',</span> <span class="pre">'_NumberOfUnplacedModelGroups',</span> <span class="pre">'_NumberOfUnplacedRooms',</span> <span class="pre">'_NumberOfViews',</span> <span class="pre">'_NumberOfViewsNotPlaced',</span> <span class="pre">'_NumberOfWarnings',</span> <span class="pre">'_NumberOfWorksets'}</span></em><a class="headerlink" href="#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of report file name extensions</p>
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitModelHealth"></span><section id="model-health-report-functions">
+<h2>Model health report functions.<a class="headerlink" href="#model-health-report-functions" title="Permalink to this headline">¶</a></h2>
+<p>Model health report metrics can either be displayed in a family where each parameter is assigned to a metric 
+and or data can be exported to text files which can be used to visualize key metrics over time.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealth.MODEL_HEALTH_TRACKER_FAMILY">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">MODEL_HEALTH_TRACKER_FAMILY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Symbol_GraphicModelHealth_ANN'</span></em><a class="headerlink" href="#RevitModelHealth.MODEL_HEALTH_TRACKER_FAMILY" title="Permalink to this definition">¶</a></dt>
+<dd><p>A revit family displaying the health metrics retrieved by this code.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitModelHealth.FAILED_TO_RETRIEVE_VALUE">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">FAILED_TO_RETRIEVE_VALUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#RevitModelHealth.FAILED_TO_RETRIEVE_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value if unable to retrieve a health metric value from model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.GetInstancesOfModelHealth">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">GetInstancesOfModelHealth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.GetInstancesOfModelHealth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all instances of the model health tracker family in a model.</p>
+<p>Built in parameter containing family name when filtering familyInstance elements:
+BuiltInParameter.ELEM_FAMILY_PARAM
+This is a faster filter in terms of performance then LINQ query refer to:
+<a class="reference external" href="https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html">https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing all model health tracker families in the model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.FamilyInstance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.GetParametersOfInstance">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">GetParametersOfInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famInstance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.GetParametersOfInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates parameter values of model tracker family instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famInstance</strong> (<em>Autodesk.Revit.DB.FamilyInstance</em>) – An instance of the model health tracker family.</p></li>
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
+.message will be ‘Failed to get value for’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.GetWorksetNumber">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">GetWorksetNumber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.GetWorksetNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of worksets in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The number of worksets in a model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.GetFileSize">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">GetFileSize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.GetFileSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the file size in MB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>File size in MB. On exception it will return -1</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.GetNumberOfWarnings">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">GetNumberOfWarnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.GetNumberOfWarnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of warnings in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of warnings in model. On exception it will return -1</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitModelHealth.healthDataAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">healthDataAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">getData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.healthDataAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new instance of healthDataAction(getData, reportFileName)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitModelHealth.healthDataAction.getData">
+<span class="sig-name descname"><span class="pre">getData</span></span><a class="headerlink" href="#RevitModelHealth.healthDataAction.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitModelHealth.healthDataAction.reportFileName">
+<span class="sig-name descname"><span class="pre">reportFileName</span></span><a class="headerlink" href="#RevitModelHealth.healthDataAction.reportFileName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.UpdateModelHealthTracerFamily">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">UpdateModelHealthTracerFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.UpdateModelHealthTracerFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates model health tracker family</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitModelHealth.WriteModelHealthReport">
+<span class="sig-prename descclassname"><span class="pre">RevitModelHealth.</span></span><span class="sig-name descname"><span class="pre">WriteModelHealthReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ouputDirectory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitModelHealth.WriteModelHealthReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>write out health tracker data</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2022, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Model Health Reporting.
+        </div>
+        <script type="text/javascript" charset="utf-8" src="_static/js/toc.js"></script>
+  </body>
+</html>

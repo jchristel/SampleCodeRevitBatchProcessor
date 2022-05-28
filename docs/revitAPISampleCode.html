@@ -4830,287 +4830,992 @@ otherwise images in groups which are not placed will not be flagged by this filt
 </section>
 <section id="module-RevitMEPSystems">
 <span id="revit-mep-systems"></span><h2>Revit MEP Systems<a class="headerlink" href="#module-RevitMEPSystems" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit MEP systems.</p>
+<section id="revit-mep-systems-helper-functions">
+<h3>Revit MEP systems helper functions.<a class="headerlink" href="#revit-mep-systems-helper-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.REPORT_REVITMEPSYSTEMS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">REPORT_REVITMEPSYSTEMS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'RevitMEPSystemsTYPEID',</span> <span class="pre">'RevitMEPSystemsTYPENAME']</span></em><a class="headerlink" href="#RevitMEPSystems.REPORT_REVITMEPSYSTEMS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.DUCT_OVAL_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">DUCT_OVAL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Oval</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#RevitMEPSystems.DUCT_OVAL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for oval ducting</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.DUCT_ROUND_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Round</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#RevitMEPSystems.DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for round ducting</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.DUCT_RECTANGULAR_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">DUCT_RECTANGULAR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rectangular</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#RevitMEPSystems.DUCT_RECTANGULAR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for rectangula ducting</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_DUCT_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Oval</span> <span class="pre">Duct',</span> <span class="pre">'Round</span> <span class="pre">Duct',</span> <span class="pre">'Rectangular</span> <span class="pre">Duct']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in ducting family names</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.FLEX_DUCT_REC_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">FLEX_DUCT_REC_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular'</span></em><a class="headerlink" href="#RevitMEPSystems.FLEX_DUCT_REC_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for rectangular flex ducting</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.FLEX_DUCT_ROUND_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">FLEX_DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round'</span></em><a class="headerlink" href="#RevitMEPSystems.FLEX_DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for round flex ducting</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular',</span> <span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in flex ducting family names</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITHFITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITHFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for conduits with fittings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITHOUTFITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHOUTFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITHOUTFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for conduits without fittings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CONDUIT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Conduit</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in conduit family names</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CABLETRAY_WITHFITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLETRAY_WITHFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLETRAY_WITHFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for cable tray with fittings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CABLETRAY_WITHOUTFITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLETRAY_WITHOUTFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLETRAY_WITHOUTFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for cable tray without fittings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in cable tray family names</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.PIPE_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">PIPE_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pipe</span> <span class="pre">Types'</span></em><a class="headerlink" href="#RevitMEPSystems.PIPE_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for pipes</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_PIPE_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_PIPE_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Pipe</span> <span class="pre">Types']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_PIPE_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in pipe family names</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.MergeIntoUniquList">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">MergeIntoUniquList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listMerge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.MergeIntoUniquList" title="Permalink to this definition">¶</a></dt>
-<dd><p>merges the second list into the first by adding elements from second list which are not already in first list</p>
+<dd><p>Merges the second list into the first by adding elements from second list which are not already in first list.</p>
+<p>TODO: Consider more generic code!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>listSource</strong> (<em>list var</em>) – List to add unique values to.</p></li>
+<li><p><strong>listMerge</strong> (<em>list var</em>) – List containing values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list var</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllDuctTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllDuctTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllDuctTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all duct types in the model</p>
+<dd><p>Gets a filtered element collector of all duct types in the model.</p>
+<ul class="simple">
+<li><p>round</p></li>
+<li><p>oval</p></li>
+<li><p>rectangular</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of duct types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetDuctTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetDuctTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetDuctTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all duct types in the model</p>
+<dd><p>Gets a filtered element collector of all duct types in the model.</p>
+<ul class="simple">
+<li><p>round</p></li>
+<li><p>oval</p></li>
+<li><p>rectangular</p></li>
+</ul>
+<p>Will exclude in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of duct types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllFlexDuctTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllFlexDuctTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllFlexDuctTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all flex duct types in the model</p>
+<dd><p>Gets a filtered element collector of all flex duct types in the model.</p>
+<ul class="simple">
+<li><p>round</p></li>
+<li><p>rectangular</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of flex duct types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetFlexDuctTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetFlexDuctTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetFlexDuctTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all flex duct types in the model</p>
+<dd><p>Gets a filtered element collector of all flex duct types in the model.</p>
+<ul class="simple">
+<li><p>round</p></li>
+<li><p>rectangular</p></li>
+</ul>
+<p>Will exclude in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of flex duct types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllConduitTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllConduitTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllConduitTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all conduit types in the model</p>
+<dd><p>Gets a filtered element collector of all conduit types in the model.</p>
+<ul class="simple">
+<li><p>with fittings</p></li>
+<li><p>without fittings</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of conduit types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetConduitTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetConduitTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetConduitTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all conduit types in the model</p>
+<dd><p>Gets a filtered element collector of all conduit types in the model.</p>
+<ul class="simple">
+<li><p>with fittings</p></li>
+<li><p>without fittings</p></li>
+</ul>
+<p>Will exclude in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of conduit types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllCableTrayTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllCableTrayTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllCableTrayTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all cable tray types in the model</p>
+<dd><p>Gets a filtered element collector of all cable tray types in the model.</p>
+<ul class="simple">
+<li><p>with fittings</p></li>
+<li><p>without fittings</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of cable tray types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetCableTrayTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetCableTrayTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetCableTrayTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all cable tray types in the model</p>
+<dd><p>Gets a filtered element collector of all cable tray types in the model.</p>
+<ul class="simple">
+<li><p>with fittings</p></li>
+<li><p>without fittings</p></li>
+</ul>
+<p>Will exclude in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of cable tray types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllPipeTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllPipeTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllPipeTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all pipe types in the model</p>
+<dd><p>Gets a filtered element collector of all pipe types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of pipe tray types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetPipeTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetPipeTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetPipeTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all pipe types in the model</p>
+<dd><p>Gets a filtered element collector of all pipe types in the model.</p>
+<p>Will exclude in place families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of pipe tray types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllDuctInstancesInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllDuctInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllDuctInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Duct elements placed in model by category…</p>
+<dd><p>Gets all duct elements placed in model.</p>
+<p>TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of duct instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllDuctInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllDuctInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllDuctInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all duct elements placed in model by class…ignores in place</p>
+<dd><p>Gets all duct elements placed in model.</p>
+<p>Will exclude in place families.
+TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of duct instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllFlexDuctInstancesInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllFlexDuctInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllFlexDuctInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all flex flex Duct elements placed in model by category…</p>
+<dd><p>Gets all flex duct elements placed in model.</p>
+<p>TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of flex duct instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllFlexDuctInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllFlexDuctInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllFlexDuctInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all flex duct elements placed in model by class…ignores in place</p>
+<dd><p>Gets all flex duct elements placed in model.</p>
+<p>Will exclude in place families.
+TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of flex duct instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllConduitInstancesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllConduitInstancesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllConduitInstancesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all conduit instances in the model by category</p>
+<dd><p>Gets all conduit elements placed in model.</p>
+<p>TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of conduit instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetConduitInstancesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetConduitInstancesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetConduitInstancesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all conduit instances in the model by class</p>
+<dd><p>Gets all conduit elements placed in model.</p>
+<p>Will exclude in place families.
+TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of conduit instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllCableTrayInstancesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllCableTrayInstancesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllCableTrayInstancesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all cable tray instances in the model by category</p>
+<dd><p>Gets all cable tray elements placed in model.</p>
+<p>TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of cable tray instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetCableTrayInstancesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetCableTrayInstancesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetCableTrayInstancesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all cable tray instances in the model by class</p>
+<dd><p>Gets all cable tray elements placed in model.</p>
+<p>Will exclude in place families.
+TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of cable tray instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllPipeInstancesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllPipeInstancesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllPipeInstancesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all pipe instances in the model by category</p>
+<dd><p>Gets all pipe elements placed in model.</p>
+<p>TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of pipe instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetPipeInstancesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetPipeInstancesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetPipeInstancesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all pipe instances in the model by class</p>
+<dd><p>Gets all pipe elements placed in model.</p>
+<p>Will exclude in place families.
+TODO: check these actually work…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of pipe instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllDuctTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllDuctTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllDuctTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Duct element types available placed in model</p>
+<dd><p>Gets all duct type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllDuctTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllDuctTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllDuctTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Duct element types available placed in model</p>
+<dd><p>Gets all duct type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllFlexDuctTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllFlexDuctTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllFlexDuctTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all flex Duct element types available placed in model</p>
+<dd><p>Gets all flex duct type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing flex duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllFlexDuctTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllFlexDuctTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllFlexDuctTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all flex Duct element types available placed in model</p>
+<dd><p>Gets all flex duct type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing flex duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllConduitTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllConduitTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllConduitTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all conduit element types available placed in model</p>
+<dd><p>Gets all conduit type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllConduitTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllConduitTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllConduitTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all conduit element types available placed in model</p>
+<dd><p>Gets all conduit type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllCableTrayTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllCableTrayTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllCableTrayTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all cable tray element types available placed in model</p>
+<dd><p>Gets all cable tray type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing cable tray types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllCableTrayTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllCableTrayTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllCableTrayTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all cable tray element types available placed in model</p>
+<dd><p>Gets all cable tray type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing cable tray types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllPipeTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllPipeTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllPipeTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all pipe element types available placed in model</p>
+<dd><p>Gets all pipe type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing pipe types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetAllPipeTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetAllPipeTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetAllPipeTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all pipe element types available placed in model</p>
+<dd><p>Gets all pipe type ids available in model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing pipe types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedDuctTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedDuctTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedDuctTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in duct type ids</p>
+<dd><p>Gets all used duct type ids available in model.</p>
+<p>Unused: at least instance of each of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedFlexDuctTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedFlexDuctTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedFlexDuctTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in flex duct type ids</p>
+<dd><p>Gets all used flex duct type ids available in model.</p>
+<p>Unused: at least instance of each of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing flex duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedConduitTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedConduitTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedConduitTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in conduit type ids</p>
+<dd><p>Gets all used conduit type ids available in model.</p>
+<p>Unused: at least instance of each of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedCableTrayTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedCableTrayTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedCableTrayTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in cable tray type ids</p>
+<dd><p>Gets all used cable tray type ids available in model.</p>
+<p>Unused: at least instance of each of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing cable tray types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedPipeTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedPipeTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedPipeTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in pipe type ids</p>
+<dd><p>Gets all used pipe type ids available in model.</p>
+<p>Unused: at least instance of each of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing pipe types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedDuctTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedDuctTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedDuctTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in duct type ids</p>
+<dd><p>Gets all unused duct type ids available in model.</p>
+<p>Unused: not one instance of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedFlexDuctTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedFlexDuctTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedFlexDuctTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in flex duct type ids</p>
+<dd><p>Gets all unused flex duct type ids available in model.</p>
+<p>Unused: not one instance of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing flex duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedConduitTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedConduitTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedConduitTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in conduit type ids</p>
+<dd><p>Gets all unused conduit type ids available in model.</p>
+<p>Unused: not one instance of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedCableTrayTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCableTrayTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedCableTrayTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in cable tray type ids</p>
+<dd><p>Gets all unused cable tray type ids available in model.</p>
+<p>Unused: not one instance of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing cable tray types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedPipeTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedPipeTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedPipeTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in pipe type ids</p>
+<dd><p>Gets all unused pipe type ids available in model.</p>
+<p>Unused: not one instance of these types is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing pipe types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns false if any symbols (types) of a family are in use in a model</p>
+<dd><p>Compares two lists of element ids and returnds False if any element id in first list is not in the second list.</p>
+<p>Returns False if any symbols (types) of a family (first list) are in use in a model (second list).</p>
+<p>TODO: repetetive code…Consider generic function!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – List of family symbols (types).</p></li>
+<li><p><strong>unUsedTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – List of unused family symbols (types)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all ids in first list are also in second list, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.BuildTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BuildTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.BuildTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Returns the dictionary passt in with keys and or values added retrieved from collector passt in.</p>
+<p>TODO: similar function exists in Walls module. Consider more generic function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing railing type elments of family symbols</p></li>
+<li><p><strong>dic</strong> (<em>Dictionary {str:</em><em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – dictionary containing key: railing type family name, value: list of ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where key is the family name and values are ids of types belonging to that family.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary {str:[Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitMEPSystems.SortTypesByFamilyName">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">SortTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.SortTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary where key is the family name and values are ids of types belonging to that family.</p>
+<p>TODO: similar function exists in Walls module. Consider more generic function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>typeGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>) </em><em>-&gt; Autodesk.Revit.DB.FilteredElementCollector</em>) – function returning element types</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where key is the family name and values are ids of types belonging to that family.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary {str:[Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedMEPSystemTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedMEPSystemTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allTypeIDGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allTypesGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInFamilyTypeNames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedMEPSystemTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns ids of unsued system types. Takes into accounts whether they belong to a major category and how many are left
-(leaves on behind) since the last one cannot be purged</p>
+<dd><p>Gets the ids of unsued MEP system types.</p>
+<p>In the case that no mep system instance using any of the types is placed, this will return all but one type id since        Revit requires at least one mep system type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>allTypeIDGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>) </em><em>-&gt; List Autodesk.Revit.ED.ElementId</em>) – Function getting all available system type ids as a list.</p></li>
+<li><p><strong>allTypesGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>) </em><em>-&gt; Autodesk.Revit.DB.FilteredElementCollector</em>) – Function getting all available system types as a collector.</p></li>
+<li><p><strong>builtInFamilyTypeNames</strong> (<em>List str</em>) – List containing alll available major type names.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing mep system types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedDuctTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedDuctTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedDuctTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in duct type ids. Note there are three major types:
-- Rectangular Duct
-- Round Duct
-- Oval Duct</p>
+<dd><p>Gets all unused in duct type ids.</p>
+<p>This method can be used to safely delete unused duct types:
+In the case that no duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one duct type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedFlexDuctTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedFlexDuctTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedFlexDuctTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in flex duct type ids. Note there are two major types:
-- Rectangular flex Duct
-- Round flex Duct</p>
+<dd><p>Gets all unused in flex duct type ids.</p>
+<p>This method can be used to safely delete unused flex duct types:
+In the case that no flex duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one flex duct type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing flex duct types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -5331,6 +6036,7 @@ BuiltInCategory.OST_PipeAccessory,
 BuiltInCategory.OST_PipeFitting</p>
 </dd></dl>
 
+</section>
 </section>
 <section id="revit-purge-unused-using-custom-code">
 <h2>Revit Purge Unused using custom code<a class="headerlink" href="#revit-purge-unused-using-custom-code" title="Permalink to this headline">¶</a></h2>

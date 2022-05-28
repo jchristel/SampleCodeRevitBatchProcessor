@@ -73,8 +73,8 @@ def GetInstancesOfModelHealth(doc):
     This is a faster filter in terms of performance then LINQ query refer to:
     https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A list containing all model health tracker families in the model.
     :rtype: list of Autodesk.Revit.DB.FamilyInstance
@@ -92,8 +92,8 @@ def GetParametersOfInstance(famInstance, doc):
 
     :param famInstance: An instance of the model health tracker family.
     :type famInstance: Autodesk.Revit.DB.FamilyInstance
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: Result class instance.
            .result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
@@ -130,8 +130,8 @@ def GetWorksetNumber(doc):
     '''
     Gets the number of worksets in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: The number of worksets in a model.
     :rtype: int
@@ -143,8 +143,8 @@ def GetFileSize(doc):
     '''
     Gets the file size in MB.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: File size in MB. On exception it will return -1
     :rtype: int
@@ -170,8 +170,8 @@ def GetNumberOfWarnings(doc):
     '''
     Gets the number of warnings in the model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: Number of warnings in model. On exception it will return -1
     :rtype: int
@@ -183,10 +183,17 @@ def GetNumberOfWarnings(doc):
     except:
         pass
     return number
-    
-# returns the number of design sets in a model
-# doc   current document
+
 def GetNumberOfDesignSets(doc):
+    '''
+    Gets the number of design sets in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of design sets in model. On exception it will return -1
+    :rtype: int
+    '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDoS.GetDesignSets(doc))
@@ -194,9 +201,16 @@ def GetNumberOfDesignSets(doc):
         pass
     return number
 
-# returns the number of design options in a model
-# doc   current document
 def GetNumberOfDesignOptions(doc):
+    '''
+    Gets the number of design options in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of design option in model. On exception it will return -1
+    :rtype: int
+    '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDoS.GetDesignOptions(doc).ToList())
@@ -206,9 +220,17 @@ def GetNumberOfDesignOptions(doc):
 
 # --------------------------------------------- VIEWS ---------------------------------------------
 
-# returns the number of sheets in a model
-# doc   current document
 def GetNumberOfSheets(doc):
+    '''
+    Gets the number of sheets in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of sheets in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rViews.GetSheetsInModel(doc))
@@ -216,23 +238,45 @@ def GetNumberOfSheets(doc):
         pass
     return number
 
-# generic view filter allowing all views to be selected
-def ViewFilter(view):
+def _ViewFilter(view):
+    '''
+    generic view filter allowing all views to be selected
+
+    :param view: not used!
+    :type view: Autodesk.Revit.DB.View
+
+    :return: returns always True
+    :rtype: bool
+    '''
     return True
 
-# returns the number of views in a model
-# doc   current document
 def GetViewsInTheModel(doc):
+    '''
+    Gets the number of views in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of views in model. On exception it will return -1
+    :rtype: int
+    '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViews.GetViewsInModel(doc, ViewFilter))
+        number = len(rViews.GetViewsInModel(doc, _ViewFilter))
     except:
         pass
     return number
 
-# returns the number of views in a model
-# doc   current document
 def GetUnplacedViews(doc):
+    '''
+    Gets the number of unplaced views in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of unplaced views in model. On exception it will return -1
+    :rtype: int
+    '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rViews.GetViewsNotOnSheet(doc))
@@ -242,9 +286,17 @@ def GetUnplacedViews(doc):
 
 # --------------------------------------------- LINE STYLES / TYPES  ---------------------------------------------
 
-# returns the number of line styles in a model
-# doc   current document
 def GetNumberOfLineStyles(doc):
+    '''
+    Gets the number of line styles in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of line styles in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLsp.GetAllLineStyleIds(doc))
@@ -252,9 +304,17 @@ def GetNumberOfLineStyles(doc):
         pass
     return number
 
-# returns the number of line styles in a model
-# doc   current document
 def GetNumberOfLinePatterns(doc):
+    '''
+    Gets the number of line patterns in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of line patterns in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLsp.GetAllLinePatterns(doc))
@@ -262,22 +322,37 @@ def GetNumberOfLinePatterns(doc):
         pass
     return number
 
-# returns the number of fill patterns in a model
-# doc   current document
 def GetNumberOfFillPatterns(doc):
+    '''
+    Gets the number of fill pattern in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of fillpattern in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLsp.GetAllFillPattern(doc))
     except Exception as e:
-        print (e)
         pass
     return number
 
 # --------------------------------------------- CAD links  ---------------------------------------------
 
-# returns the number of CAD imports in a model
-# doc   current document
 def GetNumberOfCADImports(doc):
+    '''
+    Gets the number of CAD imports in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of CAD imports in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinks.GetCADTypeImportsOnly(doc))
@@ -285,9 +360,17 @@ def GetNumberOfCADImports(doc):
         pass
     return number
 
-# returns the number of CAD links to model in a model
-# doc   current document
 def GetNumberOfCADLinksToModel(doc):
+    '''
+    Gets the number of CAD links by model in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of CAD links by model in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinks.GetAllCADLinkTypeInModelOnly(doc))
@@ -295,9 +378,17 @@ def GetNumberOfCADLinksToModel(doc):
         pass
     return number
 
-# returns the number of CAD links to view
-# doc   current document
 def GetNumberOfCADLinksToView(doc):
+    '''
+    Gets the number of CAD links by view in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of CAD links by view in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinks.GetAllCADLinkTypeByViewOnly(doc))
@@ -307,9 +398,17 @@ def GetNumberOfCADLinksToView(doc):
 
 # ---------------------------------------------  images  ---------------------------------------------
 
-# returns the number of CAD links to view
-# doc   current document
 def GetNumberOfImageImports(doc):
+    '''
+    Gets the number of image imports in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of image imports in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinks.GetAllImageLinkTypeImportedInModel(doc))
@@ -317,9 +416,17 @@ def GetNumberOfImageImports(doc):
         pass
     return number
 
-# returns the number of CAD links to view
-# doc   current document
 def GetNumberOfImageLinks(doc):
+    '''
+    Gets the number of image links in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of image links in model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rLinks.GetAllImageLinkTypeLinkedInModel(doc))
@@ -329,9 +436,17 @@ def GetNumberOfImageLinks(doc):
 
 # ---------------------------------------------  Families  ---------------------------------------------
 
-# returns the number of families in a model
-# doc   current document
 def GetNumberOfFamiliesInModel(doc):
+    '''
+    Gets the number of families loaded into the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of families loaded into model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rFams.GetAllLoadableFamilies(doc))
@@ -339,9 +454,17 @@ def GetNumberOfFamiliesInModel(doc):
         pass
     return number
 
-# returns the number of in place families in a model
-# doc   current document
 def GetNumberOfInPlaceFamiliesInModel(doc):
+    '''
+    Gets the number of in-place families the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of in-place in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rFams.GetAllInPlaceFamilies(doc))
@@ -351,9 +474,17 @@ def GetNumberOfInPlaceFamiliesInModel(doc):
 
 # ---------------------------------------------  Groups  ---------------------------------------------
 
-# returns the number of detail groups in a model
-# doc   current document
 def GetNumberOfDetailGroupsInModel(doc):
+    '''
+    Gets the number of detail group definitions the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of detail group definitions in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.GetDetailGroups(doc))
@@ -361,9 +492,17 @@ def GetNumberOfDetailGroupsInModel(doc):
         pass
     return number
 
-# returns the number of model groups in a model
-# doc   current document
 def GetNumberOfModelGroupsInModel(doc):
+    '''
+    Gets the number of model group definitions in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of model group definitions in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.GetModelGroups(doc))
@@ -371,9 +510,17 @@ def GetNumberOfModelGroupsInModel(doc):
         pass
     return number
 
-# returns the number of unplaced detail groups in a model
-# doc   current document
 def GetNumberOfUnplacedDetailGroupsInModel(doc):
+    '''
+    Gets the number of unplaced detail group definitions in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of unplaced detail group definitions in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.GetUnplacedDetailGroups(doc))
@@ -381,9 +528,17 @@ def GetNumberOfUnplacedDetailGroupsInModel(doc):
         pass
     return number
 
-# returns the number of unplaced model groups in a model
-# doc   current document
 def GetNumberOfUnplacedModelGroupsInModel(doc):
+    '''
+    Gets the number of unplaced model group definitions in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of unplaced model group definitions in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rGrp.GetUnplacedModelGroups(doc))
@@ -393,9 +548,17 @@ def GetNumberOfUnplacedModelGroupsInModel(doc):
 
 # ---------------------------------------------  Rooms  ---------------------------------------------
 
-# returns the number of unplaced rooms in a model
-# doc   current document
 def GetNumberOfRoomsInModel(doc):
+    '''
+    Gets the number of rooms in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of rooms in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rRooms.GetAllRooms(doc))
@@ -403,9 +566,17 @@ def GetNumberOfRoomsInModel(doc):
         pass
     return number
 
-# returns the number of unplaced rooms in a model
-# doc   current document
 def GetNumberOfUnplacedRoomsInModel(doc):
+    '''
+    Gets the number of unplaced rooms in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of unplaced rooms in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rRooms.GetUnplacedRooms(doc))
@@ -413,9 +584,17 @@ def GetNumberOfUnplacedRoomsInModel(doc):
         pass
     return number
 
-# returns the number of redundant rooms in a model
-# doc   current document
 def GetNumberOfRedundantRoomsInModel(doc):
+    '''
+    Gets the number of redunndant rooms in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of redundant rooms in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rRooms.GetRedundantRooms(doc))
@@ -423,9 +602,17 @@ def GetNumberOfRedundantRoomsInModel(doc):
         pass
     return number
 
-# returns the number of redundant rooms in a model
-# doc   current document
 def GetNumberOfNotEnclosedRoomsInModel(doc):
+    '''
+    Gets the not enclosed number of rooms in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of not enclosed rooms in the model. On exception it will return -1
+    :rtype: int
+    '''
+
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rRooms.GetNotEnclosedRooms(doc))
@@ -435,9 +622,16 @@ def GetNumberOfNotEnclosedRoomsInModel(doc):
 
 # ---------------------------------------------  Detail Items  ---------------------------------------------
 
-# returns the number of redundant rooms in a model
-# doc   current document
 def GetNumberOfFilledRegionInModel(doc):
+    '''
+    Gets the number of filled region instances in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Number of filled region instances in the model. On exception it will return -1
+    :rtype: int
+    '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
         number = len(rDetItems.GetFilledRegionsInModel(doc))
@@ -452,6 +646,7 @@ def GetNumberOfFilledRegionInModel(doc):
 #set up a named tuple to store data in it
 healthDataAction = namedtuple('healthDataAction', 'getData reportFileName')
 
+#: List of actions reporting model health metrics and their associated parameter name
 PARAM_ACTIONS = {
     'ValueWorksets': healthDataAction(GetWorksetNumber, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS),
     'ValueFileSize': healthDataAction(GetFileSize, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE),
@@ -482,10 +677,21 @@ PARAM_ACTIONS = {
     'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS)
 }
 
-# updates any instances of model health tracking family in a project
-# doc   current document
 def UpdateModelHealthTracerFamily(doc, revitFilePath):
-    '''updates model health tracker family'''
+    '''
+    Updates instances of model health tracker family in project.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: Fully qualified revit model file path.
+    :type revitFilePath: str
+
+    :return: Result class instance.
+           .result = True if all model key health metric where updated successfully. Otherwise False.
+           .message will be listing each parameter update: old value to new value
+    :rtype: :class:`.Result`
+    '''
+
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     instances = GetInstancesOfModelHealth(doc)
@@ -500,7 +706,24 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
 # doc   current document
 # revitFilePath     path of the curren document
 def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
-    '''write out health tracker data'''
+    '''
+    Write out health tracker data to file.
+
+    Each value gets written to a separate file. The file name is made up of time stamp and the revit file name.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: Fully qualified revit model file path.
+    :type revitFilePath: str
+    :param ouputDirectory: The directory path of where to write the data to.
+    :type ouputDirectory: str
+
+    :return: Result class instance.
+           .result = True if data was written to files successfully. Otherwise False.
+           .message will be contain data file path for each file.
+    :rtype: :class:`.Result`
+    '''
+    
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
     # get values and write them out

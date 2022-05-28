@@ -4,6 +4,7 @@ This module contains a purge unused function using standard revit api functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some functionality provided here exceeds the Revit purge unused or etransmit purge unused command:
+
 - view types
 - view templates
 - view filters

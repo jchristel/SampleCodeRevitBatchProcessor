@@ -4403,7 +4403,8 @@ arcs, circles will be tesselated to polygons</p>
 </section>
 <section id="module-RevitLevels">
 <span id="revit-levels"></span><h2>Revit Levels<a class="headerlink" href="#module-RevitLevels" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit levels.</p>
+<section id="revit-levels-helper-functions">
+<h3>Revit levels helper functions.<a class="headerlink" href="#revit-levels-helper-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitLevels.REPORT_LEVELS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">REPORT_LEVELS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'WORKSETNAME',</span> <span class="pre">'ELEVATION']</span></em><a class="headerlink" href="#RevitLevels.REPORT_LEVELS_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -4413,51 +4414,168 @@ arcs, circles will be tesselated to polygons</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetLevelsListAscending">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetLevelsListAscending</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetLevelsListAscending" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all levels in the model ascending by project elevation</p>
+<dd><p>Gets a filtered element collector of all levels in the model ascending by project elevation.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of levels</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.GetLevelReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetLevelReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetLevelReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets level data ready for being printed to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The file hostname, which is added to data returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of revit level properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetAllLevelHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelHeadsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all level head types in the model</p>
+<dd><p>Gets a filtered element collector of all level head types in the model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of level heads</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetAllLevelTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all level types in the model</p>
+<dd><p>Gets a filtered element collector of all level types in the model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of level types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetAllLevelTypeIdsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelTypeIdsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelTypeIdsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all level type ids in the model</p>
+<dd><p>Gets a list of all level type ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all level type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetUnusedLevelTypesForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetUnusedLevelTypesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetUnusedLevelTypesForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return all ids of unused level types in the model to be purged</p>
+<dd><p>Gets all ids of unused level types in the model.</p>
+<p>Unused: not one instance per level type is placed in the model.
+This method can be used to safely delete unused level types from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of level type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetUnusedLevelHeadFamilies">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetUnusedLevelHeadFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetUnusedLevelHeadFamilies" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return all ids of unused family symbols (types) of level head families</p>
+<dd><p>Gets all ids of unused family symbols (types) of level head families.</p>
+<p>Unused: not one instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of symbol ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetAllLevelHeadfamilyTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelHeadfamilyTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelHeadfamilyTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return all ids level head family types in the model</p>
+<dd><p>Gets ids of all level head family symbols (types) in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of symbol ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLevels.GetUnusedLevelHeadFamiliesForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetUnusedLevelHeadFamiliesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetUnusedLevelHeadFamiliesForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return all ids of unused level head symbols and families to be purged</p>
+<dd><p>Gets ids of all unused level head symbols and families.</p>
+<p>Unused: not one instance per level symbol is placed in the model.
+This method can be used to safely delete unused level symbols or families from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of symbol and or family ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
+</section>
 </section>
 <section id="module-RevitLineStylesPatterns">
 <span id="revit-line-styles-and-patterns"></span><h2>Revit Line Styles and Patterns<a class="headerlink" href="#module-RevitLineStylesPatterns" title="Permalink to this headline">¶</a></h2>
@@ -5043,7 +5161,7 @@ arcs, circles will be tesselated to polygons</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetRevitLinkReportData">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetRevitLinkReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetRevitLinkReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets shared parameter data ready for being printed to file.</p>
+<dd><p>Gets link data ready for being printed to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

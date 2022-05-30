@@ -1,5 +1,7 @@
 '''
-This module contains a number of helper functions relating to Revit levels. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revit levels helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -45,18 +47,36 @@ REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetLevelsListAscending(doc):
-    ''' this will return a filtered element collector of all levels in the model ascending by project elevation'''
+    '''
+    Gets a filtered element collector of all levels in the model ascending by project elevation.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector of levels
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsNotElementType().ToList().OrderBy(lambda l: l.ProjectElevation)
     return collector
 
 # ------------------------------------------------------- Level reporting --------------------------------------------------------------------
 
-# gets level data ready for being printed to file
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
 def GetLevelReportData(doc, revitFilePath):
+    '''
+    Gets level data ready for being printed to file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The file hostname, which is added to data returned.
+    :type revitFilePath: str
+
+    :return: list of list of revit level properties.
+    :rtype: list of list of str
+    '''
+
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
         data.append([
@@ -69,35 +89,84 @@ def GetLevelReportData(doc, revitFilePath):
 
 # ------------------------------------------------- filters --------------------------------------------------------------------
 
-# doc:   current model document
 def GetAllLevelHeadsByCategory(doc):
-    ''' this will return a filtered element collector of all level head types in the model'''
+    '''
+    Gets a filtered element collector of all level head types in the model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of level heads
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllLevelTypesByCategory(doc):
-    ''' this will return a filtered element collector of all level types in the model'''
+    '''
+    Gets a filtered element collector of all level types in the model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of level types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsElementType()
     return collector
 
-# doc:   current model document
 def GetAllLevelTypeIdsByCategory(doc):
-    ''' this will return a filtered element collector of all level type ids in the model'''
+    '''
+    Gets a list of all level type ids in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of all level type ids.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(collector)
     return ids
 
 # -------------------------------------------------  purge --------------------------------------------------------------------
 
-# doc             current document
 def GetUnusedLevelTypesForPurge(doc):
-    ''' this will return all ids of unused level types in the model to be purged'''
+    '''
+    Gets all ids of unused level types in the model.
+
+    Unused: not one instance per level type is placed in the model.
+    This method can be used to safely delete unused level types from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of level type ids.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     return com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 0, 6)
 
-# doc             current document
 def GetUnusedLevelHeadFamilies(doc):
-    ''' this will return all ids of unused family symbols (types) of level head families'''
+    '''
+    Gets all ids of unused family symbols (types) of level head families.
+
+    Unused: not one instance per symbol is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of symbol ids.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     usedTypes = com.GetUsedUnusedTypeIds(doc, GetAllLevelTypeIdsByCategory, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
@@ -115,9 +184,17 @@ def GetUnusedLevelHeadFamilies(doc):
             unusedSymbolIds.append(levelSymbolInModel.Id)
     return unusedSymbolIds
 
-# doc             current document
 def GetAllLevelHeadfamilyTypeIds(doc):
-    ''' this will return all ids level head family types in the model'''
+    '''
+    Gets ids of all level head family symbols (types) in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of symbol ids.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_LevelHeads)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
@@ -126,5 +203,17 @@ def GetAllLevelHeadfamilyTypeIds(doc):
 
 # doc             current document
 def GetUnusedLevelHeadFamiliesForPurge(doc):
-    ''' this will return all ids of unused level head symbols and families to be purged'''
+    '''
+    Gets ids of all unused level head symbols and families.
+
+    Unused: not one instance per level symbol is placed in the model.
+    This method can be used to safely delete unused level symbols or families from the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A list of symbol and or family ids.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedLevelHeadFamilies)

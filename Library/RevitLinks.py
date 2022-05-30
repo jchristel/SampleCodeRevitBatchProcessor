@@ -1,5 +1,7 @@
 '''
-This module contains a number of helper functions relating to Revit links, CAD links and image links. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a number of helper functions relating to Revit links, CAD links and image links.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -58,7 +60,7 @@ REPORT_REVIT_LINKS_HEADER = [
     'DESIGNOPTION',
 ]
 
-# CAD links header used in reports
+#: CAD links header used in reports
 REPORT_CAD_LINKS_HEADER = [
     'HOSTFILE',
     'ID', 
@@ -74,21 +76,51 @@ REPORT_CAD_LINKS_HEADER = [
 
 # -------------------------------------------- CAD Links -------------------------------------------------
 
-# doc   current model document
 def GetAllCADLinkTypes(doc):
-    '''returns all CAD link types in a model'''
+    '''
+    Gets all CAD link types in a model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of CAD link types
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType)
     return collector
 
-# doc   current model document
 def GetAllCADLinkInstances(doc):
-    '''returns all CAD link instances in a model'''
+    '''
+    Gets all CAD link instances in a model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of import instances
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance)
     return collector
 
-# doc   current model document
 def GetCADTypeImportsOnly(doc):
-    '''returns all CAD imports in a model'''
+    '''
+    Gets all CAD imports in a model.
+
+    Filters by class and check whether the element is an external file reference (True its a link, False it is an import)
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of all CAD imports in a model.
+    :rtype: list Autodesk.Revit.DB.CADLinkType
+    '''
+
     cadImports = []
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType)
     for cad in collector:
@@ -96,9 +128,17 @@ def GetCADTypeImportsOnly(doc):
             cadImports.append(cad)
     return cadImports
 
-# doc   current model document
 def SortCADLinkTypesByModelOrViewSpecific(doc):
-    '''returns two lists: First one: cad links types linked by view, second one cad link types linked into model'''
+    '''
+    Returns two lists: First one: cad links types linked by view (2D) , second one cad link types linked into model (3D).
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Two lists of cad link types.
+    :rtype: list Autodesk.Revit.DB.CADLinkType, list Autodesk.Revit.DB.CADLinkType
+    '''
+
     cadLinksByView = []
     cadLinksByModel = []
     collectorCADTypes = GetAllCADLinkTypes(doc)
@@ -116,21 +156,47 @@ def SortCADLinkTypesByModelOrViewSpecific(doc):
             cadLinksByModel.append(cType)
     return cadLinksByView, cadLinksByModel
 
-# doc   current odel document
 def GetAllCADLinkTypeByViewOnly(doc):
-    '''returns all CAD links by view in a model'''
+    '''
+    Gets all CAD links by view in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Lists of cad link types.
+    :rtype: list Autodesk.Revit.DB.CADLinkType
+    '''
+
     cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
     return cadLinksByView
 
-# doc   current model document
 def GetAllCADLinkTypeInModelOnly(doc):
-    '''returns all CAD links by view in a model'''
+    '''
+    Gets all CAD links by model in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Lists of cad link types.
+    :rtype: list Autodesk.Revit.DB.CADLinkType
+    '''
+
     cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
     return cadLinksByModel
 
-# doc:              the current model document
 def DeleteCADLinks(doc):
-    '''deletes all CAD links in a file'''
+    '''
+    Deletes all CAD links in a model.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: Result class instance.
+        .result = True if all CAD links got deleted. Otherwise False.
+        .message will contain status of deletion.
+    :rtype: :class:`.Result`
+    '''
+
     ids = []
     returnvalue = res.Result()
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance):
@@ -139,10 +205,26 @@ def DeleteCADLinks(doc):
     returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
     return returnvalue
 
-# link locations: a list of directories where the revit files can be located
-# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
 def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
-    '''reloads CAD links from a given location based on the original link type name (starts with)'''
+    '''
+    Reloads CAD links from a given file location based on the original link type name (starts with comparison)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param linkLocations: A list of directories where CAD files can be located.
+    :type linkLocations: list str
+    :param hostNameFormatted: Not used yet
+    :type hostNameFormatted: TBC
+    :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
+        I.e. can be used to truncate the link name i.e. the revision details of a link
+    :type doSomethingWithLinkName: func(str) -> str
+
+    :return: Result class instance.
+        .result = True if all CAD links got reloaded succesfully. Otherwise False.
+        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         # get all CAD link types in model
@@ -174,11 +256,22 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
 
 # ------------------------------------------------------- CAD link reporting --------------------------------------------------------------------
 
-# cadLinkName:      the cad link name
-# doc:              the current model document
-# returns 'unknown' if path is not a valid external file reference
 def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
-    '''extract the path from CAD link type'''
+    '''
+    Extract the file path from CAD link type.
+
+    :param cadLinkName: The cad link name
+    :type cadLinkName: str
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The fully qualified file path to the model.
+    :type revitFilePath: str
+
+    :return: The fully qualified file path if the cad link type is a valid external reference.\
+        Otherwise it will return 'unknown'.
+    :rtype: str
+    '''
+
     #default values
     modelPath = 'unknown'
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
@@ -193,11 +286,19 @@ def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
                 modelPath = str(e)
     return modelPath
 
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
-# returns a list of lists
 def GetCADReportData(doc, revitFilePath):
-    '''gets CAD links data ready for being printed to file'''
+    '''
+    Gets CAD link data to be written to report file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The fully qualified file path to the model, which is added to data returned.
+    :type revitFilePath: str
+
+    :return: list of list of cad link properties.
+    :rtype: list of list of str
+    '''
+
     data = []
     collector = GetAllCADLinkInstances(doc)
     for c in collector:
@@ -229,30 +330,65 @@ def GetCADReportData(doc, revitFilePath):
 
 # -------------------------------------------- Revit Links -------------------------------------------------
 
-# doc   current model document
-'''returns all Revit link instances in a model'''
 def GetAllRevitLinkInstances(doc):
+    '''
+    Gets all Revit link instances in a model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of revit link instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance)
     return collector
 
-# doc   current model document
 def GetAllRevitLinkTypes(doc):
-    '''returns all Revit link types in a model'''
+    '''
+    Gets all Revit link types in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector of revit link types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType)
     return collector
-
-# doc               current model document
-# linkInstance:     the linkinstance the type of is to be returned
+    
 def GetRevitLinkTypeFromInstance(doc, linkInstance):
-    '''returns all Revit link type from a given instance'''
+    '''
+    Gets the Revit link type from a given revit link instance.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param linkInstance: The linkinstance the type of is to be returned
+    :type linkInstance: Autodesk.Revit.DB.RevitLinkInstance
+
+    :return: The matching revit link type.
+    :rtype: Autodesk.Revit.DB.RevitLinkType
+    '''
+    
     revitLinkTypes = GetAllRevitLinkTypes(doc)
     for lt in revitLinkTypes:
         if(lt.Id == linkInstance.GetTypeId()):
             return lt
 
-# doc:      current model document
 def DeleteRevitLinks(doc):
-    '''deletes all revit links in a file'''
+    '''
+    Deletes all revit links in a file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Result class instance.
+        .result = True if all revit links got deleted succesfully. Otherwise False.
+        .message will contain deletion status. On exception it will also include the exception message.
+        :rtype: :class:`.Result`
+    '''
+
     ids = []
     returnvalue = res.Result()
     for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
@@ -261,11 +397,28 @@ def DeleteRevitLinks(doc):
     returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
     return returnvalue
 
-# link locations: a list of directories where the revit files can be located
-# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
-# worksetconfig: None: to use the previously apllied workset config
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
-    '''reloads revit links from a given location based on the original link type name (starts with)'''
+    '''
+    Reloads Revit links from a given file location based on the original link type name (starts with comparison)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param linkLocations: A list of directories where CAD files can be located.
+    :type linkLocations: list str
+    :param hostNameFormatted: Not used yet
+    :type hostNameFormatted: TBC
+    :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
+        I.e. can be used to truncate the link name i.e. the revision details of a link
+    :type doSomethingWithLinkName: func(str) -> str
+    :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
+    :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
+
+    :return: Result class instance.
+        .result = True if all revit links got reloaded succesfully. Otherwise False.
+        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         # get all revit link types in model
@@ -292,12 +445,30 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-# link locations: a list of directories where the revit files can be located
-# linkTypesTobReloaded is a list of elements of class RevitLinkType
-# dosomethingwithLinkName can be used to truncate i.e. the revision details of a link
-# worksetconfig: None: to use the previously apllied workset config
 def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
-    '''reloads revit links from a given location based on the original link type name (starts with)'''
+    '''
+    Reloads Revit links from a given file location based on the original link type name (starts with comparison)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param linkTypesTobReloaded: List of link type elements to be reloaded.
+    :type linkTypesTobReloaded: list Autodesk.Revit.DB.RevitLinkType
+    :param linkLocations: A list of directories where CAD files can be located.
+    :type linkLocations: list str
+    :param hostNameFormatted: Not used yet
+    :type hostNameFormatted: TBC
+    :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
+        I.e. can be used to truncate the link name i.e. the revision details of a link
+    :type doSomethingWithLinkName: func(str) -> str
+    :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
+    :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
+
+    :return: Result class instance.
+        .result = True if all revit links got reloaded succesfully. Otherwise False.
+        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         # loop over links supplied
@@ -324,9 +495,22 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
         returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnvalue
 
-# returns None if multiple or no matches where found
 def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
-    '''returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations'''
+    '''
+    Gets a fully qualified file path to a file name match (revit project file extension .rvt) in given directory locations.
+
+    Returns the first file name match it finds! If no match found returns None.
+
+    :param fileName: Filter to identify match. Filter is string.startswith(fileName)
+    :type fileName: str
+    :param possibleLinkLocations: List of folders which may contain the link file.
+    :type possibleLinkLocations: list str
+    :param fileExtension: A file extension in format: '.xyz'. Use '.rvt' for revit project files.
+    :type fileExtension: str
+    :return: Fully qualified file path if match is found otherwise None.
+    :rtype: str
+    '''
+
     linkPath = None
     counter = 0
     try:
@@ -349,23 +533,46 @@ def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
         linkPath = None
     return linkPath
 
-# which returns the name unchanged
-# could be replaced with something which i.e. truncates the revision...
 def DefaultLinkName(name):
-    '''default 'do something with link name' method'''
+    '''
+    Default 'do something with link name' method. Returns the link name unchanged.
+
+    Could be replaced with something which i.e. truncates the revision...
+
+    :param name: The link name.
+    :type name: str
+
+    :return: the link name unchanged.
+    :rtype: str
+    '''
+
     return name
 
-# None in this case reloads a link with the last used workset settings
 def DefaultWorksetConfigForReload():
-    '''default method for returning a workset configuration'''
+    '''
+    Default method returning a open previous workset configuration. (None)
+
+    :return: None: which is use the previous workset configuration.
+    :rtype: None
+    '''
+
     return None
 
 # ------------------------------------------------------- Revit link reporting --------------------------------------------------------------------
 
-# doc:      current model document
-# revitLinkType:    the revit link type element to get data from
 def GetRevitLinkTypeData(doc, revitLinkType):
-    '''returns Revit Link Type data for reporting'''
+    '''
+    Gets Revit Link Type data for reporting.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitLinkType: The link type of which to get the data from.
+    :type revitLinkType: Autodesk.Revit.DB.RevitLinkType
+
+    :return: A list of string 
+    :rtype: list str
+    '''
+
     # default values
     modelPath = 'unknown'
     isLoaded = False
@@ -390,10 +597,19 @@ def GetRevitLinkTypeData(doc, revitLinkType):
       
     return data
 
-# doc:      current model document
-# revitFilePath:    the revit host file path
 def GetRevitLinkReportData(doc, revitFilePath):
-    '''returns Revit Link data for reporting'''
+    '''
+    Gets shared parameter data ready for being printed to file.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The file hostname, which is added to data returned.
+    :type revitFilePath: str
+
+    :return: list of list of revit link properties.
+    :rtype: list of list of str
+    '''
+
     data = []
     collector = GetAllRevitLinkInstances(doc)
     for c in collector:
@@ -421,22 +637,46 @@ def GetRevitLinkReportData(doc, revitFilePath):
         
 # -------------------------------------------- IMAGES -------------------------------------------------
 
-# doc   current model document
 def GetImagesTypesInModel(doc):
-    '''returns all image link types and image link instances in a model'''
+    '''
+    Gets all image link types and image link instances in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of image types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ImageType)
     return collector
 
 def GetImagesTypeIdsInModel(doc):
-    '''returns all image link type Ids and image link instance ids in a model'''
+    '''
+    Gets all image link type Ids and image link instance ids in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of ids representing image types and image instances.
+    :rtype: list  Autodesk.Revit.DB.ElementId
+    '''
+
     ids = []
     col = GetImagesTypesInModel(doc)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
-# doc   current model document
+
 def SortImageLinkTypesByImportOrLinked(doc):
-    '''returns two lists: First one: images linked into model, secon one images saved into model from model itself (no external file reference)'''
+    '''
+    Returns two lists: First one: images linked into model, second one images saved into model from model itself (no external file reference)
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Two lists of image types and instances (?)
+    :rtype: list Autodesk.Revit.DB.ImageType, list Autodesk.Revit.DB.ImageType 
+    '''
+
     imageLink = []
     imageImport = []
     collectorImageTypes = GetImagesTypesInModel(doc)
@@ -447,42 +687,92 @@ def SortImageLinkTypesByImportOrLinked(doc):
             imageImport.append(im)
     return imageLink, imageImport
 
-# doc   current model document
 def GetAllImageLinkTypeLinkedInModel(doc):
-    '''returns all image link types which are external referenced in a model'''
+    '''
+    Gets all image link types which are links (external referenced) in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list of image types and instances (?)
+    :rtype: list Autodesk.Revit.DB.ImageType
+    '''
+
     imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
     return imageLinks
 
-# doc   current model document
 def GetAllImageLinkTypeImportedInModel(doc):
-    '''returns all iamge link types which are imported in a model'''
+    '''
+    Gets all image link types which are imported (not an external reference) in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list of image types and instances (?)
+    :rtype: list Autodesk.Revit.DB.ImageType
+    '''
+
     imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
     return imageImport
 
-# doc   current model document
 def GetImageTypeInModel(doc):
-    '''returns all image types in a model'''
+    '''
+    Gets all image types in a model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of image types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsElementType()
 
-# doc   current model document
 def GetImageInstancesInModel(doc):
-    '''returns all images placed in a model'''
+    '''
+    Gets all image instances placed in a model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector of image instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllUnusedImagetypeIdsInModel(doc):
-    '''returns all image types placed in a model'''
+    '''
+    Gets all image types with no instances placed in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of ids representing image types.
+    :rtype: list  Autodesk.Revit.DB.ElementId
+    '''
+
     unusedImages = com.GetNotPlacedTypes(doc, GetImageTypeInModel, GetImageInstancesInModel)
     unusedTypeIds = []
     for i in unusedImages:
         unusedTypeIds.append(i.Id)
     return unusedTypeIds
 
-# doc   current model document
 def GetAllUnusedImagetypeIdsInModelWithGroupCheck(doc):
-    '''returns all image types placed in a model but includes group definition check
-    this only returns valid data if at least one instance of the group is placed in the model!!
-    otherwise images in groups which are not placed will not be flagged by this filter!'''
+    '''
+    Gets all image types with no instance placed in a model but includes group definition check.
+
+    This only returns valid data if at least one instance of the group is placed in the model!!
+    Otherwise images in groups which are not placed will not be flagged by this filter!
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of ids representing image types.
+    :rtype: list  Autodesk.Revit.DB.ElementId
+    '''
+
     unusedTypeIds = GetAllUnusedImagetypeIdsInModel(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
     unusedTypeIds = com.GetUnusedTypeIdsFromDetailGroups(doc, unusedTypeIds)

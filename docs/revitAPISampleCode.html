@@ -4640,193 +4640,680 @@ arcs, circles will be tesselated to polygons</p>
 </section>
 <section id="module-RevitLinks">
 <span id="revit-links"></span><h2>Revit Links<a class="headerlink" href="#module-RevitLinks" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit links, CAD links and image links.</p>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links">
+<h3>This module contains a number of helper functions relating to Revit links, CAD links and image links.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-links-cad-links-and-image-links" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitLinks.REPORT_REVIT_LINKS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">REPORT_REVIT_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISLOADED',</span> <span class="pre">'TYPEWORKSET',</span> <span class="pre">'ISFROMLOCALPATH',</span> <span class="pre">'PATHTYPE',</span> <span class="pre">'FILEPATH',</span> <span class="pre">'SHAREDSITE',</span> <span class="pre">'SHAREDSITENAME',</span> <span class="pre">'INSTANCEWORKSET',</span> <span class="pre">'DESIGNOPTION']</span></em><a class="headerlink" href="#RevitLinks.REPORT_REVIT_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>revit links header used in reports</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitLinks.REPORT_CAD_LINKS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">REPORT_CAD_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISVIEWSPECIFIC',</span> <span class="pre">'VIEWID',</span> <span class="pre">'WORKSET',</span> <span class="pre">'DESIGNOPTION',</span> <span class="pre">'ISPINNED',</span> <span class="pre">'DRAWLAYER',</span> <span class="pre">'FILEPATH']</span></em><a class="headerlink" href="#RevitLinks.REPORT_CAD_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>CAD links header used in reports</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllCADLinkTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllCADLinkTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllCADLinkTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all CAD link types in a model</p>
+<dd><p>Gets all CAD link types in a model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of CAD link types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllCADLinkInstances">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllCADLinkInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllCADLinkInstances" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all CAD link instances in a model</p>
+<dd><p>Gets all CAD link instances in a model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of import instances</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetCADTypeImportsOnly">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetCADTypeImportsOnly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetCADTypeImportsOnly" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all CAD imports in a model</p>
+<dd><p>Gets all CAD imports in a model.</p>
+<p>Filters by class and check whether the element is an external file reference (True its a link, False it is an import)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of all CAD imports in a model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.CADLinkType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.SortCADLinkTypesByModelOrViewSpecific">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">SortCADLinkTypesByModelOrViewSpecific</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.SortCADLinkTypesByModelOrViewSpecific" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns two lists: First one: cad links types linked by view, second one cad link types linked into model</p>
+<dd><p>Returns two lists: First one: cad links types linked by view (2D) , second one cad link types linked into model (3D).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Two lists of cad link types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.CADLinkType, list Autodesk.Revit.DB.CADLinkType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllCADLinkTypeByViewOnly">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllCADLinkTypeByViewOnly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllCADLinkTypeByViewOnly" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all CAD links by view in a model</p>
+<dd><p>Gets all CAD links by view in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lists of cad link types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.CADLinkType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllCADLinkTypeInModelOnly">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllCADLinkTypeInModelOnly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllCADLinkTypeInModelOnly" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all CAD links by view in a model</p>
+<dd><p>Gets all CAD links by model in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Lists of cad link types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.CADLinkType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.DeleteCADLinks">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">DeleteCADLinks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.DeleteCADLinks" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes all CAD links in a file</p>
+<dd><p>Deletes all CAD links in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all CAD links got deleted. Otherwise False.
+.message will contain status of deletion.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.ReloadCADLinks">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">ReloadCADLinks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkLocations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostNameFormatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doSomethingWithLinkName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.ReloadCADLinks" title="Permalink to this definition">¶</a></dt>
-<dd><p>reloads CAD links from a given location based on the original link type name (starts with)</p>
+<dd><p>Reloads CAD links from a given file location based on the original link type name (starts with comparison)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>linkLocations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
+<li><p><strong>hostNameFormatted</strong> (<em>TBC</em>) – Not used yet</p></li>
+<li><p><strong>doSomethingWithLinkName</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all CAD links got reloaded succesfully. Otherwise False.
+.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetCADLinkTypeDataByName">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetCADLinkTypeDataByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cadLinkName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetCADLinkTypeDataByName" title="Permalink to this definition">¶</a></dt>
-<dd><p>extract the path from CAD link type</p>
+<dd><p>Extract the file path from CAD link type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cadLinkName</strong> (<em>str</em>) – The cad link name</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The fully qualified file path to the model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fully qualified file path if the cad link type is a valid external reference.        Otherwise it will return ‘unknown’.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetCADReportData">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetCADReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetCADReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>gets CAD links data ready for being printed to file</p>
+<dd><p>Gets CAD link data to be written to report file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The fully qualified file path to the model, which is added to data returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of cad link properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLinks.GetAllRevitLinkInstances">
+<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllRevitLinkInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllRevitLinkInstances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Revit link instances in a model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of revit link instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllRevitLinkTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllRevitLinkTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllRevitLinkTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Revit link types in a model</p>
+<dd><p>Gets all Revit link types in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of revit link types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetRevitLinkTypeFromInstance">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetRevitLinkTypeFromInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkInstance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetRevitLinkTypeFromInstance" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all Revit link type from a given instance</p>
+<dd><p>Gets the Revit link type from a given revit link instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>linkInstance</strong> (<em>Autodesk.Revit.DB.RevitLinkInstance</em>) – The linkinstance the type of is to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The matching revit link type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.RevitLinkType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.DeleteRevitLinks">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">DeleteRevitLinks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.DeleteRevitLinks" title="Permalink to this definition">¶</a></dt>
-<dd><p>deletes all revit links in a file</p>
+<dd><p>Deletes all revit links in a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all revit links got deleted succesfully. Otherwise False.
+.message will contain deletion status. On exception it will also include the exception message.
+:rtype: <a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.ReloadRevitLinks">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">ReloadRevitLinks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkLocations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostNameFormatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doSomethingWithLinkName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.ReloadRevitLinks" title="Permalink to this definition">¶</a></dt>
-<dd><p>reloads revit links from a given location based on the original link type name (starts with)</p>
+<dd><p>Reloads Revit links from a given file location based on the original link type name (starts with comparison)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>linkLocations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
+<li><p><strong>hostNameFormatted</strong> (<em>TBC</em>) – Not used yet</p></li>
+<li><p><strong>doSomethingWithLinkName</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
+<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously apllied workset config use None, otherwise provide custom config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all revit links got reloaded succesfully. Otherwise False.
+.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.ReloadRevitLinksFromList">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">ReloadRevitLinksFromList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkTypesTobReloaded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkLocations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostNameFormatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doSomethingWithLinkName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.ReloadRevitLinksFromList" title="Permalink to this definition">¶</a></dt>
-<dd><p>reloads revit links from a given location based on the original link type name (starts with)</p>
+<dd><p>Reloads Revit links from a given file location based on the original link type name (starts with comparison)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>linkTypesTobReloaded</strong> (<em>list Autodesk.Revit.DB.RevitLinkType</em>) – List of link type elements to be reloaded.</p></li>
+<li><p><strong>linkLocations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
+<li><p><strong>hostNameFormatted</strong> (<em>TBC</em>) – Not used yet</p></li>
+<li><p><strong>doSomethingWithLinkName</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
+<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously apllied workset config use None, otherwise provide custom config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+.result = True if all revit links got reloaded succesfully. Otherwise False.
+.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetLinkPath">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetLinkPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possibleLinkLocations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetLinkPath" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a fully qualified file path to a file name (revit project file extension .rvt) match in given directory locations</p>
+<dd><p>Gets a fully qualified file path to a file name match (revit project file extension .rvt) in given directory locations.</p>
+<p>Returns the first file name match it finds! If no match found returns None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – Filter to identify match. Filter is string.startswith(fileName)</p></li>
+<li><p><strong>possibleLinkLocations</strong> (<em>list str</em>) – List of folders which may contain the link file.</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em>) – A file extension in format: ‘.xyz’. Use ‘.rvt’ for revit project files.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Fully qualified file path if match is found otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.DefaultLinkName">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">DefaultLinkName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.DefaultLinkName" title="Permalink to this definition">¶</a></dt>
-<dd><p>default ‘do something with link name’ method</p>
+<dd><p>Default ‘do something with link name’ method. Returns the link name unchanged.</p>
+<p>Could be replaced with something which i.e. truncates the revision…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The link name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the link name unchanged.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.DefaultWorksetConfigForReload">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">DefaultWorksetConfigForReload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.DefaultWorksetConfigForReload" title="Permalink to this definition">¶</a></dt>
-<dd><p>default method for returning a workset configuration</p>
+<dd><p>Default method returning a open previous workset configuration. (None)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None: which is use the previous workset configuration.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetRevitLinkTypeData">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetRevitLinkTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitLinkType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetRevitLinkTypeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns Revit Link Type data for reporting</p>
+<dd><p>Gets Revit Link Type data for reporting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitLinkType</strong> (<em>Autodesk.Revit.DB.RevitLinkType</em>) – The link type of which to get the data from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetRevitLinkReportData">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetRevitLinkReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetRevitLinkReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns Revit Link data for reporting</p>
+<dd><p>Gets shared parameter data ready for being printed to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The file hostname, which is added to data returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of revit link properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetImagesTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetImagesTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetImagesTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image link types and image link instances in a model</p>
+<dd><p>Gets all image link types and image link instances in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of image types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetImagesTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetImagesTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetImagesTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image link type Ids and image link instance ids in a model</p>
+<dd><p>Gets all image link type Ids and image link instance ids in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing image types and image instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.SortImageLinkTypesByImportOrLinked">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">SortImageLinkTypesByImportOrLinked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.SortImageLinkTypesByImportOrLinked" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns two lists: First one: images linked into model, secon one images saved into model from model itself (no external file reference)</p>
+<dd><p>Returns two lists: First one: images linked into model, second one images saved into model from model itself (no external file reference)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Two lists of image types and instances (?)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ImageType, list Autodesk.Revit.DB.ImageType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllImageLinkTypeLinkedInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllImageLinkTypeLinkedInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllImageLinkTypeLinkedInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image link types which are external referenced in a model</p>
+<dd><p>Gets all image link types which are links (external referenced) in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of image types and instances (?)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ImageType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllImageLinkTypeImportedInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllImageLinkTypeImportedInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllImageLinkTypeImportedInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all iamge link types which are imported in a model</p>
+<dd><p>Gets all image link types which are imported (not an external reference) in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of image types and instances (?)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ImageType</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetImageTypeInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetImageTypeInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetImageTypeInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image types in a model</p>
+<dd><p>Gets all image types in a model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of image types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetImageInstancesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetImageInstancesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetImageInstancesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all images placed in a model</p>
+<dd><p>Gets all image instances placed in a model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of image instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImagetypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImagetypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImagetypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image types placed in a model</p>
+<dd><p>Gets all image types with no instances placed in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing image types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImagetypeIdsInModelWithGroupCheck">
 <span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImagetypeIdsInModelWithGroupCheck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImagetypeIdsInModelWithGroupCheck" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all image types placed in a model but includes group definition check
-this only returns valid data if at least one instance of the group is placed in the model!!
-otherwise images in groups which are not placed will not be flagged by this filter!</p>
+<dd><p>Gets all image types with no instance placed in a model but includes group definition check.</p>
+<p>This only returns valid data if at least one instance of the group is placed in the model!!
+Otherwise images in groups which are not placed will not be flagged by this filter!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing image types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
+</section>
 <section id="module-RevitMaterials">
 <span id="revit-materials"></span><h2>Revit Materials<a class="headerlink" href="#module-RevitMaterials" title="Permalink to this headline">¶</a></h2>
-<p>This module contains a number of helper functions relating to Revit materials.</p>
+<section id="revit-materials-helper-functions">
+<h3>Revit materials helper functions.<a class="headerlink" href="#revit-materials-helper-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMaterials.REPORT_MATERIALS_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitMaterials.</span></span><span class="sig-name descname"><span class="pre">REPORT_MATERIALS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'MATERIALNAME',</span> <span class="pre">'PARAMETERNAME',</span> <span class="pre">'PARAMETERVALUE']</span></em><a class="headerlink" href="#RevitMaterials.REPORT_MATERIALS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitMaterials.GetAllMaterials">
+<span class="sig-prename descclassname"><span class="pre">RevitMaterials.</span></span><span class="sig-name descname"><span class="pre">GetAllMaterials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMaterials.GetAllMaterials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all materials in a model.</p>
+<p>Filter by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector of materials</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitMaterials.GetMaterialbyId">
+<span class="sig-prename descclassname"><span class="pre">RevitMaterials.</span></span><span class="sig-name descname"><span class="pre">GetMaterialbyId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMaterials.GetMaterialbyId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a material element based on a material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of material to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A material if matching id was found. Otherwise nothing gets returned!</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Material</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitMaterials.GetMaterialNameById">
+<span class="sig-prename descclassname"><span class="pre">RevitMaterials.</span></span><span class="sig-name descname"><span class="pre">GetMaterialNameById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMaterials.GetMaterialNameById" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a material name based on a material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – Id of material of which the name is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The material name if matching id was found or the default value: ‘&lt;By Category&gt;’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitMaterials.GetMaterialReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitMaterials.</span></span><span class="sig-name descname"><span class="pre">GetMaterialReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMaterials.GetMaterialReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets material data ready for being written to file.</p>
+<ul class="simple">
+<li><p>HOSTFILE</p></li>
+<li><p>ID</p></li>
+<li><p>NAME</p></li>
+<li><p>and any parameter names and values attached to a material</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The fully qualified file path of Revit file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The material data in a nested list of string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 <section id="module-RevitMEPSystems">
 <span id="revit-mep-systems"></span><h2>Revit MEP Systems<a class="headerlink" href="#module-RevitMEPSystems" title="Permalink to this headline">¶</a></h2>
@@ -5783,7 +6270,7 @@ TODO: check these actually work…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedDuctTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedDuctTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedDuctTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all unused in duct type ids.</p>
+<dd><p>Gets all unused duct type ids.</p>
 <p>This method can be used to safely delete unused duct types:
 In the case that no duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one duct type definition to be in the model.</p>
 <dl class="field-list simple">
@@ -5802,7 +6289,7 @@ In the case that no duct instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedFlexDuctTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedFlexDuctTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedFlexDuctTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all unused in flex duct type ids.</p>
+<dd><p>Gets all unused flex duct type ids.</p>
 <p>This method can be used to safely delete unused flex duct types:
 In the case that no flex duct instance using any of the types is placed, this will return all but one type id since        Revit requires at least one flex duct type definition to be in the model.</p>
 <dl class="field-list simple">
@@ -5821,219 +6308,615 @@ In the case that no flex duct instance using any of the types is placed, this wi
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedConduitTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedConduitTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedConduitTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in conduit type ids. Note there are two major types:
-- Conduit with Fittings
-- Conduit without Fittings</p>
+<dd><p>Gets all unused conduit type ids.</p>
+<p>This method can be used to safely delete unused conduit types:
+In the case that no conduit instance using any of the types is placed, this will return all but one type id since        Revit requires at least one conduit type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedCableTrayTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCableTrayTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedCableTrayTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in cable tray type ids. Note there are two major types:
-- Cable Tray with Fittings
-- Cable Tray without Fittings</p>
+<dd><p>Gets all unused cable tray type ids.</p>
+<p>This method can be used to safely delete unused cable tray types:
+In the case that no cabl tray instance using any of the types is placed, this will return all but one type id since        Revit requires at least one cable tray type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedPipeTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedPipeTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedPipeTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in pipe type ids.</p>
+<dd><p>Gets all unused pipe type ids.</p>
+<p>This method can be used to safely delete unused pipe types:
+In the case that no pipe instance using any of the types is placed, this will return all but one type id since        Revit requires at least one pipe type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids representing conduit types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_DUCSTS">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_DUCSTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_DuctAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctTerminal,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_DUCSTS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of loadable built in family categories for duct related elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_CABLETRAYS">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CABLETRAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CableTrayFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_CABLETRAYS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of loadable built in family categories for cable tray related elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_CONDUITS">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CONDUITS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_ConduitFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_CONDUITS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of loadable built in family categories for conduit related elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_PIPES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_PIPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_PipeAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_PipeFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_PIPES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of loadable built in family categories for pipe related elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitMEPSystems.ROUTING_PREF_RULE_GROUP_TYPES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">ROUTING_PREF_RULE_GROUP_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Segments,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Elbows,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Junctions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Crosses,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Transitions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Unions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.MechanicalJoints,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Caps]</span></em><a class="headerlink" href="#RevitMEPSystems.ROUTING_PREF_RULE_GROUP_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of routing reference rule group types</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeId">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUniqueIdsOfUsedSymbolsFromSystemTypeId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeId" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties:
-- Cross
-- Elbow
-- MultiShapeTransition
-- Tap
-- Tee
-- Transition
-- Union</p>
+<dd><p>Gets list of unique symbol ids used in a single system type property.</p>
+<p>List can be empty if an exception during processing occured.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>systemTypeId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – MEP systemt type id (pipe, conduit, duct, cable tray)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in a system.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUniqueIdsOfUsedSymbolsFromSystemTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties:
-- Cross
-- Elbow
-- MultiShapeTransition
-- Tap
-- Tee
-- Transition
-- Union</p>
+<dd><p>Gets a list of unique symobol ids used in these MEP system type properties:</p>
+<ul class="simple">
+<li><p>Cross</p></li>
+<li><p>Elbow</p></li>
+<li><p>MultiShapeTransition</p></li>
+<li><p>Tap</p></li>
+<li><p>Tee</p></li>
+<li><p>Transition</p></li>
+<li><p>Union</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>systemTypeIds</strong> (<em>List Autodesk.Revit.DB.ElementId</em>) – List of MEP systemt type id belonging to pipe, conduit, duct or cable tray.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in mep systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInDuctTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInDuctTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInDuctTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties of duct types</p>
+<dd><p>Gets a list of unique symobol ids used in system type properties of duct types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in duct systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInFlexDuctTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInFlexDuctTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInFlexDuctTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties of flex duct types</p>
+<dd><p>Gets a list of unique symobol ids used in system type properties of flexc duct types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in flex duct systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInConduitTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInConduitTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInConduitTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties of conduit types</p>
+<dd><p>Gets a list of unique symobol ids used in system type properties of conduit types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in conduit systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInCableTrayTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInCableTrayTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInCableTrayTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties of cable tray types</p>
+<dd><p>Gets a list of unique symobol ids used in system type properties of cable tray types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in cable tray systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInPipeTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInPipeTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInPipeTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of unique symobol ids used in system type properties of pipe types</p>
+<dd><p>Gets a list of unique symobol ids used in system type properties of pipe types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of unique ids representing family symbols used in pipe systems.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForMEPSystemTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForMEPSystemTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catgeoryList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForMEPSystemTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symbol ids used in system types</p>
+<dd><p>Gets list of symbol ids belonging to provided categories loaded in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>catgeoryList</strong> (<em>list Autodesk.Revit.DB.BuiltInCategory</em>) – List of built in categories to filter symbols by.</p></li>
+<li><p><strong>systemTypeName</strong> (<em>str</em>) – Used in exception message to identify the mep system</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForDuctTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForDuctTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForDuctTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symobol ids of the following categories:
-BuiltInCategory.OST_DuctAccessory,
-BuiltInCategory.OST_DuctTerminal,
-BuiltInCategory.OST_DuctFitting</p>
+<dd><p>Gets list of symbol ids of the following categories:</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_DuctAccessory,</p></li>
+<li><p>BuiltInCategory.OST_DuctTerminal,</p></li>
+<li><p>BuiltInCategory.OST_DuctFitting</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForFlexDuctTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForFlexDuctTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForFlexDuctTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symobol ids of the following categories:
-BuiltInCategory.OST_DuctAccessory,
-BuiltInCategory.OST_DuctTerminal,
-BuiltInCategory.OST_DuctFitting
-(same as duct)</p>
+<dd><p>Gets list of symbol ids of the following categories:</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_DuctAccessory,</p></li>
+<li><p>BuiltInCategory.OST_DuctTerminal,</p></li>
+<li><p>BuiltInCategory.OST_DuctFitting</p></li>
+</ul>
+<p>TODO: flex duct and duct do not differentiate in terms of filtering…one function will get both</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForCableTrayTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForCableTrayTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForCableTrayTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symobol ids of the following categories:
-BuiltInCategory.OST_CableTrayFitting</p>
+<dd><p>Gets list of symbol ids of the following categories:</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_CableTrayFitting</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForConduitTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForConduitTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForConduitTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symobol ids of the following categories:
-BuiltInCategory.OST_ConduitFitting</p>
+<dd><p>Gets list of symbol ids of the following categories:</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_ConduitFitting</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForPipeTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForPipeTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForPipeTypesInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns list of symobol ids of the following categories:
-BuiltInCategory.OST_PipeAccessory,
-BuiltInCategory.OST_PipeFitting</p>
+<dd><p>Gets list of symbol ids of the following categories:</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_PipeAccessory,</p></li>
+<li><p>BuiltInCategory.OST_PipeFitting</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedDuctAndFlexDuctSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedDuctAndFlexDuctSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedDuctAndFlexDuctSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used duct symbol ids of categories
-BuiltInCategory.OST_DuctAccessory,
-BuiltInCategory.OST_DuctTerminal,
-BuiltInCategory.OST_DuctFitting</p>
+<dd><p>Gets all used duct and flex duct symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_DuctAccessory,</p></li>
+<li><p>BuiltInCategory.OST_DuctTerminal,</p></li>
+<li><p>BuiltInCategory.OST_DuctFitting</p></li>
+</ul>
+<p>Used: at least instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedDuctAndFlexDuctSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedDuctAndFlexDuctSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedDuctAndFlexDuctSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused duct symbol ids of categories
-BuiltInCategory.OST_DuctAccessory,
-BuiltInCategory.OST_DuctTerminal,
-BuiltInCategory.OST_DuctFitting</p>
+<dd><p>Gets all unused duct and flex duct symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_DuctAccessory,</p></li>
+<li><p>BuiltInCategory.OST_DuctTerminal,</p></li>
+<li><p>BuiltInCategory.OST_DuctFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedDuctAndFlexDuctSymbolIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all un used duct symbol ids of categories
-BuiltInCategory.OST_DuctAccessory,
-BuiltInCategory.OST_DuctTerminal,
-BuiltInCategory.OST_DuctFitting</p>
+<dd><p>Gets all unused duct and flex duct symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_DuctAccessory,</p></li>
+<li><p>BuiltInCategory.OST_DuctTerminal,</p></li>
+<li><p>BuiltInCategory.OST_DuctFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused duct symbols and families from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedCableTraySymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedCableTraySymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedCableTraySymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used duct symbol ids of categories
-BuiltInCategory.OST_CableTrayFitting</p>
+<dd><p>Gets all used cable tray symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_CableTrayFitting</p></li>
+</ul>
+<p>Used: at least instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedCableTraySymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCableTraySymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedCableTraySymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused duct symbol ids of categories
-BuiltInCategory.OST_CableTrayFitting</p>
+<dd><p>Gets all unused cable tray symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_CableTrayFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedCableTraySymbolIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCableTraySymbolIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedCableTraySymbolIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all un used duct symbol ids of categories
-BuiltInCategory.OST_CableTrayFitting</p>
+<dd><p>Gets all unused cable tray symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_CableTrayFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused cable tray symbols and families from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedConduitSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedConduitSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedConduitSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used conduit symbol ids of categories
-BuiltInCategory.OST_ConduitFitting</p>
+<dd><p>Gets all used conduit symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_ConduitFitting</p></li>
+</ul>
+<p>Used: at least instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedConduitSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedConduitSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedConduitSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused conduit symbol ids of categories
-BuiltInCategory.OST_ConduitFitting</p>
+<dd><p>Gets all unused conduit symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_ConduitFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedConduitSymbolIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedConduitSymbolIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedConduitSymbolIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all un used conduit symbol ids of categories
-BuiltInCategory.OST_ConduitFitting</p>
+<dd><p>Gets all unused conduit symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_ConduitFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused conduit symbols and families from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUsedPipeSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUsedPipeSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUsedPipeSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used pipe symbol ids of categories
-BuiltInCategory.OST_PipeAccessory,
-BuiltInCategory.OST_PipeFitting</p>
+<dd><p>Gets all used pipe symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_PipeAccessory,</p></li>
+<li><p>BuiltInCategory.OST_PipeFitting</p></li>
+</ul>
+<p>Used: at least instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedPipeSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedPipeSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedPipeSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused pipe symbol ids of categories
-BuiltInCategory.OST_PipeAccessory,
-BuiltInCategory.OST_PipeFitting</p>
+<dd><p>Gets all unused pipe symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_PipeAccessory,</p></li>
+<li><p>BuiltInCategory.OST_PipeFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedPipeSymbolIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedPipeSymbolIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedPipeSymbolIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>get all un used pipe symbol ids of categories
-BuiltInCategory.OST_PipeAccessory,
-BuiltInCategory.OST_PipeFitting</p>
+<dd><p>Gets all unused pipe symbol ids of categories</p>
+<ul class="simple">
+<li><p>BuiltInCategory.OST_PipeAccessory,</p></li>
+<li><p>BuiltInCategory.OST_PipeFitting</p></li>
+</ul>
+<p>Unused: not one instance per symbol is placed in the model.
+This method can be used to safely delete unused pipe symbols and families from the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of ids representing family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list  Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

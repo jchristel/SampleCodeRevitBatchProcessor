@@ -1,5 +1,7 @@
 '''
-This module contains a number of helper functions relating to Revit materials. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revit materials helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -38,30 +40,58 @@ import Autodesk.Revit.DB as rdb
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: header used in reports
 REPORT_MATERIALS_HEADER = ['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE']
 
 # --------------------------------------------- utility functions ------------------
 
-# returns all materials in a model
-# doc:   current model document
-def GetAllMaterials(doc):  
+def GetAllMaterials(doc): 
+    '''
+    Gets all materials in a model.
+
+    Filter by class.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: A filtered element collector of materials
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Material)
     return collector
 
-# returns a material element based on a material id
-# doc:  current model document
-# id:   id of material to be returned
 def GetMaterialbyId(doc, id):
+    '''
+    Gets a material element based on a material id.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param id: The id of material to be returned.
+    :type id: Autodesk.Revit.DB.ElementId
+
+    :return: A material if matching id was found. Otherwise nothing gets returned!
+    :rtype: Autodesk.Revit.DB.Material
+    '''
+
     mats = GetAllMaterials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
             return m
 
-# returns a material name based on a material id
-# doc:  current model document
-# id:   id of material name to be returned
 def GetMaterialNameById(doc, id):
+    '''
+    Gets a material name based on a material id.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param id: Id of material of which the name is to be returned.
+    :type id: Autodesk.Revit.DB.ElementId
+
+    :return: The material name if matching id was found or the default value: '<By Category>'
+    :rtype: str
+    '''
+
     name = '<By Category>'
     mats = GetAllMaterials(doc)
     for m in mats:
@@ -71,10 +101,24 @@ def GetMaterialNameById(doc, id):
     return name
 # ------------------------------------------------------- Material reporting --------------------------------------------------------------------
 
-# gets material ready for being printed to file
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
 def GetMaterialReportData(doc, revitFilePath):
+    '''
+    Gets material data ready for being written to file.
+
+    - HOSTFILE
+    - ID
+    - NAME
+    - and any parameter names and values attached to a material
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The fully qualified file path of Revit file.
+    :type revitFilePath: str
+    
+    :return: The material data in a nested list of string
+    :rtype: list of list of str
+    '''
+
     data = []
     mats = GetAllMaterials(doc)
     for mat in mats:

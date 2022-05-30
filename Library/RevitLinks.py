@@ -599,7 +599,7 @@ def GetRevitLinkTypeData(doc, revitLinkType):
 
 def GetRevitLinkReportData(doc, revitFilePath):
     '''
-    Gets shared parameter data ready for being printed to file.
+    Gets link data ready for being printed to file.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

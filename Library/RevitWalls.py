@@ -117,7 +117,6 @@ def SortWallTypesByFamilyName(doc):
     '''
     Returns a dictionary of all wall types in the model where key is the build in wall family name, values are ids of associated wall types.
 
-
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 

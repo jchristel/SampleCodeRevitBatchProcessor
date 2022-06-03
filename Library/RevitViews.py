@@ -522,7 +522,7 @@ def GetViewsInModel(doc, filter):
             views.append(v)
     return views
 
-def GetScheduleIdsNotOnSheets(doc):
+def GetSchedulesNotOnSheets(doc):
     '''
     Gets all schedules without an instance placed on a sheet.
 

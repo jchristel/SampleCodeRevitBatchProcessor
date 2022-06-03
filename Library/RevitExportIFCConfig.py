@@ -1,5 +1,7 @@
 ﻿'''
-This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 
 #
@@ -157,14 +159,13 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
 #-------------------------------------------- IFC EXPORT Revit 2020 -------------------------------------
 # need to check for new features in revit 2020
 
-# ifcVersion        which ifc version (2x3 etc...)
 def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
     
     This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
 
-    :param ifcVersion: The ifc version used for the export.
+    :param ifcVersion: The ifc version used for the export (2x3 etc...).
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
     :return: An IFCExportconfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration

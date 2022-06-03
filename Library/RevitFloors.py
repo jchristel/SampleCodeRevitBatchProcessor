@@ -1,5 +1,7 @@
 ﻿'''
-This module contains a number of helper functions relating to Revit floors. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revit floors helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -39,9 +41,12 @@ clr.ImportExtensions(System.Linq)
 #: header used in reports
 REPORT_FLOORS_HEADER = ['HOSTFILE', 'FLOORTYPEID', 'FLOORTYPENAME']
 
+#: Built in family name for standard floor
 FLOOR_FAMILY_NAME = 'Floor'
+#: Built in family name for a foundation slab
 FOUNDATION_SLAB_FAMILY_NAME = 'Foundation Slab'
 
+#: List of all Built in floor family names
 BUILTIN_FLOOR_TYPE_FAMILY_NAMES = [
     FLOOR_FAMILY_NAME,
     FOUNDATION_SLAB_FAMILY_NAME
@@ -62,6 +67,7 @@ def GetAllFloorTypesByCategory(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: A filtered element collector of floor types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
@@ -81,15 +87,28 @@ def GetFloorTypesByClass(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: A filtered element collector of floor types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
     return  rdb.FilteredElementCollector(doc).OfClass(rdb.FloorType)
 
-# collector   fltered element collector containing Floor type elments of family symbols representing in place families
-# dic         dictionary containing key: floor type family name, value: list of ids
 def BuildFloorTypeDictionary(collector, dic):
-    '''returns the dictionary passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    Keys are built in floor family type names.
+    TODO: This code repeats across a number of modules. Use generic instead!
+
+    :param collector: A filtered element collector containing floor types.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: A dictionary containing key: floor type family name, value: list of ids belonging to that type.
+    :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+
+    :return: A dictionary containing key: built in floor type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -98,8 +117,20 @@ def BuildFloorTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortFloorTypesByFamilyName(doc):
+    '''
+    Returns a dictionary containing all floor types in the model.
+
+    Key values are as per BUILTIN_FLOOR_TYPE_FAMILY_NAMES.
+    TODO: This code repeats across a number of modules. Use generic instead!
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: floor type family name, value: list of ids.
+    :rtype: dic { str: [Autodesk.Revit.DB.ElementId]}
+    '''
+
     # get all floor Type Elements
     wts = GetFloorTypesByClass(doc)
     # get all floor types including in place floor families
@@ -111,42 +142,104 @@ def SortFloorTypesByFamilyName(doc):
 
 # -------------------------------- none in place Floor types -------------------------------------------------------
 
-# doc   current model document
 def GetAllFloorInstancesInModelByCategory(doc):
-    ''' returns all Floor elements placed in model...ignores in foundation slabs'''
+    '''
+    Gets all floor elements placed in model...ignores in foundation slabs.
+
+    Filters by builtin category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing floor instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Floors).WhereElementIsNotElementType()
-    
-# doc   current model document
+
 def GetAllFloorInstancesInModelByClass(doc):
-    ''' returns all Floor elements placed in model...ignores in place'''
+    '''
+    Gets all floor elements placed in model...ignores in place families of category floor.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing floor instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Floor).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllFloorTypeIdsInModelByCategory(doc):
-    ''' returns all Floor element types available placed in model '''
+    '''
+    Returns all Floor element types available in model.
+
+    Filters by builtin category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing floor types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colCat = GetAllFloorTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current model document
 def GetAllFloorTypeIdsInModelByClass(doc):
-    ''' returns all Floor element types available placed in model '''
+    '''
+    Returns all Floor element types available in model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing floor types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colClass = GetFloorTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
-# doc   current document
 def GetUsedFloorTypeIds(doc):
-    ''' returns all used in Floor type ids '''
+    '''
+    Returns all used in Floor type ids.
+
+    Filters by builtin category.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing not used floor types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+
+    TODO: check for more geric list comparison and remove this function.
+
+    :param famTypeIds: List of family type ids to check.
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: Reference list of ids.
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if any id from famTypeIds is not in unUsedTypeIds.
+    :rtype: bool
+    '''
+    
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -154,12 +247,28 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             break
     return match
  
-# doc   current document
 def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
-    ''' returns all unused Floor type ids for:
+    '''
+    Gets all unused floor type id's.
+    
+    This method can be used to safely delete unused wall types:
+    In the case that no wall instance using any of the types is placed this will return all but one type id since\
+        Revit requires at least one wall type definition to be in the model.
+
+    Filters by class:
+
     - Floor
     - foundation slab
-    it will therefore not return any in place family types ...'''
+
+    It will therefore not return any in place family types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing not used floor types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllFloorTypeIdsInModelByClass, 0)
     # make sure there is at least on Floor type per system family left in model
@@ -173,36 +282,80 @@ def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
  
 # -------------------------------- In place Floor types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceFloorFamilyInstances(doc):
-    ''' returns all instances in place families of category floor'''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances of in place families of category floor.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing floor family instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Floors)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceFloorTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category floor'''
+    '''
+    Gets type ids off all available in place families symbols (types) of category floor.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing in place floor symbols (types).
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Floors)
     return ids
 
-# doc   current document
 def GetUsedInPlaceFloorTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place family symbol (type) ids.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing in place floor symbols (types).
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceFloorTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all used in place family symbol (type) ids.
+
+    Unused: Not one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing in place floor symbols (types).
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceFloorTypeIdsInModel, 0)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceFloorIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place floor familis which can be purged'''
+    '''
+    Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be savely deleted from the model.
+
+    This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one\
+        in place wall defintion in the model.
+    
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in place floor types and families.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceFloorTypeIds)
     return ids

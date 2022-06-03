@@ -1,5 +1,7 @@
 '''
-This module contains a number of helper functions relating to Revit families. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revit families helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -57,10 +59,13 @@ def LoadFamily(doc, familyFilePath):
     Will load/ reload family provided in in path. By default the parameter values in the project file will be overwritten
     with parameter values in family.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param str familyFilePath: The fully qualified file path of the family to be loaded.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param familyFilePath: The fully qualified file path of the family to be loaded.
+    :type familyFilePath: str
     :raise: None
-    :return Result: 
+    
+    :return: 
         Result class instance.
         Reload status (bool) returned in result.status.
         Reload status returned from Revit in result.message property.
@@ -68,6 +73,7 @@ def LoadFamily(doc, familyFilePath):
         On exception
         Reload.status (bool) will be False
         Reload.message will contain the exception message
+    :rtype: :class:`.Result`
     '''
 
     result = res.Result()
@@ -100,8 +106,8 @@ def LoadFamily(doc, familyFilePath):
 
 # ---------------- preset builtin category lists of categories which represent loadable families used in filtering
 
-# this list contains 3D element categories and is used in obsolete revit family purge function
-# any revit category commented out with note 'purged else where' can be found in list 'catsLoadableThreeDOther'
+#: This list contains 3D element categories and is used in obsolete revit family purge function
+#: any revit category commented out with note 'purged else where' can be found in list 'catsLoadableThreeDOther'
 catsLoadableThreeD = List[rdb.BuiltInCategory] ([
     #rdb.BuiltInCategory.OST_CableTrayFitting,  purged else where
     rdb.BuiltInCategory.OST_Casework,
@@ -145,8 +151,8 @@ catsLoadableThreeD = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_Windows
 ])
 
-# contains 3D family categories which needed specific purge code, rather then checking for unplaced family instances
-# i.e. built in revit type settings
+#: Contains 3D family categories which needed specific purge code, rather then checking for unplaced family instances.
+#: i.e. built in revit type settings
 catsLoadableThreeDOther = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CableTrayFitting,
     rdb.BuiltInCategory.OST_ConduitFitting,
@@ -161,8 +167,8 @@ catsLoadableThreeDOther = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_StairsRailingBaluster
 ])
 
-# this list contains 2D element categories and is used in obsolete revit family purge function
-# any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
+#: This list contains 2D element categories and is used in obsolete revit family purge function.\
+#: any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
 catsLoadableTags = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CurtainWallPanelTags,
     rdb.BuiltInCategory.OST_AreaTags,
@@ -250,8 +256,8 @@ catsLoadableTags = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_WindowTags
 ])
 
-# contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
-# i.e. built in revit type settings
+#: Contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
+#: i.e. built in revit type settings
 catsLoadableTagsOther = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CalloutHeads,
     rdb.BuiltInCategory.OST_ElevationMarks,
@@ -270,11 +276,14 @@ def GetFamilySymbols(doc, cats):
     '''
     Filters all family symbols (Revit family types) of given built in categories from the Revit model.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param ICollection cats: 
-        ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cats: ICollection of Autodesk.Revit.DB.BuiltInCategory values.
+    :type cats: ICollection
         :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
-    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.Element matching filter.
+
+    :return: A collector of Autodesk.Revit.DB.Element matching filter.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
     elements = []
@@ -289,11 +298,14 @@ def GetFamilyInstancesByBuiltInCategories(doc, cats):
     '''
     Filters all family instances of given built in categories from the Revit model.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param ICollection cats: 
-        ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cats: ICollection of Autodesk.Revit.DB.BuiltInCategory values:
+    :type cats: ICollection
         :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
-    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.Element matching filter.
+    
+    :return: A collector of Autodesk.Revit.DB.Element matching filter.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
     
     elements = []
@@ -308,9 +320,13 @@ def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
     '''
     Filters all family instances of a single given built in category from the Revit model.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param Autodesk.Revit.DB.BuiltInCategory builtinCat: single revit builInCategory Enum value
-    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param builtinCat: single revit builInCategory Enum value.
+    :type builtinCat: Autodesk.Revit.DB.BuiltInCategory
+    
+    :return: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
     filter = rdb.ElementCategoryFilter(builtinCat)
@@ -323,8 +339,11 @@ def GetAllLoadableFamilies(doc):
     
     Note: slow filter due to use of lambda and cast to list.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :return list: A list of Autodesk.Revit.DB.Family matching filter.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of families matching filter.
+    :rtype: list Autodesk.Revit.DB.Family
     '''
 
     collector = rdb.FilteredElementCollector(doc)
@@ -337,9 +356,13 @@ def GetAllInPlaceFamilies(doc):
     
     Note: slow filter due to use of lambda and cast to list
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :return list: A list of Autodesk.Revit.DB.Family matching filter.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of families matching filter.
+    :rtype: list Autodesk.Revit.DB.Family
     '''
+
     collector = rdb.FilteredElementCollector(doc)
     families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
@@ -350,11 +373,15 @@ def GetSymbolsFromType(doc, typeIds):
     '''
     Get all family types belonging to the same family as types passt in.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param list of Autodesk.Revit.DB.ElementId typeIds: - list of element id's representing family symbols (fmaily types)
-    :returns dictionary:
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param typeIds: - list of element id's representing family symbols (fmaily types)
+    :type typeIds: list of Autodesk.Revit.DB.ElementId
+
+    :return: dictionary:
         where key is the family id as Autodesk.Revit.DB.ElementId
         value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId belonging to the family
+    :rtype: dic {Autodesk.Revit.DB.ElementId: list[Autodesk.Revit.DB.ElementId]}
     '''
 
     fams = {}
@@ -373,10 +400,12 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
     '''
     Filters all family instances of a single given family symbol (type).
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param Autodesk.Revit.DB.ElementId typeId: The symbol (type) id
-    :return Autodesk.Revit.DB.FilteredElementCollector: 
-        A collector of Autodesk.Revit.DB.FamilyInstance matching filter
+
+    :return: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
     pvpSymbol = rdb.ParameterValueProvider(rdb.ElementId( rdb.BuiltInParameter.SYMBOL_ID_PARAM ) )
@@ -392,11 +421,13 @@ def FamilyAllTypesInUse(famTypeIds, usedTypeIds):
     
     Check is done by comparing entries of famTypeIds with usedTypeIds.
     
-    :param Autodesk.Revit.DB.ElementId famTypeIds: list of symbol(type) ids of a family
-    :param Autodesk.Revit.DB.ElementId usedTypeIds: list of symbol(type) ids in use in a project
-    :return bool:
-        False if a single symbol id contained in list famTypeIds has a match in list usedTypeIds
-        otherwise True
+    :param famTypeIds: list of symbol(type) ids of a family
+    :type famTypeIds: list Autodesk.Revit.DB.ElementId
+    :param  usedTypeIds: list of symbol(type) ids in use in a project
+    :type usedTypeIds: list Autodesk.Revit.DB.ElementId
+
+    :return: False if a single symbol id contained in list famTypeIds has a match in list usedTypeIds, otherwise True.
+    :rtype: bool
     '''
 
     match = True
@@ -410,10 +441,13 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
     ''' 
     Filters family symbol (type) ids off all available in place families of single given built in category.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param Autodesk.Revit.DB.BuiltInCategory famBuiltInCategory: built in revit category 
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param famBuiltInCategory: built in revit category 
+    :type famBuiltInCategory: Autodesk.Revit.DB.BuiltInCategory
+
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     # filter model for family symbols of given built in category
@@ -435,12 +469,15 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     in terms of purging its faster to delete an entire family definition rather then deleting it's symbols first and then the 
     definition.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param function unusedTypeGetter: 
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param unusedTypeGetter: 
         A function returning ids of unused symbols (family types) as a list. 
         It requires as argument the current model document only.
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols and or family id's matching filter.
+    :type unusedTypeGetter: function (doc) -> list Autodeks.Revit.DB.ElementId
+
+    :return: A list of Element Ids representing the family symbols and or family id's matching filter.
+    :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     unusedIds = []
@@ -468,13 +505,13 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     '''
     Filters family symbols belonging to list of built in categories passt in.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param ICollection cats: 
-        ICollection of Autodesk.Revit.DB.BuiltInCategory values:
-        :cats sample: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
-    
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param ICollection cats: ICollection of Autodesk.Revit.DB.BuiltInCategory values.
+    :type cats: cats = List[rdb.BuiltInCategory] ([rdb.BuiltInCategory.OST_Furniture, rdb.BuiltInCategory.OST_Parking])
+
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
@@ -502,10 +539,11 @@ def GetAllNonSharedFamilySymbolIds(doc):
     '''
     Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
@@ -518,16 +556,19 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
     '''
     Filters types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param function typeIdGetter: 
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param typeIdGetter: 
         A function returning ids of symbols (family types) as a list, requires as argument: 
         the current model doc, 
         ICollection of built in categories, 
         bool: exclude shared families
-    :param int useType: 0, no dependent elements (not used); 1: has dependent elements(is in use)
-    
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :type typeIdGetter: function (doc, ICollection, bool) -> list[Autodesk.Revit.DB.ElementId]
+    :param useType: 0, no dependent elements (not used); 1: has dependent elements(is in use)
+    :type useType: int
+
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     # get all types elements available
@@ -546,11 +587,13 @@ def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
     '''
     Filters unused non shared family (symbols) type ids in model.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
-    :param bool excludeSharedFam: Default is True (exclude any shared families from filter result)
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param excludeSharedFam: Default is True (exclude any shared families from filter result)
+    :type excludeSharedFam: bool
 
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
@@ -560,10 +603,11 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
     '''
     Filters unused, non shared and in place family (symbols) type ids in model which can be purged from the model.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     
-    :return list:
-        A list of Autodesk.Revit.DB.ElementId representing the family symbols matching filter.
+    :return: A list of Element Ids representing the family symbols matching filter.
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
@@ -571,16 +615,18 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
 
 # -------------------------- family elements  ----------------
 
-# types of lines in family available
+#: Types of lines in family available
 LINE_NAMES = ['Model Lines', 'Symbolic Lines']
 
 def GetAllGenericFormsInFamily(doc):
     '''
     Filters all generic forms (3D extrusions) in family.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
-    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.GenericForm. 
+    :return: A collector of Autodesk.Revit.DB.GenericForm.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.GenericForm)
@@ -591,12 +637,15 @@ def GetAllCurveBasedElementsInFamily(doc):
     Filters all curve based elements in family.
 
     These are:
+
         - Symbolic Lines
         - Model Lines
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
-    :return list: A list of Autodesk.Revit.DB.CurveElement.
+    :return: A list of Autodesk.Revit.DB.CurveElement.
+    :rtype: list Autodesk.Revit.DB.CurveElement
     '''
 
     elements = []
@@ -610,9 +659,12 @@ def GetAllModelTextElementsInFamily(doc):
     '''
     Filters all model text elements in family.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     
-    :return Autodesk.Revit.DB.FilteredElementCollector: A collector of Autodesk.Revit.DB.ModelText. 
+    :return: A collector of Autodesk.Revit.DB.ModelText.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    
     '''
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ModelText)
@@ -625,12 +677,14 @@ def SetRefPlanesToNotAReference(doc):
     ''' 
     This will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
     
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     
-    :return Result: 
+    :return: 
         result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
         result.message: one row entry per reference plane requiring reference type change
         result.result: not used
+    :rtype: :class:`.Result`
     '''
 
     '''    
@@ -683,12 +737,14 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     ''' 
     This will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
 
-    :param Autodesk.Revit.DB.Document doc: Current Revit model document.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     
-    :return Result: 
+    :return: 
         result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
         result.message: one row entry per curve element requiring reference type change
         result.result: not used
+    :rtype: :class:`.Result`
     '''
     
     '''

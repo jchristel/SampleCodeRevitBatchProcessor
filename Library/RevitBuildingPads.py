@@ -42,9 +42,9 @@ clr.ImportExtensions(System.Linq)
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_BUILDINGPAD_HEADER = ['HOSTFILE', 'BUILDINGPADTYPEID', 'BUILDINGPADTYPENAME']
-
+#: Built in family name for pad
 BASIC_BUILDINGPAD_FAMILY_NAME = 'Pad'
-
+#: List of all Built in pad family names
 BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
     BASIC_BUILDINGPAD_FAMILY_NAME
 ]

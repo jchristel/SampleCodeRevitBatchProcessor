@@ -1,5 +1,7 @@
 '''
-This module contains a number of helper functions relating to Revit geometry extraction. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Revit geometry extraction helper functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -31,9 +33,29 @@ import DataGeometry as dGeometry
 
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):
+    '''
+    Returns revit point as a string.
+
+    :param point: A revit point.
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: String in format 'X:Y:Z'
+    :rtype: str
+    '''
+
     return str(point.X) + ' : ' + str(point.Y) + ' : ' + str(point.Z)
     
 def GetEdgeAsString(edge):
+    '''
+    Returns a revit edge as a string.
+
+    :param edge: A revit edge.
+    :type edge: Autodesk.Revit.DB.Edge 
+
+    :return: String where each row represents a point on the edge. 
+    :rtype: str
+    '''
+
     returnValue = ''
     for p in edge.Tessellate():
         returnValue = returnValue + '\n' + GetPointAsString (p)
@@ -41,59 +63,104 @@ def GetEdgeAsString(edge):
 
 # ---------------------------- math utility ----------------------------
 
-# a     float
-# b     float
 def IsClose(a, b, rel_tol=1e-09, abs_tol=0.0):
     '''
-    compares two floats with a tolerance. Returns True if they are close enough, otherwise False
+    Compares two floats with a tolerance. Returns True if they are close enough, otherwise False
+    
     refer to: https://stackoverflow.com/questions/5595425/what-is-the-best-way-to-compare-floats-for-almost-equality-in-python
+
+    :param a: A float
+    :type a: float
+    :param b: A float
+    :type b: flaot
+    :param rel_tol: Relative tolerance used to compare the two floats, defaults to 1e-09
+    :type rel_tol: float, optional
+    :param abs_tol: Absolute tolerance used to compare the two floats, defaults to 0.0
+    :type abs_tol: float, optional
+
+    :return: Returns True if they are close enough to be considered equal, otherwise False
+    :rtype: bool
     '''
+
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
-# p1         Revit XYZ point
-# p2         Revit XYZ point
 def ArePointsIdentical(p1, p2):
-    ''' 
-    compares the X,Y,Z values of a revit point and returns True if they are the same
-    returns False if they are not the same
     '''
+    Compares the X,Y,Z values of two revit point and returns True if they are the same, otherwise False
+    
+    :param p1: A revit point.
+    :type p1: Autodesk.Revit.DB.XYZ
+    :param p2: A revit point.
+    :type p2: Autodesk.Revit.DB.XYZ
+
+    :return: True if they are the same, otherwise False.
+    :rtype: bool
+    '''
+
     if (IsClose(p1.X,p2.X) and IsClose(p1.Y, p2.Y) and IsClose(p1.Z,p2.Z)):
         return True
     else:
         return False
 
-# points        collection of Revit  XYZ points
-# point         Revit XYZ point
 def CheckDuplicatePoint(points, point):
     '''
-    Checks whether a collection contains a given point and returns True if that is the case
+    Checks whether a collection of points contains another given point and returns True if that is the case.
+
+    :param points: List of revit points
+    :type points: list Autodesk.Revit.DB.XYZ
+    :param point: A revit point.
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: True if point is in collection, otherwise False.
+    :rtype: bool
     '''
+
     for p1 in points:
         if(ArePointsIdentical(p1, point)):
             return True
     return False
 
-# point         Revit XYZ point
 def GetPointAsDoubles(point):
     '''
-    returns a revit XYZ as a list of doubles in order x,y,z
+    Convertes a revit XYZ to a list of doubles in order x,y,z.
+
+    :param point: A revit point.
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: List of doubles in order of x,y,z
+    :rtype: list double
     '''
+
     return [point.X, point.Y, point.Z]
 
-# point         Revit XYZ point
 def FlattenXYZPoint(point):
     '''
-    flattens a XYZ pint to a UV by just omitting the Z value
+    Flattens a XYZ point to a UV by omitting the Z value of the XYZ.
+
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
+
+    :param point: A revit point.
+    :type point: Autodesk.Revit.DB.XYZ
+
+    :return: A 2D point (UV)
+    :rtype:  Autodesk.Revit.DB.UV
     '''
+
     return rdb.UV( point.X, point.Y )
 
-# polygon         list of Revit XYZ points
 def FlattenXYZPointList(polygon):
     '''
-    flattens a list of XYZ pint to a list of UV points by just omitting the Z value
+    Flattens a list of XYZ poins to a list of UV points by omitting the Z value of each XYZ.
+
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
+
+    :param polygon: list of XYZ points
+    :type polygon: list Autodesk.Revit.DB.XYZ
+    
+    :return: list of UV points
+    :rtype: list Autodesk.Revit.DB.UV
     '''
+
     z = polygon[0].Z;
     a = []
     for p in polygon :
@@ -103,12 +170,19 @@ def FlattenXYZPointList(polygon):
         a.append( FlattenXYZPoint( p ) )
     return a
 
-# polygon         list of list of Revit XYZ points representing multiple polygons
 def FlattenXYZPointListOfLists(  polygons ):
     '''
-    flattens a list of lists of XYZ pint to a list of UV points by just omitting the Z value
+    Flattens a list lists of XYZ poins to a list of lists of UV points by omitting the Z value of each XYZ.
+
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
+
+    :param polygon: list of lists of XYZ points
+    :type polygon: list [list Autodesk.Revit.DB.XYZ]
+    
+    :return: list of lists of UV points
+    :rtype: list [list Autodesk.Revit.DB.UV]
     '''
+    
     z = polygons[0][0].Z
     a = []
     for polygon in polygons:
@@ -121,29 +195,43 @@ def FlattenXYZPointListOfLists(  polygons ):
 
 def GetCoordinateSystemTranslationAndRotation(doc):
     '''
-    returns then translation as a 1 x 3 matrix and the rotation as a 3 x 3 matrix of the shared cordinate system active
-    in document
+    Returns the rotation as a 3 x 3 matrix and the translation as a 1 x 3 matrix of the shared coordinate system active in document.
+
+    :param doc: _description_
+    :type doc: _type_
+
+    :return: 3 x 3 matrix describing rotation, 1 x 3 matrix describing translation  
+    :rtype: list (3) [list(3) int], list [int]
     '''
+
     plAtive = doc.ActiveProjectLocation
+    # get the inverse because we need to go back to origin
     totalTransform = plAtive.GetTotalTransform().Inverse
     nBasisX = GetPointAsDoubles(totalTransform.BasisX)
     nBasisY = GetPointAsDoubles(totalTransform.BasisY)
     nBasisZ = GetPointAsDoubles(totalTransform.BasisZ)
     nOrigin = GetPointAsDoubles(totalTransform.Origin)
     return [nBasisX, nBasisY, nBasisZ],nOrigin
-    pass
 
 # --------------------------------------- is point in polygon ---------------------------------------
 # from  https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
 # ---------------------------------------------------------------------------------------------------
 
-# vertex        Revit UV element
-# p             Revit UV point
 def GetQuadrant(vertex,  p ):
     '''
-    Determine the quadrant of a polygon vertex relative to the test point.
+    Determines the quadrant of a polygon vertex relative to the test point.
+
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
+
+    :param vertex: Revit UV element describing a vertex
+    :type vertex: Autodesk.Revit.DB.UV
+    :param p: Revit UV point
+    :type p: Autodesk.Revit.DB.UV
+
+    :return: An integer of range 0 - 4 describing the quadrant.
+    :rtype: int
     '''
+
     returnValue = None
     if(vertex.U > p.U):
         if( vertex.V > p.V ):
@@ -157,13 +245,21 @@ def GetQuadrant(vertex,  p ):
             returnValue = 2
     return returnValue
 
-# p             Revit UV point
-# q             Revit UV point
-# y             double
 def X_intercept(p, q, y ):
     '''
     Determine the X intercept of a polygon edge with a horizontal line at the Y value of the test point.
+
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
+
+    :param p: Revit UV point
+    :type p: Autodesk.Revit.DB.UV
+    :param q: Revit UV point
+    :type q: Autodesk.Revit.DB.UV
+    :param y: _description_
+    :type y: double
+
+    :return: _description_
+    :rtype: double
     '''
     if(0 != ( p.V - q.V )):
         #print('unexpected horizontal segment')
@@ -175,7 +271,19 @@ def X_intercept(p, q, y ):
 def AdjustDelta(delta, vertex, next_vertex, p ):
     '''
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
+
+    :param delta: _description_
+    :type delta: _type_
+    :param vertex: _description_
+    :type vertex: _type_
+    :param next_vertex: _description_
+    :type next_vertex: _type_
+    :param p: _description_
+    :type p: _type_
+    :return: _description_
+    :rtype: _type_
     '''
+
     returnvalue = delta
     # make quadrant deltas wrap around:
     if( delta == 3):
@@ -189,13 +297,26 @@ def AdjustDelta(delta, vertex, next_vertex, p ):
         if( X_intercept( vertex, next_vertex, p.V ) > p.U ):
             returnvalue = -delta
     return returnvalue
-
-# polygon       Revit UVArray element
-# point         Revit UV element
+      
 def IsPointWithinPolygon(polygon, point):
     '''
+    Checks whether a point is within a polygon.
+
     https://thebuildingcoder.typepad.com/blog/2010/12/point-in-polygon-containment-algorithm.html
+    odd number of windings rule:
+    if (angle & 4) return INSIDE else return OUTSIDE
+    non-zero winding rule:
+    if (angle != 0) return INSIDE else return OUTSIDE
+
+    :param polygon: A polygon
+    :type polygon: list of Autodesk.Revit.DB.UV
+    :param point: A point
+    :type point: Autodesk.Revit.DB.UV
+
+    :return: Refer winding rules above.
+    :rtype: bool
     '''
+
     # initialize
     quad = GetQuadrant(polygon[ 0 ], point )
     angle = 0
@@ -230,12 +351,19 @@ def IsPointWithinPolygon(polygon, point):
 
 # --------------------------------------- END --------------------------------------------------
 
-# UVpoints        list of UV points defining a polygon
 def GetSignedPolygonArea( UVpoints ):
     '''
-    returns the area of a signed UV polygon
+    Calculates the area of a signed UV polygon.
+
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
+
+    :param UVpoints: list of points defining the polygon.
+    :type UVpoints: list Autodesk.Revit.DB.UV
+
+    :return: The area of the polygon.
+    :rtype: double
     '''
+
     n = len(UVpoints)
     sum = UVpoints[0].U * ( UVpoints[1].V - UVpoints[n - 1].V )
     for i in range(1, n - 1):
@@ -243,11 +371,17 @@ def GetSignedPolygonArea( UVpoints ):
     sum += UVpoints[n - 1].U * ( UVpoints[0].V - UVpoints[n - 2].V );
     return 0.5 * sum
 
-# edgeArrays      Revit EdgeArrayArray
 def ConvertEdgeArraysIntoListOfPoints(edgeArrays):
     '''
-    returns a list of list of revit XYZ points representing the edges passt in
+    Convertes an edge array into a list of list of revit XYZ points.
+
+    :param edgeArrays: A revit edge array.
+    :type edgeArrays: Autodesk.Revit.DB.EdgeArrayArray ( no not a spelling mistake :) )
+
+    :return: A List of list of revit XYZ points.
+    :rtype: list of list Autodesk.Revit.DB.XYZ
     '''
+
     polygons = []
     for loop in edgeArrays:
         vertices = []
@@ -266,22 +400,37 @@ def ConvertEdgeArraysIntoListOfPoints(edgeArrays):
         polygons.append(vertices)
     return polygons
 
-# edge          Revit Edge objectS
 def GetEdgePoints(edge):
     '''
-    returns the Revit XYZ points defining an edge (curves get tesselated!)
+    Retrieves the revit XYZ points defining an edge (curves get tesselated!)
+
+    :param edge: An edge of a solid.
+    :type edge: Autodesk.Revit.DB.Edge 
+
+    :return: A list of revit XYZ points.
+    :rtype: list Autodesk.Revit.DB.XYZ
     '''
+
     points = []
     for p in  edge.Tessellate():
         points.append(p)
     return points
 
-# doc                   current revit document
-# dgObject              a data geometry object
 def ConvertXYZInDataGeometry(doc, dgObject):
     '''
-    converts revit XYZ objects to groups of doubles and populates translation and rotation matrix data of coordinate system information
+    Converts revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops\
+        and stores them in new data geometry obejct. It also populates translation and rotation matrix data of\
+            coordinate system information.
+
+    :param doc: _description_
+    :type doc: _type_
+    :param dgObject: A data geometry object.
+    :type dgObject: :class:`.DataGeometry`
+    
+    :return: A data geometry object.
+    :rtype: :class:`.DataGeometry`
     '''
+
     dgeo = dGeometry.DataGeometry()
     outerLoop = []
     for xyzPoint in dgObject.outerLoop:
@@ -300,12 +449,19 @@ def ConvertXYZInDataGeometry(doc, dgObject):
     dgeo.rotationCoord, dgeo.translationCoord = GetCoordinateSystemTranslationAndRotation(doc)
     return dgeo
 
-# edges         list of Revit Edge objects
-# edge          Revit Edge objectS
 def CheckDuplicateEdge(edges, edge):
     '''
-    Checks whether a collection contains a given edge and returns True if that is the case
+    Checks whether a collection contains a given edge and returns True if that is the case.
+
+    :param edges: List of edges toi check against.
+    :type edges: list of Autodesk.Revit.DB.Edge
+    :param edge: An edge
+    :type edge: Autodesk.Revit.DB.Edge
+
+    :return: True if edge is already in collection, otherwise False.
+    :rtype: bool
     '''
+
     flagOverAll = False
     compPoints = GetEdgePoints(edge)
     if(len(edges) > 0):
@@ -325,20 +481,30 @@ def CheckDuplicateEdge(edges, edge):
         pass # flag is already False
     return flagOverAll
         
-# solid         a Revit Solid object
 def CheckSolidIsZeroHeight(solid):
-    ''' 
-    returns False if points collection of a solid has multiple z values, 
-    returns True if only one Z value in points collection (2D solid...??)
     '''
+    Checks if points making up a solid have multiple Z values.
+
+    :param solid: A revit solid object.
+    :type solid: Autodesk.Revit.DB.Solid
+
+    :return: False if points collection of a solid has multiple z values, True if only one Z value in points collection (2D solid...??)
+    :rtype: bool
+    '''
+    
     return  CheckEdgesAreZeroHeight(solid.Edges)
 
-# edges         a list of Revit edge elements
 def CheckEdgesAreZeroHeight(edges):
-    ''' 
-    returns False if points collection of a edges has multiple z values, 
-    returns True if only one Z value in points collection (2D solid...??)
     '''
+    Checks if points making up a edges have multiple Z values.
+
+    :param edges: A list of edges.
+    :type edges: list Autodesk.Revit.DB.Edge
+
+    :return: False if points collection of a edges has multiple z values, True if only one Z value in points collection (2D edges...??)
+    :rtype: bool
+    '''
+
     lowestZ = 0.0
     counter = 0
     for edge in edges:
@@ -352,18 +518,30 @@ def CheckEdgesAreZeroHeight(edges):
             counter = counter + 1
     return True
 
-# solid         a Revit Solid element
 def GetLowestZFromSolidsPointCollection(solid):
-    ''' 
-    returns the lowest Z value in a solids point collection
     '''
+    Gets the lowest Z value in a solids point collection.
+
+    :param solid: A solid.
+    :type solid: Autodesk.Revit.DB.Solid
+
+    :return: The lowest Z value of any point in the solids vertex collection.
+    :rtype: double
+    '''
+    
     return GetLowestZFromSolidsPointCollection(solid.Edges)
 
-# edges         a list of Revit edge elements
 def GetLowestZFromEdgesPointCollection(edges):
-    ''' 
-    returns the lowest Z value in a solids point collection
     '''
+    Gets the lowest Z value in a edges collection
+
+    :param edges: A list of edges.
+    :type edges: list Autodesk.Revit.DB.Edge
+
+    :return: The lowest Z value of any point in the edges vertex collection.
+    :rtype: double
+    '''
+
     lowestZ = 0.0
     counter = 0
     for edge in edges:
@@ -377,34 +555,57 @@ def GetLowestZFromEdgesPointCollection(edges):
             counter = counter + 1 
     return lowestZ
 
-# edge1         Revit edge element
-# edge2         Recit edge element
 def EdgesAreConnected(edge1, edge2):
     '''
-    returns true if the two edges passt in share at least one point
+    Checks whether edges are connected by comparing their points. If there is an identical point in both\
+        then they are connected.
+
+    Revit solids dont have crossing edges!
+
+    :param edge1: An edge.
+    :type edge1: Autodesk.Revit.DB.Edge
+    :param edge2: Another edge.
+    :type edge2: Autodesk.Revit.DB.Edge
+
+    :return: _description_
+    :rtype: bool
     '''
+
     for p1 in edge1.Tessellate():
         for p2 in edge2.Tessellate():
             if (ArePointsIdentical(p1, p2)):
                 return True
     return False
 
-# solid          a Revit solid element
 def GetFacesSortedByAreaFromSolid(solid):
     '''
-    returns all faces from a solid sorted descending from biggest to smallest by area
+    Returns all faces from a solid sorted descending from biggest to smallest by area.
+
+    :param solid: A solid.
+    :type solid: Autodesk.Revit.DB.Solid
+
+    :return: A list of faces, sorted biggest to smallest by area.
+    :rtype: list Autodesk.Revit.DB.Face
     '''
+
     fl = []
     for face in solid.Faces:
         fl.append(face)
     return sorted(fl, key=lambda x: x.Area, reverse=True)
 
-# faces         a list of Revit faces
 def PairFacesByArea(faces):
     '''
-    returns a list of lists of area pairs
-    where a pair are areas with the same measured area
+    Returns a list of lists of face pairs, where a nested list contains faces with the same measured area.
+    
+    Sample would be a ceiling solid. The top and bottom face of that ceiling would be an area pair.
+
+    :param faces: A list of faces.
+    :type faces: list Autodesk.Revit.DB.Face
+
+    :return: A list of lists of faces.
+    :rtype: list of list Autodesk.Revit.DB.Face
     '''
+
     returnValue = []
     # duplicate faces list since it will be manipulated
     copyFaces = list(faces)
@@ -424,11 +625,17 @@ def PairFacesByArea(faces):
             flag = False
     return returnValue
                     
-# facePairs     list of list of Revit faces
 def GetFacesWithLowestZFromPairs(facePairs):
     '''
-    returns the face with the lowest Z value from each pairing
+    Gets the face with the lowest Z value from list of faces.
+
+    :param facePairs: A list of lists of face pairs, where a nested list contains faces with the same measured area.
+    :type facePairs: list of list Autodesk.Revit.DB.Face
+
+    :return: A list of faces.
+    :rtype: list Autodesk.Revit.DB.Face
     '''
+
     faces = []
     for faceP in facePairs:
         lowestZ = 0.0
@@ -447,18 +654,22 @@ def GetFacesWithLowestZFromPairs(facePairs):
         faces.append(currentFace)
     return faces
 
-# faces         a list of faces
 def GetUniqueHorizontalFaces(faces):
     '''
-    filters out any horizontal faces from list of faces past in
-    will also further filter by: faces with the same area only the face with the lower Z value will be returned
-    works only on planar faces
-    '''
+    Filters out any horizontal faces from list of faces past in.
     
+    Will also further filter by: faces with the same area only the face with the lower Z value will be returned.
+    Note: works only on planar faces
+    
+    TODO: It could be way simpler just to check for the face with a negative face normal Z value...
+
+    :param faces: A list of faces.
+    :type faces: list Autodesk.Revit.DB.Face
+
+    :return: A list of faces.
+    :rtype: list Autodesk.Revit.DB.Face
     '''
-    note:
-    It could be way simpler just to check for the face with a negative face normal Z value...
-    '''
+
     facesHorizontal = []
     for f in faces:
         # non planar faces are ignored for the moment...
@@ -474,15 +685,27 @@ def GetUniqueHorizontalFaces(faces):
         facesFiltered =  GetFacesWithLowestZFromPairs(pairedFaces)
     return facesFiltered
 
-# exteriorLoop        a polygon loop describing the external boundary of a face
-# otherLoop           a polygon loop which is to be checked as to whether it is within the exterioir loop and the any hole loops
-# holeLoops           a list of named tuples containing .loop property which is a list of UV points formning a polygon which have been identified as creating a hole in the exteriorLoop 
 def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops):
     '''
-    checks whether any of the other loops is within the exterior loop and if so
-    if it is not also within one of the holeLoops ...that would be an island
-    returns true if within exterior loop but not within hole loops
+    Checks whether any of the other loops is within the exterior loop and if so\
+        if it is not also within one of the holeLoops ...that would be an island
+    
+    :param exteriorLoop: A polygon loop describing the external boundary of a face.
+    :type exteriorLoop: list of Autodesk.Revit.DB.UV
+    :param otherLoop: A polygon loop which is to be checked as to whether it is within the exterioir loop and the any hole loops.
+    :type otherLoop: list of Autodesk.Revit.DB.UV
+    :param holeLoops: A list of named tuples containing .loop property which is a list of UV points formning a polygon which have been identified\
+         as creating a hole in the exteriorLoop.
+    :type holeLoops: namedtuple('uvLoop', 'loop area id threeDPoly')\
+        .Loop is a list of UV points defining a polygon loop
+        .area is a double describing the polygon area
+        .id is an integer
+        .threeDPoly is an edge loop
+    
+    :return: True if within exterior loop but not within hole loops, otherwise False.
+    :rtype: bool
     '''
+
     returnValue = False
     # get any point on the loop to check...if it is within the other loop then the entire loop is within the other loop
     # since revit does not allow for overlapping sketches
@@ -499,13 +722,24 @@ def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops
                     break
     return returnValue
 
-#loops      list of named tuples with properties loop, id and area.Loop is a list of UV points defining a polygon loop
 def BuildLoopsDictionary(loops):
     '''
-    will return a dic where:
+    Will return a dic where:
+
     - key is the outer loop of a polygon id
     - values is a list of tuples describing holes in the key polygon
+
+    :param loops: A list of named tuples describing polygons.\
+        .Loop is a list of UV points defining a polygon loop
+        .area is a double describing the polygon area
+        .id is an integer
+        .threeDPoly is an edge loop
+    :type loops: list[namedtuple('uvLoop', 'loop area id threeDPoly')]
+
+    :return: A dictionary.
+    :rtype: dic {int: list[namedtuple('uvLoop', 'loop area id threeDPoly')]}
     '''
+
     # duplicate list since I'am about to manipulate it...
     copyLoops = list(loops)
     flag = False
@@ -546,14 +780,18 @@ def BuildLoopsDictionary(loops):
     return returnValue
 
 
-# solid         a Revit Solid element
 def ConvertSolidToFlattened2DPoints(solid):
     '''
-    returns a list of lists of Revit XYZ points describing the outline of a solid projected onto a plane.
+    Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values...)
 
-    first nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list
-    arcs, circles will be tesselated to polygons
+    First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
+    Arcs, circles will be tesselated to polygons.
 
+    :param solid: A solid.
+    :type solid: Autodesk.Revit.DB.Solid
+
+    :return: A list of data geometry instances.
+    :rtype: list of :class:`.DataGeometry`
     '''
 
     '''
@@ -582,7 +820,6 @@ def ConvertSolidToFlattened2DPoints(solid):
     - > sort all edges by their connections (need to be connected by a point) so they descibe a loop <- seems to be ok as revit provides them
     
     extract points of edges
-
     '''
 
     ceilingGeos = []

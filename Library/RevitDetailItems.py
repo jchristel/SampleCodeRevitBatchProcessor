@@ -1,5 +1,7 @@
 '''
-This module contains a number of functions around Revit detail items. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a number of functions around Revit detail items.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -42,31 +44,65 @@ REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'ITEM TYPE']
 
 # --------------------------------------------- utility functions ------------------
 
-# returns a list of filled region elements from the model
-# doc   current document
 def GetFilledRegionsInModel(doc):
+    '''
+    Gets all filled region instances in a model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list containing floor instances.
+    :rtype: list Autodesk.Revit.DB.FilledRegion
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FilledRegion).ToList()
 
-
+'''
+TODO: check for actual class...
+'''
+#: class name Autodesk.Revit.DB.ElementType
 ELEMENT_TYPE = 'Autodesk.Revit.DB.ElementType'
+#: class name Autodesk.Revit.DB.FilledRegionType
 FILLED_REGION_TYPE = 'Autodesk.Revit.DB.FilledRegionType'
+#: class name Autodesk.Revit.DB.FamilySymbol
 FAMILY_SYMBOL = 'Autodesk.Revit.DB.FamilySymbol'
 
+#: List of class names which can be detailed components
 DETAIL_COMPONENT_TYPES = [
     ELEMENT_TYPE,
     FILLED_REGION_TYPE,
     FAMILY_SYMBOL
 ]
 
-# doc:   current model document
 def GetAllDetailTypesByCategory(doc):
-    ''' this will return a filtered element collector of all detail component types in the model'''
+    '''
+    Gets all detail component types in the model.
+
+    Filters by built in category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing detail component types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_DetailComponents).WhereElementIsElementType()
     return collector
 
-# collector   filtered element collector detail component types
 def BuildDetailTypeIdsDictionary(collector):
-    '''returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids'''
+    '''
+    Returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids.
+
+    :param collector: A filtered element collector containing detail component types.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+
+    :return: Dictionary where key is the element type as string and value is a list of all type ids belonging to the element type.
+    :rtype: dic{str:list[Autodesk.Revit.DB.ElementId]}
+    '''
+
     dic = {}
     for c in collector:
         if(dic.has_key(str(c.GetType()))):
@@ -76,10 +112,19 @@ def BuildDetailTypeIdsDictionary(collector):
             dic[str(c.GetType())] = [c.Id]
     return dic
 
-# doc:   current model document
-# collector   filtered element collector detail component types
 def BuildDependentElementsDictionary(doc, collector):
-    '''returns the dictionary keys is autodesk.revit.db element type as string and values are elements'''
+    '''
+    Returns the dictionary keys is autodesk.revit.db element type as string and values are elements of that type.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param collector: A filtered element collector containing elements.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+
+    :return: Dictionary where key is the element type as string and value is a list of all elements belonging to the element type.
+    :rtype: dic{str:list[Autodesk.Revit.DB.Element]}
+    '''
+   
     dic = {}
     for c in collector:
         el = doc.GetElement(c)
@@ -92,30 +137,70 @@ def BuildDependentElementsDictionary(doc, collector):
     
 # -------------------------------- repeating detail types -------------------------------------------------------
 
-# doc:   current model document
 def GetAllRepeatingDetailTypeIdsAvailable(doc):
-    '''get all repeating detail types in model'''
+    '''
+    Get all repeating detail type id's in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of element ids representing repeating detail types.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
         return dic[ELEMENT_TYPE]
     else:
         return []
 
-# doc   current document
 def GetUsedRepeatingDetailTypeIds(doc):
-    '''get all used repeating detail type ids'''
+    '''
+    Gets all used repeating detail type ids in the model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of element ids representing repeating detail types.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
     return ids
 
-# doc   current document
 def GetUnUsedRepeatingDetailTypeIds(doc):
-    '''get all unused repeating detail type ids'''
+    '''
+    Gets all unused repeating detail type ids in the model.
+
+    Unused: not one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A list of element ids representing repeating detail types.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     return ids
 
-# doc   current document
 def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
-    '''get all unused repeating detail type ids'''
+    '''
+    Gets type ids off all unused repeating detail types in model.
+
+    This method can be used to safely delete unused repeating detail types. In the case that no basic\
+        wall instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one repeating detail type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all repeating detail types not in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     allIds = GetAllRepeatingDetailTypeIdsAvailable(doc)
     # need to keep at least one
@@ -125,19 +210,36 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
 
 # -------------------------------- Detail families -------------------------------------------------------
 
-# doc:   current model document
 def GetAllDetailSymbolIdsAvailable(doc):
-    '''get all detail symbol types in model'''
+    '''
+    Gets all detail symbol (types) ids in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of element ids representing detail symbols.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
-    if (dic.has_key(ELEMENT_TYPE)):
+    if (dic.has_key(FAMILY_SYMBOL)):
         return dic[FAMILY_SYMBOL]
     else:
         return []
 
-# doc:   current model document
-# idsRepeatDet:   repeating detail types
 def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
-    '''returns the ids of all symbols used in repeating details'''
+    '''
+    Gets the ids of all symbols used in repeating details.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param idsRepeatDet: List of repeating detail type ids.
+    :type idsRepeatDet: list Autodesk.Revit.DB.ElementIds
+
+    :return: List of family symbol (type) ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
@@ -146,9 +248,19 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
             ids.append(id)
     return ids
 
-# doc:   current model document
 def GetAllUsedDetailSymbolIds(doc):
-    '''get all used detail symbol type ids in model'''
+    '''
+    Gets all used detail symbol type ids in model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of family symbol (type) ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(ELEMENT_TYPE)):
@@ -172,9 +284,19 @@ def GetAllUsedDetailSymbolIds(doc):
     else:
         return []
 
-# doc:   current model document
 def GetAllUnUsedDetailSymbolIds(doc):
-    '''get all unused detail symbol type ids in model'''
+    '''
+    Gets all unused detail symbol type ids in model.
+
+    Unused: Not one instance of this type is placed in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of family symbol (type) ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     allAvailableIds = GetAllDetailSymbolIdsAvailable(doc)
     allUsedIds = GetAllUsedDetailSymbolIds(doc)
@@ -183,9 +305,19 @@ def GetAllUnUsedDetailSymbolIds(doc):
             ids.append(id)
     return ids
 
-# doc:   current model document
 def GetAllUnUsedDetailSymbolIdsForPurge(doc):
-    '''get all unused detail symbol type ids in model to be purged (leaves one behind)'''
+    '''
+    Gets type ids off all unused detail symbols (types) in model.
+
+    This method can be used to safely delete all unused detail symbols (types) and families.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all unused detail symbols and families not in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
     return ids
     #ids = GetAllUnUsedDetailSymbolIds(doc)
@@ -197,18 +329,36 @@ def GetAllUnUsedDetailSymbolIdsForPurge(doc):
 
 # -------------------------------- filled region types -------------------------------------------------------
 
-# doc   current document
 def GetAllFilledRegionTypeIdsAvailable(doc):
-    '''get all filled regions types in model'''
+    '''
+    Gets all filled region types ids in model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of element ids representing filled region types.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     dic = BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
     if (dic.has_key(FILLED_REGION_TYPE)):
         return dic[FILLED_REGION_TYPE]
     else:
         return []
 
-# doc   current document
 def GetUsedFilledRegionTypeIds(doc):
-    '''get all used filled regions types in model'''
+    '''
+    Gets all used filled region type ids in model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of filled region type ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
@@ -218,9 +368,19 @@ def GetUsedFilledRegionTypeIds(doc):
             ids.append(id)
     return ids
 
-# doc   current document
 def GetUnUsedFilledRegionTypeIds(doc):
-    '''get all un used filled regions types in model'''
+    ''''
+    Gets all unused filled region type ids in model.
+
+    Unused: Not one instance of this type is placed in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of filled region type ids.
+    :rtype: list Autodesk.Revit.DB.ElementIds
+    '''
+
     ids = []
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     for id in idsAll:
@@ -230,9 +390,21 @@ def GetUnUsedFilledRegionTypeIds(doc):
             ids.append(id)
     return ids
 
-# doc   current document
 def GetUnUsedFilledRegionTypeIdsForPurge(doc):
-    '''get all un used filled regions types in model'''
+    '''
+    Gets ids off all unused filled region types in model.
+
+    This method can be used to safely delete all unused filled region types in model. In the case that no filled\
+        region instance using any of the types is placed, this will return all but one type id since\
+        Revit requires at least one filled region type definition to be in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing all unused filled region types not in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = GetUnUsedFilledRegionTypeIds(doc)
     idsAll = GetAllFilledRegionTypeIdsAvailable(doc)
     # need to keep at least one

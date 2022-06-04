@@ -1,6 +1,6 @@
 ﻿'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of functions around Revit ceilings.
+Revit ceilings helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -44,11 +44,13 @@ clr.ImportExtensions(System.Linq)
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_CEILINGS_HEADER = ['HOSTFILE', 'CEILINGTYPEID', 'CEILINGTYPENAME']
-
+#: Built in family name for compound ceilings
 COMPOUND_CEILING_FAMILY_NAME = 'Compound Ceiling'
+#: Built in family name for basic ceilings
 BASIC_CEILING_FAMILY_NAME = 'Basic Ceiling'
+#: Built in family name for roof soffits
 ROOF_SOFFIT_FAMILY_NAME = 'Roof Soffit'
-
+#: List of all Built in ceiling family names
 BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
     COMPOUND_CEILING_FAMILY_NAME,
     BASIC_CEILING_FAMILY_NAME,
@@ -57,30 +59,64 @@ BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetAllCeilingTypesByCategory(doc):
-    ''' this will return a filtered element collector of all ceiling types in the model:
+    '''
+    Gets a filtered element collector of all ceiling types in the model:
+
     - Compound Ceiling
     - In place families or loaded families
     - Basic Ceiling
-    it will therefore not return any in roof soffit types ..
+
+    Filters by category.
+    It will therefore not return any roof soffit types ..
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsElementType()
     return collector
 
-# doc   current model document
 def GetCeilingTypesByClass(doc):
-    ''' this will return a filtered element collector of all ceiling types in the model:
+    '''
+    Gets a filtered element collector of all ceiling types in the model:
+
     - Roof Soffit
     - Compound Ceiling
     - Basic Ceiling
-    it will therefore not return any in place family types ...'''
+
+    Filters by class.
+    It will therefore not return any in place family types.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdb.CeilingType)
 
-# collector   filtered element collector containing ceiling type elments of family symbols representing in place families
-# dic         dictionary containing key: ceiling type family name, value: list of ids
 def BuildCeilingTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    Keys are built in ceiling family type names.
+
+    TODO: Use more generic code.
+
+    :param collector: A filtered element collector containing ceiling types.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: A dictionary containing key: ceiling type family name, value: list of ids belonging to that type.
+    :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+
+    :return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -89,8 +125,19 @@ def BuildCeilingTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortCeilingTypesByFamilyName(doc):
+    '''
+    Returns a dictionary of all ceiling types in the model where key is the build in wall family name, values are ids of associated wall types.
+
+    TODO: Use more generic code.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     # get all ceiling Type Elements
     wts = GetCeilingTypesByClass(doc)
     # get all ceiling types including in place ceiling families
@@ -102,42 +149,104 @@ def SortCeilingTypesByFamilyName(doc):
 
 # -------------------------------- none in place ceiling types -------------------------------------------------------
 
-# doc   current model document
 def GetAllCeilingInstancesInModelByCategory(doc):
-    ''' returns all ceiling elements placed in model...ignores roof soffits'''
+    '''
+    Gets all ceiling elements placed in model. Ignores roof soffits.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsNotElementType()
-    
-# doc   current model document
+
 def GetAllCeilingInstancesInModelByClass(doc):
-    ''' returns all ceiling elements placed in model...ignores in place'''
+    '''
+    Gets all ceiling elements placed in model. Ignores in place families.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Ceiling).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllCeilingTypeIdsInModelByCategory(doc):
-    ''' returns all ceiling element type ids available placed in model '''
+    '''
+    Gets all ceiling element type ids available in model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling type ids.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colCat = GetAllCeilingTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector(colCat)
     return ids
 
-# doc   current model document
 def GetAllCeilingTypeIdsInModelByClass(doc):
-    ''' returns all ceiling element type ids available in model '''
+    '''
+    Gets all ceiling element type ids available in model.
+
+    Filters by class.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A filtered element collector containing ceiling type ids.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colClass = GetCeilingTypesByClass(doc)
     ids = com.GetIdsFromElementCollector(colClass)
     return ids
 
-# doc   current document
 def GetUsedCeilingTypeIds(doc):
-    ''' returns all used in ceiling type ids '''
+    '''
+    Gets all used ceiling type ids.
+
+    Filters by category.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used ceiling types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+
+    TODO: check for more geric list comparison and remove this function.
+
+    :param famTypeIds: List of family type ids to check.
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: Reference list of ids.
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if any id from famTypeIds is not in unUsedTypeIds.
+    :rtype: bool
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -145,13 +254,25 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             break
     return match
  
-# doc   current document
 def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
-    ''' returns all unused ceiling type ids for:
+    '''
+    Gets all unused ceiling type id's.
+    
     - Roof Soffit
     - Compound Ceiling
     - Basic Ceiling
-    it will therefore not return any in place family types ...'''
+
+    This method can be used to safely delete unused ceiling types:
+    In the case that no wall instance using any of the types is placed this will return all but one type id since\
+        Revit requires at least one ceiling type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing not used ceiling types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllCeilingTypeIdsInModelByClass, 0)
     # make sure there is at least on ceiling type per system family left in model
@@ -165,49 +286,98 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
  
 # -------------------------------- In place ceiling types -------------------------------------------------------
 
-# doc   current document
 def GetInPlaceCeilingFamilyInstances(doc):
-    ''' returns all instances in place families of category ceiling'''
-    # built in parameter containing family name when filtering familyInstance elements:
-    # BuiltInParameter.ELEM_FAMILY_PARAM
-    # this is a faster filter in terms of performance then LINQ query refer to:
-    # https://jeremytammik.github.io/tbc/a/1382_filter_shortcuts.html
+    '''
+    Gets all instances of in place families of category ceiling.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing in place ceiling instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Ceilings)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-# doc   current document
 def GetAllInPlaceCeilingTypeIdsInModel(doc):
-    ''' returns type ids off all available in place families of category ceiling'''
+    '''
+    Gets all type ids off all available in place families of category ceiling.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing in place ceiling types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Ceilings)
     return ids
 
-# doc   current document
 def GetUsedInPlaceCeilingTypeIds(doc):
-    ''' returns all used in place type ids '''
+    '''
+    Gets all used in place ceiling type ids in the model.
+
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used in place ceiling types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 1)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceCeilingTypeIds(doc):
-    ''' returns all unused in place type ids '''
+    '''
+    Gets all unused in place ceiling type ids in the model.
+
+    Unused: Not one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in place ceiling types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceCeilingTypeIdsInModel, 0)
     return ids
 
-# doc   current document
 def GetUnusedInPlaceCeilingIdsForPurge(doc):
-    '''returns symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be purged'''
+    '''
+    Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be savely deleted from the model.
+
+    This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one\
+        in place ceiling defintion in the model.
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing unused in place ceiling types and families.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
     return ids
 
 # -------------------------------- ceiling geometry -------------------------------------------------------
 
-# ceiling       Revit Ceiling element
 def Get2DPointsFromRevitCeiling(ceiling):
     '''
     Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
     List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
     Does not work with in place ceilings
+
+    :param ceiling: A revit ceiling instance.
+    :type ceiling: Autodesk.Revit.DB.Ceiling
+
+    :return: A list of data geometry instances.
+    :rtype: list of :class:`.DataGeometry`
     '''
+
     allCeilingPoints = []
     # get geometry from ceiling
     opt = rdb.Options()
@@ -228,13 +398,19 @@ def Get2DPointsFromRevitCeiling(ceiling):
                 allCeilingPoints.append(pLists)
     return allCeilingPoints
 
-# doc       current model document
 def Get2DPointsFromRevitCeilingsInModel(doc):
     '''
-    Returns a list of lists of points representing the flattened(2D geometry) of each ceiling in the model
+    Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
     List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
     Does not work with in place ceilings
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of data geometry instances.
+    :rtype: list of :class:`.DataGeometry`
     '''
+
     ceilingInstances =  GetAllCeilingInstancesInModelByCategory(doc)
     allCeilingPoints = []
     for cI in ceilingInstances:
@@ -245,11 +421,17 @@ def Get2DPointsFromRevitCeilingsInModel(doc):
 
 # -------------------------------- ceiling data -------------------------------------------------------
 
-# doc       current model document
 def GetAllCeilingData(doc):
     '''
-    returns a list of ceiling data objects for each ceiling element in the model
+    Gets a list of ceiling data objects for each ceiling element in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of data ceiling instances.
+    :rtype: list of :class:`.DataCeiling`
     '''
+
     allCeilingData = []
     ceilings = GetAllCeilingInstancesInModelByCategory(doc)
     for ceiling in ceilings:
@@ -258,12 +440,28 @@ def GetAllCeilingData(doc):
             allCeilingData.append(cd)
     return allCeilingData
 
-# doc                   current revit document
-# revitCeiling          Revit ceiling element
+
 def PopulateDataCeilingObject(doc, revitCeiling):
     '''
-    returns a custom ceiling data objects populated with some data from the revit model ceiling passt in
+    Returns a custom ceiling data objects populated with some data from the revit model ceiling passt in.
+
+    - ceiling id
+    - ceiling type name
+    - ceiling mark
+    - ceiling type mark
+    - ceiling level name
+    - ceiling level id
+    - ceiling offset from level
+    
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitCeiling: A revit ceiling instance.
+    :type revitCeiling: Autodesk.Revit.DB.Ceiling
+
+    :return: A data ceiling object instacne.
+    :rtype: :class:`.DataCeiling`
     '''
+
     # set up data class object
     dataC = dCeiling.DataCeiling() 
     # get ceiling geometry (boundary points)

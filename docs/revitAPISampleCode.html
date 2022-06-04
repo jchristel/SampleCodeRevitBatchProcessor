@@ -2075,114 +2075,348 @@ it will also transfer any user created subcategories to the new category and ass
 </section>
 <section id="module-RevitCeilings">
 <span id="revit-ceilings"></span><h2>Revit Ceilings<a class="headerlink" href="#module-RevitCeilings" title="Permalink to this headline">¶</a></h2>
-<section id="this-module-contains-a-number-of-functions-around-revit-ceilings">
-<h3>This module contains a number of functions around Revit ceilings.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-ceilings" title="Permalink to this headline">¶</a></h3>
+<section id="revit-ceilings-helper-functions">
+<h3>Revit ceilings helper functions.<a class="headerlink" href="#revit-ceilings-helper-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitCeilings.REPORT_CEILINGS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">REPORT_CEILINGS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'CEILINGTYPEID',</span> <span class="pre">'CEILINGTYPENAME']</span></em><a class="headerlink" href="#RevitCeilings.REPORT_CEILINGS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in reports</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCeilings.COMPOUND_CEILING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">COMPOUND_CEILING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Compound</span> <span class="pre">Ceiling'</span></em><a class="headerlink" href="#RevitCeilings.COMPOUND_CEILING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for compound ceilings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCeilings.BASIC_CEILING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">BASIC_CEILING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Basic</span> <span class="pre">Ceiling'</span></em><a class="headerlink" href="#RevitCeilings.BASIC_CEILING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for basic ceilings</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCeilings.ROOF_SOFFIT_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">ROOF_SOFFIT_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Roof</span> <span class="pre">Soffit'</span></em><a class="headerlink" href="#RevitCeilings.ROOF_SOFFIT_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for roof soffits</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCeilings.BUILTIN_CEILING_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CEILING_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Compound</span> <span class="pre">Ceiling',</span> <span class="pre">'Basic</span> <span class="pre">Ceiling',</span> <span class="pre">'Roof</span> <span class="pre">Soffit']</span></em><a class="headerlink" href="#RevitCeilings.BUILTIN_CEILING_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in ceiling family names</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all ceiling types in the model:
-- Compound Ceiling
-- In place families or loaded families
-- Basic Ceiling
-it will therefore not return any in roof soffit types ..</p>
+<dd><p>Gets a filtered element collector of all ceiling types in the model:</p>
+<ul class="simple">
+<li><p>Compound Ceiling</p></li>
+<li><p>In place families or loaded families</p></li>
+<li><p>Basic Ceiling</p></li>
+</ul>
+<p>Filters by category.
+It will therefore not return any roof soffit types ..</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetCeilingTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetCeilingTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetCeilingTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all ceiling types in the model:
-- Roof Soffit
-- Compound Ceiling
-- Basic Ceiling
-it will therefore not return any in place family types …</p>
+<dd><p>Gets a filtered element collector of all ceiling types in the model:</p>
+<ul class="simple">
+<li><p>Roof Soffit</p></li>
+<li><p>Compound Ceiling</p></li>
+<li><p>Basic Ceiling</p></li>
+</ul>
+<p>Filters by class.
+It will therefore not return any in place family types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.BuildCeilingTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">BuildCeilingTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.BuildCeilingTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Returns the dictionary passt in with keys and or values added retrieved from collector passt in.</p>
+<p>Keys are built in ceiling family type names.</p>
+<p>TODO: Use more generic code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing ceiling types.</p></li>
+<li><p><strong>dic</strong> (<em>dictionary</em><em> (</em><em>key str</em><em>, </em><em>value list of Autodesk.Revit.DB.ElementId</em><em>)</em>) – A dictionary containing key: ceiling type family name, value: list of ids belonging to that type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCeilings.SortCeilingTypesByFamilyName">
+<span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">SortCeilingTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.SortCeilingTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all ceiling types in the model where key is the build in wall family name, values are ids of associated wall types.</p>
+<p>TODO: Use more generic code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingInstancesInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ceiling elements placed in model…ignores roof soffits</p>
+<dd><p>Gets all ceiling elements placed in model. Ignores roof soffits.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ceiling elements placed in model…ignores in place</p>
+<dd><p>Gets all ceiling elements placed in model. Ignores in place families.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ceiling element type ids available placed in model</p>
+<dd><p>Gets all ceiling element type ids available in model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all ceiling element type ids available in model</p>
+<dd><p>Gets all ceiling element type ids available in model.</p>
+<p>Filters by class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetUsedCeilingTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUsedCeilingTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUsedCeilingTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in ceiling type ids</p>
+<dd><p>Gets all used ceiling type ids.</p>
+<p>Filters by category.
+Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns false if any symbols (types) of a family are in use in a model</p>
+<dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
+<p>TODO: check for more geric list comparison and remove this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – List of family type ids to check.</p></li>
+<li><p><strong>unUsedTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – Reference list of ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if any id from famTypeIds is not in unUsedTypeIds.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetUnusedNonInPlaceCeilingTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonInPlaceCeilingTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUnusedNonInPlaceCeilingTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused ceiling type ids for:
-- Roof Soffit
-- Compound Ceiling
-- Basic Ceiling
-it will therefore not return any in place family types …</p>
+<dd><p>Gets all unused ceiling type id’s.</p>
+<ul class="simple">
+<li><p>Roof Soffit</p></li>
+<li><p>Compound Ceiling</p></li>
+<li><p>Basic Ceiling</p></li>
+</ul>
+<p>This method can be used to safely delete unused ceiling types:
+In the case that no wall instance using any of the types is placed this will return all but one type id since        Revit requires at least one ceiling type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing not used ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetInPlaceCeilingFamilyInstances">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetInPlaceCeilingFamilyInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetInPlaceCeilingFamilyInstances" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all instances in place families of category ceiling</p>
+<dd><p>Gets all instances of in place families of category ceiling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing in place ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllInPlaceCeilingTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllInPlaceCeilingTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllInPlaceCeilingTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns type ids off all available in place families of category ceiling</p>
+<dd><p>Gets all type ids off all available in place families of category ceiling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing in place ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetUsedInPlaceCeilingTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUsedInPlaceCeilingTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUsedInPlaceCeilingTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in place type ids</p>
+<dd><p>Gets all used in place ceiling type ids in the model.</p>
+<p>Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used in place ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetUnusedInPlaceCeilingTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceCeilingTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUnusedInPlaceCeilingTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused in place type ids</p>
+<dd><p>Gets all unused in place ceiling type ids in the model.</p>
+<p>Unused: Not one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused in place ceiling types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetUnusedInPlaceCeilingIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceCeilingIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUnusedInPlaceCeilingIdsForPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be purged</p>
+<dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be savely deleted from the model.</p>
+<p>This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one        in place ceiling defintion in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing unused in place ceiling types and families.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -2191,26 +2425,82 @@ it will therefore not return any in place family types …</p>
 <dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
 List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
 Does not work with in place ceilings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ceiling</strong> (<em>Autodesk.Revit.DB.Ceiling</em>) – A revit ceiling instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of data geometry instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.Get2DPointsFromRevitCeilingsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">Get2DPointsFromRevitCeilingsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.Get2DPointsFromRevitCeilingsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of lists of points representing the flattened(2D geometry) of each ceiling in the model
+<dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
 List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
 Does not work with in place ceilings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of data geometry instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.GetAllCeilingData">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetAllCeilingData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetAllCeilingData" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a list of ceiling data objects for each ceiling element in the model</p>
+<dd><p>Gets a list of ceiling data objects for each ceiling element in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of data ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of <a class="reference internal" href="dataExport.html#DataCeiling.DataCeiling" title="DataCeiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCeilings.PopulateDataCeilingObject">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">PopulateDataCeilingObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitCeiling</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.PopulateDataCeilingObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a custom ceiling data objects populated with some data from the revit model ceiling passt in</p>
+<dd><p>Returns a custom ceiling data objects populated with some data from the revit model ceiling passt in.</p>
+<ul class="simple">
+<li><p>ceiling id</p></li>
+<li><p>ceiling type name</p></li>
+<li><p>ceiling mark</p></li>
+<li><p>ceiling type mark</p></li>
+<li><p>ceiling level name</p></li>
+<li><p>ceiling level id</p></li>
+<li><p>ceiling offset from level</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitCeiling</strong> (<em>Autodesk.Revit.DB.Ceiling</em>) – A revit ceiling instance.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A data ceiling object instacne.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="dataExport.html#DataCeiling.DataCeiling" title="DataCeiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

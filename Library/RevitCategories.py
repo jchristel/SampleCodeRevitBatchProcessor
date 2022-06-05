@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of functions around Revit categories.
+Revit category helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -840,8 +840,11 @@ def ChangeFamilyCategory(doc, newCategoryName):
     '''
     Changes the current family category to the new one specified.
 
-    Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements to the family category.
-    This function will also transfer any user created subcategories to the new category and assign elements to it to match the subcategory they where in before the categoryt change.
+    Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
+        to the new family category.
+    
+    This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before\
+         the category change.
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -850,7 +853,7 @@ def ChangeFamilyCategory(doc, newCategoryName):
 
     :return: 
         Result class instance.
-        result.status. True if all custom subcategories where re-created und er new category and elements where moved to those subcategories, otherwise False.
+        result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
         result.message will confirm succesful creation of subcategories and element move.
         result.result empty list
         On exception:
@@ -894,16 +897,26 @@ def ChangeFamilyCategory(doc, newCategoryName):
     else:
         returnvalue.UpdateSep(False, 'Failed to change family category:' + changeFam.message)
     return returnvalue
-    
-# doc                           current family document
-# dic                           dictionary containing category properties
-# familyCat                     family category name
-# mainCatName                   hard coded revit category name
-# docFilePath                   family file path
+
 def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
     '''
-    formats category properties into lists for reports
+    Formats category properties into lists for reports
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param dic: dictionary containing category properties
+    :type dic: _type_
+    :param familyCat: The family category name.
+    :type familyCat: str
+    :param mainCatName: A hard coded revit category name. Can be the same as familyCat.
+    :type mainCatName: str
+    :param docFilePath: The fully qualified family file path.
+    :type docFilePath: str
+
+    :return: A list of list of strings. Each row represents one category.
+    :rtype: list[list[str]]
     '''
+
     data = []
     for key in dic:
         row = [str(docFilePath).encode('utf-8'), 
@@ -938,12 +951,19 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
         data.append(row)
     return data
 
-# doc                           current family document
-# revitFilePath                 document file path
 def GetReportData(doc, revitFilePath):
     '''
-    reports all categories, properties and all elements belonging to them
+    Reports all categories, their properties and all elements belonging to them.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The fully qualified family file path.
+    :type revitFilePath: str
+    
+    :return: A list of list of strings. Each row represents one category.
+    :rtype: list[list[str]]
     '''
+
     data = []
     # get all sub categories in family and associates elements;
     subCats = GetMainSubCategories(doc)

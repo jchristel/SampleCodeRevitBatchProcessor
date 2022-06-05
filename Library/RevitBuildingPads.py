@@ -1,6 +1,6 @@
 ﻿'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of functions around Revit building pads.
+Revit building pads helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -51,23 +51,59 @@ BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-# doc:   current model document
 def GetAllBuildingPadTypesByCategory(doc):
-    ''' this will return a filtered element collector of all BuildingPad types in the model:
-    - Basic BuildingPad'''
+    '''
+    Gets a filtered element collector of all BuildingPad types in the model.
+    
+    - Basic BuildingPad
+    
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing building pad types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsElementType()
     return collector
 
-# doc   current model document
 def GetBuildingPadTypesByClass(doc):
-    ''' this will return a filtered element collector of all BuildingPad types in the model:
-    - Basic BuildingPad.'''
+    '''
+    Gets a filtered element collector of all building pad types in the model:
+
+    - Basic BuildingPad
+    
+    Filters by class.
+    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing building pad types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     return  rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPadType)
 
-# collector   fltered element collector containing BuildingPad type elments of family symbols representing in place families
-# dic         dictionary containing key: pad type family name, value: list of ids
 def BuildBuildingPadTypeDictionary(collector, dic):
-    '''returns the dictioanry passt in with keys and or values added retrieved from collector passt in'''
+    '''
+    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+
+    Keys are built in building pad family type names.
+
+    TODO: Use more generic code.
+
+    :param collector: A filtered element collector containing building pad types.
+    :type collector: Autodesk.Revit.DB.FilteredElementCollector
+    :param dic: A dictionary containing key:  building pad type family name, value: list of ids belonging to that type.
+    :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+
+    :return: A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     for c in collector:
         if(dic.has_key(c.FamilyName)):
             if(c.Id not in dic[c.FamilyName]):
@@ -76,8 +112,19 @@ def BuildBuildingPadTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-# doc   current model document
 def SortBuildingPadTypesByFamilyName(doc):
+    '''
+    Returns a dictionary of all building pad types in the model where key is the build in wall family name, values are ids of associated wall types.
+
+    TODO: Use more generic code.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.
+    :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+    '''
+
     # get all building pad Type Elements
     wts = GetBuildingPadTypesByClass(doc)
     # get all pad types including in place pad families
@@ -89,42 +136,106 @@ def SortBuildingPadTypesByFamilyName(doc):
 
 # -------------------------------- none in place BuildingPad types -------------------------------------------------------
 
-# doc   current model document
 def GetAllBuildingPadInstancesInModelByCategory(doc):
-    ''' returns all BuildingPad elements placed in model'''
+    '''
+    Gets all building pad elements placed in model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+    
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
     
-# doc   current model document
 def GetAllBuildingPadInstancesInModelByClass(doc):
-    ''' returns all BuildingPad elements placed in model'''
+    '''
+    Gets all building pad elements placed in model.
+
+    Filters by class.
+    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing ceiling instances.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+   
     return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPad).WhereElementIsNotElementType()
 
-# doc   current model document
 def GetAllBuildingPadTypeIdsInModelByCategory(doc):
-    ''' returns all BuildingPad element types available placed in model '''
+    '''
+    Gets all building pad element type ids available in model.
+
+    Filters by category.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A filtered element collector containing building pad type ids.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colCat = GetAllBuildingPadTypesByCategory(doc)
     ids = com.GetIdsFromElementCollector (colCat)
     return ids
 
-# doc   current model document
 def GetAllBuildingPadTypeIdsInModelByClass(doc):
-    ''' returns all BuildingPad element types available placed in model '''
+    '''
+    Gets all building pad element type ids available in model.
+
+    Filters by class.
+    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    
+    :return: A filtered element collector containing building pad type ids.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
     ids = []
     colClass = GetBuildingPadTypesByClass(doc)
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-# doc   current document
 def GetUsedBuildingPadTypeIds(doc):
-    ''' returns all used in BuildingPad type ids '''
+    '''
+    Gets all used building pad type ids.
+
+    Filters by category.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing used building pad types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByCategory, 1)
     return ids
 
-# famTypeIds        symbol(type) ids of a family
-# usedTypeIds       symbol(type) ids in use in a project
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
-    ''' returns false if any symbols (types) of a family are in use in a model'''
+    '''
+    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+
+    TODO: check for more geric list comparison and remove this function.
+
+    :param famTypeIds: List of family type ids to check.
+    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param unUsedTypeIds: Reference list of ids.
+    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+
+    :return: True if any id from famTypeIds is not in unUsedTypeIds.
+    :rtype: bool
+    '''
+
     match = True
     for famTypeId in famTypeIds:
         if (famTypeId not in unUsedTypeIds):
@@ -134,8 +245,22 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 # doc   current document
 def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
-    ''' returns all unused BuildingPad type ids for:
-    - Basic BuildingPad'''
+    '''
+    Gets all unused building pad type id's.
+    
+    - Basic BuildingPad
+    
+    This method can be used to safely delete unused building pad types:
+    In the case that no building pad instance using any of the types is placed this will return all but one type id since\
+        Revit requires at least one building pad type definition to be in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of element ids representing not used building pad types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
     # get unused type ids
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBuildingPadTypeIdsInModelByClass, 0)
     # make sure there is at least on BuildingPad type per system family left in model

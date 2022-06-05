@@ -44,7 +44,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Exports data samples.</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exports data samples.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-containing-utility-functions-converting-data-retrieved-from-revit-into-shapely-geometry-anbd-processing-it">Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 </ul>
 
@@ -164,18 +167,44 @@
 
 </dd></dl>
 
-<span class="target" id="module-DataShapely"></span><p>Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.</p>
+<span class="target" id="module-DataShapely"></span><section id="module-containing-utility-functions-converting-data-retrieved-from-revit-into-shapely-geometry-anbd-processing-it">
+<h2>Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.<a class="headerlink" href="#module-containing-utility-functions-converting-data-retrieved-from-revit-into-shapely-geometry-anbd-processing-it" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.GetTranslationMatrix">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetTranslationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetTranslationMatrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the rotation/ translation matrix from the geometry object</p>
+<dd><p>Gets the rotation/ translation matrix from the geometry object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>geoObject</strong> (<a class="reference internal" href="#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a>) – A data geometry object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A translation matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.GetOuterLoopAsShape">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetOuterLoopAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetOuterLoopAsShape" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the boundary loop of an object as list of shapely points. 
-Points are translated with passed in matrix</p>
+<dd><p>Returns the boundary loop of an object as list of shapely points.</p>
+<p>Points are translated with passed in matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geoObject</strong> (<a class="reference internal" href="#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a>) – A data geometry object instance.</p></li>
+<li><p><strong>translationM</strong> (<em>numpy array</em>) – A translation matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of shapely points defining a polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[shapely.point]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -252,6 +281,7 @@ works for ceilings only in the moment</p>
 writes a report to provided path containing a row per room and ceiling within room</p>
 </dd></dl>
 
+</section>
 </section>
 
 

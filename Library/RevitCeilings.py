@@ -263,7 +263,7 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
     - Basic Ceiling
 
     This method can be used to safely delete unused ceiling types:
-    In the case that no wall instance using any of the types is placed this will return all but one type id since\
+    In the case that no ceiling instance using any of the types is placed this will return all but one type id since\
         Revit requires at least one ceiling type definition to be in the model.
 
     :param doc: Current Revit model document.
@@ -452,7 +452,7 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     - ceiling level name
     - ceiling level id
     - ceiling offset from level
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param revitCeiling: A revit ceiling instance.

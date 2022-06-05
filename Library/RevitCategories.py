@@ -39,7 +39,8 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 import Autodesk.Revit.DB as rdb
 
-
+#: subcategory renaming sampled dictionary
+#: key is the current subcategory name, value is the new subcategory name 
 CAT_RENAMING = {
     'Clearance Zones': 'AMAZING'
 }
@@ -54,31 +55,45 @@ ELEMENTS_PARAS_SUB = [
 
 #-------------------------- get category properties ---------------------------------
 
-# category properties dictioanry key names and default values
+#: category properties dictionary key names and default values
+#: material name
 PROPERTY_MATERIAL_NAME = 'MaterialName'
+#: material name default value
 PROPERTY_MATERIAL_NAME_VALUE_DEFAULT = 'None'
+#: material id
 PROPERTY_MATERIAL_ID = 'MaterialId'
 
+#: pattern name
 PROPERTY_PATTERN_NAME = 'PatternName'
-PROPERTY_PATTERN_NAME_VALUE_DEFAULT = 'Solid' # hard coded solid line pattern name
+#: pattern name default value, hard coded solid line pattern name
+PROPERTY_PATTERN_NAME_VALUE_DEFAULT = 'Solid'
+#: pattern id
 PROPERTY_PATTERN_ID = 'PatternId'
 
+#: line weight projection name
 PROPERTY_LINEWEIGHT_PROJECTION_NAME = 'LineWeightProjection'
+#: line weight cut name
 PROPERTY_LINEWEIGHT_CUT_NAME = 'LineWeightCut'
 
+#: line colour red name
 PROPERTY_LINECOLOUR_RED_NAME = 'Red'
+#: line colour green name
 PROPERTY_LINECOLOUR_GREEN_NAME = 'Green'
+#: line colour blue name
 PROPERTY_LINECOLOUR_BLUE_NAME = 'Blue'
 
 
-# graphic styles used for elements in familis
+#: graphic styles used for elements in families
+#: graphic style projection name
 CATEGORY_GRAPHICSTYLE_PROJECTION = 'Projection'
+#: graphic style cut name
 CATEGORY_GRAPHICSTYLE_CUT = 'Cut'
+#: graphic style 3D name
 CATEGORY_GRAPHICSTYLE_3D = '3D'
 
 
 # -------------------------------------------- common variables --------------------
-# header used in reports
+#: Header used in report files
 REPORT_CATEGORIES_HEADER = [
     'HOSTFILE', 
     'FAMILY CATEGORY',
@@ -100,13 +115,18 @@ REPORT_CATEGORIES_HEADER = [
 ]
 
 
-# doc   current family document
 def GetMainSubCategories(doc):
     '''
-    reports all subcategories of the family category in a dictionary where
-    key: sub category name
-    data: sub category 
+    Returns all subcategories of the family category in a dictionary where\
+        key: sub category name
+        value: sub category 
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A dictionary.
+    :rtype: dictionary {str: Autodesk.Revit.DB.Category}
     '''
+
     catData = {}
     # get the family category
     familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
@@ -120,27 +140,41 @@ def GetMainSubCategories(doc):
                 catData[subcat.Name] = subcat
     return catData
 
-# doc   current family document
 def GetFamilyCategory(doc):
     '''
-    reports family category in a dictionary where
-    key: category name
-    data: category 
+    Gets the family category in a dictionary where\
+        key: category name
+        value: category 
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: dictionary {str: Autodesk.Revit.DB.Category}
     '''
+
     catData = {}
     # get the family category
     currentFamCat = doc.OwnerFamily.FamilyCategory
     catData [currentFamCat.Name] = currentFamCat
     return catData
 
-# doc   current family document
 def GetOtherSubCategories(doc):
     '''
-    reports all family sub categories which do not belong to the actual family category
-    note: custom categories have an Id greater 0
+    Returns all family subcategories which do not belong to the actual family category.
+
     key: category name
-    data: dictionary : key sub cat name, data: subcategory
+    value: dictionary : key sub cat name, value: subcategory
+
+    Note: custom subcategories have an Id greater 0
+    
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: dictionary {str: {str:Autodesk.Revit.DB.Category} }
     '''
+
     catData = {}
     # get the family category
     familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
@@ -157,11 +191,17 @@ def GetOtherSubCategories(doc):
               
     return catData
 
-#  cat    revit category
 def GetCategoryGraphicStyleIds(cat):
     '''
-    returns dic with keys: Projection, Cut, 3D and their respective ids
+    Returns a dictionary with keys: Projection, Cut, 3D and their respective ids
+    
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+    
+    :return: A dictionary
+    :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}
     '''
+
     iDGraphicStyleProjection = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Projection).Id
     
     # check if this category has a cut style ( some families always appear in elevation only!)
@@ -177,11 +217,19 @@ def GetCategoryGraphicStyleIds(cat):
     dic[CATEGORY_GRAPHICSTYLE_3D] = cat.Id
     return dic
 
-#  cat    revit category
 def GetCategoryMaterial(cat):
     '''
-    returns the material properties name and id as a dictionary where key is property description and value the property value
+    Returns the material properties name and id as a dictionary where key is property name and\
+         value the property id.
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+
+    :return: A dictionary
+    :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}\
+        If no material is assigned to a category it will return {'None: Autodesk.Revit.DB.ElementId.InvalidElementId}
     '''
+
     dicMaterial = {}
     dicMaterial[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
     dicMaterial[PROPERTY_MATERIAL_ID] = rdb.ElementId.InvalidElementId
@@ -191,11 +239,20 @@ def GetCategoryMaterial(cat):
         dicMaterial[PROPERTY_MATERIAL_ID] = material.Id
     return dicMaterial
 
-#  cat    revit category
 def GetCategoryLinePattern(cat, doc):
     '''
-    returns the line pattern properties name and id as a dictionary where key is property description and value the property value
+    Returns the line pattern properties as a dictionary\
+         where key is property name and value the pattern id.
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}
     '''
+
     dicPattern = {}
     dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
     dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
@@ -213,21 +270,35 @@ def GetCategoryLinePattern(cat, doc):
                 dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
     return dicPattern
 
-#  cat    revit category
 def GetCategoryLineWeights(cat):
     '''
-    returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value
+    Returns the line weight properties (cut and projection) as a dictionary\
+         where key is property description and value the property value
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+
+    :return: A dictionary.
+    :rtype: dictionary {str: nullable integer}
     '''
+
     dicLineWeights = {}
     dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
     dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
     return dicLineWeights
 
-#  cat    revit category
 def GetCategoryColour(cat):
     '''
-    returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value
+    Returns the colour properties (RGB) and values as a dictionary where key is colour name\
+         and value the property value
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+
+    :return: A dictionary.
+    :rtype: dictionary {str: byte}
     '''
+
     dicColour = {}
     dicColour[PROPERTY_LINECOLOUR_RED_NAME] = 0
     dicColour[PROPERTY_LINECOLOUR_GREEN_NAME] = 0
@@ -238,11 +309,19 @@ def GetCategoryColour(cat):
         dicColour[PROPERTY_LINECOLOUR_BLUE_NAME] = cat.LineColor.Blue
     return dicColour
 
-# cat   category
 def GetCategoryProperties(cat, doc):
     '''
-    returns a dictionary where keys are property names and value is the associated property value
+    Returns a dictionary where keys are category property names and value is the associated property value.
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: list [{str: var}]
     '''
+    
     properties = []
     
     # material
@@ -262,12 +341,19 @@ def GetCategoryProperties(cat, doc):
     properties.append(dicColour)
     return properties
 
-# properties    list of dictionaries in format as per GetCategoryProperties(cat) method
-# propNames     list of proprty names of which the values are to be returned
 def GetSavedCategoryPropertyByName(properties, propNames):
     '''
-    returns property values matching property names in saved category data
+    Returns property values matching property names in saved category data.
+
+    :param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.
+    :type properties: list [{str: var}]
+    :param propNames: List of proprty names of which the values are to be returned
+    :type propNames: list str
+
+    :return: A list of values.
+    :rtype: list var
     '''
+
     propValues = []
     for propName in propNames:
         match = False
@@ -281,13 +367,21 @@ def GetSavedCategoryPropertyByName(properties, propNames):
 
 #-------------------------- set category properties ---------------------------------
 
-# doc           family document
-# cat           category
-# materialId    material id to be assigned to category
 def SetCategoryMaterial(doc, cat, materialId):
     '''
-    updates material property of a given category
+    Updates material property of a given category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+    :param materialId: The new material element id.
+    :type materialId: Autodesk.Revit.DB.ElementId
+    
+    :return: True if material property was updated succesfully, otherwise False.
+    :rtype: bool
     '''
+
     flag = True
     try:
         mat = doc.GetElement(materialId)
@@ -300,13 +394,21 @@ def SetCategoryMaterial(doc, cat, materialId):
         flag = False
     return flag
     
-# doc               family document
-# cat               category
-# linePatternId     line pattern id to be assigned to category
 def SetCategoryLinePattern(doc, cat, linePatternId):
     '''
-    updates line pattern property of a given category
+    Updates line pattern property of a given category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+    :param materialId: The new material element id.
+    :type materialId: Autodesk.Revit.DB.ElementId
+
+    :return: True if line pattern property was updated succesfully, otherwise False.
+    :rtype: bool
     '''
+
     flag = True
     try:
         def action():
@@ -319,14 +421,23 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
         flag = False
     return flag
 
-# doc                         family document
-# cat                         category
-# lineThickNessCut            integer value
-# lineThickNessProjection     integer value
 def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
     '''
-    updates line weight properties of a given category
+    Updates line weight properties of a given category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+    :param lineThickNessCut: The cut line weight.
+    :type lineThickNessCut: int
+    :param lineThicknessProjection: The projection line weight.
+    :type lineThicknessProjection: int
+    
+    :return: True if line weight property was updated succesfully, otherwise False.
+    :rtype: bool
     '''
+
     flag = True
     try:
         def action():
@@ -339,15 +450,25 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
         flag = False
     return flag
 
-# doc     family document
-# cat     category
-# red     byte value for red
-# green   byte value for green
-# blue    byte value for blue
 def SetCategoryColour(doc, cat, red, green, blue):
     '''
-    updates colour properties of a given category
+    Updates colour properties of a given category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+    :param red: The colour red channel.
+    :type red: byte
+    :param green: The colour green channel.
+    :type green: byte
+    :param blue: The colour blue channel.
+    :type blue: byte
+
+    :return: True if colour property was updated succesfully, otherwise False.
+    :rtype: bool
     '''
+
     flag = True
     try:
         def action():
@@ -360,13 +481,20 @@ def SetCategoryColour(doc, cat, red, green, blue):
         flag = False
     return flag
 
-# cat   category of which properties are to be changed
-# properties    list of dictionaries in format as per GetCategoryProperties(cat) method
 def SetCategoryProperties(doc, cat, properties):
     '''
-    updates property values of a given category
+    Updates varies property values of a given category.
+    
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+    :param properties: List of property values to be applied to category.
+    :type properties: list of dictionaries in format as per GetCategoryProperties(cat) method.
+
+    :return: True if all properties where updated succesfully, otherwise False.
+    :rtype: bool
     '''
-    flag = True
     
     # material
     matId = GetSavedCategoryPropertyByName(properties, [PROPERTY_MATERIAL_ID])

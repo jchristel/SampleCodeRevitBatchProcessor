@@ -24,6 +24,10 @@ Data storage class for Revit ceiling properties.
 #
 #
 
+'''
+TODO: implement an interface 
+'''
+
 import json
 import DataGeometry
 import DataDesignSetOption

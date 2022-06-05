@@ -24,6 +24,10 @@ Geometry data storage class.
 #
 #
 
+'''
+TODO: implement an interface 
+'''
+
 import json
 
 class DataGeometry():

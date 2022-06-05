@@ -24,6 +24,10 @@ Data storage class for Revit desing option properties.
 #
 #
 
+'''
+TODO: implement an interface 
+'''
+
 import json
 
 class DataDesignSetOption():

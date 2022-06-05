@@ -1891,106 +1891,404 @@ and symbols used</p>
 <section id="this-module-contains-a-number-of-functions-around-revit-categories">
 <h3>This module contains a number of functions around Revit categories.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-categories" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.CAT_RENAMING">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CAT_RENAMING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Clearance</span> <span class="pre">Zones':</span> <span class="pre">'AMAZING'}</span></em><a class="headerlink" href="#RevitCategories.CAT_RENAMING" title="Permalink to this definition">¶</a></dt>
+<dd><p>subcategory renaming sampled dictionary
+key is the current subcategory name, value is the new subcategory name</p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="RevitCategories.ELEMENTS_PARAS_SUB">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">ELEMENTS_PARAS_SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY]</span></em><a class="headerlink" href="#RevitCategories.ELEMENTS_PARAS_SUB" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of built in parameters attached to family elements containing subcategory ids</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_MATERIAL_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MaterialName'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_MATERIAL_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>category properties dictionary key names and default values
+material name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_MATERIAL_NAME_VALUE_DEFAULT">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_NAME_VALUE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'None'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_MATERIAL_NAME_VALUE_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>material name default value</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_MATERIAL_ID">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_MATERIAL_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MaterialId'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_MATERIAL_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>material id</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_PATTERN_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternName'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_PATTERN_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>pattern name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_PATTERN_NAME_VALUE_DEFAULT">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME_VALUE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Solid'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_PATTERN_NAME_VALUE_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dd><p>pattern name default value, hard coded solid line pattern name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_PATTERN_ID">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternId'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_PATTERN_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>pattern id</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_LINEWEIGHT_PROJECTION_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINEWEIGHT_PROJECTION_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LineWeightProjection'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_LINEWEIGHT_PROJECTION_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line weight projection name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_LINEWEIGHT_CUT_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINEWEIGHT_CUT_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'LineWeightCut'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_LINEWEIGHT_CUT_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line weight cut name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_LINECOLOUR_RED_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINECOLOUR_RED_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Red'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_LINECOLOUR_RED_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour red name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_LINECOLOUR_GREEN_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINECOLOUR_GREEN_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Green'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_LINECOLOUR_GREEN_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour green name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.PROPERTY_LINECOLOUR_BLUE_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_LINECOLOUR_BLUE_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Blue'</span></em><a class="headerlink" href="#RevitCategories.PROPERTY_LINECOLOUR_BLUE_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>line colour blue name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.CATEGORY_GRAPHICSTYLE_PROJECTION">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHICSTYLE_PROJECTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Projection'</span></em><a class="headerlink" href="#RevitCategories.CATEGORY_GRAPHICSTYLE_PROJECTION" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic styles used for elements in families
+graphic style projection name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.CATEGORY_GRAPHICSTYLE_CUT">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHICSTYLE_CUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cut'</span></em><a class="headerlink" href="#RevitCategories.CATEGORY_GRAPHICSTYLE_CUT" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic style cut name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.CATEGORY_GRAPHICSTYLE_3D">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CATEGORY_GRAPHICSTYLE_3D</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'3D'</span></em><a class="headerlink" href="#RevitCategories.CATEGORY_GRAPHICSTYLE_3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>graphic style 3D name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitCategories.REPORT_CATEGORIES_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">REPORT_CATEGORIES_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'FAMILY</span> <span class="pre">CATEGORY',</span> <span class="pre">'MAINCATEGORYNAME',</span> <span class="pre">'SUBCATEGORYNAME',</span> <span class="pre">'CATEGORYID',</span> <span class="pre">'MATERIALNAME',</span> <span class="pre">'MATERIALID',</span> <span class="pre">'PATTERNNAME',</span> <span class="pre">'PATTERNID',</span> <span class="pre">'LINEWEIGHTPROJECTION',</span> <span class="pre">'LINEWEIGHTCUT',</span> <span class="pre">'RED',</span> <span class="pre">'GREEN',</span> <span class="pre">'BLUE',</span> <span class="pre">'3D',</span> <span class="pre">'PROJECTION',</span> <span class="pre">'CUT']</span></em><a class="headerlink" href="#RevitCategories.REPORT_CATEGORIES_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Header used in report files</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetMainSubCategories">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetMainSubCategories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetMainSubCategories" title="Permalink to this definition">¶</a></dt>
-<dd><p>reports all subcategories of the family category in a dictionary where
-key: sub category name
-data: sub category</p>
+<dd><dl class="simple">
+<dt>Returns all subcategories of the family category in a dictionary where        key: sub category name</dt><dd><p>value: sub category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetFamilyCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>reports family category in a dictionary where
-key: category name
-data: category</p>
+<dd><dl class="simple">
+<dt>Gets the family category in a dictionary where        key: category name</dt><dd><p>value: category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetOtherSubCategories">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetOtherSubCategories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetOtherSubCategories" title="Permalink to this definition">¶</a></dt>
-<dd><p>reports all family sub categories which do not belong to the actual family category
-note: custom categories have an Id greater 0
-key: category name
-data: dictionary : key sub cat name, data: subcategory</p>
+<dd><p>Returns all family subcategories which do not belong to the actual family category.</p>
+<p>key: category name
+value: dictionary : key sub cat name, value: subcategory</p>
+<p>Note: custom subcategories have an Id greater 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: {str:Autodesk.Revit.DB.Category} }</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryGraphicStyleIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryGraphicStyleIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryGraphicStyleIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns dic with keys: Projection, Cut, 3D and their respective ids</p>
+<dd><p>Returns a dictionary with keys: Projection, Cut, 3D and their respective ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.ElementId}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryMaterial">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryMaterial" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the material properties name and id as a dictionary where key is property description and value the property value</p>
+<dd><p>Returns the material properties name and id as a dictionary where key is property name and         value the property id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.ElementId}        If no material is assigned to a category it will return {‘None: Autodesk.Revit.DB.ElementId.InvalidElementId}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryLinePattern">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryLinePattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryLinePattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the line pattern properties name and id as a dictionary where key is property description and value the property value</p>
+<dd><p>Returns the line pattern properties as a dictionary         where key is property name and value the pattern id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.ElementId}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryLineWeights">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryLineWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryLineWeights" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the line weight properties (cut and projection) and values as a dictionary where key is property description and value the property value</p>
+<dd><p>Returns the line weight properties (cut and projection) as a dictionary         where key is property description and value the property value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: nullable integer}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryColour">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryColour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryColour" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the colour properties (RGB) and values as a dictionary where key is property description and value the property value</p>
+<dd><p>Returns the colour properties (RGB) and values as a dictionary where key is colour name         and value the property value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: byte}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetCategoryProperties">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetCategoryProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetCategoryProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a dictionary where keys are property names and value is the associated property value</p>
+<dd><p>Returns a dictionary where keys are category property names and value is the associated property value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list [{str: var}]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetSavedCategoryPropertyByName">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetSavedCategoryPropertyByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">propNames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetSavedCategoryPropertyByName" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns property values matching property names in saved category data</p>
+<dd><p>Returns property values matching property names in saved category data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>properties</strong> (<em>list</em><em> [</em><em>{str: var}</em><em>]</em>) – List of dictionaries in format as per GetCategoryProperties(cat) method.</p></li>
+<li><p><strong>propNames</strong> (<em>list str</em>) – List of proprty names of which the values are to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list var</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryMaterial">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryMaterial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materialId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryMaterial" title="Permalink to this definition">¶</a></dt>
-<dd><p>updates material property of a given category</p>
+<dd><p>Updates material property of a given category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>materialId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The new material element id.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if material property was updated succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryLinePattern">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLinePattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linePatternId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLinePattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>updates line pattern property of a given category</p>
+<dd><p>Updates line pattern property of a given category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>materialId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The new material element id.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if line pattern property was updated succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryLineWeights">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLineWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThickNessCut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThicknessProjection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLineWeights" title="Permalink to this definition">¶</a></dt>
-<dd><p>updates line weight properties of a given category</p>
+<dd><p>Updates line weight properties of a given category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>lineThickNessCut</strong> (<em>int</em>) – The cut line weight.</p></li>
+<li><p><strong>lineThicknessProjection</strong> (<em>int</em>) – The projection line weight.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if line weight property was updated succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryColour">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryColour</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">red</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">green</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryColour" title="Permalink to this definition">¶</a></dt>
-<dd><p>updates colour properties of a given category</p>
+<dd><p>Updates colour properties of a given category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>red</strong> (<em>byte</em>) – The colour red channel.</p></li>
+<li><p><strong>green</strong> (<em>byte</em>) – The colour green channel.</p></li>
+<li><p><strong>blue</strong> (<em>byte</em>) – The colour blue channel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if colour property was updated succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryProperties">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>updates property values of a given category</p>
+<dd><p>Updates varies property values of a given category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>properties</strong> (<em>list of dictionaries in format as per GetCategoryProperties</em><em>(</em><em>cat</em><em>) </em><em>method.</em>) – List of property values to be applied to category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all properties where updated succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

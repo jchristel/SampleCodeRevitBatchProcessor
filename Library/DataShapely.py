@@ -1,5 +1,7 @@
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -39,11 +41,17 @@ import DataReadFromFile as dReader
 
 # --------------- generics shape creation ------------------
 
-# geoObject         data geometry object
 def GetTranslationMatrix(geoObject):
     '''
-    returns the rotation/ translation matrix from the geometry object
+    Gets the rotation/ translation matrix from the geometry object
+
+    :param geoObject: A data geometry object instance.
+    :type geoObject: :class:`.DataGeometry`
+
+    :return: A translation matrix.
+    :rtype: numpy array
     '''
+
     transM = [] # translation only matrix
     # note numpy creates arrays by row!
     # need to append one more row since matrix dot multiplication rule:
@@ -61,13 +69,22 @@ def GetTranslationMatrix(geoObject):
     combinedM = np.transpose(combinedM)
     return combinedM
 
-# geoObject         data geometry object
-# translationM      numpy matrix
 def GetOuterLoopAsShape(geoObject, translationM):
     '''
-    returns the boundary loop of an object as list of shapely points. 
-    Points are translated with passed in matrix 
+    Returns the boundary loop of an object as list of shapely points. 
+    
+    Points are translated with passed in matrix.
+    Any loops containing less then 3 points willbe ignored. (Empty list will be returned)
+
+    :param geoObject: A data geometry object instance.
+    :type geoObject: :class:`.DataGeometry`
+    :param translationM: A translation matrix.
+    :type translationM: numpy array
+
+    :return: List of shapely points defining a polygon. (Empty list will be returned if less then 3 points in loop.)
+    :rtype: List[shapely.point]
     '''
+
     singlePolygonLoop = []
     if(geoObject.dataType == 'polygons'):
         for pdouble in geoObject.outerLoop:
@@ -82,14 +99,22 @@ def GetOuterLoopAsShape(geoObject, translationM):
     else:
         return []
 
-# geoObject         data geometry object
-# translationM      numpy matrix
 def GetInnerLoopsAsShape(geoObject, translationM):
     '''
-    returns the inner loops (holes) of an object as list of shapely points. 
-    Points are translated with passed in matrix 
-    loops within inner loops will be ignored
+    Returns the inner loops (holes) of an object as list of lists of shapely points. 
+    
+    Points are translated with passed in matrix.
+    Any inner loops containing less then 3 points willbe ignored. (Empty list will be returned)
+
+    :param geoObject: A data geometry object instance.
+    :type geoObject: :class:`.DataGeometry`
+    :param translationM: A translation matrix.
+    :type translationM: numpy array
+
+    :return: List of lists of shapely points defining a polygon.
+    :rtype: list [list[shapely.point]]
     '''
+    
     shapeS = []
     # get inner loops
     if(len(geoObject.innerLoops) > 0):
@@ -107,13 +132,20 @@ def GetInnerLoopsAsShape(geoObject, translationM):
                 shapeS.append(singlePolygonLoop)
     return shapeS
 
-# shapeS            list of polygons (each polygon is descirbed as a list of shapely points)
 def buildShapelyPolygon(shapeS):
     '''
-    creates shapely polygons from list of polygons passt in
-    assumptions is first polygone describes the boundary loop 
-    any subsequent polygons are describing holes within the boundary 
+    Creates shapely polygons from list of polygons passt in.
+
+    Sssumptions is first polygone describes the boundary loop and any subsequent polygons are describing\
+         holes within the boundary 
+
+    :param shapeS: list of shapely polygons
+    :type shapeS: list[shapely.polygon]
+
+    :return: A shapely polygon.
+    :rtype: shapely.polygon
     '''
+
     # convert to shapely
     poly = None
     # check if we got multiple polygons
@@ -134,12 +166,19 @@ def buildShapelyPolygon(shapeS):
             if poly.within(sg.Polygon(shapeS[0])) is True])
     return poly
 
-# dataInstance          a ceiling type data instance
 def GetShapelyPolygonsFromDataInstance(dataInstance):
     '''
-    returns a list of of shapely polygons from data instances passt in.
+    Returns a list of of shapely polygons from data instances passt in.
+    
     Polygons may contain holes
+
+    :param dataInstance: _description_
+    :type dataInstance: A class with .geometry property returning a :class:`.DataGeometry` instance.
+    
+    :return: A list of shapely polygons.
+    :rtype: list [shapely.polygon]
     '''
+
     allPolygons = []
     # loop over data geometry and convert into shapely polygons
 
@@ -162,16 +201,23 @@ def GetShapelyPolygonsFromDataInstance(dataInstance):
 
 # --------------- end generics ------------------
 
-# list of available geometry (from revit to shapely ) converters
+#: List of available geometry (from revit to shapely ) converters
 geometryConverter_ = {
     dr.DataRoom.dataType : GetShapelyPolygonsFromDataInstance,
     dc.DataCeiling.dataType: GetShapelyPolygonsFromDataInstance
 }
 
-# filePath          path to json formatted text file to be read (one json entry per row)
 def ReadData(filePath):
     '''
-    reads text files into data objects within data reader class which is returned
+    Reads text files into data objects within data reader class which is returned
+
+    Data file to be json formatted. (one json entry per row)
+
+    :param filePath: Fully qualified path to json formatted data file.
+    :type filePath: str
+
+    :return: A file data reader instance.
+    :rtype: :class:`.ReadDataFromFile`
     '''
     # read json file and convert into data objects
     dataReader = dReader.ReadDataFromFile(filePath)
@@ -180,14 +226,20 @@ def ReadData(filePath):
 
 # --------------- data processing ------------------
 
-# fileName:         fully qualified file path
-# header:           list of column headers, provide empty list if not required!
-# data:             list of list of strings representing row data
-# writeType         w: new file, a: append to existing file...
 def writeReportData(fileName, header, data, writeType = 'w'):
     '''
-    method writing out report information
+    Method writing out report information to file.
+ 
+    :param fileName: Fully qualified file path to data file.
+    :type fileName: str
+    :param header: List of column headers, provide empty list if not required!
+    :type header: list[str]
+    :param data: List of list of strings representing row data
+    :type data: list[list[str]]
+    :param writeType: 'w' new file, 'a' append to existing file., defaults to 'w'
+    :type writeType: str, optional
     '''
+
     with codecs.open(fileName, writeType, encoding='utf-8') as f:
         # check if header is required
         if(len(header) > 0):
@@ -202,15 +254,23 @@ def writeReportData(fileName, header, data, writeType = 'w'):
                     f.write(d[0] + '\n')
         f.close()
 
-# dataReader        ReadDataFromFile class instance
+
 def BuildDictionaryByLevelAndDataType(dataReader):
     '''
-    returns a dictionary where 
-    - key is the level name
+    Returns a dictionary where:
+
+    - key: is the level name
     - values is a list of list of data objects
     -       first list rooms
     -       second list ceilings
+
+    :param dataReader: A data reader class instance
+    :type dataReader: :class:`.ReadDataFromFile`
+
+    :return: A dictioanry where key is the level name, value is a list of lists of data objects.
+    :rtype: dic{str:[[:class:`.DataRoom],[:class:`.DataCeiling`]]}
     '''
+
     dic = {}
     for dObject in dataReader.data:
         if(dObject.levelName not in dic):

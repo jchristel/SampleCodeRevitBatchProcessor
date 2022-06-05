@@ -116,8 +116,8 @@
 <p>Provides python samples on how to use some aspects of the Revit API.</p>
 <section id="module-RevitCommonAPI">
 <span id="revitcommonapi"></span><h2>RevitCommonAPI<a class="headerlink" href="#module-RevitCommonAPI" title="Permalink to this headline">¶</a></h2>
-<section id="this-module-contains-a-number-of-commonly-used-revit-api-utility-functions">
-<h3>This module contains a number of commonly used Revit API utility functions.<a class="headerlink" href="#this-module-contains-a-number-of-commonly-used-revit-api-utility-functions" title="Permalink to this headline">¶</a></h3>
+<section id="common-revit-api-utility-functions">
+<h3>Common Revit API utility functions.<a class="headerlink" href="#common-revit-api-utility-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckParameterValue">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckParameterValue" title="Permalink to this definition">¶</a></dt>
@@ -1801,8 +1801,8 @@ and symbols used</p>
 </section>
 <section id="module-RevitBuildingPads">
 <span id="revit-building-pads"></span><h2>Revit Building Pads<a class="headerlink" href="#module-RevitBuildingPads" title="Permalink to this headline">¶</a></h2>
-<section id="this-module-contains-a-number-of-functions-around-revit-building-pads">
-<h3>This module contains a number of functions around Revit building pads.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-building-pads" title="Permalink to this headline">¶</a></h3>
+<section id="revit-building-pads-helper-functions">
+<h3>Revit building pads helper functions.<a class="headerlink" href="#revit-building-pads-helper-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitBuildingPads.REPORT_BUILDINGPAD_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">REPORT_BUILDINGPAD_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'BUILDINGPADTYPEID',</span> <span class="pre">'BUILDINGPADTYPENAME']</span></em><a class="headerlink" href="#RevitBuildingPads.REPORT_BUILDINGPAD_HEADER" title="Permalink to this definition">¶</a></dt>
@@ -1824,72 +1824,228 @@ and symbols used</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetAllBuildingPadTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadTypesByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all BuildingPad types in the model:
-- Basic BuildingPad</p>
+<dd><p>Gets a filtered element collector of all BuildingPad types in the model.</p>
+<ul class="simple">
+<li><p>Basic BuildingPad</p></li>
+</ul>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing building pad types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetBuildingPadTypesByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetBuildingPadTypesByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetBuildingPadTypesByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>this will return a filtered element collector of all BuildingPad types in the model:
-- Basic BuildingPad.</p>
+<dd><p>Gets a filtered element collector of all building pad types in the model:</p>
+<ul class="simple">
+<li><p>Basic BuildingPad</p></li>
+</ul>
+<p>Filters by class.
+Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing building pad types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.BuildBuildingPadTypeDictionary">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">BuildBuildingPadTypeDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.BuildBuildingPadTypeDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the dictioanry passt in with keys and or values added retrieved from collector passt in</p>
+<dd><p>Returns the dictionary passt in with keys and or values added retrieved from collector passt in.</p>
+<p>Keys are built in building pad family type names.</p>
+<p>TODO: Use more generic code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing building pad types.</p></li>
+<li><p><strong>dic</strong> (<em>dictionary</em><em> (</em><em>key str</em><em>, </em><em>value list of Autodesk.Revit.DB.ElementId</em><em>)</em>) – A dictionary containing key:  building pad type family name, value: list of ids belonging to that type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitBuildingPads.SortBuildingPadTypesByFamilyName">
+<span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">SortBuildingPadTypesByFamilyName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.SortBuildingPadTypesByFamilyName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all building pad types in the model where key is the build in wall family name, values are ids of associated wall types.</p>
+<p>TODO: Use more generic code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetAllBuildingPadInstancesInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadInstancesInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadInstancesInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all BuildingPad elements placed in model</p>
+<dd><p>Gets all building pad elements placed in model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetAllBuildingPadInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all BuildingPad elements placed in model</p>
+<dd><p>Gets all building pad elements placed in model.</p>
+<p>Filters by class.
+Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetAllBuildingPadTypeIdsInModelByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadTypeIdsInModelByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadTypeIdsInModelByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all BuildingPad element types available placed in model</p>
+<dd><p>Gets all building pad element type ids available in model.</p>
+<p>Filters by category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing building pad type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetAllBuildingPadTypeIdsInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all BuildingPad element types available placed in model</p>
+<dd><p>Gets all building pad element type ids available in model.</p>
+<p>Filters by class.
+Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing building pad type ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetUsedBuildingPadTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetUsedBuildingPadTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetUsedBuildingPadTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all used in BuildingPad type ids</p>
+<dd><p>Gets all used building pad type ids.</p>
+<p>Filters by category.
+Used: at least one instance of this type is placed in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing used building pad types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns false if any symbols (types) of a family are in use in a model</p>
+<dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
+<p>TODO: check for more geric list comparison and remove this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>famTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – List of family type ids to check.</p></li>
+<li><p><strong>unUsedTypeIds</strong> (<em>List of Autodesk.Revit.DB.ElementId</em>) – Reference list of ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if any id from famTypeIds is not in unUsedTypeIds.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitBuildingPads.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonInPlaceBuildingPadTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all unused BuildingPad type ids for:
-- Basic BuildingPad</p>
+<dd><p>Gets all unused building pad type id’s.</p>
+<ul class="simple">
+<li><p>Basic BuildingPad</p></li>
+</ul>
+<p>This method can be used to safely delete unused building pad types:
+In the case that no building pad instance using any of the types is placed this will return all but one type id since        Revit requires at least one building pad type definition to be in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing not used building pad types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 </section>
 <section id="module-RevitCategories">
 <span id="revit-categories"></span><h2>Revit Categories<a class="headerlink" href="#module-RevitCategories" title="Permalink to this headline">¶</a></h2>
-<section id="this-module-contains-a-number-of-functions-around-revit-categories">
-<h3>This module contains a number of functions around Revit categories.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-categories" title="Permalink to this headline">¶</a></h3>
+<section id="revit-category-helper-functions">
+<h3>Revit category helper functions.<a class="headerlink" href="#revit-category-helper-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitCategories.CAT_RENAMING">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CAT_RENAMING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Clearance</span> <span class="pre">Zones':</span> <span class="pre">'AMAZING'}</span></em><a class="headerlink" href="#RevitCategories.CAT_RENAMING" title="Permalink to this definition">¶</a></dt>
@@ -2506,8 +2662,8 @@ result.result will be empty</p>
 <dt class="sig sig-object py" id="RevitCategories.ChangeFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">ChangeFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.ChangeFamilyCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Changes the current family category to the new one specified.</p>
-<p>Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements to the family category.
-This function will also transfer any user created subcategories to the new category and assign elements to it to match the subcategory they where in before the categoryt change.</p>
+<p>Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories        to the new family category.</p>
+<p>This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before         the category change.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2517,7 +2673,7 @@ This function will also transfer any user created subcategories to the new categ
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Result class instance.
-result.status. True if all custom subcategories where re-created und er new category and elements where moved to those subcategories, otherwise False.
+result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
 result.message will confirm succesful creation of subcategories and element move.
 result.result empty list
 On exception:
@@ -2534,13 +2690,44 @@ result.result will be empty</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.BuildReportDataByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">BuildReportDataByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyCat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainCatName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.BuildReportDataByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>formats category properties into lists for reports</p>
+<dd><p>Formats category properties into lists for reports</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>dic</strong> (<em>_type_</em>) – dictionary containing category properties</p></li>
+<li><p><strong>familyCat</strong> (<em>str</em>) – The family category name.</p></li>
+<li><p><strong>mainCatName</strong> (<em>str</em>) – A hard coded revit category name. Can be the same as familyCat.</p></li>
+<li><p><strong>docFilePath</strong> (<em>str</em>) – The fully qualified family file path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of list of strings. Each row represents one category.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[list[str]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetReportData">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>reports all categories, properties and all elements belonging to them</p>
+<dd><p>Reports all categories, their properties and all elements belonging to them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The fully qualified family file path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of list of strings. Each row represents one category.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[list[str]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -2789,7 +2976,7 @@ Used: at least one instance of this type is placed in the model.</p>
 <li><p>Basic Ceiling</p></li>
 </ul>
 <p>This method can be used to safely delete unused ceiling types:
-In the case that no wall instance using any of the types is placed this will return all but one type id since        Revit requires at least one ceiling type definition to be in the model.</p>
+In the case that no ceiling instance using any of the types is placed this will return all but one type id since        Revit requires at least one ceiling type definition to be in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>

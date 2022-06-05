@@ -2294,67 +2294,241 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetFamilyCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>changes the family category to new one specified by name.
-Returns true only if the category was changed. Any other case is false! (that includes situations when the family is already of the new catgeory)</p>
+<dd><p>Changes the family category to new one specified by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>newCategoryName</strong> (<em>str</em>) – The name of the new family category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True only if the category was changed succesfully. Any other case False! (That includes situations when the family is already of the new catgeory)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.CreateNewSubCategoryToFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewSubCategoryToFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newSubCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewSubCategoryToFamilyCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a new subcategory to the family category and returns it
-returns exception “The name ‘xys’ is already in use” if category with the same name is already in file</p>
+<dd><p>Creates a new subcategory to the family category and returns it.</p>
+<p>TODO: Bubble up exception if subcategory already exists!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>newSubCategoryName</strong> (<em>str</em>) – The new subcategroy name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new subcategory. Exception “The name ‘xys’ is already in use” if subcategory with the same name is already in file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A category. (or str if exception occured)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SortElementsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SortElementsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementDic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SortElementsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a dicionary of element ids where key is the 
-category</p>
+<dd><p>Returns a dicionary of element ids where key is the category they belong to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elements</strong> (<em>[</em><em>Autodesk.Revit.DB.Element</em><em>]</em>) – List of revit elements.</p></li>
+<li><p><strong>elementDic</strong> (<em>{Autodesk.Revit.DB.Category:</em><em> [</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – Dictionary where key is subcategory and values are element ids.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary where key is subcategory and values are element ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetElementsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetElementsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetElementsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns elements in family assign to a specific category</p>
+<dd><p>Returns elements in family assigned to a specific category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary where key is subcategory and values are element ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.GetUsedCategoryIds">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">GetUsedCategoryIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.GetUsedCategoryIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns all category ids in a family which have an element assigned to them</p>
+<dd><p>Returns all category ids in a family which have an element assigned to them</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of categories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Category]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.CreateNewCategoryAndTransferProperties">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewCategoryAndTransferProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCatName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existingCatName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewCategoryAndTransferProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a new category and applies properties from existing category, Returns new category
-if category already exists in file it will return that</p>
+<dd><p>Creates a new subcategory and transfer properties from existing subcategory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>newCatName</strong> (<em>str</em>) – The new sub category name.</p></li>
+<li><p><strong>existingCatName</strong> (<em>str</em>) – The existing subcategory name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+result.status. True if category was created or already existed in file, otherwsie False.
+result.message will contain the name of the category created.
+result.result returns new category, if category already exists in file it will return that
+On exception:
+result.status (bool) will be False.
+result.message will contain generic exception message.
+result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.CreateNewCategoryFromSavedProperties">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewCategoryFromSavedProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCatName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savedCatProps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewCategoryFromSavedProperties" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a new category and applies properties stored , Returns new category
-if category already exists in file it will return that</p>
+<dd><p>Creates a new category and applies properties stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>newCatName</strong> (<em>str</em>) – The new sub category name.</p></li>
+<li><p><strong>savedCatProps</strong> (<em>list of dictionaries in format as per GetCategoryProperties</em><em>(</em><em>cat</em><em>) </em><em>method.</em>) – Dictionary containing subcategory properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+result.status. True if category was created or already existed in file, otherwsie False.
+result.message will contain the name of the category created.
+result.result returns new category, if category already exists in file it will return that
+On exception:
+result.status (bool) will be False.
+result.message will contain generic exception message.
+result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.MoveElementsFromSubCategoryToSubCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">MoveElementsFromSubCategoryToSubCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromCategoryName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.MoveElementsFromSubCategoryToSubCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>moves elements from one category to another specified by their names</p>
+<dd><p>Moves elements from one subcategory to another one identified by their names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>fromCategoryName</strong> (<em>str</em>) – The source subcategory name.</p></li>
+<li><p><strong>toCategoryName</strong> (<em>str</em>) – The destination subcategory name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
+result.message will contain the name of the deastination subcategory by element.
+result.result empty list
+On exception:
+result.status (bool) will be False.
+result.message will contain generic exception message.
+result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.MoveElementsToCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">MoveElementsToCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toCategoryName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destinationCatIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.MoveElementsToCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>moves elements provided in dictionary another category specified by their names</p>
+<dd><p>Moves elements provided in dictionary to another category specified by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>elements</strong> (<em>{Autodesk.Revit.DB.Category:</em><em> [</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – Dictionary of elements, key are graphic style names.</p></li>
+<li><p><strong>toCategoryName</strong> (<em>str</em>) – The name of the subcategory elements are to be moved to.</p></li>
+<li><p><strong>destinationCatIds</strong> (<em>dictionary {str: Autodesk.Revit.DB.ElementId}</em>) – Dictionary of ids of graphic style, key are graphic style names</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+result.status. True if all elements where moved to destination subcategories, otherwsie False.
+result.message will contain the name of the destination subcategory by element.
+result.result empty list
+On exception:
+result.status (bool) will be False.
+result.message will contain generic exception message.
+result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.ChangeFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">ChangeFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.ChangeFamilyCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>changes the current family category to the new one specified
-it will also transfer any user created subcategories to the new category and assign elements to it</p>
+<dd><p>Changes the current family category to the new one specified.</p>
+<p>Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements to the family category.
+This function will also transfer any user created subcategories to the new category and assign elements to it to match the subcategory they where in before the categoryt change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>newCategoryName</strong> (<em>str</em>) – The new family category</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+result.status. True if all custom subcategories where re-created und er new category and elements where moved to those subcategories, otherwise False.
+result.message will confirm succesful creation of subcategories and element move.
+result.result empty list
+On exception:
+result.status (bool) will be False.
+result.message will contain generic exception message.
+result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

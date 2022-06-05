@@ -123,6 +123,7 @@ def GetMainSubCategories(doc):
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: A dictionary.
     :rtype: dictionary {str: Autodesk.Revit.DB.Category}
     '''
@@ -517,11 +518,18 @@ def SetCategoryProperties(doc, cat, properties):
 #-------------------------- utilities ---------------------------------
 
 # doc                       current family document
-# newCategoryName           the name of the new familyncategory
+# newCategoryName           
 def SetFamilyCategory(doc, newCategoryName):
     '''
-    changes the family category to new one specified by name.
-    Returns true only if the category was changed. Any other case is false! (that includes situations when the family is already of the new catgeory)
+    Changes the family category to new one specified by name.
+    
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param newCategoryName: The name of the new family category.
+    :type newCategoryName: str
+    
+    :return: True only if the category was changed succesfully. Any other case False! (That includes situations when the family is already of the new catgeory)
+    :rtype: bool
     '''
     returnvalue = res.Result()
     cat = doc.OwnerFamily.FamilyCategory
@@ -540,14 +548,22 @@ def SetFamilyCategory(doc, newCategoryName):
     else:
         returnvalue.UpdateSep(False, 'Family is already of category: '+str(newCategoryName))
     return returnvalue
-
-# doc                   current family document
-# newSubCategoryName    the new subcategroy name
+   
 def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     '''
-    creates a new subcategory to the family category and returns it
-    returns exception "The name 'xys' is already in use" if category with the same name is already in file
+    Creates a new subcategory to the family category and returns it.
+    
+    TODO: Bubble up exception if subcategory already exists!
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param newSubCategoryName: The new subcategroy name
+    :type newSubCategoryName: str
+
+    :return: The new subcategory. Exception "The name 'xys' is already in use" if subcategory with the same name is already in file.
+    :rtype: A category. (or str if exception occured)
     '''
+
     returnvalue = res.Result()
     if (doc.IsFamilyDocument):
         # get the family category
@@ -574,14 +590,20 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     else:
         returnvalue.UpdateSep(False, 'This is not a family document!')
     return returnvalue
-
-# elements              list of revit elements
-# elememtDic            dictionary where key is category and values are element ids
+          
 def SortElementsByCategory(elements, elementDic):
     '''
-    returns a dicionary of element ids where key is the 
-    category
+    Returns a dicionary of element ids where key is the category they belong to.
+
+    :param elements:  List of revit elements.
+    :type elements: [Autodesk.Revit.DB.Element]
+    :param elementDic:  Dictionary where key is subcategory and values are element ids.
+    :type elementDic: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+    
+    :return: Dictionary where key is subcategory and values are element ids.
+    :rtype: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
     '''
+
     for el in elements:
         for builinDef in ELEMENTS_PARAS_SUB:
             value = com.GetBuiltInParameterValue(el, builinDef)
@@ -593,12 +615,19 @@ def SortElementsByCategory(elements, elementDic):
                 break
     return elementDic
 
-# doc                   current family document
-# cat                   category to which the elements are assigned
 def GetElementsByCategory(doc, cat):
     '''
-    returns elements in family assign to a specific category
+    Returns elements in family assigned to a specific category
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param cat: A category.
+    :type cat: Autodesk.Revit.DB.Category
+
+    :return: Dictionary where key is subcategory and values are element ids.
+    :rtype: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
     '''
+
     # get all elements in family
     dic = {}
     elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
@@ -626,11 +655,17 @@ def GetElementsByCategory(doc, cat):
             dicFiltered[key] = []
     return dicFiltered
 
-# doc                   current family document
 def GetUsedCategoryIds(doc):
     '''
-    returns all category ids in a family which have an element assigned to them
+    Returns all category ids in a family which have an element assigned to them
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: List of categories.
+    :rtype: [Autodesk.Revit.DB.Category]
     '''
+
     # get all elements in family
     dic = {}
     elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
@@ -642,14 +677,29 @@ def GetUsedCategoryIds(doc):
     dic = SortElementsByCategory(elMText, dic)
     return dic.keys ()
 
-# doc                   current family document
-# newCatName            name of category to be created
-# existingCatName       exisitng category of which to clone properties
 def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     '''
-    creates a new category and applies properties from existing category, Returns new category
-    if category already exists in file it will return that
+    Creates a new subcategory and transfer properties from existing subcategory.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param newCatName: The new sub category name.
+    :type newCatName: str
+    :param existingCatName: The existing subcategory name
+    :type existingCatName: str
+
+    :return: 
+        Result class instance.
+        result.status. True if category was created or already existed in file, otherwsie False.
+        result.message will contain the name of the category created.
+        result.result returns new category, if category already exists in file it will return that
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+        result.result will be empty
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     cats = GetMainSubCategories(doc)
     # check if existing category actually exists in family
@@ -667,14 +717,29 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
         returnvalue.UpdateSep(False, 'Template category '+ str(existingCatName) + ' does not exist in file!')
     return returnvalue
 
-# doc                   current family document
-# newCatName            name of category to be created
-# savedCatProps         existtng category properties
 def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     '''
-    creates a new category and applies properties stored , Returns new category
-    if category already exists in file it will return that
+    Creates a new category and applies properties stored.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param newCatName: The new sub category name.
+    :type newCatName: str
+    :param savedCatProps: Dictionary containing subcategory properties.
+    :type savedCatProps: list of dictionaries in format as per GetCategoryProperties(cat) method.
+
+    :return: 
+        Result class instance.
+        result.status. True if category was created or already existed in file, otherwsie False.
+        result.message will contain the name of the category created.
+        result.result returns new category, if category already exists in file it will return that
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+        result.result will be empty
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
     if(resultNewSubCat.result):
@@ -687,13 +752,29 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
             returnvalue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
     return returnvalue
 
-# doc                         current family document
-# fromCategoryName            name of source category
-# toCategoryName              name of destination category
 def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryName):
     '''
-    moves elements from one category to another specified by their names
+    Moves elements from one subcategory to another one identified by their names.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param fromCategoryName: The source subcategory name. 
+    :type fromCategoryName: str
+    :param toCategoryName: The destination subcategory name.
+    :type toCategoryName: str
+
+    :return: 
+        Result class instance.
+        result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
+        result.message will contain the name of the deastination subcategory by element.
+        result.result empty list
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+        result.result will be empty
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     # check whether source and destination category exist in file
     cats = GetMainSubCategories(doc)
@@ -711,13 +792,29 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
        returnvalue.UpdateSep(False, 'Source category '+ str(fromCategoryName) + ' does not exist in file!')
     return returnvalue
 
-# doc                           current family document
-# elements                      dictionary of elements, key are graphic style names
-# toCategoryName                name of destination category
-# destinationCatIds             dictionary of ids of graphic styleids, key are graphic style names
 def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
     '''
-    moves elements provided in dictionary another category specified by their names
+    Moves elements provided in dictionary to another category specified by name.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param elements: Dictionary of elements, key are graphic style names.
+    :type elements: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+    :param toCategoryName: The name of the subcategory elements are to be moved to.
+    :type toCategoryName: str
+    :param destinationCatIds: Dictionary of ids of graphic style, key are graphic style names
+    :type destinationCatIds: dictionary {str: Autodesk.Revit.DB.ElementId}
+
+    :return: 
+        Result class instance.
+        result.status. True if all elements where moved to destination subcategories, otherwsie False.
+        result.message will contain the name of the destination subcategory by element.
+        result.result empty list
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+        result.result will be empty
+    :rtype: :class:`.Result`
     '''
     returnvalue = res.Result()
     # check whether destination category exist in file
@@ -739,13 +836,30 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
         returnvalue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
     return returnvalue
 
-# doc                       current family document
-# newCategoryName           the name of the new familyncategory
 def ChangeFamilyCategory(doc, newCategoryName):
     '''
-    changes the current family category to the new one specified
-    it will also transfer any user created subcategories to the new category and assign elements to it
+    Changes the current family category to the new one specified.
+
+    Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements to the family category.
+    This function will also transfer any user created subcategories to the new category and assign elements to it to match the subcategory they where in before the categoryt change.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param newCategoryName: The new family category
+    :type newCategoryName: str
+
+    :return: 
+        Result class instance.
+        result.status. True if all custom subcategories where re-created und er new category and elements where moved to those subcategories, otherwise False.
+        result.message will confirm succesful creation of subcategories and element move.
+        result.result empty list
+        On exception:
+        result.status (bool) will be False.
+        result.message will contain generic exception message.
+        result.result will be empty
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     # get sub categories in family
     subCats = GetMainSubCategories (doc)

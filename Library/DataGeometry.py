@@ -1,5 +1,7 @@
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Geometry data storage class.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -34,7 +36,13 @@ class DataGeometry():
     
     def __init__(self, j = {}
         ):
-        
+        '''
+        Class constructor
+
+        :param j:  json formatted dictionary of this class, defaults to {}
+        :type j: dict, optional
+        '''
+
         self.dataType = 'polygons'
         self.outerLoop = []        
         self.innerLoops = []
@@ -48,6 +56,10 @@ class DataGeometry():
        
     def to_json(self):
         '''
-        convert the instance of this class to json
+        Convert the instance of this class to json.
+
+        :return: A Json object.
+        :rtype: json
         '''
+
         return json.dumps(self, indent = None, default=lambda o: o.__dict__)

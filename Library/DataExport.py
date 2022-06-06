@@ -1,3 +1,8 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Utility functions writing revit geometry data to file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 #
 #License:
 #
@@ -27,11 +32,18 @@ import RevitRooms as rRoom
 import Result as res
 
 
-# dataIn         list of data class instances
+# dataIn         
 def ConvertDataToListJson(dataIn):
     '''
-    convertes lists of data classes into a single list of list of Json string representing the data class
+    Convertes lists of data classes into a single list of list of Json string representing the data class
+
+    :param dataIn: list of data class instances
+    :type dataIn: [data class]
+
+    :return: list of list of Json string
+    :rtype: [[str]]
     '''
+
     dataJsonAll = []
     for dataList in dataIn:
         for d in dataList:
@@ -42,12 +54,31 @@ def ConvertDataToListJson(dataIn):
 
 # -------------------------------- write data to file -------------------------------------------------------
 
-# doc       current model document
-# dataOutPutFileName    fully qualified file path to data out put file
 def WriteJsonDataToFile (doc, dataOutPutFileName):
     '''
-    collects geometry data and writes it to a new json formatted file
+    Collects geometry data and writes it to a new json formatted file
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param dataOutPutFileName: Fully qualified file path to json data file.
+    :type dataOutPutFileName: str
+
+    :return: 
+        Result class instance.
+        
+        - result.status. True if json data file was written succesfully, otherwise False.
+        - result.message will confirm path of json data file.
+        - result.result empty list
+
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+        - result.result will be empty
+
+    :rtype: :class:`.Result`
     '''
+
     result = res.Result()
     # get data
     allRoomData = rRoom.GetAllRoomData(doc)

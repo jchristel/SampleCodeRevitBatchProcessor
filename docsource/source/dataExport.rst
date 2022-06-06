@@ -1,4 +1,4 @@
-Exports data samples.
+Export data samples.
 =================================================================================
 
 The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit. 
@@ -20,5 +20,8 @@ The following modules are classes used to store varies data retrieved from Revit
     :members:
 
 .. automodule:: DataShapely
+    :members:
+
+.. automodule:: DataExport
     :members:
 

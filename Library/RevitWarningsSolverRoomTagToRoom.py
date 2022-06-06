@@ -54,9 +54,12 @@ class RevitWarningsSolverRoomTagToRoom:
         :param warnings: List of warnings to be solved.
         :type warnings: Autodesk.Revit.DB.FailureMessage
 
-        :return: Result class instance.
-           .result = True if all room tags within warnings could be moved to room location point. Otherwise False.
-           .message will be 'moved tag to room xyz'
+        :return: 
+            Result class instance.
+            
+            - .result = True if all room tags within warnings could be moved to room location point. Otherwise False.
+            - .message will be 'moved tag to room xyz'
+        
         :rtype: :class:`.Result`
         '''
 

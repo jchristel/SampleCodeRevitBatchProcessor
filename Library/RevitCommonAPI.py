@@ -250,11 +250,15 @@ def setParameterValue(para, valueAsString, doc):
 
     :return: 
         Result class instance.
-        Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
-        Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+
+        - Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+        
         On exception:
-        Set parameter.status (bool) will be False.
-        Set parameter.message will contain the exception message.
+        
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -345,11 +349,15 @@ def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, p
 
     :return: 
         Result class instance.
-        Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
-        Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+
+        - Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
+        - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
+        
         On exception:
-        Set parameter.status (bool) will be False.
-        Set parameter.message will contain the exception message.
+        
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+        
     :rtype: :class:`.Result`
     '''
     

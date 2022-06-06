@@ -102,9 +102,12 @@ def PurgeUnplacedElements (doc,
         Will attempt to delete all elements at once.
     :type isDebug: bool, optional
 
-    :return: Result class instance.
-           .result = True if all purge actions completed successfully. Otherwise False.
-           .message will be listing each purge action and its status
+    :return: 
+        Result class instance.
+        
+        - .result = True if all purge actions completed successfully. Otherwise False.
+        - .message will be listing each purge action and its status
+    
     :rtype: :class:`.Result`
     '''
 
@@ -210,9 +213,12 @@ def PurgeUnused(doc, revitFilePath, isDebug):
         Will attempt to delete all elements at once, less detailed purge report.
     :type isDebug: bool
 
-    :return: Result class instance.
-           .result = True if all purge actions completed successfully. Otherwise False.
-           .message will be listing each purge action and its status
+    :return: 
+        Result class instance.
+        
+        - .result = True if all purge actions completed successfully. Otherwise False.
+        - .message will be listing each purge action and its status
+    
     :rtype: :class:`.Result`
     '''
 

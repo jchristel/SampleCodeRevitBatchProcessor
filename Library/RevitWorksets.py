@@ -169,9 +169,12 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     :param elementTypeName: A description used in the status message returned.
     :type elementTypeName: str
     
-    :return: Result class instance.
-        .result = True if succsesfully moved all elements to new workset. Otherwise False.
-        .message will contain stats in format [success :: failure]
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully moved all elements to new workset. Otherwise False.
+        - .message will contain stats in format [success :: failure]
+    
     :rtype: :class:`.Result`
     '''
 

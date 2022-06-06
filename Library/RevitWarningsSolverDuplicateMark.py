@@ -63,9 +63,12 @@ class RevitWarningsSolverDuplicateMark:
         :param warnings: List of warnings to be solved.
         :type warnings: Autodesk.Revit.DB.FailureMessage
 
-        :return: Result class instance.
-           .result = True if all duplicate mark warnings could be solved. Otherwise False.
-           .message will contain stats in format parameter value set to ''
+        :return: 
+            Result class instance.
+            
+            - .result = True if all duplicate mark warnings could be solved. Otherwise False.
+            - .message will contain stats in format parameter value set to ''
+        
         :rtype: :class:`.Result`
         '''
 

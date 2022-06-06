@@ -59,12 +59,17 @@ def WriteOutWSMDataToFile(directoryPath):
     :param directoryPath: The directory path to where the marker file is to be saved.
     :type directoryPath: str
     
-    :return:  Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+    :return:  
+        Result class instance.
+        
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -152,12 +157,17 @@ def CleanUpWSMDataFiles(directoryPath):
     :param directoryPath: The directory path containing the marker files to be deleted.
     :type directoryPath: str
     
-    :return:  Result class instance.
-        Delete status returned in result.status. False if an exception occured, otherwise True.
-        result.message will confirm succesfull deletion of all files.
+    :return:  
+        Result class instance.
+        
+        - Delete status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will confirm succesfull deletion of all files.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -181,12 +191,17 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
     :param ignoreMarkerFiles: True no marker file data will be read and all WSM sessions running will be killed., defaults to False
     :type ignoreMarkerFiles: bool, optional
     
-    :return:  Result class instance.
-        Kill status returned in result.status. False if an exception occured, otherwise True.
-        result.message will confirm succesfull killing of all WSM processes.
+    :return:  
+        Result class instance.
+        
+        - Kill status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will confirm succesfull killing of all WSM processes.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
     :rtype: :class:`.Result`
     '''
 

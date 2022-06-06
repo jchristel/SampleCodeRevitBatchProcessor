@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module containing utility functions converting data retrieved from Revit into shapely geometry anbd processing it.
+Utility functions converting data retrieved from Revit into shapely geometry and processing it.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -261,8 +261,8 @@ def BuildDictionaryByLevelAndDataType(dataReader):
 
     - key: is the level name
     - values is a list of list of data objects
-    -       first list rooms
-    -       second list ceilings
+    -       first list room data objects
+    -       second list ceilings data objects
 
     :param dataReader: A data reader class instance
     :type dataReader: :class:`.ReadDataFromFile`
@@ -278,16 +278,23 @@ def BuildDictionaryByLevelAndDataType(dataReader):
             ceilingsByLevel = dataReader.get_data_by_level_and_dataType(dObject.levelName, dc.DataCeiling.dataType)
             dic[dObject.levelName] = (roomsByLevel, ceilingsByLevel)
     return dic
-
-# geoObjects        a list of instances of the the same type (i.e DataRoom)
-# dataType          string humna raadable identifying the data type ( each Data... class hass this as a static field: dr.DataRoom.dataType)
+        
 def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
     '''
-    convertes polygon points from DataGeoemtry instances to shapely polygon instances
-    and returnts them as a dictionary where
+    Convertes polygon points from DataGeoemtry instances to shapely polygon instances and returnts them as a dictionary where:
+
     - key is the geometry objects id
     - value is a list of shapely polygons
+
+    :param geoObjects: A list of instances of the the same type (i.e DataRoom)
+    :type geoObjects: list[data object]
+    :param dataType: _string humna readable identifying the data type ( each Data... class hass this as a static field: dr.DataRoom.dataType)
+    :type dataType: str
+
+    :return: A dictionary.
+    :rtype: {int:[shapely.polygon]}
     '''
+
     multiPolygons = {}
     for i in range (len(geoObjects)):
         multiPolygons[geoObjects[i].id] = []
@@ -297,12 +304,24 @@ def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
                 multiPolygons[geoObjects[i].id].append(p)
     return multiPolygons
 
-# associatedDataRows    list of list of strings
 def SortMultipleDataRows(associatedDataRows, roomData):
     '''
-    collapses multiple ceilings of one type in one with multiple ids
-    works for ceilings only in the moment
+    Collapses multiple ceilings of one type into one with multiple ids.
+
+    Note: Works for ceilings only in the moment.
+    This is to avoid situations where one type of ceiling is briefed in a room, but in the model, multiple instances of another type are modelled.
+    In this case multiple type mismatches would be reported where we want only one type mismatch to be reported.
+    Takes into account design set / design options and offset from level.
+
+    :param associatedDataRows: List of list of strings representing ceiling data
+    :type associatedDataRows: list[list[str]]
+    :param roomData: List of string representing room data for a single room
+    :type roomData: list[str]
+    
+    :return: List of list of strings representing room data
+    :rtype: List of list [str]
     '''
+
     data = []
     if (len(associatedDataRows)>0):
         # build dictionary based on unique keys
@@ -341,12 +360,18 @@ def SortMultipleDataRows(associatedDataRows, roomData):
         # just return the room data since no matching ceiling was found
         data.append(roomData)
     return data
-
-# dicObject         dictionary where key is the level name and values is a lsit of DataRoom instances
+      
 def GetReportData(dicObject):
     '''
-    convertes a dictionary of DataRoom objects by level into list of lists of data entries per room
+    Convertes a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.
+
+    :param dicObject:  A dictionary where key is the level name and values is a list of DataRoom instances.
+    :type dicObject: {str:[:class: `.DataRoom`]}
+
+    :return: List of list of strings representing room data
+    :rtype: list of list [str]
     '''
+
     data = []
     for levelName in dicObject:
         for room in dicObject[levelName][0]:
@@ -383,13 +408,38 @@ def GetReportData(dicObject):
                 data.append(d)
     return data
 
-# dataSourcePath            (fully qualified file path) of json formatted data file containing room and ceiling data
-# outputFilePath            (fully qualified file path) of output report 
 def GetCeilingsByRoom (dataSourcePath, outputFilePath):
     '''
-    reads geo data from json formatted text file and does an intersection check between rooms and ceilings
-    writes a report to provided path containing a row per room and ceiling within room
+    Reads geometry data from json formatted text file and does an intersection check between room and ceiling polygons.
+    
+    The result is written  to a report to provided path containing a row per room and ceiling within room.
+    
+    :param dataSourcePath: Thge fully qualified file path of json formatted data file containing room and ceiling data.
+    :type dataSourcePath: str
+    :param outputFilePath: The fully qualified file path of the output report. 
+    :type outputFilePath: str
+
+    :return: 
+        Result class instance.
+        result.status. True if:
+
+        - all levels in file had ceilings and rooms.
+        - report file was written succesfully, 
+        
+        Otherwise False.
+        
+        - result.message will confirm report was written succesfuly.
+        - result.result empty list
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain room name and number where exception occured as well as ceiling id.
+        - result.result will be empty
+        
+    :rtype: :class:`.Result`
     '''
+
     result = res.Result()
     dataReader = ReadData(dataSourcePath)
     # check if read returned anything

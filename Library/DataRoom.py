@@ -1,6 +1,8 @@
 
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data storage class for Revit room properties.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -34,14 +36,17 @@ import DataGeometry
 import DataDesignSetOption
 
 class DataRoom():
+
     dataType = 'room'
+    
     def __init__(self, j = {}):
         '''
-        _summary_
+        Class constructor.
 
-        :param j: _description_, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
+
         self.dataType = 'room'
         self.id = -1
         self.name = '-'
@@ -68,6 +73,10 @@ class DataRoom():
 
     def to_json(self):
         '''
-        convert the instance of this class to json
+        Convert the instance of this class to json.
+
+        :return: A Json object.
+        :rtype: json
         '''
+
         return json.dumps(self, indent = None, default=lambda o: o.__dict__)

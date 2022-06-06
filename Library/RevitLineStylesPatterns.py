@@ -49,9 +49,12 @@ def DeleteLinePatternsContains(doc, contains):
     :param contains: Filter: pattern name needs to contain this tring to be deleted.
     :type contains: str
 
-    :return: Result class instance.
-           .result = True if line pattern where deleted succesfully. Otherwise False.
-           .message will contain delete status per pattern.
+    :return: 
+        Result class instance.
+           
+        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .message will contain delete status per pattern.
+
     :rtype: :class:`.Result`
     '''
 
@@ -69,9 +72,12 @@ def DeleteLinePatternStartsWith(doc, startsWith):
     :param startsWith: Filter: pattern name needs to start with this string to be deleted.
     :type startsWith: str
 
-    :return: Result class instance.
-           .result = True if line pattern where deleted succesfully. Otherwise False.
-           .message will contain delete status per pattern.
+    :return: 
+        Result class instance.
+
+        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .message will contain delete status per pattern.
+
     :rtype: :class:`.Result`
     '''
 
@@ -89,9 +95,12 @@ def DeleteLinePatternsWithout(doc, contains):
     :param contains: Filter: pattern name needs not to contain this string to be deleted.
     :type contains: str
 
-    :return: Result class instance.
-           .result = True if line pattern where deleted succesfully. Otherwise False.
-           .message will contain delete status per pattern.
+    :return: 
+        Result class instance.
+
+        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .message will contain delete status per pattern.
+
     :rtype: :class:`.Result`
     '''
 
@@ -141,9 +150,12 @@ def DeleteDuplicatLinePatterNames(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: Result class instance.
-           .result = True if all views where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+
+        - .result = True if all views where deleted. Otherwise False.
+        - .message will contain deletion status.
+
     :rtype: :class:`.Result`
     '''
 
@@ -171,9 +183,12 @@ def DeleteLineStylesStartsWith(doc, startsWith):
     :param startsWith: Filter: style name needs to start with this string to be deleted.
     :type startsWith: str
 
-    :return: Result class instance.
-           .result = True if all views where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+
+        - .result = True if all views where deleted. Otherwise False.
+        - .message will contain deletion status.
+
     :rtype: :class:`.Result`
     '''
 

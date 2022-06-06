@@ -80,7 +80,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 </ul>
 
@@ -290,12 +290,17 @@ Otherwise the actual parameter value as per value getter method.</p>
 <p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Result class instance.
-Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
-Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.
-On exception:
-Set parameter.status (bool) will be False.
-Set parameter.message will contain the exception message.</p>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -326,12 +331,17 @@ The function needs to accept these args: parameter, new parameter value as strin
 <p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Result class instance.
-Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
-Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.
-On exception:
-Set parameter.status (bool) will be False.
-Set parameter.message will contain the exception message.</p>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -2558,14 +2568,19 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-result.status. True if category was created or already existed in file, otherwsie False.
-result.message will contain the name of the category created.
-result.result returns new category, if category already exists in file it will return that
-On exception:
-result.status (bool) will be False.
-result.message will contain generic exception message.
-result.result will be empty</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if category was created or already existed in file, otherwsie False.</p></li>
+<li><p>result.message will contain the name of the category created.</p></li>
+<li><p>result.result returns new category, if category already exists in file it will return that</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -2586,14 +2601,19 @@ result.result will be empty</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-result.status. True if category was created or already existed in file, otherwsie False.
-result.message will contain the name of the category created.
-result.result returns new category, if category already exists in file it will return that
-On exception:
-result.status (bool) will be False.
-result.message will contain generic exception message.
-result.result will be empty</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if category was created or already existed in file, otherwsie False.</p></li>
+<li><p>result.message will contain the name of the category created.</p></li>
+<li><p>result.result returns new category, if category already exists in file it will return that</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -2614,14 +2634,19 @@ result.result will be empty</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
-result.message will contain the name of the deastination subcategory by element.
-result.result empty list
-On exception:
-result.status (bool) will be False.
-result.message will contain generic exception message.
-result.result will be empty</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.</p></li>
+<li><p>result.message will contain the name of the deastination subcategory by element.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -2643,14 +2668,19 @@ result.result will be empty</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-result.status. True if all elements where moved to destination subcategories, otherwsie False.
-result.message will contain the name of the destination subcategory by element.
-result.result empty list
-On exception:
-result.status (bool) will be False.
-result.message will contain generic exception message.
-result.result will be empty</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all elements where moved to destination subcategories, otherwsie False.</p></li>
+<li><p>result.message will contain the name of the destination subcategory by element.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -2672,14 +2702,19 @@ result.result will be empty</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
-result.message will confirm succesful creation of subcategories and element move.
-result.result empty list
-On exception:
-result.status (bool) will be False.
-result.message will contain generic exception message.
-result.result will be empty</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.</p></li>
+<li><p>result.message will confirm succesful creation of subcategories and element move.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4034,12 +4069,17 @@ it will return True if one of them evaluates to True, otherwise False will be re
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4130,12 +4170,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4160,12 +4205,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4228,12 +4278,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4295,12 +4350,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4322,12 +4382,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4350,12 +4415,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4545,12 +4615,18 @@ with parameter values in family.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Result class instance.
-Reload status (bool) returned in result.status.
-Reload status returned from Revit in result.message property.
-Return family reference stored in result.result property on succesful reload only         On exception
-Reload.status (bool) will be False
-Reload.message will contain the exception message</p>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Reload status (bool) returned in result.status.</p></li>
+<li><p>Reload status returned from Revit in result.message property.</p></li>
+<li><p>Return family reference stored in result.result property on succesful reload only</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4964,9 +5040,13 @@ bool: exclude shared families</p></li>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
-result.message: one row entry per reference plane requiring reference type change
-result.result: not used</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: (bool) True if at least one reference plane type was successfully changed oherwise False</p></li>
+<li><p>result.message: one row entry per reference plane requiring reference type change</p></li>
+<li><p>result.result: not used</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -4983,9 +5063,13 @@ result.result: not used</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
-result.message: one row entry per curve element requiring reference type change
-result.result: not used</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: (bool) True if at least one curve reference type was successfully changed oherwise False</p></li>
+<li><p>result.message: one row entry per curve element requiring reference type change</p></li>
+<li><p>result.result: not used</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -6785,9 +6869,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if line pattern where deleted succesfully. Otherwise False.
-.message will contain delete status per pattern.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if line pattern where deleted succesfully. Otherwise False.</p></li>
+<li><p>.message will contain delete status per pattern.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -6807,9 +6894,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if line pattern where deleted succesfully. Otherwise False.
-.message will contain delete status per pattern.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if line pattern where deleted succesfully. Otherwise False.</p></li>
+<li><p>.message will contain delete status per pattern.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -6829,9 +6919,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if line pattern where deleted succesfully. Otherwise False.
-.message will contain delete status per pattern.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if line pattern where deleted succesfully. Otherwise False.</p></li>
+<li><p>.message will contain delete status per pattern.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -6882,9 +6975,12 @@ This method can be used to safely delete unused level symbols or families from t
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all views where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all views where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -6904,9 +7000,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all views where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all views where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -7080,9 +7179,12 @@ This method can be used to safely delete unused level symbols or families from t
 <dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all CAD links got deleted. Otherwise False.
-.message will contain status of deletion.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all CAD links got deleted. Otherwise False.</p></li>
+<li><p>.message will contain status of deletion.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -7104,9 +7206,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all CAD links got reloaded succesfully. Otherwise False.
-.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all CAD links got reloaded succesfully. Otherwise False.</p></li>
+<li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -7219,10 +7324,15 @@ This method can be used to safely delete unused level symbols or families from t
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all revit links got deleted succesfully. Otherwise False.
-.message will contain deletion status. On exception it will also include the exception message.
-:rtype: <a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all revit links got deleted succesfully. Otherwise False.</p></li>
+<li><p>.message will contain deletion status. On exception it will also include the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7242,9 +7352,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all revit links got reloaded succesfully. Otherwise False.
-.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all revit links got reloaded succesfully. Otherwise False.</p></li>
+<li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -7268,9 +7381,12 @@ This method can be used to safely delete unused level symbols or families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all revit links got reloaded succesfully. Otherwise False.
-.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all revit links got reloaded succesfully. Otherwise False.</p></li>
+<li><p>.message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -9267,9 +9383,12 @@ This method can be used to safely delete unused pipe symbols and families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all purge actions completed successfully. Otherwise False.
-.message will be listing each purge action and its status</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all purge actions completed successfully. Otherwise False.</p></li>
+<li><p>.message will be listing each purge action and its status</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -9302,9 +9421,12 @@ This method can be used to safely delete unused pipe symbols and families from t
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all purge actions completed successfully. Otherwise False.
-.message will be listing each purge action and its status</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all purge actions completed successfully. Otherwise False.</p></li>
+<li><p>.message will be listing each purge action and its status</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -9377,20 +9499,20 @@ these keys do not get purged by revits native purge unused and would therefore s
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Purge status returned in result.status. False if an exception occured, purge command returned False, unsupported Revit version, otherwise True.
-result.message will contain the purge status.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Purge status returned in result.status. False if an exception occured, purge command returned False, unsupported Revit version, otherwise True.</p></li>
+<li><p>result.message will contain the purge status.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><dl class="field-list simple">
-<dt class="field-odd">rtype</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10577,12 +10699,17 @@ TODO: repetetive code…Consider generic function!</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Tag moving status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the name and number of the room.
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain the name and number of the room and the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Tag moving status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the name and number of the room.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the name and number of the room and the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -10756,12 +10883,17 @@ result.message will contain the name and number of the room and the exception me
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Parameter binding status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the name of the shared parameter.
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter binding status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -10847,12 +10979,17 @@ result.message will contain exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Parameter deletion status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the name of the shared parameter deleted.
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain generic exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Parameter deletion status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the name of the shared parameter deleted.</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12550,9 +12687,12 @@ view reference types and view continuation types in the model.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all views where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all views where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12572,9 +12712,12 @@ view reference types and view continuation types in the model.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all views where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all views where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12591,9 +12734,12 @@ view reference types and view continuation types in the model.</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all unused elevation markers where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all unused elevation markers where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12614,9 +12760,12 @@ view reference types and view continuation types in the model.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all sheets matching filter where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all sheets matching filter where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12633,9 +12782,12 @@ view reference types and view continuation types in the model.</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all sheets where deleted. Otherwise False.
-.message will contain deletion status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all sheets where deleted. Otherwise False.</p></li>
+<li><p>.message will contain deletion status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12676,9 +12828,12 @@ view reference types and view continuation types in the model.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if data was written succesfully. Otherwise False.
-.message will contain write status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if data was written succesfully. Otherwise False.</p></li>
+<li><p>.message will contain write status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -12700,9 +12855,12 @@ view reference types and view continuation types in the model.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if data was written succesfully. Otherwise False.
-.message will contain write status.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if data was written succesfully. Otherwise False.</p></li>
+<li><p>.message will contain write status.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -13370,9 +13528,12 @@ In the case that no wall instance using any of the types is placed this will ret
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all warnings could be solved. Otherwise False.
-.message will contain all messages solver returned.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all warnings could be solved. Otherwise False.</p></li>
+<li><p>.message will contain all messages solver returned.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -13412,9 +13573,12 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all duplicate mark warnings could be solved. Otherwise False.
-.message will contain stats in format parameter value set to ‘’</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all duplicate mark warnings could be solved. Otherwise False.</p></li>
+<li><p>.message will contain stats in format parameter value set to ‘’</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -13446,9 +13610,12 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all room tags within warnings could be moved to room location point. Otherwise False.
-.message will be ‘moved tag to room xyz’</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all room tags within warnings could be moved to room location point. Otherwise False.</p></li>
+<li><p>.message will be ‘moved tag to room xyz’</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -13592,9 +13759,12 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully moved all elements to new workset. Otherwise False.
-.message will contain stats in format [success :: failure]</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully moved all elements to new workset. Otherwise False.</p></li>
+<li><p>.message will contain stats in format [success :: failure]</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>

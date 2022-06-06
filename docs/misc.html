@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.0.0 documentation" href="index.html" />
-    <link rel="prev" title="Exports data samples." href="dataExport.html" />
+    <link rel="prev" title="Export data samples." href="dataExport.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -30,7 +30,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="dataExport.html" title="Exports data samples." accesskey="P">previous</a></div>
+            <div class="headerButton"><a href="dataExport.html" title="Export data samples." accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -42,7 +42,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Misc modules and classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#misc-code-modules">Misc code modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#timer">Timer</a></li>
@@ -153,7 +153,358 @@
 
 </dd></dl>
 
-<span class="target" id="module-BatchProcessorLogUtils"></span><span class="target" id="module-SolibriIFCOptimizer"></span><section id="helper-functions-relating-to-solibri-ifc-optimnizer">
+<span class="target" id="module-BatchProcessorLogUtils"></span><section id="helper-functions-to-process-revit-batchprocessor-log-files">
+<h3>Helper functions to process Revit Batchprocessor log files.<a class="headerlink" href="#helper-functions-to-process-revit-batchprocessor-log-files" title="Permalink to this headline">¶</a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.debugMode_">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">debugMode_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#BatchProcessorLogUtils.debugMode_" title="Permalink to this definition">¶</a></dt>
+<dd><p>global variable controlling debug output</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.EXCEPTION_MESSAGES">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">EXCEPTION_MESSAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ERROR:</span> <span class="pre">An</span> <span class="pre">error</span> <span class="pre">occurred</span> <span class="pre">while</span> <span class="pre">executing</span> <span class="pre">the</span> <span class="pre">task</span> <span class="pre">script!</span> <span class="pre">Operation',</span> <span class="pre">'WARNING:</span> <span class="pre">Timed-out',</span> <span class="pre">'Exception:</span> <span class="pre">[Exception]',</span> <span class="pre">'\t-</span> <span class="pre">\tMessage:</span> <span class="pre">An</span> <span class="pre">unrecoverable</span> <span class="pre">error</span> <span class="pre">has</span> <span class="pre">occurred.</span>&#160; <span class="pre">The</span> <span class="pre">program</span> <span class="pre">will</span> <span class="pre">now</span> <span class="pre">be</span> <span class="pre">terminated.',</span> <span class="pre">'Script</span> <span class="pre">Exception:']</span></em><a class="headerlink" href="#BatchProcessorLogUtils.EXCEPTION_MESSAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message snippets which indicate processing of a file went bad</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.AdjustSessionIdForFileName">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">AdjustSessionIdForFileName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.AdjustSessionIdForFileName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it        can be used in a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Re-formatted session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.AdjustSessionIdFileNameBack">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">AdjustSessionIdFileNameBack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNameId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.AdjustSessionIdFileNameBack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batchprocessor to a        file name using a batch processor supplied id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileNameId</strong> (<em>str</em>) – A file name containing a session id with all illegal characters replaced.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.WriteSessionIdMarkerFile">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">WriteSessionIdMarkerFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sessionId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.WriteSessionIdMarkerFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out an empty marker file in given directory.</p>
+<ul class="simple">
+<li><p>File is of type .txt</p></li>
+<li><p>File name is the batchprocessor sessionId used to identify the log file belonging to this process.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folderPath</strong> (<em>str</em>) – Directory of where the file will be written to.</p></li>
+<li><p><strong>sessionId</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if marker file was written succesfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetCurrentSessionIds">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetCurrentSessionIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetCurrentSessionIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returs file names of all text files in a given directory representing session Ids.</p>
+<p>Files will be deleted immediately after reading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folderPath</strong> (<em>str</em>) – Directory of where test files are located</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids in string format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetLogFiles">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetLogFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listOfSessionIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetLogFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of fully qualified filepath to logfiles matching the provided session Ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>listOfSessionIds</strong> (<em>[</em><em>str</em><em>]</em>) – List of session ids.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of fully qualified file path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetSessionIdFromLogFile">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetSessionIdFromLogFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetSessionIdFromLogFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first two rows of a log file to get the session Id used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id, or if not not a log file: an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetIdFromRow">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetIdFromRow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetIdFromRow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the session Id from logfile row.</p>
+<p>sample: 
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>Note: There are two session id fields in thi string!</p>
+<p>TODO: Do some error handling!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>str</em>) – A json formatted string with the session id in chevrons.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetTextBetween">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetTextBetween</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetTextBetween" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns text in between characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to parse</p></li>
+<li><p><strong>first</strong> (<em>str</em>) – String indicating start</p></li>
+<li><p><strong>last</strong> (<em>str</em>) – String indicating end</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string in between start and end.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetMessageFromJson">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetMessageFromJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetMessageFromJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the outer message string from json formatted message field in log file.</p>
+<p>sample: 
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>This includes leading tab characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – json formatted row of logfile</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The message string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.ProcessLogFile">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">ProcessLogFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.ProcessLogFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process revit batch processoor session log file.</p>
+<ul class="simple">
+<li><p>find Revit files processed:</p></li>
+<li><p>check whether an exception occured when processing any of the above files.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to json formated log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns list of arrays in format:
+[[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetProcessStatus">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetProcessStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileToCheck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetProcessStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a log file and checks whether any exception occured when processing a specific revit file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileToCheck</strong> (<em>str</em>) – Fully qualified file path of Revit file which was processed</p></li>
+<li><p><strong>logFilePath</strong> (<em>str</em>) – The fully qualifiedbatch processor session log file path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A process status and a message.</p>
+<ul class="simple">
+<li><p>process staus: True if no exception occured during revit file processing, otherwise false</p></li>
+<li><p>message: the exception message recorded in the log file.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool, str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetFileNameFromDataBlock">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetFileNameFromDataBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mblock</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetFileNameFromDataBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the file name from a process message block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mblock</strong> (<em>[</em><em>str</em><em>]</em>) – list of json formatted rows representing all messages received during file process</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fully qualified file path of the file processed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetFilesProcessed">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetFilesProcessed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetFilesProcessed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a batch processor logfile and extracts all file names of files processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – The fully qualified file path to log file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list lists containing The fully qualified file path for each file processed and their process status. True for no exception encountered, otherwise false.
+[[filepath, status]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetFilesNotFound">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetFilesNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filesProcessed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetFilesNotFound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters list of all files meant to be processed and returns the ones flagged as file not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filesProcessed</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>bool</em><em>]</em><em>]</em>) – array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.GetLogBlocks">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetLogBlocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">jsonData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startMarker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endMarkers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multipleBlocks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetLogBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads json formatted data into blocks per files processed.</p>
+<p>Returns the message sections per row entry only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>jsonData</strong> (<em>[</em><em>str</em><em>]</em>) – List of logfile rows in json data format</p></li>
+<li><p><strong>startMarker</strong> (<em>str</em>) – String in messages indicating start of block.</p></li>
+<li><p><strong>endMarkers</strong> (<em>str</em>) – String in messages indicating end of block.</p></li>
+<li><p><strong>multipleBlocks</strong> (<em>bool</em>) – Flag indicating whether there are multiple data block in log file to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of list of str</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.ReadLogFile">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">ReadLogFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.ReadLogFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads batch processor log file into lists of json objects.</p>
+<dl class="simple">
+<dt>Sample row:</dt><dd><p>{‘sessionId’: ‘778e87a5-4b94-4552-9e7e-c9ed38b5caee’, ‘time’: {‘local’: ‘09:35:45’, ‘utc’: ‘22:35:45’}, ‘date’: {‘local’: ‘25/11/2020’, ‘utc’: ‘24/11/2020’}, ‘message’: {‘msgId’: ‘’, ‘message’: ‘’}}</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – The fully qualified file path to log file in json format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of json objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[json]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="BatchProcessorLogUtils.ProcessLogFiles">
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">ProcessLogFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.ProcessLogFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops over log files and checks whether any exceptions occured during revit files processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folderPath</strong> (<em>str</em>) – Fully qualified directory path where marker files are stored.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of revit files processed in format:
+[logId,[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str,[str, bool, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-SolibriIFCOptimizer"></span><section id="helper-functions-relating-to-solibri-ifc-optimnizer">
 <h3>Helper functions relating to Solibri IFC optimnizer.<a class="headerlink" href="#helper-functions-relating-to-solibri-ifc-optimnizer" title="Permalink to this headline">¶</a></h3>
 <p>List of imports:</p>
 <ul class="simple">
@@ -181,12 +532,17 @@
 <dd class="field-odd"><p><strong>directoryPath</strong> (<em>str</em>) – The directory path where IFC files are located</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Optimizer status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path(s) of the optimized file(s).
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain generic exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -207,12 +563,17 @@ result.message will contain generic exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Optimizer status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path(s) of the optimized file(s).
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain generic exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -233,12 +594,17 @@ result.message will contain generic exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Optimizer status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path(s) of the optimized file(s).
-On exception (handled by optimizer itself!):
-result.status (bool) will be False.
-result.message will contain generic exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -370,12 +736,17 @@ result.message will contain generic exception message.</p>
 <dd class="field-odd"><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the marker file is to be saved.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Export status returned in result.status. False if an exception occured, otherwise True.
-result.message will contain the fully qualified file path of the exported file.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -446,12 +817,17 @@ result.message will contain the exception message.</p>
 <dd class="field-odd"><p><strong>directoryPath</strong> (<em>str</em>) – The directory path containing the marker files to be deleted.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Delete status returned in result.status. False if an exception occured, otherwise True.
-result.message will confirm succesfull deletion of all files.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Delete status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will confirm succesfull deletion of all files.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -472,12 +848,17 @@ result.message will contain the exception message.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-Kill status returned in result.status. False if an exception occured, otherwise True.
-result.message will confirm succesfull killing of all WSM processes.
-On exception:
-result.status (bool) will be False.
-result.message will contain the exception message.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Kill status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>result.message will confirm succesfull killing of all WSM processes.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>

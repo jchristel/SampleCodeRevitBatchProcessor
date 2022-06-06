@@ -39,7 +39,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 </ul>
 
@@ -100,16 +100,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="revitAPISampleCode.html#RevitGeometry.AdjustDelta">AdjustDelta() (in module RevitGeometry)</a>
 </li>
+      <li><a href="misc.html#BatchProcessorLogUtils.AdjustSessionIdFileNameBack">AdjustSessionIdFileNameBack() (in module BatchProcessorLogUtils)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.AdjustSessionIdForFileName">AdjustSessionIdForFileName() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="misc.html#Result.Result.AppendMessage">AppendMessage() (Result.Result method)</a>
 </li>
       <li><a href="misc.html#Utility.AppendToSingleFiles">AppendToSingleFiles() (in module Utility)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.ArePointsIdentical">ArePointsIdentical() (in module RevitGeometry)</a>
 </li>
-      <li><a href="revitAPISampleCode.html#RevitAnnotation.ARROWHEAD_PARAS_DIM">ARROWHEAD_PARAS_DIM (in module RevitAnnotation)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="revitAPISampleCode.html#RevitAnnotation.ARROWHEAD_PARAS_DIM">ARROWHEAD_PARAS_DIM (in module RevitAnnotation)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitAnnotation.ARROWHEAD_PARAS_SPOT_DIMS">ARROWHEAD_PARAS_SPOT_DIMS (in module RevitAnnotation)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitAnnotation.ARROWHEAD_PARAS_STAIRS_PATH">ARROWHEAD_PARAS_STAIRS_PATH (in module RevitAnnotation)</a>
@@ -309,6 +313,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitBIM360.ConvertBIM360FilePath">ConvertBIM360FilePath() (in module RevitBIM360)</a>
 </li>
+      <li><a href="dataExport.html#DataExport.ConvertDataToListJson">ConvertDataToListJson() (in module DataExport)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.ConvertEdgeArraysIntoListOfPoints">ConvertEdgeArraysIntoListOfPoints() (in module RevitGeometry)</a>
 </li>
       <li><a href="misc.html#Utility.ConvertImperialToMetricMM">ConvertImperialToMetricMM() (in module Utility)</a>
@@ -363,6 +369,13 @@
 </li>
       <li><a href="dataExport.html#DataDesignSetOption.DataDesignSetOption">DataDesignSetOption (class in DataDesignSetOption)</a>
 </li>
+      <li>
+    DataExport
+
+      <ul>
+        <li><a href="dataExport.html#module-DataExport">module</a>
+</li>
+      </ul></li>
       <li><a href="dataExport.html#DataGeometry.DataGeometry">DataGeometry (class in DataGeometry)</a>
 </li>
       <li><a href="dataExport.html#DataRoom.DataRoom">DataRoom (class in DataRoom)</a>
@@ -375,6 +388,8 @@
 </li>
       </ul></li>
       <li><a href="dataExport.html#DataCeiling.DataCeiling.DataType">DataType (DataCeiling.DataCeiling property)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.debugMode_">debugMode_ (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitWarningsSolver.RevitWarningsSolver.DefaultFilterReturnAll">DefaultFilterReturnAll() (RevitWarningsSolver.RevitWarningsSolver method)</a>
 </li>
@@ -396,12 +411,12 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitLineStylesPatterns.DeleteLinePatternStartsWith">DeleteLinePatternStartsWith() (in module RevitLineStylesPatterns)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="revitAPISampleCode.html#RevitLineStylesPatterns.DeleteLinePatternsWithout">DeleteLinePatternsWithout() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitLineStylesPatterns.DeleteLineStylesStartsWith">DeleteLineStylesStartsWith() (in module RevitLineStylesPatterns)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="revitAPISampleCode.html#RevitLinks.DeleteRevitLinks">DeleteRevitLinks() (in module RevitLinks)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitSharedParameters.DeleteSharedParameterByGUID">DeleteSharedParameterByGUID() (in module RevitSharedParameters)</a>
@@ -453,6 +468,8 @@
       <li><a href="revitAPISampleCode.html#RevitCategories.ELEMENTS_PARAS_SUB">ELEMENTS_PARAS_SUB (in module RevitCategories)</a>
 </li>
       <li><a href="misc.html#Utility.EncodeAscii">EncodeAscii() (in module Utility)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.EXCEPTION_MESSAGES">EXCEPTION_MESSAGES (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitExport.Export3DViewsToIFC">Export3DViewsToIFC() (in module RevitExport)</a>
 </li>
@@ -564,6 +581,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="dataExport.html#DataShapely.geometryConverter_">geometryConverter_ (in module DataShapely)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitRooms.Get2DPointsFromAllRevitRoomsInModel">Get2DPointsFromAllRevitRoomsInModel() (in module RevitRooms)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCeilings.Get2DPointsFromRevitCeiling">Get2DPointsFromRevitCeiling() (in module RevitCeilings)</a>
@@ -954,6 +973,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.GetCoordinateSystemTranslationAndRotation">GetCoordinateSystemTranslationAndRotation() (in module RevitGeometry)</a>
 </li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetCurrentSessionIds">GetCurrentSessionIds() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitCurtainWallElements.GetCurtainWallElementInstancesInModelByCategory">GetCurtainWallElementInstancesInModelByCategory() (in module RevitCurtainWallElements)</a>
 </li>
       <li><a href="ModelHealth.html#RevitModelHealth.healthDataAction.getData">getData (RevitModelHealth.healthDataAction attribute)</a>
@@ -1012,6 +1033,8 @@
 </li>
       <li><a href="misc.html#Utility.GetFileDateStamp">GetFileDateStamp() (in module Utility)</a>
 </li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetFileNameFromDataBlock">GetFileNameFromDataBlock() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="misc.html#Utility.GetFileNameWithoutExt">GetFileNameWithoutExt() (in module Utility)</a>
 </li>
       <li><a href="misc.html#Utility.GetFiles">GetFiles() (in module Utility)</a>
@@ -1028,6 +1051,10 @@
         <li><a href="misc.html#Utility.GetFileSize">(in module Utility)</a>
 </li>
       </ul></li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetFilesNotFound">GetFilesNotFound() (in module BatchProcessorLogUtils)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetFilesProcessed">GetFilesProcessed() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="misc.html#Utility.GetFilesSingleFolder">GetFilesSingleFolder() (in module Utility)</a>
 </li>
       <li><a href="misc.html#Utility.GetFilesWithFilter">GetFilesWithFilter() (in module Utility)</a>
@@ -1057,6 +1084,8 @@
       <li><a href="revitAPISampleCode.html#RevitGrids.GetGridTypeName">GetGridTypeName() (in module RevitGrids)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGrids.GetGridTypeNames">GetGridTypeNames() (in module RevitGrids)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetIdFromRow">GetIdFromRow() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.GetIdsFromElementCollector">GetIdsFromElementCollector() (in module RevitCommonAPI)</a>
 </li>
@@ -1098,6 +1127,10 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetLogBlocks">GetLogBlocks() (in module BatchProcessorLogUtils)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetLogFiles">GetLogFiles() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.GetLowestZFromEdgesPointCollection">GetLowestZFromEdgesPointCollection() (in module RevitGeometry)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.GetLowestZFromSolidsPointCollection">GetLowestZFromSolidsPointCollection() (in module RevitGeometry)</a>
@@ -1111,6 +1144,8 @@
       <li><a href="revitAPISampleCode.html#RevitMaterials.GetMaterialReportData">GetMaterialReportData() (in module RevitMaterials)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGrids.GetMaxExtentAsString">GetMaxExtentAsString() (in module RevitGrids)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetMessageFromJson">GetMessageFromJson() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitBIM360.GetModelBIM360Ids">GetModelBIM360Ids() (in module RevitBIM360)</a>
 </li>
@@ -1210,6 +1245,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitRooms.GetPointsFromRoomBoundaries">GetPointsFromRoomBoundaries() (in module RevitRooms)</a>
 </li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetProcessStatus">GetProcessStatus() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.GetQuadrant">GetQuadrant() (in module RevitGeometry)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitRailings.GetRailingTypesByClass">GetRailingTypesByClass() (in module RevitRailings)</a>
@@ -1241,6 +1278,8 @@
       <li><a href="revitAPISampleCode.html#RevitViews.GetScheduleIdsOnSheets">GetScheduleIdsOnSheets() (in module RevitViews)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitViews.GetSchedulesNotOnSheets">GetSchedulesNotOnSheets() (in module RevitViews)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetSessionIdFromLogFile">GetSessionIdFromLogFile() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="dataExport.html#DataShapely.GetShapelyPolygonsFromDataInstance">GetShapelyPolygonsFromDataInstance() (in module DataShapely)</a>
 </li>
@@ -1307,6 +1346,8 @@
       <li><a href="revitAPISampleCode.html#RevitFamilyUtils.GetSymbolsFromType">GetSymbolsFromType() (in module RevitFamilyUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitViews.GetTemplateIdsWhichCanHaveFilters">GetTemplateIdsWhichCanHaveFilters() (in module RevitViews)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.GetTextBetween">GetTextBetween() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitAnnotation.GetTextTypeArrowHeadIds">GetTextTypeArrowHeadIds() (in module RevitAnnotation)</a>
 </li>
@@ -1760,6 +1801,8 @@
       <ul>
         <li><a href="misc.html#module-BatchProcessorLogUtils">BatchProcessorLogUtils</a>
 </li>
+        <li><a href="dataExport.html#module-DataExport">DataExport</a>
+</li>
         <li><a href="dataExport.html#module-DataShapely">DataShapely</a>
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitAnnotation">RevitAnnotation</a>
@@ -1937,10 +1980,10 @@
 </li>
       <li><a href="ModelHealth.html#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS">PARAM_ACTIONS_FILENAME_NO_OF_SHEETS (in module RevitModelHealthReportFileNames)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ModelHealth.html#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS (in module RevitModelHealthReportFileNames)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ModelHealth.html#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED">PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED (in module RevitModelHealthReportFileNames)</a>
 </li>
       <li><a href="ModelHealth.html#RevitModelHealthReportFileNames.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS">PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS (in module RevitModelHealthReportFileNames)</a>
@@ -1962,6 +2005,10 @@
       <li><a href="revitAPISampleCode.html#RevitStairs.PRECAST_STAIR_FAMILY_NAME">PRECAST_STAIR_FAMILY_NAME (in module RevitStairs)</a>
 </li>
       <li><a href="misc.html#SolibriIFCOptimizer.ProcessIFCFiles">ProcessIFCFiles() (in module SolibriIFCOptimizer)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.ProcessLogFile">ProcessLogFile() (in module BatchProcessorLogUtils)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.ProcessLogFiles">ProcessLogFiles() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCategories.PROPERTY_LINECOLOUR_BLUE_NAME">PROPERTY_LINECOLOUR_BLUE_NAME (in module RevitCategories)</a>
 </li>
@@ -2010,6 +2057,8 @@
       <li><a href="dataExport.html#DataShapely.ReadData">ReadData() (in module DataShapely)</a>
 </li>
       <li><a href="dataExport.html#DataReadFromFile.ReadDataFromFile">ReadDataFromFile (class in DataReadFromFile)</a>
+</li>
+      <li><a href="misc.html#BatchProcessorLogUtils.ReadLogFile">ReadLogFile() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="misc.html#Utility.ReadTabSeparatedFile">ReadTabSeparatedFile() (in module Utility)</a>
 </li>
@@ -2158,6 +2207,8 @@
         <li><a href="revitAPISampleCode.html#module-RevitDetailItems">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitExport
 
@@ -2165,8 +2216,6 @@
         <li><a href="revitAPISampleCode.html#module-RevitExport">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitExportIFCConfig
 
@@ -2580,6 +2629,8 @@
       </ul></li>
       <li><a href="revitAPISampleCode.html#RevitPurgeUnused.WriteAvailableTypeIds">WriteAvailableTypeIds() (in module RevitPurgeUnused)</a>
 </li>
+      <li><a href="dataExport.html#DataExport.WriteJsonDataToFile">WriteJsonDataToFile() (in module DataExport)</a>
+</li>
       <li><a href="ModelHealth.html#RevitModelHealth.WriteModelHealthReport">WriteModelHealthReport() (in module RevitModelHealth)</a>
 </li>
       <li><a href="misc.html#SystemProcess.WriteOutProcessData">WriteOutProcessData() (in module SystemProcess)</a>
@@ -2594,6 +2645,8 @@
         <li><a href="misc.html#Utility.writeReportData">(in module Utility)</a>
 </li>
       </ul></li>
+      <li><a href="misc.html#BatchProcessorLogUtils.WriteSessionIdMarkerFile">WriteSessionIdMarkerFile() (in module BatchProcessorLogUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitViews.WriteSheetData">WriteSheetData() (in module RevitViews)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitViews.WriteSheetDataByPropertyNames">WriteSheetDataByPropertyNames() (in module RevitViews)</a>

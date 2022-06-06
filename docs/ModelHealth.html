@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 1.0.0 documentation" href="index.html" />
-    <link rel="next" title="Exports data samples." href="dataExport.html" />
+    <link rel="next" title="Export data samples." href="dataExport.html" />
     <link rel="prev" title="Revit API sample code." href="revitAPISampleCode.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="dataExport.html" title="Exports data samples." accesskey="N">next</a></div>
+            <div class="headerButton"><a href="dataExport.html" title="Export data samples." accesskey="N">next</a></div>
             <div class="headerButton"><a href="revitAPISampleCode.html" title="Revit API sample code." accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -48,7 +48,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#model-health-report-functions">Model health report functions.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Exports data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 </ul>
 
@@ -303,9 +303,12 @@ This is a faster filter in terms of performance then LINQ query refer to:
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
-.message will be ‘Failed to get value for’</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.</p></li>
+<li><p>.message will be ‘Failed to get value for’</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -808,9 +811,12 @@ This is a faster filter in terms of performance then LINQ query refer to:
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if all model key health metric where updated successfully. Otherwise False.
-.message will be listing each parameter update: old value to new value</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all model key health metric where updated successfully. Otherwise False.</p></li>
+<li><p>.message will be listing each parameter update: old value to new value</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
@@ -832,9 +838,12 @@ This is a faster filter in terms of performance then LINQ query refer to:
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if data was written to files successfully. Otherwise False.
-.message will be contain data file path for each file.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if data was written to files successfully. Otherwise False.</p></li>
+<li><p>.message will be contain data file path for each file.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>

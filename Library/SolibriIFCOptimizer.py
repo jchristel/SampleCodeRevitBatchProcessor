@@ -54,11 +54,15 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
     :type directoryPath: str
     :return: 
         Result class instance.
-        Optimizer status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path(s) of the optimized file(s).
+
+        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path(s) of the optimized file(s).
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -89,11 +93,15 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
     
     :return: 
         Result class instance.
-        Optimizer status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path(s) of the optimized file(s).
+
+        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path(s) of the optimized file(s).
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -123,11 +131,15 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
     
     :return: 
         Result class instance.
-        Optimizer status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path(s) of the optimized file(s).
+
+        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path(s) of the optimized file(s).
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        
     :rtype: :class:`.Result`
     '''
 

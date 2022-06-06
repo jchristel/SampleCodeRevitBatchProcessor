@@ -531,6 +531,7 @@ def SetFamilyCategory(doc, newCategoryName):
     :return: True only if the category was changed succesfully. Any other case False! (That includes situations when the family is already of the new catgeory)
     :rtype: bool
     '''
+    
     returnvalue = res.Result()
     cat = doc.OwnerFamily.FamilyCategory
     if (cat.Name != newCategoryName):
@@ -690,13 +691,17 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
 
     :return: 
         Result class instance.
-        result.status. True if category was created or already existed in file, otherwsie False.
-        result.message will contain the name of the category created.
-        result.result returns new category, if category already exists in file it will return that
+
+        - result.status. True if category was created or already existed in file, otherwsie False.
+        - result.message will contain the name of the category created.
+        - result.result returns new category, if category already exists in file it will return that
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
-        result.result will be empty
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
     :rtype: :class:`.Result`
     '''
 
@@ -730,13 +735,17 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
 
     :return: 
         Result class instance.
-        result.status. True if category was created or already existed in file, otherwsie False.
-        result.message will contain the name of the category created.
-        result.result returns new category, if category already exists in file it will return that
+
+        - result.status. True if category was created or already existed in file, otherwsie False.
+        - result.message will contain the name of the category created.
+        - result.result returns new category, if category already exists in file it will return that
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
-        result.result will be empty
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
     :rtype: :class:`.Result`
     '''
 
@@ -765,13 +774,17 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
 
     :return: 
         Result class instance.
-        result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
-        result.message will contain the name of the deastination subcategory by element.
-        result.result empty list
+
+        - result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
+        - result.message will contain the name of the deastination subcategory by element.
+        - result.result empty list
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
-        result.result will be empty
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
     :rtype: :class:`.Result`
     '''
 
@@ -807,13 +820,17 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
 
     :return: 
         Result class instance.
-        result.status. True if all elements where moved to destination subcategories, otherwsie False.
-        result.message will contain the name of the destination subcategory by element.
-        result.result empty list
+
+        - result.status. True if all elements where moved to destination subcategories, otherwsie False.
+        - result.message will contain the name of the destination subcategory by element.
+        - result.result empty list
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
-        result.result will be empty
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
     :rtype: :class:`.Result`
     '''
     returnvalue = res.Result()
@@ -853,13 +870,17 @@ def ChangeFamilyCategory(doc, newCategoryName):
 
     :return: 
         Result class instance.
-        result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
-        result.message will confirm succesful creation of subcategories and element move.
-        result.result empty list
+
+        - result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
+        - result.message will confirm succesful creation of subcategories and element move.
+        - result.result empty list
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
-        result.result will be empty
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+        
     :rtype: :class:`.Result`
     '''
 

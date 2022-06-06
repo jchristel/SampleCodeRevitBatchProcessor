@@ -133,7 +133,6 @@ def _PurgeUnused2022(doc):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
 
-# doc   current document
 def PurgeUnusedETransmit(doc):
     '''
     Purges the document using the purge unused functionality of the eTransmit tool provided by Autodesk.
@@ -141,13 +140,18 @@ def PurgeUnusedETransmit(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return:  Result class instance.
-        Purge status returned in result.status. False if an exception occured, purge command returned False, unsupported Revit version, otherwise True.
-        result.message will contain the purge status.
+    :return:  
+        Result class instance.
+        
+        - Purge status returned in result.status. False if an exception occured, purge command returned False, unsupported Revit version, otherwise True.
+        - result.message will contain the purge status.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
-    :rtype: :rtype: :class:`.Result`
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
+    :rtype: :class:`.Result`
     '''
 
     resultValue = res.Result()

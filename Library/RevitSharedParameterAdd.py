@@ -60,11 +60,15 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
 
     :return: 
         Result class instance.
-        Parameter binding status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the name of the shared parameter.
+
+        - Parameter binding status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the name of the shared parameter.
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    
     :rtype: :class:`.Result`
     '''
 

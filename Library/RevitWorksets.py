@@ -314,18 +314,23 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
     :param revitFilePath: The fully qualified file path of the Revit file. Will be used to identify the file in the report data.
     :type revitFilePath: str
 
-    :return: Result class instance.
-        .result = True if:
-
-        - succsesfully updated all workset default visibility where different to report
-        - or none needed updating. 
+    :return: 
+        Result class instance.
         
-        Otherwise False:
+        - .result = True if:
 
-        - an excpetion occurred
-        - A workset has no matching data in the report.
+            - succsesfully updated all workset default visibility where different to report
+            - or none needed updating. 
+        
+        - Otherwise False:
 
-        .message will each workset and whether it needed updating or not
+            - An excpetion occurred.
+            - A workset has no matching data in the report.
+        
+        - Common:
+        
+            - .message will contain each workset and whether it needed updating or not
+    
     :rtype: :class:`.Result`
     '''
 

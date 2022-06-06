@@ -99,9 +99,12 @@ class RevitWarningsSolver:
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :return: Result class instance.
-           .result = True if all warnings could be solved. Otherwise False.
-           .message will contain all messages solver returned.
+        :return: 
+            Result class instance.
+            
+            - .result = True if all warnings could be solved. Otherwise False.
+            - .message will contain all messages solver returned.
+        
         :rtype: :class:`.Result`
         '''
 

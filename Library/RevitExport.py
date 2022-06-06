@@ -81,11 +81,15 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     :type fileName: str
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -213,11 +217,15 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
     
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -256,11 +264,15 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -345,11 +357,15 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -436,11 +452,15 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     :type fileName: str
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -471,11 +491,15 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
     
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
     :rtype: :class:`.Result`
     '''
 
@@ -501,11 +525,15 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     
     :return: 
         Result class instance.
-        Export status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the fully qualified file path of the exported file.
+
+        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the fully qualified file path of the exported file.
+        
         On exception:
-        result.status (bool) will be False.
-        result.message will contain the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        
     :rtype: :class:`.Result`
     '''
 

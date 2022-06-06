@@ -95,9 +95,12 @@ def GetParametersOfInstance(famInstance, doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: Result class instance.
-           .result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
-           .message will be 'Failed to get value for'
+    :return: 
+        Result class instance.
+        
+        - .result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
+        - .message will be 'Failed to get value for'
+    
     :rtype: :class:`.Result`
     '''
 
@@ -686,9 +689,12 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
     :param revitFilePath: Fully qualified revit model file path.
     :type revitFilePath: str
 
-    :return: Result class instance.
-           .result = True if all model key health metric where updated successfully. Otherwise False.
-           .message will be listing each parameter update: old value to new value
+    :return: 
+        Result class instance.
+           
+        - .result = True if all model key health metric where updated successfully. Otherwise False.
+        - .message will be listing each parameter update: old value to new value
+    
     :rtype: :class:`.Result`
     '''
 
@@ -718,9 +724,12 @@ def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
     :param ouputDirectory: The directory path of where to write the data to.
     :type ouputDirectory: str
 
-    :return: Result class instance.
-           .result = True if data was written to files successfully. Otherwise False.
-           .message will be contain data file path for each file.
+    :return: 
+        Result class instance.
+        
+        - .result = True if data was written to files successfully. Otherwise False.
+        - .message will be contain data file path for each file.
+    
     :rtype: :class:`.Result`
     '''
     

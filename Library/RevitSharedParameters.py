@@ -124,11 +124,15 @@ def DeleteSharedParameters(doc, parameterGuids):
 
     :return: 
         Result class instance.
-        Parameter deletion status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the name of the shared parameter deleted.
+
+        - Parameter deletion status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the name of the shared parameter deleted.
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain generic exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+    
     :rtype: :class:`.Result`
     '''
 

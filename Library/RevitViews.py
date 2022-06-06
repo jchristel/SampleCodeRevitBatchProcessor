@@ -586,9 +586,12 @@ def DeleteViews(doc, viewRules, collectorViews):
     :param collectorViews: A filtered element collector containing views.
     :type collectorViews: Autodesk.Revit.DB.FilteredElementCollector
 
-    :return: Result class instance.
-           .result = True if all views where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all views where deleted. Otherwise False.
+        - .message will contain deletion status.
+
     :rtype: :class:`.Result`
     '''
 
@@ -628,9 +631,12 @@ def DeleteViewsNotOnSheets(doc, filter):
     :param filter: Function checking whether view should be deleted.
     :type filter: func(view) returns a bool
 
-    :return: Result class instance.
-           .result = True if all views where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all views where deleted. Otherwise False.
+        - .message will contain deletion status.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -657,9 +663,12 @@ def DeleteUnusedElevationViewMarkers(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: Result class instance.
-           .result = True if all unused elevation markers where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+
+        - .result = True if all unused elevation markers where deleted. Otherwise False.
+        - .message will contain deletion status.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -693,9 +702,12 @@ def DeleteSheets(doc, viewRules, collectorViews):
     :param collectorViews: A filtered element collector containing view instances.
     :type collectorViews: Autodesk.Revit.DB.FilteredElementCollector
     
-    :return: Result class instance.
-           .result = True if all sheets matching filter where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all sheets matching filter where deleted. Otherwise False.
+        - .message will contain deletion status.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -721,9 +733,12 @@ def DeleteAllSheetsInModel(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     
-    :return: Result class instance.
-           .result = True if all sheets where deleted. Otherwise False.
-           .message will contain deletion status.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all sheets where deleted. Otherwise False.
+        - .message will contain deletion status.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -782,9 +797,12 @@ def WriteSheetData(doc, fileName, currentFileName):
     :type fileName: str
     :param currentFileName: The current revit file name which will be appended to data in the report.
     :type currentFileName: str
-    :return: Result class instance.
-           .result = True if data was written succesfully. Otherwise False.
-           .message will contain write status.
+    :return: 
+        Result class instance.
+        
+        - .result = True if data was written succesfully. Otherwise False.
+        - .message will contain write status.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -814,9 +832,12 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
     :param sheetProperties: List of sheet properties to be extracted from sheets.
     :type sheetProperties: list of str
 
-    :return: Result class instance.
-           .result = True if data was written succesfully. Otherwise False.
-           .message will contain write status.
+    :return: 
+        Result class instance.
+    
+        - .result = True if data was written succesfully. Otherwise False.
+        - .message will contain write status.
+    
     :rtype: :class:`.Result`
     '''
 

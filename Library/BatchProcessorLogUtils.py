@@ -1,3 +1,8 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Helper functions to process Revit Batchprocessor log files.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 #
 #License:
 #
@@ -58,10 +63,10 @@ import Result as res
 # library from commonlibraryDebugLocation_
 import Utility as util
 
-# global variable controlling debug output
+#: global variable controlling debug output
 debugMode_ = False
 
-# message snippets which indicate processing a file went bad
+#: Message snippets which indicate processing of a file went bad
 EXCEPTION_MESSAGES = [
     'ERROR: An error occurred while executing the task script! Operation', # revit batch p message when script is buggy
     'WARNING: Timed-out', # revit batch p message when revit times out
@@ -75,30 +80,58 @@ def Output(message = ''):
     if debugMode_:
         print (message)
         
-# method removing chevrons and replace colons with underscores in session id supplied by revit batch processor
 def AdjustSessionIdForFileName(id):
+    '''
+    Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it\
+        can be used in a file name.
+
+    :param id: Session id supplied by revit batch processor.
+    :type id: str
+
+    :return: Re-formatted session id.
+    :rtype: str
+    '''
+
     # remove colons
     sessionIdChanged = id.replace(':','_')
     # remove chevrons
     sessionIdChanged = sessionIdChanged[1:-1]
     return sessionIdChanged
 
-# method re-introducing chevrons and replace underscores with colons to match session Id format used in batchprocessor
-# log files
 def AdjustSessionIdFileNameBack(fileNameId):
+    '''
+    Re-introduces chevrons and replaces underscores with colons to match session Id format used in batchprocessor to a\
+        file name using a batch processor supplied id.
+
+    :param fileNameId: A file name containing a session id with all illegal characters replaced.
+    :type fileNameId: str
+
+    :return: A session id.
+    :rtype: str
+    '''
+
     # re-instate colons
     sessionIdChanged = fileNameId.replace('_',':')
     # remove chevrons
     sessionIdChanged = '<' + sessionIdChanged + '>'
     return sessionIdChanged
 
-# method writing out an empty marker file in given directory
-# file is empty and of type .txt
-#
-# file name is the batchprocessor sessionId used to identify log file belonging to this process
-# folderpath : directory of where the file will be written to
-# sesionId: the actual file name
 def WriteSessionIdMarkerFile(folderPath, sessionId):
+    '''
+    Writes out an empty marker file in given directory. 
+    
+    - File is of type .txt
+    - File name is the batchprocessor sessionId used to identify the log file belonging to this process.
+
+    :param folderPath: Directory of where the file will be written to.
+    :type folderPath: str
+    :param sessionId: Session id supplied by revit batch processor.
+    :type sessionId: str
+
+    :return: True if marker file was written succesfully, otherwise False.
+    :rtype: bool
+    '''
+
     fileName = os.path.join(folderPath, str(sessionId)+'.txt')
     status = True
     try:
@@ -108,12 +141,18 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
         status = False
     return status
 
-# method returning file names of all text files in a given directory representing session Ids
-# files will be deleted immediately after reading
-# 
-# folderPath: directory of where test files are located
-# will return list of session Ids 
 def GetCurrentSessionIds(folderPath):
+    '''
+    Returs file names of all text files in a given directory representing session Ids.
+
+    Files will be deleted immediately after reading
+
+    :param folderPath: Directory of where test files are located
+    :type folderPath: str
+
+    :return: A list of ids in string format.
+    :rtype: [str]
+    '''
     ids = []
     file_list = glob.glob(folderPath + '\\*' + '.txt')
     # delete marker files
@@ -127,10 +166,17 @@ def GetCurrentSessionIds(folderPath):
         ids.append(AdjustSessionIdFileNameBack(Path.GetFileNameWithoutExtension(f)))
     return ids
 
-# method returning a list of fully qualified filepath to logfiles matching the provided session Ids
-#
-# listOfSessionIds: list of session ids we are trying to find log files for
 def GetLogFiles(listOfSessionIds):
+    '''
+    Returns a list of fully qualified filepath to logfiles matching the provided session Ids.
+
+    :param listOfSessionIds: List of session ids.
+    :type listOfSessionIds: [str]
+
+    :return: List of fully qualified file path.
+    :rtype: [str]
+    '''
+
     # save the current file in epoch
     timeNow = time.time()
     fileList = glob.glob(os.path.join(os.getenv('LOCALAPPDATA'),'BatchRvt') + '\\*' + '.log')
@@ -153,10 +199,17 @@ def GetLogFiles(listOfSessionIds):
                 Output('File is to old: ' + str(l))
     return logfiles
 
-# method reading the first two rows of a log file to get the session Id used
-#
-# filePath: fully qualified file path to log file
 def GetSessionIdFromLogFile(filePath):
+    '''
+    Reads the first two rows of a log file to get the session Id used.
+
+    :param filePath: Fully qualified file path to log file
+    :type filePath: str
+
+    :return: The session id, or if not not a log file: an empty string.
+    :rtype: str
+    '''
+
     rowCounter = 0
     retrievedId = ''
     for line in open( filePath, 'r' ):
@@ -169,45 +222,81 @@ def GetSessionIdFromLogFile(filePath):
         rowCounter += 1
     return retrievedId
 
-# method extracting session Id from logfile row:
-# sample: {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:27","utc":"05:49:27"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Session ID: <2020-12-17T05:49:27.559Z>"}}
-#
-# row: json formatted log entry containing the Id
 def GetIdFromRow(row):
+    '''
+    Extracts the session Id from logfile row.
+
+    sample: 
+    {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:27","utc":"05:49:27"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Session ID: <2020-12-17T05:49:27.559Z>"}}
+
+    Note: There are two session id fields in thi string!
+    
+    TODO: Do some error handling!
+
+    :param row: A json formatted string with the session id in chevrons.
+    :type row: str
+
+    :return: The session id.
+    :rtype: str
+    '''
+
     first = '<'
     last = '>'
     t = GetTextBetween(row, first, last)
     return first + t + last
 
-# returns text in between characters
-#
-# text: text to parse
-# first: string indicating start
-# last: string indicating end
-# return string in between first and last
 def GetTextBetween(text, first, last):
+    '''
+    Returns text in between characters
+
+    :param text: Text to parse
+    :type text: str
+    :param first: String indicating start
+    :type first: str
+    :param last: String indicating end
+    :type last: str
+
+    :return: string in between start and end.
+    :rtype: str
+    '''
+
     start = text.index(first) + len(first)
     end = text.index(last, start)
     return text[start:end]
 
-# returns the message string from json formatted message field in log file
-# thins includes leading tab characters
-#
-# data: json formatted row of logfile
 def GetMessageFromJson(data):
+    '''
+    Returns the outer message string from json formatted message field in log file.
+
+    sample: 
+    {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:27","utc":"05:49:27"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Session ID: <2020-12-17T05:49:27.559Z>"}}
+
+    This includes leading tab characters
+
+    :param data: json formatted row of logfile
+    :type data: str
+
+    :return: The message string
+    :rtype: str
+    '''
     outerMessage = data['message']
     return outerMessage['message']
 
-# process log file:
-#   - find files processed:
-#   - check whether an exception occured when processing any of the above files:
-#
-# filePath: fully qualified file path to json formated log file
-# returns list of arrays in format:
-# [
-#   [processed Revit file name, status of processing (true or false), message]
-# ]
 def ProcessLogFile(filePath):
+    '''
+    Process revit batch processoor session log file.
+    
+    - find Revit files processed:
+    - check whether an exception occured when processing any of the above files.
+
+    :param filePath: Fully qualified file path to json formated log file
+    :type filePath: str
+
+    :return: returns list of arrays in format:
+        [[processed Revit file name, status of processing (true or false), message]]
+    :rtype: [[str]]
+    '''
+
     filesProcessStatus = []
     # get all files processed
     try:
@@ -255,11 +344,23 @@ def filterFilesNotyFound(filesProcessed, filesNotFound):
             filteredList.append(fileName)
     return filteredList
 
-# reads a log file and checks whether any exception occured when processing a specific file
-#
-# fileToCheck: fully qualified file path of Revit file which was processed
-# logfilePath: path to log file to be processed
 def GetProcessStatus(fileToCheck, logFilePath):
+    '''
+    Reads a log file and checks whether any exception occured when processing a specific revit file.
+
+    :param fileToCheck: Fully qualified file path of Revit file which was processed
+    :type fileToCheck: str
+    :param logFilePath: The fully qualifiedbatch processor session log file path.
+    :type logFilePath: str
+
+    :return: A process status and a message.
+
+        - process staus: True if no exception occured during revit file processing, otherwise false
+        - message: the exception message recorded in the log file.
+
+    :rtype: bool, str
+    '''
+
     message = ['Found no match in log file']
     # flag indicating whether we managed to retrieve processing data for a file
     foundMatch = False
@@ -295,11 +396,17 @@ def GetProcessStatus(fileToCheck, logFilePath):
         message = '[Failed to retrieve processing data for file.]'
     return processStatus, message
         
-# method extracting the file name from a process message block
-#
-# mblock: list of json formatted rows representing all messages received during file process
-# returns the fully qualified file path of the file processed
 def GetFileNameFromDataBlock(mblock):
+    '''
+    Extracts the file name from a process message block.
+
+    :param mblock: list of json formatted rows representing all messages received during file process
+    :type mblock: [str]
+
+    :return: The fully qualified file path of the file processed
+    :rtype: str
+    '''
+
     # check if this is a cloud model
     if('CLOUD MODEL' in mblock[0]):
         #['\t- Processing file (1 of 1): CLOUD MODEL', '\t- ', '\t- \tProject ID: GUID', '\t- \tModel ID: GUID',...]
@@ -311,12 +418,17 @@ def GetFileNameFromDataBlock(mblock):
         fileName = mblock[0].Trim()[len(messageStarter)-1:]
     return fileName
 
-# method reading a logfile and extracting all files processed
-#
-# filepath: fully qualified file path to log file in json format
-# returns a list of fully qualified file path for each file processed
-# [[filepath, status]]
 def GetFilesProcessed(filePath):
+    '''
+    Reads a batch processor logfile and extracts all file names of files processed.
+    
+    :param filePath: The fully qualified file path to log file.
+    :type filePath: str
+
+    :return: a list lists containing The fully qualified file path for each file processed and their process status. True for no exception encountered, otherwise false.
+        [[filepath, status]]
+    :rtype: [[str, bool]]
+    '''
     # log file structure:
     # start of file list (file server):
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Revit Files for processing (1):"}}
@@ -384,23 +496,42 @@ def GetFileData(data):
         filestatus = True
     return [fileName,filestatus]  
 
-# filters list of all files meant to be processed and returns the one flagged as file not found
-#
-# fileProcessed array of lists in format: [[filename, status{bool}],[filename, status{bool}],...]
 def GetFilesNotFound(filesProcessed):
+    '''
+    Filters list of all files meant to be processed and returns the ones flagged as file not found.
+
+    :param filesProcessed: array of lists in format: [[filename, status as bool],[filename, status as bool],...]
+    :type filesProcessed: [[str, bool]]
+
+    :return: array of lists in format: [[filename, status as bool],[filename, status as bool],...]
+    :rtype: [[str, bool]]
+    '''
+
     fileNotFound = []
     for f in filesProcessed:
         if f[1]==False:
             fileNotFound.append(f)
     return fileNotFound
 
-# method reading json formatted data into blocks depending on start and end text strings
-#
-# jsonData: list of logfile rows in json data format
-# startMarker: string in messages indicating start of block
-# endMarker: string in messages indicating end of block
-# multipleBlocks: bool indicating whether there are multiple data block in log file to be returned
 def GetLogBlocks(jsonData, startMarker, endMarkers, multipleBlocks):
+    '''
+    Reads json formatted data into blocks per files processed.
+
+    Returns the message sections per row entry only.
+
+    :param jsonData: List of logfile rows in json data format
+    :type jsonData: [str]
+    :param startMarker: String in messages indicating start of block.
+    :type startMarker: str
+    :param endMarkers: String in messages indicating end of block.
+    :type endMarkers: str
+    :param multipleBlocks: Flag indicating whether there are multiple data block in log file to be returned
+    :type multipleBlocks: bool
+
+    :return: List of list of str
+    :rtype: [[str]]
+    '''
+
     unformattedBlockData = []
     datablock = []
     messageString = ''
@@ -435,26 +566,40 @@ def GetLogBlocks(jsonData, startMarker, endMarkers, multipleBlocks):
         Output('')
     return unformattedBlockData
 
-# method reading log file into lists of json object
-# {'sessionId': '778e87a5-4b94-4552-9e7e-c9ed38b5caee', 'time': {'local': '09:35:45', 'utc': '22:35:45'}, 'date': {'local': '25/11/2020', 'utc': '24/11/2020'}, 'message': {'msgId': '', 'message': ''}}
-# 
-#
-# filePath: fully qualified file path to log file in json format
 def ReadLogFile(filePath):
+    '''
+    Reads batch processor log file into lists of json objects.
+    
+    Sample row:
+        {'sessionId': '778e87a5-4b94-4552-9e7e-c9ed38b5caee', 'time': {'local': '09:35:45', 'utc': '22:35:45'}, 'date': {'local': '25/11/2020', 'utc': '24/11/2020'}, 'message': {'msgId': '', 'message': ''}}
+    
+    :param filePath: The fully qualified file path to log file in json format
+    :type filePath: str
+
+    :return: list of json objects
+    :rtype: [json]
+    '''
+
     data = []
     with open(filePath) as f:
         for line in f:
             data.append(json.loads(line))
     return data
 
-# method looping over log files and processing them
-#
-# folderPath: Directory where marker files are stored
-# returns list of lists of revit files processed
-# [logId, 
-#   [ processed Revit file name, status of processing (true or false), message]
-# ]
 def ProcessLogFiles(folderPath, debug = False):
+    '''
+    Loops over log files and checks whether any exceptions occured during revit files processing.
+
+    :param folderPath: Fully qualified directory path where marker files are stored.
+    :type folderPath: str
+    :param debug: Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False
+    :type debug: bool, optional
+
+    :return: List of lists of revit files processed in format:
+        [logId,[processed Revit file name, status of processing (true or false), message]]
+    :rtype: [str,[str, bool, str]]
+    '''
+
     returnvalue = res.Result()
     debugMode_ = debug
     logfileResults = []

@@ -1,5 +1,7 @@
 '''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data storage class for Revit ceiling properties.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
 #License:
@@ -67,14 +69,22 @@ class DataCeiling():
     @property
     def DataType(self):
         '''
-        This is the getter method.
+        Property: returns the data type of this class.
+
+        :return: 'ceiling'
+        :rtype: str
         '''
+
         return self.dataType
 
     def to_json(self):
         '''
-        Convert the instance of this class to json
+        Convert the instance of this class to json.
+
+        :return: A Json object.
+        :rtype: json
         '''
+
         return json.dumps(self, indent = None, default=lambda o: o.__dict__)
         
         

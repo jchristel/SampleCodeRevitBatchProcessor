@@ -191,9 +191,12 @@ def DeleteCADLinks(doc):
     :param doc: _description_
     :type doc: _type_
 
-    :return: Result class instance.
-        .result = True if all CAD links got deleted. Otherwise False.
-        .message will contain status of deletion.
+    :return: 
+        Result class instance.
+            
+        - .result = True if all CAD links got deleted. Otherwise False.
+        - .message will contain status of deletion.
+
     :rtype: :class:`.Result`
     '''
 
@@ -219,9 +222,12 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
         I.e. can be used to truncate the link name i.e. the revision details of a link
     :type doSomethingWithLinkName: func(str) -> str
 
-    :return: Result class instance.
-        .result = True if all CAD links got reloaded succesfully. Otherwise False.
-        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :return: 
+        Result class instance.
+
+        - .result = True if all CAD links got reloaded succesfully. Otherwise False.
+        - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -383,10 +389,13 @@ def DeleteRevitLinks(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: Result class instance.
-        .result = True if all revit links got deleted succesfully. Otherwise False.
-        .message will contain deletion status. On exception it will also include the exception message.
-        :rtype: :class:`.Result`
+    :return: 
+        Result class instance.
+        
+        - .result = True if all revit links got deleted succesfully. Otherwise False.
+        - .message will contain deletion status. On exception it will also include the exception message.
+    
+    :rtype: :class:`.Result`
     '''
 
     ids = []
@@ -413,9 +422,12 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
     :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
     :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
 
-    :return: Result class instance.
-        .result = True if all revit links got reloaded succesfully. Otherwise False.
-        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all revit links got reloaded succesfully. Otherwise False.
+        - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    
     :rtype: :class:`.Result`
     '''
 
@@ -463,9 +475,12 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
     :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
     :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
 
-    :return: Result class instance.
-        .result = True if all revit links got reloaded succesfully. Otherwise False.
-        .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    :return: 
+        Result class instance.
+        
+        - .result = True if all revit links got reloaded succesfully. Otherwise False.
+        - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
+    
     :rtype: :class:`.Result`
     '''
 

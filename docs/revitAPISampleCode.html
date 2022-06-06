@@ -13858,18 +13858,32 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.
-.result = True if:</p>
-<ul class="simple">
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul>
+<li><p>.result = True if:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>succsesfully updated all workset default visibility where different to report</p></li>
 <li><p>or none needed updating.</p></li>
 </ul>
-<p>Otherwise False:</p>
-<ul class="simple">
-<li><p>an excpetion occurred</p></li>
+</div></blockquote>
+</li>
+<li><p>Otherwise False:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An excpetion occurred.</p></li>
 <li><p>A workset has no matching data in the report.</p></li>
 </ul>
-<p>.message will each workset and whether it needed updating or not</p>
+</div></blockquote>
+</li>
+<li><p>Common:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>.message will contain each workset and whether it needed updating or not</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>

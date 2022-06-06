@@ -130,11 +130,15 @@ def MoveTagToRoom(doc, tagId):
 
     :return: 
         Result class instance.
-        Tag moving status returned in result.status. False if an exception occured, otherwise True.
-        result.message will contain the name and number of the room.
+
+        - Tag moving status returned in result.status. False if an exception occured, otherwise True.
+        - result.message will contain the name and number of the room.
+        
         On exception (handled by optimizer itself!):
-        result.status (bool) will be False.
-        result.message will contain the name and number of the room and the exception message.
+        
+        - result.status (bool) will be False.
+        - result.message will contain the name and number of the room and the exception message.
+    
     :rtype: :class:`.Result`
     '''
 

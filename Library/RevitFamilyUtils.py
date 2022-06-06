@@ -67,12 +67,16 @@ def LoadFamily(doc, familyFilePath):
     
     :return: 
         Result class instance.
-        Reload status (bool) returned in result.status.
-        Reload status returned from Revit in result.message property.
-        Return family reference stored in result.result property on succesful reload only \
+
+        - Reload status (bool) returned in result.status.
+        - Reload status returned from Revit in result.message property.
+        - Return family reference stored in result.result property on succesful reload only
+        
         On exception
-        Reload.status (bool) will be False
-        Reload.message will contain the exception message
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
     :rtype: :class:`.Result`
     '''
 
@@ -680,10 +684,13 @@ def SetRefPlanesToNotAReference(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     
-    :return: 
-        result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
-        result.message: one row entry per reference plane requiring reference type change
-        result.result: not used
+    :return:
+        Result class instance.
+
+        - result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
+        - result.message: one row entry per reference plane requiring reference type change
+        - result.result: not used
+
     :rtype: :class:`.Result`
     '''
 
@@ -740,10 +747,13 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     
-    :return: 
-        result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
-        result.message: one row entry per curve element requiring reference type change
-        result.result: not used
+    :return:
+        Result class instance.
+
+        - result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
+        - result.message: one row entry per curve element requiring reference type change
+        - result.result: not used
+
     :rtype: :class:`.Result`
     '''
     

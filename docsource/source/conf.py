@@ -15,7 +15,7 @@ import sys
 libraryPath = os.path.abspath('../../Library')
 libraryUIPath = os.path.abspath('../../UI')
 flowPath = os.path.abspath('../..')
-sys.path += [libraryPath, flowPath]
+sys.path += [libraryPath, libraryUIPath, flowPath]
 #sys.path.insert(0, os.path.abspath('../..'))
 
 # web layout theme
@@ -54,7 +54,7 @@ exclude_patterns = []
 # also includes RevitFamilyLoadOption module since class defined in there inherits from an AutoDesk API class
 # which is tripping sphinx
 #, 'RevitFamilyLoadOption'
-autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely']
+autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'wpf']
 
 # include __init__ docs in classes
 autoclass_content = 'both'

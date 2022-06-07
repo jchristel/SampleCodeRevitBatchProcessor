@@ -37,6 +37,7 @@
         <ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="fileSelectUI.html">Revit Batch Processor - File Selection User Interface.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
@@ -533,15 +534,24 @@
 </li>
       <li><a href="misc.html#Utility.FILE_SIZE_IN_GB">FILE_SIZE_IN_GB (in module Utility)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="misc.html#Utility.FILE_SIZE_IN_KB">FILE_SIZE_IN_KB (in module Utility)</a>
 </li>
       <li><a href="misc.html#Utility.FILE_SIZE_IN_MB">FILE_SIZE_IN_MB (in module Utility)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="misc.html#Utility.FileExist">FileExist() (in module Utility)</a>
 </li>
+      <li>
+    FileList
+
+      <ul>
+        <li><a href="fileSelectUI.html#module-FileList">module</a>
+</li>
+      </ul></li>
       <li><a href="misc.html#Utility.FilesAsDictionary">FilesAsDictionary() (in module Utility)</a>
+</li>
+      <li><a href="fileSelectUI.html#FileSelectSettings.FileSelectionSettings">FileSelectionSettings (class in FileSelectSettings)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitDetailItems.FILLED_REGION_TYPE">FILLED_REGION_TYPE (in module RevitDetailItems)</a>
 </li>
@@ -1031,6 +1041,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitFamilyUtils.GetFamilySymbolsIds">GetFamilySymbolsIds() (in module RevitFamilyUtils)</a>
 </li>
+      <li><a href="fileSelectUI.html#script.GetFileData">GetFileData() (in module script)</a>
+</li>
       <li><a href="misc.html#Utility.GetFileDateStamp">GetFileDateStamp() (in module Utility)</a>
 </li>
       <li><a href="misc.html#BatchProcessorLogUtils.GetFileNameFromDataBlock">GetFileNameFromDataBlock() (in module BatchProcessorLogUtils)</a>
@@ -1262,6 +1274,10 @@
 </li>
       </ul></li>
       <li><a href="revitAPISampleCode.html#RevitViews.GetReportHeaders">GetReportHeaders() (in module RevitViews)</a>
+</li>
+      <li><a href="fileSelectUI.html#FileList.getRevitFiles">getRevitFiles() (in module FileList)</a>
+</li>
+      <li><a href="fileSelectUI.html#FileList.getRevitFilesInclSubDirs">getRevitFilesInclSubDirs() (in module FileList)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitLinks.GetRevitLinkReportData">GetRevitLinkReportData() (in module RevitLinks)</a>
 </li>
@@ -1723,9 +1739,13 @@
 </li>
       <li><a href="misc.html#Utility.IndexOf">IndexOf() (in module Utility)</a>
 </li>
+      <li><a href="revitAPISampleCode.html#RevitCommonAPI.InTransaction">InTransaction() (in module RevitCommonAPI)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="revitAPISampleCode.html#RevitCommonAPI.InTransaction">InTransaction() (in module RevitCommonAPI)</a>
+      <li><a href="fileSelectUI.html#FileList.isBackUpFile">isBackUpFile() (in module FileList)</a>
+</li>
+      <li><a href="fileSelectUI.html#script.IsBackupFile">IsBackupFile() (in module script)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.IsClose">IsClose() (in module RevitGeometry)</a>
 </li>
@@ -1805,6 +1825,8 @@
 </li>
         <li><a href="dataExport.html#module-DataShapely">DataShapely</a>
 </li>
+        <li><a href="fileSelectUI.html#module-FileList">FileList</a>
+</li>
         <li><a href="revitAPISampleCode.html#module-RevitAnnotation">RevitAnnotation</a>
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitBIM360">RevitBIM360</a>
@@ -1883,11 +1905,15 @@
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitWorksets">RevitWorksets</a>
 </li>
+        <li><a href="fileSelectUI.html#module-script">script</a>
+</li>
         <li><a href="misc.html#module-SolibriIFCOptimizer">SolibriIFCOptimizer</a>
 </li>
         <li><a href="misc.html#module-SystemProcess">SystemProcess</a>
 </li>
         <li><a href="misc.html#module-Utility">Utility</a>
+</li>
+        <li><a href="fileSelectUI.html#module-Workloader">Workloader</a>
 </li>
         <li><a href="misc.html#module-WorksharingMonitorProcess">WorksharingMonitorProcess</a>
 </li>
@@ -1899,6 +1925,10 @@
       <li><a href="revitAPISampleCode.html#RevitCategories.MoveElementsToCategory">MoveElementsToCategory() (in module RevitCategories)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitRooms.MoveTagToRoom">MoveTagToRoom() (in module RevitRooms)</a>
+</li>
+      <li><a href="fileSelectUI.html#FileItem.MyFileItem">MyFileItem (class in FileItem)</a>
+</li>
+      <li><a href="fileSelectUI.html#UIFileSelect.MyWindow">MyWindow (class in UIFileSelect)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -2443,6 +2473,13 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.SaveFile">SaveFile() (in module RevitCommonAPI)</a>
 </li>
+      <li>
+    script
+
+      <ul>
+        <li><a href="fileSelectUI.html#module-script">module</a>
+</li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.SetBuiltInParameterValue">SetBuiltInParameterValue() (in module RevitCommonAPI)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCategories.SetCategoryColour">SetCategoryColour() (in module RevitCategories)</a>
@@ -2620,6 +2657,15 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fileSelectUI.html#WorkloadBucket.WorkloadBucket">WorkloadBucket (class in WorkloadBucket)</a>
+</li>
+      <li>
+    Workloader
+
+      <ul>
+        <li><a href="fileSelectUI.html#module-Workloader">module</a>
+</li>
+      </ul></li>
       <li>
     WorksharingMonitorProcess
 
@@ -2631,12 +2677,12 @@
 </li>
       <li><a href="dataExport.html#DataExport.WriteJsonDataToFile">WriteJsonDataToFile() (in module DataExport)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="ModelHealth.html#RevitModelHealth.WriteModelHealthReport">WriteModelHealthReport() (in module RevitModelHealth)</a>
 </li>
       <li><a href="misc.html#SystemProcess.WriteOutProcessData">WriteOutProcessData() (in module SystemProcess)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="misc.html#WorksharingMonitorProcess.WriteOutWSMDataToFile">WriteOutWSMDataToFile() (in module WorksharingMonitorProcess)</a>
 </li>
       <li><a href="dataExport.html#DataShapely.writeReportData">writeReportData() (in module DataShapely)</a>

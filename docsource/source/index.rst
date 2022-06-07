@@ -5,6 +5,7 @@ Welcome to Sample Code Revit Batch Processor's documentation!
    :maxdepth: 2
    :caption: Contents:
    
+   fileSelectUI
    revitAPISampleCode
    ModelHealth
    dataExport

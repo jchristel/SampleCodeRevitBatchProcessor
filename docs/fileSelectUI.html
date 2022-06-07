@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Revit Batch Processor - File Selection User Interface. &#8212; Sample Code Revit Batch Processor 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="Revit API sample code." href="revitAPISampleCode.html" />
+    <link rel="prev" title="Welcome to Sample Code Revit Batch Processor’s documentation!" href="index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.0.0 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Revit Batch Processor - File Selection User Interface.</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="revitAPISampleCode.html" title="Revit API sample code." accesskey="N">next</a></div>
+            <div class="headerButton"><a href="index.html" title="Welcome to Sample Code Revit Batch Processor’s documentation!" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Revit Batch Processor - File Selection User Interface.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="_sources/fileSelectUI.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="revit-batch-processor-file-selection-user-interface">
+<h1>Revit Batch Processor - File Selection User Interface.<a class="headerlink" href="#revit-batch-processor-file-selection-user-interface" title="Permalink to this headline">¶</a></h1>
+<p>Provides a file selection UI with options for</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>File types (project vs family)</p></li>
+<li><p>Number of task files to be written out</p></li>
+<li><p>BIM 360 file support</p></li>
+</ul>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="FileItem.MyFileItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileItem.</span></span><span class="sig-name descname"><span class="pre">MyFileItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360projectguid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360fileguid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360revitversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileItem.MyFileItem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="FileSelectSettings.FileSelectionSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileSelectSettings.</span></span><span class="sig-name descname"><span class="pre">FileSelectionSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubDirsInSearch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfileNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileSelectSettings.FileSelectionSettings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-FileList"></span><dl class="py function">
+<dt class="sig sig-object py" id="FileList.getRevitFiles">
+<span class="sig-prename descclassname"><span class="pre">FileList.</span></span><span class="sig-name descname"><span class="pre">getRevitFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileList.getRevitFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper method retrieving files in a given directory and of a given file extension</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FileList.getRevitFilesInclSubDirs">
+<span class="sig-prename descclassname"><span class="pre">FileList.</span></span><span class="sig-name descname"><span class="pre">getRevitFilesInclSubDirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileList.getRevitFilesInclSubDirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper method retrieving files in a given directory and its subdirectories with a give extension</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="FileList.isBackUpFile">
+<span class="sig-prename descclassname"><span class="pre">FileList.</span></span><span class="sig-name descname"><span class="pre">isBackUpFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileList.isBackUpFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether a given file is a backup file</p>
+</dd></dl>
+
+<span class="target" id="module-script"></span><dl class="py function">
+<dt class="sig sig-object py" id="script.IsBackupFile">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">IsBackupFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.IsBackupFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks whether a file is a back up file by splitting filname at every full stop
+check whether I get a list with more more then 2 entries back ?
+no: not a back up
+yes: check last list entry whether it is 4 characters in length and can I convert it into an integer?
+yes: backup file
+no: normal file
+returns true if a back up file, false if not</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.GetFileData">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">GetFileData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.GetFileData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves revit file data from either:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>directory on a file server</p></li>
+<li><p>a text file containing BIM 360 project data</p></li>
+<li><p>text file needs to be a .csv</p></li>
+<li><dl class="simple">
+<dt>format:</dt><dd><ul>
+<li><p>0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="UIFileSelect.MyWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">UIFileSelect.</span></span><span class="sig-name descname"><span class="pre">MyWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UIFileSelect.MyWindow" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="WorkloadBucket.WorkloadBucket">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">WorkloadBucket.</span></span><span class="sig-name descname"><span class="pre">WorkloadBucket</span></span><a class="headerlink" href="#WorkloadBucket.WorkloadBucket" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<span class="target" id="module-Workloader"></span></section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2022, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Revit Batch Processor - File Selection User Interface.
+        </div>
+        <script type="text/javascript" charset="utf-8" src="_static/js/toc.js"></script>
+  </body>
+</html>

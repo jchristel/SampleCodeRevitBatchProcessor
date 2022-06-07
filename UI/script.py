@@ -37,8 +37,6 @@ import FileSelectSettings as set
 import Workloader as wl
 #import WorkloadBucket as wlb
 
-# import the Libray folder
-import Library
 # import bim360 utils from Library
 from Library import UtilBIM360 as ub360
 
@@ -180,12 +178,15 @@ def IsBackupFile(fileName):
 #       - format:
 #           0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
 def GetFileData(settings):
-    ''' retrieves revit file data from either:
-        -  directory on a file server
+    ''' 
+    Retrieves revit file data from either:
+        
+        - directory on a file server
         - a text file containing BIM 360 project data
         - text file needs to be a .csv
         - format:
-            0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
+            - 0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
+    
     '''
     revitfiles = []
     # check whether input is a directory path or a text file (csv) containing BIM 360 data

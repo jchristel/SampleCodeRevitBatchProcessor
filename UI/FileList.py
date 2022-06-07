@@ -42,8 +42,6 @@ import FileItem as fi
 import Workloader as wl
 #import WorkloadBucket as wlb
 
-# import the Libray folder
-import Library
 # custom result class
 from Library import Result as res
 

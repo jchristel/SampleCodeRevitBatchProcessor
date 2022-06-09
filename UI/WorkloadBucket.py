@@ -1,3 +1,12 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A work load bucket.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Worklpad buckets are used to distribute file processing evenly between parallel running batch processor\
+    sessions based on Revit file size.
+
+'''
 #
 #License:
 #
@@ -25,10 +34,27 @@
 # a class used to store work load items
 class WorkloadBucket: 
     def __init__(self): 
+        '''
+        Class constructor.
+
+        Initialises this class with:
+
+        - .workLoadValue = 0
+        - .items = []
+
+        '''
+        
         self.workLoadValue = 0
         self.items = []
     
     def SetWorkLoadValue(self, value):
+        '''
+        Sets the buckets overall workload value.
+
+        :param value: An integer representing the workload value of this bucket.
+        :type value: int
+        '''
+
         try:
             self.workLoadValue = value
         except Exception as e:
@@ -36,6 +62,12 @@ class WorkloadBucket:
             pass
     
     def AddItem(self, value):
+        '''
+        Adds an item to the workload list.
+
+        :param value: Adds an item to the workload list.
+        :type value: foo
+        '''
         try:
             self.items.append(value)
         except Exception as e:

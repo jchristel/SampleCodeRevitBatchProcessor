@@ -1,3 +1,9 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A class to store file select UI settings.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
 #
 #License:
 #
@@ -25,6 +31,21 @@
 class FileSelectionSettings:
     
     def __init__(self, inputDirectory, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension):
+        '''
+        Class constructor
+
+        :param inputDirectory: A fully qualified directory path containing files to be shown in UI.
+        :type inputDirectory: str
+        :param includeSubDirsInSearch: If True include subdirectories in file search, otherwise just root directory.
+        :type includeSubDirsInSearch: bool
+        :param outputDirectory: A fully qualified directory path to where task files will be written.
+        :type outputDirectory: str
+        :param outputfileNumber: The number of task files to be written out.
+        :type outputfileNumber: int
+        :param revitFileExtension: A file extension filter applied to directory search.
+        :type revitFileExtension: str
+        '''
+
         self.inputDir = inputDirectory
         self.inclSubDirs = includeSubDirsInSearch
         self.outputDir = outputDirectory

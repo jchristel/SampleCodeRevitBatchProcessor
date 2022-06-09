@@ -1,3 +1,9 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The entry point for the file selection GUI.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
 #
 #License:
 #
@@ -40,9 +46,14 @@ import Workloader as wl
 # import bim360 utils from Library
 from Library import UtilBIM360 as ub360
 
-
-# main method
 def main(argv):
+    '''
+    Entry point.
+
+    :param argv: A list of string representing arguments passt in.
+    :type argv: [str]
+    '''
+
     # get arguments
     gotArgs, settings = processArgs(argv)
     if(gotArgs):
@@ -83,8 +94,19 @@ def main(argv):
         # invalid or no args provided... get out
         sys.exit(1)
 
-# argument processor
 def processArgs(argv):
+    '''
+    Processes passt in arguments and checks whether inputs are valid.
+
+    :param argv: List of arguments
+    :type argv: _type_
+
+    :return: 
+        - True if arguments passt in are valid, otherwise False.
+        - FIle select settings object instance.
+    :rtype: bool, :class:`.FileSelectionSettings`
+    '''
+
     inputDirFile = ''
     outputDirectory = ''
     outputfileNumber = 1
@@ -134,60 +156,60 @@ def processArgs(argv):
 
     return gotArgs, set.FileSelectionSettings(inputDirFile, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension)
 
-# method used to determine directory this script is run from
-# this is used to load xaml file
 def GetFolderPathFromFile(filePath):
+    '''
+    Returns the directory from a fully qualified file path.
+
+    :param filePath: A fully qualified file path.
+    :type filePath: str
+
+    :return: A fully qualified directory path. 
+        On exception an empty string.
+    :rtype: str
+    '''
+
     try:
         value = os.path.dirname(filePath)
     except Exception:
         value = ''
     return value
 
-# used to check whether input directory or input file path and output directory supplied in arguments by user do exist
 def FileExist(path):
+    '''
+    Checks whether a file exists.
+
+    :param path: A fully qualiofied file path.
+    :type path: str
+
+    :return: True if file exists, otherwise False.
+    :rtype: bool
+    '''
+
     try:
         value = os.path.exists(path)
     except Exception:
         value = False
     return value
 
-def IsBackupFile(fileName):
-    '''checks whether a file is a back up file by splitting filname at every full stop
-    check whether I get a list with more more then 2 entries back ?
-    no: not a back up
-    yes: check last list entry whether it is 4 characters in length and can I convert it into an integer?
-    yes: backup file
-    no: normal file
-    returns true if a back up file, false if not
-    '''
-    isBackup = False
-    chunks = fileName.split('.')
-    if(len(chunks)>2):
-        lastChunk = chunks[len(chunks)-2]
-        try:
-            converted_num = int(lastChunk)
-            isBackup = True
-        except Exception:
-            pass
-    return isBackup
 
-# retrieves revit file data from either:
-#   -  directory on a file server
-#   - a text file containing BIM 360 project data
-#       - text file needs to be a .csv
-#       - format:
-#           0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
 def GetFileData(settings):
-    ''' 
-    Retrieves revit file data from either:
+    '''
+    Retrieves Revit file data from either:
         
         - directory on a file server
+
         - a text file containing BIM 360 project data
-        - text file needs to be a .csv
-        - format:
-            - 0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
+            - text file needs to be a .csv
+            - format:
+                - 0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
     
+    :param settings: A file seletct settings object instance.
+    :type settings: :class:`.FileSelectionSettings`
+
+    :return: List of file items
+    :rtype: [:class:`.FileItem`]
     '''
+
     revitfiles = []
     # check whether input is a directory path or a text file (csv) containing BIM 360 data
     # since we tested for a valid path initially it will need to be either one...
@@ -208,7 +230,7 @@ def GetFileData(settings):
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revitFile in revitfilesUnfiltered:
                 # remove any back up files from selection
-                if(IsBackupFile(os.path.basename(revitFile.name)) == False):
+                if(fl.isBackupFile(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
                         revitfiles.append(revitFile)
                     else:
@@ -220,8 +242,17 @@ def GetFileData(settings):
         revitfiles = []
     return revitfiles
 
-# checks whether the firs item in a file item list belongs to a BIM 360 project
 def isBIM360File(revitFiles):
+    '''
+    Checks whether the first item in a file item list belongs to a BIM 360 project.
+
+    Checks whether Project GUID property on file item object is None.
+
+    :param revitFiles: List of file items.
+    :type revitFiles: [:class:`.FileItem`]
+    :return: True if BIM360 file, otherwise False.
+    :rtype: bool
+    '''
     BIM360File = False
     for r in revitFiles:
         if(r.BIM360ProjectGUID != None):
@@ -229,14 +260,15 @@ def isBIM360File(revitFiles):
             break
     return BIM360File
 
-# the directory this script lives in
+#: the directory this script lives in
 currentScriptDir_ = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])
 
-# xaml file name
+#: xaml file name of file select UI
 xamlfile_ = 'ui.xaml'
-# xaml full path
+
+#: xaml full path
 xamlFullFileName_ =  os.path.join(currentScriptDir_, xamlfile_)
 
-# module entry
+#: module entry
 if __name__ == "__main__":
    main(sys.argv[1:])

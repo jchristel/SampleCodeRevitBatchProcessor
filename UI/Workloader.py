@@ -1,3 +1,9 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Helper functions to sort task evenly into workload buckets.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
 #
 #License:
 #
@@ -23,11 +29,21 @@
 
 import WorkloadBucket as wb
 
-# distributes a given number evenly to workload buckets
-# number of buckets : the nubmer of buckets items are to be distributed to
-# items: list of items
-# getWorkloadSize: function returning the indivisual items workload size
 def DistributeWorkload (numerOfBuckets, items, getWorkloadSize):
+    '''
+    Distributes a given number of items evenly by workload size into workload buckets.
+
+    :param numerOfBuckets: The nubmer of buckets items are to be distributed to
+    :type numerOfBuckets: int
+    :param items: A list of items.
+    :type items: [foo]
+    :param getWorkloadSize: A function returning the workload size from an item.
+    :type getWorkloadSize: func(foo) -> int
+    
+    :return: A list of workload bucket objects containing items.
+    :rtype: list[ :class:`.WorkloadBucket`]
+    '''
+    
     workloadBuckets = []
     try:
         # ini bucket list
@@ -57,10 +73,17 @@ def DistributeWorkload (numerOfBuckets, items, getWorkloadSize):
     # send loaded buckets back
     return workloadBuckets
 
-# Python code to sort the tuples using second element  
-# of sublist Inplace way to sort using sort() 
 def Sort(sub_li): 
-  
+    '''
+    Python code to sort the tuples using second element of sublist. Inplace way to sort using sort().
+
+    Note: not sure a one liner warrants a method...?
+
+    :param sub_li: _description_
+    :type sub_li: _type_
+    :return: _description_
+    :rtype: _type_
+    '''
     # reverse = None (Sorts in Ascending order) 
     # key is set to sort using second element of  
     # sublist lambda has been used 

@@ -1,4 +1,10 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Helper functions for the file selection GUI.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -49,10 +55,19 @@ from Library import Result as res
 # my code here:
 # -------------
 
-# directory              directory containing files to be retrived
-# fileExtension         file extenision in format .rvt
 def getRevitFiles(directory, fileExtension):
-    '''helper method retrieving files in a given directory and of a given file extension'''
+    '''
+    Returns files in a given directory and of a given file extension.
+
+    :param directory: The fully qualified directory path.
+    :type directory: str
+    :param fileExtension: The file extension filter in format '.ext'
+    :type fileExtension: str
+
+    :return: List of file items
+    :rtype: [:class:`.FileItem`]
+    '''
+
     files = []
     listOfFiles = os.listdir(directory)
     for f in listOfFiles:
@@ -68,10 +83,19 @@ def getRevitFiles(directory, fileExtension):
                 files.append(fi.MyFileItem(location,size))
     return files
 
-# directory              directory containing files to be retrived
-# fileExtension         file extenision in format .rvt
 def getRevitFilesInclSubDirs(directory, fileExtension):
-    '''helper method retrieving files in a given directory and its subdirectories with a give extension'''
+    '''
+    Returns files in a given directory and its sub directories of a given file extension.
+
+    :param directory: The fully qualified directory path.
+    :type directory: str
+    :param fileExtension: The file extension filter in format '.ext'
+    :type fileExtension: str
+
+    :return: List of file items
+    :rtype: [:class:`.FileItem`]
+    '''
+
     files = []
     # Get the list of all files in directory tree at given path
     listOfFiles = list()
@@ -88,44 +112,109 @@ def getRevitFilesInclSubDirs(directory, fileExtension):
                 files.append(fi.MyFileItem(f,size))
     return files
 
-# filePath      file path without the file extension!
 def isBackUpFile(filePath):
-    '''checks whether a given file is a backup file'''
-    flag = False
-    try:
-        index = filePath.rindex('.')
-        if(index > 0):
-            # get the string after the last full stop
-            chunk = filePath[index + 1:]
-            # check if correct length
-            if(len(chunk) == 4):
-                # attempt to convert the string into a number
-                try:
-                    converted_num = int(chunk)
-                    flag = True
-                except Exception:
-                    pass
-    except Exception:
-        pass
-    return flag
+    '''
+    Checks whether a file is a Revit back up file.
+    
+    Backup files are usually in format 'filename.01234.ext'
+    
+    Method of checking:
 
-# helper used to define workload size (same as file size)
+    - splitting filname at every full stop
+    - check whether a list with more more then 2 entries came back ?
+    
+        - no: 
+            - not a back up
+        - yes: 
+            - check last list entry whether it is 4 characters in length and can it be convert it into an integer?
+        
+                - yes: 
+                    - backup file
+                - no
+                    - normal file
+    
+    :param filePath: A fully qualified file path.
+    :type filePath: str
+
+    :return: True if a back up file, otherwise False.
+    :rtype: bool
+    '''
+
+    isBackup = False
+    chunks = filePath.split('.')
+    if(len(chunks)>2):
+        lastChunk = chunks[len(chunks)-2]
+        try:
+            converted_num = int(lastChunk)
+            isBackup = True
+        except Exception:
+            pass
+    return isBackup
+
 def getFileSize(item):
+    '''
+    Helper used to define workload size (same as file size)
+
+    :param item: A file item object instance.
+    :type item: :class:`.FileItem`
+
+    :return: The file size.
+    :rtype: int
+    '''
+
     return item.size
 
-# default task list content for files on a file server location
 def BucketToTaskListFileSystem(item):
+    '''
+    Default task list content for files on a file server location.
+
+    :param item: A file item object instance.
+    :type item: :class:`.FileItem`
+
+    :return: The item name.(fully qualified file path)
+    :rtype: str
+    '''
+
     return item.name
 
-# default task list content for files on a BIM 360 cloud drive
 def BucketToTaskListBIM360(item):
+    '''
+    Default task list content for files on a BIM 360 cloud drive.
+
+    :param item: A file item object instance.
+    :type item: :class:`.FileItem`
+
+    :return: The revit version, project guid, file guid separated by a space ' '
+    :rtype: str
+    '''
+
     return ' '.join([item.BIM360RevitVersion, item.BIM360ProjectGUID, item.BIM360FileGUID])
 
-# method writing out task files
-# filename      fully qualified file path of the task file name including extension
-# bucket        workload bucket containing fully qualified file path in .name property
-# GetData       method writing out file data required ()
 def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
+    '''
+    Writes out a task list file.
+
+    :param fileName: Fully qualified file path of the task file name including extension.
+    :type fileName: str
+    :param bucket: Workload bucket object instance.
+    :type bucket: :class:`.WorkloadBucket`
+    :param GetData: Returns data from file item object to be written to file, defaults to BucketToTaskListFileSystem
+    :type GetData: func(:class:`.FileItem`) -> str, optional
+
+    :return: 
+        Result class instance.
+
+        - Write file status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Result.message property contains fully qualified file path to task list file.
+        
+        On exception:
+        
+        - .status (bool) will be False.
+        - .message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         f = open(fileName, 'w')
@@ -147,11 +236,41 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
 
 
 # method creating a number of task list files
-# directoryPath         directory containing files to be added to task lists
+# directoryPath         
 # fileExtension         file extenision in format .rvt
-# tasklistDirectory     the directory path where the task files will be written to
+# tasklistDirectory     
 # taskFilesNumbes       number of task files to be written
 def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
+    '''
+    Writes out all task list(s) to file(s).
+
+    :param directoryPath: Fully qualified directory path containing files to be added to task lists.
+    :type directoryPath: str
+    :param fileExtension: A file extension filter in format '.ext'
+    :type fileExtension: str
+    :param taskListDirectory: The fully qualified directory path where the task files will be written .
+    :type taskListDirectory: str
+    :param taskFilesNumber: The number of task files to be written.
+    :type taskFilesNumber: int
+    :param fileGetter: Function accepting a directory and file extension filter and returns file items from directory.
+    :type fileGetter: func(str, str) -> :class:`.FileItem`
+    :param fileDataProcessor: Function processing file item and retruns a string to be written to task list file, defaults to BucketToTaskListFileSystem
+    :type fileDataProcessor: func(:class:`.FileItem`) -> str, optional
+    
+    :return: 
+        Result class instance.
+
+        - Write file status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Result.message property contains fully qualified file path for each task list file.
+        
+        On exception:
+        
+        - .status (bool) will be False.
+        - .message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     returnvalue.status = True
     # get revit files in input dir

@@ -572,6 +572,8 @@ Sets the dialogue result value to False.</p>
 
 <span class="target" id="module-Workloader"></span><section id="helper-functions-to-sort-task-evenly-into-workload-buckets">
 <h2>Helper functions to sort task evenly into workload buckets.<a class="headerlink" href="#helper-functions-to-sort-task-evenly-into-workload-buckets" title="Permalink to this headline">¶</a></h2>
+<p>A bucket contains a number of files which will eventually be written into task files to be processed by batch processor.
+The below function attempt to fill these buckets evenly measured on file size.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Workloader.DistributeWorkload">
 <span class="sig-prename descclassname"><span class="pre">Workloader.</span></span><span class="sig-name descname"><span class="pre">DistributeWorkload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numerOfBuckets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getWorkloadSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Workloader.DistributeWorkload" title="Permalink to this definition">¶</a></dt>

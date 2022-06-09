@@ -1,3 +1,9 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A class to store file information.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+
 #
 #License:
 #
@@ -25,6 +31,21 @@
 class MyFileItem:
     
     def __init__(self, name, size, BIM360projectguid = None , BIM360fileguid = None, BIM360revitversion = '-'):
+        '''
+        Class constructor.
+
+        :param name: The fully qualified file path.
+        :type name: str
+        :param size: The file size.
+        :type size: int
+        :param BIM360projectguid: The BIM360 project GUID, defaults to None
+        :type BIM360projectguid: str, optional
+        :param BIM360fileguid: The BIM360 file GUID, defaults to None
+        :type BIM360fileguid: str, optional
+        :param BIM360revitversion: The revit file version (year only), defaults to '-'
+        :type BIM360revitversion: str, optional
+        '''
+
         self.name = name
         self.size = size
         self.BIM360ProjectGUID = BIM360projectguid

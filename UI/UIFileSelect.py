@@ -1,3 +1,8 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A file selection GUI.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 #
 #License:
 #
@@ -33,13 +38,37 @@ import ctypes
 # import settings class
 import FileSelectSettings as set
 
-# simple message box
 def Mbox(title, text, style):
-        return ctypes.windll.user32.MessageBoxW(0, text, title, style)
+    '''
+    A simple winforms message box.
+
+    :param title: The title of the message box.
+    :type title: str
+    :param text: The text displayed in the message box.
+    :type text: str
+    :param style: An int representing the type of buttons shown.
+        (https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.messageboxbuttons?view=windowsdesktop-6.0)
+    :type style: int
+
+    :return: A winform message box.
+    :rtype: _type_
+    '''
+
+    return ctypes.windll.user32.MessageBoxW(0, text, title, style)
 
 # UI class
 class MyWindow (Windows.Window):
     def __init__(self, xamlFullFileName, revitFiles, settings):
+        '''
+        Class constructor
+
+        :param xamlFullFileName: Fully qaulified file path to wpf XAML file.
+        :type xamlFullFileName: str
+        :param revitFiles: List containing path to files.
+        :type revitFiles: [str]
+        :param settings: A settings object.
+        :type settings: :class:`.FileSelectionSettings`
+        '''
         
         wpf.LoadComponent(self,xamlFullFileName)
 
@@ -54,6 +83,18 @@ class MyWindow (Windows.Window):
         self.cbInclSubDirs.IsChecked = settings.inclSubDirs
         
     def BtnOK(self, sender, EventArgs):
+        '''
+        Ok button event handler.
+
+        Gets the selected rows of files and adds them to .selectedFiles property
+        Sets the dialog result value to True.
+
+        :param sender: _description_
+        :type sender: _type_
+        :param EventArgs: _description_
+        :type EventArgs: _type_
+        '''
+
         # get selected items
         rows = self.files.SelectedItems
         if(rows != None and len(rows) > 0):
@@ -71,6 +112,16 @@ class MyWindow (Windows.Window):
             Mbox('Attention','No files selected', 1)
     
     def BtnCancel(self, sender, EventArgs):
+        '''
+        Cancel button event handler.
+        Sets the dialogue result value to False.
+
+        :param sender: _description_
+        :type sender: _type_
+        :param EventArgs: _description_
+        :type EventArgs: _type_
+        '''
+        
         #print('cancel')
         self.DialogResult = False
         self.Close()

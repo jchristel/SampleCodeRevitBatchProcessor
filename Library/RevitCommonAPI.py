@@ -1311,7 +1311,11 @@ def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', wor
 
 #--------------------------------------------Transactions-----------------------------------------
 
-def InTransaction(tranny, action):
+def InTransaction(
+    tranny, # type: str
+    action  # type: str
+    ):
+    # type: (...) -> bool
     '''
     Revit transaction wrapper.
 

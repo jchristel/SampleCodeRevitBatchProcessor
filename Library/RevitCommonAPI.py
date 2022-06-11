@@ -1405,7 +1405,7 @@ def InTransaction(
     tranny, # type: str
     action  # type: str
     ):
-    # type: (...) -> bool
+    # type: (...) -> res.Result
     '''
     Revit transaction wrapper.
 
@@ -1419,7 +1419,7 @@ def InTransaction(
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully saved file, otherwise False.
+        - .result = True if succsesfully executed transaction, otherwise False.
         
     :rtype: :class:`.Result`
     '''

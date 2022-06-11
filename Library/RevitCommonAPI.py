@@ -512,6 +512,7 @@ def CheckUniqueTypeData(existingTypes, newTypeData):
     :type existingTypes: List of List in format [[Autodesk.Revit.DB.ElementType , Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     :param newTypeData: Comparison list
     :type newTypeData: List in format [Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...] 
+    
     :return: 
         True, if new type is not in list existing Types passed in or
         if ids of similar family types do not match any similar types already in list
@@ -550,6 +551,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
     :type typeGetter: func
     :param instanceGetter: Function asccepting current document as argument and returning a list of instances in model
     :type instanceGetter: func
+    
     :return: List of type ids which can be purged from the model.
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
@@ -618,6 +620,7 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
     :type getTypes: func (doc)
     :param getInstances: Instances getter function. Needs to accept doc as argument and return a collector of instances foo
     :type getInstances: func(doc)
+    
     :return: returns a list of unused types
     :rtype: list of type foo
     '''
@@ -657,6 +660,7 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
     :type groupTypes: Autodesk.Revit.DB.GroupType
     :param typeIds: List of type ids to confirm whether they are in use a group
     :type typeIds: list of Autodesk.Revot.Db.ElementId
+    
     :return: Returns all type ids not matched
     :rtype: list of Autodesk.Revot.Db.ElementId
     '''
@@ -688,6 +692,7 @@ def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
     :type groupTypes: list of Autodesk.Revit.DB.GroupType
     :param typeIds: List of type ids to confirm whether they are in use a group
     :type typeIds: list of Autodesk.Revot.Db.ElementId
+    
     :return: Returns all type ids not matched
     :rtype: list of Autodesk.Revot.Db.ElementId
     '''
@@ -709,6 +714,7 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
     :type doc: Autodesk.Revit.DB.Document
     :param typeIds: List of type ids to confirm whether they are in use a group
     :type typeIds: list of Autodesk.Revot.Db.ElementId
+    
     :return: Returns all type Ids from list passt in not found in group definitions
     :rtype: list of Autodesk.Revot.DB.ElementId
     '''
@@ -733,6 +739,7 @@ def BuildCategoryDictionary(doc, elementIds):
     :type doc: Autodesk.Revit.DB.Document
     :param elementIds: List of element id of which to build the dictionary from.
     :type elementIds: list of AutoDesk.Revit.DB.ElementId
+    
     :return: Dictionary key is the element category and values are all the elements of that category.
     :rtype: dictioanry, key is string, value is list of AutoDesk.Revit.DB.Element
     '''
@@ -766,6 +773,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     :type doc: Autodesk.Revit.DB.Document
     :param elementIds: List of elements to check
     :type elementIds: list of AutoDesk.Revit.DB.ElementId
+    
     :return: True if all but one element are orphaned legend components.
     :rtype: bool
     '''
@@ -804,6 +812,7 @@ def FilterOutWarnings(doc, dependentElements):
     :type doc: Autodesk.Revit.DB.Document
     :param dependentElements: List of elements to check.
     :type dependentElements: list of AutoDesk.Revit.DB.Element
+    
     :return: A list of elements id where the workset name of the element is not 'Reviewable Warnings'
     :rtype: list of AutoDesk.Revit.DB.Element
     '''
@@ -831,6 +840,7 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
     :type filter: Autodesk.Revit.DB.ElementFilter , optional
     :param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
     :type threshold: int, optional
+    
     :return: returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured
     :rtype: int
     '''
@@ -891,10 +901,14 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     :type transactionName: str
     :param elementName: The element name added to deletion status message.
     :type elementName: str
-    :return: Result class instance.
-        .result = True if succsesfully deleted all elements. Otherwise False.
-        .message will contain deletion status
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully deleted all elements. Otherwise False.
+        - .message will contain deletion status
+
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -924,11 +938,16 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
     :type transactionName: str
     :param elementName: The name of the element (?) Not used!!
     :type elementName: str
-    :return: Result class instance.
-        .result = True if succsesfully deleted all elements. Otherwise False.
-        .message will contain each id and its deletion status
-    :rtype: SampleCodeRevitBatchProcessor.Result
+
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully deleted all elements. Otherwise False.
+        - .message will contain each id and its deletion status
+
+    :rtype: :class:`.Result`
     '''
+
     returnvalue = res.Result()
     for id in ids:
         def action():
@@ -953,6 +972,7 @@ def GetIdsFromElementCollector(col):
     
     :param col: A filtered element collector.
     :type col: Autodesk.Revit.DB.FilteredElementCollector 
+    
     :return: list of all element ids of valid elements in collector.
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
@@ -975,6 +995,7 @@ def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
     :type elId: Autodesk.Revit.DB.ElementId
     :param builtinCategories: The builtin category the element does needs to match.
     :type builtinCategories: Autodesk.Revit.DB.Definition
+    
     :return: True if element's builtin category does equals the test category, otherwise False.
     :rtype: bool
     '''
@@ -998,6 +1019,7 @@ def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
     :type elId: Autodesk.Revit.DB.ElementId
     :param builtinCategories: The builtin category the element does not needs to match.
     :type builtinCategories: Autodesk.Revit.DB.Definition
+    
     :return: True if element's builtin category does not equals the test category, otherwise False.
     :rtype: bool
     '''
@@ -1021,6 +1043,7 @@ def IsFamilyNameFromInstance(doc, familyName, elementId):
     :type familyName: str
     :param elementId: The id of the element to be tested.
     :type elementId: Autodesk.Revit.DB.ElementId
+    
     :return: True if family equals the test string, otherwise False.
     :rtype: bool
     '''
@@ -1044,6 +1067,7 @@ def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
     :type containsValue: str
     :param elementId: The id of the element to be tested.
     :type elementId:  Autodesk.Revit.DB.ElementId
+    
     :return: True if family name does contain the test string, otherwise False.
     :rtype: bool
     '''
@@ -1067,6 +1091,7 @@ def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
     :type containsValue: str
     :param elementId: The id of the element to be tested.
     :type elementId: Autodesk.Revit.DB.ElementId
+    
     :return: True if family name does not contain the test string, otherwise False.
     :rtype: bool
     '''
@@ -1090,6 +1115,7 @@ def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
     :type containsValue: str
     :param elementId: The id of the element to be tested.
     :type elementId: Autodesk.Revit.DB.ElementId
+    
     :return: : True if family name does contain the test string, otherwise False.
     :rtype: bool
     '''
@@ -1113,6 +1139,7 @@ def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
     :type containsValue: string
     :param elementId: The id of the element to be tested.
     :type elementId: Autodesk.Revit.DB.ElementId
+    
     :return: True if symbol name does not contain the test string, otherwise False.
     :rtype: bool
     '''
@@ -1136,9 +1163,13 @@ def SyncFile (doc, compactCentralFile = False):
     :type doc: Autodesk.Revit.DB.Document
     :param compactCentralFile: option to compact the central file, defaults to False
     :type compactCentralFile: bool, optional
-    :return: Result class instance.
-        .result = True if succsesfully synced file. Otherwise False.
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully synced file. Otherwise False.
+    
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -1175,9 +1206,13 @@ def SaveAsWorksharedFile(doc, fullFileName):
     :type doc: Autodesk.Revit.DB.Document
     :param fullFileName: The fully qualified file path of where to save the file.
     :type fullFileName: string
-    :return: Result class instance.
-            .result = True if succsesfully saved file, otherwise False.
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+            
+        - .result = True if succsesfully saved file, otherwise False.
+    
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -1212,9 +1247,13 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
     :type fileExtension: str, optional
     :param compactFile: Flag whether family is to be compactred on save, defaults to False
     :type compactFile: bool, optional
-    :return: Result class instance.
-            .result = True if succsesfully saved file, otherwise False.
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+            
+            - .result = True if succsesfully saved file, otherwise False.
+
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -1260,9 +1299,13 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension =
     :type nameData: List of string arrays in format[[oldname, newName]]
     :param fileExtension: The file extension used for the new file, defaults to '.rvt'
     :type fileExtension: str, optional
-    :return: Result class instance.
-        .result = True if succsesfully saved file, otherwise False.
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully saved file, otherwise False.
+
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()
@@ -1288,7 +1331,27 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension =
     return returnvalue
 
 def SaveFile(doc, compactFile = False):
-    '''to be used for families and non workshared revit files only'''
+    '''
+    Saves a non workshared Revit file. To be used for families and non workshared revit files only.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param compactFile: True file will be compacted on save, defaults to False
+    :type compactFile: bool, optional
+    :return: 
+            Result class instance.
+            
+            - .result = True if file was saved succesfully. Otherwise False.
+            - .message = 'Saved revit file!'
+        
+            On exception:
+            
+            - result.status (bool) will be False.
+            - result.message will contain exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         so = rdb.SaveOptions()
@@ -1300,7 +1363,34 @@ def SaveFile(doc, compactFile = False):
     return returnvalue
   
 # enables work sharing
-def EnableWorksharing(doc, worksetNameGridLevel = 'Shared Levels and Grids', worksetName = 'Workset1'):
+def EnableWorksharing(
+    doc, 
+    worksetNameGridLevel = 'Shared Levels and Grids', # type: str
+    worksetName = 'Workset1' # type: str
+    ):
+    # type: (...) -> bool
+    '''
+    Enabbles worksharing in a non workshared revit project file.
+
+    :param doc: _description_
+    :type doc: _type_
+    :param worksetNameGridLevel: _description_, defaults to 'Shared Levels and Grids'
+    :type worksetNameGridLevel: str, optional
+    
+    :return: 
+            Result class instance.
+            
+            - .result = True if worksharing was enabled succesfully. Otherwise False.
+            - .message = 'Succesfully enabled worksharing.'
+        
+            On exception:
+            
+            - result.status (bool) will be False.
+            - result.message will contain exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnvalue = res.Result()
     try:
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
@@ -1325,9 +1415,13 @@ def InTransaction(
     :type tranny: Autodesk.Revit.DB.Transaction 
     :param action: The action to be nested within the transaction. This needs to return a Result class instance!
     :type action: action().
-    :return: Result class instance.
-        .result = True if succsesfully saved file, otherwise False.
-    :rtype: SampleCodeRevitBatchProcessor.Result
+    
+    :return: 
+        Result class instance.
+        
+        - .result = True if succsesfully saved file, otherwise False.
+        
+    :rtype: :class:`.Result`
     '''
 
     returnvalue = res.Result()

@@ -717,12 +717,15 @@ This also includes a check as to whether elements returned as dependent are orph
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully deleted all elements. Otherwise False.
-.message will contain deletion status</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully deleted all elements. Otherwise False.</p></li>
+<li><p>.message will contain deletion status</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -742,12 +745,15 @@ This also includes a check as to whether elements returned as dependent are orph
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully deleted all elements. Otherwise False.
-.message will contain each id and its deletion status</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully deleted all elements. Otherwise False.</p></li>
+<li><p>.message will contain each id and its deletion status</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -929,11 +935,14 @@ This also includes a check as to whether elements returned as dependent are orph
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully synced file. Otherwise False.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully synced file. Otherwise False.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -955,11 +964,14 @@ File will bew compacted on save.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully saved file, otherwise False.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully saved file, otherwise False.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -980,11 +992,16 @@ File will bew compacted on save.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully saved file, otherwise False.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>.result = True if succsesfully saved file, otherwise False.</p></li>
+</ul>
+</div></blockquote>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1004,11 +1021,14 @@ File will bew compacted on save.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully saved file, otherwise False.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully saved file, otherwise False.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1016,12 +1036,66 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveFile">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>to be used for families and non workshared revit files only</p>
+<dd><p>Saves a non workshared Revit file. To be used for families and non workshared revit files only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>compactFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – True file will be compacted on save, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if file was saved succesfully. Otherwise False.</p></li>
+<li><p>.message = ‘Saved revit file!’</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.EnableWorksharing">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">EnableWorksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetNameGridLevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.EnableWorksharing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enabbles worksharing in a non workshared revit project file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>worksetNameGridLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘Shared Levels and Grids’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if worksharing was enabled succesfully. Otherwise False.</p></li>
+<li><p>.message = ‘Succesfully enabled worksharing.’</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.InTransaction">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
 <dl class="field-list simple">
@@ -1032,11 +1106,14 @@ File will bew compacted on save.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result class instance.
-.result = True if succsesfully saved file, otherwise False.</p>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if succsesfully saved file, otherwise False.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>SampleCodeRevitBatchProcessor.Result</p>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

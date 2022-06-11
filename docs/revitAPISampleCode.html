@@ -1095,7 +1095,7 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.InTransaction">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
 <dl class="field-list simple">
@@ -1108,7 +1108,7 @@ File will bew compacted on save.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>.result = True if succsesfully saved file, otherwise False.</p></li>
+<li><p>.result = True if succsesfully executed transaction, otherwise False.</p></li>
 </ul>
 </p>
 </dd>

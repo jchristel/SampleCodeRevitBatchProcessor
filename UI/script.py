@@ -230,7 +230,7 @@ def GetFileData(settings):
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revitFile in revitfilesUnfiltered:
                 # remove any back up files from selection
-                if(fl.isBackupFile(os.path.basename(revitFile.name)) == False):
+                if(fl.isBackUpFile(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
                         revitfiles.append(revitFile)
                     else:

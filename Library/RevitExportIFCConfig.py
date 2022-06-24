@@ -437,7 +437,7 @@ def IFCGetThirdPartyExportConfigByView2022(ifcVersion):
         ifcExportConfig.IFCVersion = ifcVersion
 
     ifcExportConfig.SpaceBoundaries = 1
-    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId
+    ifcExportConfig.ActivePhaseId = rdb.ElementId.InvalidElementId.IntegerValue
     ifcExportConfig.ExportBaseQuantities = True
     ifcExportConfig.SplitWallsAndColumns = True
     ifcExportConfig.VisibleElementsOfCurrentView = True # by view

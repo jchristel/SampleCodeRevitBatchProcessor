@@ -53,7 +53,7 @@ REPORT_REVITMEPSYSTEMS_HEADER = ['HOSTFILE', 'RevitMEPSystemsTYPEID', 'RevitMEPS
 DUCT_OVAL_FAMILY_NAME = 'Oval Duct'
 #: Built in family name for round ducting
 DUCT_ROUND_FAMILY_NAME = 'Round Duct'
-#: Built in family name for rectangula ducting
+#: Built in family name for rectangular ducting
 DUCT_RECTANGULAR_FAMILY_NAME = 'Rectangular Duct'
 
 #: List of all Built in ducting family names
@@ -77,26 +77,26 @@ BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES = [
 
 # conduits types are split into two major families
 #: Built in family name for conduits with fittings
-CONDUIT_WITHFITTING_FAMILY_NAME = 'Conduit with Fittings'
+CONDUIT_WITH_FITTING_FAMILY_NAME = 'Conduit with Fittings'
 #: Built in family name for conduits without fittings
-CONDUIT_WITHOUTFITTING_FAMILY_NAME = 'Conduit without Fittings'
+CONDUIT_WITHOUT_FITTING_FAMILY_NAME = 'Conduit without Fittings'
 
 #: List of all Built in conduit family names
 BUILTIN_CONDUIT_TYPE_FAMILY_NAMES = [
-    CONDUIT_WITHFITTING_FAMILY_NAME,
-    CONDUIT_WITHOUTFITTING_FAMILY_NAME
+    CONDUIT_WITH_FITTING_FAMILY_NAME,
+    CONDUIT_WITHOUT_FITTING_FAMILY_NAME
 ]
 
 # cable tray types are split into two major families
 #: Built in family name for cable tray with fittings
-CABLETRAY_WITHFITTING_FAMILY_NAME = 'Cable Tray with Fittings'
+CABLE_TRAY_WITH_FITTING_FAMILY_NAME = 'Cable Tray with Fittings'
 #: Built in family name for cable tray without fittings
-CABLETRAY_WITHOUTFITTING_FAMILY_NAME = 'Cable Tray without Fittings'
+CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME = 'Cable Tray without Fittings'
 
 #: List of all Built in cable tray family names
-BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES = [
-    CABLETRAY_WITHFITTING_FAMILY_NAME,
-    CABLETRAY_WITHOUTFITTING_FAMILY_NAME
+BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES = [
+    CABLE_TRAY_WITH_FITTING_FAMILY_NAME,
+    CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME
 ]
 
 # pipe types exist in one major families
@@ -110,7 +110,7 @@ BUILTIN_PIPE_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-def MergeIntoUniquList(listSource, listMerge):
+def MergeIntoUniqueList(listSource, listMerge):
     '''
     Merges the second list into the first by adding elements from second list which are not already in first list.
 
@@ -795,11 +795,11 @@ def GetUnUsedPipeTypeIds(doc):
 
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
-    Compares two lists of element ids and returnds False if any element id in first list is not in the second list.
+    Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
     
-    TODO: repetetive code...Consider generic function!
+    TODO: repetitive code...Consider generic function!
 
     :param famTypeIds: List of family symbols (types).
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -819,11 +819,11 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
 
 def BuildTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     TODO: similar function exists in Walls module. Consider more generic function.
 
-    :param collector: A filtered element collector containing railing type elments of family symbols
+    :param collector: A filtered element collector containing railing type elements of family symbols
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: dictionary containing key: railing type family name, value: list of ids
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
@@ -864,7 +864,7 @@ def SortTypesByFamilyName(doc, typeGetter):
 
 def GetUnUsedMEPSystemTypeIdsToPurge(doc, allTypeIDGetter, allTypesGetter, builtInFamilyTypeNames):
     '''
-    Gets the ids of unsued MEP system types. 
+    Gets the ids of unused MEP system types. 
     
     In the case that no mep system instance using any of the types is placed, this will return all but one type id since\
         Revit requires at least one mep system type definition to be in the model.
@@ -875,7 +875,7 @@ def GetUnUsedMEPSystemTypeIdsToPurge(doc, allTypeIDGetter, allTypesGetter, built
     :type allTypeIDGetter: func(doc) -> List Autodesk.Revit.ED.ElementId
     :param allTypesGetter: Function getting all available system types as a collector.
     :type allTypesGetter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
-    :param builtInFamilyTypeNames: List containing alll available major type names.
+    :param builtInFamilyTypeNames: List containing all available major type names.
     :type builtInFamilyTypeNames: List str
 
     :return: A list of ids representing mep system types.
@@ -951,7 +951,7 @@ def GetUnUsedCableTrayTypeIdsToPurge(doc):
     Gets all unused cable tray type ids. 
 
     This method can be used to safely delete unused cable tray types:
-    In the case that no cabl tray instance using any of the types is placed, this will return all but one type id since\
+    In the case that no cable tray instance using any of the types is placed, this will return all but one type id since\
         Revit requires at least one cable tray type definition to be in the model.
     
     :param doc: Current Revit model document.
@@ -961,7 +961,7 @@ def GetUnUsedCableTrayTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllCableTrayTypeIdsInModelByCategory, GetAllCableTrayTypesByCategory, BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES)
+    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllCableTrayTypeIdsInModelByCategory, GetAllCableTrayTypesByCategory, BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES)
     return ids
 
 def GetUnUsedPipeTypeIdsToPurge(doc):
@@ -999,14 +999,14 @@ Properties of system types which can use symbols: (note: RoutingPreferenceManage
 '''
 
 #: List of loadable built in family categories for duct related elements.
-CATS_LOADABLE_DUCSTS = List[rdb.BuiltInCategory] ([
+CATS_LOADABLE_DUCTS = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_DuctAccessory,
     rdb.BuiltInCategory.OST_DuctTerminal,
     rdb.BuiltInCategory.OST_DuctFitting
 ])
 
 #: List of loadable built in family categories for cable tray related elements.
-CATS_LOADABLE_CABLETRAYS = List[rdb.BuiltInCategory] ([
+CATS_LOADABLE_CABLE_TRAYS = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CableTrayFitting
 ])
 
@@ -1040,11 +1040,11 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
     '''
     Gets list of unique symbol ids used in a single system type property.
 
-    List can be empty if an exception during processing occured.
+    List can be empty if an exception during processing occurred.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param systemTypeId: MEP systemt type id (pipe, conduit, duct, cable tray)
+    :param systemTypeId: MEP system type id (pipe, conduit, duct, cable tray)
     :type systemTypeId: Autodesk.Revit.DB.ElementId
 
     :return: List of unique ids representing family symbols used in a system.
@@ -1055,13 +1055,13 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
     el = doc.GetElement(systemTypeId)
     try:
         unfilteredElements = [el.Cross, el.Elbow, el.MultiShapeTransition, el.Tap, el.Tee, el.Transition, el.Union]
-        for unfilteredel in unfilteredElements:
-            if (unfilteredel != None):
-                if (unfilteredel.Id != rdb.ElementId.InvalidElementId and unfilteredel.Id not in ids):
-                    ids.append(unfilteredel.Id)
+        for unfilteredElement in unfilteredElements:
+            if (unfilteredElement != None):
+                if (unfilteredElement.Id != rdb.ElementId.InvalidElementId and unfilteredElement.Id not in ids):
+                    ids.append(unfilteredElement.Id)
         #check if there is a RoutingPreferenceManager object...it may have some more symbols in its rules
         if(el.RoutingPreferenceManager != None):
-            # routing manager got a list RoutingReferencerule objects
+            # routing manager got a list RoutingReferenceRule objects
             # each of those got a 	MEPPartId property which is what we are after
             rpm = el.RoutingPreferenceManager
             for group in ROUTING_PREF_RULE_GROUP_TYPES:
@@ -1079,7 +1079,7 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
 
 def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
     '''
-    Gets a list of unique symobol ids used in these MEP system type properties:
+    Gets a list of unique symbol ids used in these MEP system type properties:
 
     - Cross
     - Elbow
@@ -1091,7 +1091,7 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param systemTypeIds: List of MEP systemt type id belonging to pipe, conduit, duct or cable tray.
+    :param systemTypeIds: List of MEP system type id belonging to pipe, conduit, duct or cable tray.
     :type systemTypeIds: List Autodesk.Revit.DB.ElementId
 
     :return: List of unique ids representing family symbols used in mep systems.
@@ -1101,14 +1101,14 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
     ids = []
     for systemTypeId in systemTypeIds:
         idsUnfiltered = GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId)
-        ids = MergeIntoUniquList(ids, idsUnfiltered)
+        ids = MergeIntoUniqueList(ids, idsUnfiltered)
     return ids
 
 # --------------------------------------- symbols used in MEP system types -------------------------------
 
 def GetSymbolIdsUsedInDuctTypes(doc):
     '''
-    Gets a list of unique symobol ids used in system type properties of duct types.
+    Gets a list of unique symbol ids used in system type properties of duct types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1124,7 +1124,7 @@ def GetSymbolIdsUsedInDuctTypes(doc):
 
 def GetSymbolIdsUsedInFlexDuctTypes(doc):
     '''
-    Gets a list of unique symobol ids used in system type properties of flexc duct types.
+    Gets a list of unique symbol ids used in system type properties of flex duct types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1140,7 +1140,7 @@ def GetSymbolIdsUsedInFlexDuctTypes(doc):
 
 def GetSymbolIdsUsedInConduitTypes(doc):
     '''
-    Gets a list of unique symobol ids used in system type properties of conduit types.
+    Gets a list of unique symbol ids used in system type properties of conduit types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1156,7 +1156,7 @@ def GetSymbolIdsUsedInConduitTypes(doc):
 
 def GetSymbolIdsUsedInCableTrayTypes(doc):
     '''
-    Gets a list of unique symobol ids used in system type properties of cable tray types.
+    Gets a list of unique symbol ids used in system type properties of cable tray types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1172,7 +1172,7 @@ def GetSymbolIdsUsedInCableTrayTypes(doc):
 
 def GetSymbolIdsUsedInPipeTypes(doc):
     '''
-    Gets a list of unique symobol ids used in system type properties of pipe types.
+    Gets a list of unique symbol ids used in system type properties of pipe types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1188,14 +1188,14 @@ def GetSymbolIdsUsedInPipeTypes(doc):
 
 # --------------------------------------- symbols available in model -------------------------------
 
-def GetSymbolIdsForMEPSystemTypes(doc, catgeoryList, systemTypeName):
+def GetSymbolIdsForMEPSystemTypes(doc, categoryList, systemTypeName):
     '''
     Gets list of symbol ids belonging to provided categories loaded in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param catgeoryList: List of built in categories to filter symbols by.
-    :type catgeoryList: list Autodesk.Revit.DB.BuiltInCategory
+    :param categoryList: List of built in categories to filter symbols by.
+    :type categoryList: list Autodesk.Revit.DB.BuiltInCategory
     :param systemTypeName: Used in exception message to identify the mep system
     :type systemTypeName: str
 
@@ -1205,7 +1205,7 @@ def GetSymbolIdsForMEPSystemTypes(doc, catgeoryList, systemTypeName):
 
     ids = []
     try:
-        multiCatFilter = rdb.ElementMulticategoryFilter(catgeoryList)
+        multiCatFilter = rdb.ElementMulticategoryFilter(categoryList)
         col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
         ids = com.GetIdsFromElementCollector (col)
     except Exception as ex:
@@ -1227,7 +1227,7 @@ def GetSymbolIdsForDuctTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCSTS, 'GetSymbolIdsForDuctTypes')
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
     return ids
 
 def GetSymbolIdsForFlexDuctTypesInModel(doc):
@@ -1247,7 +1247,7 @@ def GetSymbolIdsForFlexDuctTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCSTS, 'GetSymbolIdsForDuctTypes')
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
     return ids
 
 def GetSymbolIdsForCableTrayTypesInModel(doc):
@@ -1263,7 +1263,7 @@ def GetSymbolIdsForCableTrayTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CABLETRAYS, 'GetSymbolIdsForCableTrayTypes')
+    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CABLE_TRAYS, 'GetSymbolIdsForCableTrayTypes')
     return ids
 
 def GetSymbolIdsForConduitTypesInModel(doc):
@@ -1323,9 +1323,9 @@ def GetUsedDuctAndFlexDuctSymbolIds(doc):
     idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
     idsUsedInFlexTypes = GetSymbolIdsUsedInFlexDuctTypes(doc)
-    ids = MergeIntoUniquList(ids, idsInModel)
-    ids = MergeIntoUniquList(ids, idsUsedInTypes)
-    ids = MergeIntoUniquList(ids, idsUsedInFlexTypes)
+    ids = MergeIntoUniqueList(ids, idsInModel)
+    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
+    ids = MergeIntoUniqueList(ids, idsUsedInFlexTypes)
     return ids
 
 def GetUnUsedDuctAndFlexDuctSymbolIds(doc):
@@ -1392,8 +1392,8 @@ def GetUsedCableTraySymbolIds(doc):
     ids = []
     idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInCableTrayTypes(doc)
-    ids = MergeIntoUniquList(ids, idsInModel)
-    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    ids = MergeIntoUniqueList(ids, idsInModel)
+    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
     return ids
 
 def GetUnUsedCableTraySymbolIds(doc):
@@ -1456,8 +1456,8 @@ def GetUsedConduitSymbolIds(doc):
     ids = []
     idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForConduitTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInConduitTypes(doc)
-    ids = MergeIntoUniquList(ids, idsInModel)
-    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    ids = MergeIntoUniqueList(ids, idsInModel)
+    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
     return ids
 
 def GetUnUsedConduitSymbolIds(doc):
@@ -1521,8 +1521,8 @@ def GetUsedPipeSymbolIds(doc):
     ids = []
     idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForPipeTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInPipeTypes(doc)
-    ids = MergeIntoUniquList(ids, idsInModel)
-    ids = MergeIntoUniquList(ids, idsUsedInTypes)
+    ids = MergeIntoUniqueList(ids, idsInModel)
+    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
     return ids
 
 def GetUnUsedPipeSymbolIds(doc):

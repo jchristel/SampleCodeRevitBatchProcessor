@@ -9,7 +9,7 @@ Some functionality provided here exceeds the Revit purge unused or etransmit pur
 - view templates
 - view filters
 
-Others definetly lack:
+Others definitely lack:
 
 - Materials
 - Appearance assets
@@ -92,9 +92,9 @@ def PurgeUnplacedElements (doc,
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param getUnusedElementIds: A fucntion accepting the current document as the argument and returning element ids which can be purged.
+    :param getUnusedElementIds: A function accepting the current document as the argument and returning element ids which can be purged.
     :type getUnusedElementIds: func (doc) returning list of Autodesk.Revit.DB.ElementId
-    :param transactionName: A humnan readable description of the transaction containing the purge action.
+    :param transactionName: A human readable description of the transaction containing the purge action.
     :type transactionName: str
     :param unUsedElementNameHeader: The text to be displayed at the start of the list containing the deleted element names.
     :type unUsedElementNameHeader: str
@@ -122,7 +122,7 @@ def PurgeUnplacedElements (doc,
         else:
             unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
         purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
-        # check if an exception occured and in debug mode, purge elements one by one
+        # check if an exception occurred and in debug mode, purge elements one by one
         if(isDebug and purgeResult.status == False):
             #pass
             print('second debug run')
@@ -208,7 +208,7 @@ def PurgeUnused(doc, revitFilePath, isDebug):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param revitFilePath: Fully qualified file path of current model document. (Not used)
-    :type revitFilePath: strß
+    :type revitFilePath: str
     :param isDebug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs. False\
         Will attempt to delete all elements at once, less detailed purge report.
     :type isDebug: bool
@@ -251,7 +251,7 @@ Purge unit testing
 '''
 
 #: list containing keys to be ignored in comparison code
-#: these keys do not get purged by revits native purge unused and would therefore show up as false positives
+#: these keys do not get purged by Revit's native purge unused and would therefore show up as false positives
 COMPARISON_IGNORE= [
     'View Family Type(s)',
     'View Family Templates(s)',
@@ -262,7 +262,7 @@ COMPARISON_IGNORE= [
 # typeIdGetter              function which returns all available type ids
 # reportHeader              the first entry per row written to file
 # outputFilePath            location of file
-# counter                   action counter, if 0 the report file will be created from scratch, any othe value means append to existing report file
+# counter                   action counter, if 0 the report file will be created from scratch, any other value means append to existing report file
 def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, counter):
     '''gets all available type ids from passed in type id getter and writes result to file'''
     resultValue = res.Result()
@@ -290,7 +290,7 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
 
 # first     base line dictionary
 # second    dictionary to be checked against base line
-def CompareReportDictioanries(first,second):
+def CompareReportDictionaries(first,second):
     '''comparison will return all elements which are in first dictionary only, True if none are missing'''
     resultValue = res.Result()
     for key,value in first.items():
@@ -339,7 +339,7 @@ def CompareReportData(fileSource, fileTest):
     sourceDic = ConvertReportDataIntoDictionary(sourceRows)
     testDic = ConvertReportDataIntoDictionary(testRows)
     # check benchmark against test
-    statusSource = CompareReportDictioanries(sourceDic, testDic)
+    statusSource = CompareReportDictionaries(sourceDic, testDic)
     # update overall status
     resultValue.UpdateStatus(statusSource.status)
     if(statusSource.status == True):
@@ -350,7 +350,7 @@ def CompareReportData(fileSource, fileTest):
         resultValue.result.append({'Benchmark':statusSource.result})
     
     # check test against benchmark
-    statusTest = CompareReportDictioanries(testDic, sourceDic)
+    statusTest = CompareReportDictionaries(testDic, sourceDic)
 
     resultValue.UpdateStatus(statusTest.status)
     # update overall message with data from test benchmark comparison

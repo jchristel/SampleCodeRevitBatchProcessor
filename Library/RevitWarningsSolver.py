@@ -47,7 +47,7 @@ class RevitWarningsSolver:
 
     def DefaultFilterReturnAll(self, doc, elementId):
         '''
-        Default filter for elements passt into solver...returns True for any element passt in.
+        Default filter for elements past into solver...returns True for any element past in.
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -81,7 +81,7 @@ class RevitWarningsSolver:
     
     def SetSameMarkFilterAndFilterSolver(self, sameMarkFilterSolver):
         '''
-        Method allowing to overide the default filter function
+        Method allowing to override the default filter function
 
         :param sameMarkFilterSolver: A function to filter elements in warnings by
         :type sameMarkFilterSolver: func(document, elementId, list of filter values)
@@ -108,14 +108,14 @@ class RevitWarningsSolver:
         :rtype: :class:`.Result`
         '''
 
-        returnvalue = res.Result()
+        returnValue = res.Result()
         try:
             for solver in self.AVAILABLE_SOLVERS:
                 warnings =  rWar.GetWarningsByGuid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
                 resultSolver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
-                returnvalue.Update(resultSolver)
+                returnValue.Update(resultSolver)
         except Exception as e:
             print (str(e))
-        return returnvalue
+        return returnValue
 
     

@@ -104,7 +104,7 @@ def GetAllCurtainWallElementTypesByCategory(doc):
 
 def BuildCurtainWallElementTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     Keys are built in curtain wall element type names.
     TODO: this code repeats across a number of modules. Use generic instead!
@@ -278,7 +278,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
  
 def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
     '''
-    Gets all unused Curtain Wall Element element type ids which can be savely deleted from the model.
+    Gets all unused Curtain Wall Element element type ids which can be safely deleted from the model.
 
     This method can be used to safely delete unused in curtain wall element types. There is no requirement by Revit to have at least one\
         curtain wall element defintion in the model.
@@ -365,7 +365,7 @@ def GetUnusedCurtainWallSymbolIds(doc):
 # doc   current document
 def GetUnusedICurtainWallSymbolIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use) of curtain wall element families which can be savely deleted from the model.
+    Gets symbol(type) ids and family ids (when no type is in use) of curtain wall element families which can be safely deleted from the model.
 
     This method can be used to safely delete unused curtain wall element types. There is no requirement by Revit to have at least one\
         in place wall defintion in the model.

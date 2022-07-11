@@ -286,7 +286,7 @@ def GetMatch(fileExtension, nameFilter):
 # get the revision of the file name
 def GetRevision(filename):
     # default value in case no revision information is included in file name
-    returnvalue = '-'
+    returnValue = '-'
     for revStart in revisionSeparatorsStart_:
         # check if file contains any of these
         startIndex = filename.find(revStart)
@@ -297,9 +297,9 @@ def GetRevision(filename):
                 endIndex = filename.find(revEnd)
                 if (endIndex > 0):
                     break
-            returnvalue = filename[startIndex + 1:endIndex]
+            returnValue = filename[startIndex + 1:endIndex]
             break
-    return returnvalue
+    return returnValue
 
 # builds a mapping array from global nwc and rvt all files received lists
 # this defines the rows and column of the incoming file tracker

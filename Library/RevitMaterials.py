@@ -61,7 +61,7 @@ def GetAllMaterials(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Material)
     return collector
 
-def GetMaterialbyId(doc, id):
+def GetMaterialById(doc, id):
     '''
     Gets a material element based on a material id.
 

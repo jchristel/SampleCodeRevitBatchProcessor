@@ -41,7 +41,7 @@ def GetBim360Path(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: The path to the bim360 model. If an exception occured an empty string will be returned.
+    :return: The path to the bim360 model. If an exception occurred an empty string will be returned.
     :rtype: str
     '''
 

@@ -284,19 +284,19 @@ def AdjustDelta(delta, vertex, next_vertex, p ):
     :rtype: _type_
     '''
 
-    returnvalue = delta
+    returnValue = delta
     # make quadrant deltas wrap around:
     if( delta == 3):
-        returnvalue = -1
+        returnValue = -1
     elif(delta == -3):
-        returnvalue = 1
+        returnValue = 1
     # check if went around point cw or ccw:
     elif(delta == 2):
-        returnvalue = 2
+        returnValue = 2
     elif(delta == -2):
         if( X_intercept( vertex, next_vertex, p.V ) > p.U ):
-            returnvalue = -delta
-    return returnvalue
+            returnValue = -delta
+    return returnValue
       
 def IsPointWithinPolygon(polygon, point):
     '''

@@ -92,7 +92,7 @@ def GetUsedViewTypeIdsInTheModel(doc):
     viewTypeIdsUsed = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        # filter out browser organisation and other views which cant be deleted
+        # filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and 
         v.ViewType != ViewType.SystemBrowser and 
         v.ViewType != ViewType.ProjectBrowser and 
@@ -105,7 +105,7 @@ def GetUsedViewTypeIdsInTheModel(doc):
 
 def GetUnusedViewTypeIdsInModel(doc):
     '''
-    Returnds all unused view family types in the model
+    Returns all unused view family types in the model
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -139,7 +139,7 @@ def GetViewsTemplatesInInModel(doc):
 
 def GetViewsTemplateIdsInInModel(doc):
     '''
-    Get all view emplate ids in a model
+    Get all view template ids in a model
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -171,7 +171,7 @@ def GetUsedViewTemplateIdsInTheModel(doc):
     # get all view templates assigned to views
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        # filter out browser organisation and other views which cant be deleted
+        # filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and 
         v.ViewType != ViewType.SystemBrowser and 
         v.ViewType != ViewType.ProjectBrowser and 
@@ -195,8 +195,8 @@ def GetDefaultViewTypeTemplateIds(doc):
 
     viewTemplateIdsUsed = []
     # get all templates assigned to view family types:
-    vfts = com.GetSimilarTypeFamiliesByType(doc, GetViewTypes)
-    for vt in vfts:
+    viewFamilyTemplates = com.GetSimilarTypeFamiliesByType(doc, GetViewTypes)
+    for vt in viewFamilyTemplates:
         for id in vt[1]:
             # get the element
             vtFam = doc.GetElement(id)
@@ -223,8 +223,8 @@ def GetAllViewTemplateIdsUsedInModel(doc):
     '''
 
     vtv = GetUsedViewTemplateIdsInTheModel(doc)
-    vfts = GetDefaultViewTypeTemplateIds(doc)
-    for id in vfts:
+    viewFamilyTemplates = GetDefaultViewTypeTemplateIds(doc)
+    for id in viewFamilyTemplates:
         if(id not in vtv):
             vtv.append(id)
     return vtv
@@ -307,14 +307,14 @@ def GetAllAvailableFilterIdsInModel(doc):
 
 def GetFilterIdsFromViewByFilter(view, uniqueList):
     '''
-    Returns passt in list of filter id's plus new unique filter id's from view (if not already in list passt in)
+    Returns past in list of filter id's plus new unique filter id's from view (if not already in list past in)
 
     :param view: The view of which to get the filters from.
     :type view: Autodesk.Revit.DB.View
     :param uniqueList: List containing view filters
     :type uniqueList: list of Autodesk.Revit.DB.ElementId
 
-    :return: List containing passt in view filters and new view filters.
+    :return: List containing past in view filters and new view filters.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
@@ -364,7 +364,7 @@ def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
         # cant filter out templates or templates which do not control filters to be more precise
         # views The parameter:
         # BuiltInParameter.VIS_GRAPHICS_FILTERS
-        # which is attached to views is of strorage type None...not much use...
+        # which is attached to views is of storage type None...not much use...
         if(v.IsTemplate == False):
             for filter in filterByType:
                 if (v.ViewType == filter):
@@ -414,14 +414,14 @@ def GetScheduleIdsOnSheets(doc):
             ids.append(s.ScheduleId)
     return ids
  
-def GetViewsofType(doc, viewtype):
+def GetViewsOfType(doc, viewType):
     '''
     Gets all views in a model of a given type. Excludes templates.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param viewtype: Filter: the view type
-    :type viewtype: Autodesk.Revit.DB.ViewType
+    :param viewType: Filter: the view type
+    :type viewType: Autodesk.Revit.DB.ViewType
 
     :return: list of views
     :rtype: list of Autodesk.Revit.DB.View
@@ -430,7 +430,7 @@ def GetViewsofType(doc, viewtype):
     views=[]
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        if(v.ViewType == viewtype and v.IsTemplate == False):
+        if(v.ViewType == viewType and v.IsTemplate == False):
             views.append(v)
     return views
 
@@ -445,11 +445,11 @@ def GetSheetsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    return GetViewsofType(doc, ViewType.DrawingSheet)
+    return GetViewsOfType(doc, ViewType.DrawingSheet)
 
 def GetViewportOnSheets(doc, sheets):
     '''
-    Getd all view ports on sheets provided.
+    Get all view ports on sheets provided.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -460,17 +460,17 @@ def GetViewportOnSheets(doc, sheets):
     :rtype: list of Autodesk.Revit.DB.Viewport
     '''
 
-    viewports = []
+    viewPorts = []
     for sheet in sheets:
         try:
             viewportIds = sheet.GetAllViewports()
             if(viewportIds != None):
                 for viewportId in viewportIds:
                     viewport = doc.GetElement(viewportId)
-                    viewports.append(viewport)
+                    viewPorts.append(viewport)
         except Exception as e:
             print(str(e))
-    return viewports
+    return viewPorts
 
 def FilterRevisionSchedules(view):
     '''
@@ -494,7 +494,7 @@ def GetViewsInModel(doc, filter):
 
     - not template views
     - not system browser
-    - not project broser
+    - not project browser
     - not undefined
     - not Internal
     - not sheets
@@ -512,7 +512,7 @@ def GetViewsInModel(doc, filter):
     views = []
     col = FilteredElementCollector(doc).OfClass(View)
     for v in col:
-        #filter out browser organisation and other views which cant be deleted
+        #filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and filter(v) == True and 
         v.ViewType != ViewType.SystemBrowser and 
         v.ViewType != ViewType.ProjectBrowser and 
@@ -537,7 +537,7 @@ def GetSchedulesNotOnSheets(doc):
     # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
     # get all schedules in model
-    schedulesInModel = GetViewsofType(doc, ViewType.Schedule)
+    schedulesInModel = GetViewsOfType(doc, ViewType.Schedule)
     # loop and filter out schedules not on sheets
     for schedule in schedulesInModel:
         if(schedule.Id not in idsOnSheets):
@@ -558,15 +558,15 @@ def GetViewsNotOnSheet(doc):
     viewsNotOnSheet = []
     # get all sheets
     sheetsInModel = GetSheetsInModel(doc)
-    # get all viewports on sheets
-    viewportsOnSheets = GetViewportOnSheets(doc, sheetsInModel)
+    # get all viewPorts on sheets
+    viewPortsOnSheets = GetViewportOnSheets(doc, sheetsInModel)
     # get all views in model
     viewsInModel = GetViewsInModel(doc, FilterRevisionSchedules)
     # check whether view has a viewport if not ... its not placed on a sheet
     for viewInModel in viewsInModel:
         match = False
-        for viewportsOnSheet in viewportsOnSheets:
-            if(viewportsOnSheet.ViewId == viewInModel.Id):
+        for viewPortsOnSheet in viewPortsOnSheets:
+            if(viewPortsOnSheet.ViewId == viewInModel.Id):
                 match = True
                 break
         if(match == False):
@@ -641,7 +641,7 @@ def DeleteViewsNotOnSheets(doc, filter):
     '''
 
     ids = []
-    returnvalue = res.Result()
+    returnValue = res.Result()
     viewsNotOnSheets = GetViewsNotOnSheet(doc)
     for viewNotOnSheet in viewsNotOnSheets:
         if(filter(viewNotOnSheet)):
@@ -651,10 +651,10 @@ def DeleteViewsNotOnSheets(doc, filter):
         # remove a random view from this list
         ids.pop(0)
     if(len(ids) > 0):
-        returnvalue = com.DeleteByElementIds(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
+        returnValue = com.DeleteByElementIds(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
     else:
-        returnvalue.UpdateSep(True, 'No views not placed on sheets found.')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No views not placed on sheets found.')
+    return returnValue
 
 def DeleteUnusedElevationViewMarkers(doc):
     '''
@@ -672,7 +672,7 @@ def DeleteUnusedElevationViewMarkers(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
     # items to be deleted
     ids = []
@@ -686,10 +686,10 @@ def DeleteUnusedElevationViewMarkers(doc):
             ids.append(e.Id)
             counter += 1
     if(len(ids) > 0):
-        returnvalue = com.DeleteByElementIds(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
+        returnValue = com.DeleteByElementIds(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
     else:
-        returnvalue.UpdateSep(True, 'No unused elevation markers in model')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No unused elevation markers in model')
+    return returnValue
 
 def DeleteSheets(doc, viewRules, collectorViews):
     '''
@@ -742,17 +742,17 @@ def DeleteAllSheetsInModel(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     ids = []
     collectorSheets = FilteredElementCollector(doc).OfClass(View)
     for v in collectorSheets:
         if(v.ViewType == ViewType.DrawingSheet):
            ids.append(v.Id)
     if (len(ids)>0):
-        returnvalue = com.DeleteByElementIds(doc,ids, 'deleting all sheets', 'sheets')
+        returnValue = com.DeleteByElementIds(doc,ids, 'deleting all sheets', 'sheets')
     else:
-        returnvalue.UpdateSep(True, 'No sheets in the model')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No sheets in the model')
+    return returnValue
 
 def GetSheetsByFilters(doc, viewRules = None):
     '''
@@ -800,13 +800,13 @@ def WriteSheetData(doc, fileName, currentFileName):
     :return: 
         Result class instance.
         
-        - .result = True if data was written succesfully. Otherwise False.
+        - .result = True if data was written successfully. Otherwise False.
         - .message will contain write status.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
         headers = GetReportHeaders(doc)
@@ -814,14 +814,14 @@ def WriteSheetData(doc, fileName, currentFileName):
             fileName, 
             headers, 
             data)
-        returnvalue.UpdateSep(True, 'Succesfully wrote data file')
+        returnValue.UpdateSep(True, 'Successfully wrote data file')
     except Exception as e:
-        returnvalue.UpdateSep(False, str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, str(e))
+    return returnValue
 
 def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
     '''
-    Writes to file sheet properties as nominated in passt in list.
+    Writes to file sheet properties as nominated in past in list.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -835,13 +835,13 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
     :return: 
         Result class instance.
     
-        - .result = True if data was written succesfully. Otherwise False.
+        - .result = True if data was written successfully. Otherwise False.
         - .message will contain write status.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         data = GetSheetReportData(doc, currentFileName)
         headers = GetReportHeaders(doc)
@@ -854,10 +854,10 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
             fileName, 
             headers, 
             data)
-        returnvalue.UpdateSep(True, 'Succesfully wrote data file')
+        returnValue.UpdateSep(True, 'Successfully wrote data file')
     except Exception as e:
-        returnvalue.UpdateSep(False, str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, str(e))
+    return returnValue
 
 def FilterDataByProperties(data, headers, sheetProperties):
     '''
@@ -876,7 +876,7 @@ def FilterDataByProperties(data, headers, sheetProperties):
     :rtype: list of list of str
     '''
 
-    # add default headers to propertie to be filtered first
+    # add default headers to properties to be filtered first
     dataIndexList= [iter for iter in range(len(REPORT_SHEETS_HEADER))]
     # build index pointer list of data to be kept
     for f in sheetProperties:

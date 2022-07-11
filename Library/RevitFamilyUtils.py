@@ -375,7 +375,7 @@ def GetAllInPlaceFamilies(doc):
 
 def GetSymbolsFromType(doc, typeIds):
     '''
-    Get all family types belonging to the same family as types passt in.
+    Get all family types belonging to the same family as types past in.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -507,7 +507,7 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
 
 def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     '''
-    Filters family symbols belonging to list of built in categories passt in.
+    Filters family symbols belonging to list of built in categories past in.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -558,7 +558,7 @@ def GetAllNonSharedFamilySymbolIds(doc):
 
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     '''
-    Filters types obtained by passt in typeIdGetter method and depending on useType passt in returns eiteher the used or unsed symbols of a family
+    Filters types obtained by past in typeIdGetter method and depending on useType past in returns eiteher the used or unsed symbols of a family
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

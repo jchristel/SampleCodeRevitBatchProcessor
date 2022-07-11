@@ -63,11 +63,11 @@ class Result:
 
     def Update(self, otherResult):
         '''
-        Will use the passt in result instance to update the instance.
+        Will use the past in result instance to update the instance.
 
         - .status is using a logical AND 
         - .message is using append (unless other message is default '-')
-        - .result is looping over passt in result and adding it one by one to this .result list (ignores None)
+        - .result is looping over past in result and adding it one by one to this .result list (ignores None)
 
         :param otherResult: Another result class instance.
         :type otherResult: SampleBatchProcessorCode.Result

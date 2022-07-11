@@ -204,7 +204,7 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
     :return: 
         Result class instance.
 
-        - Write file status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property contains fully qualified file path to task list file.
         
         On exception:
@@ -215,7 +215,7 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         f = open(fileName, 'w')
         rowCounter = 0
@@ -229,10 +229,10 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
                 rowCounter += 1
             f.write(data.encode('utf-8'))
         f.close()
-        returnvalue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
+        returnValue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
+    return returnValue
 
 
 # method creating a number of task list files
@@ -260,7 +260,7 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
     :return: 
         Result class instance.
 
-        - Write file status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property contains fully qualified file path for each task list file.
         
         On exception:
@@ -271,8 +271,8 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
-    returnvalue.status = True
+    returnValue = res.Result()
+    returnValue.status = True
     # get revit files in input dir
     revitfiles = fileGetter(directoryPath, fileExtension)
     # build bucket list
@@ -283,9 +283,9 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
         for bucket in buckets:
             fileName =  os.path.join(taskListDirectory, 'Tasklist_' + str(counter)+ '.txt')
             statusWrite = writeRevitTaskFile(fileName, bucket, fileDataProcessor)
-            returnvalue.Update(statusWrite)
+            returnValue.Update(statusWrite)
             counter += 1
-        returnvalue.AppendMessage('Finished writing out task files')
+        returnValue.AppendMessage('Finished writing out task files')
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to save file list! '  + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to save file list! '  + str(e))
+    return returnValue

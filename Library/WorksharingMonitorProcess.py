@@ -62,7 +62,7 @@ def WriteOutWSMDataToFile(directoryPath):
     :return:  
         Result class instance.
         
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -91,7 +91,7 @@ def DeleteWSMDataFiles(directoryPath):
     :param directoryPath: The directory path containing marker files to be deleted.
     :type directoryPath: str
 
-    :return: True if all files where deleted successfullt, otherwise False.
+    :return: True if all files where deleted successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -130,10 +130,10 @@ def GetWSMSessionsToDelete(WSMsToKeep):
     '''
     Returns Worksharing monitor process sessions filtered by provided list (not in list)
 
-    :param WSMsToKeep: List of worksharing monitor sessions to filter by. WSM included in this list will be removed from passt in list.
+    :param WSMsToKeep: List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.
     :type WSMsToKeep: List of list of str in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     
-    :return: Filtered list of list of str of worksahring monitor sessions 
+    :return: Filtered list of list of str of worksharing monitor sessions 
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
 
@@ -160,8 +160,8 @@ def CleanUpWSMDataFiles(directoryPath):
     :return:  
         Result class instance.
         
-        - Delete status returned in result.status. False if an exception occured, otherwise True.
-        - result.message will confirm succesfull deletion of all files.
+        - Delete status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will confirm successful deletion of all files.
         
         On exception:
         
@@ -184,7 +184,7 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
     '''
     Kills all worksharing monitor processes currently active.
 
-    Unless merker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.
+    Unless marker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.
 
     :param directoryPath: The directory path to where marker files are to be read from.
     :type directoryPath: str
@@ -194,8 +194,8 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
     :return:  
         Result class instance.
         
-        - Kill status returned in result.status. False if an exception occured, otherwise True.
-        - result.message will confirm succesfull killing of all WSM processes.
+        - Kill status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will confirm successful killing of all WSM processes.
         
         On exception:
         
@@ -218,5 +218,5 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
         else:
             status.UpdateSep(False, 'Failed to kill all WSM sessions.')
     except Exception as e:
-        status.UpdateSep(False,'Failedd to kill wsm sessions with exceptions: ' + str(e))
+        status.UpdateSep(False,'Failed to kill wsm sessions with exceptions: ' + str(e))
     return status

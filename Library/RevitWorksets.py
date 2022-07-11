@@ -54,7 +54,7 @@ def GetWorksetIdByName(doc, worksetName):
     :param worksetName: The name of the workset of which to retrieve the Element Id
     :type worksetName: str
     
-    :return: The worsket element id, otherwise invalid Id (-1) if no such workset exists
+    :return: The workset element id, otherwise invalid Id (-1) if no such workset exists
     :rtype: Autodesk.Revit.DB.ElementId
     '''
 
@@ -67,11 +67,11 @@ def GetWorksetIdByName(doc, worksetName):
 
 def GetWorksetNameById(doc, idInteger):
     '''
-    Returns the name of the workset identified by its Element Id, otherwise 'unkown' if no such workset exists
+    Returns the name of the workset identified by its Element Id, otherwise 'unknown' if no such workset exists
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param idInteger: The elemenet id as integer value.
+    :param idInteger: The element id as integer value.
     :type idInteger: int
     
     :return: The name of the workset identified by its Id, otherwise 'unknown'
@@ -124,7 +124,7 @@ def GetWorksetsFromCollector(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: A filtered elementc collector of user defined worksets
+    :return: A filtered elements collector of user defined worksets
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
@@ -148,15 +148,15 @@ def OpenWorksetsWithElementsHack(doc):
     worksetIds = GetWorksetIds(doc)
     # loop over workset and open if anythin is on them
     for wId in worksetIds:
-        fworkset = rdb.ElementWorksetFilter(wId)
-        elemIds = rdb.FilteredElementCollector(doc).WherePasses(fworkset).ToElementIds()
+        workset = rdb.ElementWorksetFilter(wId)
+        elemIds = rdb.FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
         if (len(elemIds)>0):
             # this will force Revit to open the workset containing this element
            rdb.uidoc.ShowElements(elemIds.First())
 
 def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     '''
-    Attemps to change the worksets of elements provided through an element collector.
+    Attempts to change the worksets of elements provided through an element collector.
 
     Will return false if target workset does not exist in file.
 
@@ -172,14 +172,14 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully moved all elements to new workset. Otherwise False.
+        - .result = True if successfully moved all elements to new workset. Otherwise False.
         - .message will contain stats in format [success :: failure]
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
-    returnvalue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
+    returnValue = res.Result()
+    returnValue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
     # get the ID of the default grids workset
     defaultId = GetWorksetIdByName(doc, defaultWorksetName)
     counterSuccess = 0
@@ -202,14 +202,14 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
                     counterSuccess += 1
                 else:
                     counterFailure += 1
-                returnvalue.status = returnvalue.status & trannyStatus.status
+                returnValue.status = returnValue.status & trannyStatus.status
             else:
                 counterSuccess += 1
-                returnvalue.status = returnvalue.status & True 
+                returnValue.status = returnValue.status & True 
     else:
-        returnvalue.UpdateSep(False, 'Default workset '+ defaultWorksetName + ' does no longer exists in file!')
-    returnvalue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
-    return returnvalue
+        returnValue.UpdateSep(False, 'Default workset '+ defaultWorksetName + ' does no longer exists in file!')
+    returnValue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
+    return returnValue
 
 def GetActionChangeElementWorkset(el, defaultId):
     '''
@@ -224,8 +224,8 @@ def GetActionChangeElementWorkset(el, defaultId):
     def action():
         actionReturnValue = res.Result()
         try:
-            wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-            wsparam.Set(defaultId.IntegerValue)
+            wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+            wsParam.Set(defaultId.IntegerValue)
             actionReturnValue.message = 'Changed element workset.'
         except Exception as e:
             actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
@@ -249,8 +249,8 @@ def IsElementOnWorksetById(doc, el, worksetId):
 
     flag = True
     try:
-        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsparam)
+        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsParam)
         compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
         if(compareToWorksetName != currentWorksetName):
             flag = False
@@ -274,8 +274,8 @@ def IsElementOnWorksetByName(el, worksetName):
 
     flag = True
     try:
-        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsparam)
+        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        currentWorksetName = com.getParameterValue(wsParam)
         if(worksetName != currentWorksetName):
             flag = False
     except Exception as e:
@@ -289,21 +289,21 @@ def GetElementWorksetName(el):
 
     :param el: The element.
     :type el: Autodesk.Revit.DB.Element
-    :return: The name of the workset. If an exception occured it wil return 'invalid workset'.
+    :return: The name of the workset. If an exception occurred it wil return 'invalid workset'.
     :rtype: str
     '''
 
     workSetname = 'invalid workset'
     try:
-        wsparam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        workSetname = com.getParameterValue(wsparam)
+        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        workSetname = com.getParameterValue(wsParam)
     except Exception as e:
         print ("GetElementWorksetName: " + str(e))
     return workSetname
 
-def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
+def UpdateWorksetDefaultVisibilityFromReport(doc, reportPath, revitFilePath):
     '''
-    Updates the default visbility of worksets based on a workset report file.
+    Updates the default visibility of worksets based on a workset report file.
 
     The data for the report files is generated by GetWorksetReportData() function in this module
 
@@ -319,12 +319,12 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
         
         - .result = True if:
 
-            - succsesfully updated all workset default visibility where different to report
+            - successfully updated all workset default visibility where different to report
             - or none needed updating. 
         
         - Otherwise False:
 
-            - An excpetion occurred.
+            - An exception occurred.
             - A workset has no matching data in the report.
         
         - Common:
@@ -334,7 +334,7 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # read report
     worksetData = util.ReadTabSeparatedFile(reportPath)
     fileName = util.GetFileNameWithoutExt(revitFilePath)
@@ -360,14 +360,14 @@ def UpdateWorksetDefaultVisibiltyFromReport(doc, reportPath, revitFilePath):
                     # move element to new workset
                     transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
                     trannyStatus = com.InTransaction(transaction, action)
-                    returnvalue.Update(trannyStatus)
+                    returnValue.Update(trannyStatus)
                 else:
-                    returnvalue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
+                    returnValue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
             else:
-                returnvalue.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
+                returnValue.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
     else:
-        returnvalue.UpdateSep(True, 'No settings found for file: ' + fileName)
-    return returnvalue
+        returnValue.UpdateSep(True, 'No settings found for file: ' + fileName)
+    return returnValue
 
 # ------------------------------------------------------- workset reporting --------------------------------------------------------------------
 

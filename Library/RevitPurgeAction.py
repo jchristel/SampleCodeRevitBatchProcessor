@@ -35,9 +35,9 @@ class PurgeAction:
         self, 
         purgeTransactionName, # the function which returns all element ids to be purged
         purgeIdsGetter, # the function which returns all element ids to be purged
-        purgeReportHeader, # human readable repport header for each test action
-        testReportHeader, # human readable repport header for each test action
-        testIdsGetter # functions which returns all availble type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
+        purgeReportHeader, # human readable report header for each test action
+        testReportHeader, # human readable report header for each test action
+        testIdsGetter # functions which returns all available type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
     ): 
         '''
         Class constructor.
@@ -46,11 +46,11 @@ class PurgeAction:
         :type purgeTransactionName: str
         :param purgeIdsGetter: The function which returns all element ids to be purged
         :type purgeIdsGetter: func
-        :param purgeReportHeader: Human readable repport header for each purge action
+        :param purgeReportHeader: Human readable report header for each purge action
         :type purgeReportHeader: str
-        :param testReportHeader: Human readable repport header for each test action
+        :param testReportHeader: Human readable report header for each test action
         :type testReportHeader: str
-        :param testIdsGetter: functions which returns all availble type ids in model of same category as purge action.\
+        :param testIdsGetter: functions which returns all available type ids in model of same category as purge action.\
             To be used to compare ids before and after code purge with ids before and after revit built in purge
         :type testIdsGetter: func
         '''

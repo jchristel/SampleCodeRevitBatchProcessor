@@ -95,7 +95,7 @@ def GetFloorTypesByClass(doc):
 
 def BuildFloorTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     Keys are built in floor family type names.
     TODO: This code repeats across a number of modules. Use generic instead!
@@ -344,7 +344,7 @@ def GetUnusedInPlaceFloorTypeIds(doc):
 
 def GetUnusedInPlaceFloorIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be savely deleted from the model.
+    Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be safely deleted from the model.
 
     This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one\
         in place wall defintion in the model.

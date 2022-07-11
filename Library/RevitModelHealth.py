@@ -98,7 +98,7 @@ def GetParametersOfInstance(famInstance, doc):
     :return: 
         Result class instance.
         
-        - .result = True if all parameters where found on the family and got updated succesfully or no update at all was required. Otherwise False.
+        - .result = True if all parameters where found on the family and got updated successfully or no update at all was required. Otherwise False.
         - .message will be 'Failed to get value for'
     
     :rtype: :class:`.Result`
@@ -111,9 +111,9 @@ def GetParametersOfInstance(famInstance, doc):
         if(p.IsReadOnly == False):
             # check an action to update this parameter value exists
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
-                pvalue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
-                if(pvalue != FAILED_TO_RETRIEVE_VALUE):
-                    flag = com.setParameterValue(p, str(pvalue), doc)
+                parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
+                if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
+                    flag = com.setParameterValue(p, str(parameterValue), doc)
                     resultValue.Update(flag)
                     flagUpdate = True
                 else:
@@ -332,7 +332,7 @@ def GetNumberOfFillPatterns(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: Number of fillpattern in model. On exception it will return -1
+    :return: Number of fill pattern in model. On exception it will return -1
     :rtype: int
     '''
 
@@ -589,7 +589,7 @@ def GetNumberOfUnplacedRoomsInModel(doc):
 
 def GetNumberOfRedundantRoomsInModel(doc):
     '''
-    Gets the number of redunndant rooms in the model.
+    Gets the number of redundant rooms in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -710,8 +710,8 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
     return resultValue
 
 # doc   current document
-# revitFilePath     path of the curren document
-def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
+# revitFilePath     path of the current document
+def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
     '''
     Write out health tracker data to file.
 
@@ -721,8 +721,8 @@ def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
     :type doc: Autodesk.Revit.DB.Document
     :param revitFilePath: Fully qualified revit model file path.
     :type revitFilePath: str
-    :param ouputDirectory: The directory path of where to write the data to.
-    :type ouputDirectory: str
+    :param outputDirectory: The directory path of where to write the data to.
+    :type outputDirectory: str
 
     :return: 
         Result class instance.
@@ -737,14 +737,14 @@ def WriteModelHealthReport(doc, revitFilePath, ouputDirectory):
     resultValue = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
-        pvalue = PARAM_ACTIONS[key].getData(doc)
+        parameterValue = PARAM_ACTIONS[key].getData(doc)
         fileName = util.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
         resExport = res.Result()
         try:
             util.writeReportData(
-                ouputDirectory + '\\' + fileName,
+                outputDirectory + '\\' + fileName,
                 '',
-                [[revitFileName, key, util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), str(pvalue)]])
+                [[revitFileName, key, util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), str(parameterValue)]])
             resExport.UpdateSep(True, 'Exported: ' + str(key))
         except Exception as e:
                 resExport.UpdateSep(True, 'Export failed: ' + str(key)+ ' ' + str(e))

@@ -194,12 +194,12 @@ def GetStairCutMarkTypesByClass(doc):
 
 def GetAllStairStringersCarriageByCategory(doc):
     '''
-    Gets a filtered element collector of all stair stringers and cariage types in the model.
+    Gets a filtered element collector of all stair stringers and carriage types in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: A filtered element collector containing stair stringers and cariage types.
+    :return: A filtered element collector containing stair stringers and carriage types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
@@ -208,11 +208,11 @@ def GetAllStairStringersCarriageByCategory(doc):
 
 def BuildStairTypeDictionary(collector, dic):
     '''
-    Amends dictioanry passt in with keys and or values added retrieved from collector passt in.
+    Amends dictionary past in with keys and or values added retrieved from collector past in.
 
     Key values are as per BUILTIN_STAIR_TYPE_FAMILY_NAMES.
 
-    :param collector: A filtered element collector containing Stair type elments.
+    :param collector: A filtered element collector containing Stair type elements.
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: A dictionary containing key: stair type family name, value: list of ids.
     :type dic: dic { str: [Autodesk.Revit.DB.ElementId]}
@@ -270,7 +270,7 @@ def GetAllStairInstancesInModelByCategory(doc):
     
 def GetAllStairInstancesInModelByClass(doc):
     '''
-    Gets a filtered element collecto all Stair elements placed in model...
+    Gets a filtered element collection all Stair elements placed in model...
     
     TODO: Confirm it ignores Stair soffits.
 
@@ -417,7 +417,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
 
-    TODO: check for more geric list comparison and remove this function.
+    TODO: check for more generic list comparison and remove this function.
 
     :param famTypeIds: List of family type ids to check.
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -474,7 +474,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     Gets the id of types making up a stair.
 
     These could be stair landing types, stringer and carriage types etc.
-    Types returned depend on parameter definitions passt in. 
+    Types returned depend on parameter definitions past in. 
     Refer to: 
 
     - STAIR_LANDING_TYPE_PARAS, 
@@ -502,7 +502,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
 
 def GetAllSimilarTypeIds(doc, ids):
     '''
-    Gets all unique ids of similar types of elemet ids passed in.
+    Gets all unique ids of similar types of element ids passed in.
 
     TODO: check for similar function elsewhere!
 
@@ -580,7 +580,7 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
             ids = ids + dicToCheck[key]
     return ids
 
-def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
+def GetUsedSubTypes(doc, availableIdsGetter, paras, leaveOneBehind = True):
     '''
     Returns a list of type ids which are not used in any stair types. 
     
@@ -588,8 +588,8 @@ def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availavbleIdsGetter: function returning available type ids
-    :type availavbleIdsGetter: func(doc)
+    :param availableIdsGetter: function returning available type ids
+    :type availableIdsGetter: func(doc)
     :param paras: list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
     :type paras: list of Autodesk.Revit.DB.BuiltInParameter
     :param leaveOneBehind: _description_, defaults to True
@@ -601,7 +601,7 @@ def GetUsedSubTypes(doc, availavbleIdsGetter, paras, leaveOneBehind = True):
 
     ids = []
     # get all available type ids and then check against all Stair type ids
-    idsAvailable = availavbleIdsGetter(doc)
+    idsAvailable = availableIdsGetter(doc)
     allUsedStairTypeIds = GetAllStairTypeIdsInModelByCategory(doc)
     idsUsedTypes = []
     for used in allUsedStairTypeIds:
@@ -704,9 +704,9 @@ def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
     '''
     Gets all unused Stair stringer / carriage type ids.
 
-    This method can be used to safely delete unused stair stringer / cariage types. In the case that no stair\
+    This method can be used to safely delete unused stair stringer / carriage types. In the case that no stair\
         string carriage instance using any of the types is placed, this will return all but one type id since\
-        Revit requires at least one stringer cariage type definition to be in the model.
+        Revit requires at least one stringer carriage type definition to be in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -778,7 +778,7 @@ def GetUnusedInPlaceStairTypeIds(doc):
 
 def GetUnusedInPlaceStairIdsForPurge(doc):
     '''
-    Gets symbol (type) ids and family ids (when no type is in use) of in place Stair familis which can be purged.
+    Gets symbol (type) ids and family ids (when no type is in use) of in place Stair families which can be purged.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

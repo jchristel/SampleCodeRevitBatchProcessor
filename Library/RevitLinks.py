@@ -201,12 +201,12 @@ def DeleteCADLinks(doc):
     '''
 
     ids = []
-    returnvalue = res.Result()
+    returnValue = res.Result()
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance):
         ids.append(p.Id)
     # delete all links at once
-    returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
-    return returnvalue
+    returnValue = com.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
+    return returnValue
 
 def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
     '''
@@ -225,13 +225,13 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
     :return: 
         Result class instance.
 
-        - .result = True if all CAD links got reloaded succesfully. Otherwise False.
+        - .result = True if all CAD links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         # get all CAD link types in model
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
@@ -251,14 +251,14 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
                         return actionReturnValue
                     transaction = rdb.Transaction(doc, 'Reloading: ' + linkTypeName)
                     reloadResult = com.InTransaction(transaction, action)
-                    returnvalue.Update(reloadResult)
+                    returnValue.Update(reloadResult)
                 else:
-                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 # ------------------------------------------------------- CAD link reporting --------------------------------------------------------------------
 
@@ -371,7 +371,7 @@ def GetRevitLinkTypeFromInstance(doc, linkInstance):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkInstance: The linkinstance the type of is to be returned
+    :param linkInstance: The link instance the type of is to be returned
     :type linkInstance: Autodesk.Revit.DB.RevitLinkInstance
 
     :return: The matching revit link type.
@@ -392,19 +392,19 @@ def DeleteRevitLinks(doc):
     :return: 
         Result class instance.
         
-        - .result = True if all revit links got deleted succesfully. Otherwise False.
+        - .result = True if all revit links got deleted successfully. Otherwise False.
         - .message will contain deletion status. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`
     '''
 
     ids = []
-    returnvalue = res.Result()
+    returnValue = res.Result()
     for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     # delete all links at once
-    returnvalue = com.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
-    return returnvalue
+    returnValue = com.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
+    return returnValue
 
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
     '''
@@ -419,19 +419,19 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
     :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
         I.e. can be used to truncate the link name i.e. the revision details of a link
     :type doSomethingWithLinkName: func(str) -> str
-    :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
+    :param worksetConfig: To use the previously applied workset config use None, otherwise provide custom config.
     :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
 
     :return: 
         Result class instance.
         
-        - .result = True if all revit links got reloaded succesfully. Otherwise False.
+        - .result = True if all revit links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         # get all revit link types in model
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
@@ -448,14 +448,14 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnvalue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
     '''
@@ -472,19 +472,19 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
     :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
         I.e. can be used to truncate the link name i.e. the revision details of a link
     :type doSomethingWithLinkName: func(str) -> str
-    :param worksetConfig: To use the previously apllied workset config use None, otherwise provide custom config.
+    :param worksetConfig: To use the previously applied workset config use None, otherwise provide custom config.
     :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
 
     :return: 
         Result class instance.
         
-        - .result = True if all revit links got reloaded succesfully. Otherwise False.
+        - .result = True if all revit links got reloaded successfully. Otherwise False.
         - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         # loop over links supplied
         for p in linkTypesTobReloaded:
@@ -501,14 +501,14 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnvalue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnvalue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
     '''
@@ -597,7 +597,7 @@ def GetRevitLinkTypeData(doc, revitLinkType):
     isFromLocalPath = revitLinkType.IsFromLocalPath()
     exFileRef = revitLinkType.GetExternalFileReference()
     # get the workset of the link type (this can bew different to the workset of the link instance)
-    wsparam = revitLinkType.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+    wsParameter = revitLinkType.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     if(exFileRef.IsValidExternalFileReference(exFileRef)):
         modelPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
         pathType = exFileRef.PathType.ToString()
@@ -605,7 +605,7 @@ def GetRevitLinkTypeData(doc, revitLinkType):
     data=[
         rdb.Element.Name.GetValue(revitLinkType),
         str(isLoaded), 
-        str(wsparam.AsValueString()), 
+        str(wsParameter.AsValueString()), 
         str(isFromLocalPath), 
         pathType, 
         modelPath]
@@ -629,9 +629,9 @@ def GetRevitLinkReportData(doc, revitFilePath):
     collector = GetAllRevitLinkInstances(doc)
     for c in collector:
         # get the workset
-        wsparam = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        wsParameter = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         # get the design option
-        doparam = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
+        doParameter = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
         # get whether link is shared or not (only works when link is loaded)
         if ('<Not Shared>' in c.Name):
             lS = False 
@@ -646,7 +646,7 @@ def GetRevitLinkReportData(doc, revitFilePath):
         linkType = GetRevitLinkTypeFromInstance(doc, c)
         linkTypeData = GetRevitLinkTypeData(doc, linkType)
         # add other data
-        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [com.getParameterValue(wsparam)] + [com.getParameterValue(doparam)]
+        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [com.getParameterValue(wsParameter)] + [com.getParameterValue(doParameter)]
         data.append(linkTypeData)
     return data
         
@@ -758,7 +758,7 @@ def GetImageInstancesInModel(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsNotElementType()
 
-def GetAllUnusedImagetypeIdsInModel(doc):
+def GetAllUnusedImageTypeIdsInModel(doc):
     '''
     Gets all image types with no instances placed in a model.
 
@@ -775,7 +775,7 @@ def GetAllUnusedImagetypeIdsInModel(doc):
         unusedTypeIds.append(i.Id)
     return unusedTypeIds
 
-def GetAllUnusedImagetypeIdsInModelWithGroupCheck(doc):
+def GetAllUnusedImageTypeIdsInModelWithGroupCheck(doc):
     '''
     Gets all image types with no instance placed in a model but includes group definition check.
 
@@ -788,7 +788,7 @@ def GetAllUnusedImagetypeIdsInModelWithGroupCheck(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedTypeIds = GetAllUnusedImagetypeIdsInModel(doc)
+    unusedTypeIds = GetAllUnusedImageTypeIdsInModel(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
     unusedTypeIds = com.GetUnusedTypeIdsFromDetailGroups(doc, unusedTypeIds)
     return unusedTypeIds

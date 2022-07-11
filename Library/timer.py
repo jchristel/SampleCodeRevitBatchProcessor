@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A timer class to measuer code performance.
+A timer class to measure code performance.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -68,6 +68,6 @@ class Timer:
         if self._stopWatch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stopWatch.Stop()
-        timespan = self._stopWatch.Elapsed
+        timeSpan = self._stopWatch.Elapsed
         self._stopWatch = None
-        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%timespan.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%timespan.Milliseconds) + 'ms')
+        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%timeSpan.Milliseconds) + 'ms')

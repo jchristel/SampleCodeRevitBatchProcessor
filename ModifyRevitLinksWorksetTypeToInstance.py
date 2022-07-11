@@ -96,7 +96,7 @@ def GetRevitLinkTypeDataByName(revitLinkName, doc):
 # get the revit link instance data
 # this also calls GetRevitLinkTypeDataByName() 
 def ModifyRevitLinkInstanceData(revitLink, doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     #get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
@@ -116,26 +116,26 @@ def ModifyRevitLinkInstanceData(revitLink, doc):
             if(instanceWorksetId != typeWorksetId):
                 Output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
                 transaction = Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                returnvalue = com.InTransaction(transaction,  rWork.GetActionChangeElementWorkset(revitLink, typeWorksetId))
-                Output(linkInstanceNameEncoded + ' ' + str(returnvalue.status))
+                returnValue = com.InTransaction(transaction,  rWork.GetActionChangeElementWorkset(revitLink, typeWorksetId))
+                Output(linkInstanceNameEncoded + ' ' + str(returnValue.status))
             else:
-               returnvalue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
+               returnValue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
         else:
-          returnvalue.message = str('Link is not loaded' + str(util.EncodeAscii(lN[0:-1])))
+          returnValue.message = str('Link is not loaded' + str(util.EncodeAscii(lN[0:-1])))
     else:
-        returnvalue.UpdateSep(False, 'Failed to split link name into 3 parts')
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to split link name into 3 parts')
+    return returnValue
 
 #method moving revit link instances to the same workset as their types
 def modifyRevitLinkInstance(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
             changeLink = ModifyRevitLinkInstanceData(p, doc)
-            returnvalue.Update(changeLink)
+            returnValue.Update(changeLink)
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+    return returnValue
 
 # -------------
 # main:

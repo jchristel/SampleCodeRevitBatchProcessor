@@ -30,11 +30,11 @@ Contains file names used by model health report.
 PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS = '_NumberOfWorksets'
 #: report file name suffix : file size
 PARAM_ACTIONS_FILENAME_FILE_SIZE = '_FileSize'
-#: rreport file name suffix : warnings
+#: report file name suffix : warnings
 PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS = '_NumberOfWarnings'
 #: report file name suffix : design sets
-PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS = '_NumberOfDesingSets'
-#: rreport file name suffix : design options
+PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS = '_NumberOfDesignSets'
+#: report file name suffix : design options
 PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS ='_NumberOfDesignOptions'
 #: report file name suffix : sheet
 PARAM_ACTIONS_FILENAME_NO_OF_SHEETS = '_NumberOfSheets'
@@ -44,7 +44,7 @@ PARAM_ACTIONS_FILENAME_NO_OF_VIEWS = '_NumberOfViews'
 PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED = '_NumberOfViewsNotPlaced'
 #: report file name suffix : line styles
 PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES = '_NumberOfLineStyles'
-#: report file name suffix : linbe patterns
+#: report file name suffix : line patterns
 PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS = '_NumberOfLinePatterns'
 #: report file name suffix : fill patterns
 PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS ='_NumberOfFillPatterns'

@@ -48,7 +48,7 @@ class RevitCustomElementFilter:
         '''
         Filter checking whether element meets criteria.
 
-        This function will loop over all the filters passt in through the class constructor and test the element for each filter.
+        This function will loop over all the filters past in through the class constructor and test the element for each filter.
         Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
         it will return True if one of them evaluates to True, otherwise False will be returned.
 

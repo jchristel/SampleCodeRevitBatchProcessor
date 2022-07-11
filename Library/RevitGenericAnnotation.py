@@ -94,9 +94,9 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
 
 def BuildGenericAnnotationTypesDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
-    :param collector: Filtered element collector containing GenericAnnotation type elments of family symbols.
+    :param collector: Filtered element collector containing GenericAnnotation type elements of family symbols.
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: Dictionary, the key is the family name and the value a list of element ids representing annotation types.
     :type dic: dic: key str, values list of Autodesk.Revit.DB.ElementId
@@ -177,7 +177,7 @@ def GetUnusedGenericAnnotationTypeIds(doc):
 # doc   current document
 def GetUnusedGenericAnnotationIdsForPurge(doc):
     '''
-    returns symbol(type) ids and family ids (when no type is in use) of in generic anno familis which can be purged
+    returns symbol(type) ids and family ids (when no type is in use) of in generic anno families which can be purged
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

@@ -38,9 +38,9 @@ def getBIM360RevitFilesFromFileList(filepathCSV, extension):
     '''
     Method reading BIM360 file data from a CSV file.
 
-    :param filepathCSV: Fully quaslified file path to CSV to be read.
+    :param filepathCSV: Fully qualified file path to CSV to be read.
     :type filepathCSV: str
-    :param extension: Is an empty place holder...this method is passt into another where it expects 2 arguments...
+    :param extension: Is an empty place holder...this method is past into another where it expects 2 arguments...
     :type extension: TODO
     :raise: On exception an empty list is returned.
     
@@ -55,13 +55,13 @@ def GetBIM360Data(filepathCSV):
     '''
     Reads a csv file containing BIM 360 file data into list of FileItem instances.
 
-    :param filepathCSV: Fully quaslified file path to CSV to be read.
+    :param filepathCSV: Fully qualified file path to CSV to be read.
     :type filepathCSV: str
     :return: a list of FileItem instances representing BIM360 file data.
-        Will return an empty list of an exception occured.
+        Will return an empty list of an exception occurred.
     :rtype: list of SampleCodeBatchProcessor.FileItem
     '''
-    revitfiles = []
+    revitFiles = []
     try:
         # read the CSV into rows
         rows = util.ReadCSVfile(filepathCSV)
@@ -72,12 +72,12 @@ def GetBIM360Data(filepathCSV):
                 dummy = ProcessBIM360Row(row)
                 # check whether row got processed ok
                 if (dummy is not None):
-                    revitfiles.append(dummy)
+                    revitFiles.append(dummy)
     except Exception as e:
-        print ('An exception occured during BIM360 row processing! ' + str(e))
+        print ('An exception occurred during BIM360 row processing! ' + str(e))
         # return an empty list which will cause this script to abort
-        revitfiles = []
-    return revitfiles
+        revitFiles = []
+    return revitFiles
 
 def ProcessBIM360Row (rowData):
     '''
@@ -86,7 +86,7 @@ def ProcessBIM360Row (rowData):
     :param rowData: the list containing the file data
     :type rowData: list of str in format [Revit version, Project GUID, File GUID, file size in MB, file name]
     
-    :return: Initialised file item instance, None if row is not the right length
+    :return: Initialized file item instance, None if row is not the right length
     :rtype: SampleCodeBatchProcessor.FileItem
     '''
 

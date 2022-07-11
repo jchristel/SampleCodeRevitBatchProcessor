@@ -211,7 +211,7 @@ def GetCategoryGraphicStyleIds(cat):
     iDGraphicStyleCut = iDGraphicStyleProjection
     if(graphicStyleCut != None):
         iDGraphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
-    # build category dictioanry where key is the style type, values is the coresponding Id
+    # build category dictionary where key is the style type, values is the coresponding Id
     dic = {}
     dic[CATEGORY_GRAPHICSTYLE_PROJECTION] = iDGraphicStyleProjection 
     dic[CATEGORY_GRAPHICSTYLE_CUT] = iDGraphicStyleCut
@@ -379,7 +379,7 @@ def SetCategoryMaterial(doc, cat, materialId):
     :param materialId: The new material element id.
     :type materialId: Autodesk.Revit.DB.ElementId
     
-    :return: True if material property was updated succesfully, otherwise False.
+    :return: True if material property was updated successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -406,7 +406,7 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
     :param materialId: The new material element id.
     :type materialId: Autodesk.Revit.DB.ElementId
 
-    :return: True if line pattern property was updated succesfully, otherwise False.
+    :return: True if line pattern property was updated successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -435,7 +435,7 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
     :param lineThicknessProjection: The projection line weight.
     :type lineThicknessProjection: int
     
-    :return: True if line weight property was updated succesfully, otherwise False.
+    :return: True if line weight property was updated successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -466,7 +466,7 @@ def SetCategoryColour(doc, cat, red, green, blue):
     :param blue: The colour blue channel.
     :type blue: byte
 
-    :return: True if colour property was updated succesfully, otherwise False.
+    :return: True if colour property was updated successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -493,7 +493,7 @@ def SetCategoryProperties(doc, cat, properties):
     :param properties: List of property values to be applied to category.
     :type properties: list of dictionaries in format as per GetCategoryProperties(cat) method.
 
-    :return: True if all properties where updated succesfully, otherwise False.
+    :return: True if all properties where updated successfully, otherwise False.
     :rtype: bool
     '''
     
@@ -528,11 +528,11 @@ def SetFamilyCategory(doc, newCategoryName):
     :param newCategoryName: The name of the new family category.
     :type newCategoryName: str
     
-    :return: True only if the category was changed succesfully. Any other case False! (That includes situations when the family is already of the new catgeory)
+    :return: True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new catgeory)
     :rtype: bool
     '''
     
-    returnvalue = res.Result()
+    returnValue = res.Result()
     cat = doc.OwnerFamily.FamilyCategory
     if (cat.Name != newCategoryName):
         if (doc.Settings.Categories.Contains(newCategoryName)):
@@ -541,14 +541,14 @@ def SetFamilyCategory(doc, newCategoryName):
             transaction = rdb.Transaction(doc,'Changing family category to:' + str(newCategoryName))
             changeCat = com.InTransaction(transaction, action)
             if(changeCat.status):
-                returnvalue.UpdateSep(True, 'Succesfully changed family category to: '+str(newCategoryName))
+                returnValue.UpdateSep(True, 'Successfully changed family category to: '+str(newCategoryName))
             else:
-                returnvalue.Update(changeCat)
+                returnValue.Update(changeCat)
         else:
-            returnvalue.UpdateSep(False, 'Invalid Category name supplied: ' + str(newCategoryName))
+            returnValue.UpdateSep(False, 'Invalid Category name supplied: ' + str(newCategoryName))
     else:
-        returnvalue.UpdateSep(False, 'Family is already of category: '+str(newCategoryName))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Family is already of category: '+str(newCategoryName))
+    return returnValue
    
 def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     '''
@@ -562,10 +562,10 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     :type newSubCategoryName: str
 
     :return: The new subcategory. Exception "The name 'xys' is already in use" if subcategory with the same name is already in file.
-    :rtype: A category. (or str if exception occured)
+    :rtype: A category. (or str if exception occurred)
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     if (doc.IsFamilyDocument):
         # get the family category
         currentFamCat = doc.OwnerFamily.FamilyCategory
@@ -585,12 +585,12 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
                     actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
                 return actionReturnValue
             transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
-            returnvalue = com.InTransaction(transaction, action)
+            returnValue = com.InTransaction(transaction, action)
         else:
-          returnvalue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
+          returnValue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
     else:
-        returnvalue.UpdateSep(False, 'This is not a family document!')
-    return returnvalue
+        returnValue.UpdateSep(False, 'This is not a family document!')
+    return returnValue
           
 def SortElementsByCategory(elements, elementDic):
     '''
@@ -705,7 +705,7 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     cats = GetMainSubCategories(doc)
     # check if existing category actually exists in family
     if(existingCatName in cats):
@@ -714,13 +714,13 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
             copyFromCat = cats[existingCatName]
             catProps = GetCategoryProperties(copyFromCat, doc)
             resultNewSubCat = CreateNewCategoryFromSavedProperties(doc, newCatName, catProps)
-            returnvalue.Update(resultNewSubCat)
+            returnValue.Update(resultNewSubCat)
         else:
-            returnvalue.UpdateSep(True, 'Category already in file:'+ str(newCatName))
-            returnvalue.result = cats[newCatName]
+            returnValue.UpdateSep(True, 'Category already in file:'+ str(newCatName))
+            returnValue.result = cats[newCatName]
     else:
-        returnvalue.UpdateSep(False, 'Template category '+ str(existingCatName) + ' does not exist in file!')
-    return returnvalue
+        returnValue.UpdateSep(False, 'Template category '+ str(existingCatName) + ' does not exist in file!')
+    return returnValue
 
 def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     '''
@@ -749,17 +749,17 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
     if(resultNewSubCat.result):
         newSubcat = resultNewSubCat.result
         flag = SetCategoryProperties(newSubcat, savedCatProps)
         if(flag):
-            returnvalue.UpdateSep(True, 'Succesfully created category '+ str(newCatName))
-            returnvalue.result = newSubcat
+            returnValue.UpdateSep(True, 'Successfully created category '+ str(newCatName))
+            returnValue.result = newSubcat
         else:
-            returnvalue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
-    return returnvalue
+            returnValue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
+    return returnValue
 
 def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryName):
     '''
@@ -788,7 +788,7 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # check whether source and destination category exist in file
     cats = GetMainSubCategories(doc)
     if(fromCategoryName in cats):
@@ -798,12 +798,12 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
             # get elements on source category
             dic = GetElementsByCategory(doc, cats[fromCategoryName])
             # move elements
-            returnvalue = MoveElementsToCategory(doc, dic, toCategoryName, destinationCatIds)
+            returnValue = MoveElementsToCategory(doc, dic, toCategoryName, destinationCatIds)
         else:
-            returnvalue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
+            returnValue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
     else:
-       returnvalue.UpdateSep(False, 'Source category '+ str(fromCategoryName) + ' does not exist in file!')
-    return returnvalue
+       returnValue.UpdateSep(False, 'Source category '+ str(fromCategoryName) + ' does not exist in file!')
+    return returnValue
 
 def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
     '''
@@ -833,7 +833,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
 
     :rtype: :class:`.Result`
     '''
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # check whether destination category exist in file
     cats = GetMainSubCategories(doc)
     if(toCategoryName in cats):
@@ -847,11 +847,11 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
                             if (p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB):
                                 targetId = destinationCatIds[key]
                                 updataPara = com.setParameterValue(p, str(targetId), doc)
-                                returnvalue.Update(updataPara)
+                                returnValue.Update(updataPara)
                                 break
     else:
-        returnvalue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
-    return returnvalue
+        returnValue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
+    return returnValue
 
 def ChangeFamilyCategory(doc, newCategoryName):
     '''
@@ -884,7 +884,7 @@ def ChangeFamilyCategory(doc, newCategoryName):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # get sub categories in family
     subCats = GetMainSubCategories (doc)
     
@@ -912,12 +912,12 @@ def ChangeFamilyCategory(doc, newCategoryName):
                 if(createCat.status):
                     # move elements back onto custom subcategories
                     moveEl = MoveElementsToCategory(doc, elements[subCat], subCat, props[subCat])
-                    returnvalue.Update(moveEl)
+                    returnValue.Update(moveEl)
                 else:
-                    returnvalue.Update(createCat)
+                    returnValue.Update(createCat)
     else:
-        returnvalue.UpdateSep(False, 'Failed to change family category:' + changeFam.message)
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to change family category:' + changeFam.message)
+    return returnValue
 
 def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
     '''

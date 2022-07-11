@@ -50,7 +50,7 @@ def main(argv):
     '''
     Entry point.
 
-    :param argv: A list of string representing arguments passt in.
+    :param argv: A list of string representing arguments past in.
     :type argv: [str]
     '''
 
@@ -96,13 +96,13 @@ def main(argv):
 
 def processArgs(argv):
     '''
-    Processes passt in arguments and checks whether inputs are valid.
+    Processes past in arguments and checks whether inputs are valid.
 
     :param argv: List of arguments
     :type argv: _type_
 
     :return: 
-        - True if arguments passt in are valid, otherwise False.
+        - True if arguments past in are valid, otherwise False.
         - FIle select settings object instance.
     :rtype: bool, :class:`.FileSelectionSettings`
     '''
@@ -237,7 +237,7 @@ def GetFileData(settings):
                         print ('Max path lenght violation: ' + revitFile.name)
                         print ('File has been removed from selection!')
     except Exception as e:
-        print ('An exception occured during BIM360 file read! ' + str(e))
+        print ('An exception occurred during BIM360 file read! ' + str(e))
         # return an empty list which will cause this script to abort
         revitfiles = []
     return revitfiles

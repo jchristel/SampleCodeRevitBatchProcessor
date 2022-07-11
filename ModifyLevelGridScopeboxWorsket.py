@@ -82,7 +82,7 @@ def Output(message = ''):
         print (message)
 
 def Modify(doc, revitFilePath, gridData):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     flag = False
     for fileName, defaultWorksetName in gridData:
@@ -90,25 +90,25 @@ def Modify(doc, revitFilePath, gridData):
             flag = True
             collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
             grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
-            returnvalue.Update(grids)
+            returnValue.Update(grids)
 
             collectorLevels = FilteredElementCollector(doc).OfClass(Level)
             levels = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
-            returnvalue.Update(levels)
+            returnValue.Update(levels)
 
             collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
             sboxes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
-            returnvalue.Update(sboxes)
+            returnValue.Update(sboxes)
             
             # fix up ref planes
             collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
             refPlanes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
-            returnvalue.Update(refPlanes)
+            returnValue.Update(refPlanes)
             
             break
     if (flag == False):
-        returnvalue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
-    return returnvalue
+        returnValue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
+    return returnValue
 
 # -------------
 # main:

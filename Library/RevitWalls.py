@@ -91,7 +91,7 @@ def GetWallTypesByClass(doc):
 
 def BuildWallTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     Keys are built in wall family type names.
 
@@ -281,10 +281,10 @@ def GetUnusedInPlaceWallTypeIds(doc):
 
 def GetUnusedInPlaceWallIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use) of in place wall familis which can be savely deleted from the model.
+    Gets symbol(type) ids and family ids (when no type is in use) of in place wall families which can be safely deleted from the model.
 
     This method can be used to safely delete unused in place wall types. There is no requirement by Revit to have at least one\
-        in place wall defintion in the model.
+        in place wall definition in the model.
     
     
     :param doc: Current Revit model document.
@@ -487,7 +487,7 @@ def GetUnUsedBasicWallTypeIdsToPurge(doc):
 
     ids = com.GetUsedUnusedTypeIds(doc, GetAllBasicWallTypeIdsInModel, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
-    # argh GetStackedWallMemberIds() is only available on wall element but not walltype. Why?
+    # argh GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
     availableTypeCount = len(GetAllBasicWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
@@ -515,14 +515,14 @@ def GetWallReportData(doc, revitFilePath):
             wallTypeName = str(rdb.Element.Name.GetValue(wt))
             cs = wt.GetCompoundStructure()
             if cs != None:
-                csls = cs.GetLayers()
-                print(len(csls))
-                for csl in csls:
-                    layerMat = rMat.GetMaterialbyId(doc, csl.MaterialId)
+                csLayers = cs.GetLayers()
+                print(len(csLayers))
+                for csLayer in csLayers:
+                    layerMat = rMat.GetMaterialById(doc, csLayer.MaterialId)
                     materialMark = com.GetElementMark(layerMat)
-                    materialName = rMat.GetMaterialNameById(doc, csl.MaterialId)
-                    layerFunction = str(csl.Function)
-                    layerWidth = str(util.ConvertImperialToMetricMM(csl.Width)) # conversion from imperial to metric
+                    materialName = rMat.GetMaterialNameById(doc, csLayer.MaterialId)
+                    layerFunction = str(csLayer.Function)
+                    layerWidth = str(util.ConvertImperialToMetricMM(csLayer.Width)) # conversion from imperial to metric
                     data.append([
                         revitFilePath, 
                         str(wt.Id), 

@@ -95,33 +95,33 @@ def CheckName(view):
 def ModifyViews(doc, revitFilePath, viewData):
     
     #set default values
-    returnvalue = res.Result()
-    returnvalue.status = False
-    returnvalue.message = 'No view data provided for current Revit file'
+    returnValue = res.Result()
+    returnValue.status = False
+    returnValue.message = 'No view data provided for current Revit file'
 
     revitFileName =  util.GetFileNameWithoutExt(revitFilePath)
     for fileName, viewRules in viewData:
         if (revitFileName.startswith(fileName)):
             collectorViews = FilteredElementCollector(doc).OfClass(View)
-            returnvalue = rView.DeleteViews(doc, viewRules, collectorViews)
+            returnValue = rView.DeleteViews(doc, viewRules, collectorViews)
             break
-    return returnvalue
+    return returnValue
 
 # deletes sheets based on rules
 def ModifySheets(doc, sheets):
     
     # set default values
-    returnvalue = res.Result()
-    returnvalue.UpdateSep(False,'No sheet data provided for current Revit file')
+    returnValue = res.Result()
+    returnValue.UpdateSep(False,'No sheet data provided for current Revit file')
     
     revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
     # Output(sheets)
     for fileName, sheetRules in sheets:
         if (revitFileName.startswith(fileName)):
             collectorSheets = FilteredElementCollector(doc).OfClass(View)
-            returnvalue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
+            returnValue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
             break
-    return returnvalue
+    return returnValue
 
 # -------------
 # main:

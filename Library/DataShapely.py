@@ -140,7 +140,7 @@ def GetInnerLoopsAsShape(geoObject, translationM):
 
 def buildShapelyPolygon(shapeS):
     '''
-    Creates shapely polygons from list of polygons passt in.
+    Creates shapely polygons from list of polygons past in.
 
     Sssumptions is first polygone describes the boundary loop and any subsequent polygons are describing\
          holes within the boundary 
@@ -174,7 +174,7 @@ def buildShapelyPolygon(shapeS):
 
 def GetShapelyPolygonsFromDataInstance(dataInstance):
     '''
-    Returns a list of of shapely polygons from data instances passt in.
+    Returns a list of of shapely polygons from data instances past in.
     
     Polygons may contain holes
 
@@ -273,7 +273,7 @@ def BuildDictionaryByLevelAndDataType(dataReader):
     :param dataReader: A data reader class instance
     :type dataReader: :class:`.ReadDataFromFile`
 
-    :return: A dictioanry where key is the level name, value is a list of lists of data objects.
+    :return: A dictionary where key is the level name, value is a list of lists of data objects.
     :rtype: dic{str:[[:class:`.DataRoom],[:class:`.DataCeiling`]]}
     '''
 
@@ -430,7 +430,7 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
         result.status. True if:
 
         - all levels in file had ceilings and rooms.
-        - report file was written succesfully, 
+        - report file was written successfully, 
         
         Otherwise False.
         
@@ -440,7 +440,7 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
         On exception:
         
         - result.status (bool) will be False.
-        - result.message will contain room name and number where exception occured as well as ceiling id.
+        - result.message will contain room name and number where exception occurred as well as ceiling id.
         - result.result will be empty
         
     :rtype: :class:`.Result`

@@ -102,7 +102,7 @@ def GetCeilingTypesByClass(doc):
 
 def BuildCeilingTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     Keys are built in ceiling family type names.
 
@@ -348,7 +348,7 @@ def GetUnusedInPlaceCeilingTypeIds(doc):
 
 def GetUnusedInPlaceCeilingIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling familis which can be savely deleted from the model.
+    Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling families which can be safely deleted from the model.
 
     This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one\
         in place ceiling defintion in the model.
@@ -443,7 +443,7 @@ def GetAllCeilingData(doc):
 
 def PopulateDataCeilingObject(doc, revitCeiling):
     '''
-    Returns a custom ceiling data objects populated with some data from the revit model ceiling passt in.
+    Returns a custom ceiling data objects populated with some data from the revit model ceiling past in.
 
     - ceiling id
     - ceiling type name

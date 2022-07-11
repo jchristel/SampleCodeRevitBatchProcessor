@@ -102,7 +102,7 @@ class ReadDataFromFile:
     
     def get_data_by_level(self, levelName):
         '''
-        Returns all data objects where level name equals passt in value.
+        Returns all data objects where level name equals past in value.
 
         :param levelName: The building level name.
         :type levelName: str
@@ -115,7 +115,7 @@ class ReadDataFromFile:
     
     def get_data_by_level_and_dataType(self, levelName, dataType):
         '''
-        Returns all data objects where level name and datat type equal passt in values.
+        Returns all data objects where level name and datat type equal past in values.
 
         :param levelName: The building level name.
         :type levelName: str

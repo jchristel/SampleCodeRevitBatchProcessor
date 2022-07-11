@@ -200,7 +200,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level">
 <span class="sig-name descname"><span class="pre">get_data_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all data objects where level name equals passt in value.</p>
+<dd><p>Returns all data objects where level name equals past in value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>levelName</strong> (<em>str</em>) – The building level name.</p>
@@ -217,7 +217,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType">
 <span class="sig-name descname"><span class="pre">get_data_by_level_and_dataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all data objects where level name and datat type equal passt in values.</p>
+<dd><p>Returns all data objects where level name and datat type equal past in values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -332,7 +332,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.buildShapelyPolygon">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">buildShapelyPolygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapeS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.buildShapelyPolygon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates shapely polygons from list of polygons passt in.</p>
+<dd><p>Creates shapely polygons from list of polygons past in.</p>
 <p>Sssumptions is first polygone describes the boundary loop and any subsequent polygons are describing         holes within the boundary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -350,7 +350,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromDataInstance">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromDataInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataInstance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromDataInstance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of of shapely polygons from data instances passt in.</p>
+<dd><p>Returns a list of of shapely polygons from data instances past in.</p>
 <p>Polygons may contain holes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -420,7 +420,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dd class="field-odd"><p><strong>dataReader</strong> (<a class="reference internal" href="#DataReadFromFile.ReadDataFromFile" title="DataReadFromFile.ReadDataFromFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReadDataFromFile</span></code></a>) – A data reader class instance</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A dictioanry where key is the level name, value is a list of lists of data objects.</p>
+<dd class="field-even"><p>A dictionary where key is the level name, value is a list of lists of data objects.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dic{str:[[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom],[:class:</span></code>.DataCeiling`]]}</p>
@@ -510,7 +510,7 @@ Takes into account design set / design options and offset from level.</p>
 result.status. True if:</p>
 <ul class="simple">
 <li><p>all levels in file had ceilings and rooms.</p></li>
-<li><p>report file was written succesfully,</p></li>
+<li><p>report file was written successfully,</p></li>
 </ul>
 <p>Otherwise False.</p>
 <ul class="simple">
@@ -520,7 +520,7 @@ result.status. True if:</p>
 <p>On exception:</p>
 <ul class="simple">
 <li><p>result.status (bool) will be False.</p></li>
-<li><p>result.message will contain room name and number where exception occured as well as ceiling id.</p></li>
+<li><p>result.message will contain room name and number where exception occurred as well as ceiling id.</p></li>
 <li><p>result.result will be empty</p></li>
 </ul>
 </p>
@@ -565,7 +565,7 @@ result.status. True if:</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status. True if json data file was written succesfully, otherwise False.</p></li>
+<li><p>result.status. True if json data file was written successfully, otherwise False.</p></li>
 <li><p>result.message will confirm path of json data file.</p></li>
 <li><p>result.result empty list</p></li>
 </ul>

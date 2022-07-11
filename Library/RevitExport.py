@@ -82,7 +82,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
 
         On exception:
@@ -94,7 +94,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     '''
 
     # ifc export needs to run in a transaction
-    returnvalue = res.Result()
+    returnValue = res.Result()
     def action():
         actionReturnValue = res.Result()
         try:
@@ -107,8 +107,8 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
             actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,'Export to IFC')
-    returnvalue = com.InTransaction(transaction, action)
-    return returnvalue
+    returnValue = com.InTransaction(transaction, action)
+    return returnValue
 
 def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
     '''
@@ -218,7 +218,7 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -229,7 +229,7 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # need to create an export option from the export config
     exIFC = rdb.IFCExportOptions()
     # pass in invalid element ID to export entire model
@@ -237,9 +237,9 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
 
     # set the coordinate system to use
     exIFC.AddOption('SitePlacement', coordOption)
-    returnvalueByModel = ExportToIFC(doc, exIFC, directoryPath, fileName)
-    returnvalue.Update(returnvalueByModel)
-    return returnvalue
+    returnValueByModel = ExportToIFC(doc, exIFC, directoryPath, fileName)
+    returnValue.Update(returnValueByModel)
+    return returnValue
 
 # 
 # doSomethingWithViewName method will accept view name as arg only
@@ -265,7 +265,7 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -276,28 +276,28 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
+    views = rView.GetViewsOfType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
     # export those views one by one
     if(len(viewsToExport) > 0):
         for exportView in viewsToExport:
-            returnvalueByView = res.Result()
+            returnValueByView = res.Result()
             updatedExportOption = SetUpIFCExportOption(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
             fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
-            returnvalueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
-            returnvalue.Update(returnvalueByView)
+            returnValueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
+            returnValue.Update(returnValueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+    return returnValue
 
 def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
     '''
-    Function modifying the passt in view name and returns a file name.
+    Function modifying the past in view name and returns a file name.
 
     :param viewName: The view name to be used as file name.
     :type viewName: str
@@ -358,7 +358,7 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -369,24 +369,24 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
+    views = rView.GetViewsOfType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
     # export those views one by one
     if(len(viewsToExport) > 0):
         for exportView in viewsToExport:
-            returnvalueByView = res.Result()
+            returnValueByView = res.Result()
             ifcExportOption.FilterViewId = exportView.Id
             fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc')
-            returnvalueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
-            returnvalue.Update(returnvalueByView)
+            returnValueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
+            returnValue.Update(returnValueByView)
     else:
-        returnvalue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+    return returnValue
 
 #-------------------------------------------- NWC EXPORT -------------------------------------
 
@@ -402,7 +402,7 @@ def SetUpNWCDefaultExportOptionSharedByView():
 
 def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
     '''
-    Return an NWC Export Options object as per values passt oin.
+    Return an NWC Export Options object as per values past oin.
 
     :param usingSharedCoordinates: True shared coordinates will be used, otherwise project internal
     :type usingSharedCoordinates: bool
@@ -453,7 +453,7 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -465,16 +465,16 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     '''
 
     # nwc export does not need to run in a transaction
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         # export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
-        returnvalue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
+        returnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
         # needs to be a list in a list to stay together when combined with previous results in the update status result code
-        returnvalue.result = [[directoryPath, fileName]]
+        returnValue.result = [[directoryPath, fileName]]
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
+    return returnValue
 
 def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
     '''
@@ -492,7 +492,7 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -503,10 +503,10 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
-    returnvalueByModel = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
-    returnvalue.Update(returnvalueByModel)
-    return returnvalue
+    returnValue = res.Result()
+    returnValueByModel = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+    returnValue.Update(returnValueByModel)
+    return returnValue
 
 def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
     '''
@@ -526,7 +526,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     :return: 
         Result class instance.
 
-        - Export status returned in result.status. False if an exception occured, otherwise True.
+        - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
         
         On exception:
@@ -537,22 +537,22 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsofType(doc, rdb.ViewType.ThreeD)
+    views = rView.GetViewsOfType(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
     # export those views one by one
     if(len(viewsToExport) > 0):
         for exportView in viewsToExport:
-            returnvalueByView = res.Result()
+            returnValueByView = res.Result()
             # store view ID in export option
             nwcExportOption.ViewId = exportView.Id
             fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
-            returnvalueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
-            returnvalue.Update(returnvalueByView)
+            returnValueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+            returnValue.Update(returnValueByView)
     else:
-        returnvalue.UpdateSep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
-    return returnvalue
+        returnValue.UpdateSep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
+    return returnValue

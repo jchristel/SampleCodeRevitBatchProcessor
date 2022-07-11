@@ -101,7 +101,7 @@ def GetNotEnclosedRooms(doc):
 
 def GetRedundantRooms(doc):
     '''
-    Gets a list of redundants rooms from the model.
+    Gets a list of redundant rooms from the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -126,12 +126,12 @@ def MoveTagToRoom(doc, tagId):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param tagId: The element id of the tag to be moved to the room.
-    :type tagId: Autopdesk.Revit.DB.ElementId
+    :type tagId: Autodesk.Revit.DB.ElementId
 
     :return: 
         Result class instance.
 
-        - Tag moving status returned in result.status. False if an exception occured, otherwise True.
+        - Tag moving status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name and number of the room.
         
         On exception (handled by optimizer itself!):
@@ -142,7 +142,7 @@ def MoveTagToRoom(doc, tagId):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     rt = doc.GetElement(tagId)
     roomTagPoint = rt.Location.Point
     roomLocationPoint = rt.Room.Location.Point
@@ -157,8 +157,8 @@ def MoveTagToRoom(doc, tagId):
             actionReturnValue.UpdateSep(False, 'Failed to move tag to room ' + roomData + ' with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + roomData)
-    returnvalue.Update(com.InTransaction(transaction, action))
-    return returnvalue
+    returnValue.Update(com.InTransaction(transaction, action))
+    return returnValue
 
 # -------------------------------- room geometry -------------------------------------------------------
 
@@ -200,23 +200,23 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
 
     loopCounter = 0
     hasInnerLoops = False
-    dgeo = dGeometry.DataGeometry()
-    for bounadryLoop in boundaryLoops:
-        for roomLoop in bounadryLoop:
+    dataGeometry = dGeometry.DataGeometry()
+    for boundaryLoop in boundaryLoops:
+        for roomLoop in boundaryLoop:
             p = None # segment start point
             loopPoints = []
             for segment in roomLoop:
                 p = segment.GetCurve().GetEndPoint(0)
                 loopPoints.append(p)
             if(loopCounter == 0):
-                dgeo.outerLoop = loopPoints
+                dataGeometry.outerLoop = loopPoints
             else:
-                dgeo.innerLoops.append(loopPoints)
+                dataGeometry.innerLoops.append(loopPoints)
                 hasInnerLoops = True
             loopCounter += 1
     if (not hasInnerLoops):
-        dgeo.innerLoops = []
-    return dgeo
+        dataGeometry.innerLoops = []
+    return dataGeometry
 
 def Get2DPointsFromRevitRoom(revitRoom):
     '''
@@ -280,7 +280,7 @@ def GetAllRoomData(doc):
 
 def PopulateDataRoomObject(doc, revitRoom):
     '''
-    Returns a custom room data objects populated with some data from the revit model room passt in.
+    Returns a custom room data objects populated with some data from the revit model room past in.
 
     data points:
     
@@ -305,8 +305,8 @@ def PopulateDataRoomObject(doc, revitRoom):
     if(len(revitGeometryPointGroups) > 0):
         roomPointGroupsAsDoubles = []
         for roomPointGroupByPoly in revitGeometryPointGroups:
-            dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, roomPointGroupByPoly)
-            roomPointGroupsAsDoubles.append(dgeoConverted)
+            dataGeometryConverted = rGeo.ConvertXYZInDataGeometry(doc, roomPointGroupByPoly)
+            roomPointGroupsAsDoubles.append(dataGeometryConverted)
         dataR.geometry = roomPointGroupsAsDoubles
         # get other data
         dataR.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)

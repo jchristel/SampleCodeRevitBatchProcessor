@@ -81,29 +81,29 @@ def Output(message = ''):
         print (message)
 
 def IFCExportView(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     ifcExportOption = rex.IFCGetThirdPartyExportConfifgByView(IFCVersion.IFC2x3)
     # exports 3D view where name starts with 'NWCP', Origin is project base point
-    returnvalue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
-    return returnvalue
+    returnValue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
+    return returnValue
 
 def IFCExportViewDefault(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     ifcExportOptionDefault = rex.IFCGetExportConfifgByView(IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
-    returnvalue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
-    return returnvalue
+    returnValue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
+    return returnValue
 
 def NWCExportByView(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
-    returnvalue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
-    return returnvalue
+    returnValue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+    return returnValue
 
 def NWCExportModel(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
-    returnvalue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
-    return returnvalue
+    returnValue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+    return returnValue
 
 # -------------
 # main:

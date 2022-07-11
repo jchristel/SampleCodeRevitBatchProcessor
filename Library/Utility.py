@@ -44,15 +44,15 @@ from os import path
 import codecs
 import csv
 
-#: default file stamp date format using uderscores as delimiter: 21_03_01
+#: default file stamp date format using underscores as delimiter: 21_03_01
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
 #: file stamp date format using spaces as delimiter: 21 03 01
 FILE_DATE_STAMP_YYMMDD_SPACE = '%y %m %d'
 #: file stamp date format using spaces as delimiter: 2021 03 01
 FILE_DATE_STAMP_YYYYMMDD_SPACE = '%Y %m %d'
-#: file stamp date format using uderscores as delimiter: 2021_03_01
+#: file stamp date format using underscores as delimiter: 2021_03_01
 FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
-#: file stamp date time format using uderscores as delimiter: 2021_03_01_18_59_59
+#: file stamp date time format using underscores as delimiter: 2021_03_01_18_59_59
 FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 
 #: time stamp using colons: 18:59:59
@@ -96,7 +96,7 @@ def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
 # get the date stamp in provided format
 def GetDateStamp(format):
     '''
-    Returns a date stamp formatted using passt in format string.
+    Returns a date stamp formatted using past in format string.
 
     :param format: The date stamp format
     :type format: str
@@ -184,12 +184,12 @@ def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
 
 def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
     '''
-    Returns a dictioanry of all files in directory and nested subdirectories where file name contains filter value. 
+    Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value. 
     
     - key file name without extension
-    - values: list of directories where this file occures (based on file name only!)
+    - values: list of directories where this file occurs (based on file name only!)
 
-    Use case: check for duplicaes by file name only
+    Use case: check for duplicates by file name only
 
     :param folderPath: Root folder path from which to get files.
     :type folderPath: str
@@ -343,18 +343,18 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
                     result.write('\t'.join(headers))
                 elif(lineCounter != 0):
                     # write out padded rows
-                    rowdata = line.split('\t')
-                    #print(rowdata)
+                    rowData = line.split('\t')
+                    #print(rowData)
                     paddedRow = []
                     for cm in columnMapper:
                         if(cm == -1):
                             # this column does not exist in this file
                             paddedRow.append('N/A')
-                        elif (cm > len(rowdata)):
-                            # less columns in file than mapper index (shouldnt happen??)
+                        elif (cm > len(rowData)):
+                            # less columns in file than mapper index (should'nt happen??)
                             paddedRow.append('index out of bounds')
                         else:
-                            paddedRow.append(rowdata[cm])
+                            paddedRow.append(rowData[cm])
                     paddedRow.append('\n')
                     result.write('\t'.join(paddedRow))
                 lineCounter += 1
@@ -362,7 +362,7 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
 
 def GetUniqueHeaders(files):
     '''
-    Gets a list of alphabeticaly sorted headers retrieved from text files.
+    Gets a list of alphabetically sorted headers retrieved from text files.
     
     Assumes:
 
@@ -383,12 +383,12 @@ def GetUniqueHeaders(files):
             rowSplit = data.split('\t')
             headersInAllFiles[GetFileNameWithoutExt(f)] = rowSplit
     headersUnique = []
-    for headerByfile in headersInAllFiles:
+    for headerByFile in headersInAllFiles:
         emptyHeaderCounter = 0
-        for header in headersInAllFiles[headerByfile]:
+        for header in headersInAllFiles[headerByFile]:
             # reformat any empty headers to be unique
             if(header == ''):
-                header = headerByfile +  '.Empty.' + str(emptyHeaderCounter)
+                header = headerByFile +  '.Empty.' + str(emptyHeaderCounter)
                 emptyHeaderCounter = emptyHeaderCounter + 1
             if(header not in headersUnique):
                 headersUnique.append(header)
@@ -574,7 +574,7 @@ def DirectoryEmptyDelete(fullDirectoryPath):
 
 def DirectoryDelete(fullDirectoryPath):
     '''
-    Dletes a directory (even if it contains files)
+    Deletes a directory (even if it contains files)
 
     :param fullDirectoryPath: Path to directory
     :type fullDirectoryPath: str
@@ -587,7 +587,7 @@ def DirectoryDelete(fullDirectoryPath):
         shutil.rmtree(fullDirectoryPath)
         value = True
     except Exception as e:
-        print('An exception occured when attempting to delete a directory: ' + str(e))
+        print('An exception occurred when attempting to delete a directory: ' + str(e))
         value = False
     return value
 
@@ -602,12 +602,12 @@ def GetChildDirectories(fullDirectoryPath):
     :rtype: list of str
     '''
 
-    subfoldersWithPaths = []
+    subFoldersWithPaths = []
     for root, dirs, files in os.walk(fullDirectoryPath):
         for dir in dirs:
-            subfoldersWithPaths.append( os.path.join(root, dir) )
+            subFoldersWithPaths.append( os.path.join(root, dir) )
         break
-    return subfoldersWithPaths
+    return subFoldersWithPaths
 
 # get directory from file
 def GetFolderPathFromFile(filePath):
@@ -713,7 +713,7 @@ def CreateTargetFolder(rootPath, folderName):
 
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     '''
-    Returns a time stamped output file name based on the passt in file name and file extension.
+    Returns a time stamped output file name based on the past in file name and file extension.
 
     :param revitFilePath: Fully qualified file path to file
     :type revitFilePath: str
@@ -748,7 +748,7 @@ def GetFileNameWithoutExt(filePath):
 
 def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     '''
-    removes '../..' or '../' from relative file path string and replaces it with full path derived path passt in sample path.
+    removes '../..' or '../' from relative file path string and replaces it with full path derived path past in sample path.
 
     - relative path sample: 'C:/temp/../myfile.ext'
     - full file path sample: 'C:/temp/Sample/someOtherFile.ext'
@@ -785,8 +785,8 @@ def ReadCSVfile(filepathCSV):
 
     rowList = []
     try:
-        with open(filepathCSV) as csvfile:
-            reader = csv.reader(csvfile)
+        with open(filepathCSV) as csvFile:
+            reader = csv.reader(csvFile)
             for row in reader: # each row is a list
                 rowList.append(row)
     except Exception as e:
@@ -942,12 +942,12 @@ PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
 
-def PadSingleDigitNumericString(numericstring, format = PAD_SINGLE_DIGIT_TO_TWO):
+def PadSingleDigitNumericString(numericString, format = PAD_SINGLE_DIGIT_TO_TWO):
     '''
     Pads a single digit integer (past in as a string) with a leading zero (default)
 
-    :param numericstring: Integer as string.
-    :type numericstring: str
+    :param numericString: Integer as string.
+    :type numericString: str
     :param format: The integer padding format, defaults to PAD_SINGLE_DIGIT_TO_TWO
     :type format: str, optional
     
@@ -957,11 +957,11 @@ def PadSingleDigitNumericString(numericstring, format = PAD_SINGLE_DIGIT_TO_TWO)
 
     # attempt to convert string to int first
     try:
-        value = int(numericstring)
+        value = int(numericString)
         return str(format%value)
     except Exception:
         #string was not an integer...
-        return numericstring
+        return numericString
 
 def EncodeAscii (string):
     '''
@@ -978,13 +978,13 @@ def EncodeAscii (string):
 
 def GetFirst(iterable, default, condition = lambda x: True):
     '''
-    Returns the first value in a list matching condition. If no value found returns the specificed default value.
+    Returns the first value in a list matching condition. If no value found returns the specified default value.
 
     :param iterable: the list to be searched.
     :type iterable: iterable
     :param default: The default value
     :type default: var
-    :param condition: The condition to be checked, defaults to lambdax:True
+    :param condition: The condition to be checked, defaults to lambda x:True
     :type condition: _type_, optional
     
     :return: First value matching condition, otherwise default value

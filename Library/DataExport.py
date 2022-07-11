@@ -66,7 +66,7 @@ def WriteJsonDataToFile (doc, dataOutPutFileName):
     :return: 
         Result class instance.
         
-        - result.status. True if json data file was written succesfully, otherwise False.
+        - result.status. True if json data file was written successfully, otherwise False.
         - result.message will confirm path of json data file.
         - result.result empty list
 

@@ -32,7 +32,7 @@ import Utility as util
 
 def GetAllRunningProcesses():
     '''
-    Retrieves a list of all curently running processes.
+    Retrieves a list of all currently running processes.
 
     :return: a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     :rtype: list of list 
@@ -134,7 +134,7 @@ def KillProcesses(processList):
     :param processList: List of processes to be killed.
     :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     
-    :return: True if all passt in processes have been killed, otherwise False.
+    :return: True if all past in processes have been killed, otherwise False.
     :rtype: bool
     '''
 

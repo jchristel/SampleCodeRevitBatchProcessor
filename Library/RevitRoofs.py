@@ -91,11 +91,11 @@ def GetRoofTypesByClass(doc):
 
 def BuildRoofTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     TODO: similar function exists in Walls module. Consider more generic function.
 
-    :param collector: A filtered element collector containing roof type elments of family symbols
+    :param collector: A filtered element collector containing roof type elements of family symbols
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: dictionary containing key: roof type family name, value: list of ids
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
@@ -212,11 +212,11 @@ def GetUsedRoofTypeIds(doc):
 
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
-    Compares two lists of element ids and returnds False if any element id in first list is not in the second list.
+    Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     
     Returns False if any symbols (types) of a family (first lists) are in use in a model (second list).
     
-    TODO: repetetive code...Consider generic function!
+    TODO: repetitive code...Consider generic function!
 
     :param famTypeIds: List of family symbols (types).
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -333,7 +333,7 @@ def GetUnusedInPlaceRoofTypeIds(doc):
 # doc   current document
 def GetUnusedInPlaceRoofIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use of a family) of in place Roof familis which can be purged.
+    Gets symbol(type) ids and family ids (when no type is in use of a family) of in place Roof families which can be purged.
     
     This method can be used to safely delete unused in place roof types.
 

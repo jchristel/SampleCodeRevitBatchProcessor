@@ -105,7 +105,7 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
     - Railing Systems
     - loaded families
 
-    Will exlcude any inplace families.
+    Will exclude any inplace families.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -142,11 +142,11 @@ def GetRailingTypesByClass(doc):
 
 def BuildRailingTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     TODO: similar function exists in Walls module. Consider more generic function.
 
-    :param collector: A filtered element collector containing railing type elments of family symbols
+    :param collector: A filtered element collector containing railing type elements of family symbols
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
     :param dic: dictionary containing key: railing type family name, value: list of ids
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
@@ -262,12 +262,12 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
     idsClass = com.GetIdsFromElementCollector(colClass)
     colCat = GetAllRailingTypesByCategoryExclInPlace(doc)
     idsCat = com.GetIdsFromElementCollector(colCat)
-    for idsc in idsClass:
-        if (idsc not in ids):
-            ids.append (idsc)
-    for idsca in idsCat:
-        if( idsca not in ids):
-            ids.append(idsca)
+    for idClass in idsClass:
+        if (idClass not in ids):
+            ids.append (idClass)
+    for idCat in idsCat:
+        if( idCat not in ids):
+            ids.append(idCat)
     return ids
 
 def GetUsedRailingTypeIds(doc):
@@ -288,11 +288,11 @@ def GetUsedRailingTypeIds(doc):
 
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
-    Compares two lists of element ids and returnds False if any element id in first list is not in the second list.
+    Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
     
-    TODO: repetetive code...Consider generic function!
+    TODO: repetitive code...Consider generic function!
 
     :param famTypeIds: List of family symbols (types).
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -410,7 +410,7 @@ def GetUnusedInPlaceRailingTypeIds(doc):
 
 def GetUnusedInPlaceRailingIdsForPurge(doc):
     '''
-    Gets symbol(type) ids and family ids (when no type is in use) of in place Railing familis which can be purged.
+    Gets symbol(type) ids and family ids (when no type is in use) of in place Railing families which can be purged.
 
     This method can be used to safely delete unused in place railing types and families.
 
@@ -429,7 +429,7 @@ def GetUnusedInPlaceRailingIdsForPurge(doc):
 # -------------baluster utility -------------
 
 
-def MergeIntoUniquList(listSource, listMerge):
+def MergeIntoUniqueList(listSource, listMerge):
     '''
     Merges the second list into the first by adding elements from second list which are not already in first list.
 
@@ -449,25 +449,25 @@ def MergeIntoUniquList(listSource, listMerge):
             listSource.append(i)
     return listSource
 
-def GetBalustersUsedInPattern(bpattern):
+def GetBalustersUsedInPattern(bPattern):
     '''
     Gets list of unique baluster family ids used in a pattern only.
 
-    :param bpattern: A revit baluster pattern.
-    :type bpattern: Autodesk.Revit.DB.Architecture.BalusterPattern 
+    :param bPattern: A revit baluster pattern.
+    :type bPattern: Autodesk.Revit.DB.Architecture.BalusterPattern 
 
     :return: List of element ids of baluster family ids.
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
-    for i in range(0, bpattern.GetBalusterCount()):
-        balInfo = bpattern.GetBaluster(i)
+    for i in range(0, bPattern.GetBalusterCount()):
+        balInfo = bPattern.GetBaluster(i)
         if(balInfo.BalusterFamilyId not in ids and balInfo.BalusterFamilyId != rdb.ElementId.InvalidElementId ):
             ids.append(balInfo.BalusterFamilyId)
     # add excess pattern baluster id
-    if (bpattern.ExcessLengthFillBalusterId not in ids and bpattern.ExcessLengthFillBalusterId != rdb.ElementId.InvalidElementId):
-        ids.append(bpattern.ExcessLengthFillBalusterId)
+    if (bPattern.ExcessLengthFillBalusterId not in ids and bPattern.ExcessLengthFillBalusterId != rdb.ElementId.InvalidElementId):
+        ids.append(bPattern.ExcessLengthFillBalusterId)
     return ids
 
 def GetUsedBalusterPostIds(bPostPattern):
@@ -573,14 +573,14 @@ def GetBalusterTypesFromRailings(doc):
         el = doc.GetElement(rtId)
         # put into try catch since some rail types have no balusters ...top rail
         try:
-            btplace = el.BalusterPlacement
-            idsPattern = GetBalustersUsedInPattern(btplace.BalusterPattern)
-            idsPosts = GetUsedBalusterPostIds(btplace.PostPattern)
-            idsPerTread = GetUsedBalusterPerTread(btplace)
+            balusterPlacement = el.BalusterPlacement
+            idsPattern = GetBalustersUsedInPattern(balusterPlacement.BalusterPattern)
+            idsPosts = GetUsedBalusterPostIds(balusterPlacement.PostPattern)
+            idsPerTread = GetUsedBalusterPerTread(balusterPlacement)
             # build overall ids list
-            ids = MergeIntoUniquList(ids, idsPattern)
-            ids = MergeIntoUniquList(ids, idsPosts)
-            ids = MergeIntoUniquList(ids, idsPerTread)
+            ids = MergeIntoUniqueList(ids, idsPattern)
+            ids = MergeIntoUniqueList(ids, idsPosts)
+            ids = MergeIntoUniqueList(ids, idsPerTread)
         except:
             pass
     return ids
@@ -601,8 +601,8 @@ def GetUsedBalusterTypeIds(doc):
     ids = []
     idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
     idsUsedInRailings = GetBalusterTypesFromRailings(doc)
-    ids = MergeIntoUniquList(ids, idsUsedInModel)
-    ids = MergeIntoUniquList(ids, idsUsedInRailings)
+    ids = MergeIntoUniqueList(ids, idsUsedInModel)
+    ids = MergeIntoUniqueList(ids, idsUsedInRailings)
     return ids
 
 def GetUnUsedBalusterTypeIds(doc):

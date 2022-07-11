@@ -114,7 +114,7 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
 # get the revit link instance data
 # this also calls GetRevitLinkInstanceDataByName() 
 def ModifyRevitLinkTypeData(revitLink, doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # get the workset
     wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
@@ -124,22 +124,22 @@ def ModifyRevitLinkTypeData(revitLink, doc):
     if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
         transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
-        returnvalue = com.InTransaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
-        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(returnvalue.status))
+        returnValue = com.InTransaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(returnValue.status))
     else:
-        returnvalue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
-    return returnvalue
+        returnValue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
+    return returnValue
 
 # method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
 def modifyRevitLinkTypes(doc):
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
             changeLink = ModifyRevitLinkTypeData(p, doc)
-            returnvalue.Update(changeLink)
+            returnValue.Update(changeLink)
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+    return returnValue
 
 # -------------
 # main:

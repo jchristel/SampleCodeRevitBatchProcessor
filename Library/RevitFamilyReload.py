@@ -97,7 +97,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                         resultLoad = rFamUtil.LoadFamily(doc, library[famName][0])
                         result.AppendMessage(resultLoad.message)
                         if(resultLoad.status == True):
-                            # make sure that if a single reload was succesfull that this method returns true
+                            # make sure that if a single reload was successful that this method returns true
                             result.status = True
                             # remove symbols (family types) added through reload process
                             if (resultLoad.result != None and len(resultLoad.result) > 0):
@@ -160,7 +160,7 @@ def getNewSymboldIds(preLoadSymbolIdList, afterLoadSymbolList):
     '''
     Returns a list of symbol ids not present prior to reload.
 
-    Compares passt in list of id's and returns ids not in preloadSymbolIdList
+    Compares past in list of id's and returns ids not in preloadSymbolIdList
 
     :param preLoadSymbolIdList: List of Ids of symbols prior the reload.
     :type preLoadSymbolIdList: list of Autodesk.Revit.DB.ElementId

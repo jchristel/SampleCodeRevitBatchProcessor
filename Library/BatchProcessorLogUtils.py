@@ -39,12 +39,12 @@ Helper functions to process Revit Batchprocessor log files.
 #            11/12/2020 18:01:40 : 	P:\something\FileName.rvt
 #            ....
 #            25/11/2020 09:37:34 : 	- Operation completed.
-#   - check whether an exception occured when processing any of the above files:
+#   - check whether an exception occurred when processing any of the above files:
 #       - file(s) not found 
 #           "WARNING: The following Revit Files do not exist"
 #       - .net exception 
 #           "ERROR: An error occurred while executing the task script!"
-#       - timed out occured and revit process got killed
+#       - timed out occurred and revit process got killed
 #           "WARNING: Timed-out"
 #   - delete process id pointer file
 #   - show user processing results (only when something went wrong(?))
@@ -128,7 +128,7 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
     :param sessionId: Session id supplied by revit batch processor.
     :type sessionId: str
 
-    :return: True if marker file was written succesfully, otherwise False.
+    :return: True if marker file was written successfully, otherwise False.
     :rtype: bool
     '''
 
@@ -287,7 +287,7 @@ def ProcessLogFile(filePath):
     Process revit batch processoor session log file.
     
     - find Revit files processed:
-    - check whether an exception occured when processing any of the above files.
+    - check whether an exception occurred when processing any of the above files.
 
     :param filePath: Fully qualified file path to json formated log file
     :type filePath: str
@@ -346,7 +346,7 @@ def filterFilesNotyFound(filesProcessed, filesNotFound):
 
 def GetProcessStatus(fileToCheck, logFilePath):
     '''
-    Reads a log file and checks whether any exception occured when processing a specific revit file.
+    Reads a log file and checks whether any exception occurred when processing a specific revit file.
 
     :param fileToCheck: Fully qualified file path of Revit file which was processed
     :type fileToCheck: str
@@ -355,7 +355,7 @@ def GetProcessStatus(fileToCheck, logFilePath):
 
     :return: A process status and a message.
 
-        - process staus: True if no exception occured during revit file processing, otherwise false
+        - process staus: True if no exception occurred during revit file processing, otherwise false
         - message: the exception message recorded in the log file.
 
     :rtype: bool, str
@@ -588,7 +588,7 @@ def ReadLogFile(filePath):
 
 def ProcessLogFiles(folderPath, debug = False):
     '''
-    Loops over log files and checks whether any exceptions occured during revit files processing.
+    Loops over log files and checks whether any exceptions occurred during revit files processing.
 
     :param folderPath: Fully qualified directory path where marker files are stored.
     :type folderPath: str
@@ -600,25 +600,25 @@ def ProcessLogFiles(folderPath, debug = False):
     :rtype: [str,[str, bool, str]]
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     debugMode_ = debug
     logfileResults = []
     try:
         # get all marker files
         markerfileIds = GetCurrentSessionIds(folderPath)
         if(debugMode_):
-            returnvalue.AppendMessage('Found marker file(s): ' + str(len(markerfileIds)))
+            returnValue.AppendMessage('Found marker file(s): ' + str(len(markerfileIds)))
         if(len(markerfileIds) > 0):
             # find log files matching markers
             logfiles = GetLogFiles(markerfileIds)
             if(debugMode_):
-                returnvalue.AppendMessage('Found log file(s): ' + str(len(logfiles)))
+                returnValue.AppendMessage('Found log file(s): ' + str(len(logfiles)))
             if(len(logfiles) == len(markerfileIds)):
                 data = []
                 for lf in logfiles:
                     # debug output
                     message = 'Processing log file(s): ' + lf
-                    #returnvalue.AppendMessage('Processing log files: ' + lf)
+                    #returnValue.AppendMessage('Processing log files: ' + lf)
                     try:
                         data = ProcessLogFile(lf)
                         if (len(data) > 0):
@@ -627,22 +627,22 @@ def ProcessLogFiles(folderPath, debug = False):
                             # dummy run no files processed!
                             message = message + ' [No Revit file(s) processed!]'
                     except Exception as e:
-                        message = message + ' [An exception occured: ' + str(e) + ']'
+                        message = message + ' [An exception occurred: ' + str(e) + ']'
                     if(debugMode_):
-                        returnvalue.AppendMessage(message)
+                        returnValue.AppendMessage(message)
                     for d in data:
                         logfileResults.append(d)
-                returnvalue.AppendMessage('\n')
-                returnvalue.AppendMessage('Processed file(s) results:')
+                returnValue.AppendMessage('\n')
+                returnValue.AppendMessage('Processed file(s) results:')
                 # store results in return object
                 for lfResults in logfileResults:
                     listToStr = '\t'.join(map(str, lfResults)) 
-                    returnvalue.AppendMessage(listToStr)
-                returnvalue.status = True
+                    returnValue.AppendMessage(listToStr)
+                returnValue.status = True
             else:
-                returnvalue.UpdateSep(False,'Number of log files [' + str(len(logfiles)) + '] does not match requried number: ' + str(len(markerfileIds))) 
+                returnValue.UpdateSep(False,'Number of log files [' + str(len(logfiles)) + '] does not match requried number: ' + str(len(markerfileIds))) 
         else:
-            returnvalue.UpdateSep(False,'No marker files found in location: ' + str(folderPath))
+            returnValue.UpdateSep(False,'No marker files found in location: ' + str(folderPath))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Terminated with Exception '+ str(e))    
-    return returnvalue
+        returnValue.UpdateSep(False, 'Terminated with Exception '+ str(e))    
+    return returnValue

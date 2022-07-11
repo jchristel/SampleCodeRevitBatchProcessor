@@ -46,7 +46,7 @@ def _purge(doc, dllPath):
     :param dllPath: Fully qualified file path to the revit version specific eTransmitForRevitDB.dll installed by eTransmit
     :type dllPath: str
 
-    :return: True purge was succesfull, otherwise False.
+    :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
     
@@ -68,7 +68,7 @@ def _PurgeUnused2019(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: True purge was succesfull, otherwise False.
+    :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
 
@@ -86,7 +86,7 @@ def _PurgeUnused2020(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: True purge was succesfull, otherwise False.
+    :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
 
@@ -104,7 +104,7 @@ def _PurgeUnused2021(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: True purge was succesfull, otherwise False.
+    :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
 
@@ -122,7 +122,7 @@ def _PurgeUnused2022(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: True purge was succesfull, otherwise False.
+    :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
 
@@ -143,7 +143,7 @@ def PurgeUnusedETransmit(doc):
     :return:  
         Result class instance.
         
-        - Purge status returned in result.status. False if an exception occured, purge command returned False, unsupported Revit version, otherwise True.
+        - Purge status returned in result.status. False if an exception occurred, purge command returned False, unsupported Revit version, otherwise True.
         - result.message will contain the purge status.
         
         On exception:

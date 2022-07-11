@@ -89,7 +89,7 @@ def GetAllGridTypeIdsByCategory(doc):
 
 def GetGridTypeNames (doc, g):
     '''
-    Gets all valid grid types, based on a passt in grid, available in model.
+    Gets all valid grid types, based on a past in grid, available in model.
 
     Uses grid.GetValidTypes() to get the grid types.
 

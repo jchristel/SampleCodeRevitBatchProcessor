@@ -59,11 +59,11 @@ def GetAllSharedParameters(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
 
-# ------------------------------------------------------- parameter utilitis --------------------------------------------------------------------
+# ------------------------------------------------------- parameter utilities --------------------------------------------------------------------
 
 def CheckWhetherSharedParametersAreInFile(doc, parameterGuids):
     '''
-    Filters the passt in list of shared parameter guids by using the shared parameters in the document.\
+    Filters the past in list of shared parameter guids by using the shared parameters in the document.\
         Only parameter in both will be returned.
 
     :param doc: Current Revit model document.
@@ -83,7 +83,7 @@ def CheckWhetherSharedParametersAreInFile(doc, parameterGuids):
             filteredGUIDs.append(p.GuidValue.ToString())
     return filteredGUIDs
 
-# ------------------------------------------------------- parameter utilitis - delete --------------------------------------------------------------------
+# ------------------------------------------------------- parameter utilities - delete --------------------------------------------------------------------
 
 def DeleteSharedParameterByGUID(doc, guid):
     '''
@@ -93,11 +93,11 @@ def DeleteSharedParameterByGUID(doc, guid):
     :type doc: Autodesk.Revit.DB.Document
     :param guid: A shared parameter GUID as string.
     :type guid: str
-    :return: True if parameter exists and got deleted succesfully, otherwise False.
+    :return: True if parameter exists and got deleted successfully, otherwise False.
     :rtype: bool
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     paras = GetAllSharedParameters(doc)
     deleteIds = []
     parameterName = 'Unknown'
@@ -108,10 +108,10 @@ def DeleteSharedParameterByGUID(doc, guid):
             parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
-        returnvalue = com.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+        returnValue = com.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
     else:
-        returnvalue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
-    return returnvalue
+        returnValue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
+    return returnValue
 
 def DeleteSharedParameters(doc, parameterGuids):
     '''
@@ -125,7 +125,7 @@ def DeleteSharedParameters(doc, parameterGuids):
     :return: 
         Result class instance.
 
-        - Parameter deletion status returned in result.status. False if an exception occured, otherwise True.
+        - Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter deleted.
         
         On exception (handled by optimizer itself!):
@@ -136,21 +136,21 @@ def DeleteSharedParameters(doc, parameterGuids):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     deleteGuids = CheckWhetherSharedParametersAreInFile(doc, parameterGuids)
     if(len(deleteGuids) > 0):
         for deleteGuid in  deleteGuids:
             deleteStatus = DeleteSharedParameterByGUID(doc, deleteGuid)
-            returnvalue.Update(deleteStatus)
+            returnValue.Update(deleteStatus)
     else:
-        returnvalue.UpdateSep(True, 'No matching shard parameters in file!')
-    return returnvalue
+        returnValue.UpdateSep(True, 'No matching shard parameters in file!')
+    return returnValue
 
 # ------------------------------------------------------- parameter reporting --------------------------------------------------------------------
 
 def ParamBindingExists(doc, paramName, paramType):
     '''
-    Gets all paramterbindings for a given parameter.
+    Gets all parameter bindings for a given parameter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -191,14 +191,14 @@ def GetSharedParameterReportData(doc, revitFilePath):
     data = []
     paras = GetAllSharedParameters(doc)
     for p in paras:
-        pdef = p.GetDefinition()
-        pbindings = []
+        parameterDefinition = p.GetDefinition()
+        parameterBindings = []
         # parameter bindings do not exist in a family document
         if(doc.IsFamilyDocument == False):
-            pbindings = ParamBindingExists(doc, rdb.Element.Name.GetValue(p), pdef.ParameterType)
+            parameterBindings = ParamBindingExists(doc, rdb.Element.Name.GetValue(p), parameterDefinition.ParameterType)
         
         # just in case parameter name is not unicode
-        parameterName = 'unknonw'
+        parameterName = 'unknown'
         try:   
             parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
         except Exception as ex:
@@ -209,6 +209,6 @@ def GetSharedParameterReportData(doc, revitFilePath):
             p.GuidValue.ToString(), 
             str(p.Id.IntegerValue), 
             parameterName,
-            str(pbindings)
+            str(parameterBindings)
             ])
     return data

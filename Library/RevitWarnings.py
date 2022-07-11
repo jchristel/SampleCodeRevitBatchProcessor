@@ -56,7 +56,7 @@ def GetWarningsByGuid(doc, guid):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param guid: Filter: Identifying a specific failure of which the coresponding messages are to be returned.
+    :param guid: Filter: Identifying a specific failure of which the corresponding messages are to be returned.
     :type guid: Autodesk.Revit.DB.Guid
     
     :return: list of all failure messages with matching guid

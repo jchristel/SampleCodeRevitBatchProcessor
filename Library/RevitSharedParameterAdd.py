@@ -36,20 +36,20 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
     '''
     Binds a shared parameter to a revit category.
 
-    Refer building coder articel referenced in header
+    Refer building coder article referenced in header
 
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param category: The built in category, to which the parameter will be bound.
-    :type category: Autodesk.Revit.DB.BuiltInCatgeory
+    :type category: Autodesk.Revit.DB.BuiltInCategory
     :param parameterName: The parameter name.
     :type parameterName: str
     :param groupName: The group under which the parameter appears in shared parameter text file.
     :type groupName: str
     :param paramType: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
     :type paramType: Autodesk.Revit.DB.ParameterType
-    :param isVisible: Is parmeter visible in UI to users.
+    :param isVisible: Is parameter visible in UI to users.
     :type isVisible: bool
     :param isInstance: True parameter is an instance parameter, otherwise type parameter.
     :type isInstance: bool
@@ -61,7 +61,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
     :return: 
         Result class instance.
 
-        - Parameter binding status returned in result.status. False if an exception occured, otherwise True.
+        - Parameter binding status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter.
         
         On exception (handled by optimizer itself!):
@@ -72,7 +72,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
     
         app = doc.Application
@@ -100,26 +100,26 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                         if(elemBind.Categories.Contains(cat)):
                             # check parameter type
                             if(definition.ParameterType != parameterType):
-                                returnvalue.status = False
-                                returnvalue.message = parameterName + ': wrong paramter type: '+ str(definition.ParameterType)
-                                return returnvalue
+                                returnValue.status = False
+                                returnValue.message = parameterName + ': wrong parameter type: '+ str(definition.ParameterType)
+                                return returnValue
                             #check binding type
                             if(isInstance):
                                 if(elemBind.GetType() != rdb.InstanceBinding):
-                                    returnvalue.status = False
-                                    returnvalue.message = parameterName + ': wrong binding type (looking for instance but got type)'
-                                    return returnvalue
+                                    returnValue.status = False
+                                    returnValue.message = parameterName + ': wrong binding type (looking for instance but got type)'
+                                    return returnValue
                             else:
                                 if(elemBind.GetType() != rdb.TypeBinding):
-                                    returnvalue.status = False
-                                    returnvalue.message = parameterName + ': wrong binding type (looking for type but got instance)'
-                                    return returnvalue
+                                    returnValue.status = False
+                                    returnValue.message = parameterName + ': wrong binding type (looking for type but got instance)'
+                                    return returnValue
                     
                             # Check Visibility - cannot (not exposed)
                             # If here, everything is fine, 
                             # ie already defined correctly
-                            returnvalue.message = parameterName + ': Parameter already bound to category: ' + str(cat.Name)
-                            return returnvalue
+                            returnValue.message = parameterName + ': Parameter already bound to category: ' + str(cat.Name)
+                            return returnValue
                     except Exception as e:
                         print(parameterName + ' : Failed to check parameter binding' + str(e))
                     # If here, no category match, hence must 
@@ -163,11 +163,11 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
             actionReturnValue = res.Result()
             try:
                 if(doc.ParameterBindings.Insert(definition, bind, parameterGrouping)):
-                    actionReturnValue.message =  parameterName + ' : parameter succesfully bound'
+                    actionReturnValue.message =  parameterName + ' : parameter successfully bound'
                     return actionReturnValue
                 else:
                     if(doc.ParameterBindings.ReInsert(definition, bind, parameterGrouping)):
-                        actionReturnValue.message = parameterName + ' : parameter succesfully bound'
+                        actionReturnValue.message = parameterName + ' : parameter successfully bound'
                         return actionReturnValue
                     else:
                         actionReturnValue.status = False
@@ -177,10 +177,10 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                 actionReturnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
             return actionReturnValue
         transaction = rdb.Transaction(doc,'Binding parameter')
-        returnvalue = com.InTransaction(transaction, action)    
-        return returnvalue
+        returnValue = com.InTransaction(transaction, action)    
+        return returnValue
 
     except Exception as e:
-        returnvalue.status = False
-        returnvalue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
-    return returnvalue
+        returnValue.status = False
+        returnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
+    return returnValue

@@ -1,6 +1,6 @@
 ﻿'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions relating to Solibri IFC optimnizer.
+Helper functions relating to Solibri IFC optimizer.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 List of imports:
@@ -55,7 +55,7 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
     :return: 
         Result class instance.
 
-        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - Optimizer status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path(s) of the optimized file(s).
         
         On exception (handled by optimizer itself!):
@@ -66,19 +66,19 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # check if ifc optimizer is installed:
     if(util.FileExist(solibriInstallPath_)):
-        returnvalue.message = 'Solibri IFC optimizer is installed.'
+        returnValue.message = 'Solibri IFC optimizer is installed.'
         ifcFiles = util.GetFiles(directoryPath, '.ifc')
         if(len(ifcFiles) > 0):
-            processFilesresult = ProcessIFCFiles(ifcFiles, directoryPath)
-            returnvalue.Update(processFilesresult)
+            processFilesResult = ProcessIFCFiles(ifcFiles, directoryPath)
+            returnValue.Update(processFilesResult)
         else:
-            returnvalue.AppendMessage('No IFC files found in directory: '+ str(directoryPath))
+            returnValue.AppendMessage('No IFC files found in directory: '+ str(directoryPath))
     else:
-        returnvalue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
-    return returnvalue
+        returnValue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
+    return returnValue
 
 def OptimizeIFCFilesInList(ifcFiles, directoryPath):
     '''
@@ -94,7 +94,7 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
     :return: 
         Result class instance.
 
-        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - Optimizer status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path(s) of the optimized file(s).
         
         On exception (handled by optimizer itself!):
@@ -105,18 +105,18 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # check if ifc optimizer is installed:
     if(util.FileExist(solibriInstallPath_)):
-        returnvalue.message = 'Solibri IFC optimizer is installed.'
+        returnValue.message = 'Solibri IFC optimizer is installed.'
         if(len(ifcFiles) > 0):
-            processFilesresult = ProcessIFCFiles(ifcFiles, directoryPath)
-            returnvalue.Update(processFilesresult)
+            processFilesResult = ProcessIFCFiles(ifcFiles, directoryPath)
+            returnValue.Update(processFilesResult)
         else:
-            returnvalue.AppendMessage('IFC file list is empty.')
+            returnValue.AppendMessage('IFC file list is empty.')
     else:
-        returnvalue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
-    return returnvalue
+        returnValue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
+    return returnValue
 
 def ProcessIFCFiles(ifcFiles, directoryPath):
     '''
@@ -132,7 +132,7 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
     :return: 
         Result class instance.
 
-        - Optimizer status returned in result.status. False if an exception occured, otherwise True.
+        - Optimizer status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path(s) of the optimized file(s).
         
         On exception (handled by optimizer itself!):
@@ -143,17 +143,17 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     filesToDelete = []
     filesToRename = []
     if(len(ifcFiles) > 0):
-        returnvalue.AppendMessage('found ifc files: ' + str(len(ifcFiles)))
+        returnValue.AppendMessage('found ifc files: ' + str(len(ifcFiles)))
         for ifcFile in ifcFiles:
             s = subprocess.check_call([r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe', '-in=' + ifcFile, '-out=' + directoryPath, '-ifc', '-force'])
             # check what came back
             if (s == 0):
                 # all went ok:
-                returnvalue.AppendMessage('Optimized file: '+str(ifcFile))
+                returnValue.AppendMessage('Optimized file: '+str(ifcFile))
                 filesToDelete.append(ifcFile) # full file path
                 # get the rename information
                 # contains old and new file name
@@ -166,20 +166,20 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
                     filesToRename.append(rename)
             else:
                     # something went wrong
-                    returnvalue.UpdateSep(False, 'Failed to optimize file: '+ str(ifcFile))
+                    returnValue.UpdateSep(False, 'Failed to optimize file: '+ str(ifcFile))
         # clean up
         for fileToDelete in filesToDelete:
             statusDelete = util.FileDelete(fileToDelete)
             if(statusDelete):
-                returnvalue.AppendMessage('Deleted original file: ' + str(fileToDelete))
+                returnValue.AppendMessage('Deleted original file: ' + str(fileToDelete))
             else:
-                returnvalue.UpdateSep(False,'Failed to delete original file: '+ str(fileToDelete))
+                returnValue.UpdateSep(False,'Failed to delete original file: '+ str(fileToDelete))
         for fileToRename in filesToRename:
             statusRename = util.RenameFile(fileToRename[0], fileToRename[1])
             if(statusRename):
-                returnvalue.AppendMessage('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
+                returnValue.AppendMessage('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
             else:
-                returnvalue.UpdateSep(False,'Failed to rename original file: '+ str(fileToRename[0]))
+                returnValue.UpdateSep(False,'Failed to rename original file: '+ str(fileToRename[0]))
     else:
-        returnvalue.AppendMessage('No IFC files found')
-    return returnvalue
+        returnValue.AppendMessage('No IFC files found')
+    return returnValue

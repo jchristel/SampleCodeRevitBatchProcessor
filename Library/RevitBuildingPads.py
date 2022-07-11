@@ -89,7 +89,7 @@ def GetBuildingPadTypesByClass(doc):
 
 def BuildBuildingPadTypeDictionary(collector, dic):
     '''
-    Returns the dictionary passt in with keys and or values added retrieved from collector passt in.
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     Keys are built in building pad family type names.
 

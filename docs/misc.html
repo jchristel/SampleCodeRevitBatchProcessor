@@ -107,11 +107,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="Result.Result.Update">
 <span class="sig-name descname"><span class="pre">Update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">otherResult</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.Update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will use the passt in result instance to update the instance.</p>
+<dd><p>Will use the past in result instance to update the instance.</p>
 <ul class="simple">
 <li><p>.status is using a logical AND</p></li>
 <li><p>.message is using append (unless other message is default ‘-‘)</p></li>
-<li><p>.result is looping over passt in result and adding it one by one to this .result list (ignores None)</p></li>
+<li><p>.result is looping over past in result and adding it one by one to this .result list (ignores None)</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -218,7 +218,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if marker file was written succesfully, otherwise False.</p>
+<dd class="field-even"><p>True if marker file was written successfully, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
@@ -346,7 +346,7 @@
 <dd><p>Process revit batch processoor session log file.</p>
 <ul class="simple">
 <li><p>find Revit files processed:</p></li>
-<li><p>check whether an exception occured when processing any of the above files.</p></li>
+<li><p>check whether an exception occurred when processing any of the above files.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -365,7 +365,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.GetProcessStatus">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetProcessStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileToCheck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetProcessStatus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads a log file and checks whether any exception occured when processing a specific revit file.</p>
+<dd><p>Reads a log file and checks whether any exception occurred when processing a specific revit file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -376,7 +376,7 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>A process status and a message.</p>
 <ul class="simple">
-<li><p>process staus: True if no exception occured during revit file processing, otherwise false</p></li>
+<li><p>process staus: True if no exception occurred during revit file processing, otherwise false</p></li>
 <li><p>message: the exception message recorded in the log file.</p></li>
 </ul>
 </p>
@@ -486,7 +486,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.ProcessLogFiles">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">ProcessLogFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.ProcessLogFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loops over log files and checks whether any exceptions occured during revit files processing.</p>
+<dd><p>Loops over log files and checks whether any exceptions occurred during revit files processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -535,7 +535,7 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
 </ul>
 <p>On exception (handled by optimizer itself!):</p>
@@ -566,7 +566,7 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
 </ul>
 <p>On exception (handled by optimizer itself!):</p>
@@ -597,7 +597,7 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Optimizer status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
 </ul>
 <p>On exception (handled by optimizer itself!):</p>
@@ -681,7 +681,7 @@
 <dd class="field-odd"><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes to be killed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if all passt in processes have been killed, otherwise False.</p>
+<dd class="field-even"><p>True if all past in processes have been killed, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
@@ -739,7 +739,7 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Export status returned in result.status. False if an exception occured, otherwise True.</p></li>
+<li><p>Export status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
 </ul>
 <p>On exception:</p>
@@ -797,7 +797,7 @@
 <dd><p>Returns Worksharing monitor process sessions filtered by provided list (not in list)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>WSMsToKeep</strong> (<em>List of list of str in format:</em><em> [</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of worksharing monitor sessions to filter by. WSM included in this list will be removed from passt in list.</p>
+<dd class="field-odd"><p><strong>WSMsToKeep</strong> (<em>List of list of str in format:</em><em> [</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Filtered list of list of str of worksahring monitor sessions</p>
@@ -820,8 +820,8 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Delete status returned in result.status. False if an exception occured, otherwise True.</p></li>
-<li><p>result.message will confirm succesfull deletion of all files.</p></li>
+<li><p>Delete status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will confirm successful deletion of all files.</p></li>
 </ul>
 <p>On exception:</p>
 <ul class="simple">
@@ -851,8 +851,8 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Kill status returned in result.status. False if an exception occured, otherwise True.</p></li>
-<li><p>result.message will confirm succesfull killing of all WSM processes.</p></li>
+<li><p>Kill status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will confirm successful killing of all WSM processes.</p></li>
 </ul>
 <p>On exception:</p>
 <ul class="simple">
@@ -1011,7 +1011,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.GetDateStamp">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetDateStamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetDateStamp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a date stamp formatted using passt in format string.</p>
+<dd><p>Returns a date stamp formatted using past in format string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>format</strong> (<em>str</em>) – The date stamp format</p>
@@ -1106,7 +1106,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.FilesAsDictionary">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FilesAsDictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubDirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.FilesAsDictionary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a dictioanry of all files in directory and nested subdirectories where file name contains filter value.</p>
+<dd><p>Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value.</p>
 <ul class="simple">
 <li><p>key file name without extension</p></li>
 <li><p>values: list of directories where this file occures (based on file name only!)</p></li>
@@ -1513,7 +1513,7 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.GetOutPutFileName">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetOutPutFileName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileSuffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetOutPutFileName" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a time stamped output file name based on the passt in file name and file extension.</p>
+<dd><p>Returns a time stamped output file name based on the past in file name and file extension.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1551,7 +1551,7 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.ConvertRelativePathToFullPath">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">ConvertRelativePathToFullPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relativeFilePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.ConvertRelativePathToFullPath" title="Permalink to this definition">¶</a></dt>
-<dd><p>removes ‘../..’ or ‘../’ from relative file path string and replaces it with full path derived path passt in sample path.</p>
+<dd><p>removes ‘../..’ or ‘../’ from relative file path string and replaces it with full path derived path past in sample path.</p>
 <ul class="simple">
 <li><p>relative path sample: ‘C:/temp/../myfile.ext’</p></li>
 <li><p>full file path sample: ‘C:/temp/Sample/someOtherFile.ext’</p></li>

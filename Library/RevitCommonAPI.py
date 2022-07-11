@@ -39,7 +39,7 @@ import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
 import Utility as util
-# importing revit gropups module
+# importing revit groups module
 import RevitGroups as rGroup
 
 clr.ImportExtensions(System.Linq)
@@ -51,9 +51,9 @@ def CheckParameterValue(para, paraCondition, conditionValue):
     '''
     Checks a parameter value based on passed in condition function.
 
-    This extracts the value of the passt in parameter and compares it against a passt in value using 
-    the also passt in compare function. 
-    Note that values will be passt into compare function as ASCII encoded.
+    This extracts the value of the past in parameter and compares it against a past in value using 
+    the also past in compare function. 
+    Note that values will be past into compare function as ASCII encoded.
 
     :param para: Parameter of which the value is to be checked.
     :type para: Autodesk.Revit.DB.Parameter 
@@ -69,7 +69,7 @@ def CheckParameterValue(para, paraCondition, conditionValue):
     :raise: Any exception will need to be managed by the function caller.
 
     :return:
-        True if condition value is evaluated to be True by passt in function paraCondition.
+        True if condition value is evaluated to be True by past in function paraCondition.
         Will return False if compare function returns None or a False.
     :rtype: bool
     
@@ -77,7 +77,7 @@ def CheckParameterValue(para, paraCondition, conditionValue):
     # set default return value
     isMatch = False
     pValue = getParameterValue(para)
-    # evaluate parameter value with passt in value using passt in function
+    # evaluate parameter value with past in value using past in function
     compareOutCome = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(pValue))
     # check the return value for a bool (True) only. Everything else will return False
     if (compareOutCome == True):
@@ -97,7 +97,7 @@ def getParameterValue(para):
     :return:
         Default value is 'no Value' if parameter value is empty.
         Otherwise the actual parameter value.
-        Will return 'Exception: ' + exception message if an exception occured.
+        Will return 'Exception: ' + exception message if an exception occurred.
     :rtype: str
     '''
 
@@ -131,7 +131,7 @@ def GetParameterValueUTF8String(para):
     :return:
         Default value is 'no Value' if parameter value is empty.
         Otherwise the actual parameter value.
-        Will return 'Exception: ' + exception message if an exception occured.
+        Will return 'Exception: ' + exception message if an exception occurred.
     :rtype: str
     '''
 
@@ -176,7 +176,7 @@ def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter 
     '''
     Returns the built-in parameter value.
 
-    Returns the built-in parameter value. Return value type depends on passt in value getter function. Default is UTF-8 encoded string.
+    Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
     :param element: Element to which the built-in parameter belongs.
     :type element: Autodesk.Revit.DB.Element 
@@ -206,7 +206,7 @@ def GetParameterValueByName(element, parameterName, parameterValueGetter = GetPa
     '''
     Returns the parameter value by parameter name.
 
-    Returns the parameter value by the parameter name. Return value type depends on passt in value getter function. Default is UTF-8 encoded string.
+    Returns the parameter value by the parameter name. Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
     :param element: Element to which the built-in parameter belongs.
     :type element: Autodesk.Revit.DB.Element
@@ -246,12 +246,12 @@ def setParameterValue(para, valueAsString, doc):
     :type doc: Autodesk.Revit.DB.Document
     :raise: Any exception will need to be managed by the function caller.
 
-    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters
+    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters
 
     :return: 
         Result class instance.
 
-        - Set parameter status (bool) returned in result.status. False if an exception occured, otherwise True.
+        - Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
         
         On exception:
@@ -262,10 +262,10 @@ def setParameterValue(para, valueAsString, doc):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     oldValue = getParameterValue(para)
     transactionName = 'Update to parameter value'
-    # different parameter storage types will require different actions due to value type passt in is a string which will need converting
+    # different parameter storage types will require different actions due to value type past in is a string which will need converting
     # first before applied to the parameter
     if(para.StorageType == rdb.StorageType.ElementId):
         newId = rdb.ElementId(int(valueAsString))
@@ -280,7 +280,7 @@ def setParameterValue(para, valueAsString, doc):
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnvalue = InTransaction(transaction, action)
+        returnValue = InTransaction(transaction, action)
     elif(para.StorageType == rdb.StorageType.Double):
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to 
@@ -297,7 +297,7 @@ def setParameterValue(para, valueAsString, doc):
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnvalue = InTransaction(transaction, action)
+        returnValue = InTransaction(transaction, action)
     elif (para.StorageType == rdb.StorageType.Integer):
         def action():
             actionReturnValue = res.Result()
@@ -308,7 +308,7 @@ def setParameterValue(para, valueAsString, doc):
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnvalue = InTransaction(transaction, action)
+        returnValue = InTransaction(transaction, action)
     elif (para.StorageType == rdb.StorageType.String):
         def action():
             actionReturnValue = res.Result()
@@ -319,11 +319,11 @@ def setParameterValue(para, valueAsString, doc):
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnvalue = InTransaction(transaction, action)
+        returnValue = InTransaction(transaction, action)
     else:  
         # dead end
-        returnvalue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
-    return returnvalue
+        returnValue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
+    return returnValue
 
 def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, parameterValueSetter = setParameterValue):
     '''
@@ -345,12 +345,12 @@ def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, p
     :type parameterValueSetter: function 
     :raise: As per value setter method.
     
-    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Paramters
+    ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters
 
     :return: 
         Result class instance.
 
-        - Set parameter status (bool) returned in result.status. False if an exception occured, or parameter does not exist on element, otherwise True.
+        - Set parameter status (bool) returned in result.status. False if an exception occurred, or parameter does not exist on element, otherwise True.
         - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
         
         On exception:
@@ -361,14 +361,14 @@ def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, p
     :rtype: :class:`.Result`
     '''
     
-    returnvalue = res.Result()
-    returnvalue.UpdateSep(False, 'Parameter not found')
+    returnValue = res.Result()
+    returnValue.UpdateSep(False, 'Parameter not found')
     paras = element.GetOrderedParameters()
     for para in paras:
         if(para.Definition.BuiltInParameter == builtInParameterDef):
-            returnvalue = parameterValueSetter(para, valueAsString, doc)
+            returnValue = parameterValueSetter(para, valueAsString, doc)
             break
-    return returnvalue
+    return returnValue
 
 def GetElementMark(e):
     '''
@@ -379,7 +379,7 @@ def GetElementMark(e):
 
     :return:
         The element mark value.  
-        If an exception occured, the message will be 'Failed with exception: ' + the exception string.
+        If an exception occurred, the message will be 'Failed with exception: ' + the exception string.
     :rtype: str
     '''
 
@@ -457,7 +457,7 @@ def GetLegendComponentsInModel(doc, typeIds):
     :type typeIds: list str
     :raise: Any exception will need to be managed by the function caller.
 
-    :return: Values are representing symbol (type) ids of legend components in models filtered by ids passt in.
+    :return: Values are representing symbol (type) ids of legend components in models filtered by ids past in.
     :rtype: list of str
     '''
 
@@ -475,7 +475,7 @@ def GetLegendComponentsInModel(doc, typeIds):
 
 def GetSimilarTypeFamiliesByType(doc, typeGetter):
     '''
-    Returns a list of uniqe types its similar family (symbol) types.
+    Returns a list of unique types its similar family (symbol) types.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -505,7 +505,7 @@ def CheckUniqueTypeData(existingTypes, newTypeData):
     '''
     Compares two lists of types and their similar types (ids).
 
-    Assumes that second list past in has only one occurence of type and its similar types
+    Assumes that second list past in has only one occurrence of type and its similar types
     Compares types by name and if match their similar types.
 
     :param existingTypes: Source list
@@ -547,9 +547,9 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeGetter: Function asccepting current document as argument and returning a collector of types in model
+    :param typeGetter: Function accepting current document as argument and returning a collector of types in model
     :type typeGetter: func
-    :param instanceGetter: Function asccepting current document as argument and returning a list of instances in model
+    :param instanceGetter: Function accepting current document as argument and returning a list of instances in model
     :type instanceGetter: func
     
     :return: List of type ids which can be purged from the model.
@@ -557,22 +557,22 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
     '''
     
     # get all  types available and associated family types
-    familTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
+    familyTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
     # get used type ids
     usedFamilyTypeIds = instanceGetter(doc)
-    # flag indicating that at leat one type was removed from list because it is in use
+    # flag indicating that at least one type was removed from list because it is in use
     # this flag used when checking how many items are left...
     removedAtLeastOne = []
     # set index to 0, type names might not be unique!!
     counter = 0
-    # loop over avaiable types and check which one is used
-    for t in familTypesAvailable:
+    # loop over available types and check which one is used
+    for t in familyTypesAvailable:
         # remove all used family type Id's from the available list...
         # whatever is left can be deleted if not last available item in list for type
         # there should always be just one match
-        for usedfamilyTypeId in usedFamilyTypeIds:
+        for usedFamilyTypeId in usedFamilyTypeIds:
             # get the index of match
-            index = util.IndexOf(t[1],usedfamilyTypeId)
+            index = util.IndexOf(t[1],usedFamilyTypeId)
             # remove used item from list
             if (index > -1):
                 t[1].pop(index)
@@ -584,7 +584,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
     filteredUnusedTypeIds = []
     # reset index
     counter = 0
-    for t in familTypesAvailable:
+    for t in familyTypesAvailable:
         if (counter in removedAtLeastOne):
             # at least one item was already removed from list...so all left over ones can be purged
             for id in t[1]:
@@ -612,7 +612,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
 def GetNotPlacedTypes(doc, getTypes, getInstances):
     '''
     
-    returns a list of unused types foo by comparing type Ids of placed instances with types passt in.
+    returns a list of unused types foo by comparing type Ids of placed instances with types past in.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -628,17 +628,17 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
     availTypes = getTypes(doc)
     placedInstances = getInstances(doc)
     notPlaced = []
-    allreadyChecked = []
+    alreadyChecked = []
     # loop over all types and check for matching instances
     for at in availTypes:
         match = False
         for pi in placedInstances:
-            # check if we had this type checked allready, if so ignore and move to next
-            if(pi.GetTypeId() not in allreadyChecked):
+            # check if we had this type checked already, if so ignore and move to next
+            if(pi.GetTypeId() not in alreadyChecked):
                 #  check for type id match
                 if(pi.GetTypeId() == at.Id):
-                    # add to allready checked and verified as match list
-                    allreadyChecked.append(pi.GetTypeId())
+                    # add to already checked and verified as match list
+                    alreadyChecked.append(pi.GetTypeId())
                     match = True
                     break
         if(match == False):
@@ -656,13 +656,13 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param groupTypes: Group to be checked whether they contains elements of types passt in.
+    :param groupTypes: Group to be checked whether they contains elements of types past in.
     :type groupTypes: Autodesk.Revit.DB.GroupType
     :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revot.Db.ElementId
+    :type typeIds: list of Autodesk.Revit.Db.ElementId
     
     :return: Returns all type ids not matched
-    :rtype: list of Autodesk.Revot.Db.ElementId
+    :rtype: list of Autodesk.Revit.Db.ElementId
     '''
 
     unusedTypeIds = []
@@ -684,17 +684,17 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
 
 def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
     '''
-    Checks all elements in groups passt in whether group inlcudes element of which type Id is matching any type ids passt in
+    Checks all elements in groups past in whether group includes element of which type Id is matching any type ids past in
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param groupTypes: Groups to be checked whether they contains elements of types passt in.
+    :param groupTypes: Groups to be checked whether they contains elements of types past in.
     :type groupTypes: list of Autodesk.Revit.DB.GroupType
     :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revot.Db.ElementId
+    :type typeIds: list of Autodesk.Revit.Db.ElementId
     
     :return: Returns all type ids not matched
-    :rtype: list of Autodesk.Revot.Db.ElementId
+    :rtype: list of Autodesk.Revit.Db.ElementId
     '''
 
     for groupType in groupTypes:
@@ -706,17 +706,17 @@ def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
 
 def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
     '''
-    Checks elements in nested detail groups and detail groups whether their type ElementId is in the list passt in.
+    Checks elements in nested detail groups and detail groups whether their type ElementId is in the list past in.
     
     This only returns valid data if at least one instance of the group is placed in the model!!!
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revot.Db.ElementId
+    :type typeIds: list of Autodesk.Revit.Db.ElementId
     
-    :return: Returns all type Ids from list passt in not found in group definitions
-    :rtype: list of Autodesk.Revot.DB.ElementId
+    :return: Returns all type Ids from list past in not found in group definitions
+    :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     unusedTypeIds = []
@@ -730,7 +730,7 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
 
 def BuildCategoryDictionary(doc, elementIds):
     '''
-    Builds a dictionary from elementId s passt in.
+    Builds a dictionary from elementId s past in.
 
     Dictionary key is the element category and values are all the elements of that category.
     If no category can be found the key 'invalid category' will be used.
@@ -741,7 +741,7 @@ def BuildCategoryDictionary(doc, elementIds):
     :type elementIds: list of AutoDesk.Revit.DB.ElementId
     
     :return: Dictionary key is the element category and values are all the elements of that category.
-    :rtype: dictioanry, key is string, value is list of AutoDesk.Revit.DB.Element
+    :rtype: dictionary, key is string, value is list of AutoDesk.Revit.DB.Element
     '''
 
     dic = {}
@@ -788,7 +788,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     # if so: check whether any of the legend component entry has a valid view id
     #   if none has return true, otherwise return false
     dic = BuildCategoryDictionary(doc,  elementIds)
-    # check if dictioanry has legend component key first up
+    # check if dictionary has legend component key first up
     if(dic.has_key(categoryName) == True):
         # if so check number of keys and length of elements per key
         if(len(dic.keys()) == 2  and len(dic[categoryName]) == len(elementIds)-1):
@@ -841,11 +841,11 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
     :param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
     :type threshold: int, optional
     
-    :return: returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occured
+    :return: returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occurred
     :rtype: int
     '''
 
-    value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occured
+    value = 0 # 0: no dependent Elements, 1: has dependent elements, -1 an exception occurred
     try:
         dependentElements = el.GetDependentElements(filter)
         # remove any warnings from dependent elements
@@ -905,13 +905,13 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully deleted all elements. Otherwise False.
+        - .result = True if successfully deleted all elements. Otherwise False.
         - .message will contain deletion status
 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     def action():
         actionReturnValue = res.Result()
         try:
@@ -921,8 +921,8 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
             actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,transactionName)
-    returnvalue = InTransaction(transaction, action)
-    return returnvalue
+    returnValue = InTransaction(transaction, action)
+    return returnValue
 
 def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
     '''
@@ -942,13 +942,13 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully deleted all elements. Otherwise False.
+        - .result = True if successfully deleted all elements. Otherwise False.
         - .message will contain each id and its deletion status
 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     for id in ids:
         def action():
             actionReturnValue = res.Result()
@@ -961,8 +961,8 @@ def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
                 actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnvalue.Update( InTransaction(transaction, action))
-    return returnvalue
+        returnValue.Update( InTransaction(transaction, action))
+    return returnValue
 
 def GetIdsFromElementCollector(col):
     '''
@@ -987,7 +987,7 @@ def GetIdsFromElementCollector(col):
 
 def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
     '''
-    Checks whether an element is of the built in categories passt in.
+    Checks whether an element is of the built in categories past in.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1011,7 +1011,7 @@ def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
          
 def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
     '''
-    Checks whether an element is not of the built in categories passt in.
+    Checks whether an element is not of the built in categories past in.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1157,7 +1157,7 @@ def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
 
 def SyncFile (doc, compactCentralFile = False):
     '''
-    Synchronises a Revit central file.
+    Synchronizes a Revit central file.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -1167,37 +1167,37 @@ def SyncFile (doc, compactCentralFile = False):
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully synced file. Otherwise False.
+        - .result = True if successfully synced file. Otherwise False.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     # set up sync settings
     ro = rdb.RelinquishOptions(True)
     transActOptions = rdb.TransactWithCentralOptions()
     sync = rdb.SynchronizeWithCentralOptions()
-    sync.Comment = 'Synchronised by Revit Batch Processor'
+    sync.Comment = 'Synchronized by Revit Batch Processor'
     sync.Compact = compactCentralFile
     sync.SetRelinquishOptions(ro)
     # Synch it
     try:
-        # save local first ( this seems to prevent intermittend crash on sync(?))
+        # save local first ( this seems to prevent intermittent crash on sync(?))
         doc.Save()
         doc.SynchronizeWithCentral(transActOptions, sync)
         # relinquish all
         rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
-        returnvalue.message = 'Succesfully synched file.'
+        returnValue.message = 'Successfully synched file.'
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 def SaveAsWorksharedFile(doc, fullFileName):
     '''
-    Saves a Revit project file as a worrkshared file.
+    Saves a Revit project file as a workshared file.
 
     Save as options are:
-    Workset connfiguration is : Ask users on open to specify.
+    Workset configuration is : Ask users on open to specify.
     Any existing file will be overwritten.
     Number of backups is 5
     File will bew compacted on save.
@@ -1210,12 +1210,12 @@ def SaveAsWorksharedFile(doc, fullFileName):
     :return: 
         Result class instance.
             
-        - .result = True if succsesfully saved file, otherwise False.
+        - .result = True if successfully saved file, otherwise False.
     
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         workSharingSaveAsOption = rdb.WorksharingSaveAsOptions()
         workSharingSaveAsOption.OpenWorksetsDefault = rdb.SimpleWorksetConfiguration.AskUserToSpecify
@@ -1226,10 +1226,10 @@ def SaveAsWorksharedFile(doc, fullFileName):
         saveOption.MaximumBackups = 5
         saveOption.Compact = True
         doc.SaveAs(fullFileName, saveOption)
-        returnvalue.message = 'Succesfully saved file: ' + str(fullFileName)
+        returnValue.message = 'Successfully saved file: ' + str(fullFileName)
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rfa', compactFile = False):
     '''
@@ -1241,22 +1241,22 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
     :type targetFolderPath: str
     :param currentFullFileName: The current (old) name of the file.
     :type currentFullFileName: str
-    :param nameData:  Old name and new name are revit file names without file extension. Used to rename the family on save from old name to new name.
+    :param nameData:  Old name and new name are Revit file names without file extension. Used to rename the family on save from old name to new name.
     :type nameData: List of string arrays in format[[oldname, newName]]
     :param fileExtension: The file extension used for the new file, defaults to '.rfa'
     :type fileExtension: str, optional
-    :param compactFile: Flag whether family is to be compactred on save, defaults to False
+    :param compactFile: Flag whether family is to be compacted on save, defaults to False
     :type compactFile: bool, optional
     
     :return: 
         Result class instance.
             
-            - .result = True if succsesfully saved file, otherwise False.
+            - .result = True if successfully saved file, otherwise False.
 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
     match = False
@@ -1264,14 +1264,14 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
     for oldName, newName in nameData:
         if (revitFileName.startswith(oldName)):
             match = True
-            returnvalue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
+            returnValue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
             # save file under new name
             newFileName = targetFolderPath + '\\'+ newName + fileExtension
             break
     if(match == False):
         # save under same file name
         newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
-        returnvalue.message = 'Found no file name match for: ' + currentFullFileName
+        returnValue.message = 'Found no file name match for: ' + currentFullFileName
     try:
         # setup save as option
         so = rdb.SaveAsOptions()
@@ -1280,10 +1280,10 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
         so.SetWorksharingOptions(None)
         so.Compact = compactFile
         doc.SaveAs(newFileName, so)
-        returnvalue.UpdateSep(True, 'Saved file: ' + newFileName)
+        returnValue.UpdateSep(True, 'Saved file: ' + newFileName)
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+    return returnValue
 
 def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rvt'):
     '''
@@ -1303,32 +1303,32 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension =
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully saved file, otherwise False.
+        - .result = True if successfully saved file, otherwise False.
 
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
     newFileName= ''
     match = False
     for oldName, newName in nameData:
         if (revitFileName.startswith(oldName)):
             match = True
-            returnvalue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
+            returnValue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
             # save file under new name
             newFileName = targetFolderPath + '\\'+ newName + fileExtension
             break
     if(match == False):
         # save under same file name
         newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
-        returnvalue.message = 'Found no file name match for: ' + currentFullFileName
+        returnValue.message = 'Found no file name match for: ' + currentFullFileName
     try:
-        returnvalue.status = SaveAsWorksharedFile(doc, newFileName).status
-        returnvalue.AppendMessage('Saved file: ' + newFileName)
+        returnValue.status = SaveAsWorksharedFile(doc, newFileName).status
+        returnValue.AppendMessage('Saved file: ' + newFileName)
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+    return returnValue
 
 def SaveFile(doc, compactFile = False):
     '''
@@ -1341,7 +1341,7 @@ def SaveFile(doc, compactFile = False):
     :return: 
             Result class instance.
             
-            - .result = True if file was saved succesfully. Otherwise False.
+            - .result = True if file was saved successfully. Otherwise False.
             - .message = 'Saved revit file!'
         
             On exception:
@@ -1352,15 +1352,15 @@ def SaveFile(doc, compactFile = False):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         so = rdb.SaveOptions()
         so.Compact = compactFile
         doc.Save(so)
-        returnvalue.UpdateSep(True, 'Saved revit file!')
+        returnValue.UpdateSep(True, 'Saved revit file!')
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
+    return returnValue
   
 # enables work sharing
 def EnableWorksharing(
@@ -1370,7 +1370,7 @@ def EnableWorksharing(
     ):
     # type: (...) -> bool
     '''
-    Enabbles worksharing in a non workshared revit project file.
+    Enables worksharing in a non workshared revit project file.
 
     :param doc: _description_
     :type doc: _type_
@@ -1380,8 +1380,8 @@ def EnableWorksharing(
     :return: 
             Result class instance.
             
-            - .result = True if worksharing was enabled succesfully. Otherwise False.
-            - .message = 'Succesfully enabled worksharing.'
+            - .result = True if worksharing was enabled successfully. Otherwise False.
+            - .message = 'Successfully enabled worksharing.'
         
             On exception:
             
@@ -1391,13 +1391,13 @@ def EnableWorksharing(
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
-        returnvalue.message = 'Succesfully enabled worksharing.'
+        returnValue.message = 'Successfully enabled worksharing.'
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
 
 #--------------------------------------------Transactions-----------------------------------------
 
@@ -1419,12 +1419,12 @@ def InTransaction(
     :return: 
         Result class instance.
         
-        - .result = True if succsesfully executed transaction, otherwise False.
+        - .result = True if successfully executed transaction, otherwise False.
         
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
+    returnValue = res.Result()
     try:
         tranny.Start()
         try:
@@ -1433,10 +1433,10 @@ def InTransaction(
             # check what came back
             if (trannyResult != None):
                 # store false value 
-                returnvalue = trannyResult
+                returnValue = trannyResult
         except Exception as e:
             tranny.RollBack()
-            returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
+            returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnvalue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnvalue
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue

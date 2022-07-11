@@ -46,13 +46,13 @@ def DeleteLinePatternsContains(doc, contains):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param contains: Filter: pattern name needs to contain this tring to be deleted.
+    :param contains: Filter: pattern name needs to contain this string to be deleted.
     :type contains: str
 
     :return: 
         Result class instance.
            
-        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .result = True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -75,7 +75,7 @@ def DeleteLinePatternStartsWith(doc, startsWith):
     :return: 
         Result class instance.
 
-        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .result = True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -98,7 +98,7 @@ def DeleteLinePatternsWithout(doc, contains):
     :return: 
         Result class instance.
 
-        - .result = True if line pattern where deleted succesfully. Otherwise False.
+        - .result = True if line pattern where deleted successfully. Otherwise False.
         - .message will contain delete status per pattern.
 
     :rtype: :class:`.Result`
@@ -107,8 +107,8 @@ def DeleteLinePatternsWithout(doc, contains):
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
     idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
-    deleteids = list(set(ids)-set(idsContain))
-    result = com.DeleteByElementIds(doc,deleteids, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
+    deleteIds = list(set(ids)-set(idsContain))
+    result = com.DeleteByElementIds(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
 def GetAllLinePatterns(doc):
@@ -131,7 +131,7 @@ def BuildPatternsDictionaryByName(doc):
     :type doc: Autodesk.Revit.DB.Document
 
     :return: A dictionary where line pattern name is key, values are all ids of line patterns with the exact same name
-    :rtype: dictinonary(key str, value list of Autodesk.Revit.DB.ElementId)
+    :rtype: dictionary(key str, value list of Autodesk.Revit.DB.ElementId)
     '''
 
     lpDic = {}
@@ -159,18 +159,18 @@ def DeleteDuplicatLinePatterNames(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnvalue = res.Result()
-    returnvalue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
+    returnValue = res.Result()
+    returnValue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name
-    # anything where the value list is greate then 1 means duplicates of the same name...
+    # anything where the value list is greater then 1 means duplicates of the same name...
     linePatterns = BuildPatternsDictionaryByName(doc)
     for key, value in linePatterns.items():
         if(len(value) > 1):
             # keep the first one (original)
             value.remove(value[0])
             flagDelete = com.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
-            returnvalue.Update (flagDelete)
-    return returnvalue
+            returnValue.Update (flagDelete)
+    return returnValue
 
 # ------------------------------------------------ DELETE LINE STYLES ----------------------------------------------
 

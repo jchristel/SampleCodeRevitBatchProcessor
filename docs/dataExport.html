@@ -217,7 +217,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType">
 <span class="sig-name descname"><span class="pre">get_data_by_level_and_dataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all data objects where level name and datat type equal past in values.</p>
+<dd><p>Returns all data objects where level name and data type equal past in values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -290,7 +290,7 @@
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetOuterLoopAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetOuterLoopAsShape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the boundary loop of an object as list of shapely points.</p>
 <p>Points are translated with passed in matrix.
-Any loops containing less then 3 points willbe ignored. (Empty list will be returned)</p>
+Any loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -312,7 +312,7 @@ Any loops containing less then 3 points willbe ignored. (Empty list will be retu
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetInnerLoopsAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetInnerLoopsAsShape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the inner loops (holes) of an object as list of lists of shapely points.</p>
 <p>Points are translated with passed in matrix.
-Any inner loops containing less then 3 points willbe ignored. (Empty list will be returned)</p>
+Any inner loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -333,7 +333,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dt class="sig sig-object py" id="DataShapely.buildShapelyPolygon">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">buildShapelyPolygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapeS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.buildShapelyPolygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates shapely polygons from list of polygons past in.</p>
-<p>Sssumptions is first polygone describes the boundary loop and any subsequent polygons are describing         holes within the boundary</p>
+<p>Assumptions is first polygon describes the boundary loop and any subsequent polygons are describing         holes within the boundary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>shapeS</strong> (<em>list</em><em>[</em><em>shapely.polygon</em><em>]</em>) – list of shapely polygons</p>
@@ -431,7 +431,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromGeoObject">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromGeoObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromGeoObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes polygon points from DataGeoemtry instances to shapely polygon instances and returnts them as a dictionary where:</p>
+<dd><p>Converts polygon points from DataGeometry instances to shapely polygon instances and returns them as a dictionary where:</p>
 <ul class="simple">
 <li><p>key is the geometry objects id</p></li>
 <li><p>value is a list of shapely polygons</p></li>
@@ -440,7 +440,7 @@ Any inner loops containing less then 3 points willbe ignored. (Empty list will b
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>geoObjects</strong> (<em>list</em><em>[</em><em>data object</em><em>]</em>) – A list of instances of the the same type (i.e DataRoom)</p></li>
-<li><p><strong>dataType</strong> (<em>str</em>) – _string humna readable identifying the data type ( each Data… class hass this as a static field: dr.DataRoom.dataType)</p></li>
+<li><p><strong>dataType</strong> (<em>str</em>) – _string human readable identifying the data type ( each Data… class has this as a static field: dr.DataRoom.dataType)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -479,7 +479,7 @@ Takes into account design set / design options and offset from level.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="DataShapely.GetReportData">
 <span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetReportData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.</p>
+<dd><p>Converts a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dicObject</strong> ({str:[:class: <cite>.DataRoom</cite>]}) – A dictionary where key is the level name and values is a list of DataRoom instances.</p>
@@ -501,7 +501,7 @@ Takes into account design set / design options and offset from level.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataSourcePath</strong> (<em>str</em>) – Thge fully qualified file path of json formatted data file containing room and ceiling data.</p></li>
+<li><p><strong>dataSourcePath</strong> (<em>str</em>) – The fully qualified file path of json formatted data file containing room and ceiling data.</p></li>
 <li><p><strong>outputFilePath</strong> (<em>str</em>) – The fully qualified file path of the output report.</p></li>
 </ul>
 </dd>
@@ -514,7 +514,7 @@ result.status. True if:</p>
 </ul>
 <p>Otherwise False.</p>
 <ul class="simple">
-<li><p>result.message will confirm report was written succesfuly.</p></li>
+<li><p>result.message will confirm report was written successfully.</p></li>
 <li><p>result.result empty list</p></li>
 </ul>
 <p>On exception:</p>
@@ -537,7 +537,7 @@ result.status. True if:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="DataExport.ConvertDataToListJson">
 <span class="sig-prename descclassname"><span class="pre">DataExport.</span></span><span class="sig-name descname"><span class="pre">ConvertDataToListJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataIn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataExport.ConvertDataToListJson" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes lists of data classes into a single list of list of Json string representing the data class</p>
+<dd><p>Converts lists of data classes into a single list of list of Json string representing the data class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dataIn</strong> (<em>[</em><em>data class</em><em>]</em>) – list of data class instances</p>

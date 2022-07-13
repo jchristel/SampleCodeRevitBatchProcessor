@@ -121,7 +121,7 @@
 <h3>Common Revit API utility functions.<a class="headerlink" href="#common-revit-api-utility-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckParameterValue">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.CheckParameterValue" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.CheckParameterValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks a parameter value based on passed in condition function.</p>
 <p>This extracts the value of the past in parameter and compares it against a past in value using 
 the also past in compare function. 
@@ -153,7 +153,7 @@ Will return False if compare function returns None or a False.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getParameterValue">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getParameterValue" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitCommonAPI.getParameterValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a parameter value as string.</p>
 <p>Returns a parameter value as string independent of its storage type.</p>
 <dl class="field-list simple">
@@ -176,7 +176,7 @@ Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueUTF8String">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueUTF8String</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueUTF8String" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueUTF8String</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueUTF8String" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the parameter value as utf-8 encoded string.</p>
 <p>Returns the parameter value as utf-8 string independent of its storage type.</p>
 <dl class="field-list simple">
@@ -199,7 +199,7 @@ Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueAsInteger">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueAsInteger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueAsInteger" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueAsInteger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueAsInteger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the parameter value as integer.</p>
 <p>Returns the parameter value as integer only if the storage type is integer.</p>
 <dl class="field-list simple">
@@ -443,7 +443,7 @@ If no matching sheet is found, ‘-’ is returned.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetSimilarTypeFamiliesByType">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetSimilarTypeFamiliesByType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeGetter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetSimilarTypeFamiliesByType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of uniqe types its similar family (symbol) types.</p>
+<dd><p>Returns a list of unique types its similar family (symbol) types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -841,7 +841,7 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceContains">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the family name of a given family instance contains filter value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -862,7 +862,7 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsFamilyNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.IsFamilyNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the family name of a given family instance does not contains filter value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -883,7 +883,7 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceContains">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceContains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the family symbol name of a given family instance contains filter value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -904,7 +904,7 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">IsSymbolNameFromInstanceDoesNotContains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">containsValue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.IsSymbolNameFromInstanceDoesNotContains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether the family symbol name of a given family instance does not contains filter value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -925,8 +925,8 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SyncFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SyncFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactCentralFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SyncFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Synchronises a Revit central file.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SyncFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactCentralFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.SyncFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronizes a Revit central file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -949,10 +949,10 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveAsWorksharedFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsWorksharedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAsWorksharedFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves a Revit project file as a worrkshared file.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsWorksharedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFileName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.SaveAsWorksharedFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves a Revit project file as a workshared file.</p>
 <p>Save as options are:
-Workset connfiguration is : Ask users on open to specify.
+Workset configuration is : Ask users on open to specify.
 Any existing file will be overwritten.
 Number of backups is 5
 File will bew compacted on save.</p>
@@ -978,7 +978,7 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveAsFamily">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rfa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAsFamily" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsFamily</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.rfa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.SaveAsFamily" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a family file under new name in given location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -986,9 +986,9 @@ File will bew compacted on save.</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 <li><p><strong>targetFolderPath</strong> (<em>str</em>) – The directory path of where to save the file.</p></li>
 <li><p><strong>currentFullFileName</strong> (<em>str</em>) – The current (old) name of the file.</p></li>
-<li><p><strong>nameData</strong> (<em>List of string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are revit file names without file extension. Used to rename the family on save from old name to new name.</p></li>
+<li><p><strong>nameData</strong> (<em>List of string arrays in format</em><em>[</em><em>[</em><em>oldname</em><em>, </em><em>newName</em><em>]</em><em>]</em>) – Old name and new name are Revit file names without file extension. Used to rename the family on save from old name to new name.</p></li>
 <li><p><strong>fileExtension</strong> (<em>str</em><em>, </em><em>optional</em>) – The file extension used for the new file, defaults to ‘.rfa’</p></li>
-<li><p><strong>compactFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag whether family is to be compactred on save, defaults to False</p></li>
+<li><p><strong>compactFile</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag whether family is to be compacted on save, defaults to False</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1008,7 +1008,7 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveAs">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveAs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetFolderPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currentFullFileName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nameData</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.SaveAs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a project file under new name in given location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1035,7 +1035,7 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a non workshared Revit file. To be used for families and non workshared revit files only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1065,12 +1065,12 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.EnableWorksharing">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">EnableWorksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetNameGridLevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.EnableWorksharing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Enabbles worksharing in a non workshared revit project file.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">EnableWorksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetNameGridLevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.EnableWorksharing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables worksharing in a non workshared revit project file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>worksetNameGridLevel</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘Shared Levels and Grids’</p></li>
 </ul>
 </dd>
@@ -1095,7 +1095,7 @@ File will bew compacted on save.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.InTransaction">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><span class="pre">Result.Result</span></a></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
 <dl class="field-list simple">
@@ -1208,7 +1208,7 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all multireference annotation types in the model.</p>
+<dd><p>Gets all multi reference annotation types in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -1225,13 +1225,13 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all multireference annotation type ids in the model.</p>
+<dd><p>Gets all multi reference annotation type ids in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of element ids representing Multireference Annotation Types</p>
+<dd class="field-even"><p>List of element ids representing multi reference Annotation Types</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
@@ -1242,7 +1242,7 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllMultiRefAnnotationElements">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllMultiRefAnnotationElements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllMultiRefAnnotationElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all multireference annotation elements in the model.</p>
+<dd><p>Gets all multi reference annotation elements in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -1259,14 +1259,14 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUsedMultiRefDimTypeIdsInTheModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedMultiRefDimTypeIdsInTheModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedMultiRefDimTypeIdsInTheModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all ids of multireference types used by elements in the model.</p>
+<dd><p>Gets all ids of multi reference types used by elements in the model.</p>
 <p>Used: at least one instance using this type is placed in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of element ids representing Multireference Annotation Types</p>
+<dd class="field-even"><p>List of element ids representing multi reference Annotation Types</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
@@ -1277,13 +1277,13 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllSimilarMultiReferenceAnnoTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllSimilarMultiReferenceAnnoTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllSimilarMultiReferenceAnnoTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all multireference annotation types using get similar types in the model.</p>
+<dd><p>Gets all multi reference annotation types using get similar types in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list in format [[multireftype, [element ids of similar multi ref types, …]]]</p>
+<dd class="field-even"><p>list in format [[multi refType, [element ids of similar multi ref types, …]]]</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,…],]</p>
@@ -1292,14 +1292,14 @@ File will bew compacted on save.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitAnnotation.GetUsedDimstylesFromMultiRef">
-<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedDimstylesFromMultiRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiReferenceAnnoTypes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedDimstylesFromMultiRef" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitAnnotation.GetUsedDimStylesFromMultiRef">
+<span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUsedDimStylesFromMultiRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiReferenceAnnoTypes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUsedDimStylesFromMultiRef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all dimension styles used in multi ref annotation types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>multiReferenceAnnoTypes</strong> (<em>List</em><em> [</em><em>[</em><em>Autodesk.Revit.DB.ElementType</em><em>, </em><em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em><em>,</em><em>]</em><em>]</em>) – list in format [[multireftype, [element ids of similar multi ref types, …]]]</p></li>
+<li><p><strong>multiReferenceAnnoTypes</strong> (<em>List</em><em> [</em><em>[</em><em>Autodesk.Revit.DB.ElementType</em><em>, </em><em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>, </em><em>Autodesk.Revit.DB.ElementId</em><em>,</em><em>...</em><em>]</em><em>,</em><em>]</em><em>]</em>) – list in format [[multi refType, [element ids of similar multi ref types, …]]]</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1314,7 +1314,7 @@ File will bew compacted on save.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllUnusedMultiRefDimTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedMultiRefDimTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllUnusedMultiRefDimTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets IDs of all unused multiref dimension types in the model.</p>
+<dd><p>Gets IDs of all unused multi ref dimension types in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -1442,7 +1442,7 @@ File will bew compacted on save.</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitAnnotation.ARROWHEAD_PARAS_TEXT">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.LEADER_ARROWHEAD]</span></em><a class="headerlink" href="#RevitAnnotation.ARROWHEAD_PARAS_TEXT" title="Permalink to this definition">¶</a></dt>
-<dd><p>paramter containing the arrowhead id in text types</p>
+<dd><p>parameter containing the arrowhead id in text types</p>
 </dd></dl>
 
 <dl class="py data">
@@ -1641,7 +1641,7 @@ and symbols used</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetAllUsedArrowHeadTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetAllUsedArrowHeadTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetAllUsedArrowHeadTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Geturns all used arrow types in the model.</p>
+<dd><p>Returns all used arrow types in the model.</p>
 <p>Used in types of dimension, text, independent tags, spot dims, annotation symbols (incl room and area tags), stairs path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1660,7 +1660,7 @@ and symbols used</p>
 <dt class="sig sig-object py" id="RevitAnnotation.GetArrowTypesInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetArrowTypesInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetArrowTypesInModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head types in the model.</p>
-<p>TODO: This uses a plain english name comaprison to get arrow head types…may not work in non english versions of Revit!</p>
+<p>TODO: This uses a plain english name comparison to get arrow head types…may not work in non english versions of Revit!</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -1779,13 +1779,13 @@ and symbols used</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitAnnotation.GetUnusedSymbolIdsFromSpotTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUnusedSymbolIdsFromSpotTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitAnnotation.GetUnusedSymbolIdsFromSpotTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all family symbol ids not used as symbol in any spot elevation or spot coordinate type defintion.</p>
+<dd><p>Gets all family symbol ids not used as symbol in any spot elevation or spot coordinate type definition.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of element ids representing family symbols not used in spot elevation or spot coordinate type defintion.</p>
+<dd class="field-even"><p>List of element ids representing family symbols not used in spot elevation or spot coordinate type definition.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
@@ -1803,7 +1803,7 @@ and symbols used</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of element ids representing family and family symbols not used in spot elevation or spot coordinate type defintion.</p>
+<dd class="field-even"><p>List of element ids representing family and family symbols not used in spot elevation or spot coordinate type definition.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
@@ -1860,7 +1860,7 @@ and symbols used</p>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>proejct GUID, model GUID, human readble cloud path</p>
+<dd class="field-even"><p>project GUID, model GUID, human readable cloud path</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>GUID, GUID, str</p>
@@ -1938,7 +1938,7 @@ and symbols used</p>
 <li><p>Basic BuildingPad</p></li>
 </ul>
 <p>Filters by class.
-Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -2015,7 +2015,7 @@ Since there are no in place families of type building pad posible, this should r
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad elements placed in model.</p>
 <p>Filters by class.
-Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -2052,7 +2052,7 @@ Since there are no in place families of type building pad posible, this should r
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">GetAllBuildingPadTypeIdsInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.GetAllBuildingPadTypeIdsInModelByClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad element type ids available in model.</p>
 <p>Filters by class.
-Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.</p>
+Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -2089,7 +2089,7 @@ Used: at least one instance of this type is placed in the model.</p>
 <dt class="sig sig-object py" id="RevitBuildingPads.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitBuildingPads.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitBuildingPads.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
-<p>TODO: check for more geric list comparison and remove this function.</p>
+<p>TODO: check for more generic list comparison and remove this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2415,7 +2415,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>properties</strong> (<em>list</em><em> [</em><em>{str: var}</em><em>]</em>) – List of dictionaries in format as per GetCategoryProperties(cat) method.</p></li>
-<li><p><strong>propNames</strong> (<em>list str</em>) – List of proprty names of which the values are to be returned</p></li>
+<li><p><strong>propNames</strong> (<em>list str</em>) – List of property names of which the values are to be returned</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2564,7 +2564,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
-<li><p><strong>newSubCategoryName</strong> (<em>str</em>) – The new subcategroy name</p></li>
+<li><p><strong>newSubCategoryName</strong> (<em>str</em>) – The new subcategory name</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2579,7 +2579,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SortElementsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SortElementsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementDic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SortElementsByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a dicionary of element ids where key is the category they belong to.</p>
+<dd><p>Returns a dictionary of element ids where key is the category they belong to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2648,7 +2648,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status. True if category was created or already existed in file, otherwsie False.</p></li>
+<li><p>result.status. True if category was created or already existed in file, otherwise False.</p></li>
 <li><p>result.message will contain the name of the category created.</p></li>
 <li><p>result.result returns new category, if category already exists in file it will return that</p></li>
 </ul>
@@ -2681,7 +2681,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status. True if category was created or already existed in file, otherwsie False.</p></li>
+<li><p>result.status. True if category was created or already existed in file, otherwise False.</p></li>
 <li><p>result.message will contain the name of the category created.</p></li>
 <li><p>result.result returns new category, if category already exists in file it will return that</p></li>
 </ul>
@@ -2714,8 +2714,8 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.</p></li>
-<li><p>result.message will contain the name of the deastination subcategory by element.</p></li>
+<li><p>result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.</p></li>
+<li><p>result.message will contain the name of the destination subcategory by element.</p></li>
 <li><p>result.result empty list</p></li>
 </ul>
 <p>On exception:</p>
@@ -2748,7 +2748,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status. True if all elements where moved to destination subcategories, otherwsie False.</p></li>
+<li><p>result.status. True if all elements where moved to destination subcategories, otherwise False.</p></li>
 <li><p>result.message will contain the name of the destination subcategory by element.</p></li>
 <li><p>result.result empty list</p></li>
 </ul>
@@ -2770,7 +2770,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="sig sig-object py" id="RevitCategories.ChangeFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">ChangeFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.ChangeFamilyCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Changes the current family category to the new one specified.</p>
-<p>Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories        to the new family category.</p>
+<p>Revit’s default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories        to the new family category.</p>
 <p>This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before         the category change.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2783,7 +2783,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.</p></li>
-<li><p>result.message will confirm succesful creation of subcategories and element move.</p></li>
+<li><p>result.message will confirm successful creation of subcategories and element move.</p></li>
 <li><p>result.result empty list</p></li>
 </ul>
 <p>On exception:</p>
@@ -3062,7 +3062,7 @@ Used: at least one instance of this type is placed in the model.</p>
 <dt class="sig sig-object py" id="RevitCeilings.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
-<p>TODO: check for more geric list comparison and remove this function.</p>
+<p>TODO: check for more generic list comparison and remove this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3177,7 +3177,7 @@ In the case that no ceiling instance using any of the types is placed this will 
 <dt class="sig sig-object py" id="RevitCeilings.GetUnusedInPlaceCeilingIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitCeilings.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceCeilingIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCeilings.GetUnusedInPlaceCeilingIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling families which can be safely deleted from the model.</p>
-<p>This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one        in place ceiling defintion in the model.</p>
+<p>This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one        in place ceiling definition in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -3267,7 +3267,7 @@ Does not work with in place ceilings</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A data ceiling object instacne.</p>
+<dd class="field-even"><p>A data ceiling object instance.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="dataExport.html#DataCeiling.DataCeiling" title="DataCeiling.DataCeiling"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataCeiling</span></code></a></p>
@@ -3452,7 +3452,7 @@ TODO: This code repeats across a number of modules. Use generic instead!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCurtainWallElements.GetAllCurtainWallElementTypesByCategoryExclInPlace">
 <span class="sig-prename descclassname"><span class="pre">RevitCurtainWallElements.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallElementTypesByCategoryExclInPlace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCurtainWallElements.GetAllCurtainWallElementTypesByCategoryExclInPlace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all Curtain Wall Element element type available in model. Exludes in place family symbols.</p>
+<dd><p>Gets all Curtain Wall Element element type available in model. Excludes in place family symbols.</p>
 <p>Includes:</p>
 <ul class="simple">
 <li><p>curtain wall panels</p></li>
@@ -3474,7 +3474,7 @@ TODO: This code repeats across a number of modules. Use generic instead!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCurtainWallElements.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols">
 <span class="sig-prename descclassname"><span class="pre">RevitCurtainWallElements.</span></span><span class="sig-name descname"><span class="pre">GetAllCurtainWallElementTypeIdsByCategoryExclSymbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCurtainWallElements.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all Curtain Wall Element element type ids available in model. Exludes in place family symbols.</p>
+<dd><p>Gets all Curtain Wall Element element type ids available in model. Excludes in place family symbols.</p>
 <p>Includes:</p>
 <ul class="simple">
 <li><p>curtain wall panels</p></li>
@@ -3520,7 +3520,7 @@ Includes:</p>
 <dt class="sig sig-object py" id="RevitCurtainWallElements.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitCurtainWallElements.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCurtainWallElements.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
-<p>TODO: check for more geric list comparison and remove this function.</p>
+<p>TODO: check for more generic list comparison and remove this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3541,7 +3541,7 @@ Includes:</p>
 <dt class="sig sig-object py" id="RevitCurtainWallElements.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitCurtainWallElements.</span></span><span class="sig-name descname"><span class="pre">GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCurtainWallElements.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused Curtain Wall Element element type ids which can be safely deleted from the model.</p>
-<p>This method can be used to safely delete unused in curtain wall element types. There is no requirement by Revit to have at least one        curtain wall element defintion in the model.</p>
+<p>This method can be used to safely delete unused in curtain wall element types. There is no requirement by Revit to have at least one        curtain wall element definition in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -3624,7 +3624,7 @@ Includes:</p>
 <dt class="sig sig-object py" id="RevitCurtainWallElements.GetUnusedICurtainWallSymbolIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitCurtainWallElements.</span></span><span class="sig-name descname"><span class="pre">GetUnusedICurtainWallSymbolIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCurtainWallElements.GetUnusedICurtainWallSymbolIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use) of curtain wall element families which can be safely deleted from the model.</p>
-<p>This method can be used to safely delete unused curtain wall element types. There is no requirement by Revit to have at least one        in place wall defintion in the model.</p>
+<p>This method can be used to safely delete unused curtain wall element types. There is no requirement by Revit to have at least one        in place wall definition in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -4056,7 +4056,7 @@ Gets all unused filled region type ids in model.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the desin set/option data is to be returned.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the design set/option data is to be returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4086,7 +4086,7 @@ isPrimary:bool</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>elementFilters</strong> (<em>list of functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
-<li><p><strong>isLogicalANDFilter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logicla AND)</p></li>
+<li><p><strong>isLogicalANDFilter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)</p></li>
 </ul>
 </dd>
 </dl>
@@ -4323,8 +4323,8 @@ it will return True if one of them evaluates to True, otherwise False will be re
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitExport.IFCGetExportConfifgByView">
-<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCGetExportConfifgByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcSpaceBounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.IFCGetExportConfifgByView" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitExport.IFCGetExportConfigByView">
+<span class="sig-prename descclassname"><span class="pre">RevitExport.</span></span><span class="sig-name descname"><span class="pre">IFCGetExportConfigByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcSpaceBounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExport.IFCGetExportConfigByView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an IFC export configuration for the built in IFC exporter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -4380,7 +4380,7 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dd><p>Return an NWC Export Options object with shared coordinates, export by View.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A navisworks .nwc export option.</p>
+<dd class="field-odd"><p>A Navisworks .nwc export option.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
@@ -4400,13 +4400,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <li><p><strong>exportLinks</strong> (<em>bool</em>) – True: Revit links will also be exported, otherwise not.</p></li>
 <li><p><strong>splitModelByLevel</strong> (<em>bool</em>) – True: model elements will be split by level, otherwise not.</p></li>
 <li><p><strong>exportParts</strong> (<em>bool</em>) – True parts will be exported, otherwise not.</p></li>
-<li><p><strong>exportRoomAsAttributes</strong> (<em>bool</em>) – True room proprties will be eported (can be slow!), otherwise not.</p></li>
+<li><p><strong>exportRoomAsAttributes</strong> (<em>bool</em>) – True room properties will be exported (can be slow!), otherwise not.</p></li>
 <li><p><strong>exportRoomGeometry</strong> (<em>bool</em>) – True room geometry will be exported, otherwise not.</p></li>
-<li><p><strong>findMissingMaterials</strong> (<em>bool</em>) – True exxporter will attempt to find missing materials, otherwise not</p></li>
+<li><p><strong>findMissingMaterials</strong> (<em>bool</em>) – True exporter will attempt to find missing materials, otherwise not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A navisworks .nwc export option.</p>
+<dd class="field-even"><p>A Navisworks .nwc export option.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
@@ -4422,7 +4422,7 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
 <li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
 <li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
 </ul>
@@ -4454,7 +4454,7 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
 <li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
 <li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
 </ul>
@@ -4487,7 +4487,7 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>viewFilter</strong> (<em>str</em>) – String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)</p></li>
-<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A navisworks .nwc export option.</p></li>
+<li><p><strong>nwcExportOption</strong> (<em>Autodesk.Revit.DB.NavisworksExportOptions</em>) – A Navisworks .nwc export option.</p></li>
 <li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
 <li><p><strong>doSomethingWithViewName</strong> (<em>function</em><em> , </em><em>optional</em>) – A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.</p></li>
 </ul>
@@ -4530,13 +4530,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2019">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2019" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4548,13 +4548,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2019">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2019" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4566,13 +4566,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2020">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2020" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export (2x3 etc…).</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4584,13 +4584,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2020">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2020" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4602,13 +4602,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2021">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4620,13 +4620,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2021">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4638,13 +4638,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2022">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByView2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByView2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4656,13 +4656,13 @@ it will return True if one of them evaluates to True, otherwise False will be re
 <dt class="sig sig-object py" id="RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2022">
 <span class="sig-prename descclassname"><span class="pre">RevitExportIFCConfig.</span></span><span class="sig-name descname"><span class="pre">IFCGetThirdPartyExportConfigByModel2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCConfig.IFCGetThirdPartyExportConfigByModel2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk</p>
-<p>This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.</p>
+<p>This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ifcVersion</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An IFCExportconfig object.</p>
+<dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
@@ -4697,7 +4697,7 @@ with parameter values in family.</p>
 <ul class="simple">
 <li><p>Reload status (bool) returned in result.status.</p></li>
 <li><p>Reload status returned from Revit in result.message property.</p></li>
-<li><p>Return family reference stored in result.result property on succesful reload only</p></li>
+<li><p>Return family reference stored in result.result property on successful reload only</p></li>
 </ul>
 <p>On exception</p>
 <ul class="simple">
@@ -4789,7 +4789,7 @@ i.e. built in revit type settings</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>builtinCat</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – single revit builInCategory Enum value.</p></li>
+<li><p><strong>builtinCat</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – single revit builtInCategory Enum value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4846,7 +4846,7 @@ i.e. built in revit type settings</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>typeIds</strong> (<em>list of Autodesk.Revit.DB.ElementId</em>) – <ul>
-<li><p>list of element id’s representing family symbols (fmaily types)</p></li>
+<li><p>list of element id’s representing family symbols (family types)</p></li>
 </ul>
 </p></li>
 </ul>
@@ -4934,7 +4934,7 @@ definition.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>unusedTypeGetter</strong> (<em>function</em><em> (</em><em>doc</em><em>) </em><em>-&gt; list Autodeks.Revit.DB.ElementId</em>) – A function returning ids of unused symbols (family types) as a list. 
+<li><p><strong>unusedTypeGetter</strong> (<em>function</em><em> (</em><em>doc</em><em>) </em><em>-&gt; list Autodesk.Revit.DB.ElementId</em>) – A function returning ids of unused symbols (family types) as a list. 
 It requires as argument the current model document only.</p></li>
 </ul>
 </dd>
@@ -4987,7 +4987,7 @@ It requires as argument the current model document only.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitFamilyUtils.GetUsedUnusedTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitFamilyUtils.</span></span><span class="sig-name descname"><span class="pre">GetUsedUnusedTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typeIdGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludeSharedFam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyUtils.GetUsedUnusedTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filters types obtained by past in typeIdGetter method and depending on useType past in returns eiteher the used or unsed symbols of a family</p>
+<dd><p>Filters types obtained by past in typeIdGetter method and depending on useType past in returns either the used or unused symbols of a family</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -5120,7 +5120,7 @@ bool: exclude shared families</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status: (bool) True if at least one reference plane type was successfully changed oherwise False</p></li>
+<li><p>result.status: (bool) True if at least one reference plane type was successfully changed otherwise False</p></li>
 <li><p>result.message: one row entry per reference plane requiring reference type change</p></li>
 <li><p>result.result: not used</p></li>
 </ul>
@@ -5143,7 +5143,7 @@ bool: exclude shared families</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>result.status: (bool) True if at least one curve reference type was successfully changed oherwise False</p></li>
+<li><p>result.status: (bool) True if at least one curve reference type was successfully changed otherwise False</p></li>
 <li><p>result.message: one row entry per curve element requiring reference type change</p></li>
 <li><p>result.result: not used</p></li>
 </ul>
@@ -5174,7 +5174,7 @@ bool: exclude shared families</p></li>
 <dd class="field-even"><p><strong>UserWarning</strong> – _description_</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Retuns True if any of the reload actions was succesful.</p>
+<dd class="field-odd"><p>Returns True if any of the reload actions was successful.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
@@ -5200,8 +5200,8 @@ bool: exclude shared families</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitFamilyReload.getNewSymboldIds">
-<span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getNewSymboldIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preLoadSymbolIdList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afterLoadSymbolList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getNewSymboldIds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitFamilyReload.getNewSymbolIds">
+<span class="sig-prename descclassname"><span class="pre">RevitFamilyReload.</span></span><span class="sig-name descname"><span class="pre">getNewSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preLoadSymbolIdList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">afterLoadSymbolList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyReload.getNewSymbolIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of symbol ids not present prior to reload.</p>
 <p>Compares past in list of id’s and returns ids not in preloadSymbolIdList</p>
 <dl class="field-list simple">
@@ -5249,7 +5249,7 @@ bool: exclude shared families</p></li>
 <dt class="sig sig-object py" id="RevitFamilyLoadOption.FamilyLoadOption.OnSharedFamilyFound">
 <span class="sig-name descname"><span class="pre">OnSharedFamilyFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sharedFamily</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">familyInUse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwriteParameterValues</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFamilyLoadOption.FamilyLoadOption.OnSharedFamilyFound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines behavior when a shared family is found in the model.</p>
-<p>Overwrite parameter values is set to True. In case of any shared subcomponents allready in the model but different in family loaded, the project version will be used.</p>
+<p>Overwrite parameter values is set to True. In case of any shared sub components already in the model but different in family loaded, the project version will be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -5303,7 +5303,7 @@ bool: exclude shared families</p></li>
 <dt class="sig sig-object py" id="RevitFloors.GetAllFloorTypesByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">GetAllFloorTypesByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.GetAllFloorTypesByCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning a filtered element collector of all floor types in the model.</p>
-<p>This uses builtincategory as filter. Return types includes:
+<p>This uses builtinCategory as filter. Return types includes:
 - Floor
 - In place families or loaded families</p>
 <p>It will therefore not return any foundation slab types.</p>
@@ -5478,7 +5478,7 @@ Used: at least one instance of this type is placed in the model.</p>
 <dt class="sig sig-object py" id="RevitFloors.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
-<p>TODO: check for more geric list comparison and remove this function.</p>
+<p>TODO: check for more generic list comparison and remove this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -5594,7 +5594,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dt class="sig sig-object py" id="RevitFloors.GetUnusedInPlaceFloorIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitFloors.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceFloorIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitFloors.GetUnusedInPlaceFloorIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be safely deleted from the model.</p>
-<p>This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one        in place wall defintion in the model.</p>
+<p>This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one        in place wall definition in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -5666,7 +5666,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Passt in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.</p>
+<dd class="field-even"><p>Past in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dic: key str, values list of Autodesk.Revit.DB.ElementId</p>
@@ -5694,7 +5694,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGenericAnnotation.GetUnusedGenericAnnotationTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGenericAnnotation.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGenericAnnotationTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGenericAnnotation.GetUnusedGenericAnnotationTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all unsued annotation symbol ids ( unused in model as well as dimension types)</p>
+<dd><p>Returns all unused annotation symbol ids ( unused in model as well as dimension types)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -5774,7 +5774,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>a</strong> (<em>float</em>) – A float</p></li>
-<li><p><strong>b</strong> (<em>flaot</em>) – A float</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – A float</p></li>
 <li><p><strong>rel_tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Relative tolerance used to compare the two floats, defaults to 1e-09</p></li>
 <li><p><strong>abs_tol</strong> (<em>float</em><em>, </em><em>optional</em>) – Absolute tolerance used to compare the two floats, defaults to 0.0</p></li>
 </ul>
@@ -5831,7 +5831,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.GetPointAsDoubles">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">GetPointAsDoubles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.GetPointAsDoubles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes a revit XYZ to a list of doubles in order x,y,z.</p>
+<dd><p>Converts a revit XYZ to a list of doubles in order x,y,z.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
@@ -5866,7 +5866,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.FlattenXYZPointList">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">FlattenXYZPointList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polygon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.FlattenXYZPointList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flattens a list of XYZ poins to a list of UV points by omitting the Z value of each XYZ.</p>
+<dd><p>Flattens a list of XYZ points to a list of UV points by omitting the Z value of each XYZ.</p>
 <p><a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html">https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -5884,7 +5884,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.FlattenXYZPointListOfLists">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">FlattenXYZPointListOfLists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polygons</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.FlattenXYZPointListOfLists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flattens a list lists of XYZ poins to a list of lists of UV points by omitting the Z value of each XYZ.</p>
+<dd><p>Flattens a list lists of XYZ points to a list of lists of UV points by omitting the Z value of each XYZ.</p>
 <p><a class="reference external" href="https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html">https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -6027,7 +6027,7 @@ if (angle != 0) return INSIDE else return OUTSIDE</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.ConvertEdgeArraysIntoListOfPoints">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">ConvertEdgeArraysIntoListOfPoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edgeArrays</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.ConvertEdgeArraysIntoListOfPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convertes an edge array into a list of list of revit XYZ points.</p>
+<dd><p>Converts an edge array into a list of list of revit XYZ points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>edgeArrays</strong> (<em>Autodesk.Revit.DB.EdgeArrayArray</em><em> ( </em><em>no not a spelling mistake :</em><em>) </em><em>)</em>) – A revit edge array.</p>
@@ -6044,7 +6044,7 @@ if (angle != 0) return INSIDE else return OUTSIDE</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.GetEdgePoints">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">GetEdgePoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.GetEdgePoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the revit XYZ points defining an edge (curves get tesselated!)</p>
+<dd><p>Retrieves the revit XYZ points defining an edge (curves get tessellated!)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>edge</strong> (<em>Autodesk.Revit.DB.Edge</em>) – An edge of a solid.</p>
@@ -6061,7 +6061,7 @@ if (angle != 0) return INSIDE else return OUTSIDE</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.ConvertXYZInDataGeometry">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">ConvertXYZInDataGeometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dgObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.ConvertXYZInDataGeometry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops        and stores them in new data geometry obejct. It also populates translation and rotation matrix data of            coordinate system information.</p>
+<dd><p>Converts revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops        and stores them in new data geometry object. It also populates translation and rotation matrix data of            coordinate system information.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -6267,11 +6267,11 @@ Note: works only on planar faces</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>exteriorLoop</strong> (<em>list of Autodesk.Revit.DB.UV</em>) – A polygon loop describing the external boundary of a face.</p></li>
-<li><p><strong>otherLoop</strong> (<em>list of Autodesk.Revit.DB.UV</em>) – A polygon loop which is to be checked as to whether it is within the exterioir loop and the any hole loops.</p></li>
+<li><p><strong>otherLoop</strong> (<em>list of Autodesk.Revit.DB.UV</em>) – A polygon loop which is to be checked as to whether it is within the exterior loop and the any hole loops.</p></li>
 <li><p><strong>holeLoops</strong> (<em>namedtuple</em><em>(</em><em>'uvLoop'</em><em>, </em><em>'loop area id threeDPoly'</em><em>)        </em><em>.Loop is a list of UV points defining a polygon loop
 .area is a double describing the polygon area
 .id is an integer
-.threeDPoly is an edge loop</em>) – A list of named tuples containing .loop property which is a list of UV points formning a polygon which have been identified         as creating a hole in the exteriorLoop.</p></li>
+.threeDPoly is an edge loop</em>) – A list of named tuples containing .loop property which is a list of UV points forming a polygon which have been identified         as creating a hole in the exteriorLoop.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -6312,7 +6312,7 @@ Note: works only on planar faces</p>
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">ConvertSolidToFlattened2DPoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.ConvertSolidToFlattened2DPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values…)</p>
 <p>First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
-Arcs, circles will be tesselated to polygons.</p>
+Arcs, circles will be tessellated to polygons.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>solid</strong> (<em>Autodesk.Revit.DB.Solid</em>) – A solid.</p>
@@ -6409,7 +6409,7 @@ Arcs, circles will be tesselated to polygons.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGroups.GetDetailGroupIds">
 <span class="sig-prename descclassname"><span class="pre">RevitGroups.</span></span><span class="sig-name descname"><span class="pre">GetDetailGroupIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGroups.GetDetailGroupIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of all detail group typess from the model.</p>
+<dd><p>Gets a list of all detail group types from the model.</p>
 <p>This will not include any attached detail groups.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -6672,13 +6672,13 @@ Arcs, circles will be tesselated to polygons.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetGridTypeIdByName">
-<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridTypeIdByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridtypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridTypeIdByName" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridTypeIdByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridTypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridTypeIdByName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the grid type Id based on it’s name, if no match found it returns the Revit Invalid Element Id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>gridtypeName</strong> (<em>str</em>) – The grid type name.</p></li>
+<li><p><strong>gridTypeName</strong> (<em>str</em>) – The grid type name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -6700,7 +6700,7 @@ Arcs, circles will be tesselated to polygons.</p>
 <li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
 <li><p><strong>paraName</strong> (<em>str</em>) – A parameter Name.</p></li>
 <li><p><strong>paraCondition</strong> (<em>func</em><em>(</em><em>arg1</em><em>,</em><em>arg2</em><em>)</em>) – A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.</p></li>
-<li><p><strong>conditionValue</strong> (<em>var</em>) – The value to be cjecked against.</p></li>
+<li><p><strong>conditionValue</strong> (<em>var</em>) – The value to be checked against.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -6894,8 +6894,8 @@ This method can be used to safely delete unused level types from the model.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitLevels.GetAllLevelHeadfamilyTypeIds">
-<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelHeadfamilyTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelHeadfamilyTypeIds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitLevels.GetAllLevelHeadFamilyTypeIds">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">GetAllLevelHeadFamilyTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.GetAllLevelHeadFamilyTypeIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets ids of all level head family symbols (types) in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -6943,7 +6943,7 @@ This method can be used to safely delete unused level symbols or families from t
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs to contain this tring to be deleted.</p></li>
+<li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs to contain this string to be deleted.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -7039,7 +7039,7 @@ This method can be used to safely delete unused level symbols or families from t
 <dd class="field-even"><p>A dictionary where line pattern name is key, values are all ids of line patterns with the exact same name</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dictinonary(key str, value list of Autodesk.Revit.DB.ElementId)</p>
+<dd class="field-odd"><p>dictionary(key str, value list of Autodesk.Revit.DB.ElementId)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7381,7 +7381,7 @@ This method can be used to safely delete unused level symbols or families from t
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>linkInstance</strong> (<em>Autodesk.Revit.DB.RevitLinkInstance</em>) – The linkinstance the type of is to be returned</p></li>
+<li><p><strong>linkInstance</strong> (<em>Autodesk.Revit.DB.RevitLinkInstance</em>) – The link instance the type of is to be returned</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -7426,7 +7426,7 @@ This method can be used to safely delete unused level symbols or families from t
 <li><p><strong>linkLocations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
 <li><p><strong>hostNameFormatted</strong> (<em>TBC</em>) – Not used yet</p></li>
 <li><p><strong>doSomethingWithLinkName</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
-<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously apllied workset config use None, otherwise provide custom config.</p></li>
+<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously applied workset config use None, otherwise provide custom config.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -7455,7 +7455,7 @@ This method can be used to safely delete unused level symbols or families from t
 <li><p><strong>linkLocations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
 <li><p><strong>hostNameFormatted</strong> (<em>TBC</em>) – Not used yet</p></li>
 <li><p><strong>doSomethingWithLinkName</strong> (<em>func</em><em>(</em><em>str</em><em>) </em><em>-&gt; str</em>) – A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link</p></li>
-<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously apllied workset config use None, otherwise provide custom config.</p></li>
+<li><p><strong>worksetConfig</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously applied workset config use None, otherwise provide custom config.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -7688,8 +7688,8 @@ This method can be used to safely delete unused level symbols or families from t
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImagetypeIdsInModel">
-<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImagetypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImagetypeIdsInModel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImageTypeIdsInModel">
+<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImageTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImageTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image types with no instances placed in a model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -7705,8 +7705,8 @@ This method can be used to safely delete unused level symbols or families from t
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImagetypeIdsInModelWithGroupCheck">
-<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImagetypeIdsInModelWithGroupCheck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImagetypeIdsInModelWithGroupCheck" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitLinks.GetAllUnusedImageTypeIdsInModelWithGroupCheck">
+<span class="sig-prename descclassname"><span class="pre">RevitLinks.</span></span><span class="sig-name descname"><span class="pre">GetAllUnusedImageTypeIdsInModelWithGroupCheck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLinks.GetAllUnusedImageTypeIdsInModelWithGroupCheck" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image types with no instance placed in a model but includes group definition check.</p>
 <p>This only returns valid data if at least one instance of the group is placed in the model!!
 Otherwise images in groups which are not placed will not be flagged by this filter!</p>
@@ -7846,7 +7846,7 @@ Otherwise images in groups which are not placed will not be flagged by this filt
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitMEPSystems.DUCT_RECTANGULAR_FAMILY_NAME">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">DUCT_RECTANGULAR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rectangular</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#RevitMEPSystems.DUCT_RECTANGULAR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
-<dd><p>Built in family name for rectangula ducting</p>
+<dd><p>Built in family name for rectangular ducting</p>
 </dd></dl>
 
 <dl class="py data">
@@ -7874,14 +7874,14 @@ Otherwise images in groups which are not placed will not be flagged by this filt
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITHFITTING_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITHFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITH_FITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for conduits with fittings</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITHOUTFITTING_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHOUTFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITHOUTFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CONDUIT_WITHOUT_FITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CONDUIT_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for conduits without fittings</p>
 </dd></dl>
 
@@ -7892,20 +7892,20 @@ Otherwise images in groups which are not placed will not be flagged by this filt
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CABLETRAY_WITHFITTING_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLETRAY_WITHFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLETRAY_WITHFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CABLE_TRAY_WITH_FITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLE_TRAY_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLE_TRAY_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for cable tray with fittings</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CABLETRAY_WITHOUTFITTING_FAMILY_NAME">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLETRAY_WITHOUTFITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLETRAY_WITHOUTFITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#RevitMEPSystems.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for cable tray without fittings</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_CABLETRAY_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#RevitMEPSystems.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in cable tray family names</p>
 </dd></dl>
 
@@ -7922,8 +7922,8 @@ Otherwise images in groups which are not placed will not be flagged by this filt
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitMEPSystems.MergeIntoUniquList">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">MergeIntoUniquList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listMerge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.MergeIntoUniquList" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.MergeIntoUniqueList">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">MergeIntoUniqueList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listMerge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.MergeIntoUniqueList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges the second list into the first by adding elements from second list which are not already in first list.</p>
 <p>TODO: Consider more generic code!</p>
 <dl class="field-list simple">
@@ -8753,7 +8753,7 @@ TODO: check these actually work…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUnUsedMEPSystemTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedMEPSystemTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allTypeIDGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allTypesGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInFamilyTypeNames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedMEPSystemTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the ids of unsued MEP system types.</p>
+<dd><p>Gets the ids of unused MEP system types.</p>
 <p>In the case that no mep system instance using any of the types is placed, this will return all but one type id since        Revit requires at least one mep system type definition to be in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -8761,7 +8761,7 @@ TODO: check these actually work…</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>allTypeIDGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>) </em><em>-&gt; List Autodesk.Revit.ED.ElementId</em>) – Function getting all available system type ids as a list.</p></li>
 <li><p><strong>allTypesGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>) </em><em>-&gt; Autodesk.Revit.DB.FilteredElementCollector</em>) – Function getting all available system types as a collector.</p></li>
-<li><p><strong>builtInFamilyTypeNames</strong> (<em>List str</em>) – List containing alll available major type names.</p></li>
+<li><p><strong>builtInFamilyTypeNames</strong> (<em>List str</em>) – List containing all available major type names.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -8835,7 +8835,7 @@ In the case that no conduit instance using any of the types is placed, this will
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUnUsedCableTrayTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUnUsedCableTrayTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused cable tray type ids.</p>
 <p>This method can be used to safely delete unused cable tray types:
-In the case that no cabl tray instance using any of the types is placed, this will return all but one type id since        Revit requires at least one cable tray type definition to be in the model.</p>
+In the case that no cable tray instance using any of the types is placed, this will return all but one type id since        Revit requires at least one cable tray type definition to be in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -8869,14 +8869,14 @@ In the case that no pipe instance using any of the types is placed, this will re
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_DUCSTS">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_DUCSTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_DuctAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctTerminal,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_DUCSTS" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_DUCTS">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_DUCTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_DuctAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctTerminal,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_DuctFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_DUCTS" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of loadable built in family categories for duct related elements.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_CABLETRAYS">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CABLETRAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CableTrayFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_CABLETRAYS" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitMEPSystems.CATS_LOADABLE_CABLE_TRAYS">
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CABLE_TRAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CableTrayFitting]</span></em><a class="headerlink" href="#RevitMEPSystems.CATS_LOADABLE_CABLE_TRAYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of loadable built in family categories for cable tray related elements.</p>
 </dd></dl>
 
@@ -8907,7 +8907,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>systemTypeId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – MEP systemt type id (pipe, conduit, duct, cable tray)</p></li>
+<li><p><strong>systemTypeId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – MEP system type id (pipe, conduit, duct, cable tray)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -8922,7 +8922,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetUniqueIdsOfUsedSymbolsFromSystemTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetUniqueIdsOfUsedSymbolsFromSystemTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in these MEP system type properties:</p>
+<dd><p>Gets a list of unique symbol ids used in these MEP system type properties:</p>
 <ul class="simple">
 <li><p>Cross</p></li>
 <li><p>Elbow</p></li>
@@ -8936,7 +8936,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>systemTypeIds</strong> (<em>List Autodesk.Revit.DB.ElementId</em>) – List of MEP systemt type id belonging to pipe, conduit, duct or cable tray.</p></li>
+<li><p><strong>systemTypeIds</strong> (<em>List Autodesk.Revit.DB.ElementId</em>) – List of MEP system type id belonging to pipe, conduit, duct or cable tray.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -8951,7 +8951,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInDuctTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInDuctTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInDuctTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in system type properties of duct types.</p>
+<dd><p>Gets a list of unique symbol ids used in system type properties of duct types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -8968,7 +8968,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInFlexDuctTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInFlexDuctTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInFlexDuctTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in system type properties of flexc duct types.</p>
+<dd><p>Gets a list of unique symbol ids used in system type properties of flex duct types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -8985,7 +8985,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInConduitTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInConduitTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInConduitTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in system type properties of conduit types.</p>
+<dd><p>Gets a list of unique symbol ids used in system type properties of conduit types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -9002,7 +9002,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInCableTrayTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInCableTrayTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInCableTrayTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in system type properties of cable tray types.</p>
+<dd><p>Gets a list of unique symbol ids used in system type properties of cable tray types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -9019,7 +9019,7 @@ In the case that no pipe instance using any of the types is placed, this will re
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsUsedInPipeTypes">
 <span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsUsedInPipeTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsUsedInPipeTypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of unique symobol ids used in system type properties of pipe types.</p>
+<dd><p>Gets a list of unique symbol ids used in system type properties of pipe types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -9035,13 +9035,13 @@ In the case that no pipe instance using any of the types is placed, this will re
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitMEPSystems.GetSymbolIdsForMEPSystemTypes">
-<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForMEPSystemTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catgeoryList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForMEPSystemTypes" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitMEPSystems.</span></span><span class="sig-name descname"><span class="pre">GetSymbolIdsForMEPSystemTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categoryList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">systemTypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitMEPSystems.GetSymbolIdsForMEPSystemTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of symbol ids belonging to provided categories loaded in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>catgeoryList</strong> (<em>list Autodesk.Revit.DB.BuiltInCategory</em>) – List of built in categories to filter symbols by.</p></li>
+<li><p><strong>categoryList</strong> (<em>list Autodesk.Revit.DB.BuiltInCategory</em>) – List of built in categories to filter symbols by.</p></li>
 <li><p><strong>systemTypeName</strong> (<em>str</em>) – Used in exception message to identify the mep system</p></li>
 </ul>
 </dd>
@@ -9438,7 +9438,7 @@ This method can be used to safely delete unused pipe symbols and families from t
 <li><p>view templates</p></li>
 <li><p>view filters</p></li>
 </ul>
-<p>Others definetly lack:</p>
+<p>Others definitely lack:</p>
 <ul class="simple">
 <li><p>Materials</p></li>
 <li><p>Appearance assets</p></li>
@@ -9454,8 +9454,8 @@ This method can be used to safely delete unused pipe symbols and families from t
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>getUnusedElementIds</strong> (<em>func</em><em> (</em><em>doc</em><em>) </em><em>returning list of Autodesk.Revit.DB.ElementId</em>) – A fucntion accepting the current document as the argument and returning element ids which can be purged.</p></li>
-<li><p><strong>transactionName</strong> (<em>str</em>) – A humnan readable description of the transaction containing the purge action.</p></li>
+<li><p><strong>getUnusedElementIds</strong> (<em>func</em><em> (</em><em>doc</em><em>) </em><em>returning list of Autodesk.Revit.DB.ElementId</em>) – A function accepting the current document as the argument and returning element ids which can be purged.</p></li>
+<li><p><strong>transactionName</strong> (<em>str</em>) – A human readable description of the transaction containing the purge action.</p></li>
 <li><p><strong>unUsedElementNameHeader</strong> (<em>str</em>) – The text to be displayed at the start of the list containing the deleted element names.</p></li>
 <li><p><strong>isDebug</strong> (<em>bool</em><em>, </em><em>optional</em>) – True: will return detailed report and attempt to try to delete elements one by one if an exception occurs, defaults to False        Will attempt to delete all elements at once.</p></li>
 </ul>
@@ -9494,7 +9494,7 @@ This method can be used to safely delete unused pipe symbols and families from t
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>revitFilePath</strong> (<em>strß</em>) – Fully qualified file path of current model document. (Not used)</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – Fully qualified file path of current model document. (Not used)</p></li>
 <li><p><strong>isDebug</strong> (<em>bool</em>) – True: will return detailed report and attempt to try to delete elements one by one if an exception occurs. False        Will attempt to delete all elements at once, less detailed purge report.</p></li>
 </ul>
 </dd>
@@ -9516,7 +9516,7 @@ This method can be used to safely delete unused pipe symbols and families from t
 <dt class="sig sig-object py" id="RevitPurgeUnused.COMPARISON_IGNORE">
 <span class="sig-prename descclassname"><span class="pre">RevitPurgeUnused.</span></span><span class="sig-name descname"><span class="pre">COMPARISON_IGNORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['View</span> <span class="pre">Family</span> <span class="pre">Type(s)',</span> <span class="pre">'View</span> <span class="pre">Family</span> <span class="pre">Templates(s)',</span> <span class="pre">'View</span> <span class="pre">Filter(s)']</span></em><a class="headerlink" href="#RevitPurgeUnused.COMPARISON_IGNORE" title="Permalink to this definition">¶</a></dt>
 <dd><p>list containing keys to be ignored in comparison code
-these keys do not get purged by revits native purge unused and would therefore show up as false positives</p>
+these keys do not get purged by Revit’s native purge unused and would therefore show up as false positives</p>
 </dd></dl>
 
 <dl class="py function">
@@ -9555,7 +9555,7 @@ these keys do not get purged by revits native purge unused and would therefore s
 <li><p><strong>purgeIdsGetter</strong> (<em>func</em>) – The function which returns all element ids to be purged</p></li>
 <li><p><strong>purgeReportHeader</strong> (<em>str</em>) – Human readable report header for each purge action</p></li>
 <li><p><strong>testReportHeader</strong> (<em>str</em>) – Human readable report header for each test action</p></li>
-<li><p><strong>testIdsGetter</strong> (<em>func</em>) – functions which returns all availble type ids in model of same category as purge action.            To be used to compare ids before and after code purge with ids before and after revit built in purge</p></li>
+<li><p><strong>testIdsGetter</strong> (<em>func</em>) – functions which returns all available type ids in model of same category as purge action.            To be used to compare ids before and after code purge with ids before and after revit built in purge</p></li>
 </ul>
 </dd>
 </dl>
@@ -9672,7 +9672,7 @@ these keys do not get purged by revits native purge unused and would therefore s
 - Rail termination
 - Railing Systems
 - loaded families</p>
-<p>Will exlcude any inplace families.</p>
+<p>Will exclude any inplace families.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -9986,8 +9986,8 @@ In the case that no railing instance using any of the types is placed, this will
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitRailings.MergeIntoUniquList">
-<span class="sig-prename descclassname"><span class="pre">RevitRailings.</span></span><span class="sig-name descname"><span class="pre">MergeIntoUniquList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listMerge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRailings.MergeIntoUniquList" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="RevitRailings.MergeIntoUniqueList">
+<span class="sig-prename descclassname"><span class="pre">RevitRailings.</span></span><span class="sig-name descname"><span class="pre">MergeIntoUniqueList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listSource</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listMerge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRailings.MergeIntoUniqueList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges the second list into the first by adding elements from second list which are not already in first list.</p>
 <p>TODO: Consider more generic code!</p>
 <dl class="field-list simple">
@@ -10008,11 +10008,11 @@ In the case that no railing instance using any of the types is placed, this will
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitRailings.GetBalustersUsedInPattern">
-<span class="sig-prename descclassname"><span class="pre">RevitRailings.</span></span><span class="sig-name descname"><span class="pre">GetBalustersUsedInPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRailings.GetBalustersUsedInPattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitRailings.</span></span><span class="sig-name descname"><span class="pre">GetBalustersUsedInPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bPattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRailings.GetBalustersUsedInPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of unique baluster family ids used in a pattern only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>bpattern</strong> (<em>Autodesk.Revit.DB.Architecture.BalusterPattern</em>) – A revit baluster pattern.</p>
+<dd class="field-odd"><p><strong>bPattern</strong> (<em>Autodesk.Revit.DB.Architecture.BalusterPattern</em>) – A revit baluster pattern.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of element ids of baluster family ids.</p>
@@ -10751,7 +10751,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitRooms.GetRedundantRooms">
 <span class="sig-prename descclassname"><span class="pre">RevitRooms.</span></span><span class="sig-name descname"><span class="pre">GetRedundantRooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRooms.GetRedundantRooms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of redundants rooms from the model.</p>
+<dd><p>Gets a list of redundant rooms from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -10773,7 +10773,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>tagId</strong> (<em>Autopdesk.Revit.DB.ElementId</em>) – The element id of the tag to be moved to the room.</p></li>
+<li><p><strong>tagId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The element id of the tag to be moved to the room.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -10945,16 +10945,16 @@ TODO: repetitive code…Consider generic function!</p>
 <dt class="sig sig-object py" id="RevitSharedParameterAdd.BindSharedParameter">
 <span class="sig-prename descclassname"><span class="pre">RevitSharedParameterAdd.</span></span><span class="sig-name descname"><span class="pre">BindSharedParameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isVisible</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isInstance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterGrouping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharedParameterFilepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterAdd.BindSharedParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Binds a shared parameter to a revit category.</p>
-<p>Refer building coder articel referenced in header</p>
+<p>Refer building coder article referenced in header</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>category</strong> (<em>Autodesk.Revit.DB.BuiltInCatgeory</em>) – The built in category, to which the parameter will be bound.</p></li>
+<li><p><strong>category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – The built in category, to which the parameter will be bound.</p></li>
 <li><p><strong>parameterName</strong> (<em>str</em>) – The parameter name.</p></li>
 <li><p><strong>groupName</strong> (<em>str</em>) – The group under which the parameter appears in shared parameter text file.</p></li>
 <li><p><strong>paramType</strong> (<em>Autodesk.Revit.DB.ParameterType</em>) – The parameter type. (Area, vs text vs… (deprecated in Revit 2022!)</p></li>
-<li><p><strong>isVisible</strong> (<em>bool</em>) – Is parmeter visible in UI to users.</p></li>
+<li><p><strong>isVisible</strong> (<em>bool</em>) – Is parameter visible in UI to users.</p></li>
 <li><p><strong>isInstance</strong> (<em>bool</em>) – True parameter is an instance parameter, otherwise type parameter.</p></li>
 <li><p><strong>parameterGrouping</strong> (<em>str</em>) – Where parameter appears in properties section in UI.</p></li>
 <li><p><strong>sharedParameterFilepath</strong> (<em>str</em>) – Fully qualified file path to shared parameter text file.</p></li>
@@ -11078,7 +11078,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitSharedParameters.ParamBindingExists">
 <span class="sig-prename descclassname"><span class="pre">RevitSharedParameters.</span></span><span class="sig-name descname"><span class="pre">ParamBindingExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameters.ParamBindingExists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all paramterbindings for a given parameter.</p>
+<dd><p>Gets all parameter bindings for a given parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -11317,13 +11317,13 @@ TODO: repetitive code…Consider generic function!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairStringersCarriageByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairStringersCarriageByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairStringersCarriageByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a filtered element collector of all stair stringers and cariage types in the model.</p>
+<dd><p>Gets a filtered element collector of all stair stringers and carriage types in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A filtered element collector containing stair stringers and cariage types.</p>
+<dd class="field-even"><p>A filtered element collector containing stair stringers and carriage types.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
@@ -11391,7 +11391,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllStairInstancesInModelByClass">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllStairInstancesInModelByClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllStairInstancesInModelByClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a filtered element collecto all Stair elements placed in model…</p>
+<dd><p>Gets a filtered element collection all Stair elements placed in model…</p>
 <p>TODO: Confirm it ignores Stair soffits.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -11548,7 +11548,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dt class="sig sig-object py" id="RevitStairs.FamilyNoTypesInUse">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">FamilyNoTypesInUse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.FamilyNoTypesInUse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.</p>
-<p>TODO: check for more geric list comparison and remove this function.</p>
+<p>TODO: check for more generic list comparison and remove this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -11621,7 +11621,7 @@ Refer to:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetAllSimilarTypeIds">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetAllSimilarTypeIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetAllSimilarTypeIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all unique ids of similar types of elemet ids passed in.</p>
+<dd><p>Gets all unique ids of similar types of element ids passed in.</p>
 <p>TODO: check for similar function elsewhere!</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -11683,14 +11683,14 @@ Revit requires at least one type definition per system family to be in the model
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitStairs.GetUsedSubTypes">
-<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availavbleIdsGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypes" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUsedSubTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">availableIdsGetter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaveOneBehind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUsedSubTypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of type ids which are not used in any stair types.</p>
 <p>Type ids are provided via an id getter function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>availavbleIdsGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – function returning available type ids</p></li>
+<li><p><strong>availableIdsGetter</strong> (<em>func</em><em>(</em><em>doc</em><em>)</em>) – function returning available type ids</p></li>
 <li><p><strong>paras</strong> (<em>list of Autodesk.Revit.DB.BuiltInParameter</em>) – list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)</p></li>
 <li><p><strong>leaveOneBehind</strong> (<em>bool</em><em>, </em><em>optional</em>) – _description_, defaults to True</p></li>
 </ul>
@@ -11780,7 +11780,7 @@ Revit requires at least one type definition per system family to be in the model
 <dt class="sig sig-object py" id="RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitStairs.</span></span><span class="sig-name descname"><span class="pre">GetUnusedStairStringersCarriageTypeIdsToPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitStairs.GetUnusedStairStringersCarriageTypeIdsToPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused Stair stringer / carriage type ids.</p>
-<p>This method can be used to safely delete unused stair stringer / cariage types. In the case that no stair        string carriage instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stringer cariage type definition to be in the model.</p>
+<p>This method can be used to safely delete unused stair stringer / carriage types. In the case that no stair        string carriage instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stringer carriage type definition to be in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -11918,7 +11918,7 @@ Revit requires at least one type definition per system family to be in the model
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A filtered element collector containing callout head symbols.</p>
+<dd class="field-even"><p>A filtered element collector containing call out head symbols.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
@@ -11963,7 +11963,7 @@ Revit requires at least one type definition per system family to be in the model
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetAllViewContinuationMarkersByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetAllViewContinuationMarkersByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetAllViewContinuationMarkersByCategory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a filtered element collector of all view contiunation symbols (types) in the model.</p>
+<dd><p>Gets a filtered element collector of all view continuation symbols (types) in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -12003,7 +12003,7 @@ Revit requires at least one type definition per system family to be in the model
 <dl class="py data">
 <dt class="sig sig-object py" id="RevitViewReferencing.VIEW_TAG_SYMBOL_PARAMETER_DEF">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">VIEW_TAG_SYMBOL_PARAMETER_DEF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.CALLOUT_ATTR_HEAD_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.ELEV_SYMBOL_ID,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SECTION_ATTR_HEAD_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SECTION_ATTR_TAIL_TAG,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.REFERENCE_VIEWER_ATTR_TAG]</span></em><a class="headerlink" href="#RevitViewReferencing.VIEW_TAG_SYMBOL_PARAMETER_DEF" title="Permalink to this definition">¶</a></dt>
-<dd><p>contains the builtin parameter definitions for Callout symbol tag ids, section symbol tag ids, elevation symbol tag ids</p>
+<dd><p>contains the builtin parameter definitions for call out symbol tag ids, section symbol tag ids, elevation symbol tag ids</p>
 </dd></dl>
 
 <dl class="py data">
@@ -12038,7 +12038,7 @@ Revit requires at least one type definition per system family to be in the model
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>key is the reference tag type: callout, section or elevation, values are the type ids in use</p>
+<dd class="field-even"><p>key is the reference tag type: call out, section or elevation, values are the type ids in use</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}</p>
@@ -12055,7 +12055,7 @@ Revit requires at least one type definition per system family to be in the model
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>key is the reference type: callout, section or elevation, values are the type ids in use</p>
+<dd class="field-even"><p>key is the reference type: call out, section or elevation, values are the type ids in use</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dictionary {reference tag type: list Autodesk.Revit.DB.ElementIds}</p>
@@ -12143,7 +12143,7 @@ Revit requires at least one type definition per system family to be in the model
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViewReferencing.GetUsedViewReferenceAndContinuationMarkerSymbolIds">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUsedViewReferenceAndContinuationMarkerSymbolIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUsedViewReferenceAndContinuationMarkerSymbolIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Getd the ids of all view reference symbols(types) and view continuations symbols (types) used by 
+<dd><p>Get the ids of all view reference symbols(types) and view continuations symbols (types) used by 
 view reference types and view continuation types in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -12225,7 +12225,7 @@ view reference types and view continuation types in the model.</p>
 <dt class="sig sig-object py" id="RevitViewReferencing.GetUnusedViewReferenceTypeIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitViewReferencing.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewReferenceTypeIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViewReferencing.GetUnusedViewReferenceTypeIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused view references type ids in model for purge.</p>
-<p>This method can be used to safely delete all nused view reference types.</p>
+<p>This method can be used to safely delete all unused view reference types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -12344,7 +12344,7 @@ view reference types and view continuation types in the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetUnusedViewTypeIdsInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetUnusedViewTypeIdsInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetUnusedViewTypeIdsInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returnds all unused view family types in the model</p>
+<dd><p>Returns all unused view family types in the model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -12378,7 +12378,7 @@ view reference types and view continuation types in the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsTemplateIdsInInModel">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsTemplateIdsInInModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsTemplateIdsInInModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all view emplate ids in a model</p>
+<dd><p>Get all view template ids in a model</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -12618,13 +12618,13 @@ view reference types and view continuation types in the model.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewsOfType">
-<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsOfType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewtype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsOfType" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewsOfType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">viewType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewsOfType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all views in a model of a given type. Excludes templates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>viewtype</strong> (<em>Autodesk.Revit.DB.ViewType</em>) – Filter: the view type</p></li>
+<li><p><strong>viewType</strong> (<em>Autodesk.Revit.DB.ViewType</em>) – Filter: the view type</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -12656,7 +12656,7 @@ view reference types and view continuation types in the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitViews.GetViewportOnSheets">
 <span class="sig-prename descclassname"><span class="pre">RevitViews.</span></span><span class="sig-name descname"><span class="pre">GetViewportOnSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitViews.GetViewportOnSheets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Getd all view ports on sheets provided.</p>
+<dd><p>Get all view ports on sheets provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -12697,7 +12697,7 @@ view reference types and view continuation types in the model.</p>
 <ul class="simple">
 <li><p>not template views</p></li>
 <li><p>not system browser</p></li>
-<li><p>not project broser</p></li>
+<li><p>not project browser</p></li>
 <li><p>not undefined</p></li>
 <li><p>not Internal</p></li>
 <li><p>not sheets</p></li>
@@ -13278,7 +13278,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dt class="sig sig-object py" id="RevitWalls.GetUnusedInPlaceWallIdsForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitWalls.</span></span><span class="sig-name descname"><span class="pre">GetUnusedInPlaceWallIdsForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWalls.GetUnusedInPlaceWallIdsForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place wall families which can be safely deleted from the model.</p>
-<p>This method can be used to safely delete unused in place wall types. There is no requirement by Revit to have at least one        in place wall defintion in the model.</p>
+<p>This method can be used to safely delete unused in place wall types. There is no requirement by Revit to have at least one        in place wall definition in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
@@ -13536,7 +13536,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>guid</strong> (<em>Autodesk.Revit.DB.Guid</em>) – Filter: Identifying a specific failure of which the coresponding messages are to be returned.</p></li>
+<li><p><strong>guid</strong> (<em>Autodesk.Revit.DB.Guid</em>) – Filter: Identifying a specific failure of which the corresponding messages are to be returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -13588,7 +13588,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py method">
 <dt class="sig sig-object py" id="RevitWarningsSolver.RevitWarningsSolver.SetSameMarkFilterAndFilterSolver">
 <span class="sig-name descname"><span class="pre">SetSameMarkFilterAndFilterSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sameMarkFilterSolver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWarningsSolver.RevitWarningsSolver.SetSameMarkFilterAndFilterSolver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method allowing to overide the default filter function</p>
+<dd><p>Method allowing to override the default filter function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>sameMarkFilterSolver</strong> (<em>func</em><em>(</em><em>document</em><em>, </em><em>elementId</em><em>, </em><em>list of filter values</em><em>)</em>) – A function to filter elements in warnings by</p>
@@ -13726,7 +13726,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The worsket element id, otherwise invalid Id (-1) if no such workset exists</p>
+<dd class="field-even"><p>The workset element id, otherwise invalid Id (-1) if no such workset exists</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
@@ -13737,12 +13737,12 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWorksets.GetWorksetNameById">
 <span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">GetWorksetNameById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idInteger</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.GetWorksetNameById" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name of the workset identified by its Element Id, otherwise ‘unkown’ if no such workset exists</p>
+<dd><p>Returns the name of the workset identified by its Element Id, otherwise ‘unknown’ if no such workset exists</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>idInteger</strong> (<em>int</em>) – The elemenet id as integer value.</p></li>
+<li><p><strong>idInteger</strong> (<em>int</em>) – The element id as integer value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -13798,7 +13798,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A filtered elementc collector of user defined worksets</p>
+<dd class="field-even"><p>A filtered elements collector of user defined worksets</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
@@ -13825,7 +13825,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitWorksets.ModifyElementWorkset">
 <span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">ModifyElementWorkset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaultWorksetName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementTypeName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.ModifyElementWorkset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attemps to change the worksets of elements provided through an element collector.</p>
+<dd><p>Attempts to change the worksets of elements provided through an element collector.</p>
 <p>Will return false if target workset does not exist in file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -13923,9 +13923,9 @@ In the case that no wall instance using any of the types is placed this will ret
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="RevitWorksets.UpdateWorksetDefaultVisibiltyFromReport">
-<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">UpdateWorksetDefaultVisibiltyFromReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.UpdateWorksetDefaultVisibiltyFromReport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the default visbility of worksets based on a workset report file.</p>
+<dt class="sig sig-object py" id="RevitWorksets.UpdateWorksetDefaultVisibilityFromReport">
+<span class="sig-prename descclassname"><span class="pre">RevitWorksets.</span></span><span class="sig-name descname"><span class="pre">UpdateWorksetDefaultVisibilityFromReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitWorksets.UpdateWorksetDefaultVisibilityFromReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the default visibility of worksets based on a workset report file.</p>
 <p>The data for the report files is generated by GetWorksetReportData() function in this module</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -13949,7 +13949,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <li><p>Otherwise False:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>An excpetion occurred.</p></li>
+<li><p>An exception occurred.</p></li>
 <li><p>A workset has no matching data in the report.</p></li>
 </ul>
 </div></blockquote>

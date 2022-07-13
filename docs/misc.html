@@ -96,7 +96,7 @@
 <dt class="sig sig-object py" id="Result.Result.AppendMessage">
 <span class="sig-name descname"><span class="pre">AppendMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Result.Result.AppendMessage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Appends a new line and new message string to the existing message.</p>
-<p>First message appended will replace the default vaklue of -</p>
+<p>First message appended will replace the default value of -</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The new message to be appended.</p>
@@ -155,7 +155,7 @@
 </dd></dl>
 
 <span class="target" id="module-BatchProcessorLogUtils"></span><section id="helper-functions-to-process-revit-batchprocessor-log-files">
-<h3>Helper functions to process Revit Batchprocessor log files.<a class="headerlink" href="#helper-functions-to-process-revit-batchprocessor-log-files" title="Permalink to this headline">¶</a></h3>
+<h3>Helper functions to process Revit BatchProcessor log files.<a class="headerlink" href="#helper-functions-to-process-revit-batchprocessor-log-files" title="Permalink to this headline">¶</a></h3>
 <dl class="py data">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.debugMode_">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">debugMode_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#BatchProcessorLogUtils.debugMode_" title="Permalink to this definition">¶</a></dt>
@@ -188,7 +188,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.AdjustSessionIdFileNameBack">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">AdjustSessionIdFileNameBack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNameId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.AdjustSessionIdFileNameBack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batchprocessor to a        file name using a batch processor supplied id.</p>
+<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a        file name using a batch processor supplied id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fileNameId</strong> (<em>str</em>) – A file name containing a session id with all illegal characters replaced.</p>
@@ -208,7 +208,7 @@
 <dd><p>Writes out an empty marker file in given directory.</p>
 <ul class="simple">
 <li><p>File is of type .txt</p></li>
-<li><p>File name is the batchprocessor sessionId used to identify the log file belonging to this process.</p></li>
+<li><p>File name is the batch processor sessionId used to identify the log file belonging to this process.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -229,7 +229,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.GetCurrentSessionIds">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetCurrentSessionIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folderPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetCurrentSessionIds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returs file names of all text files in a given directory representing session Ids.</p>
+<dd><p>Returns file names of all text files in a given directory representing session Ids.</p>
 <p>Files will be deleted immediately after reading</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,7 +247,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.GetLogFiles">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetLogFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listOfSessionIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetLogFiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of fully qualified filepath to logfiles matching the provided session Ids.</p>
+<dd><p>Returns a list of fully qualified filepath to log files matching the provided session Ids.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>listOfSessionIds</strong> (<em>[</em><em>str</em><em>]</em>) – List of session ids.</p>
@@ -343,14 +343,14 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.ProcessLogFile">
 <span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">ProcessLogFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.ProcessLogFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Process revit batch processoor session log file.</p>
+<dd><p>Process revit batch processor session log file.</p>
 <ul class="simple">
 <li><p>find Revit files processed:</p></li>
 <li><p>check whether an exception occurred when processing any of the above files.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to json formated log file</p>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified file path to json formatted log file</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>returns list of arrays in format:
@@ -370,13 +370,13 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fileToCheck</strong> (<em>str</em>) – Fully qualified file path of Revit file which was processed</p></li>
-<li><p><strong>logFilePath</strong> (<em>str</em>) – The fully qualifiedbatch processor session log file path.</p></li>
+<li><p><strong>logFilePath</strong> (<em>str</em>) – The fully qualified batch processor session log file path.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>A process status and a message.</p>
 <ul class="simple">
-<li><p>process staus: True if no exception occurred during revit file processing, otherwise false</p></li>
+<li><p>process status: True if no exception occurred during revit file processing, otherwise false</p></li>
 <li><p>message: the exception message recorded in the log file.</p></li>
 </ul>
 </p>
@@ -389,11 +389,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="BatchProcessorLogUtils.GetFileNameFromDataBlock">
-<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetFileNameFromDataBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mblock</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetFileNameFromDataBlock" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BatchProcessorLogUtils.</span></span><span class="sig-name descname"><span class="pre">GetFileNameFromDataBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">messageBlock</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BatchProcessorLogUtils.GetFileNameFromDataBlock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts the file name from a process message block.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>mblock</strong> (<em>[</em><em>str</em><em>]</em>) – list of json formatted rows representing all messages received during file process</p>
+<dd class="field-odd"><p><strong>messageBlock</strong> (<em>[</em><em>str</em><em>]</em>) – list of json formatted rows representing all messages received during file process</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The fully qualified file path of the file processed</p>
@@ -505,8 +505,8 @@
 </dd></dl>
 
 </section>
-<span class="target" id="module-SolibriIFCOptimizer"></span><section id="helper-functions-relating-to-solibri-ifc-optimnizer">
-<h3>Helper functions relating to Solibri IFC optimnizer.<a class="headerlink" href="#helper-functions-relating-to-solibri-ifc-optimnizer" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-SolibriIFCOptimizer"></span><section id="helper-functions-relating-to-solibri-ifc-optimizer">
+<h3>Helper functions relating to Solibri IFC optimizer.<a class="headerlink" href="#helper-functions-relating-to-solibri-ifc-optimizer" title="Permalink to this headline">¶</a></h3>
 <p>List of imports:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p></li>
@@ -619,7 +619,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="SystemProcess.GetAllRunningProcesses">
 <span class="sig-prename descclassname"><span class="pre">SystemProcess.</span></span><span class="sig-name descname"><span class="pre">GetAllRunningProcesses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SystemProcess.GetAllRunningProcesses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves a list of all curently running processes.</p>
+<dd><p>Retrieves a list of all currently running processes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
@@ -765,7 +765,7 @@
 <dd class="field-odd"><p><strong>directoryPath</strong> (<em>str</em>) – The directory path containing marker files to be deleted.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if all files where deleted successfullt, otherwise False.</p>
+<dd class="field-even"><p>True if all files where deleted successfully, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool</p>
@@ -800,7 +800,7 @@
 <dd class="field-odd"><p><strong>WSMsToKeep</strong> (<em>List of list of str in format:</em><em> [</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Filtered list of list of str of worksahring monitor sessions</p>
+<dd class="field-even"><p>Filtered list of list of str of worksharing monitor sessions</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
@@ -840,7 +840,7 @@
 <dt class="sig sig-object py" id="WorksharingMonitorProcess.DieWSMDie">
 <span class="sig-prename descclassname"><span class="pre">WorksharingMonitorProcess.</span></span><span class="sig-name descname"><span class="pre">DieWSMDie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignoreMarkerFiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#WorksharingMonitorProcess.DieWSMDie" title="Permalink to this definition">¶</a></dt>
 <dd><p>Kills all worksharing monitor processes currently active.</p>
-<p>Unless merker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.</p>
+<p>Unless marker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -923,7 +923,7 @@
 <dl class="py data">
 <dt class="sig sig-object py" id="Utility.FILE_DATE_STAMP_YY_MM_DD">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YY_MM_DD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%y_%m_%d'</span></em><a class="headerlink" href="#Utility.FILE_DATE_STAMP_YY_MM_DD" title="Permalink to this definition">¶</a></dt>
-<dd><p>default file stamp date format using uderscores as delimiter: 21_03_01</p>
+<dd><p>default file stamp date format using underscores as delimiter: 21_03_01</p>
 </dd></dl>
 
 <dl class="py data">
@@ -941,13 +941,13 @@
 <dl class="py data">
 <dt class="sig sig-object py" id="Utility.FILE_DATE_STAMP_YYYY_MM_DD">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYY_MM_DD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y_%m_%d'</span></em><a class="headerlink" href="#Utility.FILE_DATE_STAMP_YYYY_MM_DD" title="Permalink to this definition">¶</a></dt>
-<dd><p>file stamp date format using uderscores as delimiter: 2021_03_01</p>
+<dd><p>file stamp date format using underscores as delimiter: 2021_03_01</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="Utility.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y_%m_%d_%H_%M_%S'</span></em><a class="headerlink" href="#Utility.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC" title="Permalink to this definition">¶</a></dt>
-<dd><p>file stamp date time format using uderscores as delimiter: 2021_03_01_18_59_59</p>
+<dd><p>file stamp date time format using underscores as delimiter: 2021_03_01_18_59_59</p>
 </dd></dl>
 
 <dl class="py data">
@@ -1109,9 +1109,9 @@
 <dd><p>Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value.</p>
 <ul class="simple">
 <li><p>key file name without extension</p></li>
-<li><p>values: list of directories where this file occures (based on file name only!)</p></li>
+<li><p>values: list of directories where this file occurs (based on file name only!)</p></li>
 </ul>
-<p>Use case: check for duplicaes by file name only</p>
+<p>Use case: check for duplicates by file name only</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1193,7 +1193,7 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.GetUniqueHeaders">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetUniqueHeaders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetUniqueHeaders" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets a list of alphabeticaly sorted headers retrieved from text files.</p>
+<dd><p>Gets a list of alphabetically sorted headers retrieved from text files.</p>
 <p>Assumes:</p>
 <ul class="simple">
 <li><p>first row in each file is the header row</p></li>
@@ -1381,7 +1381,7 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.DirectoryDelete">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">DirectoryDelete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fullDirectoryPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.DirectoryDelete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dletes a directory (even if it contains files)</p>
+<dd><p>Deletes a directory (even if it contains files)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>fullDirectoryPath</strong> (<em>str</em>) – Path to directory</p>
@@ -1742,12 +1742,12 @@ value: lit of str</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.PadSingleDigitNumericString">
-<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">PadSingleDigitNumericString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numericstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%02d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.PadSingleDigitNumericString" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">PadSingleDigitNumericString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numericString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%02d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.PadSingleDigitNumericString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pads a single digit integer (past in as a string) with a leading zero (default)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>numericstring</strong> (<em>str</em>) – Integer as string.</p></li>
+<li><p><strong>numericString</strong> (<em>str</em>) – Integer as string.</p></li>
 <li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The integer padding format, defaults to PAD_SINGLE_DIGIT_TO_TWO</p></li>
 </ul>
 </dd>
@@ -1780,13 +1780,13 @@ value: lit of str</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Utility.GetFirst">
 <span class="sig-prename descclassname"><span class="pre">Utility.</span></span><span class="sig-name descname"><span class="pre">GetFirst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Utility.GetFirst" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the first value in a list matching condition. If no value found returns the specificed default value.</p>
+<dd><p>Returns the first value in a list matching condition. If no value found returns the specified default value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterable</strong> (<em>iterable</em>) – the list to be searched.</p></li>
 <li><p><strong>default</strong> (<em>var</em>) – The default value</p></li>
-<li><p><strong>condition</strong> (<em>_type_</em><em>, </em><em>optional</em>) – The condition to be checked, defaults to lambdax:True</p></li>
+<li><p><strong>condition</strong> (<em>_type_</em><em>, </em><em>optional</em>) – The condition to be checked, defaults to lambda x:True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

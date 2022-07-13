@@ -94,16 +94,16 @@
 </div></blockquote>
 <dl class="py class">
 <dt class="sig sig-object py" id="FileItem.MyFileItem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileItem.</span></span><span class="sig-name descname"><span class="pre">MyFileItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360projectguid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360fileguid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360revitversion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileItem.MyFileItem" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileItem.</span></span><span class="sig-name descname"><span class="pre">MyFileItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360ProjectGuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360FileGuid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BIM360RevitVersion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileItem.MyFileItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – The fully qualified file path.</p></li>
 <li><p><strong>size</strong> (<em>int</em>) – The file size.</p></li>
-<li><p><strong>BIM360projectguid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 project GUID, defaults to None</p></li>
-<li><p><strong>BIM360fileguid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 file GUID, defaults to None</p></li>
-<li><p><strong>BIM360revitversion</strong> (<em>str</em><em>, </em><em>optional</em>) – The revit file version (year only), defaults to ‘-’</p></li>
+<li><p><strong>BIM360ProjectGuid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 project GUID, defaults to None</p></li>
+<li><p><strong>BIM360FileGuid</strong> (<em>str</em><em>, </em><em>optional</em>) – The BIM360 file GUID, defaults to None</p></li>
+<li><p><strong>BIM360RevitVersion</strong> (<em>str</em><em>, </em><em>optional</em>) – The revit file version (year only), defaults to ‘-’</p></li>
 </ul>
 </dd>
 </dl>
@@ -111,7 +111,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="FileSelectSettings.FileSelectionSettings">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileSelectSettings.</span></span><span class="sig-name descname"><span class="pre">FileSelectionSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubDirsInSearch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfileNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileSelectSettings.FileSelectionSettings" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FileSelectSettings.</span></span><span class="sig-name descname"><span class="pre">FileSelectionSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSubDirsInSearch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirectory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFileNumber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#FileSelectSettings.FileSelectionSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -119,7 +119,7 @@
 <li><p><strong>inputDirectory</strong> (<em>str</em>) – A fully qualified directory path containing files to be shown in UI.</p></li>
 <li><p><strong>includeSubDirsInSearch</strong> (<em>bool</em>) – If True include subdirectories in file search, otherwise just root directory.</p></li>
 <li><p><strong>outputDirectory</strong> (<em>str</em>) – A fully qualified directory path to where task files will be written.</p></li>
-<li><p><strong>outputfileNumber</strong> (<em>int</em>) – The number of task files to be written out.</p></li>
+<li><p><strong>outputFileNumber</strong> (<em>int</em>) – The number of task files to be written out.</p></li>
 <li><p><strong>revitFileExtension</strong> (<em>str</em>) – A file extension filter applied to directory search.</p></li>
 </ul>
 </dd>
@@ -175,7 +175,7 @@
 <p>Backup files are usually in format ‘filename.01234.ext’</p>
 <p>Method of checking:</p>
 <ul>
-<li><p>splitting filname at every full stop</p></li>
+<li><p>splitting file name at every full stop</p></li>
 <li><p>check whether a list with more more then 2 entries came back ?</p>
 <blockquote>
 <div><ul>
@@ -323,7 +323,7 @@
 <li><p><strong>taskListDirectory</strong> (<em>str</em>) – The fully qualified directory path where the task files will be written .</p></li>
 <li><p><strong>taskFilesNumber</strong> (<em>int</em>) – The number of task files to be written.</p></li>
 <li><p><strong>fileGetter</strong> (func(str, str) -&gt; <code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) – Function accepting a directory and file extension filter and returns file items from directory.</p></li>
-<li><p><strong>fileDataProcessor</strong> (func(<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) -&gt; str, optional) – Function processing file item and retruns a string to be written to task list file, defaults to BucketToTaskListFileSystem</p></li>
+<li><p><strong>fileDataProcessor</strong> (func(<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) -&gt; str, optional) – Function processing file item and returns a string to be written to task list file, defaults to BucketToTaskListFileSystem</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -404,7 +404,7 @@ On exception an empty string.</p>
 <dd><p>Checks whether a file exists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – A fully qualiofied file path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – A fully qualified file path.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if file exists, otherwise False.</p>
@@ -440,7 +440,7 @@ On exception an empty string.</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a>) – A file seletct settings object instance.</p>
+<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a>) – A file select settings object instance.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List of file items</p>
@@ -476,8 +476,8 @@ On exception an empty string.</p>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="script.xamlfile_">
-<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">xamlfile_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ui.xaml'</span></em><a class="headerlink" href="#script.xamlfile_" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="script.xamlFile_">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">xamlFile_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ui.xaml'</span></em><a class="headerlink" href="#script.xamlFile_" title="Permalink to this definition">¶</a></dt>
 <dd><p>xaml file name of file select UI</p>
 </dd></dl>
 
@@ -498,7 +498,7 @@ On exception an empty string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>xamlFullFileName</strong> (<em>str</em>) – Fully qaulified file path to wpf XAML file.</p></li>
+<li><p><strong>xamlFullFileName</strong> (<em>str</em>) – Fully qualified file path to wpf XAML file.</p></li>
 <li><p><strong>revitFiles</strong> (<em>[</em><em>str</em><em>]</em>) – List containing path to files.</p></li>
 <li><p><strong>settings</strong> (<a class="reference internal" href="#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a>) – A settings object.</p></li>
 </ul>
@@ -541,7 +541,7 @@ Sets the dialogue result value to False.</p>
 <dt class="sig sig-object py" id="WorkloadBucket.WorkloadBucket">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">WorkloadBucket.</span></span><span class="sig-name descname"><span class="pre">WorkloadBucket</span></span><a class="headerlink" href="#WorkloadBucket.WorkloadBucket" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class constructor.</p>
-<p>Initialises this class with:</p>
+<p>Initializes this class with:</p>
 <ul class="simple">
 <li><p>.workLoadValue = 0</p></li>
 <li><p>.items = []</p></li>
@@ -576,12 +576,12 @@ Sets the dialogue result value to False.</p>
 The below function attempt to fill these buckets evenly measured on file size.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Workloader.DistributeWorkload">
-<span class="sig-prename descclassname"><span class="pre">Workloader.</span></span><span class="sig-name descname"><span class="pre">DistributeWorkload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numerOfBuckets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getWorkloadSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Workloader.DistributeWorkload" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">Workloader.</span></span><span class="sig-name descname"><span class="pre">DistributeWorkload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numberOfBuckets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getWorkloadSize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Workloader.DistributeWorkload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Distributes a given number of items evenly by workload size into workload buckets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>numerOfBuckets</strong> (<em>int</em>) – The nubmer of buckets items are to be distributed to</p></li>
+<li><p><strong>numberOfBuckets</strong> (<em>int</em>) – The number of buckets items are to be distributed to</p></li>
 <li><p><strong>items</strong> (<em>[</em><em>foo</em><em>]</em>) – A list of items.</p></li>
 <li><p><strong>getWorkloadSize</strong> (<em>func</em><em>(</em><em>foo</em><em>) </em><em>-&gt; int</em>) – A function returning the workload size from an item.</p></li>
 </ul>

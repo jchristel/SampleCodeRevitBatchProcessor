@@ -42,12 +42,19 @@ import Utility as util
 # importing revit groups module
 import RevitGroups as rGroup
 
+# type checker
+from typing import List, Callable
+
 clr.ImportExtensions(System.Linq)
 
 
 #----------------------------------------parameters-----------------------------------------------
 
-def CheckParameterValue(para, paraCondition, conditionValue):
+def CheckParameterValue(
+    para, 
+    paraCondition, # type: Callable[[str,str],bool]
+    conditionValue):
+    # type: (...) -> bool
     '''
     Checks a parameter value based on passed in condition function.
 
@@ -84,7 +91,10 @@ def CheckParameterValue(para, paraCondition, conditionValue):
         isMatch = True
     return isMatch
 
-def getParameterValue(para):
+def getParameterValue(
+    para
+    ):
+    # type: (...) -> str
     '''
     Returns a parameter value as string.
 
@@ -118,7 +128,10 @@ def getParameterValue(para):
         pValue = 'Exception: '+str(e)
     return pValue
 
-def GetParameterValueUTF8String(para):
+def GetParameterValueUTF8String(
+    para
+    ):
+    # type: (...) -> str
     '''
     Returns the parameter value as utf-8 encoded string.
 
@@ -149,7 +162,10 @@ def GetParameterValueUTF8String(para):
             pValue = str(para.AsElementId()).encode('utf-8')
     return pValue
 
-def GetParameterValueAsInteger(para):
+def GetParameterValueAsInteger(
+    para
+    ):
+    # type: (...) -> int
     '''
     Returns the parameter value as integer.
 
@@ -202,7 +218,11 @@ def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter 
             break
     return parameterValue
 
-def GetParameterValueByName(element, parameterName, parameterValueGetter = GetParameterValueUTF8String):
+def GetParameterValueByName(
+    element, 
+    parameterName, # type: str
+    parameterValueGetter = GetParameterValueUTF8String
+    ):
     '''
     Returns the parameter value by parameter name.
 
@@ -232,7 +252,11 @@ def GetParameterValueByName(element, parameterName, parameterValueGetter = GetPa
             break
     return parameterValue
 
-def setParameterValue(para, valueAsString, doc):
+def setParameterValue(
+    para, 
+    valueAsString, # type: str
+    doc
+    ):
     '''
     Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
@@ -325,7 +349,13 @@ def setParameterValue(para, valueAsString, doc):
         returnValue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
     return returnValue
 
-def SetBuiltInParameterValue(doc, element, builtInParameterDef, valueAsString, parameterValueSetter = setParameterValue):
+def SetBuiltInParameterValue(
+    doc, 
+    element, 
+    builtInParameterDef, 
+    valueAsString, # type: str
+    parameterValueSetter = setParameterValue
+    ):
     '''
     Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
@@ -393,7 +423,11 @@ def GetElementMark(e):
 
 #----------------------------- revisions ----------------
 
-def GetSheetRevByName(doc, sheetName):
+def GetSheetRevByName(
+    doc, 
+    sheetName # type: str
+    ):
+
     '''
     Returns the revision of a sheet identified by its name. Default value is '-'.
 
@@ -420,7 +454,11 @@ def GetSheetRevByName(doc, sheetName):
         revValue = util.PadSingleDigitNumericString(revP.AsString())
     return revValue
 
-def GetSheetRevByNumber(doc, sheetNumber):
+def GetSheetRevByNumber(
+    doc, 
+    sheetNumber # type: str
+    ):
+
     '''
     Returns the revision of a sheet identified by its number. Default value is '-'.
 
@@ -825,7 +863,12 @@ def FilterOutWarnings(doc, dependentElements):
             ids.append(id)
     return ids
 
-def HasDependentElements(doc, el, filter = None, threshold = 2):
+def HasDependentElements(
+    doc,
+    el, 
+    filter = None, 
+    threshold = 2 # type: int
+    ):
     '''
     Checks whether an element has dependent elements.
 
@@ -861,7 +904,12 @@ def HasDependentElements(doc, el, filter = None, threshold = 2):
         value = -1
     return value
 
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
+def GetUsedUnusedTypeIds(
+    doc, 
+    typeIdGetter, 
+    useType = 0, # type: int
+    threshold = 2 # type: int
+    ):
     '''
     Gets either the used or not used type Ids provided by typeIdGetter.
 
@@ -889,7 +937,12 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, threshold = 2):
             ids.append(typeId)
     return ids
 
-def DeleteByElementIds(doc, ids, transactionName, elementName):
+def DeleteByElementIds(
+    doc, 
+    ids, 
+    transactionName, # type: str
+    elementName # type: str
+    ):
     '''
     Deleting elements in list all at once.
 
@@ -924,7 +977,12 @@ def DeleteByElementIds(doc, ids, transactionName, elementName):
     returnValue = InTransaction(transaction, action)
     return returnValue
 
-def DeleteByElementIdsOneByOne(doc, ids, transactionName, elementName):
+def DeleteByElementIdsOneByOne(
+    doc, 
+    ids, 
+    transactionName, # type: str
+    elementName # type: str
+    ):
     '''
     Deleting elements in list one at the time.
 
@@ -1033,7 +1091,12 @@ def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
             break
     return match
 
-def IsFamilyNameFromInstance(doc, familyName, elementId):
+def IsFamilyNameFromInstance(
+    doc, 
+    familyName, # type: str
+    elementId
+    ):
+
     '''
     Checks whether the family name of a given family instance matches filter value.
 
@@ -1057,7 +1120,12 @@ def IsFamilyNameFromInstance(doc, familyName, elementId):
         flag = False
     return flag
 
-def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
+def IsFamilyNameFromInstanceContains(
+    doc, 
+    containsValue, # type: str
+    elementId
+    ):
+    # type: (...) -> bool
     '''
     Checks whether the family name of a given family instance contains filter value.
 
@@ -1081,7 +1149,12 @@ def IsFamilyNameFromInstanceContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+def IsFamilyNameFromInstanceDoesNotContains(
+    doc, 
+    containsValue, # type: str
+    elementId
+    ):
+    # type: (...) -> bool
     '''
     Checks whether the family name of a given family instance does not contains filter value.
 
@@ -1105,7 +1178,12 @@ def IsFamilyNameFromInstanceDoesNotContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
+def IsSymbolNameFromInstanceContains(
+    doc, 
+    containsValue, # type: str
+    elementId
+    ):
+    # type: (...) -> bool
     '''
     Checks whether the family symbol name of a given family instance contains filter value.
 
@@ -1129,7 +1207,13 @@ def IsSymbolNameFromInstanceContains(doc, containsValue, elementId):
         flag = False
     return flag
 
-def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
+def IsSymbolNameFromInstanceDoesNotContains(
+    doc, 
+    containsValue, # type: str
+    elementId
+    ):
+    # type: (...) -> bool
+
     '''
     Checks whether the family symbol name of a given family instance does not contains filter value.
     
@@ -1155,7 +1239,11 @@ def IsSymbolNameFromInstanceDoesNotContains(doc, containsValue, elementId):
 
 #-------------------------------------------------------file IO --------------------------------------
 
-def SyncFile (doc, compactCentralFile = False):
+def SyncFile (
+    doc, 
+    compactCentralFile = False # type: bool
+    ):
+    # type: (...) -> res.Result
     '''
     Synchronizes a Revit central file.
 
@@ -1192,7 +1280,11 @@ def SyncFile (doc, compactCentralFile = False):
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
-def SaveAsWorksharedFile(doc, fullFileName):
+def SaveAsWorksharedFile(
+    doc, 
+    fullFileName  # type: str
+    ):
+    # type: (...) -> res.Result
     '''
     Saves a Revit project file as a workshared file.
 
@@ -1231,7 +1323,15 @@ def SaveAsWorksharedFile(doc, fullFileName):
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
-def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rfa', compactFile = False):
+def SaveAsFamily(
+    doc, 
+    targetFolderPath, # type: str
+    currentFullFileName, # type: str
+    nameData, # type: List[List[str]]
+    fileExtension = '.rfa', # type: str
+    compactFile = False # type: bool
+    ):
+    # type: (...) -> res.Result
     '''
     Saves a family file under new name in given location.
 
@@ -1285,7 +1385,14 @@ def SaveAsFamily(doc, targetFolderPath, currentFullFileName, nameData, fileExten
         returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnValue
 
-def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension = '.rvt'):
+def SaveAs(
+    doc, 
+    targetFolderPath, # type: str
+    currentFullFileName, # type: str
+    nameData, # type: List[List[str]]
+    fileExtension = '.rvt' # type: str
+    ):
+    # type: (...) -> res.Result
     '''
     Saves a project file under new name in given location.
 
@@ -1330,7 +1437,11 @@ def SaveAs(doc, targetFolderPath, currentFullFileName, nameData, fileExtension =
         returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnValue
 
-def SaveFile(doc, compactFile = False):
+def SaveFile(
+    doc, 
+    compactFile = False # type: bool
+    ):
+    # type: (...) -> res.Result
     '''
     Saves a non workshared Revit file. To be used for families and non workshared revit files only.
 
@@ -1364,16 +1475,16 @@ def SaveFile(doc, compactFile = False):
   
 # enables work sharing
 def EnableWorksharing(
-    doc, 
+    doc, #
     worksetNameGridLevel = 'Shared Levels and Grids', # type: str
     worksetName = 'Workset1' # type: str
     ):
-    # type: (...) -> bool
+    # type: (...) -> res.Result
     '''
     Enables worksharing in a non workshared revit project file.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
     :param worksetNameGridLevel: _description_, defaults to 'Shared Levels and Grids'
     :type worksetNameGridLevel: str, optional
     
@@ -1402,8 +1513,8 @@ def EnableWorksharing(
 #--------------------------------------------Transactions-----------------------------------------
 
 def InTransaction(
-    tranny, # type: str
-    action  # type: str
+    tranny, # 
+    action  # type: Callable[[], res.Result]
     ):
     # type: (...) -> res.Result
     '''

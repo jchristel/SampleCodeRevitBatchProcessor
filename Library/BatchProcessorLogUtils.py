@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Helper functions to process Revit Batchprocessor log files.
+Helper functions to process Revit BatchProcessor log files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -58,9 +58,9 @@ import time
 import os
 import json
 
-# custom result class from commonlibraryDebugLocation_
+# custom result class from common library DebugLocation_
 import Result as res
-# library from commonlibraryDebugLocation_
+# library from common library DebugLocation_
 import Utility as util
 
 #: global variable controlling debug output
@@ -100,7 +100,7 @@ def AdjustSessionIdForFileName(id):
 
 def AdjustSessionIdFileNameBack(fileNameId):
     '''
-    Re-introduces chevrons and replaces underscores with colons to match session Id format used in batchprocessor to a\
+    Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a\
         file name using a batch processor supplied id.
 
     :param fileNameId: A file name containing a session id with all illegal characters replaced.
@@ -121,7 +121,7 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
     Writes out an empty marker file in given directory. 
     
     - File is of type .txt
-    - File name is the batchprocessor sessionId used to identify the log file belonging to this process.
+    - File name is the batch processor sessionId used to identify the log file belonging to this process.
 
     :param folderPath: Directory of where the file will be written to.
     :type folderPath: str
@@ -143,7 +143,7 @@ def WriteSessionIdMarkerFile(folderPath, sessionId):
 
 def GetCurrentSessionIds(folderPath):
     '''
-    Returs file names of all text files in a given directory representing session Ids.
+    Returns file names of all text files in a given directory representing session Ids.
 
     Files will be deleted immediately after reading
 
@@ -168,7 +168,7 @@ def GetCurrentSessionIds(folderPath):
 
 def GetLogFiles(listOfSessionIds):
     '''
-    Returns a list of fully qualified filepath to logfiles matching the provided session Ids.
+    Returns a list of fully qualified filepath to log files matching the provided session Ids.
 
     :param listOfSessionIds: List of session ids.
     :type listOfSessionIds: [str]
@@ -180,7 +180,7 @@ def GetLogFiles(listOfSessionIds):
     # save the current file in epoch
     timeNow = time.time()
     fileList = glob.glob(os.path.join(os.getenv('LOCALAPPDATA'),'BatchRvt') + '\\*' + '.log')
-    logfiles = []
+    logFiles = []
     if len(fileList) > 0:
         for l in fileList:
             # check whether file is older than 24h
@@ -191,13 +191,13 @@ def GetLogFiles(listOfSessionIds):
                 timeOut = 8640000
             if timeNow - fileTime < timeOut:
                 # read the first two rows of the file to get the id
-                idstring = GetSessionIdFromLogFile(l)
-                for idtoMatch in listOfSessionIds:
-                    if idtoMatch == idstring:
-                        logfiles.append(l)
+                idString = GetSessionIdFromLogFile(l)
+                for idToMatch in listOfSessionIds:
+                    if idToMatch == idString:
+                        logFiles.append(l)
             else:
                 Output('File is to old: ' + str(l))
-    return logfiles
+    return logFiles
 
 def GetSessionIdFromLogFile(filePath):
     '''
@@ -284,12 +284,12 @@ def GetMessageFromJson(data):
 
 def ProcessLogFile(filePath):
     '''
-    Process revit batch processoor session log file.
+    Process revit batch processor session log file.
     
     - find Revit files processed:
     - check whether an exception occurred when processing any of the above files.
 
-    :param filePath: Fully qualified file path to json formated log file
+    :param filePath: Fully qualified file path to json formatted log file
     :type filePath: str
 
     :return: returns list of arrays in format:
@@ -306,7 +306,7 @@ def ProcessLogFile(filePath):
             filesNotFound = GetFilesNotFound(filesProcessed)
             try:
                 # filter filesProcessed by files not found
-                filesToCheck = filterFilesNotyFound(filesProcessed, filesNotFound)
+                filesToCheck = filterFilesNotFound(filesProcessed, filesNotFound)
                 # check for exceptions during file processing
                 for fileToCheck in filesToCheck:
                     try:
@@ -332,7 +332,7 @@ def ProcessLogFile(filePath):
 # filesProcessed: list of arrays, first entry in array is fully qualified file path
 # filesNotFound: list of fully qualified file path
 # returns a list of fully qualified file path (of files marked as found)
-def filterFilesNotyFound(filesProcessed, filesNotFound):
+def filterFilesNotFound(filesProcessed, filesNotFound):
     filteredList = []
     for fileName,status in filesProcessed:
         flag = False
@@ -350,12 +350,12 @@ def GetProcessStatus(fileToCheck, logFilePath):
 
     :param fileToCheck: Fully qualified file path of Revit file which was processed
     :type fileToCheck: str
-    :param logFilePath: The fully qualifiedbatch processor session log file path.
+    :param logFilePath: The fully qualified batch processor session log file path.
     :type logFilePath: str
 
     :return: A process status and a message.
 
-        - process staus: True if no exception occurred during revit file processing, otherwise false
+        - process status: True if no exception occurred during revit file processing, otherwise false
         - message: the exception message recorded in the log file.
 
     :rtype: bool, str
@@ -369,16 +369,16 @@ def GetProcessStatus(fileToCheck, logFilePath):
     unformattedRevitFileProcessMessages = GetLogBlocks(jsonData, '\t- Processing file (', ['\t- Task script operation completed.','\t- Operation aborted.'], True)
     processStatus = True
     # loop over messages in this block and check for time out, and exception messages
-    for mblock in  unformattedRevitFileProcessMessages:
+    for messageBlock in  unformattedRevitFileProcessMessages:
         # check if right file the file name
         # todo
-        fileName = GetFileNameFromDataBlock(mblock)
+        fileName = GetFileNameFromDataBlock(messageBlock)
         if(fileName == fileToCheck):
             Output('file to check: ' +str(fileToCheck + '     file found: '+fileName) +'    is match '  +str(fileName == fileToCheck))
             foundMatch = True
             # flag to show whether logs show any issues
             foundProblem = False
-            for m in mblock:
+            for m in messageBlock:
                 Output(m)
                 # check for exceptions
                 for exceptionMessage in EXCEPTION_MESSAGES:
@@ -396,26 +396,26 @@ def GetProcessStatus(fileToCheck, logFilePath):
         message = '[Failed to retrieve processing data for file.]'
     return processStatus, message
         
-def GetFileNameFromDataBlock(mblock):
+def GetFileNameFromDataBlock(messageBlock):
     '''
     Extracts the file name from a process message block.
 
-    :param mblock: list of json formatted rows representing all messages received during file process
-    :type mblock: [str]
+    :param messageBlock: list of json formatted rows representing all messages received during file process
+    :type messageBlock: [str]
 
     :return: The fully qualified file path of the file processed
     :rtype: str
     '''
 
     # check if this is a cloud model
-    if('CLOUD MODEL' in mblock[0]):
+    if('CLOUD MODEL' in messageBlock[0]):
         #['\t- Processing file (1 of 1): CLOUD MODEL', '\t- ', '\t- \tProject ID: GUID', '\t- \tModel ID: GUID',...]
         messageStarter = '\t- \t'
-        fileName = mblock[3].Trim()[len(messageStarter)-1:]
+        fileName = messageBlock[3].Trim()[len(messageStarter)-1:]
     else:
         # ["\t- Processing file (x of y): file path"}},...]
         messageStarter = '\t- Processing file (x of y): '
-        fileName = mblock[0].Trim()[len(messageStarter)-1:]
+        fileName = messageBlock[0].Trim()[len(messageStarter)-1:]
     return fileName
 
 def GetFilesProcessed(filePath):
@@ -483,18 +483,18 @@ def GetFilesProcessed(filePath):
 # sample of BIM360:
 #18/05/2021 15:37:23 : 	Project ID: a valid guid
 #18/05/2021 15:37:23 : 	Model ID: a valid guid
-# note: when processing BIM360 files Batchprocessor is not checking whether the file exists upfront!
+# note: when processing BIM360 files batch processor is not checking whether the file exists upfront!
 # returns list in format
 # [filename, file exists status as bool]
 def GetFileData(data):
     # trim white spaces from file name
     fileName = data[0].Trim()
-    filestatus = False
+    fileStatus = False
     # check whether file status contains a YES or whether this is a cloud model 
     # (RBP does not check upfront whether a cloud model exists!)
     if ('YES' in data[1] or 'Project ID' in data[1]):
-        filestatus = True
-    return [fileName,filestatus]  
+        fileStatus = True
+    return [fileName,fileStatus]  
 
 def GetFilesNotFound(filesProcessed):
     '''
@@ -533,7 +533,7 @@ def GetLogBlocks(jsonData, startMarker, endMarkers, multipleBlocks):
     '''
 
     unformattedBlockData = []
-    datablock = []
+    dataBlock = []
     messageString = ''
     # extract rows belonging to blocks
     fileBlock = False
@@ -548,21 +548,21 @@ def GetLogBlocks(jsonData, startMarker, endMarkers, multipleBlocks):
             match = False
             if messageString.startswith(endMarker) and fileBlock == True:
                 matchEndBlock = True
-                unformattedBlockData.append(datablock)
-                datablock = []
+                unformattedBlockData.append(dataBlock)
+                dataBlock = []
                 fileBlock = False
                 match = True
                 break
         if(not multipleBlocks and match):
             break
         if (fileBlock):
-            datablock.append(messageString)
+            dataBlock.append(messageString)
     # check for open block
     if (fileBlock == True and matchEndBlock == False):
         # append this data...hopefully there is an exception message in there!!
-        unformattedBlockData.append(datablock)
+        unformattedBlockData.append(dataBlock)
         Output('Added open data block')
-        Output(datablock)
+        Output(dataBlock)
         Output('')
     return unformattedBlockData
 
@@ -605,17 +605,17 @@ def ProcessLogFiles(folderPath, debug = False):
     logfileResults = []
     try:
         # get all marker files
-        markerfileIds = GetCurrentSessionIds(folderPath)
+        markerFileIds = GetCurrentSessionIds(folderPath)
         if(debugMode_):
-            returnValue.AppendMessage('Found marker file(s): ' + str(len(markerfileIds)))
-        if(len(markerfileIds) > 0):
+            returnValue.AppendMessage('Found marker file(s): ' + str(len(markerFileIds)))
+        if(len(markerFileIds) > 0):
             # find log files matching markers
-            logfiles = GetLogFiles(markerfileIds)
+            logFiles = GetLogFiles(markerFileIds)
             if(debugMode_):
-                returnValue.AppendMessage('Found log file(s): ' + str(len(logfiles)))
-            if(len(logfiles) == len(markerfileIds)):
+                returnValue.AppendMessage('Found log file(s): ' + str(len(logFiles)))
+            if(len(logFiles) == len(markerFileIds)):
                 data = []
-                for lf in logfiles:
+                for lf in logFiles:
                     # debug output
                     message = 'Processing log file(s): ' + lf
                     #returnValue.AppendMessage('Processing log files: ' + lf)
@@ -640,7 +640,7 @@ def ProcessLogFiles(folderPath, debug = False):
                     returnValue.AppendMessage(listToStr)
                 returnValue.status = True
             else:
-                returnValue.UpdateSep(False,'Number of log files [' + str(len(logfiles)) + '] does not match requried number: ' + str(len(markerfileIds))) 
+                returnValue.UpdateSep(False,'Number of log files [' + str(len(logFiles)) + '] does not match required number: ' + str(len(markerFileIds))) 
         else:
             returnValue.UpdateSep(False,'No marker files found in location: ' + str(folderPath))
     except Exception as e:

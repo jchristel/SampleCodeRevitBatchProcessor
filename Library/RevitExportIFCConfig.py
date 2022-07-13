@@ -42,11 +42,11 @@ def IFCGetThirdPartyExportConfigByView2019(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -83,11 +83,11 @@ def IFCGetThirdPartyExportConfigByView2019(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -101,11 +101,11 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -147,7 +147,7 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion):
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -163,11 +163,11 @@ def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export (2x3 etc...).
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -205,11 +205,11 @@ def IFCGetThirdPartyExportConfigByView2020(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -223,11 +223,11 @@ def IFCGetThirdPartyExportConfigByModel2020(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -270,7 +270,7 @@ def IFCGetThirdPartyExportConfigByModel2020(ifcVersion):
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -287,11 +287,11 @@ def IFCGetThirdPartyExportConfigByView2021(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -329,11 +329,11 @@ def IFCGetThirdPartyExportConfigByView2021(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -347,11 +347,11 @@ def IFCGetThirdPartyExportConfigByModel2021(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -394,7 +394,7 @@ def IFCGetThirdPartyExportConfigByModel2021(ifcVersion):
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -412,11 +412,11 @@ def IFCGetThirdPartyExportConfigByView2022(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export by view. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export by view. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -454,11 +454,11 @@ def IFCGetThirdPartyExportConfigByView2022(ifcVersion):
     ifcExportConfig.ExportUserDefinedPsetsFileName = ''
     ifcExportConfig.ExportLinkedFiles = False
     ifcExportConfig.IncludeSiteElevation = True
-    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC epxort considerably (sample: from 8min to 45min!)
+    ifcExportConfig.UseActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True
@@ -472,11 +472,11 @@ def IFCGetThirdPartyExportConfigByModel2022(ifcVersion):
     '''
     Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
     
-    This configuration allows export the entire model. If ifcversion is None, IFCVersion.Default will be used.
+    This configuration allows export the entire model. If ifcVersion is None, IFCVersion.Default will be used.
 
     :param ifcVersion: The ifc version used for the export.
     :type ifcVersion: Autodesk.Revit.DB.IFCVersion
-    :return: An IFCExportconfig object.
+    :return: An IFCExportConfig object.
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     '''
 
@@ -519,7 +519,7 @@ def IFCGetThirdPartyExportConfigByModel2022(ifcVersion):
     ifcExportConfig.ExportSpecificSchedules = False
     ifcExportConfig.TessellationLevelOfDetail = 0
     ifcExportConfig.StoreIFCGUID = True
-    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumnes are not computated???
+    ifcExportConfig.ExportRoomsInView = False # might not work in 3D views if volumes are not computed???
     # revit 2019.1
     ifcExportConfig.UseOnlyTriangulation = False
     ifcExportConfig.IncludeSteelElements = True

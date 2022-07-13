@@ -80,7 +80,7 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
     col = GetAllGenericAnnotationTypesByCategory(doc)
     for c in col:
         parameterMatch = False
-        # get the family object to checkwhether it is a shared family
+        # get the family object to check whether it is a shared family
         fam = c.Family
         id = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
         if(id != None):
@@ -101,7 +101,7 @@ def BuildGenericAnnotationTypesDictionary(collector, dic):
     :param dic: Dictionary, the key is the family name and the value a list of element ids representing annotation types.
     :type dic: dic: key str, values list of Autodesk.Revit.DB.ElementId
     
-    :return: Passt in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.
+    :return: Past in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.
     :rtype: dic: key str, values list of Autodesk.Revit.DB.ElementId
     '''
 
@@ -155,7 +155,7 @@ def GetUsedGenericAnnotationTypeIds(doc):
 # doc   current model document
 def GetUnusedGenericAnnotationTypeIds(doc):
     '''
-    Returns all unsued annotation symbol ids ( unused in model as well as dimension types)
+    Returns all unused annotation symbol ids ( unused in model as well as dimension types)
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

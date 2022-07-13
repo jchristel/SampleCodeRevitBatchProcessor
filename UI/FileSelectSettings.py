@@ -30,7 +30,7 @@ A class to store file select UI settings.
 # An item to represent a file name in a row in a grid.
 class FileSelectionSettings:
     
-    def __init__(self, inputDirectory, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension):
+    def __init__(self, inputDirectory, includeSubDirsInSearch, outputDirectory, outputFileNumber, revitFileExtension):
         '''
         Class constructor
 
@@ -40,8 +40,8 @@ class FileSelectionSettings:
         :type includeSubDirsInSearch: bool
         :param outputDirectory: A fully qualified directory path to where task files will be written.
         :type outputDirectory: str
-        :param outputfileNumber: The number of task files to be written out.
-        :type outputfileNumber: int
+        :param outputFileNumber: The number of task files to be written out.
+        :type outputFileNumber: int
         :param revitFileExtension: A file extension filter applied to directory search.
         :type revitFileExtension: str
         '''
@@ -49,5 +49,5 @@ class FileSelectionSettings:
         self.inputDir = inputDirectory
         self.inclSubDirs = includeSubDirsInSearch
         self.outputDir = outputDirectory
-        self.outputFileNum = outputfileNumber
+        self.outputFileNum = outputFileNumber
         self.revitFileExtension = revitFileExtension

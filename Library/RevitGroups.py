@@ -97,7 +97,7 @@ def GetModelGroupIds(doc):
 
 def GetDetailGroupIds(doc):
     '''
-    Gets a list of all detail group typess from the model.
+    Gets a list of all detail group types from the model.
 
     This will not include any attached detail groups.
 

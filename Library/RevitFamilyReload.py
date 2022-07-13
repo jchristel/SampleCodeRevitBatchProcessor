@@ -61,12 +61,12 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
     
     :raises UserWarning: _description_
     
-    :return: Retuns True if any of the reload actions was succesful.
+    :return: Returns True if any of the reload actions was successful.
     :rtype: bool
     '''
 
     result = res.Result()
-    # if a family is reloaded it may bring in new typs not present in the model at reload
+    # if a family is reloaded it may bring in new types not present in the model at reload
     # this list contains the ids of those types (symbols)
     # so they can be deleted if so desired
     symbolIdsToBeDeleted = []   
@@ -103,7 +103,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                             if (resultLoad.result != None and len(resultLoad.result) > 0):
                                 famLoaded = resultLoad.result.First()
                                 afterLoadSymbolIds = famLoaded.GetFamilySymbolIds()
-                                newSymbolIds = getNewSymboldIds(priorLoadSymbolIds, afterLoadSymbolIds)
+                                newSymbolIds = getNewSymbolIds(priorLoadSymbolIds, afterLoadSymbolIds)
                                 if(len(newSymbolIds) > 0):
                                     symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
                     else:
@@ -112,7 +112,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                             matchesMessage = matchesMessage + '...' + path + '\n'
                         matchesMessage = 'Found multiple matches for ' + famName + '\n' + matchesMessage
                         matchesMessage = matchesMessage.strip()
-                        # found mutliple matches for family by name only...aborting reload
+                        # found multiple matches for family by name only...aborting reload
                         result.AppendMessage(matchesMessage)
                 else:
                     result.UpdateSep(result.status,'Found no match for ' + famName)
@@ -121,7 +121,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                 resultDelete = com.DeleteByElementIds(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
                 result.AppendMessage (resultDelete.message)
             else:
-                message = 'No need to delete any new family typese since no new types where created.'
+                message = 'No need to delete any new family types since no new types where created.'
                 result.AppendMessage(message) # make sure not to change the status
         else:
             message = 'Found no loadable families in file!'
@@ -156,7 +156,7 @@ def getFamilyIdsFromSymbols(doc):
             familyIds.append(famSymbol.Family.Id)
     return familyIds
 
-def getNewSymboldIds(preLoadSymbolIdList, afterLoadSymbolList):
+def getNewSymbolIds(preLoadSymbolIdList, afterLoadSymbolList):
     '''
     Returns a list of symbol ids not present prior to reload.
 

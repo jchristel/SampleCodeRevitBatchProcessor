@@ -113,7 +113,7 @@ def GetAllDimensionElements(doc):
 
 def GetAllMultiRefAnnotationTypes(doc):
     '''
-    Gets all multireference annotation types in the model.
+    Gets all multi reference annotation types in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -126,12 +126,12 @@ def GetAllMultiRefAnnotationTypes(doc):
 
 def GetAllMultiRefAnnotationTypeIds(doc):
     '''
-    Gets all multireference annotation type ids in the model.
+    Gets all multi reference annotation type ids in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: List of element ids representing Multireference Annotation Types
+    :return: List of element ids representing multi reference Annotation Types
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
@@ -142,7 +142,7 @@ def GetAllMultiRefAnnotationTypeIds(doc):
 
 def GetAllMultiRefAnnotationElements(doc):
     '''
-    Gets all multireference annotation elements in the model.
+    Gets all multi reference annotation elements in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -155,14 +155,14 @@ def GetAllMultiRefAnnotationElements(doc):
 
 def GetUsedMultiRefDimTypeIdsInTheModel(doc):
     '''
-    Gets all ids of multireference types used by elements in the model.
+    Gets all ids of multi reference types used by elements in the model.
 
     Used: at least one instance using this type is placed in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: List of element ids representing Multireference Annotation Types
+    :return: List of element ids representing multi reference Annotation Types
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
@@ -175,25 +175,25 @@ def GetUsedMultiRefDimTypeIdsInTheModel(doc):
 
 def GetAllSimilarMultiReferenceAnnoTypes(doc):
     '''
-    Gets all multireference annotation types using get similar types in the model.
+    Gets all multi reference annotation types using get similar types in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: list in format [[multireftype, [element ids of similar multi ref types, ...]]]
+    :return: list in format [[multi refType, [element ids of similar multi ref types, ...]]]
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     '''
 
     multiReferenceAnnoTypes = com.GetSimilarTypeFamiliesByType(doc, GetAllMultiRefAnnotationTypes)
     return multiReferenceAnnoTypes 
 
-def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
+def GetUsedDimStylesFromMultiRef(doc, multiReferenceAnnoTypes):
     '''
     Gets all dimension styles used in multi ref annotation types.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param multiReferenceAnnoTypes: list in format [[multireftype, [element ids of similar multi ref types, ...]]]
+    :param multiReferenceAnnoTypes: list in format [[multi refType, [element ids of similar multi ref types, ...]]]
     :type multiReferenceAnnoTypes: List [[Autodesk.Revit.DB.ElementType, [Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]]
     
     :return: List of element ids representing dimension style
@@ -210,7 +210,7 @@ def GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes):
 
 def GetAllUnusedMultiRefDimTypeIdsInModel(doc):
     '''
-    Gets IDs of all unused multiref dimension types in the model.
+    Gets IDs of all unused multi ref dimension types in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -235,10 +235,10 @@ def GetAllUnusedDimTypeIdsInModel(doc):
 
     # get unused dimension type ids
     filteredUnusedDimTypeIds = com.GetUnusedTypeIdsInModel(doc, GetDimTypes, GetUsedDimTypeIdsInTheModel)
-    # get all multiref dimension types in model
+    # get all multi ref dimension types in model
     multiReferenceAnnoTypes = GetAllSimilarMultiReferenceAnnoTypes(doc)
-    # get all dim styles used in multirefs
-    usedDimStylesInMultiRefs = GetUsedDimstylesFromMultiRef(doc, multiReferenceAnnoTypes)
+    # get all dim styles used in multi refs
+    usedDimStylesInMultiRefs = GetUsedDimStylesFromMultiRef(doc, multiReferenceAnnoTypes)
     # cross reference filtered list vs multi ref list and only keep items which are just in the filtered list
     unusedDimTypeIds = []
     for f in filteredUnusedDimTypeIds:
@@ -308,7 +308,7 @@ def GetUsedTextTypeIdsInTheModel(doc):
     for t in col:
         if(t.GetTypeId() not in textTypeIdsUsed):
             textTypeIdsUsed.append(t.GetTypeId())
-    # get all schedules and check their appearance text proprties!
+    # get all schedules and check their appearance text properties!
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSchedule)
     for c in col:
         if(c.BodyTextTypeId not in textTypeIdsUsed):
@@ -355,7 +355,7 @@ ARROWHEAD_PARAS_DIM = [
 #:
 #: containing arrow head ids
 
-#: paramter containing the arrowhead id in text types
+#: parameter containing the arrowhead id in text types
 ARROWHEAD_PARAS_TEXT = [
     rdb.BuiltInParameter.LEADER_ARROWHEAD
 ]
@@ -553,7 +553,7 @@ def GetStairsPathArrowHeadIds(doc):
 
 def GetAllUsedArrowHeadTypeIdsInModel(doc):
     '''
-    Geturns all used arrow types in the model.
+    Returns all used arrow types in the model.
     
     Used in types of dimension, text, independent tags, spot dims, annotation symbols (incl room and area tags), stairs path
 
@@ -581,7 +581,7 @@ def GetArrowTypesInModel(doc):
     '''
     Gets all arrow head types in the model.
 
-    TODO: This uses a plain english name comaprison to get arrow head types...may not work in non english versions of Revit!
+    TODO: This uses a plain english name comparison to get arrow head types...may not work in non english versions of Revit!
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -719,13 +719,13 @@ def GetAllSpotElevationSymbolIdsInModel(doc):
 
 def GetUnusedSymbolIdsFromSpotTypes(doc):
     '''
-    Gets all family symbol ids not used as symbol in any spot elevation or spot coordinate type defintion.
+    Gets all family symbol ids not used as symbol in any spot elevation or spot coordinate type definition.
     
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: List of element ids representing family symbols not used in spot elevation or spot coordinate type defintion.
+    :return: List of element ids representing family symbols not used in spot elevation or spot coordinate type definition.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
@@ -753,7 +753,7 @@ def GetUnusedSymbolIdsFromSpotTypesToPurge(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: List of element ids representing family and family symbols not used in spot elevation or spot coordinate type defintion.
+    :return: List of element ids representing family and family symbols not used in spot elevation or spot coordinate type definition.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 

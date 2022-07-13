@@ -59,7 +59,7 @@ def GetAllFloorTypesByCategory(doc):
     '''
     Function returning a filtered element collector of all floor types in the model.
 
-    This uses builtincategory as filter. Return types includes:
+    This uses builtinCategory as filter. Return types includes:
     - Floor
     - In place families or loaded families
 
@@ -229,7 +229,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
 
-    TODO: check for more geric list comparison and remove this function.
+    TODO: check for more generic list comparison and remove this function.
 
     :param famTypeIds: List of family type ids to check.
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -347,7 +347,7 @@ def GetUnusedInPlaceFloorIdsForPurge(doc):
     Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be safely deleted from the model.
 
     This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one\
-        in place wall defintion in the model.
+        in place wall definition in the model.
     
     
     :param doc: Current Revit model document.

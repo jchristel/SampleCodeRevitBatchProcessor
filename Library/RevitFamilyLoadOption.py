@@ -31,7 +31,7 @@ class FamilyLoadOption(rdb.IFamilyLoadOptions):
 		'''
 		Defines behavior when a shared family is found in the model.
 		
-		Overwrite parameter values is set to True. In case of any shared subcomponents allready in the model but different in family loaded, the project version will be used.
+		Overwrite parameter values is set to True. In case of any shared sub components already in the model but different in family loaded, the project version will be used.
 
 		:param sharedFamily: _description_
 		:type sharedFamily: _type_

@@ -47,7 +47,7 @@ class Result:
         '''
         Appends a new line and new message string to the existing message.
 
-        First message appended will replace the default vaklue of -
+        First message appended will replace the default value of -
 
         :param message: The new message to be appended.
         :type message: str

@@ -36,7 +36,7 @@ from System.Collections.Generic import List
 
 
 # import common library
-# utility functions for most coomonly used Revit API tasks
+# utility functions for most commonly used Revit API tasks
 import RevitCommonAPI as com
 # utilities
 import Utility as util
@@ -70,7 +70,7 @@ def LoadFamily(doc, familyFilePath):
 
         - Reload status (bool) returned in result.status.
         - Reload status returned from Revit in result.message property.
-        - Return family reference stored in result.result property on succesful reload only
+        - Return family reference stored in result.result property on successful reload only
         
         On exception
         
@@ -208,7 +208,7 @@ catsLoadableTags = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_InternalPointLoadTags,
     rdb.BuiltInCategory.OST_IsolatedFoundationAnalyticalTags,
     rdb.BuiltInCategory.OST_KeynoteTags,
-    #uiltInCategory.OST_LevelHeads, #purged separately
+    #BuiltInCategory.OST_LevelHeads, #purged separately
     rdb.BuiltInCategory.OST_LightingDeviceTags,
     rdb.BuiltInCategory.OST_LightingFixtureTags,
     rdb.BuiltInCategory.OST_LineLoadTags,
@@ -326,7 +326,7 @@ def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param builtinCat: single revit builInCategory Enum value.
+    :param builtinCat: single revit builtInCategory Enum value.
     :type builtinCat: Autodesk.Revit.DB.BuiltInCategory
     
     :return: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
@@ -379,7 +379,7 @@ def GetSymbolsFromType(doc, typeIds):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeIds: - list of element id's representing family symbols (fmaily types)
+    :param typeIds: - list of element id's representing family symbols (family types)
     :type typeIds: list of Autodesk.Revit.DB.ElementId
 
     :return: dictionary:
@@ -388,17 +388,17 @@ def GetSymbolsFromType(doc, typeIds):
     :rtype: dic {Autodesk.Revit.DB.ElementId: list[Autodesk.Revit.DB.ElementId]}
     '''
 
-    fams = {}
+    families = {}
     for tId in typeIds:
         # get family element
         typeEl = doc.GetElement(tId)
         famEl = typeEl.Family
         # check whether family was already processed
-        if(famEl.Id not in fams):
+        if(famEl.Id not in families):
             # get all available family types
             sIds = famEl.GetFamilySymbolIds().ToList()
-            fams[famEl.Id] = sIds
-    return fams
+            families[famEl.Id] = sIds
+    return families
 
 def GetFamilyInstancesBySymbolTypeId(doc, typeId):
     '''
@@ -415,8 +415,8 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
     pvpSymbol = rdb.ParameterValueProvider(rdb.ElementId( rdb.BuiltInParameter.SYMBOL_ID_PARAM ) )
     equals = rdb.FilterNumericEquals()
     idFilter = rdb.FilterElementIdRule( pvpSymbol, equals, typeId)
-    efilter =  rdb.ElementParameterFilter( idFilter )
-    collector = rdb.FilteredElementCollector(doc).WherePasses( efilter )
+    elementFilter =  rdb.ElementParameterFilter( idFilter )
+    collector = rdb.FilteredElementCollector(doc).WherePasses( elementFilter )
     return collector
 
 def FamilyAllTypesInUse(famTypeIds, usedTypeIds):
@@ -478,7 +478,7 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     :param unusedTypeGetter: 
         A function returning ids of unused symbols (family types) as a list. 
         It requires as argument the current model document only.
-    :type unusedTypeGetter: function (doc) -> list Autodeks.Revit.DB.ElementId
+    :type unusedTypeGetter: function (doc) -> list Autodesk.Revit.DB.ElementId
 
     :return: A list of Element Ids representing the family symbols and or family id's matching filter.
     :rtype: list Autodesk.Revit.DB.ElementId
@@ -489,10 +489,10 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     # get all unused type Ids
     unusedTypeIds = unusedTypeGetter(doc)
     # get family Elements belonging to those type ids
-    fams = GetSymbolsFromType(doc, unusedTypeIds)
+    families = GetSymbolsFromType(doc, unusedTypeIds)
     # check whether an entire family can be purged and if so remove their symbol(type) ids from 
     # from unusedType ids list since we will be purging the family instead
-    for key, value in fams.items():
+    for key, value in families.items():
         if(FamilyAllTypesInUse(value, unusedTypeIds)):
             unusedFamilyIds.append(key)
             unusedTypeIds = util.RemoveItemsFromList(unusedTypeIds, value)
@@ -523,7 +523,7 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
         multiCatFilter = rdb.ElementMulticategoryFilter(cats)
         elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
         for el in elements:
-            # check if shared fams are to be excluded from return list
+            # check if shared families are to be excluded from return list
             if(excludeSharedFam):
                 fam = el.Family
                 pValue = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
@@ -558,7 +558,7 @@ def GetAllNonSharedFamilySymbolIds(doc):
 
 def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     '''
-    Filters types obtained by past in typeIdGetter method and depending on useType past in returns eiteher the used or unsed symbols of a family
+    Filters types obtained by past in typeIdGetter method and depending on useType past in returns either the used or unused symbols of a family
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -687,7 +687,7 @@ def SetRefPlanesToNotAReference(doc):
     :return:
         Result class instance.
 
-        - result.status: (bool) True if at least one reference plane type was successfully changed oherwise False
+        - result.status: (bool) True if at least one reference plane type was successfully changed otherwise False
         - result.message: one row entry per reference plane requiring reference type change
         - result.result: not used
 
@@ -728,7 +728,7 @@ def SetRefPlanesToNotAReference(doc):
                 rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
                 '12'
                 )
-            # set overall flag to indicate that at leasst one element was changed
+            # set overall flag to indicate that at least one element was changed
             if(resultChange.status == True and matchAtAll == False):
                 matchAtAll = True
             result.Update(resultChange)
@@ -750,7 +750,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     :return:
         Result class instance.
 
-        - result.status: (bool) True if at least one curve reference type was successfully changed oherwise False
+        - result.status: (bool) True if at least one curve reference type was successfully changed otherwise False
         - result.message: one row entry per curve element requiring reference type change
         - result.result: not used
 

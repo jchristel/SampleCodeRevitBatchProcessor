@@ -76,7 +76,7 @@ def GetModelBIM360Ids(doc):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: proejct GUID, model GUID, human readble cloud path
+    :return: project GUID, model GUID, human readable cloud path
     :rtype: GUID, GUID, str
     '''
 
@@ -104,7 +104,7 @@ def GetModelFileSize(doc):
     path = doc.GetCloudModelPath()
     fullPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     if (fullPath.StartsWith("BIM 360")):
-        # get user envirnoment
+        # get user environment
         hostName = util.GetLocalAppDataPath()
         # build path to local cache files
         folder = hostName + '\\Autodesk\\Revit\\Autodesk Revit ' + str(doc.Application.VersionNumber) + '\\CollaborationCache'

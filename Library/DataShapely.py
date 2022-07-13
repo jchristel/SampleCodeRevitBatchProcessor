@@ -61,7 +61,7 @@ def GetTranslationMatrix(geoObject):
     transM = [] # translation only matrix
     # note numpy creates arrays by row!
     # need to append one more row since matrix dot multiplication rule:
-    # number of coulmns in first matrix must match number of rows in second matrix (point later on)
+    # number of columns in first matrix must match number of rows in second matrix (point later on)
     for vector in geoObject.rotationCoord:
         vector.append(0.0)
         transM.append(vector)
@@ -80,7 +80,7 @@ def GetOuterLoopAsShape(geoObject, translationM):
     Returns the boundary loop of an object as list of shapely points. 
     
     Points are translated with passed in matrix.
-    Any loops containing less then 3 points willbe ignored. (Empty list will be returned)
+    Any loops containing less then 3 points will be ignored. (Empty list will be returned)
 
     :param geoObject: A data geometry object instance.
     :type geoObject: :class:`.DataGeometry`
@@ -93,10 +93,10 @@ def GetOuterLoopAsShape(geoObject, translationM):
 
     singlePolygonLoop = []
     if(geoObject.dataType == 'polygons'):
-        for pdouble in geoObject.outerLoop:
+        for pointDouble in geoObject.outerLoop:
             # need to add 1 to list for matric multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)
-            translatedPoint = np.dot(translationM,[pdouble[0], pdouble[1], pdouble[2], 1.0])
+            translatedPoint = np.dot(translationM,[pointDouble[0], pointDouble[1], pointDouble[2], 1.0])
             p = sg.Point(translatedPoint[0],translatedPoint[1],translatedPoint[2])
             singlePolygonLoop.append(p)
     # ignore any poly loops with less then 3 sides (less then 3 points)
@@ -110,7 +110,7 @@ def GetInnerLoopsAsShape(geoObject, translationM):
     Returns the inner loops (holes) of an object as list of lists of shapely points. 
     
     Points are translated with passed in matrix.
-    Any inner loops containing less then 3 points willbe ignored. (Empty list will be returned)
+    Any inner loops containing less then 3 points will be ignored. (Empty list will be returned)
 
     :param geoObject: A data geometry object instance.
     :type geoObject: :class:`.DataGeometry`
@@ -127,10 +127,10 @@ def GetInnerLoopsAsShape(geoObject, translationM):
         # there might be more then one inner loop
         for innerLoop in geoObject.innerLoops:
             singlePolygonLoop = []
-            for pdouble in innerLoop:
-                # need to add 1 to list for matric multiplication
+            for pointDouble in innerLoop:
+                # need to add 1 to list for matrix multiplication
                 # number of columns in first matrix (translation) must match number of rows in second matrix (point)
-                translatedPoint = np.dot(translationM,[pdouble[0], pdouble[1], pdouble[2], 1.0])
+                translatedPoint = np.dot(translationM,[pointDouble[0], pointDouble[1], pointDouble[2], 1.0])
                 p = sg.Point(translatedPoint[0],translatedPoint[1],translatedPoint[2])
                 singlePolygonLoop.append(p)
             # ignore any poly loops with less then 3 sides ( less then 3 points)
@@ -142,7 +142,7 @@ def buildShapelyPolygon(shapeS):
     '''
     Creates shapely polygons from list of polygons past in.
 
-    Sssumptions is first polygone describes the boundary loop and any subsequent polygons are describing\
+    Assumptions is first polygon describes the boundary loop and any subsequent polygons are describing\
          holes within the boundary 
 
     :param shapeS: list of shapely polygons
@@ -287,14 +287,14 @@ def BuildDictionaryByLevelAndDataType(dataReader):
         
 def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
     '''
-    Convertes polygon points from DataGeoemtry instances to shapely polygon instances and returnts them as a dictionary where:
+    Converts polygon points from DataGeometry instances to shapely polygon instances and returns them as a dictionary where:
 
     - key is the geometry objects id
     - value is a list of shapely polygons
 
     :param geoObjects: A list of instances of the the same type (i.e DataRoom)
     :type geoObjects: list[data object]
-    :param dataType: _string humna readable identifying the data type ( each Data... class hass this as a static field: dr.DataRoom.dataType)
+    :param dataType: _string human readable identifying the data type ( each Data... class has this as a static field: dr.DataRoom.dataType)
     :type dataType: str
 
     :return: A dictionary.
@@ -369,7 +369,7 @@ def SortMultipleDataRows(associatedDataRows, roomData):
       
 def GetReportData(dicObject):
     '''
-    Convertes a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.
+    Converts a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.
 
     :param dicObject:  A dictionary where key is the level name and values is a list of DataRoom instances.
     :type dicObject: {str:[:class: `.DataRoom`]}
@@ -381,7 +381,7 @@ def GetReportData(dicObject):
     data = []
     for levelName in dicObject:
         for room in dicObject[levelName][0]:
-            datarow = [
+            dataRow = [
                 room.functionNumber, 
                 room.number, 
                 room.name, 
@@ -408,8 +408,8 @@ def GetReportData(dicObject):
                     associatedDataRows.append(associatedDataRow)
             
             # get the data as list of strings. Collapse multiple ceilings of the same type into one entry
-            # with mutliplt ids
-            dataBySomething = SortMultipleDataRows(associatedDataRows, datarow)
+            # with multiple ids
+            dataBySomething = SortMultipleDataRows(associatedDataRows, dataRow)
             for d in dataBySomething:
                 data.append(d)
     return data
@@ -420,7 +420,7 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
     
     The result is written  to a report to provided path containing a row per room and ceiling within room.
     
-    :param dataSourcePath: Thge fully qualified file path of json formatted data file containing room and ceiling data.
+    :param dataSourcePath: The fully qualified file path of json formatted data file containing room and ceiling data.
     :type dataSourcePath: str
     :param outputFilePath: The fully qualified file path of the output report. 
     :type outputFilePath: str
@@ -434,7 +434,7 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
         
         Otherwise False.
         
-        - result.message will confirm report was written succesfuly.
+        - result.message will confirm report was written successfully.
         - result.result empty list
         
         On exception:
@@ -505,8 +505,8 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                                             dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
                                             result.AppendMessage(
                                                 'Exception: ' + str(e) + '\n' +
-                                                'offending room: room name '+ dataObjectRoom.name+ ' room number '+ dataObjectRoom.number + ' room id ' + str(dataObjectRoom.id) + ' is valid polytgon ' + str(rPolygon.is_valid) +  '\n' +
-                                                'offending ceiling id ' + str(dataObjectCeiling.id) + ' is valid polytgon ' + str(cPolygon.is_valid)
+                                                'offending room: room name '+ dataObjectRoom.name+ ' room number '+ dataObjectRoom.number + ' room id ' + str(dataObjectRoom.id) + ' is valid polygon ' + str(rPolygon.is_valid) +  '\n' +
+                                                'offending ceiling id ' + str(dataObjectCeiling.id) + ' is valid polygon ' + str(cPolygon.is_valid)
                                                 )
                 else:
                     result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName][0][0].levelName))
@@ -514,10 +514,10 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
                 result.AppendMessage('No rooms found for level: ' + str(dicObjects[levelName]))
         # write data out:
         # loop over dic
-        # write single row for room and matching ceiling ( multiple rows for single rrom if multiple ceilings)
+        # write single row for room and matching ceiling ( multiple rows for single room if multiple ceilings)
         reportData = GetReportData(dicObjects)
         writeReportData(outputFilePath, [       # header
-            'room function nuber', 
+            'room function number', 
             'room number',
             'room name', 
             'room level name', 

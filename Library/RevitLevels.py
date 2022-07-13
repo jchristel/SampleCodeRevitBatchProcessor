@@ -184,7 +184,7 @@ def GetUnusedLevelHeadFamilies(doc):
             unusedSymbolIds.append(levelSymbolInModel.Id)
     return unusedSymbolIds
 
-def GetAllLevelHeadfamilyTypeIds(doc):
+def GetAllLevelHeadFamilyTypeIds(doc):
     '''
     Gets ids of all level head family symbols (types) in the model.
 

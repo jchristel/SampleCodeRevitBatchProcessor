@@ -107,7 +107,7 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
         designSName = rdb.Element.Name.GetValue(e)
         # check for match on both set and option
         if(designSName == designSetName and designOName == designOptionName):
-            # get isPriamry property on design option
+            # get isPrimary property on design option
             isPrimary = do.IsPrimary
             break
     return isPrimary
@@ -118,7 +118,7 @@ def GetDesignSetOptionInfo(doc, element):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param element: The element of which the desin set/option data is to be returned.
+    :param element: The element of which the design set/option data is to be returned.
     :type element: Autodesk.Revit.DB.Element
     :return: Dictionary
         Design Set Name: (can be either Main Model or the design set name)

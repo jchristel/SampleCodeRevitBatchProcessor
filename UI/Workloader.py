@@ -32,12 +32,12 @@ The below function attempt to fill these buckets evenly measured on file size.
 
 import WorkloadBucket as wb
 
-def DistributeWorkload (numerOfBuckets, items, getWorkloadSize):
+def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
     '''
     Distributes a given number of items evenly by workload size into workload buckets.
 
-    :param numerOfBuckets: The nubmer of buckets items are to be distributed to
-    :type numerOfBuckets: int
+    :param numberOfBuckets: The number of buckets items are to be distributed to
+    :type numberOfBuckets: int
     :param items: A list of items.
     :type items: [foo]
     :param getWorkloadSize: A function returning the workload size from an item.
@@ -50,7 +50,7 @@ def DistributeWorkload (numerOfBuckets, items, getWorkloadSize):
     workloadBuckets = []
     try:
         # ini bucket list
-        for x in range(numerOfBuckets):
+        for x in range(numberOfBuckets):
             workloadBuckets.append(wb.WorkloadBucket())
         itemToWorkLoadValues = []
         

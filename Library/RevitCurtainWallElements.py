@@ -190,7 +190,7 @@ def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
 
 def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
     '''
-    Gets all Curtain Wall Element element type available in model. Exludes in place family symbols.
+    Gets all Curtain Wall Element element type available in model. Excludes in place family symbols.
 
     Includes:
 
@@ -213,7 +213,7 @@ def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
 
 def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
     '''
-    Gets all Curtain Wall Element element type ids available in model. Exludes in place family symbols.
+    Gets all Curtain Wall Element element type ids available in model. Excludes in place family symbols.
 
     Includes:
 
@@ -258,7 +258,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
 
-    TODO: check for more geric list comparison and remove this function.
+    TODO: check for more generic list comparison and remove this function.
 
     :param famTypeIds: List of family type ids to check.
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -281,7 +281,7 @@ def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
     Gets all unused Curtain Wall Element element type ids which can be safely deleted from the model.
 
     This method can be used to safely delete unused in curtain wall element types. There is no requirement by Revit to have at least one\
-        curtain wall element defintion in the model.
+        curtain wall element definition in the model.
     
     
     :param doc: Current Revit model document.
@@ -368,7 +368,7 @@ def GetUnusedICurtainWallSymbolIdsForPurge(doc):
     Gets symbol(type) ids and family ids (when no type is in use) of curtain wall element families which can be safely deleted from the model.
 
     This method can be used to safely delete unused curtain wall element types. There is no requirement by Revit to have at least one\
-        in place wall defintion in the model.
+        in place wall definition in the model.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

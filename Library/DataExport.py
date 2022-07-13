@@ -35,7 +35,7 @@ import Result as res
 # dataIn         
 def ConvertDataToListJson(dataIn):
     '''
-    Convertes lists of data classes into a single list of list of Json string representing the data class
+    Converts lists of data classes into a single list of list of Json string representing the data class
 
     :param dataIn: list of data class instances
     :type dataIn: [data class]

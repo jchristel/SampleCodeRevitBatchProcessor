@@ -76,7 +76,7 @@ def GetBuildingPadTypesByClass(doc):
     - Basic BuildingPad
     
     Filters by class.
-    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+    Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -156,7 +156,7 @@ def GetAllBuildingPadInstancesInModelByClass(doc):
     Gets all building pad elements placed in model.
 
     Filters by class.
-    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+    Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -190,7 +190,7 @@ def GetAllBuildingPadTypeIdsInModelByClass(doc):
     Gets all building pad element type ids available in model.
 
     Filters by class.
-    Since there are no in place families of type building pad posible, this should return the same elements as the by category filter.
+    Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -225,7 +225,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
 
-    TODO: check for more geric list comparison and remove this function.
+    TODO: check for more generic list comparison and remove this function.
 
     :param famTypeIds: List of family type ids to check.
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId

@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Customizeable element filter class.
+Customizable element filter class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -37,7 +37,7 @@ class RevitCustomElementFilter:
 
         :param elementFilters: List of element filter functions which will need to accept document and elementId as their arguments, defaults to []
         :type elementFilters: list of functions, optional
-        :param isLogicalANDFilter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logicla AND)
+        :param isLogicalANDFilter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)
         :type isLogicalANDFilter: bool, optional
         '''
 

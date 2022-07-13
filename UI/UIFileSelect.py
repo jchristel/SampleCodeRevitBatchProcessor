@@ -40,7 +40,7 @@ import FileSelectSettings as set
 
 def Mbox(title, text, style):
     '''
-    A simple winforms message box.
+    A simple win forms message box.
 
     :param title: The title of the message box.
     :type title: str
@@ -50,7 +50,7 @@ def Mbox(title, text, style):
         (https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.messageboxbuttons?view=windowsdesktop-6.0)
     :type style: int
 
-    :return: A winform message box.
+    :return: A win form message box.
     :rtype: _type_
     '''
 
@@ -62,7 +62,7 @@ class MyWindow (Windows.Window):
         '''
         Class constructor
 
-        :param xamlFullFileName: Fully qaulified file path to wpf XAML file.
+        :param xamlFullFileName: Fully qualified file path to wpf XAML file.
         :type xamlFullFileName: str
         :param revitFiles: List containing path to files.
         :type revitFiles: [str]

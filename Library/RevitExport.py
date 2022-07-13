@@ -322,7 +322,7 @@ def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
 
 #-------------------------------------------- IFC default -------------------------------------
 
-def IFCGetExportConfifgByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noBoundaries):
+def IFCGetExportConfigByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noBoundaries):
     '''
     Returns an IFC export configuration for the built in IFC exporter.
 
@@ -394,7 +394,7 @@ def SetUpNWCDefaultExportOptionSharedByView():
     '''
     Return an NWC Export Options object with shared coordinates, export by View.
 
-    :return: A navisworks .nwc export option.
+    :return: A Navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     '''
     
@@ -414,14 +414,14 @@ def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, export
     :type splitModelByLevel: bool
     :param exportParts: True parts will be exported, otherwise not.
     :type exportParts: bool
-    :param exportRoomAsAttributes: True room proprties will be eported (can be slow!), otherwise not.
+    :param exportRoomAsAttributes: True room properties will be exported (can be slow!), otherwise not.
     :type exportRoomAsAttributes: bool
     :param exportRoomGeometry: True room geometry will be exported, otherwise not.
     :type exportRoomGeometry: bool
-    :param findMissingMaterials: True exxporter will attempt to find missing materials, otherwise not
+    :param findMissingMaterials: True exporter will attempt to find missing materials, otherwise not
     :type findMissingMaterials: bool
 
-    :return: A navisworks .nwc export option.
+    :return: A Navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     '''
 
@@ -444,7 +444,7 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param nwcExportOption: A navisworks .nwc export option.
+    :param nwcExportOption: A Navisworks .nwc export option.
     :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
     :param directoryPath: The directory path to where the export is being saved.
     :type directoryPath: str
@@ -482,7 +482,7 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param nwcExportOption: A navisworks .nwc export option.
+    :param nwcExportOption: A Navisworks .nwc export option.
     :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
     :param directoryPath: The directory path to where the export is being saved.
     :type directoryPath: str
@@ -516,7 +516,7 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
     :type doc: Autodesk.Revit.DB.Document
     :param viewFilter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
     :type viewFilter: str
-    :param nwcExportOption: A navisworks .nwc export option.
+    :param nwcExportOption: A Navisworks .nwc export option.
     :type nwcExportOption: Autodesk.Revit.DB.NavisworksExportOptions
     :param directoryPath: The directory path to where the export is being saved.
     :type directoryPath: str

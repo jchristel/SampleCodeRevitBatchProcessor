@@ -120,7 +120,7 @@ def isBackUpFile(filePath):
     
     Method of checking:
 
-    - splitting filname at every full stop
+    - splitting file name at every full stop
     - check whether a list with more more then 2 entries came back ?
     
         - no: 
@@ -234,12 +234,6 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
         returnValue.UpdateSep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
     return returnValue
 
-
-# method creating a number of task list files
-# directoryPath         
-# fileExtension         file extenision in format .rvt
-# tasklistDirectory     
-# taskFilesNumbes       number of task files to be written
 def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
     '''
     Writes out all task list(s) to file(s).
@@ -254,7 +248,7 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
     :type taskFilesNumber: int
     :param fileGetter: Function accepting a directory and file extension filter and returns file items from directory.
     :type fileGetter: func(str, str) -> :class:`.FileItem`
-    :param fileDataProcessor: Function processing file item and retruns a string to be written to task list file, defaults to BucketToTaskListFileSystem
+    :param fileDataProcessor: Function processing file item and returns a string to be written to task list file, defaults to BucketToTaskListFileSystem
     :type fileDataProcessor: func(:class:`.FileItem`) -> str, optional
     
     :return: 
@@ -274,9 +268,9 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
     returnValue = res.Result()
     returnValue.status = True
     # get revit files in input dir
-    revitfiles = fileGetter(directoryPath, fileExtension)
+    revitFiles = fileGetter(directoryPath, fileExtension)
     # build bucket list
-    buckets = wl.DistributeWorkload(taskFilesNumber, revitfiles, getFileSize)
+    buckets = wl.DistributeWorkload(taskFilesNumber, revitFiles, getFileSize)
     try:
         # write out file lists
         counter = 0

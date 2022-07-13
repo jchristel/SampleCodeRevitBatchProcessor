@@ -187,8 +187,8 @@ def GetOtherSubCategories(doc):
             if (mainCat.Name not in catData):
                 catData[mainCat.Name] = {}
             # loop over all sub categories
-            for subcat in mainCat.SubCategories:
-                catData[mainCat.Name][subcat.Name] = subcat
+            for subCat in mainCat.SubCategories:
+                catData[mainCat.Name][subCat.Name] = subCat
               
     return catData
 
@@ -211,7 +211,7 @@ def GetCategoryGraphicStyleIds(cat):
     iDGraphicStyleCut = iDGraphicStyleProjection
     if(graphicStyleCut != None):
         iDGraphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
-    # build category dictionary where key is the style type, values is the coresponding Id
+    # build category dictionary where key is the style type, values is the corresponding Id
     dic = {}
     dic[CATEGORY_GRAPHICSTYLE_PROJECTION] = iDGraphicStyleProjection 
     dic[CATEGORY_GRAPHICSTYLE_CUT] = iDGraphicStyleCut
@@ -348,7 +348,7 @@ def GetSavedCategoryPropertyByName(properties, propNames):
 
     :param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.
     :type properties: list [{str: var}]
-    :param propNames: List of proprty names of which the values are to be returned
+    :param propNames: List of property names of which the values are to be returned
     :type propNames: list str
 
     :return: A list of values.
@@ -507,13 +507,13 @@ def SetCategoryProperties(doc, cat, properties):
     
     # line weights
     lineWeights = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINEWEIGHT_CUT_NAME, PROPERTY_LINEWEIGHT_PROJECTION_NAME])
-    flagLineweights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1])
+    flagLineWeights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1])
     
     # category colour
     colourRGB = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINECOLOUR_RED_NAME, PROPERTY_LINECOLOUR_GREEN_NAME, PROPERTY_LINECOLOUR_BLUE_NAME])
     flagColours = SetCategoryColour(doc, cat, colourRGB[0], colourRGB[1], colourRGB[2])
     
-    return flagMat & flagPattern & flagLineweights & flagColours
+    return flagMat & flagPattern & flagLineWeights & flagColours
 
 #-------------------------- utilities ---------------------------------
 
@@ -558,7 +558,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newSubCategoryName: The new subcategroy name
+    :param newSubCategoryName: The new subcategory name
     :type newSubCategoryName: str
 
     :return: The new subcategory. Exception "The name 'xys' is already in use" if subcategory with the same name is already in file.
@@ -578,9 +578,9 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
             def action():
                 actionReturnValue = res.Result()
                 try:
-                    newSubcategory = doc.Settings.Categories.NewSubcategory(parentCategory, newSubCategoryName)
+                    newSubCategory = doc.Settings.Categories.NewSubcategory(parentCategory, newSubCategoryName)
                     actionReturnValue.UpdateSep(True, 'Created subcategory ' + str(newSubCategoryName))
-                    actionReturnValue.result = newSubcategory
+                    actionReturnValue.result = newSubCategory
                 except Exception as e:
                     actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
                 return actionReturnValue
@@ -594,7 +594,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
           
 def SortElementsByCategory(elements, elementDic):
     '''
-    Returns a dicionary of element ids where key is the category they belong to.
+    Returns a dictionary of element ids where key is the category they belong to.
 
     :param elements:  List of revit elements.
     :type elements: [Autodesk.Revit.DB.Element]
@@ -606,8 +606,8 @@ def SortElementsByCategory(elements, elementDic):
     '''
 
     for el in elements:
-        for builinDef in ELEMENTS_PARAS_SUB:
-            value = com.GetBuiltInParameterValue(el, builinDef)
+        for builtinDef in ELEMENTS_PARAS_SUB:
+            value = com.GetBuiltInParameterValue(el, builtinDef)
             if (value != None):
                 if(value in elementDic):
                     elementDic[value].append(el.Id)
@@ -692,7 +692,7 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     :return: 
         Result class instance.
 
-        - result.status. True if category was created or already existed in file, otherwsie False.
+        - result.status. True if category was created or already existed in file, otherwise False.
         - result.message will contain the name of the category created.
         - result.result returns new category, if category already exists in file it will return that
         
@@ -736,7 +736,7 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     :return: 
         Result class instance.
 
-        - result.status. True if category was created or already existed in file, otherwsie False.
+        - result.status. True if category was created or already existed in file, otherwise False.
         - result.message will contain the name of the category created.
         - result.result returns new category, if category already exists in file it will return that
         
@@ -752,11 +752,11 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     returnValue = res.Result()
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
     if(resultNewSubCat.result):
-        newSubcat = resultNewSubCat.result
-        flag = SetCategoryProperties(newSubcat, savedCatProps)
+        newSubCat = resultNewSubCat.result
+        flag = SetCategoryProperties(newSubCat, savedCatProps)
         if(flag):
             returnValue.UpdateSep(True, 'Successfully created category '+ str(newCatName))
-            returnValue.result = newSubcat
+            returnValue.result = newSubCat
         else:
             returnValue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
     return returnValue
@@ -775,8 +775,8 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
     :return: 
         Result class instance.
 
-        - result.status. True if all elements from source subcategory where moved to destination subcategory, otherwsie False.
-        - result.message will contain the name of the deastination subcategory by element.
+        - result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.
+        - result.message will contain the name of the destination subcategory by element.
         - result.result empty list
         
         On exception:
@@ -793,7 +793,7 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
     cats = GetMainSubCategories(doc)
     if(fromCategoryName in cats):
         if(toCategoryName in cats):
-            # dictionary containing destination catgory ids (3D, cut and projection)
+            # dictionary containing destination category ids (3D, cut and projection)
             destinationCatIds = GetCategoryGraphicStyleIds(cats[toCategoryName])
             # get elements on source category
             dic = GetElementsByCategory(doc, cats[fromCategoryName])
@@ -821,7 +821,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
     :return: 
         Result class instance.
 
-        - result.status. True if all elements where moved to destination subcategories, otherwsie False.
+        - result.status. True if all elements where moved to destination subcategories, otherwise False.
         - result.message will contain the name of the destination subcategory by element.
         - result.result empty list
         
@@ -846,8 +846,8 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
                         for p in paras:
                             if (p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB):
                                 targetId = destinationCatIds[key]
-                                updataPara = com.setParameterValue(p, str(targetId), doc)
-                                returnValue.Update(updataPara)
+                                updatedPara = com.setParameterValue(p, str(targetId), doc)
+                                returnValue.Update(updatedPara)
                                 break
     else:
         returnValue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
@@ -857,7 +857,7 @@ def ChangeFamilyCategory(doc, newCategoryName):
     '''
     Changes the current family category to the new one specified.
 
-    Revits default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
+    Revit's default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
         to the new family category.
     
     This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before\
@@ -872,7 +872,7 @@ def ChangeFamilyCategory(doc, newCategoryName):
         Result class instance.
 
         - result.status. True if all custom subcategories where re-created under the new family category and elements where moved to those subcategories, otherwise False.
-        - result.message will confirm succesful creation of subcategories and element move.
+        - result.message will confirm successful creation of subcategories and element move.
         - result.result empty list
         
         On exception:
@@ -906,7 +906,7 @@ def ChangeFamilyCategory(doc, newCategoryName):
     if(changeFam.status):
         # re-create custom sub categories
         for subCat in subCats:
-            # only re-create custom sub cagtegories (id greater then 0)
+            # only re-create custom sub categories (id greater then 0)
             if(subCats[subCat].Id.IntegerValue > 0):
                 createCat = CreateNewCategoryFromSavedProperties(doc, subCat, props[subCat])
                 if(createCat.status):

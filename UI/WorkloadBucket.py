@@ -3,7 +3,7 @@
 A work load bucket.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Worklpad buckets are used to distribute file processing evenly between parallel running batch processor\
+Workload buckets are used to distribute file processing evenly between parallel running batch processor\
     sessions based on Revit file size.
 
 '''
@@ -37,7 +37,7 @@ class WorkloadBucket:
         '''
         Class constructor.
 
-        Initialises this class with:
+        Initializes this class with:
 
         - .workLoadValue = 0
         - .items = []

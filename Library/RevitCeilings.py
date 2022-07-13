@@ -236,7 +236,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
 
-    TODO: check for more geric list comparison and remove this function.
+    TODO: check for more generic list comparison and remove this function.
 
     :param famTypeIds: List of family type ids to check.
     :type famTypeIds: List of Autodesk.Revit.DB.ElementId
@@ -351,7 +351,7 @@ def GetUnusedInPlaceCeilingIdsForPurge(doc):
     Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling families which can be safely deleted from the model.
 
     This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one\
-        in place ceiling defintion in the model.
+        in place ceiling definition in the model.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -458,7 +458,7 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     :param revitCeiling: A revit ceiling instance.
     :type revitCeiling: Autodesk.Revit.DB.Ceiling
 
-    :return: A data ceiling object instacne.
+    :return: A data ceiling object instance.
     :rtype: :class:`.DataCeiling`
     '''
 
@@ -469,8 +469,8 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     if(len(revitGeometryPointGroups) > 0):
         ceilingPointGroupsAsDoubles = []
         for allCeilingPointGroups in revitGeometryPointGroups:
-            dgeoConverted = rGeo.ConvertXYZInDataGeometry(doc, allCeilingPointGroups)
-            ceilingPointGroupsAsDoubles.append(dgeoConverted)
+            dataGeoConverted = rGeo.ConvertXYZInDataGeometry(doc, allCeilingPointGroups)
+            ceilingPointGroupsAsDoubles.append(dataGeoConverted)
         dataC.geometry = ceilingPointGroupsAsDoubles
         # get other data
         dataC.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)

@@ -72,7 +72,7 @@ def IsClose(a, b, rel_tol=1e-09, abs_tol=0.0):
     :param a: A float
     :type a: float
     :param b: A float
-    :type b: flaot
+    :type b: float
     :param rel_tol: Relative tolerance used to compare the two floats, defaults to 1e-09
     :type rel_tol: float, optional
     :param abs_tol: Absolute tolerance used to compare the two floats, defaults to 0.0
@@ -122,7 +122,7 @@ def CheckDuplicatePoint(points, point):
 
 def GetPointAsDoubles(point):
     '''
-    Convertes a revit XYZ to a list of doubles in order x,y,z.
+    Converts a revit XYZ to a list of doubles in order x,y,z.
 
     :param point: A revit point.
     :type point: Autodesk.Revit.DB.XYZ
@@ -150,7 +150,7 @@ def FlattenXYZPoint(point):
 
 def FlattenXYZPointList(polygon):
     '''
-    Flattens a list of XYZ poins to a list of UV points by omitting the Z value of each XYZ.
+    Flattens a list of XYZ points to a list of UV points by omitting the Z value of each XYZ.
 
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
 
@@ -172,7 +172,7 @@ def FlattenXYZPointList(polygon):
 
 def FlattenXYZPointListOfLists(  polygons ):
     '''
-    Flattens a list lists of XYZ poins to a list of lists of UV points by omitting the Z value of each XYZ.
+    Flattens a list lists of XYZ points to a list of lists of UV points by omitting the Z value of each XYZ.
 
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
 
@@ -204,9 +204,9 @@ def GetCoordinateSystemTranslationAndRotation(doc):
     :rtype: list (3) [list(3) int], list [int]
     '''
 
-    plAtive = doc.ActiveProjectLocation
+    projectLocationActive = doc.ActiveProjectLocation
     # get the inverse because we need to go back to origin
-    totalTransform = plAtive.GetTotalTransform().Inverse
+    totalTransform = projectLocationActive.GetTotalTransform().Inverse
     nBasisX = GetPointAsDoubles(totalTransform.BasisX)
     nBasisY = GetPointAsDoubles(totalTransform.BasisY)
     nBasisZ = GetPointAsDoubles(totalTransform.BasisZ)
@@ -373,7 +373,7 @@ def GetSignedPolygonArea( UVpoints ):
 
 def ConvertEdgeArraysIntoListOfPoints(edgeArrays):
     '''
-    Convertes an edge array into a list of list of revit XYZ points.
+    Converts an edge array into a list of list of revit XYZ points.
 
     :param edgeArrays: A revit edge array.
     :type edgeArrays: Autodesk.Revit.DB.EdgeArrayArray ( no not a spelling mistake :) )
@@ -402,7 +402,7 @@ def ConvertEdgeArraysIntoListOfPoints(edgeArrays):
 
 def GetEdgePoints(edge):
     '''
-    Retrieves the revit XYZ points defining an edge (curves get tesselated!)
+    Retrieves the revit XYZ points defining an edge (curves get tessellated!)
 
     :param edge: An edge of a solid.
     :type edge: Autodesk.Revit.DB.Edge 
@@ -419,7 +419,7 @@ def GetEdgePoints(edge):
 def ConvertXYZInDataGeometry(doc, dgObject):
     '''
     Converts revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops\
-        and stores them in new data geometry obejct. It also populates translation and rotation matrix data of\
+        and stores them in new data geometry object. It also populates translation and rotation matrix data of\
             coordinate system information.
 
     :param doc: _description_
@@ -431,23 +431,23 @@ def ConvertXYZInDataGeometry(doc, dgObject):
     :rtype: :class:`.DataGeometry`
     '''
 
-    dgeo = dGeometry.DataGeometry()
+    dataGeometry = dGeometry.DataGeometry()
     outerLoop = []
     for xyzPoint in dgObject.outerLoop:
-        pdouble = GetPointAsDoubles(xyzPoint)
-        outerLoop.append(pdouble)
+        pointDouble = GetPointAsDoubles(xyzPoint)
+        outerLoop.append(pointDouble)
     innerLoops = []
     for innerLoop in dgObject.innerLoops:
         innerLoopPoints = []
         for xyzPoint in innerLoop:
-            pdouble = GetPointAsDoubles(xyzPoint)
-            innerLoopPoints.append(pdouble)
+            pointDouble = GetPointAsDoubles(xyzPoint)
+            innerLoopPoints.append(pointDouble)
         innerLoops.append(innerLoopPoints)
-    dgeo.outerLoop = outerLoop
-    dgeo.innerLoops = innerLoops
+    dataGeometry.outerLoop = outerLoop
+    dataGeometry.innerLoops = innerLoops
     # add coordinate system translation and rotation data
-    dgeo.rotationCoord, dgeo.translationCoord = GetCoordinateSystemTranslationAndRotation(doc)
-    return dgeo
+    dataGeometry.rotationCoord, dataGeometry.translationCoord = GetCoordinateSystemTranslationAndRotation(doc)
+    return dataGeometry
 
 def CheckDuplicateEdge(edges, edge):
     '''
@@ -546,7 +546,7 @@ def GetLowestZFromEdgesPointCollection(edges):
     counter = 0
     for edge in edges:
         for p in edge.Tessellate():
-            # make sure lowest z is initialist with the first point z values
+            # make sure lowest z is initialized with the first point z values
             if (counter == 0):
                 lowestZ = p.Z
             else:
@@ -692,9 +692,9 @@ def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops
     
     :param exteriorLoop: A polygon loop describing the external boundary of a face.
     :type exteriorLoop: list of Autodesk.Revit.DB.UV
-    :param otherLoop: A polygon loop which is to be checked as to whether it is within the exterioir loop and the any hole loops.
+    :param otherLoop: A polygon loop which is to be checked as to whether it is within the exterior loop and the any hole loops.
     :type otherLoop: list of Autodesk.Revit.DB.UV
-    :param holeLoops: A list of named tuples containing .loop property which is a list of UV points formning a polygon which have been identified\
+    :param holeLoops: A list of named tuples containing .loop property which is a list of UV points forming a polygon which have been identified\
          as creating a hole in the exteriorLoop.
     :type holeLoops: namedtuple('uvLoop', 'loop area id threeDPoly')\
         .Loop is a list of UV points defining a polygon loop
@@ -714,7 +714,7 @@ def IsLoopWithinOtherLoopButNotReferenceLoops(exteriorLoop, otherLoop, holeLoops
     if (IsPointWithinPolygon(exteriorLoop, point)):
         returnValue = True
         # check whether this point is within the polygon loops identified as holes
-        # if so it is actually an island and will be accounted for seperately
+        # if so it is actually an island and will be accounted for separately
         if(len(holeLoops) > 0):
             for hLoop in holeLoops:
                 if (IsPointWithinPolygon(hLoop.loop, point)):
@@ -747,8 +747,8 @@ def BuildLoopsDictionary(loops):
     counter = 0
     # check if there is more then one loop  to start with
     if(len(copyLoops) > 1):
-        loopflag = True
-        while loopflag:
+        loopFlag = True
+        while loopFlag:
             # add the biggest loop as exterior to dictionary (first one in list)
             key = copyLoops[0].id
             returnValue[key] = []
@@ -772,7 +772,7 @@ def BuildLoopsDictionary(loops):
                 copyLoops.remove(hole)
             # check whether all loops are accounted for
             if(len(copyLoops) == 0):
-                loopflag = False
+                loopFlag = False
     elif(len(copyLoops) == 1):
         key = copyLoops[0].id
         # only one exterior loop exists, no interior loops
@@ -785,7 +785,7 @@ def ConvertSolidToFlattened2DPoints(solid):
     Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values...)
 
     First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
-    Arcs, circles will be tesselated to polygons.
+    Arcs, circles will be tessellated to polygons.
 
     :param solid: A solid.
     :type solid: Autodesk.Revit.DB.Solid
@@ -795,29 +795,29 @@ def ConvertSolidToFlattened2DPoints(solid):
     '''
 
     '''
-    sample for a sold with mutltiple sketches:
+    sample for a sold with multiple sketches:
     [
         [
-            [external polyline],[hole],[hole]
+            [external poly line],[hole],[hole]
         ],
         [
-            [external polyline] # without any holes
+            [external poly line] # without any holes
         ]
     ]
     
-    sort faces into groupes by volumne:
-    This may be required because a solid can be made up of multiple volumnes (extrusion, sweeps etc)
+    sort faces into groups by volume:
+    This may be required because a solid can be made up of multiple volumes (extrusion, sweeps etc)
     Turns out a solid returns a single face for multiple sketches. In order to work out whether these are multiple non overlapping polygons I will need to check
     whether a point from one polygon is within the other if so it may represents a hole or an island within a hole...to avoid misreading an island for a whole I will need to sort the faces by area
-    and chjeck from largest down to smallest.
-    Also polylines send back will always only represent: first list: exterior boundary as polygon any follow list is a hole within the polygon. Any islands in thoe holes will get their own top level represntation
+    and check from largest down to smallest.
+    Also poly lines send back will always only represent: first list: exterior boundary as polygon any follow list is a hole within the polygon. Any islands in those holes will get their own top level representation
     i.e. no further list nesting!
 
     Within the faces groups: identify faces which are horizontal: its normal is facing up or down
     select the face with the lower Z coordinates and
-    group all edges of the above face which form a closed loop (first loop of edges to descibe the extend of that face, any secondary loops define holes in face)
+    group all edges of the above face which form a closed loop (first loop of edges to describe the extend of that face, any secondary loops define holes in face)
     
-    - > sort all edges by their connections (need to be connected by a point) so they descibe a loop <- seems to be ok as revit provides them
+    - > sort all edges by their connections (need to be connected by a point) so they describe a loop <- seems to be ok as revit provides them
     
     extract points of edges
     '''
@@ -826,37 +826,37 @@ def ConvertSolidToFlattened2DPoints(solid):
     # sort faces by size
     sortedBySizeFaces = GetFacesSortedByAreaFromSolid(solid)
     # get all faces which are horizontal only
-    hotizontalFaces = GetUniqueHorizontalFaces(sortedBySizeFaces)
+    horizontalFaces = GetUniqueHorizontalFaces(sortedBySizeFaces)
     # loop of all horizontal faces and extract loops
-    for hf in hotizontalFaces:
+    for hf in horizontalFaces:
         edgeLoops = ConvertEdgeArraysIntoListOfPoints(hf.EdgeLoops)
         # convert in UV coordinates
         edgeLoopsFlattened = FlattenXYZPointListOfLists(edgeLoops)
         #set up a named tuple to store data in it
-        uvloops = []
+        uvLoops = []
         uvLoop = namedtuple('uvLoop', 'loop area id threeDPoly')
         counter = 0
-        for edgeloopF in edgeLoopsFlattened:
-            areaLoop = GetSignedPolygonArea( edgeloopF )
-            uvTuple = uvLoop(edgeloopF, abs(areaLoop), counter, edgeLoops[counter])
-            uvloops.append(uvTuple)
+        for edgeLoopFlat in edgeLoopsFlattened:
+            areaLoop = GetSignedPolygonArea( edgeLoopFlat )
+            uvTuple = uvLoop(edgeLoopFlat, abs(areaLoop), counter, edgeLoops[counter])
+            uvLoops.append(uvTuple)
             counter += 1
-        uvloops = sorted(uvloops, key=lambda x: x.area, reverse=True)
+        uvLoops = sorted(uvLoops, key=lambda x: x.area, reverse=True)
         # sort loops into exterior and hole loops
-        loopDic = BuildLoopsDictionary(uvloops)
+        loopDic = BuildLoopsDictionary(uvLoops)
         for key in loopDic:
-            dgeo = dGeometry.DataGeometry()
+            dataGeometry = dGeometry.DataGeometry()
             keyList =[]
             # find matching loop by id
-            for x in uvloops:
+            for x in uvLoops:
                 if x.id == key:
                     keyList = x
                     break
-            dgeo.outerLoop = keyList.threeDPoly
+            dataGeometry.outerLoop = keyList.threeDPoly
             if(len(loopDic[key])>0):
                 for hole in loopDic[key]:
-                    dgeo.innerLoops.append(hole.threeDPoly)
+                    dataGeometry.innerLoops.append(hole.threeDPoly)
             else:
-                dgeo.innerLoops = []
-            ceilingGeos.append(dgeo)
+                dataGeometry.innerLoops = []
+            ceilingGeos.append(dataGeometry)
     return ceilingGeos

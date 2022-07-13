@@ -58,17 +58,17 @@ def main(argv):
     gotArgs, settings = processArgs(argv)
     if(gotArgs):
         # retrieve revit file data
-        revitfiles = GetFileData(settings)
+        revitFiles = GetFileData(settings)
         # check whether this is a BIM360 project or file system and assign
         # data retriever method acordingly
-        if(isBIM360File(revitfiles)):
+        if(isBIM360File(revitFiles)):
             getData = fl.BucketToTaskListBIM360
         else:
             getData = fl.BucketToTaskListFileSystem
         # check if anything came back
-        if(len(revitfiles) > 0):
+        if(len(revitFiles) > 0):
             # lets show the window
-            ui = UIFs.MyWindow(xamlFullFileName_, revitfiles, settings)
+            ui = UIFs.MyWindow(xamlFullFileName_, revitFiles, settings)
             uiResult = ui.ShowDialog()
             if(uiResult):
                 # build bucket list
@@ -87,7 +87,7 @@ def main(argv):
                 print ('No files selected!')
                 sys.exit(2)
         else:
-            # show messagew box
+            # show message box
             print ('No files found!')
             sys.exit(2)
     else:
@@ -109,12 +109,12 @@ def processArgs(argv):
 
     inputDirFile = ''
     outputDirectory = ''
-    outputfileNumber = 1
+    outputFileNumber = 1
     revitFileExtension = '.rvt'
     includeSubDirsInSearch = False
     gotArgs = False
     try:
-        opts, args = getopt.getopt(argv,"hsi:o:n:e:",["subDir","input=","outputDir=",'numberFiles=','filextension='])
+        opts, args = getopt.getopt(argv,"hsi:o:n:e:",["subDir","input=","outputDir=",'numberFiles=','fileExtension='])
     except getopt.GetoptError:
         print ('test.py -s -i <input> -o <outputDirectory> -n <numberOfOutputFiles> -e <fileExtension>')
     for opt, arg in opts:
@@ -131,7 +131,7 @@ def processArgs(argv):
         elif opt in ("-n", "--numberFiles"):
             try:
                 value = int(arg)
-                outputfileNumber = value
+                outputFileNumber = value
                 gotArgs = True
             except ValueError:
                 print (arg + ' value is not an integer')
@@ -141,7 +141,7 @@ def processArgs(argv):
             gotArgs = True
 
     # check if input values are valid
-    if (outputfileNumber < 0 or outputfileNumber > 100):
+    if (outputFileNumber < 0 or outputFileNumber > 100):
         gotArgs = False
         print ('The number of output files must be bigger then 0 and smaller then 100')
     if(not FileExist(inputDirFile)):
@@ -154,7 +154,7 @@ def processArgs(argv):
         gotArgs = False
         print ('Invalid file extension: [' + str(revitFileExtension) + '] expecting: .rvt or .rfa')
 
-    return gotArgs, set.FileSelectionSettings(inputDirFile, includeSubDirsInSearch, outputDirectory, outputfileNumber, revitFileExtension)
+    return gotArgs, set.FileSelectionSettings(inputDirFile, includeSubDirsInSearch, outputDirectory, outputFileNumber, revitFileExtension)
 
 def GetFolderPathFromFile(filePath):
     '''
@@ -178,7 +178,7 @@ def FileExist(path):
     '''
     Checks whether a file exists.
 
-    :param path: A fully qualiofied file path.
+    :param path: A fully qualified file path.
     :type path: str
 
     :return: True if file exists, otherwise False.
@@ -203,44 +203,44 @@ def GetFileData(settings):
             - format:
                 - 0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path
     
-    :param settings: A file seletct settings object instance.
+    :param settings: A file select settings object instance.
     :type settings: :class:`.FileSelectionSettings`
 
     :return: List of file items
     :rtype: [:class:`.FileItem`]
     '''
 
-    revitfiles = []
+    revitFiles = []
     # check whether input is a directory path or a text file (csv) containing BIM 360 data
     # since we tested for a valid path initially it will need to be either one...
     try:
         if(os.path.isfile(settings.inputDir)):
             # got a text file...extract BIM 360 data
-            revitfiles = ub360.GetBIM360Data(settings.inputDir)
+            revitFiles = ub360.GetBIM360Data(settings.inputDir)
         elif(os.path.isdir(settings.inputDir)):
-            # check a to serch for files is to include sub dirs
-            revitfilesUnfiltered = []
+            # check a to search for files is to include sub dirs
+            revitFilesUnfiltered = []
             if(settings.inclSubDirs):
                 # get revit files in input dir and subdirs
-                revitfilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
             else:
                 # get revit files in input dir
-                revitfilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
             # check for max path violations!
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
-            for revitFile in revitfilesUnfiltered:
+            for revitFile in revitFilesUnfiltered:
                 # remove any back up files from selection
                 if(fl.isBackUpFile(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
-                        revitfiles.append(revitFile)
+                        revitFiles.append(revitFile)
                     else:
-                        print ('Max path lenght violation: ' + revitFile.name)
+                        print ('Max path length violation: ' + revitFile.name)
                         print ('File has been removed from selection!')
     except Exception as e:
         print ('An exception occurred during BIM360 file read! ' + str(e))
         # return an empty list which will cause this script to abort
-        revitfiles = []
-    return revitfiles
+        revitFiles = []
+    return revitFiles
 
 def isBIM360File(revitFiles):
     '''
@@ -264,10 +264,10 @@ def isBIM360File(revitFiles):
 currentScriptDir_ = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])
 
 #: xaml file name of file select UI
-xamlfile_ = 'ui.xaml'
+xamlFile_ = 'ui.xaml'
 
 #: xaml full path
-xamlFullFileName_ =  os.path.join(currentScriptDir_, xamlfile_)
+xamlFullFileName_ =  os.path.join(currentScriptDir_, xamlFile_)
 
 #: module entry
 if __name__ == "__main__":

@@ -102,8 +102,8 @@ def GetGridTypeNames (doc, g):
     '''
 
     validGridTypes = []
-    validgridTypeIds = g.GetValidTypes()
-    for validGridTypeId in validgridTypeIds:
+    validGridTypeIds = g.GetValidTypes()
+    for validGridTypeId in validGridTypeIds:
         gridData = []
         gtypeT = doc.GetElement(validGridTypeId)
         gridData.append(validGridTypeId)
@@ -128,14 +128,14 @@ def GetGridTypeName (doc, g):
     value = rdb.Element.Name.GetValue(gtypeT)
     return value
 
-def GetGridTypeIdByName (doc, gridtypeName):
+def GetGridTypeIdByName (doc, gridTypeName):
     '''
     Gets the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param gridtypeName: The grid type name.
-    :type gridtypeName: str
+    :param gridTypeName: The grid type name.
+    :type gridTypeName: str
     :return: The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId
     :rtype: Autodesk.Revit.DB.ElementId
     '''
@@ -144,10 +144,10 @@ def GetGridTypeIdByName (doc, gridtypeName):
     grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).ToList()
     if(len(grids) > 0):
         g = grids[0]
-        validgridTypeIds = g.GetValidTypes()
-        for gridTypId in validgridTypeIds:
+        validGridTypeIds = g.GetValidTypes()
+        for gridTypId in validGridTypeIds:
             gtypeTName = rdb.Element.Name.GetValue(doc.GetElement(gridTypId))
-            if(gtypeTName ==  gridtypeName):
+            if(gtypeTName ==  gridTypeName):
                 id = gridTypId
                 break
     return id
@@ -162,7 +162,7 @@ def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
     :type paraName: str
     :param paraCondition: A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.
     :type paraCondition: func(arg1,arg2)
-    :param conditionValue: The value to be cjecked against.
+    :param conditionValue: The value to be checked against.
     :type conditionValue: var
     :return: True if parameter value is evaluated to True otherwise False.
     :rtype: bool

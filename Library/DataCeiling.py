@@ -53,7 +53,7 @@ class DataCeiling():
         self.associatedElements = []
         if(len(j) > 0 ):
             self.__dict__ = json.loads(j)
-            # custom deserialisation code...
+            # custom deserialization code...
             geoDataList = []
             for item in self.geometry:
                 if('dataType' in item):

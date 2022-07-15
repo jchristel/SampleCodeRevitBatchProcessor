@@ -1,0 +1,2 @@
+def printFromAPI():
+    print('hello')

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DuHast"
-version = "1.0.5"
+version = "1.0.6"
 description = "Revit API sample library"
 readme = "README.md"
 authors = [{ name = "Jan Christel", email = "jan.r.christel@gmail.com" }]

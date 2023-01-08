@@ -12,10 +12,13 @@
 #
 import os
 import sys
-libraryPath = os.path.abspath('../../Library')
-libraryUIPath = os.path.abspath('../../UI')
-flowPath = os.path.abspath('../..')
-sys.path += [libraryPath, libraryUIPath, flowPath]
+duHastPathAPI = os.path.abspath('../../duHast/src/du_hast/APISamples')
+duHastPathData = os.path.abspath('../../duHast/src/du_hast/DataSamples')
+samplePathUI = os.path.abspath('../../Samples/UI')
+samplePathBAT = os.path.abspath('../../Samples/BAT')
+samplePathFlows = os.path.abspath('../../Samples/Flows')
+
+sys.path += [duHastPathAPI, duHastPathData, samplePathUI, samplePathBAT, samplePathFlows]
 #sys.path.insert(0, os.path.abspath('../..'))
 
 # web layout theme
@@ -24,11 +27,11 @@ import sphinx_adc_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Sample Code Revit Batch Processor'
-copyright = '2022, Jan Christel'
+copyright = '2023, Jan Christel'
 author = 'Jan Christel'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '1.0.1'
 
 
 # -- General configuration ---------------------------------------------------

@@ -86,7 +86,7 @@ class ReadDataFromFile:
         dataObjects = []
         for d in dataJson:
             p = None
-            #load json string into dic and check whjat the data type is
+            #load json string into dic and check what the data type is
             dummy = json.loads(d[0])
             if('dataType' in dummy):
                 if(dummy['dataType'] == dr.DataRoom.dataType):

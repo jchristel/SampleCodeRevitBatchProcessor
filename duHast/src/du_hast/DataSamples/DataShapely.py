@@ -94,7 +94,7 @@ def GetOuterLoopAsShape(geoObject, translationM):
     singlePolygonLoop = []
     if(geoObject.dataType == 'polygons'):
         for pointDouble in geoObject.outerLoop:
-            # need to add 1 to list for matric multiplication
+            # need to add 1 to list for matrix multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)
             translatedPoint = np.dot(translationM,[pointDouble[0], pointDouble[1], pointDouble[2], 1.0])
             p = sg.Point(translatedPoint[0],translatedPoint[1],translatedPoint[2])

@@ -38,7 +38,7 @@ import RevitFamilyUtils as rFam
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-import Autodesk.Revit.DB.Architecture as rdba
+import Autodesk.Revit.DB.Architecture as rdbA
 
 clr.ImportExtensions(System.Linq)
 
@@ -502,7 +502,7 @@ def GetAllAnnoSymbolTypes(doc):
     types = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
     for c in col:
-        if (c.GetType() == rdb.AnnotationSymbolType or c.GetType == rdb.AreaTagType or c.GetType() == rdba.RoomTagType):
+        if (c.GetType() == rdb.AnnotationSymbolType or c.GetType == rdb.AreaTagType or c.GetType() == rdbA.RoomTagType):
             types.append(c)
     return types
 
@@ -533,7 +533,7 @@ def GetAllStairPathTypes(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of stair path types
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdba.StairsPathType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
         
 def GetStairsPathArrowHeadIds(doc):
     '''

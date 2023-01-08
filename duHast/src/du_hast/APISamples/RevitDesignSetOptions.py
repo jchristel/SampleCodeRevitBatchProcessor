@@ -99,7 +99,7 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
     for do in collector:
         designOName = rdb.Element.Name.GetValue(do)
-        # check if primray in name if so remove...( this is language agnostic!!!!!)
+        # check if primary in name if so remove...( this is language agnostic!!!!!)
         if (designOName.endswith(' (primary)')):
             designOName = designOName[:-len(' (primary)')]
         # design set

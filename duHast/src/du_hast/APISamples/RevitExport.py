@@ -56,6 +56,8 @@ class IFCCoords:
     SiteSurveyPoint = '1'
     ProjectBasePoint = '2'
     InternalCoordinates = '3'
+    ProjectInTN = '4',
+    InternalInTN = '5'
 
 class IFCSpaceBoundaries:
     '''
@@ -110,7 +112,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     returnValue = com.InTransaction(transaction, action)
     return returnValue
 
-def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
+def IFCGetThirdPartyExportConfigByView(doc, ifcVersion, ifcSettings = None):
     '''
     Returns the 3rd party ifc config for export by view depending on revit version.
 
@@ -128,19 +130,19 @@ def IFCGetThirdPartyExportConfigByView(doc, ifcVersion):
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
     if (revitVersion == '2019'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion, ifcSettings)
     elif (revitVersion == '2020'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2020(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2020(ifcVersion, ifcSettings)
     elif (revitVersion == '2021'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2021(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2021(ifcVersion, ifcSettings)
     elif (revitVersion == '2022'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2022(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2022(ifcVersion, ifcSettings)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
     return ifcConfig
 
-def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
+def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion, ifcSettings = None):
     '''
     Returns the 3rd party ifc config for export by model depending on revit version.
 
@@ -158,13 +160,13 @@ def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion):
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
     if (revitVersion == '2019'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2019(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2019(ifcVersion, ifcSettings)
     elif (revitVersion == '2020'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2020(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2020(ifcVersion, ifcSettings)
     elif (revitVersion == '2021'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2021(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2021(ifcVersion, ifcSettings)
     elif (revitVersion == '2022'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2022(ifcVersion)
+        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2022(ifcVersion, ifcSettings)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')

@@ -43,6 +43,7 @@ import os.path
 from os import path
 import codecs
 import csv
+import collections
 
 #: default file stamp date format using underscores as delimiter: 21_03_01
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
@@ -117,6 +118,16 @@ def GetLocalAppDataPath():
     '''
 
     return os.environ['LOCALAPPDATA']
+
+def GetCurrentUserName():
+    '''
+    Returns the current user name
+
+    :return: the user name
+    :rtype: str
+    '''
+    
+    return os.environ['USERNAME']
 
 #: ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -394,25 +405,6 @@ def GetUniqueHeaders(files):
                 headersUnique.append(header)
     return sorted(headersUnique)
 
-def GetFirstRowInFile(filePath):
-    '''
-    Reads the first line of a text file and returns it as a single string
-
-    :param filePath: The fully qualified file path.
-    :type filePath: str
-
-    :return: The first row of a text file.
-    :rtype: str
-    '''
-
-    row = ''
-    try:
-        with open(filePath) as f:
-            row = f.readline().strip()
-    except Exception:
-        row = None
-    return row
-
 def writeReportData(fileName, header, data, writeType = 'w'):
     '''
     Function writing out report information.
@@ -430,7 +422,6 @@ def writeReportData(fileName, header, data, writeType = 'w'):
     with codecs.open(fileName, writeType, encoding='utf-8') as f:
         # check if header is required
         if(len(header) > 0):
-            print('\t'.join(header + ['\n']))
             f.write('\t'.join(header + ['\n']))
         # check if data is required
         if(len(data) > 0):
@@ -439,6 +430,33 @@ def writeReportData(fileName, header, data, writeType = 'w'):
                     f.write('\t'.join(d + ['\n']))
                 elif(len(d) == 1):
                     f.write(d[0] + '\n')
+        f.close()
+
+def writeReportDataAsCSV (fileName, header, data, writeType = 'w'):
+    '''
+    Function writing out report information as CSV file.
+
+    :param fileName: The reports fully qualified file path.
+    :type fileName: str
+    :param header: list of column headers
+    :type header: list of str
+    :param data: list of list of strings representing row data
+    :type data: [[str,str,..]]
+    :param writeType: Flag indicating whether existing report file is to be overwritten 'w' or appended to 'a', defaults to 'w'
+    :type writeType: str, optional
+    '''
+
+    # open the file in the write mode
+    with codecs.open(fileName, writeType, encoding='utf-8') as f:
+        # create the csv writer
+        writer = csv.writer(f)
+        # check header
+        if(len(header) > 0):
+            writer.writerow(header)
+        if(len(data) > 0):
+            for d in data:
+                # write a row to the csv file
+                writer.writerow(d)
         f.close()
 
 # ---------------------------------------------------------------------------------------------------------------------------------
@@ -609,15 +627,34 @@ def GetChildDirectories(fullDirectoryPath):
         break
     return subFoldersWithPaths
 
+def GetParentDirectory(fullDirectoryPath):
+    '''
+    Returns the parent directory of directory, or empty string if invalid directory
+
+    :param fullDirectoryPath: Path to directory
+    :type fullDirectoryPath: str
+    
+    :return: parent directory, or empty string
+    :rtype: str
+    '''
+
+    parentDir = ''
+    try:
+        parentDir = os.path.dirname(fullDirectoryPath)
+    except Exception:
+        pass
+    return parentDir
+
+
 # get directory from file
 def GetFolderPathFromFile(filePath):
     '''
     Extracts directory from file path.
 
-    :param filePath: _description_
-    :type filePath: _type_
-    :return: _description_
-    :rtype: _type_
+    :param filePath: A fully qualified file path.
+    :type filePath: str
+    :return: If no exception occurs : A fully qualified directory path,else an empty string.
+    :rtype: str
     '''
     try:
         value = os.path.dirname(filePath)
@@ -711,6 +748,20 @@ def CreateTargetFolder(rootPath, folderName):
         flag = CreateFolder(rootPath, folderName)
     return flag
 
+def DirectoryExists(directoryPath):
+    '''
+    Check if a given directory exists
+
+    :param directoryPath: Fully qualified directory path
+    :type directoryPath: str
+    :return: True if directory exists, otherwise False
+    :rtype: bool
+    '''
+    if(path.exists(directoryPath)):
+        return True
+    else:
+        return False
+
 def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     '''
     Returns a time stamped output file name based on the past in file name and file extension.
@@ -772,7 +823,7 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
     else:
         return relativeFilePath
 
-def ReadCSVfile(filepathCSV):
+def ReadCSVfile(filepathCSV, increaseMaxFieldSizeLimit = False):
     '''
     Read a csv file into a list of rows, where each row is another list.
 
@@ -784,6 +835,11 @@ def ReadCSVfile(filepathCSV):
     '''
 
     rowList = []
+
+    # hard coded hack
+    if(increaseMaxFieldSizeLimit):
+        csv.field_size_limit(2147483647)
+
     try:
         with open(filepathCSV) as csvFile:
             reader = csv.reader(csvFile)
@@ -794,7 +850,28 @@ def ReadCSVfile(filepathCSV):
         rowList = []
     return rowList
 
-def ReadTabSeparatedFile(filePath):
+def GetFirstRowInCSVFile(filePath):
+    '''
+    Reads the first line of a csv text file and returns it as a list of strings
+
+    :param filePath: The fully qualified file path.
+    :type filePath: str
+
+    :return: The first row of a text file.
+    :rtype: str
+    '''
+
+    row = []
+    try:
+        with open(filePath) as f:
+            reader = csv.reader(f)
+            row = f.readline()
+            row = row.strip()
+    except Exception:
+        row = []
+    return row
+
+def ReadTabSeparatedFile(filePath, increaseMaxFieldSizeLimit = False):
     '''
     Read a tab separated text file into a list of rows, where each row is another list.
 
@@ -806,17 +883,40 @@ def ReadTabSeparatedFile(filePath):
     '''
 
     rowList = []
+
+    # hard coded hack
+    if(increaseMaxFieldSizeLimit):
+        csv.field_size_limit(2147483647)
+
     try:
-        with codecs.open (filePath,'r',encoding='utf-8') as f:
+        with open (filePath) as f:
             reader = csv.reader(f, dialect='excel-tab')
             for row in reader: # each row is a list
                 rowList.append(row)
             f.close()
     except Exception as e:
-        print (str(e))
+        print (filePath, str(e))
         rowList = []
     return rowList
 
+def GetFirstRowInFile(filePath):
+    '''
+    Reads the first line of a text file and returns it as a single string
+
+    :param filePath: The fully qualified file path.
+    :type filePath: str
+
+    :return: The first row of a text file.
+    :rtype: str
+    '''
+
+    row = ''
+    try:
+        with open(filePath) as f:
+            row = f.readline().strip()
+    except Exception:
+        row = None
+    return row
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 def ConDoesNotEqual (valueOne, valueTwo):
@@ -1042,3 +1142,29 @@ def RemoveItemsFromList(sourceList, removeIdsList):
     except:
         pass
     return sourceList
+
+
+def flatten(d, parent_key='', sep='_'):
+    '''
+    Flattens a dictionary as per stack overflow
+
+    https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys/6027615#6027615
+
+    :param d: _description_
+    :type d: _type_
+    :param parent_key: _description_, defaults to ''
+    :type parent_key: str, optional
+    :param sep: _description_, defaults to '_'
+    :type sep: str, optional
+    :return: _description_
+    :rtype: _type_
+    '''
+    
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)

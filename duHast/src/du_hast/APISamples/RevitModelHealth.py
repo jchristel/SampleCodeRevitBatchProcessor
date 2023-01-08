@@ -64,6 +64,24 @@ MODEL_HEALTH_TRACKER_FAMILY = 'Symbol_GraphicModelHealth_ANN'
 #: Default value if unable to retrieve a health metric value from model
 FAILED_TO_RETRIEVE_VALUE = -1
 
+def _castParameterValue(pValue):
+    '''
+    Check if parameter is of type string ( currently the date only)
+    and only cast to string if not...
+
+    :param pValue: The parameter value
+    :type pValue: unknown
+    :return: The parameter value as a string
+    :rtype: str
+    '''
+    
+    newParaValue = ''
+    if(pValue.GetType() != System.String):
+        newParaValue = str(pValue)
+    else:
+        newParaValue = pValue
+    return newParaValue
+
 def GetInstancesOfModelHealth(doc):
     '''
     Gets all instances of the model health tracker family in a model.
@@ -113,7 +131,7 @@ def GetParametersOfInstance(famInstance, doc):
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
                 parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
                 if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
-                    flag = com.setParameterValue(p, str(parameterValue), doc)
+                    flag = com.setParameterValue(p, _castParameterValue(parameterValue), doc)
                     resultValue.Update(flag)
                     flagUpdate = True
                 else:
@@ -128,6 +146,19 @@ def GetParametersOfInstance(famInstance, doc):
 # ----------------------------------------------
 
 # --------------------------------------------- GENERAL ---------------------------------------------
+
+def GetCurrentDate(doc):
+    '''
+    Get the current date
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: The current date in format YYYY_MM_DD.
+    :rtype: str
+
+    '''
+    return util.GetFileDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD)
 
 def GetWorksetNumber(doc):
     '''
@@ -677,7 +708,8 @@ PARAM_ACTIONS = {
     'ValueRoomsUnplaced': healthDataAction(GetNumberOfUnplacedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED),
     'ValueRoomsNotEnclosed': healthDataAction(GetNumberOfNotEnclosedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED),
     'ValueRoomsRedundant': healthDataAction(GetNumberOfRedundantRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT),
-    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS)
+    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS),
+    'ValueDateLastUpdated' : healthDataAction(GetCurrentDate, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED)
 }
 
 def UpdateModelHealthTracerFamily(doc, revitFilePath):
@@ -744,7 +776,17 @@ def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
             util.writeReportData(
                 outputDirectory + '\\' + fileName,
                 '',
-                [[revitFileName, key, util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), str(parameterValue)]])
+                [
+                    [
+                        revitFileName, 
+                        key, 
+                        util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
+                        util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), 
+                        _castParameterValue(parameterValue)
+                        ]
+                    ]
+                )
+                
             resExport.UpdateSep(True, 'Exported: ' + str(key))
         except Exception as e:
                 resExport.UpdateSep(True, 'Export failed: ' + str(key)+ ' ' + str(e))

@@ -41,12 +41,12 @@ clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_BUILDINGPAD_HEADER = ['HOSTFILE', 'BUILDINGPADTYPEID', 'BUILDINGPADTYPENAME']
+REPORT_BUILDING_PAD_HEADER = ['HOSTFILE', 'BUILDINGPADTYPEID', 'BUILDINGPADTYPENAME']
 #: Built in family name for pad
-BASIC_BUILDINGPAD_FAMILY_NAME = 'Pad'
+BASIC_BUILDING_PAD_FAMILY_NAME = 'Pad'
 #: List of all Built in pad family names
-BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES = [
-    BASIC_BUILDINGPAD_FAMILY_NAME
+BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES = [
+    BASIC_BUILDING_PAD_FAMILY_NAME
 ]
 
 # --------------------------------------------- utility functions ------------------
@@ -266,7 +266,7 @@ def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
     # make sure there is at least on BuildingPad type per system family left in model
     BuildingPadTypes = SortBuildingPadTypesByFamilyName(doc)
     for key, value in BuildingPadTypes.items():
-        if(key in BUILTIN_BUILDINGPAD_TYPE_FAMILY_NAMES):
+        if(key in BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES):
             if(FamilyNoTypesInUse(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])

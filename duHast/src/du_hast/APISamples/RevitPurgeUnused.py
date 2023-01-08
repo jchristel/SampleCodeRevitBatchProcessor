@@ -3,7 +3,7 @@
 This module contains a purge unused function using standard revit api functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some functionality provided here exceeds the Revit purge unused or etransmit purge unused command:
+Some functionality provided here exceeds the Revit purge unused or e-transmit purge unused command:
 
 - view types
 - view templates
@@ -16,7 +16,7 @@ Others definitely lack:
 - loadable Families
 - some MEP systems
 
-Future: just provide improvements over etransmit purge unused in this code section.
+Future: just provide improvements over e-transmit purge unused in this code section.
 
 '''
 
@@ -159,7 +159,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Types', rStair.GetUnuse
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Path Types', rStair.GetUnusedStairPathTypeIdsToPurge, 'Stair Path Type(s)', 'Stair Path Type(s)', rStair.GetAllStairPathTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Landing Types', rStair.GetUnusedStairLandingTypeIdsToPurge, 'Stair Landing Type(s)', 'Stair Landing Type(s)',rStair.GetAllStairLandingTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Run Types', rStair.GetUnusedStairRunTypeIdsToPurge, 'Stair Run Type(s)', 'Stair Run Type(s)', rStair.GetAllStairRunTypeIdsInModelByClass))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stringers and Carriage Types', rStair.GetUnusedStairStringersCarriageTypeIdsToPurge, 'Stair Stringers and Carriage Type(s)', 'Stair Stringers and Carriage Type(s)', rStair.GetAllStairstringCarriageTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stringers and Carriage Types', rStair.GetUnusedStairStringersCarriageTypeIdsToPurge, 'Stair Stringers and Carriage Type(s)', 'Stair Stringers and Carriage Type(s)', rStair.GetAllStairStringCarriageTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Stair Types', rStair.GetUnusedInPlaceStairIdsForPurge,'InPlace Stair Type(s)', 'InPlace Stair Type(s)', rStair.GetAllInPlaceStairTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ramp Types', rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Cut Mark Types', rStair.GetUnusedStairCutMarkTypeIdsToPurge, 'Stair Cut Mark Type(s)', 'Stair Cut Mark Type(s)', rStair.GetAllStairCutMarkTypeIdsInModelByClass))
@@ -171,10 +171,10 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', rMEP.GetUn
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', rMEP.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', rMEP.GetAllConduitTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', rMEP.GetAllDuctTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Types', rMEP.GetUnUsedPipeTypeIdsToPurge,'Pipe Type(s)','Pipe Type(s)', rMEP.GetAllPipeTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Symbols and Families', rMEP.GetUnUsedCableTraySymbolIdsForPurge,'Cable Tray Symbols and Familie(s)','Cable Tray Symbols and Familie(s)', rMEP.GetSymbolIdsForCableTrayTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Symbols and Families', rMEP.GetUnUsedConduitSymbolIdsForPurge,'Conduit Symbols and Familie(s)','Conduit Symbols and Familie(s)', rMEP.GetSymbolIdsForConduitTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', rMEP.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge,'Duct Symbols and Familie(s)','Duct Symbols and Familie(s)', rMEP.GetSymbolIdsForDuctTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', rMEP.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Familie(s)','Pipe Symbols and Familie(s)', rMEP.GetSymbolIdsForPipeTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Symbols and Families', rMEP.GetUnUsedCableTraySymbolIdsForPurge,'Cable Tray Symbols and Family(s)','Cable Tray Symbols and Family(s)', rMEP.GetSymbolIdsForCableTrayTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Symbols and Families', rMEP.GetUnUsedConduitSymbolIdsForPurge,'Conduit Symbols and Family(s)','Conduit Symbols and Family(s)', rMEP.GetSymbolIdsForConduitTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', rMEP.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge,'Duct Symbols and Family(s)','Duct Symbols and Family(s)', rMEP.GetSymbolIdsForDuctTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', rMEP.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Family(s)','Pipe Symbols and Family(s)', rMEP.GetSymbolIdsForPipeTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadFamilyTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGrid.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))
@@ -190,7 +190,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnn.GetAll
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rGAnno.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Spotelvation Symbols',  rAnn.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnn.GetAllSpotElevationSymbolIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnn.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnn.GetAllSpotElevationSymbolIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 

@@ -33,10 +33,79 @@ import System
 import RevitCommonAPI as com
 import Result as res
 
+
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 clr.ImportExtensions(System.Linq)
+
+
+# -------------------------------------------------PATTERN PROPERTIES ------------
+
+#: pattern name
+PROPERTY_PATTERN_NAME = 'PatternName'
+#: pattern name default value, hard coded solid line pattern name
+PROPERTY_PATTERN_NAME_VALUE_DEFAULT = 'Solid'
+#: pattern id
+PROPERTY_PATTERN_ID = 'PatternId'
+
+def GetLinePatternFromCategory(cat, doc):
+    '''
+    Returns the line pattern properties as a dictionary\
+         where keys are pattern name and pattern id.
+
+    :param cat: A category.
+    :type cat: Autodesk.REvit.DB.Category
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: dictionary {str: str, str: Autodesk.Revit.DB.ElementId}
+    '''
+
+    dicPattern = {}
+    dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
+    dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
+    '''check for 'solid' pattern which apparently is not a pattern at all
+    *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
+    * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
+    * Solid is visible to the user when selecting line patterns. 
+    '''
+    if(patternId != rdb.LinePatternElement.GetSolidPatternId()):
+        # not a solid line pattern
+        collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
+        linePatternElement = None
+        for c in collector:
+            if(patternId == c.Id):
+                dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
+    return dicPattern
+
+def GetLinePatternFromLevelElement(doc, level):
+    '''
+    Returns the line pattern properties as a dictionary\
+         where keys are pattern name and pattern id.
+
+    :param doc: Current Revit family document.
+    :type doc: Current Revit family document.
+    :param level: a level element
+    :type level: Autodesk.Revit.DB.Level
+
+    :return: A dictionary.
+    :rtype: dictionary {str: str, str: Autodesk.Revit.DB.ElementId}
+    '''
+
+    dicPattern = {}
+    dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
+    dicPattern[PROPERTY_PATTERN_ID] = rdb.ElementId.InvalidElementId
+    try:
+        lTypeId = level.GetTypeId()
+        levelType = doc.GetElement(lTypeId)
+        linePatternIdString = com.GetBuiltInParameterValue(levelType, rdb.BuiltInParameter.LINE_PATTERN)
+        dicPattern[PROPERTY_PATTERN_ID] = rdb.ElementId(int(linePatternIdString))
+        dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(levelType)
+    except Exception as ex:
+        dicPattern[PROPERTY_PATTERN_NAME] = str(ex)
+    return dicPattern
 
 # ------------------------------------------------ DELETE LINE PATTERNS ----------------------------------------------
 

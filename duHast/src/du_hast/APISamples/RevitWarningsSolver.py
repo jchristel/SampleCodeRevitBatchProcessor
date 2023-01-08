@@ -95,7 +95,7 @@ class RevitWarningsSolver:
         '''
         Attempts to solve some warning in a revit model using available warnings solver.
 
-        It will get all warnings in model, filter them by available solver GUIDS and finally will attempt to solve the warnings matched up with a solver.
+        It will get all warnings in model, filter them by available solver GUIDs and finally will attempt to solve the warnings matched up with a solver.
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document

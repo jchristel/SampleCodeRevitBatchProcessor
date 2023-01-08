@@ -26,6 +26,8 @@ Contains file names used by model health report.
 #
 #
 
+#: report file name suffix : date last updated
+PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED = '_DateLastUpdated'
 #: report file name suffix : worksets
 PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS = '_NumberOfWorksets'
 #: report file name suffix : file size
@@ -113,5 +115,6 @@ PARAM_ACTIONS_FILENAMES = {
     PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED,
     PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED,
     PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT,
-    PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS
+    PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS,
+    PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED
 }

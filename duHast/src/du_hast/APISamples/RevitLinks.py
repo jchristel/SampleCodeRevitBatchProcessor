@@ -188,8 +188,8 @@ def DeleteCADLinks(doc):
     '''
     Deletes all CAD links in a model.
 
-    :param doc: _description_
-    :type doc: _type_
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: 
         Result class instance.
@@ -259,6 +259,51 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
+
+# ------------------------------------------------------- CAD link geometry --------------------------------------------------------------------
+
+def GetCADImportInstanceGeometry(importInstance):
+    '''
+    Returns a list of geometry elements from an import instance
+
+    :param importInstance: A import instance
+    :type importInstance: AutoDesk.Revit.DB.ImportInstance
+    
+    :return: A list of geometry objects. Can return an empty list!
+    :rtype: [Autodesk.Revit.DB GeometryObject]
+    '''
+
+    geo = []
+    # default geometry option
+    opt = rdb.Options()
+    geoElemLevel1 = importInstance.get_Geometry(opt)
+    if (geoElemLevel1 != None):
+        for geoInstance in geoElemLevel1:
+            if(geoInstance!= None):
+                geoElemLevel2 = geoInstance.GetInstanceGeometry()
+                if(geoElemLevel2 !=None):
+                    for item in geoElemLevel2:
+                        geo.append(item)
+    return geo
+
+def GetAllCADImportInstancesGeometry(doc):
+    '''
+    Returns a list of geometry elements from all import instances in the document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of geometry objects. Can return an empty list!
+    :rtype: [Autodesk.Revit.DB GeometryObject]
+    '''
+    instancesGeometry = []
+    allImportInstances = GetAllCADLinkInstances(doc)
+    for importInstance in allImportInstances:
+        geometryInstances = GetCADImportInstanceGeometry(importInstance)
+        if (len(geometryInstances) > 0):
+            instancesGeometry += geometryInstances
+    return instancesGeometry
+
 
 # ------------------------------------------------------- CAD link reporting --------------------------------------------------------------------
 

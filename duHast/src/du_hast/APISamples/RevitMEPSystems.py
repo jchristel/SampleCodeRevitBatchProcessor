@@ -37,16 +37,16 @@ import RevitFamilyUtils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-import Autodesk.Revit.DB.Mechanical as rdbm
-import Autodesk.Revit.DB.Electrical as rdbe
-import Autodesk.Revit.DB.Plumbing as rdbp
+import Autodesk.Revit.DB.Mechanical as rdbM
+import Autodesk.Revit.DB.Electrical as rdbE
+import Autodesk.Revit.DB.Plumbing as rdbP
 
 
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_REVITMEPSYSTEMS_HEADER = ['HOSTFILE', 'RevitMEPSystemsTYPEID', 'RevitMEPSystemsTYPENAME']
+REPORT_REVIT_MEP_SYSTEMS_HEADER = ['HOSTFILE', 'RevitMEPSystemsTYPEID', 'RevitMEPSystemsTYPENAME']
 
 # Duct types are split into three major families
 #: Built in family name for oval ducting
@@ -167,7 +167,7 @@ def GetDuctTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbm.DuctType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbM.DuctType)
 
 def GetAllFlexDuctTypesByCategory(doc):
     '''
@@ -202,7 +202,7 @@ def GetFlexDuctTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbm.FlexDuctType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbM.FlexDuctType)
 
 def GetAllConduitTypesByCategory(doc):
     '''
@@ -237,7 +237,7 @@ def GetConduitTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.ConduitType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbE.ConduitType)
 
 def GetAllCableTrayTypesByCategory(doc):
     '''
@@ -272,7 +272,7 @@ def GetCableTrayTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.CableTrayType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbE.CableTrayType)
 
 def GetAllPipeTypesByCategory(doc):
     '''
@@ -301,7 +301,7 @@ def GetPipeTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbp.PipeType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbP.PipeType)
 
 # -------------------------------- none in place instances -------------------------------------------------------
 
@@ -337,7 +337,7 @@ def GetAllDuctInstancesInModelByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdbm.DuctType).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbM.DuctType).WhereElementIsNotElementType()
 
 def GetAllFlexDuctInstancesInModelByCategory(doc):
     '''
@@ -368,7 +368,7 @@ def GetAllFlexDuctInstancesInModelByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdbm.FlexDuctType).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbM.FlexDuctType).WhereElementIsNotElementType()
 
 def GetAllConduitInstancesByCategory(doc):
     '''
@@ -400,7 +400,7 @@ def GetConduitInstancesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.ConduitType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbE.ConduitType).WhereElementIsNotElementType()
 
 def GetAllCableTrayInstancesByCategory(doc):
     '''
@@ -432,7 +432,7 @@ def GetCableTrayInstancesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbe.CableTrayType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbE.CableTrayType).WhereElementIsNotElementType()
 
 def GetAllPipeInstancesByCategory(doc):
     '''
@@ -464,7 +464,7 @@ def GetPipeInstancesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbp.PipeType).WhereElementIsNotElementType()
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbP.PipeType).WhereElementIsNotElementType()
 
 # -------------------------------- MEP system types -------------------------------------------------------
 

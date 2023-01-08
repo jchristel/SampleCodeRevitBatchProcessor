@@ -48,6 +48,9 @@ class DataCeiling():
         self.levelName = '-'
         self.levelId = '-'
         self.offsetFromLevel = 0.0
+        self.modelName = '-'
+        self.phaseCreated = '-'
+        self.phaseDemolished = '-'
         self.geometry = [[]]
         self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
         self.associatedElements = []

@@ -146,7 +146,7 @@ def OpenWorksetsWithElementsHack(doc):
 
     # get worksets in model
     worksetIds = GetWorksetIds(doc)
-    # loop over workset and open if anythin is on them
+    # loop over workset and open if anything is on them
     for wId in worksetIds:
         workset = rdb.ElementWorksetFilter(wId)
         elemIds = rdb.FilteredElementCollector(doc).WherePasses(workset).ToElementIds()

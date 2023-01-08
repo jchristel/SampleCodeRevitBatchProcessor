@@ -33,7 +33,9 @@ from System.Collections.Generic import List
 
 import RevitCommonAPI as com
 import RevitFamilyUtils as rFamUtils
+import RevitLinks as rLink
 import Result as res
+import RevitLineStylesPatterns as rPat
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -49,7 +51,8 @@ CAT_RENAMING = {
 ELEMENTS_PARAS_SUB = [
     rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,
     rdb.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,
-    rdb.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY
+    rdb.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY,
+    rdb.BuiltInParameter.CLINE_SUBCATEGORY
 ]
 
 
@@ -63,33 +66,26 @@ PROPERTY_MATERIAL_NAME_VALUE_DEFAULT = 'None'
 #: material id
 PROPERTY_MATERIAL_ID = 'MaterialId'
 
-#: pattern name
-PROPERTY_PATTERN_NAME = 'PatternName'
-#: pattern name default value, hard coded solid line pattern name
-PROPERTY_PATTERN_NAME_VALUE_DEFAULT = 'Solid'
-#: pattern id
-PROPERTY_PATTERN_ID = 'PatternId'
-
 #: line weight projection name
-PROPERTY_LINEWEIGHT_PROJECTION_NAME = 'LineWeightProjection'
+PROPERTY_LINE_WEIGHT_PROJECTION_NAME = 'LineWeightProjection'
 #: line weight cut name
-PROPERTY_LINEWEIGHT_CUT_NAME = 'LineWeightCut'
+PROPERTY_LINE_WEIGHT_CUT_NAME = 'LineWeightCut'
 
 #: line colour red name
-PROPERTY_LINECOLOUR_RED_NAME = 'Red'
+PROPERTY_LINE_COLOUR_RED_NAME = 'Red'
 #: line colour green name
-PROPERTY_LINECOLOUR_GREEN_NAME = 'Green'
+PROPERTY_LINE_COLOUR_GREEN_NAME = 'Green'
 #: line colour blue name
-PROPERTY_LINECOLOUR_BLUE_NAME = 'Blue'
+PROPERTY_LINE_COLOUR_BLUE_NAME = 'Blue'
 
 
 #: graphic styles used for elements in families
 #: graphic style projection name
-CATEGORY_GRAPHICSTYLE_PROJECTION = 'Projection'
+CATEGORY_GRAPHIC_STYLE_PROJECTION = 'Projection'
 #: graphic style cut name
-CATEGORY_GRAPHICSTYLE_CUT = 'Cut'
+CATEGORY_GRAPHIC_STYLE_CUT = 'Cut'
 #: graphic style 3D name
-CATEGORY_GRAPHICSTYLE_3D = '3D'
+CATEGORY_GRAPHIC_STYLE_3D = '3D'
 
 
 # -------------------------------------------- common variables --------------------
@@ -102,16 +98,16 @@ REPORT_CATEGORIES_HEADER = [
     'CATEGORYID',
     PROPERTY_MATERIAL_NAME.upper(), 
     PROPERTY_MATERIAL_ID.upper(), 
-    PROPERTY_PATTERN_NAME.upper(), 
-    PROPERTY_PATTERN_ID.upper(), 
-    PROPERTY_LINEWEIGHT_PROJECTION_NAME.upper(), 
-    PROPERTY_LINEWEIGHT_CUT_NAME.upper(), 
-    PROPERTY_LINECOLOUR_RED_NAME.upper(), 
-    PROPERTY_LINECOLOUR_GREEN_NAME.upper(), 
-    PROPERTY_LINECOLOUR_BLUE_NAME.upper(),
-    CATEGORY_GRAPHICSTYLE_3D.upper(), 
-    CATEGORY_GRAPHICSTYLE_PROJECTION.upper(), 
-    CATEGORY_GRAPHICSTYLE_CUT.upper() 
+    rPat.PROPERTY_PATTERN_NAME.upper(), 
+    rPat.PROPERTY_PATTERN_ID.upper(), 
+    PROPERTY_LINE_WEIGHT_PROJECTION_NAME.upper(), 
+    PROPERTY_LINE_WEIGHT_CUT_NAME.upper(), 
+    PROPERTY_LINE_COLOUR_RED_NAME.upper(), 
+    PROPERTY_LINE_COLOUR_GREEN_NAME.upper(), 
+    PROPERTY_LINE_COLOUR_BLUE_NAME.upper(),
+    CATEGORY_GRAPHIC_STYLE_3D.upper(), 
+    CATEGORY_GRAPHIC_STYLE_PROJECTION.upper(), 
+    CATEGORY_GRAPHIC_STYLE_CUT.upper() 
 ]
 
 
@@ -137,9 +133,61 @@ def GetMainSubCategories(doc):
         # to ensure default subcategories with an id less then 0 are also extracted
         if (mainCat.Name == familyCategoryName):
             # loop over all sub categories
-            for subcat in mainCat.SubCategories:
-                catData[subcat.Name] = subcat
+            for subCat in mainCat.SubCategories:
+                catData[subCat.Name] = subCat
     return catData
+
+def DoesMainSubCategoryExists(doc, subCatName):
+    '''
+    Checks whether a given subcategory exists in the family.
+
+    Note: Only subcategory directly belonging to the family category will be checked for a match.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param subCatName: The name of the subcategory to be checked against.
+    :type subCatName: str
+
+    :return: True if subcategory exists in family, otherwise False
+    :rtype: bool
+    '''
+
+    # get all sub categories belonging to family category
+    subCats = GetMainSubCategories(doc)
+    if(subCatName in subCats):
+        return True
+    else:
+        return False
+
+def DeleteMainSubCategory(doc, subCatName):
+    '''
+    Deletes a given subcategory from the family.
+
+    Note: Only subcategory directly belonging to the family category will be checked for a match.
+
+    ::param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param subCatName: The name of the subcategory to be deleted.
+    :type subCatName: str
+
+    :return: True if subcategory exists in family and was deleted successfully, otherwise False
+    :rtype: bool
+    '''
+
+    # get all sub categories belonging to family category
+    subCats = GetMainSubCategories(doc)
+    if(subCatName in subCats):
+        # delete subcategory
+        statusDelete = com.DeleteByElementIds(
+            doc,
+            [subCats[subCatName].Id],
+            'delete subcategory: ' + subCatName,
+            'subcategory'
+        )
+        return statusDelete.status
+    else:
+        return False
+
 
 def GetFamilyCategory(doc):
     '''
@@ -192,6 +240,84 @@ def GetOtherSubCategories(doc):
               
     return catData
 
+def GetOtherCustomSubCategories(doc):
+    '''
+    Returns all family custom subcategories which do not belong to the actual family category.
+    Custom categories have an Id greater then 0.
+
+    key: category name
+    value: dictionary : key sub cat name, value: subcategory
+
+    Note: custom subcategories have an Id greater 0
+    
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A dictionary.
+    :rtype: dictionary {str: {str:Autodesk.Revit.DB.Category} }
+    '''
+
+    catData = {}
+    # get the family category
+    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    # get all subcategories in Document
+    for mainCat in doc.Settings.Categories:
+        # find the category not matching this docs category
+        # to ensure default subcategories with an id less then 0 are also extracted
+        if (mainCat.Name != familyCategoryName):
+            if (mainCat.Name not in catData):
+                catData[mainCat.Name] = {}
+            # loop over all sub categories
+            for subCat in mainCat.SubCategories:
+                if(subCat.Id.IntegerValue > 0):
+                    catData[mainCat.Name][subCat.Name] = subCat
+    return catData
+
+def GetOtherCategories(doc):
+    '''
+    Returns all family pre defined categories which do not belong to the actual family category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A list of categories.
+    :rtype: [Autodesk.Revit.DB.Category]
+    '''
+
+    catData = []
+    # get the family category
+    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    # get all subcategories in Document
+    for mainCat in doc.Settings.Categories:
+        # find the category not matching this docs category
+        # to ensure default subcategories with an id less then 0 are also extracted
+        if (mainCat.Name != familyCategoryName):
+            if (mainCat not in catData):
+                catData.append(mainCat)
+    return catData
+
+def GetCategoryByBuiltInDefName(doc, builtInDefs):
+    '''
+    Returns categories by their built in definition 
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param builtInDefs: list of BuiltInCategory Enumeration values
+    :type builtInDefs: [Autodesk.Revit.DB.BuiltInCategory]
+
+    :return: list of categories
+    :rtype: [Autodesk.Revit.DB.Category]
+    '''
+
+    cats = []
+    documentSettings = doc.Settings
+    groups = documentSettings.Categories
+    for builtInDef in builtInDefs:
+        cat = groups.get_Item(builtInDef)
+        if cat!=None:
+            cats.append(cat)
+    return cats
+
 def GetCategoryGraphicStyleIds(cat):
     '''
     Returns a dictionary with keys: Projection, Cut, 3D and their respective ids
@@ -207,15 +333,15 @@ def GetCategoryGraphicStyleIds(cat):
     
     # check if this category has a cut style ( some families always appear in elevation only!)
     graphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut)
-    # set as default the same as the projection style since that seems to be always available
-    iDGraphicStyleCut = iDGraphicStyleProjection
+    # set as default invalid element id
+    iDGraphicStyleCut = rdb.ElementId.InvalidElementId
     if(graphicStyleCut != None):
         iDGraphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
     # build category dictionary where key is the style type, values is the corresponding Id
     dic = {}
-    dic[CATEGORY_GRAPHICSTYLE_PROJECTION] = iDGraphicStyleProjection 
-    dic[CATEGORY_GRAPHICSTYLE_CUT] = iDGraphicStyleCut
-    dic[CATEGORY_GRAPHICSTYLE_3D] = cat.Id
+    dic[CATEGORY_GRAPHIC_STYLE_PROJECTION] = iDGraphicStyleProjection 
+    dic[CATEGORY_GRAPHIC_STYLE_CUT] = iDGraphicStyleCut
+    dic[CATEGORY_GRAPHIC_STYLE_3D] = cat.Id
     return dic
 
 def GetCategoryMaterial(cat):
@@ -240,37 +366,6 @@ def GetCategoryMaterial(cat):
         dicMaterial[PROPERTY_MATERIAL_ID] = material.Id
     return dicMaterial
 
-def GetCategoryLinePattern(cat, doc):
-    '''
-    Returns the line pattern properties as a dictionary\
-         where key is property name and value the pattern id.
-
-    :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
-    :param doc: Current Revit family document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: A dictionary.
-    :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}
-    '''
-
-    dicPattern = {}
-    dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
-    dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
-    '''check for 'solid' pattern which apparently is not a pattern at all
-    *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
-    * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
-    * Solid is visible to the user when selecting line patterns. 
-    '''
-    if(patternId != rdb.LinePatternElement.GetSolidPatternId()):
-        # not a solid line pattern
-        collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
-        linePatternElement = None
-        for c in collector:
-            if(patternId == c.Id):
-                dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
-    return dicPattern
-
 def GetCategoryLineWeights(cat):
     '''
     Returns the line weight properties (cut and projection) as a dictionary\
@@ -284,8 +379,8 @@ def GetCategoryLineWeights(cat):
     '''
 
     dicLineWeights = {}
-    dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
-    dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
+    dicLineWeights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
+    dicLineWeights[PROPERTY_LINE_WEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
     return dicLineWeights
 
 def GetCategoryColour(cat):
@@ -301,13 +396,13 @@ def GetCategoryColour(cat):
     '''
 
     dicColour = {}
-    dicColour[PROPERTY_LINECOLOUR_RED_NAME] = 0
-    dicColour[PROPERTY_LINECOLOUR_GREEN_NAME] = 0
-    dicColour[PROPERTY_LINECOLOUR_BLUE_NAME] = 0
+    dicColour[PROPERTY_LINE_COLOUR_RED_NAME] = 0
+    dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME] = 0
+    dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME] = 0
     if (cat.LineColor.IsValid):
-        dicColour[PROPERTY_LINECOLOUR_RED_NAME] = cat.LineColor.Red
-        dicColour[PROPERTY_LINECOLOUR_GREEN_NAME] = cat.LineColor.Green
-        dicColour[PROPERTY_LINECOLOUR_BLUE_NAME] = cat.LineColor.Blue
+        dicColour[PROPERTY_LINE_COLOUR_RED_NAME] = cat.LineColor.Red
+        dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME] = cat.LineColor.Green
+        dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME] = cat.LineColor.Blue
     return dicColour
 
 def GetCategoryProperties(cat, doc):
@@ -330,7 +425,7 @@ def GetCategoryProperties(cat, doc):
     properties.append(dicMaterial)
     
     # line pattern
-    dicPattern = GetCategoryLinePattern(cat, doc)
+    dicPattern = rPat.GetLinePatternFromCategory(cat, doc)
     properties.append(dicPattern)
     
     # line weights
@@ -502,15 +597,15 @@ def SetCategoryProperties(doc, cat, properties):
     flagMat = SetCategoryMaterial(doc, cat, matId[0])
     
     # line pattern
-    linePatternId = GetSavedCategoryPropertyByName(properties, [PROPERTY_PATTERN_ID])
+    linePatternId = GetSavedCategoryPropertyByName(properties, [rPat.PROPERTY_PATTERN_ID])
     flagPattern = SetCategoryLinePattern(doc, cat, linePatternId[0])
     
     # line weights
-    lineWeights = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINEWEIGHT_CUT_NAME, PROPERTY_LINEWEIGHT_PROJECTION_NAME])
+    lineWeights = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
     flagLineWeights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1])
     
     # category colour
-    colourRGB = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINECOLOUR_RED_NAME, PROPERTY_LINECOLOUR_GREEN_NAME, PROPERTY_LINECOLOUR_BLUE_NAME])
+    colourRGB = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
     flagColours = SetCategoryColour(doc, cat, colourRGB[0], colourRGB[1], colourRGB[2])
     
     return flagMat & flagPattern & flagLineWeights & flagColours
@@ -528,7 +623,7 @@ def SetFamilyCategory(doc, newCategoryName):
     :param newCategoryName: The name of the new family category.
     :type newCategoryName: str
     
-    :return: True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new catgeory)
+    :return: True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new category)
     :rtype: bool
     '''
     
@@ -601,13 +696,13 @@ def SortElementsByCategory(elements, elementDic):
     :param elementDic:  Dictionary where key is subcategory and values are element ids.
     :type elementDic: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
     
-    :return: Dictionary where key is subcategory and values are element ids.
-    :rtype: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+    :return: Dictionary where key is subcategory id and values are element ids.
+    :rtype: {Autodesk.Revit.DB.ElementId: [Autodesk.Revit.DB.ElementId]}
     '''
 
     for el in elements:
         for builtinDef in ELEMENTS_PARAS_SUB:
-            value = com.GetBuiltInParameterValue(el, builtinDef)
+            value = com.GetBuiltInParameterValue(el, builtinDef, com.GetParameterValueAsElementId)
             if (value != None):
                 if(value in elementDic):
                     elementDic[value].append(el.Id)
@@ -615,6 +710,59 @@ def SortElementsByCategory(elements, elementDic):
                     elementDic[value] = [el.Id]
                 break
     return elementDic
+
+def SortGeometryElementsByCategory(elements, elementDic, doc):
+    counter = 0
+    for el in elements:
+        counter = counter + 1
+        graphicStyleId = rdb.ElementId.InvalidElementId
+        if(type(el) is rdb.Solid):
+            # get graphic style id from edges
+            edgeArray = el.Edges
+            if(edgeArray.IsEmpty == False):
+                for edge in edgeArray:
+                    graphicStyleId = edge.GraphicsStyleId
+        else:
+            graphicStyleId = el.GraphicsStyleId
+        # failed to get an id?
+        if(graphicStyleId != rdb.ElementId.InvalidElementId):
+            graphicStyle = doc.GetElement(graphicStyleId)
+            graphCatId = graphicStyle.GraphicsStyleCategory.Id
+            # geometry elements have no Id property ... Doh!! pass in invalid element id...
+            if (graphCatId != None):
+                if(graphCatId in elementDic):
+                    elementDic[graphCatId].append(rdb.ElementId.InvalidElementId)
+                else:
+                    elementDic[graphCatId] = [rdb.ElementId.InvalidElementId]
+    return elementDic
+
+def _sortAllElementsByCategory(doc):
+    '''
+    Sorts all elements in a family by category.
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: Dictionary where key is subcategory id and values are element ids.
+    :rtype: {Autodesk.Revit.DB.ElementId: [Autodesk.Revit.DB.ElementId]}
+    '''
+
+    # get all elements in family
+    dic = {}
+    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
+    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
+    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
+    elRefPlanes = rFamUtils.GetAllReferencePlanesInFamily(doc)
+    # get import Instance elements
+    elImport = rLink.GetAllCADImportInstancesGeometry(doc)
+    # build dictionary where key is category or graphic style id of  a category
+    dic = SortElementsByCategory(elCurve, dic)
+    dic = SortElementsByCategory(elForms, dic)
+    dic = SortElementsByCategory(elMText, dic)
+    dic = SortElementsByCategory(elRefPlanes, dic)
+    # geometry instances use a property rather then a parameter to store the category style Id
+    dic = SortGeometryElementsByCategory(elImport, dic, doc)
+    return dic
 
 def GetElementsByCategory(doc, cat):
     '''
@@ -630,14 +778,7 @@ def GetElementsByCategory(doc, cat):
     '''
 
     # get all elements in family
-    dic = {}
-    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
-    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
-    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
-    # build dictionary where key is category or graphic style id of  a category
-    dic = SortElementsByCategory(elCurve, dic)
-    dic = SortElementsByCategory(elForms, dic)
-    dic = SortElementsByCategory(elMText, dic)
+    dic = _sortAllElementsByCategory(doc)
     # get id and graphic style id of category to be filtered by
     categoryIds = GetCategoryGraphicStyleIds(cat)
     # check whether category past in is same as owner family category
@@ -645,11 +786,11 @@ def GetElementsByCategory(doc, cat):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        categoryIds[CATEGORY_GRAPHICSTYLE_3D] = rdb.ElementId.InvalidElementId
+        categoryIds[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
     dicFiltered = {}
     # filter elements by category ids
     for key,value in categoryIds.items():
-        # print (key + ' ' + str(value))
+        #print (key + ' ' + str(value))
         if value in dic:
             dicFiltered[key] = dic[value]
         else:
@@ -668,15 +809,10 @@ def GetUsedCategoryIds(doc):
     '''
 
     # get all elements in family
-    dic = {}
-    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
-    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
-    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
-    # build dictionary where key is category or graphic style id of a category
-    dic = SortElementsByCategory(elCurve, dic)
-    dic = SortElementsByCategory(elForms, dic)
-    dic = SortElementsByCategory(elMText, dic)
+    dic = _sortAllElementsByCategory(doc)
     return dic.keys ()
+
+# ----------------------------- modify / create subcategories -------------------------------------
 
 def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     '''
@@ -719,7 +855,7 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
             returnValue.UpdateSep(True, 'Category already in file:'+ str(newCatName))
             returnValue.result = cats[newCatName]
     else:
-        returnValue.UpdateSep(False, 'Template category '+ str(existingCatName) + ' does not exist in file!')
+        returnValue.UpdateSep(False, 'Template category: '+ str(existingCatName) + ' does not exist in file!')
     return returnValue
 
 def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
@@ -753,9 +889,9 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
     if(resultNewSubCat.result):
         newSubCat = resultNewSubCat.result
-        flag = SetCategoryProperties(newSubCat, savedCatProps)
+        flag = SetCategoryProperties(doc, newSubCat, savedCatProps)
         if(flag):
-            returnValue.UpdateSep(True, 'Successfully created category '+ str(newCatName))
+            returnValue.UpdateSep(True, 'Successfully created category: '+ str(newCatName))
             returnValue.result = newSubCat
         else:
             returnValue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
@@ -800,9 +936,9 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
             # move elements
             returnValue = MoveElementsToCategory(doc, dic, toCategoryName, destinationCatIds)
         else:
-            returnValue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
+            returnValue.UpdateSep(False, 'Destination category: '+ str(toCategoryName) + ' does not exist in file!')
     else:
-       returnValue.UpdateSep(False, 'Source category '+ str(fromCategoryName) + ' does not exist in file!')
+       returnValue.UpdateSep(False, 'Source category: '+ str(fromCategoryName) + ' does not exist in file!')
     return returnValue
 
 def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
@@ -833,6 +969,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
 
     :rtype: :class:`.Result`
     '''
+
     returnValue = res.Result()
     # check whether destination category exist in file
     cats = GetMainSubCategories(doc)
@@ -850,14 +987,88 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
                                 returnValue.Update(updatedPara)
                                 break
     else:
-        returnValue.UpdateSep(False, 'Destination category '+ str(toCategoryName) + ' does not exist in file!')
+        returnValue.UpdateSep(False, 'Destination category: '+ str(toCategoryName) + ' does not exist in file!')
     return returnValue
+
+def RenameSubCategory(doc, oldSubCatName, newSubCatName):
+    '''
+    Renames a family custom subcategory.
+
+    Note: Only subcategory directly belonging to the family category will be checked for a match.
+
+    - Revit API does currently not allow to change a subcategory name. This method instead:
+
+        - duplicates the old subcategory with the new name
+        - moves all elements belonging to the old subcategory to the new subcategory
+        - deletes the old subcategory
+
+    - If the new subcategory already exists in the file:
+
+        - moves all elements belonging to the old subcategory to the new subcategory
+        - deletes the old subcategory
+
+    :param doc: Current Revit family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param oldSubCatName: The subcategory name to be re-named
+    :type oldSubCatName: str
+    :param newSubCatName: The new subcategory name.
+    :type newSubCatName: str
+
+    :return: 
+        Result class instance.
+
+        - result.status. True if subcategory was renamed successfully , otherwise False.
+        - result.message will contain rename process messages.
+        - result.result empty list
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
+    :rtype: :class:`.Result`
+    '''
+
+    returnValue = res.Result()
+    # check whether ol;d subcategory exists in family file
+    alreadyInFamilyOld = DoesMainSubCategoryExists(doc, oldSubCatName)
+    if(alreadyInFamilyOld):
+        # check whether new subcategory already in family
+        alreadyInFamily = DoesMainSubCategoryExists(doc, newSubCatName)
+        if(alreadyInFamily):
+            # just move elements from old sub category to new one
+            returnValue.AppendMessage('Subcategory: ' + newSubCatName + ' already in family.')
+        else:
+            # duplicate old sub category
+            createNewStatus = CreateNewCategoryAndTransferProperties(doc, newSubCatName, oldSubCatName)
+            returnValue.Update(createNewStatus)
+        # check if we have a subcategory to move elements to
+        if(returnValue.status):
+            # move elements
+            moveStatus = MoveElementsFromSubCategoryToSubCategory(doc, oldSubCatName, newSubCatName)
+            returnValue.Update(moveStatus)
+            if(moveStatus.status):
+                deletedOldSubCategory = DeleteMainSubCategory(doc, oldSubCatName)
+                if(deletedOldSubCategory):
+                    returnValue.UpdateSep(True, 'Subcategory: ' + oldSubCatName + ' deleted successfully.')
+                else:
+                    returnValue.UpdateSep(True, 'Subcategory: ' + oldSubCatName + ' failed to delete subcategory...Exiting')
+            else:
+                returnValue.UpdateSep(False, 'Subcategory: ' + newSubCatName + ' failed to move elements to new subcategory. Exiting...')
+        else:
+            returnValue.UpdateSep(False, 'Subcategory: ' + newSubCatName + ' failed to create in family. Exiting...')
+    else:
+        returnValue.UpdateSep(False, 'Base subcategory: ' + oldSubCatName + ' does not exist in family. Exiting...')
+    return returnValue
+
+# --------------------------------------- family category  --------------------------------------------------------------
 
 def ChangeFamilyCategory(doc, newCategoryName):
     '''
     Changes the current family category to the new one specified.
 
-    Revit's default behaviour when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
+    Revit's default behavior when changing the category of a family is to discard all custom subcategories created and assign elements which are on those custom subcategories\
         to the new family category.
     
     This function will also re-create any user created subcategories under the new category and assign elements to it to match the subcategory they where on before\
@@ -919,6 +1130,8 @@ def ChangeFamilyCategory(doc, newCategoryName):
         returnValue.UpdateSep(False, 'Failed to change family category:' + changeFam.message)
     return returnValue
 
+# --------------------------------------- reporting --------------------------------------------------------------
+
 def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
     '''
     Formats category properties into lists for reports
@@ -952,22 +1165,22 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
         row.append(str(dicMaterial[PROPERTY_MATERIAL_NAME]).encode('utf-8'))
         row.append(str(dicMaterial[PROPERTY_MATERIAL_ID]).encode('utf-8'))
         # line pattern
-        dicPattern = GetCategoryLinePattern(dic[key], doc)
-        row.append(str(dicPattern[PROPERTY_PATTERN_NAME]).encode('utf-8'))
-        row.append(str(dicPattern[PROPERTY_PATTERN_ID]).encode('utf-8'))
+        dicPattern = rPat.GetLinePatternFromCategory(dic[key], doc)
+        row.append(str(dicPattern[rPat.PROPERTY_PATTERN_NAME]).encode('utf-8'))
+        row.append(str(dicPattern[rPat.PROPERTY_PATTERN_ID]).encode('utf-8'))
         # line weights
         dicLineWeights = GetCategoryLineWeights(dic[key])
-        row.append(str(dicLineWeights[PROPERTY_LINEWEIGHT_PROJECTION_NAME]).encode('utf-8'))
-        row.append(str(dicLineWeights[PROPERTY_LINEWEIGHT_CUT_NAME]).encode('utf-8'))
+        row.append(str(dicLineWeights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME]).encode('utf-8'))
+        row.append(str(dicLineWeights[PROPERTY_LINE_WEIGHT_CUT_NAME]).encode('utf-8'))
         # category colour
         dicColour = GetCategoryColour(dic[key])
-        row.append(str(dicColour[PROPERTY_LINECOLOUR_RED_NAME]).encode('utf-8'))
-        row.append(str(dicColour[PROPERTY_LINECOLOUR_GREEN_NAME]).encode('utf-8'))
-        row.append(str(dicColour[PROPERTY_LINECOLOUR_BLUE_NAME]).encode('utf-8'))
+        row.append(str(dicColour[PROPERTY_LINE_COLOUR_RED_NAME]).encode('utf-8'))
+        row.append(str(dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME]).encode('utf-8'))
+        row.append(str(dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME]).encode('utf-8'))
         # elements
-        row.append(str(len(elements[CATEGORY_GRAPHICSTYLE_3D])).encode('utf-8'))
-        row.append(str(len(elements[CATEGORY_GRAPHICSTYLE_PROJECTION])).encode('utf-8'))
-        row.append(str(len(elements[CATEGORY_GRAPHICSTYLE_CUT])).encode('utf-8'))
+        row.append(str(len(elements[CATEGORY_GRAPHIC_STYLE_3D])).encode('utf-8'))
+        row.append(str(len(elements[CATEGORY_GRAPHIC_STYLE_PROJECTION])).encode('utf-8'))
+        row.append(str(len(elements[CATEGORY_GRAPHIC_STYLE_CUT])).encode('utf-8'))
 
         data.append(row)
     return data
@@ -987,13 +1200,14 @@ def GetReportData(doc, revitFilePath):
 
     data = []
     # get all sub categories in family and associates elements;
-    subCats = GetMainSubCategories(doc)
-    familyCat = GetFamilyCategory(doc)
-    otherCats = GetOtherSubCategories(doc)
+    subCats = GetMainSubCategories(doc) # i/e family is specialty equipment and all its associated sub categories
+    familyCat = GetFamilyCategory(doc) # any 3D element which is set to 'None' in subcategory (if family is specialty equipment so is this element)
+    otherCats = GetOtherSubCategories(doc) # Imports in Families cats are here
     familyCatName = list(familyCat.keys())[0]
     # build output
     data = BuildReportDataByCategory(doc, familyCat, familyCatName, familyCatName, revitFilePath)
     data = data + BuildReportDataByCategory(doc, subCats, familyCatName, familyCatName, revitFilePath)
-    for cat in otherCats:
-        data = data + BuildReportDataByCategory(doc, otherCats[cat], familyCatName, cat, revitFilePath)
+    # check for imports
+    if ('Imports in Families' in otherCats):
+        data = data + BuildReportDataByCategory(doc, otherCats['Imports in Families'], familyCatName, 'Imports in Families', revitFilePath)
     return data

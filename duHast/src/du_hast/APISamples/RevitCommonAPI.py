@@ -43,7 +43,7 @@ import Utility as util
 import RevitGroups as rGroup
 
 # type checker
-from typing import List, Callable
+#from typing import List, Callable
 
 clr.ImportExtensions(System.Linq)
 
@@ -186,6 +186,31 @@ def GetParameterValueAsInteger(
     # extract parameter value depending on whether its storage type is integer, otherwise default value
     if(para.StorageType == rdb.StorageType.Integer):
         pValue = para.AsInteger()
+    return pValue
+
+def GetParameterValueAsElementId(
+    para
+    ):
+    '''
+    Returns the parameter value as Element Id.
+
+    Returns the parameter value as element Id only if the storage type is ElementId.
+
+    :param para: Parameter of which the value is to be returned.
+    :type para: Autodesk.Revit.DB.Parameter 
+    :raise: Any exception will need to be managed by the function caller.
+
+    :return:
+        Default value is -1 if parameter value is empty or storage type is not integer.
+        Otherwise the actual parameter value.
+    :rtype: int
+    '''
+
+    # set return value default
+    pValue = rdb.ElementId.InvalidElementId
+    # extract parameter value depending on whether its storage type is integer, otherwise default value
+    if(para.StorageType == rdb.StorageType.ElementId):
+        pValue = para.AsElementId()
     return pValue
 
 def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
@@ -634,7 +659,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
             # need to keep at least one item
             if(len(t[1]) > 1):
                 #maxLength = len(t[1])
-                # make sure to leave the first one behind to match Revit purge behaviour
+                # make sure to leave the first one behind to match Revit purge behavior
                 for x in range(1, len(t[1])):
                     id = t[1][x]
                     # get the element

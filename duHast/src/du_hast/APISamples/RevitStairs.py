@@ -36,7 +36,7 @@ import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-import Autodesk.Revit.DB.Architecture as rdba
+import Autodesk.Revit.DB.Architecture as rdbA
 clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
@@ -69,7 +69,7 @@ STAIR_LANDING_TYPE_PARAS = [
 ]
 
 #: list of built in parameters for stair cut mark
-STAIR_CUTMARK_TYPE_PARAS = [
+STAIR_CUT_MARK_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
 ]
 
@@ -125,7 +125,7 @@ def GetStairTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsType)
 
 def GetStairPathTypesByClass(doc):
     '''
@@ -138,7 +138,7 @@ def GetStairPathTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsPathType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
 
 def GetAllStairPathElementsInModel(doc):
     '''
@@ -164,7 +164,7 @@ def GetStairLandingTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsLandingType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsLandingType)
 
 def GetStairRunTypesByClass(doc):
     '''
@@ -177,7 +177,7 @@ def GetStairRunTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.StairsRunType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsRunType)
 
 def GetStairCutMarkTypesByClass(doc):
     '''
@@ -190,7 +190,7 @@ def GetStairCutMarkTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.CutMarkType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.CutMarkType)
 
 def GetAllStairStringersCarriageByCategory(doc):
     '''
@@ -281,7 +281,7 @@ def GetAllStairInstancesInModelByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdba.Stairs).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.Stairs).WhereElementIsNotElementType()
 
 def GetAllStairTypeIdsInModelByCategory(doc):
     '''
@@ -381,7 +381,7 @@ def GetAllStairCutMarkTypeIdsInModelByClass(doc):
     ids = com.GetIdsFromElementCollector (colClass)
     return ids
 
-def GetAllStairstringCarriageTypeIdsInModelByCategory(doc):
+def GetAllStairStringCarriageTypeIdsInModelByCategory(doc):
     '''
     Get all Stair stringers and carriage element type ids available in model.
 
@@ -467,7 +467,7 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
                 ids.remove(value[0])
     return ids
 
-#--------------------------------utlity functions to ge unused sub types ----------------------
+#--------------------------------utility functions to ge unused sub types ----------------------
 
 def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     '''
@@ -697,7 +697,7 @@ def GetUnusedStairCutMarkTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUTMARK_TYPE_PARAS)
+    ids = GetUsedSubTypes(doc, GetAllStairCutMarkTypeIdsInModelByClass, STAIR_CUT_MARK_TYPE_PARAS)
     return ids
 
 def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
@@ -715,7 +715,7 @@ def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, GetAllStairstringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
+    ids = GetUsedSubTypes(doc, GetAllStairStringCarriageTypeIdsInModelByCategory, STAIR_SUPPORT_TYPE_PARAS)
     return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------

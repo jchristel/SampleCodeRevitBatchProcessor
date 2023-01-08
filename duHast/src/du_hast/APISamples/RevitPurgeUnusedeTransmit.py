@@ -72,7 +72,7 @@ def _PurgeUnused2019(doc):
     :rtype: bool
     '''
 
-    # path to eTransmitt dll for Revit 2019
+    # path to e-Transmit dll for Revit 2019
     eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2019\eTransmitForRevitDB.dll'
     value = _purge(doc, eTransmitFilePath)
     return value
@@ -90,7 +90,7 @@ def _PurgeUnused2020(doc):
     :rtype: bool
     '''
 
-    # path to eTransmitt dll for Revit 2019
+    # path to e-Transmit dll for Revit 2019
     eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2020\eTransmitForRevitDB.dll'
     value = _purge(doc, eTransmitFilePath)
     return value
@@ -108,7 +108,7 @@ def _PurgeUnused2021(doc):
     :rtype: bool
     '''
 
-    # path to eTransmitt dll for Revit 2019
+    # path to e-Transmit dll for Revit 2019
     eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2021\eTransmitForRevitDB.dll'
     value = _purge(doc, eTransmitFilePath)
     return value
@@ -126,7 +126,7 @@ def _PurgeUnused2022(doc):
     :rtype: bool
     '''
 
-    # path to eTransmitt dll for Revit 2019
+    # path to e-Transmit dll for Revit 2019
     eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2022\eTransmitForRevitDB.dll'
     value = _purge(doc, eTransmitFilePath)
     return value

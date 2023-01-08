@@ -72,7 +72,7 @@ BUILTIN_TYPE_FAMILY_NAMES = [
 ]
 
 #: category filter for all element filters by category
-CURTAINWALL_ELEMENTS_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+CURTAINWALL_ELEMENTS_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_CurtainWallPanels,
         rdb.BuiltInCategory.OST_CurtainWallMullions
     ])
@@ -98,7 +98,7 @@ def GetAllCurtainWallElementTypesByCategory(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
@@ -164,7 +164,7 @@ def GetCurtainWallElementInstancesInModelByCategory(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
     
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
     return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
 def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
@@ -314,7 +314,7 @@ def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
     '''
 
     ids = []
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORYFILTER )
+    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     for c in collector:
         if(c.GetType() == rdb.FamilySymbol):

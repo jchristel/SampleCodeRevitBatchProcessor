@@ -36,6 +36,7 @@ import RevitGeometry as rGeo
 import RevitDesignSetOptions as rDesignO
 import DataRoom as dRoom
 import DataGeometry as dGeometry
+import RevitPhases as rPhase
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -313,6 +314,13 @@ def PopulateDataRoomObject(doc, revitRoom):
         dataR.id = revitRoom.Id.IntegerValue
         dataR.name = rdb.Element.Name.GetValue(revitRoom).encode('utf-8')
         dataR.number = revitRoom.Number.encode('utf-8')
+        # get the model name
+        if(doc.IsDetached):
+            dataR.modelName = 'Detached Model'
+        else:
+            dataR.modelName = doc.Title
+        # get phase name
+        dataR.phase = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, com.GetParameterValueAsElementId)).encode('utf-8')
         funcNumberValue = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number')
         if(funcNumberValue != None):
             dataR.functionNumber = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number').encode('utf-8')

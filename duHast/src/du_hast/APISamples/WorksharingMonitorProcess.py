@@ -35,7 +35,7 @@ Process name of work sharing monitor
 
 PROCESS_NAME_WSM = 'WorksharingMonitor.exe'
 PROCESS_MARKER_FILENAME = 'WSMProcessList'
-PROCESS_MARKER_FILEEXTENSION = '.plist'
+PROCESS_MARKER_FILE_EXTENSION = '.plist'
 
 import SystemProcess as sp
 
@@ -43,7 +43,7 @@ import SystemProcess as sp
 
 def GetWorkSharingMonitorProcesses():
     '''
-    Get all curently running worksharing monitor processes
+    Get all currently running worksharing monitor processes
 
     :return: _description_
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
@@ -75,7 +75,7 @@ def WriteOutWSMDataToFile(directoryPath):
 
     status = res.Result()
     processList = GetWorkSharingMonitorProcesses()
-    statusWriteOut = sp.WriteOutProcessData(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILEEXTENSION)
+    statusWriteOut = sp.WriteOutProcessData(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILE_EXTENSION)
     if(statusWriteOut):
         status.UpdateSep(True, 'Successfully wrote WSM process marker file to: ' + str(directoryPath))
     else:
@@ -86,7 +86,7 @@ def DeleteWSMDataFiles(directoryPath):
     '''
     Deletes all WSM marker files in a directory.
 
-    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION 
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION 
 
     :param directoryPath: The directory path containing marker files to be deleted.
     :type directoryPath: str
@@ -97,7 +97,7 @@ def DeleteWSMDataFiles(directoryPath):
 
     status = True
     # get files in directory
-    filesToDelete = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILEEXTENSION)
+    filesToDelete = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(filesToDelete) > 0):
         statusDelete = True
         for file in filesToDelete:
@@ -108,7 +108,7 @@ def ReadWSMDataFromFile(directoryPath):
     '''
     Reads all worksharing monitor processes data from marker file(s) in a given directory
     
-    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION 
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION 
 
     :param directoryPath: The directory path to where marker files are to be read from.
     :type directoryPath: str
@@ -118,7 +118,7 @@ def ReadWSMDataFromFile(directoryPath):
     '''
     
     processData = []
-    files = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILEEXTENSION)
+    files = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(files) > 0):
         for file in files:
             rows = util.ReadCSVfile(file)
@@ -152,7 +152,7 @@ def CleanUpWSMDataFiles(directoryPath):
     '''
     Removes all wsm data marker files in a given directory.
 
-    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILEEXTENSION.
+    WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION.
 
     :param directoryPath: The directory path containing the marker files to be deleted.
     :type directoryPath: str
@@ -209,7 +209,7 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
     try:
         wsmRunningPrior = []
         if(ignoreMarkerFiles == False):
-            # read out wsms running before script started
+            # read out worksharing monitor sessions running before script started
             wsmRunningPrior = ReadWSMDataFromFile(directoryPath)
         wsmToDelete = GetWSMSessionsToDelete(wsmRunningPrior)
         statusKill = sp.KillProcesses(wsmToDelete)

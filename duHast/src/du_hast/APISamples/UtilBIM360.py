@@ -26,13 +26,17 @@ This module contains a number of helper functions relating to BIM360.
 #
 #
 
-import csv
 import System
 import clr
 import csv
-import FileItem as fi
+
 import Utility as util
 
+# get the relative path to the parent folder added to sys path
+import sys, os
+sys.path.append(os.path.join(os.path.realpath(__file__), os.pardir, os.pardir))
+
+from UI import FileItem as fi
         
 def getBIM360RevitFilesFromFileList(filepathCSV, extension):
     '''

@@ -35,6 +35,7 @@ import RevitFamilyUtils as rFam
 import RevitGeometry as rGeo
 import RevitDesignSetOptions as rDesignO
 import DataCeiling as dCeiling
+import RevitPhases as rPhase
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -483,6 +484,14 @@ def PopulateDataCeilingObject(doc, revitCeiling):
         dataC.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
         dataC.levelId = revitCeiling.LevelId.IntegerValue
         dataC.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        # get the model name
+        if(doc.IsDetached):
+            dataC.modelName = 'Detached Model'
+        else:
+            dataC.modelName = doc.Title
+        # get phasing information
+        dataC.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataC.phaseDemolished = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, com.GetParameterValueAsElementId)).encode('utf-8')
         return dataC
     else:
         return None

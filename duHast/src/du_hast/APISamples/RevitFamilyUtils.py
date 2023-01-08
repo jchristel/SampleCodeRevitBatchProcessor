@@ -354,6 +354,24 @@ def GetAllLoadableFamilies(doc):
     families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     return families
 
+def GetAllLoadableFamilyIdsThroughTypes(doc):
+        '''
+        Get all loadable family ids in file.
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        :return: list of family ids
+        :rtype: [Autodesk.Revit.DB.ElementId]
+        '''
+
+        familyIds = []
+        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol) 
+        # get families from symbols and filter out in place families
+        for famSymbol in col:
+            if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
+                familyIds.append(famSymbol.Family.Id)
+        return familyIds
+
 def GetAllInPlaceFamilies(doc):
     '''
     Filters all families in revit model by whether it is an InPlace family.
@@ -371,7 +389,50 @@ def GetAllInPlaceFamilies(doc):
     families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
 
+def GetAllFamilyInstances(doc):
+    '''
+    Returns all family instances in document.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A collector with all family instances in document.
+    :rtype: Autodesk.Revit.DB.Collector
+    '''
+
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance)
+    return col
+
 # --------------------------family data ----------------
+
+
+def IsAnyNestedFamilyInstanceLabelDriven(doc):
+    '''
+    Checks whether any family isntance in document is driven by the 'Label' property.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: True if at least one instance is driven by label property. Othewise False
+    :rtype: bool
+    '''
+
+    flag = False
+    famInstances = GetAllFamilyInstances(doc)
+    
+    for famInstance in famInstances:
+        # get the Label parameter value
+        pValue = com.GetBuiltInParameterValue(
+            famInstance,
+            rdb.BuiltInParameter.ELEM_TYPE_LABEL,
+            com.GetParameterValueAsElementId
+            )
+        # a valid Element Id means family instance is driven by Label
+        if (pValue != rdb.ElementId.InvalidElementId):
+            flag = True
+            break
+            
+    return flag
 
 def GetSymbolsFromType(doc, typeIds):
     '''
@@ -620,7 +681,11 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
 # -------------------------- family elements  ----------------
 
 #: Types of lines in family available
-LINE_NAMES = ['Model Lines', 'Symbolic Lines']
+LINE_NAMES = [
+    'Model Lines', # 3D families
+    'Symbolic Lines', # 3D families
+    'Line' # annotation (tag) families
+    ]
 
 def GetAllGenericFormsInFamily(doc):
     '''
@@ -672,6 +737,20 @@ def GetAllModelTextElementsInFamily(doc):
     '''
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ModelText)
+    return col
+
+def GetAllReferencePlanesInFamily(doc):
+    '''
+    Filters all reference planes in family.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A collector of Autodesk.Revit.DB.ReferencePlane.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     return col
 
 # -------------------------- ref planes  ----------------

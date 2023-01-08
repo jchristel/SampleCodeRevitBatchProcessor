@@ -56,7 +56,7 @@ def GetBim360Path(doc):
 
 def ConvertBIM360FilePath(path):
     '''
-    Pretend this is a file server path rather than cloud model path and swap BIM360:// with C:/
+    Pretend this is a file server path rather than cloud model path and swap cloud path with C:/
 
     :param path: The model cloud file path starting with BIM360
     :type path: str
@@ -65,8 +65,13 @@ def ConvertBIM360FilePath(path):
     :rtype: str
     '''
 
-    # hack.. pretend path points to C:\\ rather than BIM 360://
-    path = path.replace(r'BIM 360://', r'C:/')
+    # hack.. pretend path points to C:\\ rather than BIM 360:// or 'autodesk docs://'
+    if (path.lower().startswith('bim 360://')):
+        # bim 360 naming
+        path = r'C:/' + path[len('bim 360://'):]
+    elif (path.lower().startswith('autodesk docs://')):
+        # autodesk construction cloud naming
+        path = r'C:/' + path[len('autodesk docs://'):]
     return path
 
 def GetModelBIM360Ids(doc):
@@ -85,7 +90,7 @@ def GetModelBIM360Ids(doc):
     projectGuid = path.GetProjectGUID()
     # check whether this is a cloud model
     isCloudModel = path.CloudPath
-    # get human reeadable path
+    # get human readable path
     human = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     return projectGuid,modelGuid,str(human)
 

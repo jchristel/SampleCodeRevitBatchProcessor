@@ -157,7 +157,7 @@ VIEW_TAG_SYMBOL_PARAMETER_DEF = [
 ]
 
 #: category filter for all view ref categories
-VIEWREF_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+VIEW_REF_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_CalloutHeads,
         rdb.BuiltInCategory.OST_ElevationMarks,
         rdb.BuiltInCategory.OST_SectionHeads,
@@ -171,8 +171,8 @@ def GetReferenceTypeIdsFromViewType(viewType):
     :param viewType: The view type.
     :type viewType: Autodesk.Revit.DB.ViewType
 
-    :return: dictionary, key: BuiltinParamterDefinition, value: id of a tag
-    :rtype: dic{Autodesk.Revit.DB.BuiltinParamterDefinition:[Autodesk.Revit.DB.ElementId]}
+    :return: dictionary, key: BuiltinParameterDefinition, value: id of a tag
+    :rtype: dic{Autodesk.Revit.DB.BuiltinParameterDefinition:[Autodesk.Revit.DB.ElementId]}
     '''
 
     dic = {}
@@ -301,7 +301,7 @@ def GetAllViewReferenceSymbolIds(doc):
     '''
 
     ids = []
-    multiCatFilter = rdb.ElementMulticategoryFilter(VIEWREF_CATEGORYFILTER)
+    multiCatFilter = rdb.ElementMulticategoryFilter(VIEW_REF_CATEGORY_FILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     ids = com.GetIdsFromElementCollector(collector)
     return ids

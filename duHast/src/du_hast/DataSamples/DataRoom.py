@@ -53,6 +53,8 @@ class DataRoom():
         self.number = '-'
         self.levelName = '-'
         self.levelId = '-'
+        self.modelName = '-'
+        self.phase = '-'
         self.geometry = [[]]
         self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
         self.functionNumber = '-'

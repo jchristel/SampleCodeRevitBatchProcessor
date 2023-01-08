@@ -35,7 +35,7 @@ import RevitFamilyUtils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-import Autodesk.Revit.DB.Architecture as rdba
+import Autodesk.Revit.DB.Architecture as rdbA
 
 clr.ImportExtensions(System.Linq)
 
@@ -58,7 +58,7 @@ BUILTIN_RAILING_TYPE_FAMILY_NAMES = [
 ]
 
 #: category filter for all railing element filters by category
-RAILING_CATEGORYFILTER = List[rdb.BuiltInCategory] ([
+RAILING_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_Railings,
         rdb.BuiltInCategory.OST_RailingBalusterRail,
         rdb.BuiltInCategory.OST_RailingHandRail,
@@ -89,7 +89,7 @@ def GetAllRailingTypesByCategory(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
@@ -114,7 +114,7 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
     :rtype: list of types
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     elements=[]
     for c in collector:
@@ -138,7 +138,7 @@ def GetRailingTypesByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdba.RailingType)
+    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.RailingType)
 
 def BuildRailingTypeDictionary(collector, dic):
     '''
@@ -198,7 +198,7 @@ def GetAllRailingInstancesInModelByCategory(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
 def GetAllRailingInstancesInModelByClass(doc):
@@ -212,7 +212,7 @@ def GetAllRailingInstancesInModelByClass(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdba.Railing).WhereElementIsNotElementType()
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.Railing).WhereElementIsNotElementType()
 
 def GetAllRailingTypeIdsInModelByCategory(doc):
     '''
@@ -357,7 +357,7 @@ def GetInPlaceRailingFamilyInstances(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORYFILTER)
+    filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
 def GetAllInPlaceRailingTypeIdsInModel(doc):
@@ -372,7 +372,7 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
     '''
 
     ids = []
-    for cat in RAILING_CATEGORYFILTER: 
+    for cat in RAILING_CATEGORY_FILTER: 
         idsByCat = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, cat)
         if(len(idsByCat) > 0):
             ids = ids + idsByCat

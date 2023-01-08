@@ -31,7 +31,8 @@ copyright = '2023, Jan Christel'
 author = 'Jan Christel'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.1'
+# need to be in double high commas for bumpver to recognize this a the version number
+release = "1.0.7"
 
 
 # -- General configuration ---------------------------------------------------

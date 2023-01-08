@@ -74,7 +74,7 @@ class Result:
         '''
         try:
             # check if default message string, if so do not update
-            if(otherResult.message is not '-'):
+            if(otherResult.message != '-'):
                 self.AppendMessage(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values

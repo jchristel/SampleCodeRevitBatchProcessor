@@ -77,7 +77,7 @@ def GetFamilySharedParameters(doc):
         for famPara in  famManager.GetParameters():
             try:
                 # only shared parameters hav .GUID property...
-                if(str(famPara.GUID) is not ''):
+                if(str(famPara.GUID) != ''):
                     sharedFamParas.append(famPara)
             except Exception as e:
                 pass
@@ -148,7 +148,7 @@ def CheckWhetherSharedParameterByNameIsFamilyParameter(doc, parameterName):
         if(famPara.Definition.Name == parameterName):
             try:
                 # only shared parameters hav .GUID property...
-                if(str(famPara.GUID) is not ''):
+                if(str(famPara.GUID) != ''):
                     para = famPara
                     break
             except Exception as e:

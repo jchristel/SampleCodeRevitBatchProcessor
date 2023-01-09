@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 1.0.1 documentation</title>
+    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 1.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -16,13 +16,13 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.0.1 documentation" href="index.html" />
-    <link rel="next" title="Model Health Reporting." href="ModelHealth.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.0.7 documentation" href="index.html" />
+    <link rel="next" title="Revit API family property reporting." href="familyReporting.html" />
     <link rel="prev" title="Revit Batch Processor - File Selection User Interface." href="fileSelectUI.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.0.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.0.7 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>Revit API sample code.</h1></div>
@@ -31,7 +31,7 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="ModelHealth.html" title="Model Health Reporting." accesskey="N">next</a></div>
+            <div class="headerButton"><a href="familyReporting.html" title="Revit API family property reporting." accesskey="N">next</a></div>
             <div class="headerButton"><a href="fileSelectUI.html" title="Revit Batch Processor - File Selection User Interface." accesskey="P">previous</a></div>
         </li>
     </ul>
@@ -51,9 +51,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitCategories">Revit Categories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitCeilings">Revit Ceilings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitCurtainWallElements">Revit Curtain Wall</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitDetailItems">Revit Detail Items</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#revit-element-filtering">Revit Element Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitDetailItems">Revit Detail Items</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitExport">Revit Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitFamilyUtils">Revit Family</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitFloors">Revit Floors</a></li>
@@ -80,6 +80,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitWorksets">Revit Worksets</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="familyReporting.html">Revit API family property reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
@@ -3775,6 +3776,139 @@ Includes:</p>
 
 </section>
 </section>
+<section id="revit-element-filtering">
+<h2>Revit Element Filtering<a class="headerlink" href="#revit-element-filtering" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitCustomElementFilter.</span></span><span class="sig-name descname"><span class="pre">RevitCustomElementFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementFilters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isLogicalANDFilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elementFilters</strong> (<em>list of functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
+<li><p><strong>isLogicalANDFilter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter.CheckElement">
+<span class="sig-name descname"><span class="pre">CheckElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter.CheckElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter checking whether element meets criteria.</p>
+<p>This function will loop over all the filters past in through the class constructor and test the element for each filter.
+Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
+it will return True if one of them evaluates to True, otherwise False will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked against the filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it matches the filter(s), otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-RevitDesignSetOptions">
+<span id="revit-design-options-and-design-sets"></span><h2>Revit Design Options and Design Sets<a class="headerlink" href="#module-RevitDesignSetOptions" title="Permalink to this headline">¶</a></h2>
+<section id="this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options">
+<h3>This module contains a number of functions around Revit Design Sets and Design Options.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options" title="Permalink to this headline">¶</a></h3>
+<dl class="py data">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.REPORT_DESIGNSET_HEADER">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">REPORT_DESIGNSET_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PRIMARY</span> <span class="pre">OPTION',</span> <span class="pre">'OTHER</span> <span class="pre">OPTIONS']</span></em><a class="headerlink" href="#RevitDesignSetOptions.REPORT_DESIGNSET_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignOptions">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all design options in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design options in current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSets">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the design sets in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design sets in the current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.IsDesignOptionPrimary">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">IsDesignOptionPrimary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designSetName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designOptionName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.IsDesignOptionPrimary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a design option is the primary option within a design set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>designSetName</strong> (<em>str</em>) – The name of the design set the option belongs to,</p></li>
+<li><p><strong>designOptionName</strong> (<em>str</em>) – The name of the design option to be checked,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if this option is primary otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSetOptionInfo">
+<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSetOptionInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSetOptionInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design set, design option information of an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the design set/option data is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary
+Design Set Name: (can be either Main Model or the design set name)
+designOptionName:    Design Option Name (empty string if Main Model
+isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary
+designSetName:str
+designOptionName:str
+isPrimary:bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
 <section id="module-RevitDetailItems">
 <span id="revit-detail-items"></span><h2>Revit Detail Items<a class="headerlink" href="#module-RevitDetailItems" title="Permalink to this headline">¶</a></h2>
 <section id="this-module-contains-a-number-of-functions-around-revit-detail-items">
@@ -4117,139 +4251,6 @@ Gets all unused filled region type ids in model.</p>
 </dd></dl>
 
 </section>
-</section>
-<section id="module-RevitDesignSetOptions">
-<span id="revit-design-options-and-design-sets"></span><h2>Revit Design Options and Design Sets<a class="headerlink" href="#module-RevitDesignSetOptions" title="Permalink to this headline">¶</a></h2>
-<section id="this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options">
-<h3>This module contains a number of functions around Revit Design Sets and Design Options.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options" title="Permalink to this headline">¶</a></h3>
-<dl class="py data">
-<dt class="sig sig-object py" id="RevitDesignSetOptions.REPORT_DESIGNSET_HEADER">
-<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">REPORT_DESIGNSET_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PRIMARY</span> <span class="pre">OPTION',</span> <span class="pre">'OTHER</span> <span class="pre">OPTIONS']</span></em><a class="headerlink" href="#RevitDesignSetOptions.REPORT_DESIGNSET_HEADER" title="Permalink to this definition">¶</a></dt>
-<dd><p>header used in reports</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignOptions">
-<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignOptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all design options in a model,</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Design options in current model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSets">
-<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets all the design sets in a model,</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Design sets in the current model</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="RevitDesignSetOptions.IsDesignOptionPrimary">
-<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">IsDesignOptionPrimary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designSetName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">designOptionName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.IsDesignOptionPrimary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks whether a design option is the primary option within a design set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>designSetName</strong> (<em>str</em>) – The name of the design set the option belongs to,</p></li>
-<li><p><strong>designOptionName</strong> (<em>str</em>) – The name of the design option to be checked,</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if this option is primary otherwise False</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="RevitDesignSetOptions.GetDesignSetOptionInfo">
-<span class="sig-prename descclassname"><span class="pre">RevitDesignSetOptions.</span></span><span class="sig-name descname"><span class="pre">GetDesignSetOptionInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitDesignSetOptions.GetDesignSetOptionInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the design set, design option information of an element.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the design set/option data is to be returned.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Dictionary
-Design Set Name: (can be either Main Model or the design set name)
-designOptionName:    Design Option Name (empty string if Main Model
-isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Dictionary
-designSetName:str
-designOptionName:str
-isPrimary:bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-</section>
-<section id="revit-element-filtering">
-<h2>Revit Element Filtering<a class="headerlink" href="#revit-element-filtering" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitCustomElementFilter.</span></span><span class="sig-name descname"><span class="pre">RevitCustomElementFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">elementFilters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isLogicalANDFilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>elementFilters</strong> (<em>list of functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
-<li><p><strong>isLogicalANDFilter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="RevitCustomElementFilter.RevitCustomElementFilter.CheckElement">
-<span class="sig-name descname"><span class="pre">CheckElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elementId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCustomElementFilter.RevitCustomElementFilter.CheckElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter checking whether element meets criteria.</p>
-<p>This function will loop over all the filters past in through the class constructor and test the element for each filter.
-Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
-it will return True if one of them evaluates to True, otherwise False will be returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
-<li><p><strong>elementId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked against the filter.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if it matches the filter(s), otherwise False</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="module-RevitExport">
 <span id="revit-export"></span><h2>Revit Export<a class="headerlink" href="#module-RevitExport" title="Permalink to this headline">¶</a></h2>
@@ -4806,6 +4807,61 @@ it will return True if one of them evaluates to True, otherwise False will be re
 </dd></dl>
 
 </section>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitExportIFCSettings.IFCSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitExportIFCSettings.</span></span><span class="sig-name descname"><span class="pre">IFCSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifcVersion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spaceBoundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activePhaseId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activeViewId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportBaseQuantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splitWallsAndColumns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibleElementsOfCurrentView</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use2DRoomBoundaryForVolume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useFamilyAndTypeNameForReference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportInternalRevitPropertySets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportIFCCommonPropertySets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export2DElements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportPartsAsBuildingElements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportBoundingBox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportSolidModelRep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportSchedulesAsPsets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportUserDefinedPsets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportUserDefinedPsetsFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportLinkedFiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSiteElevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useActiveViewGeometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportSpecificSchedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellationLevelOfDetail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storeIFCGUID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exportRoomsInView</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useOnlyTriangulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includeSteelElements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cOBieCompanyInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cOBieProjectInfo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useTypeNameOnlyForIfcType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useVisibleRevitNameAsEntityName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sitePlacement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selectedSite</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoRefCRSName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoRefCRSDesc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoRefEPSGCode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoRefGeodeticDatum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geoRefMapUnit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excludeFilter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitExportIFCSettings.IFCSettings" title="Permalink to this definition">¶</a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the configuration.</p></li>
+<li><p><strong>ifcVersion</strong> – The IFCFileFormat of the configuration.</p></li>
+<li><p><strong>spaceBoundaries</strong> – The level of space boundaries of the configuration.</p></li>
+<li><p><strong>activePhaseId</strong> – The phase of the document to export.</p></li>
+<li><p><strong>exportBaseQuantities</strong> – Whether or not to include base quantities for model elements in the export data. Base quantities are generated from model geometry to reflect actual physical quantity values, independent of measurement rules or methods.</p></li>
+<li><p><strong>splitWallsAndColumns</strong> – Whether or not to split walls and columns by building stories.</p></li>
+<li><p><strong>visibleElementsOfCurrentView</strong> – True to export only the visible elements of the current view (based on filtering and/or element and category hiding). False to export the entire model.</p></li>
+<li><p><strong>use2DRoomBoundaryForVolume</strong> – True to use a simplified approach to calculation of room volumes (based on extrusion of 2D room boundaries) which is also the default when exporting to IFC 2x2. False to use the Revit calculated room geometry to represent the room volumes (which is the default when exporting to IFC 2x3).</p></li>
+<li><p><strong>useFamilyAndTypeNameForReference</strong> – True to use the family and type name for references. False to use the type name only.</p></li>
+<li><p><strong>exportInternalRevitPropertySets</strong> – True to include the Revit-specific property sets based on parameter groups. False to exclude them.</p></li>
+<li><p><strong>exportIFCCommonPropertySets</strong> – True to include the IFC common property sets. False to exclude them.</p></li>
+<li><p><strong>export2DElements</strong> – True to include 2D elements supported by IFC export (notes and filled regions). False to exclude them.</p></li>
+<li><p><strong>exportPartsAsBuildingElements</strong> – True to export the parts as independent building elements. False to export the parts with host element.</p></li>
+<li><p><strong>exportBoundingBox</strong> – True to export bounding box. False to exclude them.</p></li>
+<li><p><strong>exportSolidModelRep</strong> – True to allow exports of solid models when possible. False to exclude them.</p></li>
+<li><p><strong>exportSchedulesAsPsets</strong> – True to allow exports of schedules as custom property sets. False to exclude them.</p></li>
+<li><p><strong>exportUserDefinedPsets</strong> – True to allow user defined property sets to be exported. False to ignore them</p></li>
+<li><p><strong>exportUserDefinedPsetsFileName</strong> – The name of the file containing the user defined Parameter Mapping Table to be exported.</p></li>
+<li><p><strong>exportLinkedFiles</strong> – True to include links in export, otherwise False.</p></li>
+<li><p><strong>includeSiteElevation</strong> – True to include IFCSITE elevation in the site local placement origin.</p></li>
+<li><p><strong>useActiveViewGeometry</strong> – True to use the active view when generating geometry. False to use default export options.</p></li>
+<li><p><strong>exportSpecificSchedules</strong> – True to export specific schedules</p></li>
+<li><p><strong>tessellationLevelOfDetail</strong> – Value indicating the level of detail to be used by tessellation. Valid values is between 0 to 1</p></li>
+<li><p><strong>storeIFCGUID</strong> – True to store the IFC GUID in the file after the export.  This will require manually saving the file to keep the parameter.</p></li>
+<li><p><strong>exportRoomsInView</strong> – True to export rooms if their bounding box intersect with the section box. If the section box isn’t visible, then all the rooms are exported if this option is set.</p></li>
+<li><p><strong>useOnlyTriangulation</strong> – Value indicating whether tessellated geometry should be kept only as triangulation. (Note: in IFC4_ADD2 IfcPolygonalFaceSet is introduced that can simplify the coplanar triangle faces into a polygonal face. This option skip this)</p></li>
+<li><p><strong>includeSteelElements</strong> – Value indicating whether steel elements should be exported.</p></li>
+<li><p><strong>cOBieCompanyInfo</strong> – COBie specific company information (from a dedicated tab)</p></li>
+<li><p><strong>cOBieProjectInfo</strong> – COBie specific project information (from a dedicated tab)</p></li>
+<li><p><strong>activeViewId</strong> (<em>int</em>) – Id of the active view.</p></li>
+<li><p><strong>useTypeNameOnlyForIfcType</strong> (<em>bool</em>) – Value indicating whether only the Type name will be used to name the IfcTypeObject</p></li>
+<li><p><strong>useVisibleRevitNameAsEntityName</strong> (<em>bool</em>) – Value indicating whether the IFC Entity Name will use visible Revit Name</p></li>
+<li><p><strong>selectedSite</strong> (<em>str</em>) – Selected Site name</p></li>
+<li><p><strong>sitePlacement</strong> (<em>str: SiteTransformBasis.Shared</em><em>, </em><em>SiteTransformBasis.Site</em><em>, </em><em>SiteTransformBasis.Project</em><em>, </em><em>SiteTransformBasis.Internal</em><em>, </em><em>SiteTransformBasis.ProjectInTN</em><em>, </em><em>SiteTransformBasis.InternalInTN</em>) – The origin of the exported file: either shared coordinates (Site Survey Point), Project Base Point, or internal coordinates.</p></li>
+<li><p><strong>geoRefCRSName</strong> (<em>str</em>) – Projected Coordinate System Name</p></li>
+<li><p><strong>geoRefCRSDesc</strong> (<em>str</em>) – Projected Coordinate System Description</p></li>
+<li><p><strong>geoRefEPSGCode</strong> (<em>str</em>) – EPSG Code for the Projected CRS</p></li>
+<li><p><strong>geoRefGeodeticDatum</strong> (<em>str</em>) – The geodetic datum of the ProjectedCRS</p></li>
+<li><p><strong>geoRefMapUnit</strong> (<em>str</em>) – The Map Unit of the ProjectedCRS</p></li>
+<li><p><strong>excludeFilter</strong> (<em>str</em>) – Exclude filter string (element list in an array, separated with semicolon ‘;’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-RevitFamilyUtils">
 <span id="revit-family"></span><h2>Revit Family<a class="headerlink" href="#module-RevitFamilyUtils" title="Permalink to this headline">¶</a></h2>
@@ -5358,6 +5414,9 @@ bool: exclude shared families</p></li>
 </dl>
 </dd></dl>
 
+</section>
+<span class="target" id="module-RevitFamilyParameterUtils"></span><section id="revit-families-parameter-helper-functions">
+<h3>Revit families parameter helper functions.<a class="headerlink" href="#revit-families-parameter-helper-functions" title="Permalink to this headline">¶</a></h3>
 </section>
 <span class="target" id="module-RevitFamilyReload"></span><section id="helper-functions-to-load-or-reload-families">
 <h3>Helper functions to load or reload families<a class="headerlink" href="#helper-functions-to-load-or-reload-families" title="Permalink to this headline">¶</a></h3>
@@ -11606,7 +11665,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>parameterName</strong> (<em>str</em>) – The family parameter name.</p></li>
-<li><p><strong>parameterData</strong> (<em>RevitSharedParametersTuple.parameterData</em>) – A named tup[le containing the shared parameter information</p></li>
+<li><p><strong>parameterData</strong> (<a class="reference internal" href="#RevitSharedParametersTuple.parameterData" title="RevitSharedParametersTuple.parameterData"><em>RevitSharedParametersTuple.parameterData</em></a>) – A named tup[le containing the shared parameter information</p></li>
 <li><p><strong>parameterDef</strong> (<em>Autodesk.Revit.DB.ExternalDefinition</em>) – The external definition of the shared parameter.</p></li>
 </ul>
 </dd>
@@ -11668,6 +11727,142 @@ TODO: repetitive code…Consider generic function!</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitSharedParameterDataPurgeUnused"></span><section id="family-shared-parameters-purge-unused-utilities">
+<h3>Family shared parameters purge unused utilities.<a class="headerlink" href="#family-shared-parameters-purge-unused-utilities" title="Permalink to this headline">¶</a></h3>
+<p>This will delete all shared parameter definitions which are not used by any family parameter.</p>
+<ul class="simple">
+<li><p>requires a revit shared parameter processor object</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameterDataPurgeUnused.PurgeUnused">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameterDataPurgeUnused.</span></span><span class="sig-name descname"><span class="pre">PurgeUnused</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterDataPurgeUnused.PurgeUnused" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will delete all shared parameter definitions which are not used by any family parameter in the family or nested families.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>processor</strong> (<a class="reference internal" href="familyReporting.html#RevitSharedParameterDataProcessor.SharedParameterProcessor" title="RevitSharedParameterDataProcessor.SharedParameterProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">SharedParameterProcessor</span></code></a>) – An RevitSharedParameterDataProcessor object containing all shared parameter information of the family document and any nested families.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>True if all unused shared parameters where deleted successfully or none needed to be deleted. Otherwise False.</p></li>
+<li><p>Result.message property updated in format: Found unused shared parameter: shared parameter Name [GUID]</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>status (bool) will be False.</p></li>
+<li><p>message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitSharedParametersTuple"></span><section id="this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file">
+<h3>This module contains a tuple used to store settings retrieved from a file.<a class="headerlink" href="#this-module-contains-a-tuple-used-to-store-settings-retrieved-from-a-file" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitSharedParametersTuple.parameterData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitSharedParametersTuple.</span></span><span class="sig-name descname"><span class="pre">parameterData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isInstance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterGroup</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParametersTuple.parameterData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new instance of parameterData(name, isInstance, builtInParameterGroup)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParametersTuple.parameterData.builtInParameterGroup">
+<span class="sig-name descname"><span class="pre">builtInParameterGroup</span></span><a class="headerlink" href="#RevitSharedParametersTuple.parameterData.builtInParameterGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParametersTuple.parameterData.isInstance">
+<span class="sig-name descname"><span class="pre">isInstance</span></span><a class="headerlink" href="#RevitSharedParametersTuple.parameterData.isInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParametersTuple.parameterData.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#RevitSharedParametersTuple.parameterData.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitSharedParameterSwap"></span><section id="this-module-contains-a-function-to-swap-out-one-shard-parameter-for-another">
+<h3>This module contains a function to swap out one shard parameter for another.<a class="headerlink" href="#this-module-contains-a-function-to-swap-out-one-shard-parameter-for-another" title="Permalink to this headline">¶</a></h3>
+<p>The swap is done by:
+- changing current shared parameter to a family parameter (dummy)
+- deleting the old shared parameter definition
+- swapping the family parameter (dummy) to the new shared parameter.</p>
+<p>Note: storage types of old and new shared parameter need to be identical.</p>
+<p>Parameter change directives are read from a .csv file:</p>
+<ul class="simple">
+<li><p>header row: yes</p></li>
+<li><p>column 1: current shared parameter name</p></li>
+<li><p>column 2: new shared parameter name</p></li>
+<li><p>column 3: fully qualified file path of shared parameter file</p></li>
+<li><p>column 4: Is parameter instance (True / False)</p></li>
+<li><p>column 5: parameter grouping name ( refer to module: RevitParameterGrouping)</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitSharedParameterSwap.parameterSettingsData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitSharedParameterSwap.</span></span><span class="sig-name descname"><span class="pre">parameterSettingsData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oldParameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newParameterData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sharedParameterPath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterSwap.parameterSettingsData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new instance of parameterSettingsData(oldParameterName, newParameterData, sharedParameterPath)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParameterSwap.parameterSettingsData.newParameterData">
+<span class="sig-name descname"><span class="pre">newParameterData</span></span><a class="headerlink" href="#RevitSharedParameterSwap.parameterSettingsData.newParameterData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParameterSwap.parameterSettingsData.oldParameterName">
+<span class="sig-name descname"><span class="pre">oldParameterName</span></span><a class="headerlink" href="#RevitSharedParameterSwap.parameterSettingsData.oldParameterName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitSharedParameterSwap.parameterSettingsData.sharedParameterPath">
+<span class="sig-name descname"><span class="pre">sharedParameterPath</span></span><a class="headerlink" href="#RevitSharedParameterSwap.parameterSettingsData.sharedParameterPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitSharedParameterSwap.SwapSharedParameters">
+<span class="sig-prename descclassname"><span class="pre">RevitSharedParameterSwap.</span></span><span class="sig-name descname"><span class="pre">SwapSharedParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changeDirectiveFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitSharedParameterSwap.SwapSharedParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swaps out a shared parameter for another. (refer to module header for details)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>changeDirectiveFilePath</strong> (<em>str</em>) – Fully qualified file path to shared parameter change directive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the names of the changed shared parameter(s).</p></li>
+<li><p>result status will contain lists of new shared parameters</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

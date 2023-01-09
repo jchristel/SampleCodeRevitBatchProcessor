@@ -26,7 +26,6 @@ Family category data processor class.
 #
 #
 
-from operator import truediv
 from IFamilyProcessor import IFamilyProcessor
 import RevitCategories as rCat
 import RevitCategoryData as rCatData

@@ -58,6 +58,10 @@ import RevitSharedParameters as rSharedPara
 
 from collections import namedtuple
 
+'''
+Tuple containing settings data on how to swap a shared parameter retrieved from a file.
+'''
+
 parameterSettingsData = namedtuple('parameterSettingsData', 'oldParameterName newParameterData sharedParameterPath')
 
 def _loadSharedParameterDataFromFile(filePath):

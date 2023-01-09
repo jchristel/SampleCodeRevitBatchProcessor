@@ -49,17 +49,11 @@ Algorithm description:
 #
 
 import threading
-#from collections import namedtuple
 import os
 
 import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 from timer import Timer
 import Result as res
-#import Utility as util
-
-# tuples containing base family data read from file
-#rootFamily = namedtuple('rootFamily', 'name category filePath parent child')
-#nestedFamily = namedtuple('nestedFamily', 'name category filePath rootPath categoryPath')
 
 def _ExtractParentFamilies(currentParent, treePath):
     '''

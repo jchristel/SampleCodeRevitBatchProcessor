@@ -44,10 +44,9 @@ Revit Curtain Wall
 .. automodule:: RevitCurtainWallElements
     :members:
 
-Revit Detail Items
-------------------
-
-.. automodule:: RevitDetailItems
+Revit Element Filtering
+------------------------------------
+.. autoclass:: RevitCustomElementFilter.RevitCustomElementFilter
     :members:
 
 Revit Design Options and Design Sets
@@ -56,9 +55,10 @@ Revit Design Options and Design Sets
 .. automodule:: RevitDesignSetOptions
     :members:
 
-Revit Element Filtering
-------------------------------------
-.. autoclass:: RevitCustomElementFilter.RevitCustomElementFilter
+Revit Detail Items
+------------------
+
+.. automodule:: RevitDetailItems
     :members:
 
 Revit Export
@@ -77,9 +77,15 @@ Revit Export
 .. automodule:: RevitExportIFCConfig
     :members:
 
+.. autoclass:: RevitExportIFCSettings.IFCSettings
+    :members:
+
 Revit Family
 ------------
 .. automodule:: RevitFamilyUtils
+    :members:
+
+.. automodule:: RevitFamilyParameterUtils
     :members:
 
 .. automodule:: RevitFamilyReload
@@ -179,6 +185,15 @@ Revit Shared Parameters
     :members:
 
 .. automodule:: RevitSharedParameters
+    :members:
+
+.. automodule:: RevitSharedParameterDataPurgeUnused
+    :members:
+
+.. automodule:: RevitSharedParametersTuple
+    :members:
+
+.. automodule:: RevitSharedParameterSwap
     :members:
 
 Revit Stairs

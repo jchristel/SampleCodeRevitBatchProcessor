@@ -7,9 +7,12 @@ Welcome to Sample Code Revit Batch Processor's documentation!
    
    fileSelectUI
    revitAPISampleCode
+   familyReporting
    ModelHealth
    dataExport
    misc
+   
+.. include:: ../../Samples/Flows/FlowsIndex.rst
 
 Indices and tables
 ==================

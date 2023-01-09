@@ -47,7 +47,7 @@ def PurgeUnused(doc, processor):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param processor: An RevitSharedParameterDataProcessor object containing all shared parameter information of the family document and any nested families.
-    :type processor: :class:`.SharedParameterProcessor'
+    :type processor: :class:`.SharedParameterProcessor`
 
     :return: 
         Result class instance.

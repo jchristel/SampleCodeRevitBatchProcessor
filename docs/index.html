@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to Sample Code Revit Batch Processor’s documentation! &#8212; Sample Code Revit Batch Processor 1.0.1 documentation</title>
+    <title>Welcome to Sample Code Revit Batch Processor’s documentation! &#8212; Sample Code Revit Batch Processor 1.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -16,12 +16,12 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 1.0.1 documentation" href="#" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.0.7 documentation" href="#" />
     <link rel="next" title="Revit Batch Processor - File Selection User Interface." href="fileSelectUI.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 1.0.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 1.0.7 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>Welcome to Sample Code Revit Batch Processor’s documentation!</h1></div>
@@ -42,6 +42,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="fileSelectUI.html">Revit Batch Processor - File Selection User Interface.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="familyReporting.html">Revit API family property reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
@@ -92,9 +93,9 @@
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCategories">Revit Categories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCeilings">Revit Ceilings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitCurtainWallElements">Revit Curtain Wall</a></li>
-<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDetailItems">Revit Detail Items</a></li>
-<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#revit-element-filtering">Revit Element Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDesignSetOptions">Revit Design Options and Design Sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitDetailItems">Revit Detail Items</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitExport">Revit Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitFamilyUtils">Revit Family</a></li>
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitFloors">Revit Floors</a></li>
@@ -121,6 +122,18 @@
 <li class="toctree-l2"><a class="reference internal" href="revitAPISampleCode.html#module-RevitWorksets">Revit Worksets</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="familyReporting.html">Revit API family property reporting.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-defining-interfaces">Modules defining interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#utility-class-used-to-collect-family-data">Utility class used to collect family data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-used-to-collect-family-category-data">Modules used to collect family category data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-used-to-collect-family-base-data">Modules used to collect family base data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-used-to-collect-family-line-pattern-data">Modules used to collect family line pattern data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-used-to-collect-family-shared-parameter-data">Modules used to collect family shared parameter data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#modules-used-to-collect-family-warnings-data">Modules used to collect family warnings data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#module-RevitFamilyReportUtils">Utility modules used to read varies report types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="familyReporting.html#module-RevitFamilyBaseDataAnalysisCircularReferencing">Modules used to analyze family base data</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ModelHealth.html#contains-file-names-used-by-model-health-report">Contains file names used by model health report.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ModelHealth.html#model-health-report-functions">Model health report functions.</a></li>
@@ -139,6 +152,11 @@
 </li>
 </ul>
 </div>
+<section id="flows">
+<h2>Flows<a class="headerlink" href="#flows" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>

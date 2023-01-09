@@ -11,8 +11,8 @@ Welcome to Sample Code Revit Batch Processor's documentation!
    ModelHealth
    dataExport
    misc
+   FlowsIndex
    
-.. include:: ../../Samples/Flows/FlowsIndex.rst
 
 Indices and tables
 ==================

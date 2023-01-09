@@ -58,7 +58,7 @@ exclude_patterns = []
 # also includes RevitFamilyLoadOption module since class defined in there inherits from an AutoDesk API class
 # which is tripping sphinx
 #, 'RevitFamilyLoadOption'
-autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'wpf']
+autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'wpf','revit_script_util','revit_file_util']
 
 # include __init__ docs in classes
 autoclass_content = 'both'

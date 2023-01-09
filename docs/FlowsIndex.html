@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Flows &#8212; Sample Code Revit Batch Processor 1.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 1.0.7 documentation" href="index.html" />
+    <link rel="prev" title="Misc modules and classes" href="misc.html" />
+    <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 1.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>Flows</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="py-modindex.html" title="Python Module Index" >modules</a></div>
+            <div class="headerButton"><a href="misc.html" title="Misc modules and classes" accesskey="P">previous</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="index.html">Main Page</a></li></ul>
+        <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fileSelectUI.html">Revit Batch Processor - File Selection User Interface.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="revitAPISampleCode.html">Revit API sample code.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="familyReporting.html">Revit API family property reporting.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#add-shared-parameters-to-project-files">Add shared parameters to project files.</a></li>
+</ul>
+</li>
+</ul>
+
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="_sources/FlowsIndex.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-ModifyAddSharedParas">
+<span id="flows"></span><h1>Flows<a class="headerlink" href="#module-ModifyAddSharedParas" title="Permalink to this headline">¶</a></h1>
+<section id="add-shared-parameters-to-project-files">
+<h2>Add shared parameters to project files.<a class="headerlink" href="#add-shared-parameters-to-project-files" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to add any number of shared parameters to workshared Revit project files.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyAddSharedParas.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyAddSharedParas.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyAddSharedParas.UpDateParameters">
+<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">UpDateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyAddSharedParas.UpDateParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind parameters to category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>str</em><em>, </em><em>ParameterType</em><em>, </em><em>bool</em><em>,</em><em>[</em><em>BuiltInCategory</em><em>]</em><em>,</em><em>BuiltInParameterGroup</em><em>, </em><em>bool</em><em>]</em><em>,</em><em>...</em><em>]</em>) – list describing shared parameter to be added. Refer to <a href="#id1"><span class="problematic" id="id2">listOfParameters_</span></a> below</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.statius: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.</p></li>
+<li><p>result.message will contain the names of the shared parameters added.</p></li>
+<li><p>result.result will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ModifyAddSharedParas.sharedParameterFilePath_">
+<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">sharedParameterFilePath_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C:\\temp\\Shared</span> <span class="pre">Parameters.txt'</span></em><a class="headerlink" href="#ModifyAddSharedParas.sharedParameterFilePath_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fully qualified path to shared parameter file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ModifyAddSharedParas.listOfParameters_">
+<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">listOfParameters_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['ParameterOne',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Length,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_GEOMETRY,</span> <span class="pre">True],</span> <span class="pre">['ParameterTwo',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.YesNo,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Windows,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_Walls],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True],</span> <span class="pre">['ParameterThree',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Text,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Rooms],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True]]</span></em><a class="headerlink" href="#ModifyAddSharedParas.listOfParameters_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing the parameters to be added and their properties</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Parameter Name,</p></li>
+<li><p>parameter group name ( in shared parameter file),</p></li>
+<li><p>the parameter storage type as rdb.ParameterType</p></li>
+<li><p>a list of all categories as rdb.BuiltInCategory the parameter is to be added to</p></li>
+<li><p>the property group the parameter is to be added to as rdb.BuiltInParameterGroup</p></li>
+<li><p>True if parameter is an instance parameter, False if it is a type parameter</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 4.5.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                Flows
+        </div>
+        <script type="text/javascript" charset="utf-8" src="_static/js/toc.js"></script>
+  </body>
+</html>

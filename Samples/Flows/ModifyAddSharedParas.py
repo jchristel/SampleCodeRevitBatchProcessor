@@ -1,4 +1,12 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Add shared parameters to project files.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to add any number of shared parameters to workshared Revit project files.
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -23,8 +31,6 @@
 #
 #
 
-# this sample demonstrates how to add shared parameters to project files
-
 # ---------------------------------
 # default path locations
 # ---------------------------------
@@ -48,7 +54,7 @@ import Result as res
 import RevitSharedParameterAdd as paraAdd
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -73,27 +79,62 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# bind parameters to category
-# doc:  current model document
-# data:     list describing shared parameter to be added. Refer to listOfParameters_ below
 def UpDateParameters (doc, data):
+    '''
+    Bind parameters to category
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param data: list describing shared parameter to be added. Refer to listOfParameters_ below
+    :type data: [[str, str, ParameterType, bool,[BuiltInCategory],BuiltInParameterGroup, bool],...]
+
+    :return: 
+        Result class instance.
+
+        - result.statius: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.
+        - result.message will contain the names of the shared parameters added.
+        - result.result will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     status = res.Result()
     try:
         for paraName, groupName, paraType, isVisible, elementCategory, paraGroup, isInstance in data:
-            # add parameter to multiple categories if requiered
+            # add parameter to multiple categories if required
             for cat in elementCategory:
-                statusBind =  paraAdd.BindSharedParameter(doc, cat, paraName, groupName, paraType, isVisible, isInstance, paraGroup, sharedParameterFilePath_)
+                statusBind =  paraAdd.BindSharedParameter(
+                    doc, 
+                    cat, 
+                    paraName, 
+                    groupName, 
+                    paraType, 
+                    isVisible, 
+                    isInstance, 
+                    paraGroup, 
+                    sharedParameterFilePath_
+                )
                 status.Update(statusBind)
     except Exception as e:
-        status.status = False
-        status.message = 'Terminated with exception: '+ str(e)
+        status.UpdateSep(False, 'Terminated with exception: '+ str(e))
     return status
 
 # -------------
@@ -103,8 +144,10 @@ def UpDateParameters (doc, data):
 # store output here:
 rootPath_ = r'C:\temp'
 
-# fully qualified path to shared parameter file
 sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
+'''
+Fully qualified path to shared parameter file
+'''
 
 # list of properties per parameter
 # para name - string
@@ -154,12 +197,23 @@ sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
             #{"Visibility",BuiltInParameterGroup.PG_VISIBILITY}
 # iS Instance - boolean
 
-# parameters to be added list
 listOfParameters_ = [
-    ['ParameterOne','Exported Parameters',ParameterType.Length, True, [BuiltInCategory.OST_Ceilings], BuiltInParameterGroup.PG_GEOMETRY, True],
-    ['ParameterTwo','Exported Parameters',ParameterType.YesNo, True, [BuiltInCategory.OST_Windows,BuiltInCategory.OST_CurtainWallPanels,BuiltInCategory.OST_Walls], BuiltInParameterGroup.PG_IDENTITY_DATA, True],
-    ['ParameterThree','Exported Parameters',ParameterType.Text, True, [BuiltInCategory.OST_Rooms], BuiltInParameterGroup.PG_IDENTITY_DATA, True]
+    ['ParameterOne','Exported Parameters',rdb.ParameterType.Length, True, [rdb.BuiltInCategory.OST_Ceilings], rdb.BuiltInParameterGroup.PG_GEOMETRY, True],
+    ['ParameterTwo','Exported Parameters',rdb.ParameterType.YesNo, True, [rdb.BuiltInCategory.OST_Windows,rdb.BuiltInCategory.OST_CurtainWallPanels, rdb.BuiltInCategory.OST_Walls], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True],
+    ['ParameterThree','Exported Parameters',rdb.ParameterType.Text, True, [rdb.BuiltInCategory.OST_Rooms], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True]
 ]
+'''
+
+List containing the parameters to be added and their properties
+
+    - Parameter Name,
+    - parameter group name ( in shared parameter file),
+    - the parameter storage type as rdb.ParameterType
+    - a list of all categories as rdb.BuiltInCategory the parameter is to be added to 
+    - the property group the parameter is to be added to as rdb.BuiltInParameterGroup
+    - True if parameter is an instance parameter, False if it is a type parameter
+
+'''
 
 Output('Updating Shared Parameter Data.... start')
 

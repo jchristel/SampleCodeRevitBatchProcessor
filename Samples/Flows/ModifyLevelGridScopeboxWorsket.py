@@ -1,4 +1,18 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Move grid, levels, reference planes and scope boxes to a specified workset.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how move grids, levels, reference planes and scope boxes to a specific workset.
+
+Note:
+
+- Worksets are defined by project file to allow for maximum flexibility.
+- Reference planes inside model elements (i.e. within stairs or in place families) can not have their workset changed by this flow.
+
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -49,7 +63,7 @@ import Utility as util
 import Result as res
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -76,32 +90,64 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
 def Modify(doc, revitFilePath, gridData):
+    '''
+    Changes the worksets of grids, levels, reference planes and scope boxes.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The current model (document) file path.
+    :type revitFilePath: str
+    :param gridData: List of files and associated worksets names. Refer to `defaultWorksets_` below.
+    :type gridData: [[filename, workset name]]
+
+    :return: 
+        Result class instance.
+
+        - result.status: Change workset status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: Will contain the category and fail / success counts.
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
+    revitFileName = str(util.GetFileNameWithoutExt(revitFilePath))
     flag = False
     for fileName, defaultWorksetName in gridData:
         if (revitFileName.startswith(fileName)):
             flag = True
-            collectorGrids = FilteredElementCollector(doc).OfClass(Grid)
+            collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
             grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
             returnValue.Update(grids)
 
-            collectorLevels = FilteredElementCollector(doc).OfClass(Level)
+            collectorLevels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
             levels = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
             returnValue.Update(levels)
 
-            collectorScopeBoxes = FilteredElementCollector(doc).OfCategory(BuiltInCategory.OST_VolumeOfInterest)
+            collectorScopeBoxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
             sboxes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
             returnValue.Update(sboxes)
             
             # fix up ref planes
-            collectorRefPlanes = FilteredElementCollector(doc).OfClass(ReferencePlane)
+            collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
             refPlanes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
             returnValue.Update(refPlanes)
             
@@ -126,8 +172,12 @@ Output('Checking levels and grids.... start')
 #]
 
 defaultWorksets_ = [
-['Test_grids', 'Shared Levels & Grids']
+    ['Test_grids', 'Shared Levels & Grids']
 ]
+
+'''
+List containing the workset name by project file
+'''
 
 # modify workset of levels, grids ands scope boxes
 statusModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)

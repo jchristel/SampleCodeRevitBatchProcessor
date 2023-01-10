@@ -1,3 +1,28 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Save a detached copy of a workshared project file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to detach a central file and save a copy in a time stamped folder.
+
+Likely scenarios for this flows are:
+
+- Models being send out for coordination
+- Creating milestone copies
+
+Notes:
+
+- this sample creates a dated back-up folder in a given location and than re-creates a central file with the same name in the new location
+- Revit Batch Processor settings:
+    
+    - detach model
+    - all worksets closed
+    - audit on opening
+    - preserve worskets
+
+- the SaveAs() method will compress the newly created central file by default
+'''
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -20,16 +45,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
 
-# this sample creates a dated back-up folder in a given location and than re-creates a central file with the same name in the new location
-# batch processor settings should be:
-# - detach model
-# - all worksets closed
-# - audit on opening
-# - preserve worskets
-# the SaveAs() method will compress the newly created central file by default
 
 # ---------------------------------
 # default path locations
@@ -53,7 +69,7 @@ import RevitCommonAPI as com
 import Utility as util
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -80,6 +96,13 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:

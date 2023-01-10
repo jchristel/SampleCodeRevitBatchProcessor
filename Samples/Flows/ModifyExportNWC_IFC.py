@@ -1,4 +1,21 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Export views or entire models to IFC or NavisWorks.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to export views or entire models to IFC or NavisWorks.
+
+Note:
+
+- Revit Batch Processor settings:
+
+    - open all worksets to ensure everything required gets exported
+
+- the model will not be saved after the export
+
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -22,9 +39,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# this sample exports an entire model or 3D view to IFC and NWC files
-# batch processor should have enabled:
-#    - open all worksets to ensure everything required gets exported
 
 # ---------------------------------
 # default path locations
@@ -48,7 +62,7 @@ import Result as res
 import RevitExport as rex
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -75,31 +89,122 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
 def IFCExportView(doc):
+    '''
+    Exports a view to IFC using open source third party IFC exporter supported by Autodesk.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - result.status: View export status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will contain the fully qualified file path of the exported file.
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
-    ifcExportOption = rex.IFCGetThirdPartyExportConfifgByView(IFCVersion.IFC2x3)
+    ifcExportOption = rex.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
     # exports 3D view where name starts with 'NWCP', Origin is project base point
     returnValue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
     return returnValue
 
 def IFCExportViewDefault(doc):
+    '''
+    Exports a view to IFC using the build in (basic) IFC exporter.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will contain the fully qualified file path of the exported file.
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
-    ifcExportOptionDefault = rex.IFCGetExportConfifgByView(IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
+    ifcExportOptionDefault = rex.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
     returnValue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
     return returnValue
 
 def NWCExportByView(doc):
+    '''
+    Exports a view as a NavisWorks cache file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will contain the fully qualified file path of the exported file
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
     nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
     returnValue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
     return returnValue
 
 def NWCExportModel(doc):
+    '''
+    Exports the entire model as a NavisWorks cache file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message: will contain the fully qualified file path of the exported file.
+        - result.result: will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
     nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
     returnValue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
@@ -116,7 +221,7 @@ Output('Exporting.... start')
 
 # export to IFC file format - view
 statusExport_ = IFCExportView(doc)
-# export to IFC file format - view but use default ootb ifc exporter
+# export to IFC file format - view but use default out of the box ifc exporter
 statusExportIFCDefault_ = IFCExportViewDefault(doc)
 statusExport_.Update(statusExportIFCDefault_)
 

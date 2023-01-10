@@ -49,6 +49,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#add-shared-parameters-to-project-files">Add shared parameters to project files.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#delete-sheets-and-views-from-project-files">Delete sheets and views from project files.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">Move grid, levels, reference planes and scope boxes to a specified workset.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file">Save a detached copy of a workshared project file.</a></li>
 </ul>
 </li>
 </ul>
@@ -268,6 +270,99 @@ A likely scenario for this is models being send out for coordination requiring s
 <dt class="sig sig-object py" id="ModifyDeleteSheetsAndViews.viewRules_">
 <span class="sig-prename descclassname"><span class="pre">ModifyDeleteSheetsAndViews.</span></span><span class="sig-name descname"><span class="pre">viewRules_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['File',</span> <span class="pre">[['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value'],</span> <span class="pre">['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value'],</span> <span class="pre">['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value']]]]</span></em><a class="headerlink" href="#ModifyDeleteSheetsAndViews.viewRules_" title="Permalink to this definition">¶</a></dt>
 <dd><p>List containing the view rules by project file</p>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyLevelGridScopeboxWorsket"></span><section id="move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">
+<h2>Move grid, levels, reference planes and scope boxes to a specified workset.<a class="headerlink" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how move grids, levels, reference planes and scope boxes to a specific workset.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>Worksets are defined by project file to allow for maximum flexibility.</p></li>
+<li><p>Reference planes inside model elements (i.e. within stairs or in place families) can not have their workset changed by this flow.</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyLevelGridScopeboxWorsket.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyLevelGridScopeboxWorsket.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyLevelGridScopeboxWorsket.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyLevelGridScopeboxWorsket.Modify">
+<span class="sig-prename descclassname"><span class="pre">ModifyLevelGridScopeboxWorsket.</span></span><span class="sig-name descname"><span class="pre">Modify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gridData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyLevelGridScopeboxWorsket.Modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the worksets of grids, levels, reference planes and scope boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The current model (document) file path.</p></li>
+<li><p><strong>gridData</strong> (<em>[</em><em>[</em><em>filename</em><em>, </em><em>workset name</em><em>]</em><em>]</em>) – List of files and associated worksets names. Refer to <cite>defaultWorksets_</cite> below.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Change workset status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: Will contain the category and fail / success counts.</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ModifyLevelGridScopeboxWorsket.defaultWorksets_">
+<span class="sig-prename descclassname"><span class="pre">ModifyLevelGridScopeboxWorsket.</span></span><span class="sig-name descname"><span class="pre">defaultWorksets_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['Test_grids',</span> <span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">&amp;</span> <span class="pre">Grids']]</span></em><a class="headerlink" href="#ModifyLevelGridScopeboxWorsket.defaultWorksets_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing the workset name by project file</p>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyModelMilestone"></span><section id="save-a-detached-copy-of-a-workshared-project-file">
+<h2>Save a detached copy of a workshared project file.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to detach a central file and save a copy in a time stamped folder.</p>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>Models being send out for coordination</p></li>
+<li><p>Creating milestone copies</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>this sample creates a dated back-up folder in a given location and than re-creates a central file with the same name in the new location</p></li>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>detach model</p></li>
+<li><p>all worksets closed</p></li>
+<li><p>audit on opening</p></li>
+<li><p>preserve worskets</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>the SaveAs() method will compress the newly created central file by default</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyModelMilestone.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyModelMilestone.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyModelMilestone.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

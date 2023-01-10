@@ -1,3 +1,23 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Delete sheets and views from project files.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to delete sheets and views from workshared Revit project files using filters.
+A likely scenario for this is models being send out for coordination requiring some clean up prior issue.
+
+This sample:
+
+- deletes all views where given parameter(s) fails value tests(s)
+- deletes all sheets where given parameter(s) fails value test(s)
+- any views not on sheets with exception of views starting with a given string
+
+Note:
+
+- Filters are defined by project file to allow for maximum flexibility.
+- If multiple filters are defined, a sheet or view must not meet any of them in order to be deleted. (logical AND condition)
+
+'''
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -23,10 +43,7 @@
 #
 #
 
-# this sample:
-# - deletes all views where given parameter(s) fails value tests(s)
-# - deletes all sheets where given parameter(s) fails value test(s)
-# - any views not on sheets with exception of views starting with a given string
+
 
 # ---------------------------------
 # default path locations
@@ -52,7 +69,7 @@ import Utility as util
 import Result as res
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -77,23 +94,62 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# checks whether view names starts with given strings
+# 
 def CheckName(view):
+    '''
+    Checks whether view names starts with a number of given strings.
+
+    :param view: A view.
+    :type view: Autodesk.Revit.DB.View
+
+    :return: True if view name starts with any of the given strings. Otherwise False.
+    :rtype: bool
+    '''
+
     if(view.Name.lower().startswith('test1') or view.Name.lower().startswith('test2') or view.Name.lower().startswith('test3')):
         return False
     else:
         return True
 
-# deletes views based on rules
 def ModifyViews(doc, revitFilePath, viewData):
-    
+    '''
+    Deletes views based on rules
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: The current model (document) file path.
+    :type revitFilePath: str
+    :param viewData: List of files and associated view filter rules. Refer to `viewRules_` below.
+    :type viewData: [[filename,[conditions]]]
+
+    :return: 
+        Result class instance.
+
+        - result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain deletion status of each view deleted.
+        - result.result will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     #set default values
     returnValue = res.Result()
     returnValue.status = False
@@ -102,23 +158,46 @@ def ModifyViews(doc, revitFilePath, viewData):
     revitFileName =  util.GetFileNameWithoutExt(revitFilePath)
     for fileName, viewRules in viewData:
         if (revitFileName.startswith(fileName)):
-            collectorViews = FilteredElementCollector(doc).OfClass(View)
+            collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
             returnValue = rView.DeleteViews(doc, viewRules, collectorViews)
             break
     return returnValue
 
-# deletes sheets based on rules
-def ModifySheets(doc, sheets):
-    
+
+def ModifySheets(doc, sheetsData):
+    '''
+    Deletes sheets based on rules.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheetsData: List of files and associated sheet filter rules. Refer to `sheetRules_` below.
+    :type sheetsData: [[filename,[conditions]]]
+
+    :return: 
+        Result class instance.
+
+        - result.status: Sheet deletion status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain deletion status of each sheet deleted.
+        - result.result will be an empty list
+        
+        On exception
+        
+        - Reload.status (bool) will be False
+        - Reload.message will contain the exception message
+
+    :rtype: :class:`.Result`
+    '''
+
     # set default values
     returnValue = res.Result()
     returnValue.UpdateSep(False,'No sheet data provided for current Revit file')
     
     revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
     # Output(sheets)
-    for fileName, sheetRules in sheets:
+    for fileName, sheetRules in sheetsData:
+        # check if set of rules applies to this particular project file
         if (revitFileName.startswith(fileName)):
-            collectorSheets = FilteredElementCollector(doc).OfClass(View)
+            collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
             returnValue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
             break
     return returnValue
@@ -132,23 +211,37 @@ rootPath_ = r'C:\temp'
 
 # sheets to delete rules 
 sheetRules_ = [
-    ['FileOne',[
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
-        ]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
-    ['FileTwo', [
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
-    ]]# applies to file FileTwoBeforeName
+    ['FileOne', # project file name start (would apply to files FileOneOne and FileOneTwo)
+        [
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+        ]
+    ],
+    ['FileTwo', # project file name start
+        [
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # sheet condition rule
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+        ]
+    ]
 ]
+
+'''
+List containing the sheet rules by project file
+'''
 
 # views to delete rules
 viewRules_ = [
-    ['File',[
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
-    ]]
+    ['File', # project file name start
+        [
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # view condition rule
+        ]
+    ]
 ]
+
+'''
+List containing the view rules by project file
+'''
 
 #s ave revit file to new location
 Output('Modifying Revit File.... start')

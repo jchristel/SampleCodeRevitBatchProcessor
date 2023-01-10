@@ -98,13 +98,13 @@ def UpDateParameters (doc, data):
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param data: list describing shared parameter to be added. Refer to listOfParameters_ below
+    :param data: List describing shared parameter to be added. Refer to `listOfParameters_` below
     :type data: [[str, str, ParameterType, bool,[BuiltInCategory],BuiltInParameterGroup, bool],...]
 
     :return: 
         Result class instance.
 
-        - result.statius: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.
+        - result.status: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.
         - result.message will contain the names of the shared parameters added.
         - result.result will be an empty list
         
@@ -203,7 +203,6 @@ listOfParameters_ = [
     ['ParameterThree','Exported Parameters',rdb.ParameterType.Text, True, [rdb.BuiltInCategory.OST_Rooms], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True]
 ]
 '''
-
 List containing the parameters to be added and their properties
 
     - Parameter Name,

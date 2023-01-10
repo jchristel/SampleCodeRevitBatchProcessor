@@ -19,7 +19,7 @@ Algorithm description:
             - no
             - add to missing families list
             - stop processing since one match is enough per missing family
- - write out missing families data ( host family filepath,)
+- write out missing families data ( host family filepath,)
 
 '''
 

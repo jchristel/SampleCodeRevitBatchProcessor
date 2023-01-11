@@ -779,7 +779,9 @@ def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
 
     # get date prefix for file name
     filePrefix = GetFileDateStamp()
-    name = Path.GetFileNameWithoutExtension(revitFilePath)
+    # added str() around this expression to satisfy sphinx auto code documentation
+    # it will throw an exception when concatenating the string in the return statement
+    name = str(Path.GetFileNameWithoutExtension(revitFilePath))
     return filePrefix + '_' + name + fileSuffix + fileExtension
 
 

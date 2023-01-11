@@ -1,4 +1,23 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Rename loaded families.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to rename loaded families based on a CSV file.
+
+Likely scenarios for this flows are:
+
+- Your project library is undergoing a change... 
+
+Notes:
+
+- Revit Batch Processor settings:
+    
+    - all worksets closed
+    - create new Local file
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -22,8 +41,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-
-# this sample renames loaded families based on data read from CSV file
 
 import clr
 import System
@@ -62,15 +79,24 @@ sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
 import RevitCommonAPI as com
+import Utility as util
+import RevitFamilyUtils as rFamU
 import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 #output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
@@ -81,37 +107,62 @@ def Output(message = ''):
 # -------------
 
 def renameLoadedFamilies(doc):
-    '''loops over global family list and renames all matches'''
-    eq = FilteredElementCollector(doc).OfClass(Family)
+    '''
+    Loops over global family list and renames all matches.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    '''
+
+    returnValue = res.Result()
+    famIds = rFamU.GetAllLoadableFamilyIdsThroughTypes(doc)
     counter = 0
-    for e in eq:
+    for familyID in famIds:
+        # retrieve the family through the id
+        family = doc.GetElement(familyID)
+        # loop over rename directives from csv file
         for oldname,newname in LIST_OF_FAMILY_NAMES:
             # remove file extension to old and new name
             if(oldname.lower().endswith('.rfa')):
                 oldname = oldname[:-4]
             if(newname.lower().endswith('.rfa')):
                 newname = newname[:-4]
-            if oldname == e.Name:
+            if oldname == family.Name:
                 counter = counter + 1
                 Output ('Found: ' + oldname)
-            	# rename
+            	# rename the family within an action ( needs to be wrapped into a Revit transaction)
                 def action():
+                    actionReturnValue = res.Result()
                     Output ('Attempting to rename family: '+ oldname)
-                    e.Name = newname
-                    Output ('old: ' + oldname + ' new: ' + newname)
-                    return
-                transaction = Transaction(doc, 'Renaming: ' + newname)
-                com.InTransaction(transaction, action)
-    Output('Renamed: ' + str(counter) + ' families')
+                    try:
+                        family.Name = newname
+                        actionReturnValue.UpdateSep(True, 'Renamed old: ' + oldname + ' to new: ' + newname)
+                    except Exception as e:
+                        actionReturnValue.UpdateSep(False, 'Failed to rename family: ' + oldname + ' with exception: ' + str(e))
+                    return actionReturnValue
+                transaction = rdb.Transaction(doc, 'Renaming: ' + newname)
+                returnValue.Update( com.InTransaction(transaction, action) )
+    Output(returnValue.message)
 
 def readFamilyNames():
-    '''reads family list from csv file'''
+    '''
+    Reads family list from csv file.
+
+    Note: 
+    
+    - CSV file path is stored in global variable: FAMILY_NAME_FILE_PATH
+    - CSV file contains of 2 columns
+
+        - column one: old family name
+        - column two: new family name
+        - no header row!
+    
+    - rows are read into global variable: LIST_OF_FAMILY_NAMES
+
+    '''
+
     try:
-        with open(FAMILY_NAME_FILE_PATH) as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader: # each row is a list
-                # read information
-                LIST_OF_FAMILY_NAMES.append(row)
+        LIST_OF_FAMILY_NAMES = util.ReadCSVfile(FAMILY_NAME_FILE_PATH)
         Output('Read: ' + str(len(LIST_OF_FAMILY_NAMES)) + ' rename rules')
     except Exception as e:
         Output('Failed to read family name file: ' + str(e))

@@ -70,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitPurgeUnusedeTransmit">Revit Purge Unused using eTransmit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRailings">Revit Railings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRamps">Revit Ramps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-RevitRevisions">Revit Revisions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRoofs">Revit Roofs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitRooms">Revit Rooms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-RevitSharedParameterAdd">Revit Shared Parameters</a></li>
@@ -10702,6 +10703,85 @@ TODO: repetitive code…Consider generic function!</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+<section id="module-RevitRevisions">
+<span id="revit-revisions"></span><h2>Revit Revisions<a class="headerlink" href="#module-RevitRevisions" title="Permalink to this headline">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-revisions">
+<h3>This module contains a number of helper functions relating to Revit revisions.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-revisions" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">revisionData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">issuedBy</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">issuedTo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revisionNumberType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revisionDate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tagCloudVisibility</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.revisionData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new instance of revisionData(description, issuedBy, issuedTo, revisionNumberType, revisionDate, tagCloudVisibility)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#RevitRevisions.revisionData.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.issuedBy">
+<span class="sig-name descname"><span class="pre">issuedBy</span></span><a class="headerlink" href="#RevitRevisions.revisionData.issuedBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.issuedTo">
+<span class="sig-name descname"><span class="pre">issuedTo</span></span><a class="headerlink" href="#RevitRevisions.revisionData.issuedTo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.revisionDate">
+<span class="sig-name descname"><span class="pre">revisionDate</span></span><a class="headerlink" href="#RevitRevisions.revisionData.revisionDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.revisionNumberType">
+<span class="sig-name descname"><span class="pre">revisionNumberType</span></span><a class="headerlink" href="#RevitRevisions.revisionData.revisionNumberType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="RevitRevisions.revisionData.tagCloudVisibility">
+<span class="sig-name descname"><span class="pre">tagCloudVisibility</span></span><a class="headerlink" href="#RevitRevisions.revisionData.tagCloudVisibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 5</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitRevisions.CreateRevision">
+<span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">CreateRevision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.CreateRevision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a revision in the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revData</strong> (<a class="reference internal" href="#RevitRevisions.revisionData" title="RevitRevisions.revisionData"><code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code></a>) – Named tuple containing revision data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list with single entry: the new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

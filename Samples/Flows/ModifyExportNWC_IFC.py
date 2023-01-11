@@ -124,9 +124,12 @@ def IFCExportView(doc):
     '''
 
     returnValue = res.Result()
-    ifcExportOption = rex.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
-    # exports 3D view where name starts with 'NWCP', Origin is project base point
-    returnValue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
+    try:
+        ifcExportOption = rex.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
+        # exports 3D view where name starts with 'NWCP', Origin is project base point
+        returnValue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
+    except Exception as e:
+        returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return returnValue
 
 def IFCExportViewDefault(doc):
@@ -152,8 +155,11 @@ def IFCExportViewDefault(doc):
     '''
 
     returnValue = res.Result()
-    ifcExportOptionDefault = rex.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
-    returnValue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
+    try:
+        ifcExportOptionDefault = rex.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
+        returnValue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
+    except Exception as e:
+        returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return returnValue
 
 def NWCExportByView(doc):
@@ -179,8 +185,11 @@ def NWCExportByView(doc):
     '''
 
     returnValue = res.Result()
-    nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
-    returnValue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+    try:
+        nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
+        returnValue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+    except Exception as e:
+        returnValue.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
     return returnValue
 
 def NWCExportModel(doc):
@@ -206,8 +215,11 @@ def NWCExportModel(doc):
     '''
 
     returnValue = res.Result()
-    nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
-    returnValue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+    try:
+        nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
+        returnValue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+    except Exception as e:
+        returnValue.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
     return returnValue
 
 # -------------

@@ -1,3 +1,22 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reload Revit and CAD links.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to reload Revit and CAD links from a number of given locations.
+
+Likely scenarios for this flows are:
+
+- Linked models have undergone a change in name change and or location
+
+Notes:
+
+- Revit Batch Processor settings:
+    
+    - all worksets open
+    - create new Local file
+
+'''
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -23,10 +42,6 @@
 #
 #
 
-# this sample reloads Revit and CAD links from a number of given locations
-# batch processor settings should be
-# - all worksets open
-# - create new Local file
 
 # ---------------------------------
 # default path locations
@@ -51,7 +66,7 @@ import RevitLinks as rLink
 import Utility as util
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -78,15 +93,34 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# special treatment to link names...
-# ignores the revit file version (4 characters) at the end of the file name and the file extension (4 characters) also at end of file
-# this is a sample only since the code below uses the default method RevitWorksets.DefaultLinkName
 def LinkName(name):
+    '''
+    Removes the last 8 characters from a link name:
+
+    - file extension (4 characters)
+    - 4 last characters in file name i.e. revision information
+
+    Note:
+    This is a sample only since the code below uses the default method RevitWorksets.DefaultLinkName
+
+    :param name: The link name.
+    :type name: str
+
+    :return: Shortened link name.
+    :rtype: str
+    '''
     return name[0:-8]
 
 # -------------
@@ -114,8 +148,9 @@ resultRevitLinksReload_ = rLink.ReloadRevitLinks(
     doc, 
     linkRevitLocations_, 
     hostName_, 
-    rLink.DefaultLinkName, 
-    rLink.DefaultWorksetConfigForReload)
+    rLink.DefaultLinkName, # this could be replaced by custom function i.e. LinkName(name) provided above
+    rLink.DefaultWorksetConfigForReload
+)
 
 Output(resultRevitLinksReload_.message + ' :: ' + str(resultRevitLinksReload_.status))
 
@@ -124,7 +159,8 @@ resultCADLinksReload_ = rLink.ReloadCADLinks(
     doc, 
     linkCADLocations_, 
     hostName_, 
-    rLink.DefaultLinkName)
+    rLink.DefaultLinkName # this could be replaced by custom function i.e. LinkName(name) provided above
+)
 
 Output(resultCADLinksReload_.message + ' :: ' + str(resultCADLinksReload_.status))
 

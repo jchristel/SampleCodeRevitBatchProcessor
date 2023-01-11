@@ -49,8 +49,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#add-shared-parameters-to-project-files">Add shared parameters to project files.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#delete-sheets-and-views-from-project-files">Delete sheets and views from project files.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export-views-or-entire-models-to-ifc-or-navisworks">Export views or entire models to IFC or NavisWorks.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">Move grid, levels, reference planes and scope boxes to a specified workset.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file">Save a detached copy of a workshared project file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reload-revit-and-cad-links">Reload Revit and CAD links.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rename-loaded-families">Rename loaded families.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-revision-and-add-it-to-a-specific-sheet">Create a revision and add it to a specific sheet.</a></li>
 </ul>
 </li>
 </ul>
@@ -273,6 +277,144 @@ A likely scenario for this is models being send out for coordination requiring s
 </dd></dl>
 
 </section>
+<span class="target" id="module-ModifyExportNWC_IFC"></span><section id="export-views-or-entire-models-to-ifc-or-navisworks">
+<h2>Export views or entire models to IFC or NavisWorks.<a class="headerlink" href="#export-views-or-entire-models-to-ifc-or-navisworks" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to export views or entire models to IFC or NavisWorks.</p>
+<p>Note:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>open all worksets to ensure everything required gets exported</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>the model will not be saved after the export</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyExportNWC_IFC.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyExportNWC_IFC.IFCExportView">
+<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">IFCExportView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.IFCExportView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a view to IFC using open source third party IFC exporter supported by Autodesk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: View export status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyExportNWC_IFC.IFCExportViewDefault">
+<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">IFCExportViewDefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.IFCExportViewDefault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a view to IFC using the build in (basic) IFC exporter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyExportNWC_IFC.NWCExportByView">
+<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">NWCExportByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.NWCExportByView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a view as a NavisWorks cache file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will contain the fully qualified file path of the exported file</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyExportNWC_IFC.NWCExportModel">
+<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">NWCExportModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.NWCExportModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports the entire model as a NavisWorks cache file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
+<li><p>result.result: will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <span class="target" id="module-ModifyLevelGridScopeboxWorsket"></span><section id="move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">
 <h2>Move grid, levels, reference planes and scope boxes to a specified workset.<a class="headerlink" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset" title="Permalink to this headline">¶</a></h2>
 <p>This flow demonstrates how move grids, levels, reference planes and scope boxes to a specific workset.</p>
@@ -357,6 +499,155 @@ A likely scenario for this is models being send out for coordination requiring s
 <dl class="py function">
 <dt class="sig sig-object py" id="ModifyModelMilestone.Output">
 <span class="sig-prename descclassname"><span class="pre">ModifyModelMilestone.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyModelMilestone.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyModelReloadLinks"></span><section id="reload-revit-and-cad-links">
+<h2>Reload Revit and CAD links.<a class="headerlink" href="#reload-revit-and-cad-links" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to reload Revit and CAD links from a number of given locations.</p>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>Linked models have undergone a change in name change and or location</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>all worksets open</p></li>
+<li><p>create new Local file</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyModelReloadLinks.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyModelReloadLinks.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyModelReloadLinks.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyModelReloadLinks.LinkName">
+<span class="sig-prename descclassname"><span class="pre">ModifyModelReloadLinks.</span></span><span class="sig-name descname"><span class="pre">LinkName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyModelReloadLinks.LinkName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the last 8 characters from a link name:</p>
+<ul class="simple">
+<li><p>file extension (4 characters)</p></li>
+<li><p>4 last characters in file name i.e. revision information</p></li>
+</ul>
+<p>Note:
+This is a sample only since the code below uses the default method RevitWorksets.DefaultLinkName</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The link name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Shortened link name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRenameLoaded"></span><section id="rename-loaded-families">
+<h2>Rename loaded families.<a class="headerlink" href="#rename-loaded-families" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to rename loaded families based on a CSV file.</p>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>Your project library is undergoing a change…</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>all worksets closed</p></li>
+<li><p>create new Local file</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRenameLoaded.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRenameLoaded.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRenameLoaded.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRenameLoaded.renameLoadedFamilies">
+<span class="sig-prename descclassname"><span class="pre">ModifyRenameLoaded.</span></span><span class="sig-name descname"><span class="pre">renameLoadedFamilies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRenameLoaded.renameLoadedFamilies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops over global family list and renames all matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRenameLoaded.readFamilyNames">
+<span class="sig-prename descclassname"><span class="pre">ModifyRenameLoaded.</span></span><span class="sig-name descname"><span class="pre">readFamilyNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRenameLoaded.readFamilyNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads family list from csv file.</p>
+<p>Note:</p>
+<ul>
+<li><p>CSV file path is stored in global variable: FAMILY_NAME_FILE_PATH</p></li>
+<li><p>CSV file contains of 2 columns</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>column one: old family name</p></li>
+<li><p>column two: new family name</p></li>
+<li><p>no header row!</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>rows are read into global variable: LIST_OF_FAMILY_NAMES</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRevisionAndApplyToSheets"></span><section id="create-a-revision-and-add-it-to-a-specific-sheet">
+<h2>Create a revision and add it to a specific sheet.<a class="headerlink" href="#create-a-revision-and-add-it-to-a-specific-sheet" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to</p>
+<ul class="simple">
+<li><p>add a revision (or multiple) to a document</p></li>
+<li><p>apply those revisions to sheets (filtered selection)</p></li>
+<li><p>mark the revision(s) as issued</p></li>
+</ul>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>You may want to add a revision to a splash ( start up view) sheet for QA purposes every time you issue the model</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>all worksets closed</p></li>
+<li><p>create new Local file</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionAndApplyToSheets.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionAndApplyToSheets.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionAndApplyToSheets.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

@@ -1,4 +1,27 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a revision and add it to a specific sheet.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to 
+
+- add a revision (or multiple) to a document
+- apply those revisions to sheets (filtered selection)
+- mark the revision(s) as issued
+
+Likely scenarios for this flows are:
+
+- You may want to add a revision to a splash ( start up view) sheet for QA purposes every time you issue the model
+
+Notes:
+
+- Revit Batch Processor settings:
+    
+    - all worksets closed
+    - create new Local file
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -23,10 +46,6 @@
 #
 #
 
-# this sample demonstrates how to:
-# - add a revision (or multiple) to a document
-# - apply those revisions to sheets (filtered selection)
-# - mark the revision(s) as issued
 
 # ---------------------------------
 # default path locations
@@ -53,7 +72,7 @@ import Utility as util
 import Result as res
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -80,6 +99,13 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
@@ -101,14 +127,14 @@ def AddRevisionToDocument (doc, revData):
     result = res.Result()
     newRevision = None
     def action():
-        newRevision = Revision.Create(doc)
+        newRevision = rdb.Revision.Create(doc)
         newRevision.Description = revData[0]
         newRevision.IssuedBy = revData[1]
         newRevision.NumberType = revData[2]
         newRevision.RevisionDate = revData[3]
-        newRevision.Visibility = RevisionVisibility.Hidden
+        newRevision.Visibility = rdb.RevisionVisibility.Hidden
         return newRevision
-    transaction = Transaction(doc, "adding revision to file")
+    transaction = rdb.Transaction(doc, "adding revision to file")
     result = com.InTransaction(transaction, action)
     return result 
 
@@ -117,7 +143,7 @@ def AddRevisionToDocument (doc, revData):
 def MarkRevisonsAsIssued(doc, revIds):
     result = res.Result()
     # get all revisions in file
-    revsInModel = Revision.GetAllRevisionIds(doc)
+    revsInModel = rdb.Revision.GetAllRevisionIds(doc)
     # check against what was applied
     idsToBeMarkedIssued = set(revIds).intersection(revsInModel)
     #print (idsToBeMarkedIssued)
@@ -126,7 +152,7 @@ def MarkRevisonsAsIssued(doc, revIds):
         revision = doc.GetElement(id)
         def action():
             revision.Issued = True
-        transaction = Transaction(doc, "Setting revision to issued")
+        transaction = rdb.Transaction(doc, "Setting revision to issued")
         resultSetToIssued = com.InTransaction(transaction, action)
         result.Update(resultSetToIssued)
     return result
@@ -158,14 +184,14 @@ def AddRevsToSheet(doc, sheet, revIds):
         ids.Add(revId)
     def action():
             sheet.SetAdditionalRevisionIds(ids)
-    transaction = Transaction(doc, "adding revision to sheet")
+    transaction = rdb.Transaction(doc, "adding revision to sheet")
     result = com.InTransaction(transaction, action)
     return result
 
 # main function of this sample
 def AddRevsToSheetsRequired(doc, sheetFilterRules):
     result = res.Result()
-    # get sheet to which revisions are to be appliedß
+    # get sheet to which revisions are to be applied
     sheetsInModelFiltered = GetSheets(doc, sheetFilterRules)
     if(len(sheetsInModelFiltered) > 0 ):
         # set up revision
@@ -202,7 +228,7 @@ rootPath_ = r'C:\temp'
 # datetime.datetime.now().strftime("%d/%m/%y")
 
 revisionsToAdd_ = [
-    ['MODEL ISSUE - FOR INFORMATION','JC', RevisionNumberType.Numeric, datetime.datetime.now().strftime("%d/%m/%y")]
+    ['MODEL ISSUE - FOR INFORMATION','JC', rdb.RevisionNumberType.Numeric, datetime.datetime.now().strftime("%d/%m/%y")]
 ]
 
 # sheets to add revisions to rules 
@@ -228,8 +254,8 @@ if(debug_ == False):
       Output('Add revision.... Syncing to Central: finished '+ str(result_.status))
   else:
       #none work shared
-      Output('Add revision.... Saving non norkshared file: start')
+      Output('Add revision.... Saving non workshared file: start')
       doc.SaveAs(revitFilePath_)
-      Output('Add revision.... Saving non norkshared file: finished')
+      Output('Add revision.... Saving non workshared file: finished')
 
 Output('Add revision.... finished ')

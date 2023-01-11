@@ -169,6 +169,11 @@ Revit Ramps
 .. automodule:: RevitRamps
     :members:
 
+Revit Revisions
+------------------------
+.. automodule:: RevitRevisions
+    :members:
+
 Revit Roofs
 ------------------------
 .. automodule:: RevitRoofs

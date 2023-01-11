@@ -10,13 +10,21 @@ They can be as simple as a single module which can be run using the GUI version 
 
 .. automodule::  ModifyDeleteSheetsAndViews
     :members:
-..
-    does not work due to missing module...
-    .. automodule::  ModifyExportNWC_IFC
+
+.. automodule::  ModifyExportNWC_IFC
     :members:
 
 .. automodule::  ModifyLevelGridScopeboxWorsket
     :members:
 
 .. automodule::  ModifyModelMilestone
-    :members:    
+    :members:
+
+.. automodule::  ModifyModelReloadLinks
+    :members:
+
+.. automodule::  ModifyRenameLoaded
+    :members:
+
+.. automodule::  ModifyRevisionAndApplyToSheets
+    :members:

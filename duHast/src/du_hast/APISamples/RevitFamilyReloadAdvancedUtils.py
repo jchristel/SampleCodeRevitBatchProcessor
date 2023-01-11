@@ -3,7 +3,7 @@
 Reload using advanced tools collection.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+This module provides utility functions to read and write reload task lists for the Revit Batch Processor.
 
 '''
 

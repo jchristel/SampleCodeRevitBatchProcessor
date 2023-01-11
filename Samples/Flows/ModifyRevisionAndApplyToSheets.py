@@ -68,6 +68,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 # import libraries
 import RevitCommonAPI as com
 import RevitViews as rView
+import RevitRevisions as rRev
 import Utility as util
 import Result as res
 
@@ -111,8 +112,19 @@ def Output(message = ''):
     else:
         print (message)
 
-# returns the sheets in this file matching provided filter(s)
 def GetSheets(doc, sheetFilterRules):
+    '''
+    Get all sheets from the model matching filters supplied. 
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheetFilterRules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets. Refer to `sheetRules_` below.
+    :type sheetFilterRules: [[filename,[[filter rules]]]]
+
+    :return: List of sheets matching filter(s)
+    :rtype: [Autodesk.Revit.DB.View]
+    '''
+
     results = []
     # get sheets where revisions need to be applied to:
     revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
@@ -122,80 +134,111 @@ def GetSheets(doc, sheetFilterRules):
             break
     return results
 
-# adds a revision to the document
-def AddRevisionToDocument (doc, revData):
-    result = res.Result()
-    newRevision = None
-    def action():
-        newRevision = rdb.Revision.Create(doc)
-        newRevision.Description = revData[0]
-        newRevision.IssuedBy = revData[1]
-        newRevision.NumberType = revData[2]
-        newRevision.RevisionDate = revData[3]
-        newRevision.Visibility = rdb.RevisionVisibility.Hidden
-        return newRevision
-    transaction = rdb.Transaction(doc, "adding revision to file")
-    result = com.InTransaction(transaction, action)
-    return result 
+def MarkRevisionsAsIssued(doc, revIds):
+    '''
+    Marks revisions as issued.
 
-# marks a revisions as issued
-# reIds is a list of revision id's to be marked issued
-def MarkRevisonsAsIssued(doc, revIds):
-    result = res.Result()
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revIds: List of revision ids identifying revisions to be marked as issued.
+    :type revIds: [Autodesk.Revit.DB.ElementId]
+
+    :return:  
+        Result class instance.
+        
+        - Revisions marked as issued status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message(s) revision marked as issued successfully.
+        - result.result: empty list
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
+    :rtype: :class:`.Result`
+    '''
+
+    returnValue = res.Result()
     # get all revisions in file
     revsInModel = rdb.Revision.GetAllRevisionIds(doc)
     # check against what was applied
     idsToBeMarkedIssued = set(revIds).intersection(revsInModel)
-    #print (idsToBeMarkedIssued)
     for id in idsToBeMarkedIssued:
-        # get the element
-        revision = doc.GetElement(id)
-        def action():
-            revision.Issued = True
-        transaction = rdb.Transaction(doc, "Setting revision to issued")
-        resultSetToIssued = com.InTransaction(transaction, action)
-        result.Update(resultSetToIssued)
-    return result
+        # set revision status to issued
+        resultSetToIssued = rRev.MarkRevisionAsIssuedByRevisionId(doc, id)
+        returnValue.Update(resultSetToIssued)
+    return returnValue
 
-# adds a number of revisions to the document
-# revision information is stored in global list
 def AddRevToDocument(doc):
+    '''
+    Adds a number of revisions to the document
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return:  
+        Result class instance.
+        
+        - Revision(s) created status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message revision created successfully.
+        - result.result: will contain list of id's of new revision created
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
+    :rtype: :class:`.Result`
+    '''
+
     result = res.Result()
     # store rev id's in list 
     ids=[]
     try:
         for rev in revisionsToAdd_:
             # create new revision
-            newRev = AddRevisionToDocument (doc, rev)
-            # append to existing revisions
-            ids.Add(newRev.Id)
+            newRevStatus = rRev.CreateRevision(doc, rev)
+            if(newRevStatus.status):
+                # append to existing revisions
+                newRev = newRevStatus.result[0]
+                ids.Add(newRev.Id)
         result.result = ids
     except Exception as e:
         result.UpdateSep(False, 'Failed to create revisions: ' + str(e))
     return result
 
-# adds revisions to single sheet
-def AddRevsToSheet(doc, sheet, revIds):
-    result = res.Result()
-    # get revisions allready on sheet (this is improtant, since they need to be passed in again when adding a new revision!)
-    # this call converts ids to a c# List<ElementId> : ids.ToList[ElementId]()
-    ids = sheet.GetAdditionalRevisionIds()
-    for revId in revIds:
-        ids.Add(revId)
-    def action():
-            sheet.SetAdditionalRevisionIds(ids)
-    transaction = rdb.Transaction(doc, "adding revision to sheet")
-    result = com.InTransaction(transaction, action)
-    return result
-
 # main function of this sample
 def AddRevsToSheetsRequired(doc, sheetFilterRules):
-    result = res.Result()
+    '''
+    Adds revision(s) to documents, applies revision(s) to sheet(s) and then sets the revision status to 'issued'.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheetFilterRules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets. Refer to `sheetRules_` below.
+    :type sheetFilterRules: [[filename,[[filter rules]]]]
+
+    :return:  
+        Result class instance.
+        
+        - Revision(s) created, added to sheets, set to 'issued' status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the messages of each step required to create a revision, apply it to a sheet and set it to issued.
+        - result.result: will contain list of id's of new revision created
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    
+    :rtype: :class:`.Result`
+    '''
+
+    returnValue = res.Result()
     # get sheet to which revisions are to be applied
     sheetsInModelFiltered = GetSheets(doc, sheetFilterRules)
     if(len(sheetsInModelFiltered) > 0 ):
         # set up revision
         revIdResult = AddRevToDocument(doc)
+        returnValue.Update(revIdResult)
         # check what came back
         if(revIdResult.status):
             revIds = revIdResult.result
@@ -205,16 +248,16 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
                 if (revitFileName.startswith(fileName)):
                     # add revisions to sheets:
                     for sheet in sheetsInModelFiltered:
-                        resultAddRevoToSheet = AddRevsToSheet(doc, sheet, revIds)
-                        result.Update(resultAddRevoToSheet)
+                        resultAddRevisionsToSheet = rRev.AddRevisionsToSheet(doc, sheet, revIds)
+                        returnValue.Update(resultAddRevisionsToSheet)
             # set revisions as issued
-            resultMarkasIssued = MarkRevisonsAsIssued(doc, revIds)
-            result.Update(resultMarkasIssued)
-        else:
-            result = revIdResult
+            resultMarkAsIssued = MarkRevisionsAsIssued(doc, revIds)
+            returnValue.Update(resultMarkAsIssued)
     else:
-        result.UpdateSep(False, 'No sheet(s) matching filter(s) found')
-    return result
+        returnValue.UpdateSep(False, 'No sheet(s) matching filter(s) found')
+    # wipe result list since it contains a mix of ids no longer required
+    returnValue.result = []
+    return returnValue
 
 # -------------
 # main:
@@ -223,21 +266,31 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
 # store output here:
 rootPath_ = r'C:\temp'
 
-# list of revisions in format:
-# {'Description', 'IssuedBy', RevisionNumberType.Numeric, 'date'}
-# datetime.datetime.now().strftime("%d/%m/%y")
-
+# list of revisions to be added to each model
 revisionsToAdd_ = [
-    ['MODEL ISSUE - FOR INFORMATION','JC', rdb.RevisionNumberType.Numeric, datetime.datetime.now().strftime("%d/%m/%y")]
+    rRev.revisionData(
+        'Revision description text',
+        'Issue to text',
+        'Issue from text',
+        rdb.RevisionNumberType.Numeric, # this is a numeric revision 
+        datetime.datetime.now().strftime("%d/%m/%y"), # put the current date
+        rdb.RevisionVisibility.Hidden # hide revision clouds and tags
+    )
 ]
 
 # sheets to add revisions to rules 
 sheetRules_ = [
-    ['FileOne',[['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']]],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
-    ['FileTwo', [
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
-        ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
-    ]]# applies to file FileTwoBeforeName
+    [
+        'FileOne',[
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
+        ]
+    ],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
+    [
+        'FileTwo', [
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
+            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
+        ]
+    ]# applies to file FileTwoBeforeName
 ]
 
 Output('Add revision.... start')

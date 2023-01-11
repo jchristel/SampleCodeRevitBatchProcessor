@@ -656,6 +656,116 @@ This is a sample only since the code below uses the default method RevitWorksets
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionAndApplyToSheets.GetSheets">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionAndApplyToSheets.</span></span><span class="sig-name descname"><span class="pre">GetSheets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetFilterRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionAndApplyToSheets.GetSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all sheets from the model matching filters supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheetFilterRules</strong> (<em>[</em><em>[</em><em>filename</em><em>,</em><em>[</em><em>[</em><em>filter rules</em><em>]</em><em>]</em><em>]</em><em>]</em>) – A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets. Refer to <cite>sheetRules_</cite> below.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of sheets matching filter(s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.View]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionAndApplyToSheets.MarkRevisionsAsIssued">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionAndApplyToSheets.</span></span><span class="sig-name descname"><span class="pre">MarkRevisionsAsIssued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionAndApplyToSheets.MarkRevisionsAsIssued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks revisions as issued.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revIds</strong> (<em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em>) – List of revision ids identifying revisions to be marked as issued.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revisions marked as issued status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message(s) revision marked as issued successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionAndApplyToSheets.AddRevToDocument">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionAndApplyToSheets.</span></span><span class="sig-name descname"><span class="pre">AddRevToDocument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionAndApplyToSheets.AddRevToDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a number of revisions to the document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision(s) created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list of id’s of new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionAndApplyToSheets.AddRevsToSheetsRequired">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionAndApplyToSheets.</span></span><span class="sig-name descname"><span class="pre">AddRevsToSheetsRequired</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheetFilterRules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionAndApplyToSheets.AddRevsToSheetsRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds revision(s) to documents, applies revision(s) to sheet(s) and then sets the revision status to ‘issued’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheetFilterRules</strong> (<em>[</em><em>[</em><em>filename</em><em>,</em><em>[</em><em>[</em><em>filter rules</em><em>]</em><em>]</em><em>]</em><em>]</em>) – A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets. Refer to <cite>sheetRules_</cite> below.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision(s) created, added to sheets, set to ‘issued’ status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the messages of each step required to create a revision, apply it to a sheet and set it to issued.</p></li>
+<li><p>result.result: will contain list of id’s of new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

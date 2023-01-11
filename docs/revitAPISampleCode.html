@@ -10786,6 +10786,100 @@ TODO: repetitive code…Consider generic function!</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitRevisions.MarkRevisionAsIssued">
+<span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">MarkRevisionAsIssued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.MarkRevisionAsIssued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a revision status to ‘Issued’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision</strong> (<em>Autodesk.REvit.DB.Revision</em>) – The revision</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision marked as issued successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitRevisions.MarkRevisionAsIssuedByRevisionId">
+<span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">MarkRevisionAsIssuedByRevisionId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revisionId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.MarkRevisionAsIssuedByRevisionId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a revision, identified by its id, status to ‘Issued’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revisionId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The Id of the revision.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision marked as issued successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitRevisions.AddRevisionsToSheet">
+<span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">AddRevisionsToSheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.AddRevisionsToSheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds revisions to single sheet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.SheetView</em>) – The sheet to add the revision to.</p></li>
+<li><p><strong>revIds</strong> (<em>[</em><em>Autodesk.Revit.ElementId</em><em>]</em>) – List of revision ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision adding to sheet status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision added to sheet  successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 <section id="module-RevitRoofs">

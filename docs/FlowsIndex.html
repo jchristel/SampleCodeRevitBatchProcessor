@@ -55,6 +55,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#reload-revit-and-cad-links">Reload Revit and CAD links.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#rename-loaded-families">Rename loaded families.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-a-revision-and-add-it-to-a-specific-sheet">Create a revision and add it to a specific sheet.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-revision">Create a revision.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name">Save a detached copy of a workshared project file under a new name.</a></li>
 </ul>
 </li>
 </ul>
@@ -762,6 +764,100 @@ This is a sample only since the code below uses the default method RevitWorksets
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRevisionSimple"></span><section id="create-a-revision">
+<h2>Create a revision.<a class="headerlink" href="#create-a-revision" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to</p>
+<ul class="simple">
+<li><p>add a revision (or multiple) to a document</p></li>
+</ul>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>You may want to add a revision to multiple documents</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>all worksets closed</p></li>
+<li><p>create new Local file</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionSimple.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionSimple.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionSimple.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevisionSimple.AddRevToDocument">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevisionSimple.</span></span><span class="sig-name descname"><span class="pre">AddRevToDocument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevisionSimple.AddRevToDocument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a number of revisions to the document</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision(s) created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list of id’s of new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRevitFileSaveAs"></span><section id="save-a-detached-copy-of-a-workshared-project-file-under-a-new-name">
+<h2>Save a detached copy of a workshared project file under a new name.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to detach a central file and save a copy in a given folder.</p>
+<p>Likely scenarios for this flows are:</p>
+<ul class="simple">
+<li><p>Models being send out for coordination and requires a name change (i.e. revision data added)</p></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>detach model</p></li>
+<li><p>all worksets closed</p></li>
+<li><p>audit on opening</p></li>
+<li><p>preserve worskets</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>the SaveAs() method will compress the newly created central file by default</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitFileSaveAs.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitFileSaveAs.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitFileSaveAs.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
 </dd>
 </dl>
 </dd></dl>

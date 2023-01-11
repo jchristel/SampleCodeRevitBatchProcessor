@@ -1,3 +1,25 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Save a detached copy of a workshared project file under a new name.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to detach a central file and save a copy in a given folder.
+
+Likely scenarios for this flows are:
+
+- Models being send out for coordination and requires a name change (i.e. revision data added)
+
+Notes:
+
+- Revit Batch Processor settings:
+    
+    - detach model
+    - all worksets closed
+    - audit on opening
+    - preserve worskets
+
+- the SaveAs() method will compress the newly created central file by default
+'''
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -23,8 +45,6 @@
 #
 #
 
-# this sample demonstrates how to detach and save a file somwhere else and or under a different name
-# list of end this file provides a mapping from the old file name to the new file name
 
 # ---------------------------------
 # default path locations
@@ -45,12 +65,6 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
 import RevitCommonAPI as com
-
-# autodesk API
-from Autodesk.Revit.DB import *
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -74,6 +88,13 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:

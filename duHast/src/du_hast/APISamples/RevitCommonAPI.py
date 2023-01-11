@@ -1441,7 +1441,9 @@ def SaveAs(
     '''
 
     returnValue = res.Result()
-    revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
+    # added str() around this expression to satisfy sphinx auto code documentation
+    # it will throw an exception when concatenating the string in the return statement
+    revitFileName = str(util.GetFileNameWithoutExt(currentFullFileName))
     newFileName= ''
     match = False
     for oldName, newName in nameData:
@@ -1454,7 +1456,8 @@ def SaveAs(
     if(match == False):
         # save under same file name
         newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
-        returnValue.message = 'Found no file name match for: ' + currentFullFileName
+        # added str.format around this expression to satisfy sphinx auto code documentation
+        returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
     try:
         returnValue.status = SaveAsWorksharedFile(doc, newFileName).status
         returnValue.AppendMessage('Saved file: ' + newFileName)

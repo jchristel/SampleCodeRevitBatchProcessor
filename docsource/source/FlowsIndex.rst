@@ -28,3 +28,9 @@ They can be as simple as a single module which can be run using the GUI version 
 
 .. automodule::  ModifyRevisionAndApplyToSheets
     :members:
+
+.. automodule::  ModifyRevisionSimple
+    :members:
+
+.. automodule::  ModifyRevitFileSaveAs
+    :members:

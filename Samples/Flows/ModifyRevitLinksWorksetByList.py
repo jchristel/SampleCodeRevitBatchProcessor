@@ -175,8 +175,17 @@ rootPath_ = r'C:\temp'
 # list containing the default worksets for links in format:
 # [[revit host file name],[[Link file name, workset name],[link file name, workset name]]
 defaultWorksets_ = [
-['Test_Links', [['Link Name','Workset Name'],['Link Name','Workset Name']]],
-['Test_Links', [['Link Name','Workset Name']]],
+    ['Test_Links', 
+        [
+            ['Link Name','Workset Name'],
+            ['Link Name','Workset Name']
+        ]
+    ],
+    ['Test_Links', 
+        [
+            ['Link Name','Workset Name']
+        ]
+    ],
 ]
 
 # modify revit links

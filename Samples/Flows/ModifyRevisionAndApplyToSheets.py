@@ -191,7 +191,7 @@ def AddRevToDocument(doc):
     :rtype: :class:`.Result`
     '''
 
-    result = res.Result()
+    returnValue = res.Result()
     # store rev id's in list 
     ids=[]
     try:
@@ -202,10 +202,10 @@ def AddRevToDocument(doc):
                 # append to existing revisions
                 newRev = newRevStatus.result[0]
                 ids.Add(newRev.Id)
-        result.result = ids
+        returnValue.result = ids
     except Exception as e:
-        result.UpdateSep(False, 'Failed to create revisions: ' + str(e))
-    return result
+        returnValue.UpdateSep(False, 'Failed to create revisions: ' + str(e))
+    return returnValue
 
 # main function of this sample
 def AddRevsToSheetsRequired(doc, sheetFilterRules):

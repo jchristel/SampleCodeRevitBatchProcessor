@@ -34,3 +34,22 @@ They can be as simple as a single module which can be run using the GUI version 
 
 .. automodule::  ModifyRevitFileSaveAs
     :members:
+
+.. automodule:: ReportGridsLevels
+    :members:
+
+.. automodule:: ReportLinks
+    :members:
+
+.. automodule:: ReportMatts
+    :members:
+
+.. automodule:: ReportSharedParameters
+    :members:
+
+.. automodule:: ReportWallsDetails
+    :members:
+
+.. automodule:: ReportWorksets
+    :members:
+    

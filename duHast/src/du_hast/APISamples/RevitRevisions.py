@@ -52,7 +52,7 @@ def CreateRevision (doc, revData):
     :return:  
         Result class instance.
         
-        - Revision status returned in result.status. False if an exception occurred, otherwise True.
+        - Revision created status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the message revision created successfully.
         - result.result: will contain list with single entry: the new revision created
         
@@ -133,7 +133,7 @@ def MarkRevisionAsIssuedByRevisionId(doc, revisionId):
     :return:  
         Result class instance.
         
-        - Revision status returned in result.status. False if an exception occurred, otherwise True.
+        - Revision marked as issued status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the message revision marked as issued successfully.
         - result.result: empty list
         
@@ -167,7 +167,7 @@ def AddRevisionsToSheet(doc, sheet, revIds):
     :type sheet: Autodesk.Revit.DB.SheetView
     :param revIds: List of revision ids
     :type revIds: [Autodesk.Revit.ElementId]
-    
+
     :return:  
         Result class instance.
         

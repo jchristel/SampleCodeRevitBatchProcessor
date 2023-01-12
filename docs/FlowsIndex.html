@@ -57,6 +57,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#create-a-revision-and-add-it-to-a-specific-sheet">Create a revision and add it to a specific sheet.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#create-a-revision">Create a revision.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name">Save a detached copy of a workshared project file under a new name.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-grids-and-levels-data-to-file">Write grids and levels data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-link-data-to-file">Write link data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-material-property-data-to-file">Write material property data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-shared-parameter-data-to-file">Write shared parameter data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-wall-type-data-to-file">Write wall type data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#write-workset-data-to-file">Write workset data to file.</a></li>
 </ul>
 </li>
 </ul>
@@ -858,6 +864,275 @@ This is a sample only since the code below uses the default method RevitWorksets
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportGridsLevels"></span><section id="write-grids-and-levels-data-to-file">
+<h2>Write grids and levels data to file.<a class="headerlink" href="#write-grids-and-levels-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write grids and level property data to file.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>For grid properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitGrids.GetGridReportData" title="RevitGrids.GetGridReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitGrids.GetGridReportData</span></code></a>.</p></li>
+<li><p>For level properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitLevels.GetLevelReportData" title="RevitLevels.GetLevelReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitLevels.GetLevelReportData</span></code></a>.</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportGridsLevels.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportGridsLevels.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportGridsLevels.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportGridsLevels.writeGridData">
+<span class="sig-prename descclassname"><span class="pre">ReportGridsLevels.</span></span><span class="sig-name descname"><span class="pre">writeGridData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportGridsLevels.writeGridData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes grid data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportGridsLevels.writeLevelData">
+<span class="sig-prename descclassname"><span class="pre">ReportGridsLevels.</span></span><span class="sig-name descname"><span class="pre">writeLevelData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportGridsLevels.writeLevelData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes levels data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportLinks"></span><section id="write-link-data-to-file">
+<h2>Write link data to file.<a class="headerlink" href="#write-link-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write CAD and Revit link property data to file.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>For Revit link properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitLinks.GetRevitLinkReportData" title="RevitLinks.GetRevitLinkReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitLinks.GetRevitLinkReportData</span></code></a>.</p></li>
+<li><p>For CAD link properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitLinks.GetCADReportData" title="RevitLinks.GetCADReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitLinks.GetCADReportData</span></code></a>.</p></li>
+<li><p>For true Revit link location (shared or project internal) the link need to be loaded -&gt; open all worksets in Revit Batch Processor settings is required</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportLinks.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportLinks.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportLinks.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportLinks.writeRevitLinkData">
+<span class="sig-prename descclassname"><span class="pre">ReportLinks.</span></span><span class="sig-name descname"><span class="pre">writeRevitLinkData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportLinks.writeRevitLinkData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes Revit link data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportLinks.writeCADLinkData">
+<span class="sig-prename descclassname"><span class="pre">ReportLinks.</span></span><span class="sig-name descname"><span class="pre">writeCADLinkData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportLinks.writeCADLinkData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes CAD link data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportMatts"></span><section id="write-material-property-data-to-file">
+<h2>Write material property data to file.<a class="headerlink" href="#write-material-property-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write material property data to file.</p>
+<p>Note:
+For material properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitMaterials.GetMaterialReportData" title="RevitMaterials.GetMaterialReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitMaterials.GetMaterialReportData</span></code></a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportMatts.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportMatts.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportMatts.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportMatts.writeMaterialData">
+<span class="sig-prename descclassname"><span class="pre">ReportMatts.</span></span><span class="sig-name descname"><span class="pre">writeMaterialData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportMatts.writeMaterialData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes material data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportSharedParameters"></span><section id="write-shared-parameter-data-to-file">
+<h2>Write shared parameter data to file.<a class="headerlink" href="#write-shared-parameter-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write shared parameter data to file.</p>
+<p>Note:
+For shared parameter properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitSharedParameters.GetSharedParameterReportData" title="RevitSharedParameters.GetSharedParameterReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitSharedParameters.GetSharedParameterReportData</span></code></a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportSharedParameters.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportSharedParameters.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportSharedParameters.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportSharedParameters.writeSharedParaData">
+<span class="sig-prename descclassname"><span class="pre">ReportSharedParameters.</span></span><span class="sig-name descname"><span class="pre">writeSharedParaData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportSharedParameters.writeSharedParaData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes shared parameter data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportWallsDetails"></span><section id="write-wall-type-data-to-file">
+<h2>Write wall type data to file.<a class="headerlink" href="#write-wall-type-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write wall type data to file.</p>
+<p>Note:
+For wall type properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWalls.GetWallReportData" title="RevitWalls.GetWallReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWalls.GetWallReportData</span></code></a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportWallsDetails.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportWallsDetails.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWallsDetails.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportWallsDetails.WriteWallTypeData">
+<span class="sig-prename descclassname"><span class="pre">ReportWallsDetails.</span></span><span class="sig-name descname"><span class="pre">WriteWallTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWallsDetails.WriteWallTypeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes wall type data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ReportWorksets"></span><section id="write-workset-data-to-file">
+<h2>Write workset data to file.<a class="headerlink" href="#write-workset-data-to-file" title="Permalink to this headline">¶</a></h2>
+<p>This flow demonstrates how to write workset data to file.</p>
+<p>Note:
+For workset properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWorksets.GetWorksetReportData" title="RevitWorksets.GetWorksetReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWorksets.GetWorksetReportData</span></code></a>.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportWorksets.Output">
+<span class="sig-prename descclassname"><span class="pre">ReportWorksets.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWorksets.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ReportWorksets.WriteWorksetData">
+<span class="sig-prename descclassname"><span class="pre">ReportWorksets.</span></span><span class="sig-name descname"><span class="pre">WriteWorksetData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWorksets.WriteWorksetData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes workset data to a tab separated text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>

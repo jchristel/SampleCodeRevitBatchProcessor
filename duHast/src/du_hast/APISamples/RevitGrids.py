@@ -283,10 +283,19 @@ def ModifyGridsWorksets(doc, revitFileName, worksetRules):
 
 # ------------------------------------------------------- Grid reporting --------------------------------------------------------------------
 
-# gets grid data ready for being printed to file
-# doc: the current revit document
-# revitFilePath: fully qualified file path of Revit file
 def GetGridReportData(doc, revitFilePath):
+    '''
+    Gets grid data ready for being printed to file
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revitFilePath: fully qualified file path of Revit file
+    :type revitFilePath: str
+
+    :return: list of list of revit grid properties.
+    :rtype: [[str]]
+    '''
+
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
         data.append([

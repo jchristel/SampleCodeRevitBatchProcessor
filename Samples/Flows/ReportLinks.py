@@ -1,4 +1,18 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Write link data to file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to write CAD and Revit link property data to file.
+
+Note:
+
+- For Revit link properties reported refer to :obj:`RevitLinks.GetRevitLinkReportData <RevitLinks.GetRevitLinkReportData>`.
+- For CAD link properties reported refer to :obj:`RevitLinks.GetCADReportData <RevitLinks.GetCADReportData>`.
+- For true Revit link location (shared or project internal) the link need to be loaded -> open all worksets in Revit Batch Processor settings is required
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -47,12 +61,6 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 import Utility as util
 import RevitLinks as rLink
 
-# autodesk API
-from Autodesk.Revit.DB import *
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
 # flag whether this runs in debug or not
 debug_ = False
 
@@ -73,17 +81,32 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# method writing out Revit link information
-# doc:          current model document
-# fileName:     fully qualified file path
 def writeRevitLinkData(doc, fileName):
+    '''
+    Writes Revit link data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(
@@ -96,10 +119,19 @@ def writeRevitLinkData(doc, fileName):
         Output (str(e))
     return status
 
-# method writing out CAD link information
-# doc:          current model document
-# fileName:     fully qualified file path
 def writeCADLinkData(doc, fileName):
+    '''
+    Writes CAD link data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(

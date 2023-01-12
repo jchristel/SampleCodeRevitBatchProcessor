@@ -1,4 +1,17 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Write grids and levels data to file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to write grids and level property data to file.
+
+Note:
+
+- For grid properties reported refer to :obj:`RevitGrids.GetGridReportData <RevitGrids.GetGridReportData>`.
+- For level properties reported refer to :obj:`RevitLevels.GetLevelReportData <RevitLevels.GetLevelReportData>`.
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -22,8 +35,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# sample description
-# how to report on grids and levels properties
 
 # ---------------------------------
 # default path locations
@@ -48,17 +59,11 @@ import RevitGrids as rGrid
 import RevitLevels as rLevel
 import Utility as util
 
-# autodesk API
-from Autodesk.Revit.DB import *
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
 # flag whether this runs in debug or not
 debug_ = False
 
 # Add batch processor scripting references
-if not debug:
+if not debug_:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
@@ -74,15 +79,32 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# method writing out grid information
 def writeGridData(doc, fileName):
+    '''
+    Writes grid data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(
@@ -95,8 +117,19 @@ def writeGridData(doc, fileName):
         Output (str(e))
     return status
 
-# method writing out level information
 def writeLevelData(doc, fileName):
+    '''
+    Writes levels data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(

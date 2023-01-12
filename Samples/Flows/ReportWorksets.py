@@ -1,4 +1,16 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Write workset data to file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to write workset data to file.
+
+Note:
+For workset properties reported refer to :obj:`RevitWorksets.GetWorksetReportData <RevitWorksets.GetWorksetReportData>`.
+
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -47,9 +59,6 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 import Utility as util
 import RevitWorksets as rWks
 
-# autodesk API
-from Autodesk.Revit.DB import *
-
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
@@ -74,15 +83,31 @@ else:
 # -------------
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# method writing out material information
-# doc:          current model document
-# fileName:     fully qualified file path
 def WriteWorksetData(doc, fileName):
+    '''
+    Writes workset data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(

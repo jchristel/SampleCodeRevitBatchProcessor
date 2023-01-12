@@ -6994,6 +6994,26 @@ Arcs, circles will be tessellated to polygons.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.GetGridReportData">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetGridReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetGridReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets grid data ready for being printed to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – fully qualified file path of Revit file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of revit grid properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetUnusedGridTypesForPurge">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetUnusedGridTypesForPurge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetUnusedGridTypesForPurge" title="Permalink to this definition">¶</a></dt>
 <dd><p>this will return all ids of unused grid types in the model to be purged</p>
@@ -10769,7 +10789,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the message revision created successfully.</p></li>
 <li><p>result.result: will contain list with single entry: the new revision created</p></li>
 </ul>
@@ -10831,7 +10851,7 @@ TODO: repetitive code…Consider generic function!</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
-<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Revision marked as issued status returned in result.status. False if an exception occurred, otherwise True.</p></li>
 <li><p>result.message will contain the message revision marked as issued successfully.</p></li>
 <li><p>result.result: empty list</p></li>
 </ul>

@@ -1,4 +1,15 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Write material property data to file.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to write material property data to file.
+
+Note:
+For material properties reported refer to :obj:`RevitMaterials.GetMaterialReportData <RevitMaterials.GetMaterialReportData>`.
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -46,12 +57,6 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 import Utility as util
 import RevitMaterials as rMat
 
-# autodesk API
-from Autodesk.Revit.DB import *
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
 # flag whether this runs in debug or not
 debug_ = False
 
@@ -71,17 +76,32 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-# method writing out material information
-# doc:          current model document
-# fileName:     fully qualified file path
 def writeMaterialData(doc, fileName):
+    '''
+    Writes material data to a tab separated text file.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param fileName: Fully qualified file path to report file.
+    :type fileName: str
+
+    :return: True if report file was written successfully, otherwise False
+    :rtype: bool
+    '''
+
     status = True
     try:
         status = util.writeReportData(

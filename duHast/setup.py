@@ -1,7 +1,7 @@
 from setuptools import setup
-#from setuptools import find_packages
-setup()
-'''
+from setuptools import find_packages
+#setup()
+
 setup(
     # ...
     packages=find_packages(
@@ -11,4 +11,3 @@ setup(
     package_dir={"": "src"}
     # ...
 )
-'''

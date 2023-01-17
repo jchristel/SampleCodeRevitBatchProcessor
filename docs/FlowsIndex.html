@@ -47,22 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#add-shared-parameters-to-project-files">Add shared parameters to project files.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#delete-sheets-and-views-from-project-files">Delete sheets and views from project files.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#export-views-or-entire-models-to-ifc-or-navisworks">Export views or entire models to IFC or NavisWorks.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">Move grid, levels, reference planes and scope boxes to a specified workset.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file">Save a detached copy of a workshared project file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reload-revit-and-cad-links">Reload Revit and CAD links.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#rename-loaded-families">Rename loaded families.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#create-a-revision-and-add-it-to-a-specific-sheet">Create a revision and add it to a specific sheet.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#create-a-revision">Create a revision.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name">Save a detached copy of a workshared project file under a new name.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-grids-and-levels-data-to-file">Write grids and levels data to file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-link-data-to-file">Write link data to file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-material-property-data-to-file">Write material property data to file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-shared-parameter-data-to-file">Write shared parameter data to file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-wall-type-data-to-file">Write wall type data to file.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#write-workset-data-to-file">Write workset data to file.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ModifyAddSharedParas">Modifying element properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ReportGridsLevels">Reporting element properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-process-pre-processing-flows">Batch Process - Pre processing Flows</a></li>
 </ul>
 </li>
 </ul>
@@ -98,8 +85,10 @@
 <h1>Flows<a class="headerlink" href="#flows" title="Permalink to this headline">¶</a></h1>
 <p>Flows are Python modules which use the functions provided in the sample library and the Revit Batch Processor to solve a particular task.
 They can be as simple as a single module which can be run using the GUI version of Revit Batch Processor only, or, on the other end of the spectrum, can be made up of a number of modules which are run in parallel through batch or powershell scripts.</p>
-<span class="target" id="module-ModifyAddSharedParas"></span><section id="add-shared-parameters-to-project-files">
-<h2>Add shared parameters to project files.<a class="headerlink" href="#add-shared-parameters-to-project-files" title="Permalink to this headline">¶</a></h2>
+<section id="module-ModifyAddSharedParas">
+<span id="modifying-element-properties"></span><h2>Modifying element properties<a class="headerlink" href="#module-ModifyAddSharedParas" title="Permalink to this headline">¶</a></h2>
+<section id="add-shared-parameters-to-project-files">
+<h3>Add shared parameters to project files.<a class="headerlink" href="#add-shared-parameters-to-project-files" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to add any number of shared parameters to workshared Revit project files.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ModifyAddSharedParas.Output">
@@ -167,7 +156,7 @@ They can be as simple as a single module which can be run using the GUI version 
 
 </section>
 <span class="target" id="module-ModifyDeleteSheetsAndViews"></span><section id="delete-sheets-and-views-from-project-files">
-<h2>Delete sheets and views from project files.<a class="headerlink" href="#delete-sheets-and-views-from-project-files" title="Permalink to this headline">¶</a></h2>
+<h3>Delete sheets and views from project files.<a class="headerlink" href="#delete-sheets-and-views-from-project-files" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to delete sheets and views from workshared Revit project files using filters.
 A likely scenario for this is models being send out for coordination requiring some clean up prior issue.</p>
 <p>This sample:</p>
@@ -286,7 +275,7 @@ A likely scenario for this is models being send out for coordination requiring s
 
 </section>
 <span class="target" id="module-ModifyExportNWC_IFC"></span><section id="export-views-or-entire-models-to-ifc-or-navisworks">
-<h2>Export views or entire models to IFC or NavisWorks.<a class="headerlink" href="#export-views-or-entire-models-to-ifc-or-navisworks" title="Permalink to this headline">¶</a></h2>
+<h3>Export views or entire models to IFC or NavisWorks.<a class="headerlink" href="#export-views-or-entire-models-to-ifc-or-navisworks" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to export views or entire models to IFC or NavisWorks.</p>
 <p>Note:</p>
 <ul>
@@ -424,7 +413,7 @@ A likely scenario for this is models being send out for coordination requiring s
 
 </section>
 <span class="target" id="module-ModifyLevelGridScopeboxWorsket"></span><section id="move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset">
-<h2>Move grid, levels, reference planes and scope boxes to a specified workset.<a class="headerlink" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset" title="Permalink to this headline">¶</a></h2>
+<h3>Move grid, levels, reference planes and scope boxes to a specified workset.<a class="headerlink" href="#move-grid-levels-reference-planes-and-scope-boxes-to-a-specified-workset" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how move grids, levels, reference planes and scope boxes to a specific workset.</p>
 <p>Note:</p>
 <ul class="simple">
@@ -482,7 +471,7 @@ A likely scenario for this is models being send out for coordination requiring s
 
 </section>
 <span class="target" id="module-ModifyModelMilestone"></span><section id="save-a-detached-copy-of-a-workshared-project-file">
-<h2>Save a detached copy of a workshared project file.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file" title="Permalink to this headline">¶</a></h2>
+<h3>Save a detached copy of a workshared project file.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to detach a central file and save a copy in a time stamped folder.</p>
 <p>Likely scenarios for this flows are:</p>
 <ul class="simple">
@@ -517,7 +506,7 @@ A likely scenario for this is models being send out for coordination requiring s
 
 </section>
 <span class="target" id="module-ModifyModelReloadLinks"></span><section id="reload-revit-and-cad-links">
-<h2>Reload Revit and CAD links.<a class="headerlink" href="#reload-revit-and-cad-links" title="Permalink to this headline">¶</a></h2>
+<h3>Reload Revit and CAD links.<a class="headerlink" href="#reload-revit-and-cad-links" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to reload Revit and CAD links from a number of given locations.</p>
 <p>Likely scenarios for this flows are:</p>
 <ul class="simple">
@@ -570,7 +559,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ModifyRenameLoaded"></span><section id="rename-loaded-families">
-<h2>Rename loaded families.<a class="headerlink" href="#rename-loaded-families" title="Permalink to this headline">¶</a></h2>
+<h3>Rename loaded families.<a class="headerlink" href="#rename-loaded-families" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to rename loaded families based on a CSV file.</p>
 <p>Likely scenarios for this flows are:</p>
 <ul class="simple">
@@ -631,7 +620,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ModifyRevisionAndApplyToSheets"></span><section id="create-a-revision-and-add-it-to-a-specific-sheet">
-<h2>Create a revision and add it to a specific sheet.<a class="headerlink" href="#create-a-revision-and-add-it-to-a-specific-sheet" title="Permalink to this headline">¶</a></h2>
+<h3>Create a revision and add it to a specific sheet.<a class="headerlink" href="#create-a-revision-and-add-it-to-a-specific-sheet" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to</p>
 <ul class="simple">
 <li><p>add a revision (or multiple) to a document</p></li>
@@ -776,7 +765,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ModifyRevisionSimple"></span><section id="create-a-revision">
-<h2>Create a revision.<a class="headerlink" href="#create-a-revision" title="Permalink to this headline">¶</a></h2>
+<h3>Create a revision.<a class="headerlink" href="#create-a-revision" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to</p>
 <ul class="simple">
 <li><p>add a revision (or multiple) to a document</p></li>
@@ -837,7 +826,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ModifyRevitFileSaveAs"></span><section id="save-a-detached-copy-of-a-workshared-project-file-under-a-new-name">
-<h2>Save a detached copy of a workshared project file under a new name.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name" title="Permalink to this headline">¶</a></h2>
+<h3>Save a detached copy of a workshared project file under a new name.<a class="headerlink" href="#save-a-detached-copy-of-a-workshared-project-file-under-a-new-name" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to detach a central file and save a copy in a given folder.</p>
 <p>Likely scenarios for this flows are:</p>
 <ul class="simple">
@@ -869,8 +858,11 @@ This is a sample only since the code below uses the default method RevitWorksets
 </dd></dl>
 
 </section>
-<span class="target" id="module-ReportGridsLevels"></span><section id="write-grids-and-levels-data-to-file">
-<h2>Write grids and levels data to file.<a class="headerlink" href="#write-grids-and-levels-data-to-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-ReportGridsLevels">
+<span id="reporting-element-properties"></span><h2>Reporting element properties<a class="headerlink" href="#module-ReportGridsLevels" title="Permalink to this headline">¶</a></h2>
+<section id="write-grids-and-levels-data-to-file">
+<h3>Write grids and levels data to file.<a class="headerlink" href="#write-grids-and-levels-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write grids and level property data to file.</p>
 <p>Note:</p>
 <ul class="simple">
@@ -930,7 +922,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ReportLinks"></span><section id="write-link-data-to-file">
-<h2>Write link data to file.<a class="headerlink" href="#write-link-data-to-file" title="Permalink to this headline">¶</a></h2>
+<h3>Write link data to file.<a class="headerlink" href="#write-link-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write CAD and Revit link property data to file.</p>
 <p>Note:</p>
 <ul class="simple">
@@ -991,7 +983,7 @@ This is a sample only since the code below uses the default method RevitWorksets
 
 </section>
 <span class="target" id="module-ReportMatts"></span><section id="write-material-property-data-to-file">
-<h2>Write material property data to file.<a class="headerlink" href="#write-material-property-data-to-file" title="Permalink to this headline">¶</a></h2>
+<h3>Write material property data to file.<a class="headerlink" href="#write-material-property-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write material property data to file.</p>
 <p>Note:
 For material properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitMaterials.GetMaterialReportData" title="RevitMaterials.GetMaterialReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitMaterials.GetMaterialReportData</span></code></a>.</p>
@@ -1028,7 +1020,7 @@ For material properties reported refer to <a class="reference internal" href="re
 
 </section>
 <span class="target" id="module-ReportSharedParameters"></span><section id="write-shared-parameter-data-to-file">
-<h2>Write shared parameter data to file.<a class="headerlink" href="#write-shared-parameter-data-to-file" title="Permalink to this headline">¶</a></h2>
+<h3>Write shared parameter data to file.<a class="headerlink" href="#write-shared-parameter-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write shared parameter data to file.</p>
 <p>Note:
 For shared parameter properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitSharedParameters.GetSharedParameterReportData" title="RevitSharedParameters.GetSharedParameterReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitSharedParameters.GetSharedParameterReportData</span></code></a>.</p>
@@ -1065,7 +1057,7 @@ For shared parameter properties reported refer to <a class="reference internal" 
 
 </section>
 <span class="target" id="module-ReportWallsDetails"></span><section id="write-wall-type-data-to-file">
-<h2>Write wall type data to file.<a class="headerlink" href="#write-wall-type-data-to-file" title="Permalink to this headline">¶</a></h2>
+<h3>Write wall type data to file.<a class="headerlink" href="#write-wall-type-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write wall type data to file.</p>
 <p>Note:
 For wall type properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWalls.GetWallReportData" title="RevitWalls.GetWallReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWalls.GetWallReportData</span></code></a>.</p>
@@ -1102,7 +1094,7 @@ For wall type properties reported refer to <a class="reference internal" href="r
 
 </section>
 <span class="target" id="module-ReportWorksets"></span><section id="write-workset-data-to-file">
-<h2>Write workset data to file.<a class="headerlink" href="#write-workset-data-to-file" title="Permalink to this headline">¶</a></h2>
+<h3>Write workset data to file.<a class="headerlink" href="#write-workset-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write workset data to file.</p>
 <p>Note:
 For workset properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWorksets.GetWorksetReportData" title="RevitWorksets.GetWorksetReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWorksets.GetWorksetReportData</span></code></a>.</p>
@@ -1137,6 +1129,10 @@ For workset properties reported refer to <a class="reference internal" href="rev
 </dl>
 </dd></dl>
 
+</section>
+</section>
+<section id="batch-process-pre-processing-flows">
+<h2>Batch Process - Pre processing Flows<a class="headerlink" href="#batch-process-pre-processing-flows" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 

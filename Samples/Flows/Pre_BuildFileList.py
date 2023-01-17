@@ -1,4 +1,30 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Write files to task lists.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to write files in a given directory to an arbitrary number of task lists for Revit Batch Processor.
+
+Note:
+
+This code below will:
+
+- filter files in a given directory by their file extension
+- add them to task lists depending on their file size in an attempt to create an equal workload for all Revit Batch Processor sessions to be spun up. 
+
+This script can be used when: 
+
+- multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up and 
+- the number and / or names of files to processed are likely to change.
+
+- this can either be:
+
+    - started from a batch file before Revit Batch Processor is started
+    - started as a pre - process script in the first session of Revit Batch Processor 
+
+
+'''
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -57,6 +83,12 @@ if not debug_:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
     if not debug_:
         script_util.Output(str(message))
     else:

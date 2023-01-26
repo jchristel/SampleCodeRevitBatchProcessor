@@ -57,7 +57,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
 from duHast.APISamples import Utility as util
-import RevitSharedParameters as rSp
+from duHast.APISamples import RevitSharedParameters as rSp
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

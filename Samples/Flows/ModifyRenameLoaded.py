@@ -42,9 +42,25 @@ Notes:
 #
 #
 
+#set path to common library
+#path to Common.py
+commonlibraryDebugLocation_ = r'C:\temp'
+
+rootPath_ = r'C:\temp'
+#debug mode revit project file name
+debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 import clr
 import System
 import csv
+import sys
+sys.path.append(commonlibraryDebugLocation_)
+
+# import common library
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples import Result as res
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -53,12 +69,7 @@ debug_ = False
 #default file path locations
 # --------------------------
 #store output here:
-#rootPath_ = r'C:\temp'
-rootPath_ = r'C:\temp'
-#path to Common.py
-commonlibraryDebugLocation_ = r'C:\temp'
-#debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+
 
 # Add batch processor scripting references
 if not debug_:
@@ -73,15 +84,9 @@ else:
     #get default revit file name
     revitFilePath_ = debugRevitFileName_
 
-#set path to common library
-import sys
-sys.path.append(commonlibraryDebugLocation_)
 
-# import common library
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import Utility as util
-from duHast.APISamples import RevitFamilyUtils as rFamU
-from duHast.APISamples import Result as res
+
+
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -178,7 +183,7 @@ LIST_OF_FAMILY_NAMES = []
 # path to rename rules csv file
 # format per row is
 # old name.rfa, new name.rfa
-FAMILY_NAME_FILE_PATH = r'C:\temp\RenameLoadedFamilies.csv'
+FAMILY_NAME_FILE_PATH = r''
 
 Output('Updating Family Names .... start')
 

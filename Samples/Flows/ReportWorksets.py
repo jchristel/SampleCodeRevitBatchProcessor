@@ -57,7 +57,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
 from duHast.APISamples import Utility as util
-import RevitWorksets as rWks
+from duHast.APISamples import RevitWorksets as rWks
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

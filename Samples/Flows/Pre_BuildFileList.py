@@ -68,7 +68,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-import FileList as fl
+from duHast.UI import FileList as fl
 
 # flag whether this runs in debug or not 
 debug_ = False
@@ -99,14 +99,17 @@ def Output(message = ''):
 # -------------
 
 # directory containing files
-rootPath_ = r'C:\temp'
+rootPath_ = r''
 # store task files lists here
-rootPathExport_ = r'C:\temp'
+rootPathExport_ = r''
 # number of task list files to be written out
 taskFilesNumber_ = 1
 
 # get file data
 Output('Writing file Data.... start')
-result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
-Output (result_.message)
-Output('Writing file Data.... status: ' + str(result_.status))
+try:
+    result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
+    Output (result_.message)
+    Output('Writing file Data.... status: ' + str(result_.status))
+except Exception as e:
+    Output ('Failed to write file list with exception: ' + str(e))

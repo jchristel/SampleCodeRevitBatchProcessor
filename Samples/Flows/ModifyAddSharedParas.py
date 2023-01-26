@@ -51,7 +51,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 # import libraries
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import Result as res
-import RevitSharedParameterAdd as paraAdd
+from duHast.APISamples import RevitSharedParameterAdd as paraAdd
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

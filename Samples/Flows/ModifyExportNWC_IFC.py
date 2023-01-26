@@ -59,7 +59,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
 from duHast.APISamples import Result as res
-import RevitExport as rex
+from duHast.APISamples import RevitExport as rex
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

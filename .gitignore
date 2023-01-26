@@ -190,19 +190,5 @@ x64/
 /docsource/build
 /docs/doctrees
 docs/.buildinfo
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_CAD.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_grids.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_levels.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_Materials.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_RVT.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_SharedParas.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_WallTypes.txt
-docsource/C:\temp\23_01_17_System.IO.Path.GetFileNameWithoutExtension_Worksets.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_CAD.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_grids.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_levels.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_Materials.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_RVT.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_SharedParas.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_WallTypes.txt
-docsource/C:\temp\23_01_26_System.IO.Path.GetFileNameWithoutExtension_Worksets.txt
+#Sphinx build output
+docsource/C:\temp\

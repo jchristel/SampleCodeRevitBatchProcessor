@@ -38,7 +38,7 @@ ParameterGroupingToBuiltInParameterGroups = {
     'Construction': rdb.BuiltInParameterGroup.PG_CONSTRUCTION,
     'Data':rdb.BuiltInParameterGroup.PG_DATA,
     'Dimensions':rdb.BuiltInParameterGroup.PG_GEOMETRY,
-    'Electrical':rdb.BuiltInParameterGroup.PG_AELECTRICAL,
+    'Electrical':rdb.BuiltInParameterGroup.PG_ELECTRICAL,
     'Electrical-Circuiting':rdb.BuiltInParameterGroup.PG_ELECTRICAL_CIRCUITING,
     'Electrical-Lighting':rdb.BuiltInParameterGroup.PG_ELECTRICAL_LIGHTING,
     'Electrical-Loads':rdb.BuiltInParameterGroup.PG_ELECTRICAL_LOADS,

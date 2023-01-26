@@ -27,24 +27,22 @@ The entry point for the file selection GUI.
 #
 #
 
-import sys, getopt, os, csv
-# to get to the root folder of this repo
-sys.path.append(os.path.join(os.path.realpath(__file__), os.pardir, os.pardir))
+import sys, getopt, os
+
 
 # import file item class
-import FileItem as fi
+from duHast.UI import FileItem as fi
 # import file list methods
-import FileList as fl
+from duHast.UI import FileList as fl
 # import UI class
-import UIFileSelect as UIFs
+from duHast.UI import UIFileSelect as UIFs
 # import settings class
-import FileSelectSettings as set
+from duHast.UI import FileSelectSettings as set
 # import workloader utils
-import Workloader as wl
-#import WorkloadBucket as wlb
+from duHast.UI import Workloader as wl
 
 # import bim360 utils from Library
-from Library import UtilBIM360 as ub360
+from duHast.APISamples import UtilBIM360 as ub360
 
 def main(argv):
     '''
@@ -60,7 +58,7 @@ def main(argv):
         # retrieve revit file data
         revitFiles = GetFileData(settings)
         # check whether this is a BIM360 project or file system and assign
-        # data retriever method acordingly
+        # data retriever method accordingly
         if(isBIM360File(revitFiles)):
             getData = fl.BucketToTaskListBIM360
         else:

@@ -30,7 +30,7 @@ The below function attempt to fill these buckets evenly measured on file size.
 #
 #
 
-import WorkloadBucket as wb
+from duHast.UI import WorkloadBucket as wb
 
 def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
     '''
@@ -67,7 +67,7 @@ def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
             lowBucket = min(workloadBuckets, key=lambda wbucket: wbucket.workLoadValue)
             # add new item to bucket list
             lowBucket.AddItem(bucket[0])
-            # increase workbucket size by size of item added
+            # increase work bucket size by size of item added
             lowBucket.SetWorkLoadValue(lowBucket.workLoadValue + bucket[1])
 
     except Exception as e:

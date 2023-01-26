@@ -28,15 +28,10 @@ This module contains a number of helper functions relating to BIM360.
 
 import System
 import clr
-import csv
+
 
 from duHast.APISamples import Utility as util
-
-# get the relative path to the parent folder added to sys path
-import sys, os
-sys.path.append(os.path.join(os.path.realpath(__file__), os.pardir, os.pardir))
-
-from UI import FileItem as fi
+from duHast.UI import FileItem as fi
         
 def getBIM360RevitFilesFromFileList(filepathCSV, extension):
     '''

@@ -36,7 +36,7 @@ from System import Windows
 import ctypes
 
 # import settings class
-import FileSelectSettings as set
+#from duHast.UI import FileSelectSettings as set
 
 def Mbox(title, text, style):
     '''

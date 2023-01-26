@@ -35,11 +35,16 @@ This module requires python >3.9 due to dependencies:
 import sys
 import codecs
 
-import shapely.geometry as sg
-import shapely.ops as so
 
-import numpy as np
-
+# these packages are not available in an ironpython environment .e.g. Revit Python shell
+# to avoid an exception stopping the entire package to load these are within a try catch block
+try:
+    
+    import shapely.geometry as sg
+    import numpy as np
+except Exception as e:
+    print(e)
+    
 from duHast.APISamples import Result as res
 from duHast.DataSamples import DataCeiling as dc
 from duHast.DataSamples import DataRoom as dr

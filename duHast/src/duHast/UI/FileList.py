@@ -33,23 +33,20 @@ Helper functions for the file selection GUI.
 
 import clr
 import System
+import os
 
-# get the relative path to the parent folder added to sys path
-import sys, os
-sys.path.append(os.path.join(os.path.realpath(__file__), os.pardir, os.pardir))
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 
 # import file item class
-import FileItem as fi
+from duHast.UI import FileItem as fi
 # import workloader utils
-import Workloader as wl
-#import WorkloadBucket as wlb
+from duHast.UI import Workloader as wl
 
 # custom result class
-from Library from duHast.APISamples import Result as res
+from duHast.APISamples import Result as res
 
 # -------------
 # my code here:

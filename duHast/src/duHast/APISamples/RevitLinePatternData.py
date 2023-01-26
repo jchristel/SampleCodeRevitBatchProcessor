@@ -26,7 +26,6 @@ Family line pattern data class.
 #
 #
 
-from duHast.APISamples import IFamilyData
 from duHast.APISamples import IFamilyData as IFamData
 from duHast.APISamples import Utility as util
 from duHast.APISamples import RevitCategories as rCats
@@ -41,9 +40,9 @@ import Autodesk.Revit.DB as rdb
 PATTERN_NAME = 'patternName'
 PATTERN_ID = 'patternId'
 
-class LinePatternData(IFamilyData):
+class LinePatternData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath, rootCategoryPath, dataType):
+    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
         '''
         Class constructor
 
@@ -53,6 +52,10 @@ class LinePatternData(IFamilyData):
         :param dataType: Human readable data type descriptor
         :type dataType: str
         '''
+
+        # todo: check inheritance!!
+        # super(CategoryData, self).__init__(rootPath, dataType)
+
         self.data = []
         
         if(dataType != None):

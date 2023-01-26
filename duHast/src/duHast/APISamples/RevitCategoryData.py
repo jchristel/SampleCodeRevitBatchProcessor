@@ -26,16 +26,12 @@ Family category data class.
 #
 #
 
-import System
-from duHast.APISamples import IFamilyData
 from duHast.APISamples import IFamilyData as IFamData
 from duHast.APISamples import Utility as util
 from duHast.APISamples import RevitCategories as rCat
 
-
-
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+#import Autodesk.Revit.DB as rdb
 
 # data dictionary key values specific to this class
 CATEGORY_NAME = 'categoryName'
@@ -44,9 +40,9 @@ SUB_CATEGORY_ID = 'subCategoryId'
 GRAPHIC_PROPERTY_KEY_PREFIX = 'graphicProperty'
 GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER = '_'
 
-class CategoryData(IFamilyData):
+class CategoryData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath, rootCategoryPath, dataType):
+    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
         '''
         Class constructor
 
@@ -56,6 +52,8 @@ class CategoryData(IFamilyData):
         :param dataType: Human readable data type descriptor
         :type dataType: str
         '''
+        # todo: check inheritance!!
+        # super(CategoryData, self).__init__(rootPath, dataType)
 
         self.data = []
         

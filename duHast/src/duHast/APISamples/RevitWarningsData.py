@@ -26,22 +26,25 @@ Family warnings data class.
 #
 #
 
-from duHast.APISamples import IFamilyData
 from duHast.APISamples import IFamilyData as IFamData
 from duHast.APISamples import Utility as util
 from duHast.APISamples import RevitWarnings as rWarn
 
 # import Autodesk
-import Autodesk.Revit.DB as rdb
+#import Autodesk.Revit.DB as rdb
 
 WARNING_TEXT = 'warningText'
 WARNING_GUID = 'warningGUID'
 WARNING_RELATED_IDS = 'warningRelatedIds' 
 WARNING_OTHER_IDS = 'warningOtherIds' 
 
-class WarningsData(IFamilyData):
+class WarningsData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath, rootCategoryPath, dataType):
+    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
+
+        # todo: check inheritance!!
+        # super(CategoryData, self).__init__(rootPath, dataType)
+        
         self.data = []
         
         if(dataType != None):

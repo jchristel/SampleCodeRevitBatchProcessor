@@ -26,7 +26,6 @@ Family shared parameter data class.
 #
 #
 
-from duHast.APISamples import IFamilyData
 from duHast.APISamples import IFamilyData as IFamData
 from duHast.APISamples import Utility as util
 from duHast.APISamples import RevitSharedParameters as rSharedPara
@@ -39,9 +38,13 @@ PARAMETER_GUID = 'parameterGUID'
 PARAMETER_NAME = 'parameterName' 
 PARAMETER_ID = 'parameterId' 
 
-class SharedParameterData(IFamilyData):
+class SharedParameterData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath, rootCategoryPath, dataType):
+    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
+
+        # todo: check inheritance!!
+        # super(CategoryData, self).__init__(rootPath, dataType)
+
         self.data = []
         
         if(dataType != None):

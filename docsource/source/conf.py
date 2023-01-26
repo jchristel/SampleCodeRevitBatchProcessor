@@ -32,7 +32,7 @@ author = 'Jan Christel'
 
 # The full version, including alpha/beta/rc tags
 # need to be in double high commas for bumpver to recognize this a the version number
-release = "0.0.1"
+release = "0.0.2"
 
 
 # -- General configuration ---------------------------------------------------

@@ -19,9 +19,6 @@ The following modules are classes used to store varies data retrieved from Revit
 .. autoclass:: DataRoom.DataRoom
     :members:
 
-.. automodule:: DataShapely
-    :members:
-
 .. automodule:: DataExport
     :members:
 

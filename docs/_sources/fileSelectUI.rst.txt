@@ -17,15 +17,6 @@ Provides a file selection UI with options for
 .. automodule:: FileList
     :members:
 
-.. automodule:: script
-    :members:
-
-.. automodule:: UIFileSelect
-    :noindex:
-
-.. autoclass:: UIFileSelect.MyWindow
-    :members:
-
 .. autoclass:: WorkloadBucket.WorkloadBucket
     :members:
 

@@ -26,8 +26,8 @@ Helper functions relating to Revit worksharing monitor process.
 #
 #
 
-import Utility as util
-import Result as res
+from duHast.APISamples import Utility as util
+from duHast.APISamples import Result as res
 
 ''' 
 Process name of work sharing monitor

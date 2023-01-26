@@ -49,7 +49,7 @@ import Workloader as wl
 #import WorkloadBucket as wlb
 
 # custom result class
-from Library import Result as res
+from Library from duHast.APISamples import Result as res
 
 # -------------
 # my code here:

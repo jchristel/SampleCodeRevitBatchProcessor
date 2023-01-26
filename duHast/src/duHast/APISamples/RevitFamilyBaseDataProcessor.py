@@ -26,10 +26,10 @@ Family base data processor class.
 #
 #
 
-from IFamilyProcessor import IFamilyProcessor
-import RevitFamilyBaseData as rFamData
-import IFamilyData as IFamData
-import UtilBatchP as uBP
+from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
+from duHast.APISamples import RevitFamilyBaseData as rFamData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import UtilBatchP as uBP
 
 class FamilyBaseProcessor(IFamilyProcessor):
 

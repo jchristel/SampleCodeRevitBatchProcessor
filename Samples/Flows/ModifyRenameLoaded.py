@@ -78,10 +78,10 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-import RevitCommonAPI as com
-import Utility as util
-import RevitFamilyUtils as rFamU
-import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples import Result as res
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

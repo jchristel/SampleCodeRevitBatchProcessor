@@ -37,21 +37,21 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 clr.AddReference('System')
 
-import Utility as util
-import RevitBIM360 as b360
-import RevitCommonAPI as com
-import Result as res
-import RevitDesignSetOptions as rDoS
-import RevitWarnings as rWarn
-import RevitWorksets as rWork
-import RevitViews as rViews
-import RevitLineStylesPatterns as rLsp
-import RevitLinks as rLinks
-import RevitModelHealthReportFileNames as rFns
-import RevitFamilyUtils as rFams
-import RevitGroups as rGrp
-import RevitRooms as rRooms
-import RevitDetailItems as rDetItems
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitBIM360 as b360
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitDesignSetOptions as rDoS
+from duHast.APISamples import RevitWarnings as rWarn
+from duHast.APISamples import RevitWorksets as rWork
+from duHast.APISamples import RevitViews as rViews
+from duHast.APISamples import RevitLineStylesPatterns as rLsp
+from duHast.APISamples import RevitLinks as rLinks
+from duHast.APISamples import RevitModelHealthReportFileNames as rFns
+from duHast.APISamples import RevitFamilyUtils as rFams
+from duHast.APISamples import RevitGroups as rGrp
+from duHast.APISamples import RevitRooms as rRooms
+from duHast.APISamples import RevitDetailItems as rDetItems
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

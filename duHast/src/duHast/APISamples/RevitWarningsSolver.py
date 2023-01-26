@@ -31,11 +31,10 @@ import System
 import clr
 #from collections import namedtuple
 
-import Result as res
-import RevitWarnings as rWar
-
-import RevitWarningsSolverRoomTagToRoom as rwsRoomTagToRoom
-import RevitWarningsSolverDuplicateMark as rwsDuplicateMark
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitWarnings as rWar
+from duHast.APISamples import RevitWarningsSolverRoomTagToRoom as rwsRoomTagToRoom
+from duHast.APISamples import RevitWarningsSolverDuplicateMark as rwsDuplicateMark
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

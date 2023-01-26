@@ -30,8 +30,8 @@ import clr
 import System
 
 # import common library modules
-import RevitCommonAPI as com
-import RevitFamilyUtils as rFam
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitFamilyUtils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

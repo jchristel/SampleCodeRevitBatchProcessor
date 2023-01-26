@@ -26,8 +26,8 @@ Room tag not in room warnings solver class.
 #
 #
 
-import Result as res
-import RevitRooms as rRoom
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitRooms as rRoom
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

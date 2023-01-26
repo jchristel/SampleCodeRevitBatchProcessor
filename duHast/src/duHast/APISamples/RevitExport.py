@@ -34,16 +34,16 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # custom result class
-import Result as res
+from duHast.APISamples import Result as res
 
 from System.IO import Path
 import Autodesk.Revit.DB as rdb
 
 # import common library
-import RevitCommonAPI as com
-import RevitViews as rView
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitViews as rView
 # this imports 3rd party ifc exporters depending on version of Revit in use.
-import RevitExportIFCConfig as ifcCon
+from duHast.APISamples import RevitExportIFCConfig as ifcCon
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 

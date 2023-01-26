@@ -46,8 +46,8 @@ nestedFamily:
 
 from collections import namedtuple
 
-import Utility as util
-import Result as res
+from duHast.APISamples import Utility as util
+from duHast.APISamples import Result as res
 
 # tuples containing base family data read from file
 rootFamily = namedtuple('rootFamily', 'name category filePath')

@@ -32,15 +32,15 @@ import System
 import clr
 import glob
 # class used for stats reporting
-import Result as res
+from duHast.APISamples import Result as res
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
 import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
-import Utility as util
+from duHast.APISamples import Utility as util
 # importing revit groups module
-import RevitGroups as rGroup
+from duHast.APISamples import RevitGroups as rGroup
 
 # type checker
 #from typing import List, Callable

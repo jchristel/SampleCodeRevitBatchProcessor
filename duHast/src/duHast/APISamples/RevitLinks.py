@@ -30,9 +30,9 @@ import clr
 import System
 
 # import common library modules
-import RevitCommonAPI as com
-import Result as res
-import Utility as util
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
 import glob
 import os
 from os import path

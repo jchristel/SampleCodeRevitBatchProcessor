@@ -31,8 +31,8 @@ import codecs
 import csv
 import json
 
-import DataCeiling as dc
-import DataRoom as dr
+from duHast.DataSamples import DataCeiling as dc
+from duHast.DataSamples import DataRoom as dr
 
 
 class ReadDataFromFile:

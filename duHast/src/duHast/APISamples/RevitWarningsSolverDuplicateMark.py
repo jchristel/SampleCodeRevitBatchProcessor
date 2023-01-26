@@ -27,8 +27,8 @@ Duplicate mark warnings solver class.
 #
 #
 
-import RevitCommonAPI as com
-import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Result as res
 
 
 # import Autodesk

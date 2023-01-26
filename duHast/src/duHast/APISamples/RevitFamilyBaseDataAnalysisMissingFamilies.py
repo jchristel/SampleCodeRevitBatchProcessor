@@ -48,10 +48,10 @@ Algorithm description:
 
 #from collections import namedtuple
 
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-from timer import Timer
-import Result as res
-import Utility as util
+from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples.timer import Timer
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
 
 def _BuildUniqueNestedFamilyDic(overallFamilyBaseNestedData):
     '''

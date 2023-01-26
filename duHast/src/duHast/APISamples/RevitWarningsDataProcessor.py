@@ -27,11 +27,9 @@ Family warnings data processor class.
 #
 
 
-from email import header
-from IFamilyProcessor import IFamilyProcessor
-import RevitWarningsData as rWarnData
-import json
-import IFamilyData as IFamData
+from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
+from duHast.APISamples import RevitWarningsData as rWarnData
+from duHast.APISamples import IFamilyData as IFamData
 
 class WarningsProcessor(IFamilyProcessor):
 

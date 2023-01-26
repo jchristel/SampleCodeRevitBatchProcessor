@@ -40,10 +40,10 @@ import shapely.ops as so
 
 import numpy as np
 
-import Result as res
-import DataCeiling as dc
-import DataRoom as dr
-import DataReadFromFile as dReader
+from duHast.APISamples import Result as res
+from duHast.DataSamples import DataCeiling as dc
+from duHast.DataSamples import DataRoom as dr
+from duHast.DataSamples import DataReadFromFile as dReader
 
 # --------------- generics shape creation ------------------
 

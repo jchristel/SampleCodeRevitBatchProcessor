@@ -43,7 +43,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
-import Utility as util
+from duHast.APISamples import Utility as util
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

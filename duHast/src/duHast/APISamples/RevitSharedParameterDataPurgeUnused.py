@@ -32,11 +32,11 @@ This will delete all shared parameter definitions which are not used by any fami
 #
 
 # class used for stats reporting
-import Result as res
-import RevitCommonAPI as com
-import IFamilyData as IFamData
-import RevitSharedParameterData as rSharedParaData
-import RevitCategories as rCat
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import RevitSharedParameterData as rSharedData
+from duHast.APISamples import RevitCategories as rCat
 
 import Autodesk.Revit.DB as rdb
 

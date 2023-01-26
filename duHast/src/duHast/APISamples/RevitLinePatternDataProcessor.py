@@ -27,10 +27,10 @@ Family line pattern data processor class.
 #
 
 
-from IFamilyProcessor import IFamilyProcessor
-import RevitLinePatternData as rLinePatData
-import IFamilyData as IFamData
-import Result as res
+from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
+from duHast.APISamples import RevitLinePatternData as rLinePatData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Result as res
 
 class LinePatternProcessor(IFamilyProcessor):
 

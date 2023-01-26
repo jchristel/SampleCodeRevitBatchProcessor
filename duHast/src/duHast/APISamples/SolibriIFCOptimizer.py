@@ -36,8 +36,8 @@ List of imports:
 import subprocess
 from System.IO import Path
 
-import Result as res
-import Utility as util
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
 
 
 

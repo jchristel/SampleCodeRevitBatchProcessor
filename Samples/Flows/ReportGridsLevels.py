@@ -54,10 +54,10 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-import RevitCommonAPI as com
-import RevitGrids as rGrid
-import RevitLevels as rLevel
-import Utility as util
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitGrids as rGrid
+from duHast.APISamples import RevitLevels as rLevel
+from duHast.APISamples import Utility as util
 
 # flag whether this runs in debug or not
 debug_ = False

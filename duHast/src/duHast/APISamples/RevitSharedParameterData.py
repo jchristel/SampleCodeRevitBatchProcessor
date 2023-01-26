@@ -26,10 +26,10 @@ Family shared parameter data class.
 #
 #
 
-from IFamilyData import IFamilyData
-import IFamilyData as IFamData
-import Utility as util
-import RevitSharedParameters as rSharedPara
+from duHast.APISamples import IFamilyData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitSharedParameters as rSharedPara
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

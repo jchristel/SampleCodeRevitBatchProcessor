@@ -51,9 +51,9 @@ Algorithm description:
 import threading
 import os
 
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-from timer import Timer
-import Result as res
+from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples.timer import Timer
+from duHast.APISamples import Result as res
 
 def _ExtractParentFamilies(currentParent, treePath):
     '''

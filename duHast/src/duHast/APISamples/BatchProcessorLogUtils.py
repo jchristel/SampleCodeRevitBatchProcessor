@@ -53,15 +53,14 @@ import clr
 import System
 from System.IO import Path
 import glob
-import datetime
 import time
 import os
 import json
 
-# custom result class from common library DebugLocation_
-import Result as res
-# library from common library DebugLocation_
-import Utility as util
+# custom result class from common library
+from duHast.APISamples import Result as res
+# library from common library
+from duHast.APISamples import Utility as util
 
 #: global variable controlling debug output
 debugMode_ = False

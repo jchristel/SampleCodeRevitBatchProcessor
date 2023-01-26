@@ -31,9 +31,9 @@ import System
 from System.Collections.Generic import List
 clr.ImportExtensions(System.Linq)
 
-import RevitCommonAPI as com
-import RevitFamilyUtils as rFamU
-import RevitViews as rView
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples import RevitViews as rView
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

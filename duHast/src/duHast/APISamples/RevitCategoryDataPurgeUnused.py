@@ -32,10 +32,10 @@ This will delete all subcategories which are user created ( id greater then 0) a
 #
 
 # class used for stats reporting
-import Result as res
-import RevitCommonAPI as com
-import IFamilyData as IFamData
-import RevitCategoryData as rCatData
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import RevitCategoryData as rCatData
 
 import Autodesk.Revit.DB as rdb
 

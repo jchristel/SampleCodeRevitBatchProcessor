@@ -11,9 +11,9 @@ https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-
 import Autodesk.Revit.DB as rdb
 
 # custom result class
-import Result as res
+from duHast.APISamples import Result as res
 # import InTransaction from common module
-import RevitCommonAPI as com
+from duHast.APISamples import RevitCommonAPI as com
 
 def LoadSharedParameterFile(doc, path):
     '''

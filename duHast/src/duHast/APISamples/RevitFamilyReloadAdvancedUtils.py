@@ -32,10 +32,10 @@ This module provides utility functions to read and write reload task lists for t
 
 from collections import namedtuple
 
-from timer import Timer
-import Result as res
-import Utility as util
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples.timer import Timer
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 
 # tuples containing base family data and changed family data read from files
 changedFamily = namedtuple('changedFamily', 'name category filePath')

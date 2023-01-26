@@ -49,31 +49,31 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 clr.AddReference('System')
 
-import RevitCommonAPI as com
-import Utility as util
-import Result as res
-import RevitAnnotation as rAnn
-import RevitBuildingPads as rBuildP
-import RevitCeilings as rCeil
-import RevitCurtainWallElements as rCWE
-import RevitDetailItems as rDet
-import RevitFamilyUtils as rFamU
-import RevitFloors as rFlo
-import RevitGenericAnnotation as rGAnno
-import RevitGroups as rGrp
-import RevitGrids as rGrid
-import RevitLevels as rLev
-import RevitLinks as rLink
-import RevitMEPSystems as rMEP
-import RevitRailings as rRail
-import RevitRamps as rRam
-import RevitRoofs as rRoof
-import RevitStairs as rStair
-import RevitViews as rView
-import RevitViewReferencing as rViewRef
-import RevitWalls as rWall
-from timer import Timer
-import RevitPurgeAction as pA
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Utility as util
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitAnnotation as rAnn
+from duHast.APISamples import RevitBuildingPads as rBuildP
+from duHast.APISamples import RevitCeilings as rCeil
+from duHast.APISamples import RevitCurtainWallElements as rCWE
+from duHast.APISamples import RevitDetailItems as rDet
+from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples import RevitFloors as rFlo
+from duHast.APISamples import RevitGenericAnnotation as rGAnno
+from duHast.APISamples import RevitGroups as rGrp
+from duHast.APISamples import RevitGrids as rGrid
+from duHast.APISamples import RevitLevels as rLev
+from duHast.APISamples import RevitLinks as rLink
+from duHast.APISamples import RevitMEPSystems as rMEP
+from duHast.APISamples import RevitRailings as rRail
+from duHast.APISamples import RevitRamps as rRam
+from duHast.APISamples import RevitRoofs as rRoof
+from duHast.APISamples import RevitStairs as rStair
+from duHast.APISamples import RevitViews as rView
+from duHast.APISamples import RevitViewReferencing as rViewRef
+from duHast.APISamples import RevitWalls as rWall
+from duHast.APISamples.timer import Timer
+from duHast.APISamples import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

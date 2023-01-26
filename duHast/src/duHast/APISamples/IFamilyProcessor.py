@@ -32,8 +32,8 @@ Interface for family processing class.
 import System
 import Autodesk.Revit.DB as rdb
 import json
-import IFamilyData as IFamData
-import Result as res
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Result as res
 
 class IFamilyProcessor():
     

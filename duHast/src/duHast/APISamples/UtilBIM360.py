@@ -30,7 +30,7 @@ import System
 import clr
 import csv
 
-import Utility as util
+from duHast.APISamples import Utility as util
 
 # get the relative path to the parent folder added to sys path
 import sys, os

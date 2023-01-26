@@ -36,10 +36,10 @@ This helper function expect a folder containing rename directive files. For form
 import clr
 import System
 
-import RevitCommonAPI as com
-import RevitFamilyRenameFilesUtils as rFamRenameUtils
-import RevitFamilyUtils as rFamUtils
-import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitFamilyRenameFilesUtils as rFamRenameUtils
+from duHast.APISamples import RevitFamilyUtils as rFamUtils
+from duHast.APISamples import Result as res
 
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb

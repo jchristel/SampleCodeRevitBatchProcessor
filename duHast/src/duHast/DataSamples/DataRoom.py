@@ -32,8 +32,9 @@ TODO: implement an interface
 '''
 
 import json
-import DataGeometry
-import DataDesignSetOption
+
+from duHast.DataSamples import DataGeometry
+from duHast.DataSamples import DataDesignSetOption
 
 class DataRoom():
 

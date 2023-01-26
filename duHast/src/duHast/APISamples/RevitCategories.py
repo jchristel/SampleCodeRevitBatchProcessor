@@ -31,11 +31,11 @@ import clr
 import System
 from System.Collections.Generic import List
 
-import RevitCommonAPI as com
-import RevitFamilyUtils as rFamUtils
-import RevitLinks as rLink
-import Result as res
-import RevitLineStylesPatterns as rPat
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitFamilyUtils as rFamUtils
+from duHast.APISamples import RevitLinks as rLink
+from duHast.APISamples import Result as res
+from duHast.APISamples import RevitLineStylesPatterns as rPat
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

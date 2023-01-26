@@ -27,10 +27,10 @@ Family category data class.
 #
 
 import System
-from IFamilyData import IFamilyData
-import IFamilyData as IFamData
-import Utility as util
-import RevitCategories as rCat
+from duHast.APISamples import IFamilyData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitCategories as rCat
 
 
 

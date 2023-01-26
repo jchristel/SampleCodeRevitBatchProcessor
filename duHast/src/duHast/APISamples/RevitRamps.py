@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit ramps.
 import clr
 import System
 
-import RevitCommonAPI as com
+from duHast.APISamples import RevitCommonAPI as com
 
 
 

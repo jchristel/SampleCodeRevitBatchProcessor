@@ -45,12 +45,12 @@ Finds host families of nested families requiring to be renamed.
 
 import clr
 import System
-from timer import Timer
+from duHast.APISamples.timer import Timer
 
-import Result as res
-#import Utility as util
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-import RevitFamilyRenameFilesUtils as rFamRenameUtils
+from duHast.APISamples import Result as res
+#from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples import RevitFamilyRenameFilesUtils as rFamRenameUtils
 
 #---------------------------------------------------------------------------------------------------------------
 #                      find families containing nested families needing to be renamed

@@ -28,7 +28,7 @@ Functions around Revit BIM360.
 
 import System
 import clr
-import Utility as util
+from duHast.APISamples import Utility as util
 
 #from System.IO import Path
 import Autodesk.Revit.DB as rdb

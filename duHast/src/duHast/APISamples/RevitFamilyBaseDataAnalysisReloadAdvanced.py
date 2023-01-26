@@ -43,11 +43,11 @@ Family Base data analysis module containing functions to build a reload tree.
 #
 
 
-from timer import Timer
-import Result as res
-import Utility as util
-import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-import RevitFamilyReloadAdvancedUtils as rFamReloadAdvUtils
+from duHast.APISamples.timer import Timer
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples import RevitFamilyReloadAdvancedUtils as rFamReloadAdvUtils
 
 _TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
 

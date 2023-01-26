@@ -54,8 +54,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-import Utility as util
-import RevitMaterials as rMat
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitMaterials as rMat
 
 # flag whether this runs in debug or not
 debug_ = False

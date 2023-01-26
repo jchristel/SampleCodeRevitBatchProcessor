@@ -32,9 +32,9 @@ import System
 import sys
 #sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
 
-import RevitCommonAPI as com
-import RevitFamilyUtils as rFam
-import RevitAnnotation as rAnno
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitFamilyUtils as rFam
+from duHast.APISamples import RevitAnnotation as rAnno
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

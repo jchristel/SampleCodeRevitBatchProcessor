@@ -30,8 +30,8 @@ import clr
 import System
 from collections import namedtuple
 
-import RevitCommonAPI as com
-import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import Result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -26,11 +26,11 @@ Family category data processor class.
 #
 #
 
-from IFamilyProcessor import IFamilyProcessor
-import RevitCategories as rCat
-import RevitCategoryData as rCatData
-import IFamilyData as IFamData
-import Result as res
+from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
+from duHast.APISamples import RevitCategories as rCat
+from duHast.APISamples import RevitCategoryData as rCatData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Result as res
 
 class CategoryProcessor(IFamilyProcessor):
 

@@ -63,10 +63,10 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 #import common libraries
-import RevitCommonAPI as com
-import RevitViews as rView
-import Utility as util
-import Result as res
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitViews as rView
+from duHast.APISamples import Utility as util
+from duHast.APISamples import Result as res
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

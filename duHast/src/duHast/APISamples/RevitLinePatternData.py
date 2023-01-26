@@ -26,12 +26,12 @@ Family line pattern data class.
 #
 #
 
-from IFamilyData import IFamilyData
-import IFamilyData as IFamData
-import Utility as util
-import RevitCategories as rCats
-import RevitLineStylesPatterns as rPat
-import RevitLevels as rLevel
+from duHast.APISamples import IFamilyData
+from duHast.APISamples import IFamilyData as IFamData
+from duHast.APISamples import Utility as util
+from duHast.APISamples import RevitCategories as rCats
+from duHast.APISamples import RevitLineStylesPatterns as rPat
+from duHast.APISamples import RevitLevels as rLevel
 
 
 # import Autodesk

@@ -29,7 +29,7 @@ Family data collector class.
 #
 #
 
-import Result as res
+from duHast.APISamples import Result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 

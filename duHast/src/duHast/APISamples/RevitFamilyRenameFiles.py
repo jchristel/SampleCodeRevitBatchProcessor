@@ -42,9 +42,9 @@ import clr
 import System
 import os
 
-import RevitFamilyRenameFilesUtils as rFamRenameUtils
-import Result as res
-import Utility as util
+from duHast.APISamples import RevitFamilyRenameFilesUtils as rFamRenameUtils
+from duHast.APISamples import Result as res
+from duHast.APISamples import Utility as util
 
 def _renameFiles(renameDirectives):
     '''

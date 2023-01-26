@@ -30,10 +30,10 @@ import clr
 import System
 
 # import common library modules
-import RevitCommonAPI as com
-import RevitMaterials as rMat
-import RevitFamilyUtils as rFam
-import Utility as util
+from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitMaterials as rMat
+from duHast.APISamples import RevitFamilyUtils as rFam
+from duHast.APISamples import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

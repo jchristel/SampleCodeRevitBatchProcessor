@@ -29,7 +29,7 @@ Revit geometry extraction helper functions
 from collections import namedtuple
 import Autodesk.Revit.DB as rdb
 
-import DataGeometry as dGeometry
+from duHast.DataSamples import DataGeometry as dGeometry
 
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):

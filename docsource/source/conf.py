@@ -12,13 +12,13 @@
 #
 import os
 import sys
-duHastPathAPI = os.path.abspath('../../duHast/src/du_hast/APISamples')
-duHastPathData = os.path.abspath('../../duHast/src/du_hast/DataSamples')
-samplePathUI = os.path.abspath('../../Samples/UI')
+duHastPathAPI = os.path.abspath('../../duHast/src/duHast/APISamples')
+duHastPathData = os.path.abspath('../../duHast/src/duHast/DataSamples')
+duHastPathUI = os.path.abspath('../../duHast/src/duHast/UI')
 samplePathBAT = os.path.abspath('../../Samples/BAT')
 samplePathFlows = os.path.abspath('../../Samples/Flows')
 
-sys.path += [duHastPathAPI, duHastPathData, samplePathUI, samplePathBAT, samplePathFlows]
+sys.path += [duHastPathAPI, duHastPathData, duHastPathUI, samplePathBAT, samplePathFlows]
 #sys.path.insert(0, os.path.abspath('../..'))
 
 # web layout theme
@@ -32,7 +32,7 @@ author = 'Jan Christel'
 
 # The full version, including alpha/beta/rc tags
 # need to be in double high commas for bumpver to recognize this a the version number
-release = "1.0.7"
+release = "0.0.1"
 
 
 # -- General configuration ---------------------------------------------------
@@ -58,7 +58,7 @@ exclude_patterns = []
 # also includes RevitFamilyLoadOption module since class defined in there inherits from an AutoDesk API class
 # which is tripping sphinx
 #, 'RevitFamilyLoadOption'
-autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'wpf','revit_script_util','revit_file_util']
+autodoc_mock_imports = ["clr", 'System', 'Autodesk', 'numpy', 'shapely', 'wpf','revit_script_util','revit_file_util','script_util']
 
 # include __init__ docs in classes
 autoclass_content = 'both'

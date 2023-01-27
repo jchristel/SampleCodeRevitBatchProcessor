@@ -35,7 +35,7 @@ from duHast.UI import FileItem as fi
 # import file list methods
 from duHast.UI import FileList as fl
 # import UI class
-from duHast.UI import UIFileSelect as UIFs
+import UIFileSelect as UIFs
 # import settings class
 from duHast.UI import FileSelectSettings as set
 # import workloader utils

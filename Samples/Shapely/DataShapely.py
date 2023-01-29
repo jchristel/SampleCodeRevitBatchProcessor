@@ -38,12 +38,10 @@ import codecs
 
 # these packages are not available in an ironpython environment .e.g. Revit Python shell
 # to avoid an exception stopping the entire package to load these are within a try catch block
-try:
-    
-    import shapely.geometry as sg
-    import numpy as np
-except Exception as e:
-    print(e)
+
+import shapely.geometry as sg
+import numpy as np
+
     
 from duHast.APISamples import Result as res
 from duHast.DataSamples import DataCeiling as dc

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Flows &#8212; Sample Code Revit Batch Processor 0.0.1 documentation</title>
+    <title>Flows &#8212; Sample Code Revit Batch Processor 0.0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -16,12 +16,12 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 0.0.1 documentation" href="index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.2 documentation" href="index.html" />
     <link rel="prev" title="Misc modules and classes" href="misc.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 0.0.1 documentation</p>
+    <p>Sample Code Revit Batch Processor 0.0.2 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>Flows</h1></div>
@@ -49,7 +49,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ModifyAddSharedParas">Modifying element properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ReportGridsLevels">Reporting element properties</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Pre_BuildFileList">Batch Process - Pre processing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-process-pre-processing-flows">Batch Process - Pre processing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-DataShapely">Using Shapely and data extracted from Revit</a></li>
 </ul>
 </li>
 </ul>
@@ -1131,9 +1132,10 @@ For workset properties reported refer to <a class="reference internal" href="rev
 
 </section>
 </section>
-<section id="module-Pre_BuildFileList">
-<span id="batch-process-pre-processing-flows"></span><h2>Batch Process - Pre processing Flows<a class="headerlink" href="#module-Pre_BuildFileList" title="Permalink to this headline">¶</a></h2>
-<section id="write-files-to-task-lists">
+<section id="batch-process-pre-processing-flows">
+<h2>Batch Process - Pre processing Flows<a class="headerlink" href="#batch-process-pre-processing-flows" title="Permalink to this headline">¶</a></h2>
+<p>Modules useful when running batch processor without its user interface.</p>
+<span class="target" id="module-Pre_BuildFileList"></span><section id="write-files-to-task-lists">
 <h3>Write files to task lists.<a class="headerlink" href="#write-files-to-task-lists" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write files in a given directory to an arbitrary number of task lists for Revit Batch Processor.</p>
 <p>Note:</p>
@@ -1162,6 +1164,496 @@ For workset properties reported refer to <a class="reference internal" href="rev
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-script">
+<span id="file-selection-ui"></span><h3>File selection UI<a class="headerlink" href="#module-script" title="Permalink to this headline">¶</a></h3>
+<section id="the-entry-point-for-the-file-selection-gui">
+<h4>The entry point for the file selection GUI.<a class="headerlink" href="#the-entry-point-for-the-file-selection-gui" title="Permalink to this headline">¶</a></h4>
+<dl class="py function">
+<dt class="sig sig-object py" id="script.main">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entry point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>argv</strong> (<em>[</em><em>str</em><em>]</em>) – A list of string representing arguments past in.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.processArgs">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">processArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.processArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes past in arguments and checks whether inputs are valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>argv</strong> (<em>_type_</em>) – List of arguments</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>True if arguments past in are valid, otherwise False.</p></li>
+<li><p>FIle select settings object instance.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool, <a class="reference internal" href="fileSelectUI.html#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.GetFolderPathFromFile">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">GetFolderPathFromFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.GetFolderPathFromFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the directory from a fully qualified file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – A fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A fully qualified directory path. 
+On exception an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.FileExist">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">FileExist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.FileExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a file exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – A fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if file exists, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.GetFileData">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">GetFileData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.GetFileData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves Revit file data from either:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>directory on a file server</p></li>
+<li><dl class="simple">
+<dt>a text file containing BIM 360 project data</dt><dd><ul>
+<li><p>text file needs to be a .csv</p></li>
+<li><dl class="simple">
+<dt>format:</dt><dd><ul>
+<li><p>0 Revit Version:YYYY,Project GUID, File GUID, file size, BIM 360 file path</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="fileSelectUI.html#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a>) – A file select settings object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of file items</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="script.isBIM360File">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">isBIM360File</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revitFiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#script.isBIM360File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the first item in a file item list belongs to a BIM 360 project.</p>
+<p>Checks whether Project GUID property on file item object is None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>revitFiles</strong> ([<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]) – List of file items.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if BIM360 file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="script.currentScriptDir_">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">currentScriptDir_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/Samples/UI'</span></em><a class="headerlink" href="#script.currentScriptDir_" title="Permalink to this definition">¶</a></dt>
+<dd><p>the directory this script lives in</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="script.xamlFile_">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">xamlFile_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ui.xaml'</span></em><a class="headerlink" href="#script.xamlFile_" title="Permalink to this definition">¶</a></dt>
+<dd><p>xaml file name of file select UI</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="script.xamlFullFileName_">
+<span class="sig-prename descclassname"><span class="pre">script.</span></span><span class="sig-name descname"><span class="pre">xamlFullFileName_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Users/janchristel/Documents/GitHub/SampleCodeRevitBatchProcessor/Samples/UI/ui.xaml'</span></em><a class="headerlink" href="#script.xamlFullFileName_" title="Permalink to this definition">¶</a></dt>
+<dd><p>xaml full path</p>
+</dd></dl>
+
+</section>
+<span class="target" id="module-UIFileSelect"></span><section id="a-file-selection-gui">
+<h4>A file selection GUI.<a class="headerlink" href="#a-file-selection-gui" title="Permalink to this headline">¶</a></h4>
+<dl class="py function">
+<dt class="sig sig-object py" id="UIFileSelect.Mbox">
+<span class="sig-prename descclassname"><span class="pre">UIFileSelect.</span></span><span class="sig-name descname"><span class="pre">Mbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UIFileSelect.Mbox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple win forms message box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – The title of the message box.</p></li>
+<li><p><strong>text</strong> (<em>str</em>) – The text displayed in the message box.</p></li>
+<li><p><strong>style</strong> (<em>int</em>) – An int representing the type of buttons shown.
+(<a class="reference external" href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.messageboxbuttons?view=windowsdesktop-6.0">https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.messageboxbuttons?view=windowsdesktop-6.0</a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A win form message box.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="UIFileSelect.MyWindow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">UIFileSelect.</span></span><span class="sig-name descname"><span class="pre">MyWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UIFileSelect.MyWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xamlFullFileName</strong> (<em>str</em>) – Fully qualified file path to wpf XAML file.</p></li>
+<li><p><strong>revitFiles</strong> (<em>[</em><em>str</em><em>]</em>) – List containing path to files.</p></li>
+<li><p><strong>settings</strong> (<a class="reference internal" href="fileSelectUI.html#FileSelectSettings.FileSelectionSettings" title="FileSelectSettings.FileSelectionSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileSelectionSettings</span></code></a>) – A settings object.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="UIFileSelect.MyWindow.BtnOK">
+<span class="sig-name descname"><span class="pre">BtnOK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EventArgs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UIFileSelect.MyWindow.BtnOK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ok button event handler.</p>
+<p>Gets the selected rows of files and adds them to .selectedFiles property
+Sets the dialog result value to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sender</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>EventArgs</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="UIFileSelect.MyWindow.BtnCancel">
+<span class="sig-name descname"><span class="pre">BtnCancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">EventArgs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UIFileSelect.MyWindow.BtnCancel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel button event handler.
+Sets the dialogue result value to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sender</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>EventArgs</strong> (<em>_type_</em>) – _description_</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+<section id="module-DataShapely">
+<span id="using-shapely-and-data-extracted-from-revit"></span><h2>Using Shapely and data extracted from Revit<a class="headerlink" href="#module-DataShapely" title="Permalink to this headline">¶</a></h2>
+<section id="utility-functions-converting-data-retrieved-from-revit-into-shapely-geometry-and-processing-it">
+<h3>Utility functions converting data retrieved from Revit into shapely geometry and processing it.<a class="headerlink" href="#utility-functions-converting-data-retrieved-from-revit-into-shapely-geometry-and-processing-it" title="Permalink to this headline">¶</a></h3>
+<p>This module requires python &gt;3.9 due to dependencies:</p>
+<ul class="simple">
+<li><p>numpy</p></li>
+<li><p>shapely</p></li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetTranslationMatrix">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetTranslationMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetTranslationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the rotation/ translation matrix from the geometry object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>geoObject</strong> (<a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a>) – A data geometry object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A translation matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetOuterLoopAsShape">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetOuterLoopAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetOuterLoopAsShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the boundary loop of an object as list of shapely points.</p>
+<p>Points are translated with passed in matrix.
+Any loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geoObject</strong> (<a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a>) – A data geometry object instance.</p></li>
+<li><p><strong>translationM</strong> (<em>numpy array</em>) – A translation matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of shapely points defining a polygon. (Empty list will be returned if less then 3 points in loop.)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[shapely.point]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetInnerLoopsAsShape">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetInnerLoopsAsShape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translationM</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetInnerLoopsAsShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inner loops (holes) of an object as list of lists of shapely points.</p>
+<p>Points are translated with passed in matrix.
+Any inner loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geoObject</strong> (<a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a>) – A data geometry object instance.</p></li>
+<li><p><strong>translationM</strong> (<em>numpy array</em>) – A translation matrix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of shapely points defining a polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list [list[shapely.point]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.buildShapelyPolygon">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">buildShapelyPolygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapeS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.buildShapelyPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates shapely polygons from list of polygons past in.</p>
+<p>Assumptions is first polygon describes the boundary loop and any subsequent polygons are describing         holes within the boundary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>shapeS</strong> (<em>list</em><em>[</em><em>shapely.polygon</em><em>]</em>) – list of shapely polygons</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A shapely polygon.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>shapely.polygon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromDataInstance">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromDataInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataInstance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromDataInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of of shapely polygons from data instances past in.</p>
+<p>Polygons may contain holes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataInstance</strong> (A class with .geometry property returning a <a class="reference internal" href="dataExport.html#DataGeometry.DataGeometry" title="DataGeometry.DataGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></a> instance.) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of shapely polygons.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list [shapely.polygon]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="DataShapely.geometryConverter_">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">geometryConverter_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;function</span> <span class="pre">GetShapelyPolygonsFromDataInstance&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;function</span> <span class="pre">GetShapelyPolygonsFromDataInstance&gt;}</span></em><a class="headerlink" href="#DataShapely.geometryConverter_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of available geometry (from revit to shapely ) converters</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.ReadData">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">ReadData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.ReadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads text files into data objects within data reader class which is returned</p>
+<p>Data file to be json formatted. (one json entry per row)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filePath</strong> (<em>str</em>) – Fully qualified path to json formatted data file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A file data reader instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="dataExport.html#DataReadFromFile.ReadDataFromFile" title="DataReadFromFile.ReadDataFromFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReadDataFromFile</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.writeReportData">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">writeReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writeType</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.writeReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method writing out report information to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to data file.</p></li>
+<li><p><strong>header</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of column headers, provide empty list if not required!</p></li>
+<li><p><strong>data</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of list of strings representing row data</p></li>
+<li><p><strong>writeType</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘w’ new file, ‘a’ append to existing file., defaults to ‘w’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.BuildDictionaryByLevelAndDataType">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">BuildDictionaryByLevelAndDataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataReader</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.BuildDictionaryByLevelAndDataType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary where:</p>
+<ul class="simple">
+<li><p>key: is the level name</p></li>
+<li><p>values is a list of list of data objects</p></li>
+<li><p>first list room data objects</p></li>
+<li><p>second list ceilings data objects</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dataReader</strong> (<a class="reference internal" href="dataExport.html#DataReadFromFile.ReadDataFromFile" title="DataReadFromFile.ReadDataFromFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReadDataFromFile</span></code></a>) – A data reader class instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where key is the level name, value is a list of lists of data objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic{str:[[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataRoom],[:class:</span></code>.DataCeiling`]]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetShapelyPolygonsFromGeoObject">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetShapelyPolygonsFromGeoObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geoObjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetShapelyPolygonsFromGeoObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts polygon points from DataGeometry instances to shapely polygon instances and returns them as a dictionary where:</p>
+<ul class="simple">
+<li><p>key is the geometry objects id</p></li>
+<li><p>value is a list of shapely polygons</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geoObjects</strong> (<em>list</em><em>[</em><em>data object</em><em>]</em>) – A list of instances of the the same type (i.e DataRoom)</p></li>
+<li><p><strong>dataType</strong> (<em>str</em>) – _string human readable identifying the data type ( each Data… class has this as a static field: dr.DataRoom.dataType)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{int:[shapely.polygon]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.SortMultipleDataRows">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">SortMultipleDataRows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">associatedDataRows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roomData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.SortMultipleDataRows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collapses multiple ceilings of one type into one with multiple ids.</p>
+<p>Note: Works for ceilings only in the moment.
+This is to avoid situations where one type of ceiling is briefed in a room, but in the model, multiple instances of another type are modelled.
+In this case multiple type mismatches would be reported where we want only one type mismatch to be reported.
+Takes into account design set / design options and offset from level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>associatedDataRows</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of list of strings representing ceiling data</p></li>
+<li><p><strong>roomData</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of string representing room data for a single room</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of list of strings representing room data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List of list [str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetReportData">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetReportData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dicObject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetReportData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dicObject</strong> ({str:[:class: <cite>.DataRoom</cite>]}) – A dictionary where key is the level name and values is a list of DataRoom instances.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of list of strings representing room data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list [str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="DataShapely.GetCeilingsByRoom">
+<span class="sig-prename descclassname"><span class="pre">DataShapely.</span></span><span class="sig-name descname"><span class="pre">GetCeilingsByRoom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataSourcePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFilePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataShapely.GetCeilingsByRoom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads geometry data from json formatted text file and does an intersection check between room and ceiling polygons.</p>
+<p>The result is written  to a report to provided path containing a row per room and ceiling within room.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataSourcePath</strong> (<em>str</em>) – The fully qualified file path of json formatted data file containing room and ceiling data.</p></li>
+<li><p><strong>outputFilePath</strong> (<em>str</em>) – The fully qualified file path of the output report.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.
+result.status. True if:</p>
+<ul class="simple">
+<li><p>all levels in file had ceilings and rooms.</p></li>
+<li><p>report file was written successfully,</p></li>
+</ul>
+<p>Otherwise False.</p>
+<ul class="simple">
+<li><p>result.message will confirm report was written successfully.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain room name and number where exception occurred as well as ceiling id.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

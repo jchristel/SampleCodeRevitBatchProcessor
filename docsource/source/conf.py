@@ -17,8 +17,18 @@ duHastPathData = os.path.abspath('../../duHast/src/duHast/DataSamples')
 duHastPathUI = os.path.abspath('../../duHast/src/duHast/UI')
 samplePathBAT = os.path.abspath('../../Samples/BAT')
 samplePathFlows = os.path.abspath('../../Samples/Flows')
+samplePathUI = os.path.abspath('../../Samples/UI')
+samplePathShapely = os.path.abspath('../../Samples/Shapely')
 
-sys.path += [duHastPathAPI, duHastPathData, duHastPathUI, samplePathBAT, samplePathFlows]
+sys.path += [
+    duHastPathAPI, 
+    duHastPathData, 
+    duHastPathUI, 
+    samplePathBAT, 
+    samplePathFlows,
+    samplePathUI,
+    samplePathShapely
+]
 #sys.path.insert(0, os.path.abspath('../..'))
 
 # web layout theme

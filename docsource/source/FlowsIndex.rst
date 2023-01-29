@@ -62,5 +62,22 @@ Reporting element properties
 Batch Process - Pre processing Flows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Modules useful when running batch processor without its user interface.
+
 .. automodule:: Pre_BuildFileList
+    :members:
+
+File selection UI
+""""""""""""""""""""
+
+.. automodule:: script
+    :members:
+
+.. automodule:: UIFileSelect
+    :members:
+
+Using Shapely and data extracted from Revit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: DataShapely
     :members:

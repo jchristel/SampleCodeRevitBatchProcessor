@@ -1,4 +1,20 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Link type workset updates - by instance.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to change revit link type workset to the same as the first revit link instance of the same type.
+
+Notes:
+
+- Revit Batch Processor settings:
+    
+    - open local copy of model
+    - open all worksets
+
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -48,7 +64,7 @@ from duHast.APISamples import RevitWorksets as rWork
 from duHast.APISamples import Result as res
 
 # autodesk API
-from Autodesk.Revit.DB import *
+import Autodesk.Revit.DB as rdb
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -75,33 +91,42 @@ else:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
+    
+def _getRevitInstanceDataByName(revitLinkName, doc):
+    '''
+    returns Revit Link Instance data
 
-def GetWorksetNamebyId(doc, Id):
-    name = 'unknown'
-    for p in FilteredWorksetCollector(doc).OfKind(WorksetKind.UserWorkset):
-        if(p.Id == Id):
-            name = p.Name
-            break
-    return name
-    
-    
-# returns Revit Link Instance data
-def GetRevitInstanceDataByName(revitLinkName, doc):
+    :param revitLinkName: The revit link name of which to return an instance Id
+    :type revitLinkName: str
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: A link instance Id if an instance of a given link was found, otherwise Invalid element Id (-1)
+    :rtype: AutoDesk.Revit.DB.ElementId
+    '''
+
     match = False
     # default values
     instanceWorksetName = 'unknown'
-    for p in FilteredElementCollector(doc).OfClass(RevitLinkInstance):
+    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance):
         # Output('['+str(Element.Name.GetValue(revitLinkName))+'][' + str(Element.Name.GetValue(p))+']')
-        linkTypeNameParts = Element.Name.GetValue(p).split(':')
+        linkTypeNameParts = rdb.Element.Name.GetValue(p).split(':')
         if(len(linkTypeNameParts) == 3):
             lN = linkTypeNameParts[0]
-            if(lN[0:-1] == Element.Name.GetValue(revitLinkName)):
+            if(lN[0:-1] == rdb.Element.Name.GetValue(revitLinkName)):
                 match = True
-                wsparam = p.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+                wsparam = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
                 instanceWorksetName = wsparam.AsValueString()
                 break
     if(match == True):
@@ -109,33 +134,80 @@ def GetRevitInstanceDataByName(revitLinkName, doc):
         return rWork.GetWorksetIdByName(doc, instanceWorksetName)
     else:
         # Output('no match')
-        return ElementId.InvalidElementId
+        return rdb.ElementId.InvalidElementId
 
-# get the revit link instance data
-# this also calls GetRevitLinkInstanceDataByName() 
-def ModifyRevitLinkTypeData(revitLink, doc):
+def _modifyRevitLinkTypeData(revitLink, doc):
+    '''
+    Modifies the workset of an individual link type if not the same as an instance of that type.
+
+    :param revitLink: A revit link type.
+    :type revitLink: AutoDesk.Revit.DB.RevitLinkType
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - Result.status: True if link type was moved to a new worksets successfully or if it was on required workset already, otherwise False.
+        - Result.message: A status message for each link type.
+        - Result.result is empty list
+
+        On exception:
+        
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
-    # get the workset
-    wsparam = revitLink.get_Parameter(BuiltInParameter.ELEM_PARTITION_PARAM)
+
+    # get the workset Id of the link type
+    wsparam = revitLink.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
     typeWorksetId = rWork.GetWorksetIdByName(doc, typeWorksetName)
-    instanceWorksetId = GetRevitInstanceDataByName(revitLink, doc)
-    instanceWorksetName = GetWorksetNamebyId(doc, instanceWorksetId)
-    if(instanceWorksetId!= ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
-        Output('Moving '+ str(Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
-        transaction = Transaction(doc, "Changing workset of " + str(Element.Name.GetValue(revitLink)))
+
+    # get the workset id of a link instance belonging to same type
+    instanceWorksetId = _getRevitInstanceDataByName(revitLink, doc)
+    instanceWorksetName = rWork.GetWorksetNameById(doc, instanceWorksetId.IntegerValue)
+
+    # check if revit link type needs the workset changed?
+    if(instanceWorksetId!= rdb.ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
+        Output('Moving '+ str(rdb.Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
+        transaction = rdb.Transaction(doc, "Changing workset of " + str(rdb.Element.Name.GetValue(revitLink)))
         returnValue = com.InTransaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
-        Output(str(Element.Name.GetValue(revitLink)) + ' ' + str(returnValue.status))
+        Output(str(rdb.Element.Name.GetValue(revitLink)) + ' ' + str(returnValue.status))
     else:
-        returnValue.message = str(Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
+        returnValue.message = str(rdb.Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
     return returnValue
 
-# method changing the workset of Revit link types if not on the same workset than the coresponding Revit link instance
+# 
 def modifyRevitLinkTypes(doc):
+    '''
+    Method changing the workset of Revit link types if not on the same workset than the corresponding Revit link instance
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - Result.status: True if all link types where moved to the same workset as the link instance of the same type, otherwise False.
+        - Result.message: A status message for each link type.
+        - Result.result is empty list
+
+        On exception:
+        
+        - Set parameter.status (bool) will be False.
+        - Set parameter.message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
     returnValue = res.Result()
     try:
-        for p in FilteredElementCollector(doc).OfClass(RevitLinkType):
-            changeLink = ModifyRevitLinkTypeData(p, doc)
+        for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
+            changeLink = _modifyRevitLinkTypeData(p, doc)
             returnValue.Update(changeLink)
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))

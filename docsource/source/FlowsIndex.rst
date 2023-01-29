@@ -37,6 +37,15 @@ Modifying element properties
 .. automodule::  ModifyRevitFileSaveAs
     :members:
 
+.. automodule::   ModifyRevitLinksWorksetByList
+    :members:
+
+.. automodule::   ModifyRevitLinksWorksetInstanceToType
+    :members:
+
+.. automodule::   ModifyRevitLinksWorksetTypeToInstance
+    :members:
+
 Reporting element properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -67,6 +76,8 @@ Modules useful when running batch processor without its user interface.
 .. automodule:: Pre_BuildFileList
     :members:
 
+.. _UI Flow :
+
 File selection UI
 """"""""""""""""""""
 
@@ -74,6 +85,16 @@ File selection UI
     :members:
 
 .. automodule:: UIFileSelect
+    :members:
+
+
+Batch Process - Post processing Flows
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: Post_CombineReports
+    :members:
+
+.. automodule:: Post_AutoFiling
     :members:
 
 Using Shapely and data extracted from Revit

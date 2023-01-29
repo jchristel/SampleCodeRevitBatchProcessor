@@ -7,6 +7,7 @@ Provides a file selection UI with options for
     - Number of task files to be written out
     - BIM 360 file support
 
+Also refer to flow: :ref:`UI Flow`
 
 .. autoclass:: FileItem.MyFileItem
     :members:

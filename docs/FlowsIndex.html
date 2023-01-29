@@ -50,6 +50,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-ModifyAddSharedParas">Modifying element properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ReportGridsLevels">Reporting element properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch-process-pre-processing-flows">Batch Process - Pre processing Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Post_CombineReports">Batch Process - Post processing Flows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-DataShapely">Using Shapely and data extracted from Revit</a></li>
 </ul>
 </li>
@@ -859,6 +860,172 @@ This is a sample only since the code below uses the default method RevitWorksets
 </dd></dl>
 
 </section>
+<span class="target" id="module-ModifyRevitLinksWorksetByList"></span><section id="link-workset-updates-by-list">
+<h3>Link workset updates - by list.<a class="headerlink" href="#link-workset-updates-by-list" title="Permalink to this headline">¶</a></h3>
+<p>This flow demonstrates how to change revit link instance and type worksets based on a list.</p>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>open local copy of model</p></li>
+<li><p>open all worksets</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetByList.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetByList.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetByList.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetByList.ModifyRevitLinkData">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetByList.</span></span><span class="sig-name descname"><span class="pre">ModifyRevitLinkData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revitFilePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetByList.ModifyRevitLinkData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method moving revit link instances and types to the same workset as defined in list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revitFilePath</strong> (<em>str</em>) – The current model file path.</p></li>
+<li><p><strong>linkData</strong> (<em>[</em><em>[</em><em>str</em><em>]</em><em>,</em><em>[</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>,</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>,</em><em>...</em><em>]</em>) – List containing the default worksets for links. Refer to <cite>defaultWorksets_</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Result.status: True if all links where moved to their specified worksets, otherwise False.</p></li>
+<li><p>Result.message: A status message for each link instance and link type.</p></li>
+<li><p>Result.result is empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRevitLinksWorksetInstanceToType"></span><section id="link-type-workset-updates-by-instance">
+<h3>Link type workset updates - by instance.<a class="headerlink" href="#link-type-workset-updates-by-instance" title="Permalink to this headline">¶</a></h3>
+<p>This flow demonstrates how to change revit link type workset to the same as the first revit link instance of the same type.</p>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>open local copy of model</p></li>
+<li><p>open all worksets</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetInstanceToType.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetInstanceToType.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetInstanceToType.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetInstanceToType.modifyRevitLinkTypes">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetInstanceToType.</span></span><span class="sig-name descname"><span class="pre">modifyRevitLinkTypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetInstanceToType.modifyRevitLinkTypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method changing the workset of Revit link types if not on the same workset than the corresponding Revit link instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Result.status: True if all link types where moved to the same workset as the link instance of the same type, otherwise False.</p></li>
+<li><p>Result.message: A status message for each link type.</p></li>
+<li><p>Result.result is empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-ModifyRevitLinksWorksetTypeToInstance"></span><section id="link-instance-workset-updates-by-type">
+<h3>Link instance workset updates - by type.<a class="headerlink" href="#link-instance-workset-updates-by-type" title="Permalink to this headline">¶</a></h3>
+<p>This flow demonstrates how to change revit link instances worksets to the same as the corresponding revit link type workset.</p>
+<p>Notes:</p>
+<ul>
+<li><p>Revit Batch Processor settings:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>open local copy of model</p></li>
+<li><p>open all worksets</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetTypeToInstance.Output">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetTypeToInstance.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetTypeToInstance.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ModifyRevitLinksWorksetTypeToInstance.modifyRevitLinkInstance">
+<span class="sig-prename descclassname"><span class="pre">ModifyRevitLinksWorksetTypeToInstance.</span></span><span class="sig-name descname"><span class="pre">modifyRevitLinkInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyRevitLinksWorksetTypeToInstance.modifyRevitLinkInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method moving all revit link instances to the same workset as their corresponding types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Result.status: True if all link instance where moved to the same workset as the corresponding link type, otherwise False.</p></li>
+<li><p>Result.message: A status message for each link instance.</p></li>
+<li><p>Result.result is empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 <section id="module-ReportGridsLevels">
 <span id="reporting-element-properties"></span><h2>Reporting element properties<a class="headerlink" href="#module-ReportGridsLevels" title="Permalink to this headline">¶</a></h2>
@@ -1170,7 +1337,7 @@ For workset properties reported refer to <a class="reference internal" href="rev
 
 </section>
 <section id="module-script">
-<span id="file-selection-ui"></span><h3>File selection UI<a class="headerlink" href="#module-script" title="Permalink to this headline">¶</a></h3>
+<span id="file-selection-ui"></span><span id="ui-flow"></span><h3>File selection UI<a class="headerlink" href="#module-script" title="Permalink to this headline">¶</a></h3>
 <section id="the-entry-point-for-the-file-selection-gui">
 <h4>The entry point for the file selection GUI.<a class="headerlink" href="#the-entry-point-for-the-file-selection-gui" title="Permalink to this headline">¶</a></h4>
 <dl class="py function">
@@ -1384,6 +1551,119 @@ Sets the dialogue result value to False.</p>
 </dd></dl>
 
 </section>
+</section>
+</section>
+<section id="module-Post_CombineReports">
+<span id="batch-process-post-processing-flows"></span><h2>Batch Process - Post processing Flows<a class="headerlink" href="#module-Post_CombineReports" title="Permalink to this headline">¶</a></h2>
+<section id="combines-reports">
+<h3>Combines reports.<a class="headerlink" href="#combines-reports" title="Permalink to this headline">¶</a></h3>
+<p>This flow demonstrates how to combine multiple report files written per Revit project file into a single file per report type.</p>
+<p>This script can be used when:</p>
+<ul>
+<li><p>multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up</p></li>
+<li><p>single session of Revit Batch Processor is used</p></li>
+<li><p>this can either be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>started from a batch file after Revit Batch Processor is finished</p></li>
+<li><p>started as a post - process script in the Revit Batch Processor UI</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="Post_CombineReports.Output">
+<span class="sig-prename descclassname"><span class="pre">Post_CombineReports.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Post_CombineReports.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-Post_AutoFiling"></span><section id="automated-filing">
+<h3>Automated filing.<a class="headerlink" href="#automated-filing" title="Permalink to this headline">¶</a></h3>
+<p>This flow demonstrates how to file incoming models into as given folder structure and keep a record of date and revision of files received.</p>
+<p>The given folder structure includes a NavisWorks federated model folder where all .nwc files are stored. In order to replace existing files in that location, incoming files are stripped of their revision information contained within the file name.</p>
+<p>This script can be used when:</p>
+<ul>
+<li><p>multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up</p></li>
+<li><p>single session of Revit Batch Processor is used</p></li>
+<li><p>this can either be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>started from a batch file after Revit Batch Processor is finished</p></li>
+<li><p>started as a post - process script in the Revit Batch Processor UI</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="py function">
+<dt class="sig sig-object py" id="Post_AutoFiling.Output">
+<span class="sig-prename descclassname"><span class="pre">Post_AutoFiling.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Post_AutoFiling.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Post_AutoFiling.CreateTargetFolder">
+<span class="sig-prename descclassname"><span class="pre">Post_AutoFiling.</span></span><span class="sig-name descname"><span class="pre">CreateTargetFolder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">targetLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folderName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Post_AutoFiling.CreateTargetFolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up dated model incoming folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>targetLocation</strong> (<em>str</em>) – Directory in which to create a new folder</p></li>
+<li><p><strong>folderName</strong> (<em>str</em>) – New folder name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if folder was created successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Post_AutoFiling.MoveFiles">
+<span class="sig-prename descclassname"><span class="pre">Post_AutoFiling.</span></span><span class="sig-name descname"><span class="pre">MoveFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Post_AutoFiling.MoveFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move files into incoming folder(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileData</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all files where moved successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Post_AutoFiling.SaveFilesReceivedList">
+<span class="sig-prename descclassname"><span class="pre">Post_AutoFiling.</span></span><span class="sig-name descname"><span class="pre">SaveFilesReceivedList</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Post_AutoFiling.SaveFilesReceivedList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves out a file where each row contains the dates a file was received last.</p>
+<p>Note:
+This reads the previously written received file and only overwrites the date of files a match was found for/</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if everything went well, otherwise False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 <section id="module-DataShapely">

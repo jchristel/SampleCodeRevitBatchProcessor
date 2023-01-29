@@ -1,4 +1,25 @@
-﻿#!/usr/bin/python
+﻿'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Combines reports.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to combine multiple report files written per Revit project file into a single file per report type.
+
+
+This script can be used when: 
+
+- multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up
+- single session of Revit Batch Processor is used
+
+
+- this can either be:
+
+    - started from a batch file after Revit Batch Processor is finished
+    - started as a post - process script in the Revit Batch Processor UI
+
+'''
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -61,6 +82,13 @@ if not debug_:
 
 # output messages either to batch processor (debug = False) or console (debug = True)
 def Output(message = ''):
+    '''
+    Output messages either to batch processor (debug = False) or console (debug = True)
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+    
     if not debug_:
         script_util.Output(str(message))
     else:
@@ -75,8 +103,28 @@ rootPath_ = r'C:\temp'
 
 # combine data
 Output('Writing summary Data.... start')
+
+# get the current date stamp to be used as a file prefix for the combined report
 dateStamp_ = util.GetFileDateStamp()
-util.CombineFiles(rootPath_, dateStamp_, '_CAD','.txt', dateStamp_ + '_CAD_Links_summary.txt')
+
+# combine report files based on:
+util.CombineFiles(
+    rootPath_,  # - part report location
+    dateStamp_, # - part report prefix ( same date stamp as current)
+    '_CAD',     # - part report file name suffix
+    '.txt',     # - part report file extension
+    dateStamp_ + '_CAD_Links_summary.txt'   # - combined report file name in same location as part reports
+)
+# notify users
 Output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
-util.CombineFiles(rootPath_, dateStamp_, '_RVT','.txt', dateStamp_ + '_RVT_Links_summary.txt')
+
+# combine report files based on:
+util.CombineFiles(
+    rootPath_,      # - part report location
+    dateStamp_,     # - part report prefix ( same date stamp as current)
+    '_RVT',         # - part report file name suffix
+    '.txt',         # - part report file extension
+    dateStamp_ + '_RVT_Links_summary.txt'   # - combined report file name in same location as part reports
+)
+# notify user
 Output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')

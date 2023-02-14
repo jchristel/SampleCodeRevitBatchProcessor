@@ -40,7 +40,7 @@ import Autodesk.Revit.DB as rdb
 
 import Autodesk.Revit.DB.Architecture as rdbA
 
-clr.ImportExtensions(System.Linq)
+#clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in dimensions reports

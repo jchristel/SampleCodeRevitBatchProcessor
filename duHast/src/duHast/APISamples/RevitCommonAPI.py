@@ -45,7 +45,7 @@ from duHast.APISamples import RevitGroups as rGroup
 # type checker
 #from typing import List, Callable
 
-clr.ImportExtensions(System.Linq)
+#clr.ImportExtensions(System.Linq)
 
 
 #----------------------------------------parameters-----------------------------------------------

@@ -47,9 +47,24 @@ import Autodesk.Revit.DB as rdb
 #: header used in reports
 REPORT_GRIDS_HEADER = ['HOSTFILE','ID', 'NAME', 'WORKSETNAME', 'EXTENTMAX', 'EXTENTMIN']
 
+
+def get_grids_in_model(doc):
+  '''
+  Get all grids in model
+
+  :param doc: The current model document.
+  :type doc: Autodesk.Revit.DB.Document
+  :return: A collector with all grids in model.
+  :rtype: _type_
+  '''
+
+  collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+  return collector
+
+
 # --------------------------------------------- visibility functions ------------------
 
-def _change_grids_2D (doc, grids, view):
+def change_grids_2D (doc, grids, view):
     '''
     Changes all grids in view to 2D
 
@@ -92,7 +107,7 @@ def _change_grids_2D (doc, grids, view):
     returnValue = com.InTransaction(transaction, action)
     return returnValue
 
-def _show_bubble_end (doc, grid, view, endIdentifier, showBubble):
+def show_bubble_end (doc, grid, view, endIdentifier, showBubble):
     '''
     Toggles grid bubble visibility on specified end for given grid.
 
@@ -169,8 +184,8 @@ def hide_both_bubbles (doc, grids, view):
   
     returnValue = res.Result()
     for g in grids:
-        returnValue.Update(_show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
-        returnValue.Update( _show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
+        returnValue.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
+        returnValue.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
     
     return returnValue
 
@@ -203,7 +218,7 @@ def show_bubble_zero_end (doc, grids, view):
 
     returnValue = res.Result()
     for g in grids:
-        returnValue.Update(_show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
+        returnValue.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
     
     return returnValue
 
@@ -236,7 +251,7 @@ def show_bubble_one_end (doc, grids, view):
 
     returnValue = res.Result()
     for g in grids:
-        returnValue.Update( _show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
+        returnValue.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
     
     return returnValue
 # --------------------------------------------- utility functions ------------------

@@ -29,23 +29,12 @@ Revit families parameter helper functions.
 import clr
 import System
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-clr.AddReference('System')
-from System.Collections.Generic import List
-
-
 # import common library
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples import RevitCommonAPI as com
-# utilities
-from duHast.APISamples import Utility as util
 # class used for stats reporting
 from duHast.APISamples import Result as res
-# implementation of Revit API callback required when loading families into a Revit model
-from duHast.APISamples import RevitFamilyLoadOption as famLoadOpt
-# load everything required from family load call back 
-from duHast.APISamples.RevitFamilyLoadOption import *
+
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 

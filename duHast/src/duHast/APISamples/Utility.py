@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,6 +44,11 @@ from os import path
 import codecs
 import csv
 import collections
+
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 #: default file stamp date format using underscores as delimiter: 21_03_01
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'

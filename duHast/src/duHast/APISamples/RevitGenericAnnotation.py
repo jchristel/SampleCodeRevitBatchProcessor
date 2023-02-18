@@ -39,8 +39,6 @@ from duHast.APISamples import RevitAnnotation as rAnno
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_GENERIC_ANNOTATIONS_HEADER = ['HOSTFILE', 'GENERICANNOTATIONTYPEID', 'GENERICANNOTATIONTYPENAME']

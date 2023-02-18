@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions for the file selection GUI.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,10 +34,6 @@ Helper functions for the file selection GUI.
 import clr
 import System
 import os
-
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 
 
 # import file item class

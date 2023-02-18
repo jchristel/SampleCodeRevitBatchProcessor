@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,9 +30,6 @@ This module contains a number of helper functions to get the IFCExportConfig in 
 import clr
 import System
 import sys
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 
 import Autodesk.Revit.DB as rdb
 

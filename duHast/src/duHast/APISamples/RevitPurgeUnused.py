@@ -45,10 +45,6 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-clr.AddReference('System')
-
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import Utility as util
 from duHast.APISamples import Result as res

@@ -40,7 +40,7 @@ from os import path
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
+
 
 # -------------------------------------------- common variables --------------------
 

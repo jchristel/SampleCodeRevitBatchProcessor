@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit ceilings helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,8 +39,6 @@ from duHast.APISamples import RevitPhases as rPhase
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
-clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports

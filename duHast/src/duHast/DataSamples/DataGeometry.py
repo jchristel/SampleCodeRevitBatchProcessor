@@ -30,6 +30,11 @@ Geometry data storage class.
 TODO: implement an interface 
 '''
 
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 import json
 
 class DataGeometry():

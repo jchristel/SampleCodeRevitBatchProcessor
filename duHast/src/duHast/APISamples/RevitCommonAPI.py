@@ -30,7 +30,11 @@ Common Revit API utility functions.
 #import datetime
 import System
 import clr
-import glob
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
+#import glob
 # class used for stats reporting
 from duHast.APISamples import Result as res
 
@@ -44,9 +48,6 @@ from duHast.APISamples import RevitGroups as rGroup
 
 # type checker
 #from typing import List, Callable
-
-clr.ImportExtensions(System.Linq)
-
 
 #----------------------------------------parameters-----------------------------------------------
 

@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Model health report functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -32,10 +32,6 @@ and or data can be exported to text files which can be used to visualize key met
 
 import clr
 import System
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-clr.AddReference('System')
 
 from duHast.APISamples import Utility as util
 from duHast.APISamples import RevitBIM360 as b360

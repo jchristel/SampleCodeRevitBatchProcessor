@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of functions around exporting from Revit to varies file formats.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,9 +29,6 @@ This module contains a number of functions around exporting from Revit to varies
 import clr
 import System
 import sys
-
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 
 # custom result class
 from duHast.APISamples import Result as res

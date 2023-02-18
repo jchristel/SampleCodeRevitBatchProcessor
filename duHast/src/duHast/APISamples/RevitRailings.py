@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit railings. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -36,8 +36,6 @@ from duHast.APISamples import RevitFamilyUtils as rFam
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
-
-clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports

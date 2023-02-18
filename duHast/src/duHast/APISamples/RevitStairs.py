@@ -1,4 +1,4 @@
-﻿'''
+'''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit stairs. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,7 +37,6 @@ from duHast.APISamples import Utility as util
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
-clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports

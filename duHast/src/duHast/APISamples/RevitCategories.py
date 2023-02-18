@@ -37,8 +37,6 @@ from duHast.APISamples import RevitLinks as rLink
 from duHast.APISamples import Result as res
 from duHast.APISamples import RevitLineStylesPatterns as rPat
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 import Autodesk.Revit.DB as rdb
 
 #: subcategory renaming sampled dictionary
@@ -372,7 +370,7 @@ def GetCategoryLineWeights(cat):
          where key is property description and value the property value
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
 
     :return: A dictionary.
     :rtype: dictionary {str: nullable integer}
@@ -389,7 +387,7 @@ def GetCategoryColour(cat):
          and value the property value
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
 
     :return: A dictionary.
     :rtype: dictionary {str: byte}
@@ -410,7 +408,7 @@ def GetCategoryProperties(cat, doc):
     Returns a dictionary where keys are category property names and value is the associated property value.
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
 
@@ -482,17 +480,26 @@ def SetCategoryMaterial(doc, cat, materialId):
     try:
         mat = doc.GetElement(materialId)
         def action():
-            cat.Material = mat
+            actionReturnValue = res.Result()
+            try:
+                cat.Material = mat
+                actionReturnValue.UpdateSep(True, 'Successfully set material value of subcategory')
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
+            return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory material: ' + str(rdb.Element.Name.GetValue(mat)))
         updateMat = com.InTransaction(transaction, action)
+        flag = updateMat.status
     except Exception as e:
-        print('SetCategoryMaterial ' + str(e))
         flag = False
     return flag
     
-def SetCategoryLinePattern(doc, cat, linePatternId):
+def SetCategoryLinePattern(doc, cat, linePatternId, ignoreMissingCutStyle):
     '''
     Updates line pattern property of a given category.
+
+    Note: in cases where the 'cut' property does not exist on a sub category this will return false even though the 'projection' property will most
+    likely have been updated without a problem...
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -500,6 +507,8 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
     :type cat: Autodesk.Revit.DB.Category
     :param materialId: The new material element id.
     :type materialId: Autodesk.Revit.DB.ElementId
+    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignoreMissingCutStyle: bool
 
     :return: True if line pattern property was updated successfully, otherwise False.
     :rtype: bool
@@ -508,16 +517,29 @@ def SetCategoryLinePattern(doc, cat, linePatternId):
     flag = True
     try:
         def action():
-            cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Cut)
-            cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Projection)
+            actionReturnValue = res.Result()
+            try:
+                cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Cut)
+                actionReturnValue.UpdateSep(True, 'Successfully set cut line pattern of subcategory')
+            except Exception as e:
+                if(ignoreMissingCutStyle):
+                    actionReturnValue.UpdateSep(True, 'Failed to set cut line pattern of subcategory with exception: {}. Exception ignored!'.format(e))
+                else:
+                    actionReturnValue.UpdateSep(False, 'Failed to set cut line pattern of subcategory with exception: {}'.format(e))
+            try:
+                cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Projection)
+                actionReturnValue.UpdateSep(True, 'Successfully set projection line pattern of subcategory')
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
+            return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory line pattern')
         updateLinePattern = com.InTransaction(transaction, action)
+        flag = updateLinePattern.status
     except Exception as e:
-        print('SetCategoryLinePattern ' + str(e))
         flag = False
     return flag
 
-def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
+def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection, ignoreMissingCutStyle):
     '''
     Updates line weight properties of a given category.
 
@@ -529,6 +551,8 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
     :type lineThickNessCut: int
     :param lineThicknessProjection: The projection line weight.
     :type lineThicknessProjection: int
+    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignoreMissingCutStyle: bool
     
     :return: True if line weight property was updated successfully, otherwise False.
     :rtype: bool
@@ -537,12 +561,25 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection):
     flag = True
     try:
         def action():
-            cat.SetLineWeight(lineThickNessCut, rdb.GraphicsStyleType.Cut)
-            cat.SetLineWeight(lineThicknessProjection, rdb.GraphicsStyleType.Projection)
+            actionReturnValue = res.Result()
+            try:
+                cat.SetLineWeight(lineThickNessCut, rdb.GraphicsStyleType.Cut)
+                actionReturnValue.UpdateSep(True, 'Successfully set cut line weight of subcategory')
+            except Exception as e:
+                if(ignoreMissingCutStyle):
+                    actionReturnValue.UpdateSep(True, 'Failed to set cut line weight of subcategory with exception: {}. Exception ignored!'.format(e))
+                else:
+                    actionReturnValue.UpdateSep(False, 'Failed to set cut line weight of subcategory with exception: {}'.format(e))
+            try:
+                cat.SetLineWeight(lineThicknessProjection, rdb.GraphicsStyleType.Projection)
+                actionReturnValue.UpdateSep(True, 'Successfully set projection line weight of subcategory')
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
+            return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory line weights')
         updateLineWeights = com.InTransaction(transaction, action)
+        flag = updateLineWeights.status
     except Exception as e:
-        print('SetCategoryLineWeights:' + str(e))
         flag = False
     return flag
 
@@ -568,16 +605,22 @@ def SetCategoryColour(doc, cat, red, green, blue):
     flag = True
     try:
         def action():
-            newColour = rdb.Color(red, green, blue)
-            cat.LineColor = newColour
+            actionReturnValue = res.Result()
+            try:
+                newColour = rdb.Color(red, green, blue)
+                cat.LineColor = newColour
+                actionReturnValue.UpdateSep(True, 'Successfully set colour value of subcategory')
+            except Exception as e:
+                actionReturnValue.UpdateSep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
+            return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory colour')
         updateColour = com.InTransaction(transaction, action)
+        flag = updateColour.status
     except Exception as e:
-        print('SetCategoryColour ' + str(e))
         flag = False
     return flag
 
-def SetCategoryProperties(doc, cat, properties):
+def SetCategoryProperties(doc, cat, properties, ignoreMissingCutStyle):
     '''
     Updates varies property values of a given category.
     
@@ -587,6 +630,8 @@ def SetCategoryProperties(doc, cat, properties):
     :type cat: Autodesk.Revit.DB.Category
     :param properties: List of property values to be applied to category.
     :type properties: list of dictionaries in format as per GetCategoryProperties(cat) method.
+    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignoreMissingCutStyle: bool
 
     :return: True if all properties where updated successfully, otherwise False.
     :rtype: bool
@@ -598,11 +643,11 @@ def SetCategoryProperties(doc, cat, properties):
     
     # line pattern
     linePatternId = GetSavedCategoryPropertyByName(properties, [rPat.PROPERTY_PATTERN_ID])
-    flagPattern = SetCategoryLinePattern(doc, cat, linePatternId[0])
+    flagPattern = SetCategoryLinePattern(doc, cat, linePatternId[0], ignoreMissingCutStyle)
     
     # line weights
     lineWeights = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
-    flagLineWeights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1])
+    flagLineWeights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1], ignoreMissingCutStyle)
     
     # category colour
     colourRGB = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
@@ -649,7 +694,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     '''
     Creates a new subcategory to the family category and returns it.
     
-    TODO: Bubble up exception if subcategory already exists!
+    Note: if a subcategory with the name provided already exist it will be returned instead of trying to create another one with the same name.
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -662,27 +707,36 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
 
     returnValue = res.Result()
     if (doc.IsFamilyDocument):
-        # get the family category
-        currentFamCat = doc.OwnerFamily.FamilyCategory
-        parentCategory = None
-        for mainCat in doc.Settings.Categories:
-            if (mainCat.Name == currentFamCat.Name):
-                parentCategory = mainCat
-                break
-        if(newSubCategoryName != parentCategory.Name):
-            def action():
-                actionReturnValue = res.Result()
-                try:
-                    newSubCategory = doc.Settings.Categories.NewSubcategory(parentCategory, newSubCategoryName)
-                    actionReturnValue.UpdateSep(True, 'Created subcategory ' + str(newSubCategoryName))
-                    actionReturnValue.result = newSubCategory
-                except Exception as e:
-                    actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
-                return actionReturnValue
-            transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
-            returnValue = com.InTransaction(transaction, action)
+        # check if subcategory already exists
+        if(DoesMainSubCategoryExists(doc, newSubCategoryName)):
+            # just return the already existing subcategory
+            mainSubCategories = GetMainSubCategories(doc)
+            returnValue.UpdateSep(True, 'Subcategory already in family.')
+            returnValue.result = mainSubCategories[newSubCategoryName]
         else:
-          returnValue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
+            # create a new subcategory
+            # get the family category
+            currentFamCat = doc.OwnerFamily.FamilyCategory
+            parentCategory = None
+            # get parent category object from Revit internal settings
+            for mainCat in doc.Settings.Categories:
+                if (mainCat.Name == currentFamCat.Name):
+                    parentCategory = mainCat
+                    break
+            if(newSubCategoryName != parentCategory.Name):
+                def action():
+                    actionReturnValue = res.Result()
+                    try:
+                        newSubCategory = doc.Settings.Categories.NewSubcategory(parentCategory, newSubCategoryName)
+                        actionReturnValue.UpdateSep(True, 'Created subcategory ' + str(newSubCategoryName))
+                        actionReturnValue.result = newSubCategory
+                    except Exception as e:
+                        actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
+                    return actionReturnValue
+                transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
+                returnValue = com.InTransaction(transaction, action)
+            else:
+                returnValue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
     else:
         returnValue.UpdateSep(False, 'This is not a family document!')
     return returnValue
@@ -858,7 +912,7 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
         returnValue.UpdateSep(False, 'Template category: '+ str(existingCatName) + ' does not exist in file!')
     return returnValue
 
-def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
+def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps, ignoreMissingCutStyle = False):
     '''
     Creates a new category and applies properties stored.
 
@@ -868,6 +922,8 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
     :type newCatName: str
     :param savedCatProps: Dictionary containing subcategory properties.
     :type savedCatProps: list of dictionaries in format as per GetCategoryProperties(cat) method.
+    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignoreMissingCutStyle: bool
 
     :return: 
         Result class instance.
@@ -887,14 +943,16 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps):
 
     returnValue = res.Result()
     resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
-    if(resultNewSubCat.result):
+    if(resultNewSubCat.status):
         newSubCat = resultNewSubCat.result
-        flag = SetCategoryProperties(doc, newSubCat, savedCatProps)
+        flag = SetCategoryProperties(doc, newSubCat, savedCatProps, ignoreMissingCutStyle)
         if(flag):
             returnValue.UpdateSep(True, 'Successfully created category: '+ str(newCatName))
             returnValue.result = newSubCat
         else:
             returnValue.UpdateSep(False, 'Failed to apply properties to new category: '+ str(newCatName))
+    else:
+        returnValue.UpdateSep(False, 'Failed to create new subcategory: '+ str(newCatName))
     return returnValue
 
 def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryName):
@@ -980,9 +1038,16 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
                     for elId in value:
                         el = doc.GetElement(elId)
                         paras = el.GetOrderedParameters()
+                        # find the parameter driving the subcategory
                         for p in paras:
                             if (p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB):
+                                # get the subcategory style id
                                 targetId = destinationCatIds[key]
+                                # check if a 'cut' style id exists...if not move to 'projection' instead
+                                # not sure how this works in none - english versions of Revit...
+                                if(key == 'Cut' and targetId == rdb.ElementId.InvalidElementId):
+                                    targetId = destinationCatIds['Projection']
+                                    returnValue.AppendMessage('No cut style present in family, using projection style instead')
                                 updatedPara = com.setParameterValue(p, str(targetId), doc)
                                 returnValue.Update(updatedPara)
                                 break
@@ -1109,20 +1174,25 @@ def ChangeFamilyCategory(doc, newCategoryName):
     props = {}
     for subCat in subCats:
         prop = GetCategoryProperties(subCats[subCat], doc)
-        props[subCat] = props
+        props[subCat] = prop
     
     # change family category
     changeFam = SetFamilyCategory(doc, newCategoryName)
+    returnValue.Update(changeFam)
 
     if(changeFam.status):
         # re-create custom sub categories
         for subCat in subCats:
             # only re-create custom sub categories (id greater then 0)
             if(subCats[subCat].Id.IntegerValue > 0):
-                createCat = CreateNewCategoryFromSavedProperties(doc, subCat, props[subCat])
+                # create new sub categories with flag: ignore if cut graphic style is missing set to true!
+                createCat = CreateNewCategoryFromSavedProperties(doc, subCat, props[subCat], True)
+                returnValue.Update(createCat)
                 if(createCat.status):
+                    # get the graphic style ids of the new subcategory for elements to use
+                    destinationCatIds = GetCategoryGraphicStyleIds(createCat.result)
                     # move elements back onto custom subcategories
-                    moveEl = MoveElementsToCategory(doc, elements[subCat], subCat, props[subCat])
+                    moveEl = MoveElementsToCategory(doc, elements[subCat], subCat, destinationCatIds)
                     returnValue.Update(moveEl)
                 else:
                     returnValue.Update(createCat)

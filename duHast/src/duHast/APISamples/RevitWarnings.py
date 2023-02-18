@@ -29,8 +29,6 @@ This module contains a number of helper functions relating to Revit warnings.
 import clr
 import System
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_WARNINGS_HEADER = ['HOSTFILE','ID', 'NAME', 'WARNING TYPE', 'NUMBER OF WARNINGS']

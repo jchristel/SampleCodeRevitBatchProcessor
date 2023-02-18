@@ -29,7 +29,6 @@ This module contains a number of helper functions relating to Revit view referen
 import clr
 import System
 from System.Collections.Generic import List
-clr.ImportExtensions(System.Linq)
 
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitFamilyUtils as rFamU

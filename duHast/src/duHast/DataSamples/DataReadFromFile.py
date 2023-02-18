@@ -31,6 +31,11 @@ import codecs
 import csv
 import json
 
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 from duHast.DataSamples import DataCeiling as dc
 from duHast.DataSamples import DataRoom as dr
 

@@ -37,9 +37,6 @@ from duHast.APISamples import Result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
-
 # -------------------------------------------------PATTERN PROPERTIES ------------
 
 #: pattern name

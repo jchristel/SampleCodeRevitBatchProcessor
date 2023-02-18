@@ -28,6 +28,9 @@ Revit levels helper functions.
 
 import clr
 import System
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
@@ -38,8 +41,6 @@ from duHast.APISamples import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
-clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports

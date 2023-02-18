@@ -41,9 +41,6 @@ import Autodesk.Revit.DB.Mechanical as rdbM
 import Autodesk.Revit.DB.Electrical as rdbE
 import Autodesk.Revit.DB.Plumbing as rdbP
 
-
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_REVIT_MEP_SYSTEMS_HEADER = ['HOSTFILE', 'RevitMEPSystemsTYPEID', 'RevitMEPSystemsTYPENAME']

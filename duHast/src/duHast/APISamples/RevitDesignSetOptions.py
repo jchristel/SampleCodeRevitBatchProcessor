@@ -38,8 +38,6 @@ from duHast.APISamples import Utility as util
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_DESIGNSET_HEADER = ['HOSTFILE','ID', 'NAME', 'PRIMARY OPTION', 'OTHER OPTIONS']

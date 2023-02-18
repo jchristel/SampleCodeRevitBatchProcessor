@@ -45,6 +45,11 @@ import codecs
 import csv
 import collections
 
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 #: default file stamp date format using underscores as delimiter: 21_03_01
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
 #: file stamp date format using spaces as delimiter: 21 03 01

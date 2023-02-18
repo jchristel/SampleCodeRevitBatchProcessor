@@ -30,9 +30,6 @@ import clr
 import System
 import sys
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
 # custom result class
 from duHast.APISamples import Result as res
 

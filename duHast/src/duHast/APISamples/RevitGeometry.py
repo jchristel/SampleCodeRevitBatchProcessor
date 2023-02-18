@@ -27,6 +27,11 @@ Revit geometry extraction helper functions
 #
 
 from collections import namedtuple
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 import Autodesk.Revit.DB as rdb
 
 from duHast.DataSamples import DataGeometry as dGeometry
@@ -34,7 +39,7 @@ from duHast.DataSamples import DataGeometry as dGeometry
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):
     '''
-    Returns revit point as a string.
+    Returns Revit point as a string.
 
     :param point: A revit point.
     :type point: Autodesk.Revit.DB.XYZ

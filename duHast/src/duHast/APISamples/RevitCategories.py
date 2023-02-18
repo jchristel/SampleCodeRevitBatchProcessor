@@ -37,8 +37,6 @@ from duHast.APISamples import RevitLinks as rLink
 from duHast.APISamples import Result as res
 from duHast.APISamples import RevitLineStylesPatterns as rPat
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 import Autodesk.Revit.DB as rdb
 
 #: subcategory renaming sampled dictionary
@@ -372,7 +370,7 @@ def GetCategoryLineWeights(cat):
          where key is property description and value the property value
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
 
     :return: A dictionary.
     :rtype: dictionary {str: nullable integer}
@@ -389,7 +387,7 @@ def GetCategoryColour(cat):
          and value the property value
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
 
     :return: A dictionary.
     :rtype: dictionary {str: byte}
@@ -410,7 +408,7 @@ def GetCategoryProperties(cat, doc):
     Returns a dictionary where keys are category property names and value is the associated property value.
 
     :param cat: A category.
-    :type cat: Autodesk.REvit.DB.Category
+    :type cat: Autodesk.Revit.DB.Category
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
 

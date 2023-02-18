@@ -30,6 +30,11 @@ The below function attempt to fill these buckets evenly measured on file size.
 #
 #
 
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 from duHast.UI import WorkloadBucket as wb
 
 def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):

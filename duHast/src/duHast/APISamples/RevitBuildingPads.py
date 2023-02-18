@@ -37,8 +37,6 @@ from duHast.APISamples import Utility as util
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: header used in reports
 REPORT_BUILDING_PAD_HEADER = ['HOSTFILE', 'BUILDINGPADTYPEID', 'BUILDINGPADTYPENAME']

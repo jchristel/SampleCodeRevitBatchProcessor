@@ -31,9 +31,6 @@ import clr
 import System
 import sys
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
 import Autodesk.Revit.DB as rdb
 
 #-------------------------------------------- IFC EXPORT Revit 2019 -------------------------------------

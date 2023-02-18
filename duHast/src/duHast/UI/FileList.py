@@ -36,10 +36,6 @@ import System
 import os
 
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
-
-
 # import file item class
 from duHast.UI import FileItem as fi
 # import workloader utils

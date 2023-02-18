@@ -34,10 +34,7 @@ from duHast.APISamples import Result as res
 from duHast.APISamples import Utility as util
 
 # import Autodesk
-from Autodesk.Revit.DB import View, ViewType, ViewFamilyType, ViewSheet, FilteredElementCollector, ElementId, ParameterFilterElement, ScheduleSheetInstance, ElevationMarker
-#from Autodesk.Revit.DB import *
-
-clr.ImportExtensions(System.Linq)
+import Autodesk.Revit.DB as rdb
 
 # -------------------------------------------- common variables --------------------
 #: header used in views report
@@ -60,7 +57,7 @@ def GetViewTypes(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    return FilteredElementCollector(doc).OfClass(ViewFamilyType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.ViewFamilyType)
 
 def GetViewTypeIds(doc):
     '''
@@ -74,7 +71,7 @@ def GetViewTypeIds(doc):
     '''
 
     ids = []
-    col = FilteredElementCollector(doc).OfClass(ViewFamilyType)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewFamilyType)
     ids = com.GetIdsFromElementCollector(col)
     return ids
 
@@ -90,15 +87,15 @@ def GetUsedViewTypeIdsInTheModel(doc):
     '''
 
     viewTypeIdsUsed = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and 
-        v.ViewType != ViewType.SystemBrowser and 
-        v.ViewType != ViewType.ProjectBrowser and 
-        v.ViewType != ViewType.Undefined and 
-        v.ViewType != ViewType.Internal and 
-        v.ViewType != ViewType.DrawingSheet):
+        v.ViewType != rdb.ViewType.SystemBrowser and 
+        v.ViewType != rdb.ViewType.ProjectBrowser and 
+        v.ViewType != rdb.ViewType.Undefined and 
+        v.ViewType != rdb.ViewType.Internal and 
+        v.ViewType != rdb.ViewType.DrawingSheet):
             if(v.GetTypeId() not in viewTypeIdsUsed):
                 viewTypeIdsUsed.append(v.GetTypeId())
     return viewTypeIdsUsed
@@ -130,7 +127,7 @@ def GetViewsTemplatesInInModel(doc):
     '''
 
     viewTemplates = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out templates
         if(v.IsTemplate):
@@ -149,7 +146,7 @@ def GetViewsTemplateIdsInInModel(doc):
     '''
 
     ids = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out templates
         if(v.IsTemplate):
@@ -169,16 +166,16 @@ def GetUsedViewTemplateIdsInTheModel(doc):
 
     viewTemplateIdsUsed = []
     # get all view templates assigned to views
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and 
-        v.ViewType != ViewType.SystemBrowser and 
-        v.ViewType != ViewType.ProjectBrowser and 
-        v.ViewType != ViewType.Undefined and 
-        v.ViewType != ViewType.Internal and 
-        v.ViewType != ViewType.DrawingSheet):
-            if(v.ViewTemplateId not in viewTemplateIdsUsed and v.ViewTemplateId != ElementId.InvalidElementId):
+        v.ViewType != rdb.ViewType.SystemBrowser and 
+        v.ViewType != rdb.ViewType.ProjectBrowser and 
+        v.ViewType != rdb.ViewType.Undefined and 
+        v.ViewType != rdb.ViewType.Internal and 
+        v.ViewType != rdb.ViewType.DrawingSheet):
+            if(v.ViewTemplateId not in viewTemplateIdsUsed and v.ViewTemplateId != rdb.ElementId.InvalidElementId):
                 viewTemplateIdsUsed.append(v.ViewTemplateId)
     return viewTemplateIdsUsed
 
@@ -201,7 +198,7 @@ def GetDefaultViewTypeTemplateIds(doc):
             # get the element
             vtFam = doc.GetElement(id)
             if(vtFam.DefaultTemplateId not in viewTemplateIdsUsed and 
-            vtFam.DefaultTemplateId != ElementId.InvalidElementId):
+            vtFam.DefaultTemplateId != rdb.ElementId.InvalidElementId):
                 viewTemplateIdsUsed.append(vtFam.DefaultTemplateId)
     return viewTemplateIdsUsed
 
@@ -243,7 +240,7 @@ def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
     '''
 
     viewTemplates = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out templates
         if(v.IsTemplate):
@@ -274,7 +271,19 @@ def GetAllUnusedViewTemplateIdsInModel(doc):
 # -------------------------------------------View Filters --------------------------------------------
 
 #: List of view types which can have filters applied
-VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [ViewType.FloorPlan, ViewType.CeilingPlan, ViewType.Elevation, ViewType.ThreeD, ViewType.EngineeringPlan, ViewType.AreaPlan, ViewType.Section, ViewType.Detail, ViewType.Walkthrough, ViewType.DraftingView, ViewType.Legend]
+VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [
+    rdb.ViewType.FloorPlan, 
+    rdb.ViewType.CeilingPlan, 
+    rdb.ViewType.Elevation, 
+    rdb.ViewType.ThreeD, 
+    rdb.ViewType.EngineeringPlan, 
+    rdb.ViewType.AreaPlan, 
+    rdb.ViewType.Section, 
+    rdb.ViewType.Detail, 
+    rdb.ViewType.Walkthrough, 
+    rdb.ViewType.DraftingView, 
+    rdb.ViewType.Legend
+]
 
 def GetAllAvailableFiltersInModel(doc):
     '''
@@ -286,7 +295,7 @@ def GetAllAvailableFiltersInModel(doc):
     :return: A filtered Element collector containing Autodesk.Revit.DB.ParameterFilterElement
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
-    collector = FilteredElementCollector(doc).OfClass(ParameterFilterElement)
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ParameterFilterElement)
     return collector
 
 def GetAllAvailableFilterIdsInModel(doc):
@@ -359,7 +368,7 @@ def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
     '''
 
     filtersInUse = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # cant filter out templates or templates which do not control filters to be more precise
         # views The parameter:
@@ -408,7 +417,7 @@ def GetScheduleIdsOnSheets(doc):
     '''
 
     ids=[]
-    col = FilteredElementCollector(doc).OfClass(ScheduleSheetInstance)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ScheduleSheetInstance)
     for s in col:
         if s.ScheduleId not in ids:
             ids.append(s.ScheduleId)
@@ -428,7 +437,7 @@ def GetViewsOfType(doc, viewType):
     '''
 
     views=[]
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         if(v.ViewType == viewType and v.IsTemplate == False):
             views.append(v)
@@ -445,7 +454,7 @@ def GetSheetsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    return GetViewsOfType(doc, ViewType.DrawingSheet)
+    return GetViewsOfType(doc, rdb.ViewType.DrawingSheet)
 
 def GetViewportOnSheets(doc, sheets):
     '''
@@ -510,15 +519,15 @@ def GetViewsInModel(doc, filter):
     '''
 
     views = []
-    col = FilteredElementCollector(doc).OfClass(View)
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         #filter out browser organization and other views which cant be deleted
         if(v.IsTemplate == False and filter(v) == True and 
-        v.ViewType != ViewType.SystemBrowser and 
-        v.ViewType != ViewType.ProjectBrowser and 
-        v.ViewType != ViewType.Undefined and 
-        v.ViewType != ViewType.Internal and 
-        v.ViewType != ViewType.DrawingSheet):
+        v.ViewType != rdb.ViewType.SystemBrowser and 
+        v.ViewType != rdb.ViewType.ProjectBrowser and 
+        v.ViewType != rdb.ViewType.Undefined and 
+        v.ViewType != rdb.ViewType.Internal and 
+        v.ViewType != rdb.ViewType.DrawingSheet):
             views.append(v)
     return views
 
@@ -537,7 +546,7 @@ def GetSchedulesNotOnSheets(doc):
     # get schedules on sheets
     idsOnSheets = GetScheduleIdsOnSheets(doc)
     # get all schedules in model
-    schedulesInModel = GetViewsOfType(doc, ViewType.Schedule)
+    schedulesInModel = GetViewsOfType(doc, rdb.ViewType.Schedule)
     # loop and filter out schedules not on sheets
     for schedule in schedulesInModel:
         if(schedule.Id not in idsOnSheets):
@@ -600,11 +609,11 @@ def DeleteViews(doc, viewRules, collectorViews):
     for v in collectorViews:
         # filter out revision schedules '<', sheets and other view types which can not be deleted
         if(util.EncodeAscii(v.Name)[0] != '<' and 
-        v.ViewType != ViewType.Internal and 
-        v.ViewType != ViewType.Undefined and 
-        v.ViewType != ViewType.ProjectBrowser and 
-        v.ViewType != ViewType.DrawingSheet and 
-        v.ViewType != ViewType.SystemBrowser):
+        v.ViewType != rdb.ViewType.Internal and 
+        v.ViewType != rdb.ViewType.Undefined and 
+        v.ViewType != rdb.ViewType.ProjectBrowser and 
+        v.ViewType != rdb.ViewType.DrawingSheet and 
+        v.ViewType != rdb.ViewType.SystemBrowser):
             viewCounter =+ 1
             paras = v.GetOrderedParameters()
             ruleMatch = True
@@ -673,7 +682,7 @@ def DeleteUnusedElevationViewMarkers(doc):
     '''
 
     returnValue = res.Result()
-    ele = FilteredElementCollector(doc).OfClass(ElevationMarker)
+    ele = rdb.FilteredElementCollector(doc).OfClass(rdb.ElevationMarker)
     # items to be deleted
     ids = []
     # set up view counter (how many views will be deleted)
@@ -713,7 +722,7 @@ def DeleteSheets(doc, viewRules, collectorViews):
 
     ids = []
     for v in collectorViews:
-        if(v.ViewType == ViewType.DrawingSheet):
+        if(v.ViewType == rdb.ViewType.DrawingSheet):
             paras = v.GetOrderedParameters()
             ruleMatch = True
             for paraName, paraCondition, conditionValue in viewRules:
@@ -744,9 +753,9 @@ def DeleteAllSheetsInModel(doc):
 
     returnValue = res.Result()
     ids = []
-    collectorSheets = FilteredElementCollector(doc).OfClass(View)
+    collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in collectorSheets:
-        if(v.ViewType == ViewType.DrawingSheet):
+        if(v.ViewType == rdb.ViewType.DrawingSheet):
            ids.append(v.Id)
     if (len(ids)>0):
         returnValue = com.DeleteByElementIds(doc,ids, 'deleting all sheets', 'sheets')
@@ -767,7 +776,7 @@ def GetSheetsByFilters(doc, viewRules = None):
     :rtype: list of Autodesk.Revit.DB.View
     '''
     
-    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
     views = []
     for v in collectorViews:
         # if no filter rules applied return al sheets
@@ -827,7 +836,7 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
     :type doc: Autodesk.Revit.DB.Document
     :param fileName: The fully qualified file path of the report file.
     :type fileName: str
-    :param currentFileName: The current revit file name which will be appended to data in the report.
+    :param currentFileName: The current Revit file name which will be appended to data in the report.
     :type currentFileName: str
     :param sheetProperties: List of sheet properties to be extracted from sheets.
     :type sheetProperties: list of str
@@ -906,7 +915,7 @@ def GetSheetReportData(doc, hostName):
     :rtype: list of list of str
     '''
 
-    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
     views = []
     for v in collectorViews:
         # get all parameters attached to sheet
@@ -935,7 +944,7 @@ def GetReportHeaders(doc):
     :rtype: list str
     '''
 
-    collectorViews = FilteredElementCollector(doc).OfClass(ViewSheet)
+    collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
     # copy headers list
     headers = REPORT_SHEETS_HEADER[:]
     for v in collectorViews:

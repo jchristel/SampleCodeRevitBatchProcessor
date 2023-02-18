@@ -38,8 +38,6 @@ from duHast.APISamples import Utility as util
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: Header used in reports
 REPORT_WALLS_HEADER = ['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', 'LAYERMATERIALMARK']

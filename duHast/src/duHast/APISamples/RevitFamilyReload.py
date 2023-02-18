@@ -29,8 +29,6 @@ Helper functions to load or reload families
 import clr
 import System
 
-clr.AddReference('System.Core')
-clr.ImportExtensions(System.Linq)
 clr.AddReference('System')
 from System.Collections.Generic import List
 

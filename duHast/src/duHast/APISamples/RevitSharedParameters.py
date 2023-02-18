@@ -37,8 +37,6 @@ from duHast.APISamples import Utility as util
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-clr.ImportExtensions(System.Linq)
-
 # -------------------------------------------- common variables --------------------
 #: headers used in reports
 REPORT_SHAREDPARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBINDINGS']

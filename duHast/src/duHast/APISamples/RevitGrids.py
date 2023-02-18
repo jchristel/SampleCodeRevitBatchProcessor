@@ -27,6 +27,10 @@ Revit grids helper functions.
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 import System
 
 # import common library modules
@@ -38,8 +42,6 @@ from duHast.APISamples import RevitFamilyUtils as rFamU
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
-#clr.ImportExtensions(System.Linq)
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports

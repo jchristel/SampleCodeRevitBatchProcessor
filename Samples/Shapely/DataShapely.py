@@ -43,7 +43,7 @@ import shapely.geometry as sg
 import numpy as np
 
     
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 from duHast.DataSamples import DataCeiling as dc
 from duHast.DataSamples import DataRoom as dr
 from duHast.DataSamples import DataReadFromFile as dReader

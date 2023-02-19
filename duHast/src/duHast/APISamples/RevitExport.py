@@ -31,7 +31,7 @@ import System
 import sys
 
 # custom result class
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 from System.IO import Path
 import Autodesk.Revit.DB as rdb

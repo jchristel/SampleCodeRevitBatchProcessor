@@ -39,7 +39,7 @@ import System
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitFamilyRenameFilesUtils as rFamRenameUtils
 from duHast.APISamples import RevitFamilyUtils as rFamUtils
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb

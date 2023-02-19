@@ -30,7 +30,7 @@ from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
 from duHast.APISamples import RevitCategories as rCat
 from duHast.APISamples import RevitCategoryData as rCatData
 from duHast.APISamples import IFamilyData as IFamData
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 class CategoryProcessor(IFamilyProcessor):
 

@@ -15,6 +15,7 @@ import sys
 duHastPathAPI = os.path.abspath('../../duHast/src/duHast/APISamples')
 duHastPathData = os.path.abspath('../../duHast/src/duHast/DataSamples')
 duHastPathUI = os.path.abspath('../../duHast/src/duHast/UI')
+duHastPathUtils = os.path.abspath('../../duHast/src/duHast/Utilities')
 samplePathBAT = os.path.abspath('../../Samples/BAT')
 samplePathFlows = os.path.abspath('../../Samples/Flows')
 samplePathUI = os.path.abspath('../../Samples/UI')
@@ -23,7 +24,8 @@ samplePathShapely = os.path.abspath('../../Samples/Shapely')
 sys.path += [
     duHastPathAPI, 
     duHastPathData, 
-    duHastPathUI, 
+    duHastPathUI,
+    duHastPathUtils,
     samplePathBAT, 
     samplePathFlows,
     samplePathUI,

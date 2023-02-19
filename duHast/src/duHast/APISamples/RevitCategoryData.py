@@ -27,7 +27,7 @@ Family category data class.
 #
 
 from duHast.APISamples import IFamilyData as IFamData
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitCategories as rCat
 
 # import Autodesk

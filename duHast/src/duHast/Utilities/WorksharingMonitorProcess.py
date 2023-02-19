@@ -26,8 +26,9 @@ Helper functions relating to Revit worksharing monitor process.
 #
 #
 
-from duHast.APISamples import Utility as util
-from duHast.APISamples import Result as res
+from duHast.Utilities import Utility as util
+from duHast.Utilities import Result as res
+from duHast.Utilities import SystemProcess as sp
 
 ''' 
 Process name of work sharing monitor
@@ -37,7 +38,6 @@ PROCESS_NAME_WSM = 'WorksharingMonitor.exe'
 PROCESS_MARKER_FILENAME = 'WSMProcessList'
 PROCESS_MARKER_FILE_EXTENSION = '.plist'
 
-import SystemProcess as sp
 
 # --------------------------------- worksharing monitor specific ---------------------------------------
 

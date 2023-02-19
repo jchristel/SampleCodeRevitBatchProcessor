@@ -36,13 +36,13 @@ clr.ImportExtensions(Linq)
 
 #import glob
 # class used for stats reporting
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
 import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 # importing revit groups module
 from duHast.APISamples import RevitGroups as rGroup
 

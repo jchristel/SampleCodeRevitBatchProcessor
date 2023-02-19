@@ -43,10 +43,10 @@ Note:
 import clr
 import System
 from collections import namedtuple
-from duHast.APISamples.timer import Timer
+from duHast.Utilities.timer import Timer
 
-from duHast.APISamples import Result as res
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Result as res
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDUtils
 
 # tuples containing rename directive read from file

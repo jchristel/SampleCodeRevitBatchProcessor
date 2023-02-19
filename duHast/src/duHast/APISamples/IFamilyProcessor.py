@@ -33,7 +33,7 @@ import System
 import Autodesk.Revit.DB as rdb
 import json
 from duHast.APISamples import IFamilyData as IFamData
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 class IFamilyProcessor():
     

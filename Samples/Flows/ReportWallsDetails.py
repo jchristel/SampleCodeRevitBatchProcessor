@@ -56,7 +56,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitWalls as rWall
 
 # autodesk API

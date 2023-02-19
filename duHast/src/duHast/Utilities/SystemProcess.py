@@ -28,7 +28,7 @@ Helper functions relating to system processes.
 import subprocess
 import os, signal
 
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 
 def GetAllRunningProcesses():
     '''

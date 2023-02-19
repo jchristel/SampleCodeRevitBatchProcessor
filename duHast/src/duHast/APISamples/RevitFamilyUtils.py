@@ -39,9 +39,9 @@ from System.Collections.Generic import List
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples import RevitCommonAPI as com
 # utilities
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 # class used for stats reporting
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 # implementation of Revit API callback required when loading families into a Revit model
 from duHast.APISamples import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 

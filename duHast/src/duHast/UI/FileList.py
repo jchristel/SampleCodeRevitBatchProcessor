@@ -42,7 +42,7 @@ from duHast.UI import FileItem as fi
 from duHast.UI import Workloader as wl
 
 # custom result class
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 # -------------
 # my code here:

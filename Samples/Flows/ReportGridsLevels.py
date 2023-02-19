@@ -57,7 +57,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitGrids as rGrid
 from duHast.APISamples import RevitLevels as rLevel
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 
 # flag whether this runs in debug or not
 debug_ = False

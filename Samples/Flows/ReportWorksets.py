@@ -56,7 +56,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitWorksets as rWks
 
 clr.AddReference('System.Core')

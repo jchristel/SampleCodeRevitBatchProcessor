@@ -33,10 +33,10 @@ and or data can be exported to text files which can be used to visualize key met
 import clr
 import System
 
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitBIM360 as b360
 from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 from duHast.APISamples import RevitDesignSetOptions as rDoS
 from duHast.APISamples import RevitWarnings as rWarn
 from duHast.APISamples import RevitWorksets as rWork

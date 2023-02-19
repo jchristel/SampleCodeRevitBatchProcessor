@@ -34,7 +34,7 @@ from System.Collections.Generic import List
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitFamilyUtils as rFamUtils
 from duHast.APISamples import RevitLinks as rLink
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 from duHast.APISamples import RevitLineStylesPatterns as rPat
 
 import Autodesk.Revit.DB as rdb

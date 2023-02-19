@@ -46,8 +46,8 @@ import clr
 import System
 
 from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import Utility as util
-from duHast.APISamples import Result as res
+from duHast.Utilities import Utility as util
+from duHast.Utilities import Result as res
 from duHast.APISamples import RevitAnnotation as rAnn
 from duHast.APISamples import RevitBuildingPads as rBuildP
 from duHast.APISamples import RevitCeilings as rCeil
@@ -68,7 +68,7 @@ from duHast.APISamples import RevitStairs as rStair
 from duHast.APISamples import RevitViews as rView
 from duHast.APISamples import RevitViewReferencing as rViewRef
 from duHast.APISamples import RevitWalls as rWall
-from duHast.APISamples.timer import Timer
+from duHast.Utilities.timer import Timer
 from duHast.APISamples import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb

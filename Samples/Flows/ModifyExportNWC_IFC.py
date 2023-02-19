@@ -58,7 +58,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 from duHast.APISamples import RevitExport as rex
 
 # autodesk API

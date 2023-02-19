@@ -10,7 +10,7 @@ Welcome to Sample Code Revit Batch Processor's documentation!
    familyReporting
    ModelHealth
    dataExport
-   misc
+   utilities
    FlowsIndex
    
 

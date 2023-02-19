@@ -29,7 +29,7 @@ Family shared parameter data processor class.
 from duHast.APISamples.IFamilyProcessor import IFamilyProcessor
 from duHast.APISamples import RevitSharedParameterData as rSharedData
 from duHast.APISamples import IFamilyData as IFamData
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 class SharedParameterProcessor(IFamilyProcessor):
 

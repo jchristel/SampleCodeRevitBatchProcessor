@@ -58,7 +58,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitLinks as rLink
 
 # flag whether this runs in debug or not

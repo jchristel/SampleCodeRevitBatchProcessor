@@ -58,9 +58,9 @@ import os
 import json
 
 # custom result class from common library
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 # library from common library
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Utility as util
 
 #: global variable controlling debug output
 debugMode_ = False

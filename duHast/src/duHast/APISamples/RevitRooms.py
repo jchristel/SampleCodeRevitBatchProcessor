@@ -31,7 +31,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples import DataRoom as dRoom

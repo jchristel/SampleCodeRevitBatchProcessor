@@ -52,8 +52,8 @@ import threading
 import os
 
 from duHast.APISamples import RevitFamilyBaseDataUtils as rFamBaseDataUtils
-from duHast.APISamples.timer import Timer
-from duHast.APISamples import Result as res
+from duHast.Utilities.timer import Timer
+from duHast.Utilities import Result as res
 
 def _ExtractParentFamilies(currentParent, treePath):
     '''

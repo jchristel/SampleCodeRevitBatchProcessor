@@ -30,8 +30,8 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import Result as res
-from duHast.APISamples import Utility as util
+from duHast.Utilities import Result as res
+from duHast.Utilities import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -33,7 +33,7 @@ import System
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples import RevitCommonAPI as com
 # class used for stats reporting
-from duHast.APISamples import Result as res
+from duHast.Utilities import Result as res
 
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb

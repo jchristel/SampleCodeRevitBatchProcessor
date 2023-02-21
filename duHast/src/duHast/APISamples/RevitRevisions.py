@@ -202,3 +202,92 @@ def AddRevisionsToSheet(doc, sheet, revIds):
     transaction = rdb.Transaction(doc, "adding revision to sheet")
     returnValue = com.InTransaction(transaction, action)
     return returnValue
+
+# ---------------------------------------- deleting revisions --------------------------------------------
+
+def _check_Revision_against_filters(revision, revision_description_filter):
+    '''
+    Checks a revision against a list of revision filters and returns the outcome of all checks.
+
+    :param revision: The revision to be checked
+    :type revision: Autodesk.Revit.DB.Revision
+    :param revision_description_filter: List of revision filters (refer to REVISION_KEEP_RULES at end of script)
+    :type revision_description_filter: [parameter name, comparison function, comparison value]
+    
+    :return: A boolean representing the outcome of all checks performed (logical AND)
+    :rtype: bool
+    '''
+
+    paras = revision.GetOrderedParameters()
+    ruleMatch = True
+    for paraName, paraCondition, conditionValue in revision_description_filter:
+        for p in paras:
+            if(p.Definition.Name == paraName):
+                match = com.CheckParameterValue(p, paraCondition, conditionValue)
+                ruleMatch = ruleMatch and match
+    return ruleMatch
+
+def delete_all_revisions_in_model(doc, revision_description_filter = []):
+    '''
+    Deletes all revision in file passing filter in one transaction.
+
+    :param doc: Current model document
+    :type doc: Autodesk.Revit.DB.Document
+    :param revisionDescriptionFilter: list of filters, defaults to []
+    :type revisionDescriptionFilter: list, optional
+
+    :return: 
+        Result class instance.
+
+        - result.status. True if all possible revisions where deleted successfully, otherwise False.
+        - result.message will contain the name(s) of the revisions excluded by filter and number of revisions deleted.
+        - result.result empty list
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain generic exception message.
+        - result.result will be empty
+
+    :rtype: :class:`.Result`
+    '''
+
+    return_value = res.Result()
+    to_delete = []
+    filtered_at_least_one = False
+    revisions = rdb.FilteredElementCollector(doc).OfClass(rdb.Revision)
+    for rev in revisions:
+        if(len(revision_description_filter) > 0):
+            ruleMatch = _check_Revision_against_filters(rev, revision_description_filter)
+            if (ruleMatch == True):
+                # delete view
+                to_delete.append(rev.Id)
+            else:
+                filtered_at_least_one = True
+                return_value.AppendMessage('Revision: {} {} will not be deleted.'.format(rev.Description, rev.RevisionDate))
+        else:
+            to_delete.append(rev.Id)
+       
+    # check if any revisions to delete
+    if(len(to_delete) > 0 ): 
+        # check if at least one revision was filtered out and will therefore remain in the file
+        # if not remove one manually since Revit requires at least one revision in the file
+        if(filtered_at_least_one == False):
+            # one revision need to stay in file...
+            to_delete.pop()
+        else:
+            # delete them all
+            def action():
+                action_return_value = res.Result()
+                action_return_value.AppendMessage ('Attempting to delete revisions: {}'.format(len(to_delete)))
+                try:
+                    doc.Delete(to_delete.ToList[rdb.ElementId]())
+                    action_return_value.AppendMessage('Deleted {} revisions.'.format(len(to_delete)))              
+                except Exception as e:
+                    action_return_value.UpdateSep(False, 'Failed to delete revisions with exception: {}'.format(e))
+                return action_return_value
+            transaction = rdb.Transaction(doc, 'Deleting Revisions')
+            return_value.Update(com.InTransaction(transaction, action))
+    else:
+        return_value.UpdateSep(False, 'Only one revision in file which can not be deleted!')
+    return return_value

@@ -91,27 +91,27 @@ def change_grids_2D (doc, grids, view):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # needs to run in a transaction
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         grid_counter = 0
         for g in grids:
             grid_counter = grid_counter + 1
             try:
                 g.SetDatumExtentType(rdb.DatumEnds.End1, view, rdb.DatumExtentType.ViewSpecific)
                 g.SetDatumExtentType(rdb.DatumEnds.End0, view, rdb.DatumExtentType.ViewSpecific)
-                actionReturnValue.UpdateSep(True, 'Changed grid {} to 2D.'.format(g.Name))
+                action_return_value.UpdateSep(True, 'Changed grid {} to 2D.'.format(g.Name))
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to change grid {} to 2D with exception: {}'.format(g.Name, e))
+                action_return_value.UpdateSep(False, 'Failed to change grid {} to 2D with exception: {}'.format(g.Name, e))
         if(grid_counter == 0):
-            actionReturnValue.UpdateSep(True, 'No grids visible in view {}'.format(view.Name))
-        return actionReturnValue
+            action_return_value.UpdateSep(True, 'No grids visible in view {}'.format(view.Name))
+        return action_return_value
     transaction = rdb.Transaction(doc, "Grids to 2D")
-    returnValue = com.InTransaction(transaction, action)
-    return returnValue
+    return_value = com.InTransaction(transaction, action)
+    return return_value
 
-def show_bubble_end (doc, grid, view, end_identifier, showBubble):
+def show_bubble_end (doc, grid, view, end_identifier, show_bubble):
     '''
     Toggles grid bubble visibility on specified end for given grid.
 
@@ -121,8 +121,8 @@ def show_bubble_end (doc, grid, view, end_identifier, showBubble):
     :type grid: Autodesk.Revit.DB.Grid
     :param view: The view in which a grid bubbles visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
-    :param showBubble: True bubble will switched on, False it will be switched off
-    :type showBubble: bool
+    :param show_bubble: True bubble will switched on, False it will be switched off
+    :type show_bubble: bool
 
     :return: 
         Result class instance.
@@ -140,28 +140,28 @@ def show_bubble_end (doc, grid, view, end_identifier, showBubble):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # needs to run in a transaction
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
-            if(showBubble):
+            if(show_bubble):
                 grid.ShowBubbleInView(end_identifier, view)
-                actionReturnValue.UpdateSep(True, 'Set grid {} bubble to visible at end: {}'.format(grid.Name, end_identifier))
+                action_return_value.UpdateSep(True, 'Set grid {} bubble to visible at end: {}'.format(grid.Name, end_identifier))
             else:
                 grid.HideBubbleInView(end_identifier, view)
-                actionReturnValue.UpdateSep(True, 'Set grid {} bubble to invisible at end: {}'.format(grid.Name, end_identifier))
+                action_return_value.UpdateSep(True, 'Set grid {} bubble to invisible at end: {}'.format(grid.Name, end_identifier))
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to change grid {} bubble visibility at end {} with exception: {}'.format(grid.Name, end_identifier, e))
-        return actionReturnValue
+            action_return_value.UpdateSep(False, 'Failed to change grid {} bubble visibility at end {} with exception: {}'.format(grid.Name, end_identifier, e))
+        return action_return_value
     
-    transaction = rdb.Transaction(doc, "Toggle Bubble. {}".format(showBubble))
-    returnValue = com.InTransaction(transaction, action)
-    return returnValue
+    transaction = rdb.Transaction(doc, "Toggle Bubble. {}".format((show_bubble)))
+    return_value = com.InTransaction(transaction, action)
+    return return_value
 
 def hide_both_bubbles (doc, grids, view):
     '''
-    Hides both bobbles of grids in given view.
+    Hides both bubbles of grids in given view.
 
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -186,12 +186,12 @@ def hide_both_bubbles (doc, grids, view):
     :rtype: :class:`.Result`
     '''
   
-    returnValue = res.Result()
+    return_value = res.Result()
     for g in grids:
-        returnValue.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
-        returnValue.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
+        return_value.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
+        return_value.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
     
-    return returnValue
+    return return_value
 
 def show_bubble_zero_end (doc, grids, view):
     '''
@@ -220,11 +220,11 @@ def show_bubble_zero_end (doc, grids, view):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     for g in grids:
-        returnValue.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
+        return_value.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
     
-    return returnValue
+    return return_value
 
 def show_bubble_one_end (doc, grids, view):
     '''
@@ -253,11 +253,11 @@ def show_bubble_one_end (doc, grids, view):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     for g in grids:
-        returnValue.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
+        return_value.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
     
-    return returnValue
+    return return_value
 
 def toggle_bubble_end (doc, grid, view, end_identifier):
     '''
@@ -289,23 +289,23 @@ def toggle_bubble_end (doc, grid, view, end_identifier):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     def action():
         try:
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             endBubbleOne = grid.IsBubbleVisibleInView(end_identifier,view)
             if(endBubbleOne == False):
                 grid.ShowBubbleInView(end_identifier, view)
-                actionReturnValue.UpdateSep(True, 'Set grid {} bubble to visible at end: {}.'.format(grid.Name, end_identifier))
+                action_return_value.UpdateSep(True, 'Set grid {} bubble to visible at end: {}.'.format(grid.Name, end_identifier))
             else:
                 grid.HideBubbleInView(end_identifier, view)
-                actionReturnValue.UpdateSep(True, 'Set grid {} bubble to not visible at end: {}.'.format(grid.Name, end_identifier))
+                action_return_value.UpdateSep(True, 'Set grid {} bubble to not visible at end: {}.'.format(grid.Name, end_identifier))
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to change grid {} bubble visibility at end: {} with exception: {}'.format(grid.Name, end_identifier, e))
-        return actionReturnValue
+            action_return_value.UpdateSep(False, 'Failed to change grid {} bubble visibility at end: {} with exception: {}'.format(grid.Name, end_identifier, e))
+        return action_return_value
     transaction = rdb.Transaction(doc, "Toggle Bubble.")
-    returnValue = com.InTransaction(transaction, action)
-    return returnValue
+    return_value = com.InTransaction(transaction, action)
+    return return_value
 
 def toggle_bubble_one_end (doc, grids, view ):
     '''
@@ -334,10 +334,10 @@ def toggle_bubble_one_end (doc, grids, view ):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     for g in grids:
-        returnValue.Update( toggle_bubble_end(doc, g, view, rdb.DatumEnds.End1))
-    return returnValue
+        return_value.Update( toggle_bubble_end(doc, g, view, rdb.DatumEnds.End1))
+    return return_value
     
 def toggle_bubble_zero_end (doc, grids, view ):
     '''
@@ -366,10 +366,10 @@ def toggle_bubble_zero_end (doc, grids, view ):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     for g in grids:
-        returnValue.Update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End0))
-    return returnValue
+        return_value.Update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End0))
+    return return_value
 
 # --------------------------------------------- utility functions ------------------
 

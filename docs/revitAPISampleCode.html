@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 0.0.2 documentation</title>
+    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 0.0.3 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -16,13 +16,13 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 0.0.2 documentation" href="index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.3 documentation" href="index.html" />
     <link rel="next" title="Revit API family property reporting." href="familyReporting.html" />
     <link rel="prev" title="Revit Batch Processor - File Selection User Interface." href="fileSelectUI.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 0.0.2 documentation</p>
+    <p>Sample Code Revit Batch Processor 0.0.3 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>Revit API sample code.</h1></div>
@@ -84,7 +84,7 @@
 <li class="toctree-l1"><a class="reference internal" href="familyReporting.html">Revit API family property reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ModelHealth.html">Model Health Reporting.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">Misc modules and classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Misc modules and classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="FlowsIndex.html">Flows</a></li>
 </ul>
 
@@ -329,7 +329,7 @@ Otherwise the actual parameter value as per value getter method.</p>
 </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -370,7 +370,7 @@ The function needs to accept these args: parameter, new parameter value as strin
 </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -750,7 +750,7 @@ This also includes a check as to whether elements returned as dependent are orph
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -778,7 +778,7 @@ This also includes a check as to whether elements returned as dependent are orph
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -950,7 +950,7 @@ This also includes a check as to whether elements returned as dependent are orph
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SyncFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SyncFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactCentralFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.APISamples.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SyncFile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SyncFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactCentralFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.Utilities.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SyncFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronizes a Revit central file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -967,14 +967,14 @@ This also includes a check as to whether elements returned as dependent are orph
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveAsWorksharedFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsWorksharedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFileName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.APISamples.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SaveAsWorksharedFile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveAsWorksharedFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fullFileName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.Utilities.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SaveAsWorksharedFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a Revit project file as a workshared file.</p>
 <p>Save as options are:
 Workset configuration is : Ask users on open to specify.
@@ -996,7 +996,7 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1026,7 +1026,7 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1053,14 +1053,14 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SaveFile">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.APISamples.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SaveFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compactFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.Utilities.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.SaveFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves a non workshared Revit file. To be used for families and non workshared revit files only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1083,14 +1083,14 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.EnableWorksharing">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">EnableWorksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetNameGridLevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.APISamples.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.EnableWorksharing" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">EnableWorksharing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetNameGridLevel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Shared</span> <span class="pre">Levels</span> <span class="pre">and</span> <span class="pre">Grids'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worksetName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Workset1'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">duHast.Utilities.Result.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.EnableWorksharing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enables worksharing in a non workshared revit project file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1113,7 +1113,7 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1138,7 +1138,7 @@ File will bew compacted on save.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2444,7 +2444,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dd><p>Returns the line weight properties (cut and projection) as a dictionary         where key is property description and value the property value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary.</p>
@@ -2461,7 +2461,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dd><p>Returns the colour properties (RGB) and values as a dictionary where key is colour name         and value the property value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p>
+<dd class="field-odd"><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A dictionary.</p>
@@ -2479,7 +2479,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p></li>
+<li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 </ul>
 </dd>
@@ -2535,14 +2535,17 @@ value: dictionary : key sub cat name, value: subcategory</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryLinePattern">
-<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLinePattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linePatternId</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLinePattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLinePattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linePatternId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignoreMissingCutStyle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLinePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates line pattern property of a given category.</p>
+<p>Note: in cases where the ‘cut’ property does not exist on a sub category this will return false even though the ‘projection’ property will most
+likely have been updated without a problem…</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 <li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
 <li><p><strong>materialId</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The new material element id.</p></li>
+<li><p><strong>ignoreMissingCutStyle</strong> (<em>bool</em>) – If true will not flag an exception if applying styles fails on missing cut style.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2556,7 +2559,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryLineWeights">
-<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLineWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThickNessCut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThicknessProjection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLineWeights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryLineWeights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThickNessCut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineThicknessProjection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignoreMissingCutStyle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryLineWeights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates line weight properties of a given category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2565,6 +2568,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
 <li><p><strong>lineThickNessCut</strong> (<em>int</em>) – The cut line weight.</p></li>
 <li><p><strong>lineThicknessProjection</strong> (<em>int</em>) – The projection line weight.</p></li>
+<li><p><strong>ignoreMissingCutStyle</strong> (<em>bool</em>) – If true will not flag an exception if applying styles fails on missing cut style.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2601,7 +2605,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.SetCategoryProperties">
-<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryProperties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">SetCategoryProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignoreMissingCutStyle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.SetCategoryProperties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates varies property values of a given category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2609,6 +2613,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 <li><p><strong>cat</strong> (<em>Autodesk.Revit.DB.Category</em>) – A category.</p></li>
 <li><p><strong>properties</strong> (<em>list of dictionaries in format as per GetCategoryProperties</em><em>(</em><em>cat</em><em>) </em><em>method.</em>) – List of property values to be applied to category.</p></li>
+<li><p><strong>ignoreMissingCutStyle</strong> (<em>bool</em>) – If true will not flag an exception if applying styles fails on missing cut style.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2644,7 +2649,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <dt class="sig sig-object py" id="RevitCategories.CreateNewSubCategoryToFamilyCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewSubCategoryToFamilyCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newSubCategoryName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewSubCategoryToFamilyCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new subcategory to the family category and returns it.</p>
-<p>TODO: Bubble up exception if subcategory already exists!</p>
+<p>Note: if a subcategory with the name provided already exist it will be returned instead of trying to create another one with the same name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2746,14 +2751,14 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCategories.CreateNewCategoryFromSavedProperties">
-<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewCategoryFromSavedProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCatName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savedCatProps</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewCategoryFromSavedProperties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RevitCategories.</span></span><span class="sig-name descname"><span class="pre">CreateNewCategoryFromSavedProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newCatName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savedCatProps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignoreMissingCutStyle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCategories.CreateNewCategoryFromSavedProperties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new category and applies properties stored.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2761,6 +2766,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 <li><p><strong>newCatName</strong> (<em>str</em>) – The new sub category name.</p></li>
 <li><p><strong>savedCatProps</strong> (<em>list of dictionaries in format as per GetCategoryProperties</em><em>(</em><em>cat</em><em>) </em><em>method.</em>) – Dictionary containing subcategory properties.</p></li>
+<li><p><strong>ignoreMissingCutStyle</strong> (<em>bool</em>) – If true will not flag an exception if applying styles fails on missing cut style.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2779,7 +2785,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2812,7 +2818,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2846,7 +2852,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2899,7 +2905,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2933,7 +2939,7 @@ value: dictionary : key sub cat name, value: subcategory</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4298,7 +4304,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4399,7 +4405,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4434,7 +4440,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4507,7 +4513,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4579,7 +4585,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4611,7 +4617,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4644,7 +4650,7 @@ Gets all unused filled region type ids in model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4900,7 +4906,7 @@ with parameter values in family.</p>
 </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5388,7 +5394,7 @@ bool: exclude shared families</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5411,7 +5417,7 @@ bool: exclude shared families</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5998,7 +6004,7 @@ In the case that no wall instance using any of the types is placed this will ret
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitGeometry.GetPointAsString">
 <span class="sig-prename descclassname"><span class="pre">RevitGeometry.</span></span><span class="sig-name descname"><span class="pre">GetPointAsString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGeometry.GetPointAsString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns revit point as a string.</p>
+<dd><p>Returns Revit point as a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>point</strong> (<em>Autodesk.Revit.DB.XYZ</em>) – A revit point.</p>
@@ -6843,6 +6849,289 @@ Arcs, circles will be tessellated to polygons.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.get_grids_in_model">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">get_grids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.get_grids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all grids in model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector with all grids in model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.change_grids_2D">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">change_grids_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.change_grids_2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes all grids in view to 2D</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – List of grids to be changed to 2D.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to change the grids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids where set to 2D, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) changed to 2D</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.show_bubble_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">show_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_bubble</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.show_bubble_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on specified end for given grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid of which a bubbles visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+<li><p><strong>show_bubble</strong> (<em>bool</em>) – True bubble will switched on, False it will be switched off</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility was set successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.hide_both_bubbles">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">hide_both_bubbles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.hide_both_bubbles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hides both bubbles of grids in given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid of which a bubbles visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility was switched off successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.show_bubble_zero_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">show_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.show_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on grid bubbles at zero end in specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which a bubbles visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility at zero end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.show_bubble_one_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">show_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.show_bubble_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on grid bubbles at One end in specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which a bubbles visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility at one end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.toggle_bubble_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.toggle_bubble_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on specified end for given grid in given views.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grid</strong> (<em>Autodesk.Revit.DB.Grid</em>) – The grid of which a bubbles visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.DatumEnds</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+<li><p><strong>end_identifier</strong> – The end of the grid to be modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.toggle_bubble_one_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.toggle_bubble_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on one end for given grids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which a bubbles visibility at one end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitGrids.toggle_bubble_zero_end">
+<span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">toggle_bubble_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.toggle_bubble_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles grid bubble visibility on zero end for given grids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>grids</strong> (<em>[</em><em>Autodesk.Revit.DB.Grid</em><em>]</em>) – The grids of which a bubbles visibility at zero end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a grid bubbles visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all grids bubble(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the grid(s) where a bubble visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the grid name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitGrids.GetAllGridHeadsByCategory">
 <span class="sig-prename descclassname"><span class="pre">RevitGrids.</span></span><span class="sig-name descname"><span class="pre">GetAllGridHeadsByCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitGrids.GetAllGridHeadsByCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all grid head types in the model.</p>
@@ -7047,6 +7336,272 @@ Arcs, circles will be tessellated to polygons.</p>
 <dt class="sig sig-object py" id="RevitLevels.REPORT_LEVELS_HEADER">
 <span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">REPORT_LEVELS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'WORKSETNAME',</span> <span class="pre">'ELEVATION']</span></em><a class="headerlink" href="#RevitLevels.REPORT_LEVELS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.change_levels_2D">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">change_levels_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.change_levels_2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes all levels in view to 2D</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – List of levels to be changed to 2D.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to change the levels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels where set to 2D, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) changed to 2D</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.show_head_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">show_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_head</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.show_head_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles level head visibility on specified end for given level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+<li><p><strong>show_head</strong> (<em>bool</em>) – True head will switched on, False it will be switched off</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility was set successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.hide_both_heads">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">hide_both_heads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.hide_both_heads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hides both heads of levels in given view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility was switched off successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.show_head_zero_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">show_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.show_head_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on level heads at zero end in specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at zero end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.show_head_one_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">show_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.show_head_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on level heads at One end in specified view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at one end was set to visible successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was set.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.toggle_head_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">toggle_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.toggle_head_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles level head visibility on specified end for given level in given views.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a heads visibility is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.DatumEnds</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+<li><p><strong>end_identifier</strong> – The end of the level to be modified.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.toggle_head_one_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">toggle_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.toggle_head_one_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles level head visibility on one end for given levels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a heads visibility at one end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all levels head(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitLevels.toggle_head_zero_end">
+<span class="sig-prename descclassname"><span class="pre">RevitLevels.</span></span><span class="sig-name descname"><span class="pre">toggle_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitLevels.toggle_head_zero_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles level head visibility on zero end for given levels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
+<li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – The levels of which a head visibility at zero end is to be toggled.</p></li>
+<li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which a level heads visibility is to be toggled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all level head(s) visibility at one end was changed successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the level(s) where a head visibility was changed.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message including the level name.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -7297,7 +7852,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7322,7 +7877,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7347,7 +7902,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7403,7 +7958,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7428,7 +7983,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7607,7 +8162,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7634,7 +8189,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7786,7 +8341,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7814,7 +8369,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7843,7 +8398,7 @@ This method can be used to safely delete unused level symbols or families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -9845,7 +10400,7 @@ This method can be used to safely delete unused pipe symbols and families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -9883,7 +10438,7 @@ This method can be used to safely delete unused pipe symbols and families from t
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -9966,7 +10521,7 @@ these keys do not get purged by Revit’s native purge unused and would therefor
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -10801,7 +11356,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -10832,7 +11387,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -10863,7 +11418,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -10895,7 +11450,39 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitRevisions.delete_all_revisions_in_model">
+<span class="sig-prename descclassname"><span class="pre">RevitRevisions.</span></span><span class="sig-name descname"><span class="pre">delete_all_revisions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_description_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitRevisions.delete_all_revisions_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all revision in file passing filter in one transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>revisionDescriptionFilter</strong> (<em>list</em><em>, </em><em>optional</em>) – list of filters, defaults to []</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all possible revisions where deleted successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the revisions excluded by filter and number of revisions deleted.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11339,7 +11926,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11523,7 +12110,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11556,7 +12143,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11751,7 +12338,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11783,7 +12370,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11813,7 +12400,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11846,7 +12433,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11880,7 +12467,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -11958,7 +12545,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -12057,7 +12644,7 @@ TODO: repetitive code…Consider generic function!</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13719,7 +14306,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13744,7 +14331,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13766,7 +14353,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13792,7 +14379,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13814,7 +14401,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13860,7 +14447,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -13874,7 +14461,7 @@ view reference types and view continuation types in the model.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>fileName</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
-<li><p><strong>currentFileName</strong> (<em>str</em>) – The current revit file name which will be appended to data in the report.</p></li>
+<li><p><strong>currentFileName</strong> (<em>str</em>) – The current Revit file name which will be appended to data in the report.</p></li>
 <li><p><strong>sheetProperties</strong> (<em>list of str</em>) – List of sheet properties to be extracted from sheets.</p></li>
 </ul>
 </dd>
@@ -13887,7 +14474,7 @@ view reference types and view continuation types in the model.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -14560,7 +15147,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -14605,7 +15192,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -14642,7 +15229,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -14791,7 +15378,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -14911,7 +15498,7 @@ In the case that no wall instance using any of the types is placed this will ret
 </p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="misc.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

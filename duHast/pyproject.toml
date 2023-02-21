@@ -1,9 +1,15 @@
+[project]
+readme = "README.md"
+
 [build-system]
 requires = ["setuptools==43.0.0", "wheel==0.33.6"]
 build-backend = "setuptools.build_meta"
 
+[project.urls]
+Homepage = "https://github.com/jchristel/SampleCodeRevitBatchProcessor"
+
 [tool.bumpver]
-current_version = "0.0.2"
+current_version = "0.0.3"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message  = "Bump version {old_version} -> {new_version}"
 commit          = true
@@ -12,5 +18,5 @@ push            = false
 
 [tool.bumpver.file_patterns]
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
-"../docsource/source/conf.py" =['release = "{version}"']
+"../docsource/source/conf.py" = ['release = "{version}"']
 "setup.cfg" = ['version = {version}']

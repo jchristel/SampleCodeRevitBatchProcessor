@@ -1,7 +1,7 @@
 Misc modules and classes
 ========================
 
-Misc code modules
+Utility code modules
 --------------------
 
 .. autoclass:: Result.Result

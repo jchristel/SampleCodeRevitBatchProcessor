@@ -46,6 +46,19 @@ import Autodesk.Revit.DB as rdb
 #: header used in reports
 REPORT_LEVELS_HEADER = ['HOSTFILE', 'ID', 'NAME', 'WORKSETNAME', 'ELEVATION']
 
+def get_levels_in_model(doc):
+  '''
+  Get all levels in model
+
+  :param doc: The current model document.
+  :type doc: Autodesk.Revit.DB.Document
+  :return: A collector with all levels in model.
+  :rtype: Autodesk.Revit.DB.FilteredElementCollector
+  '''
+
+  collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+  return collector
+
 # --------------------------------------------- visibility functions ------------------
 
 def change_levels_2D (doc, levels, view):

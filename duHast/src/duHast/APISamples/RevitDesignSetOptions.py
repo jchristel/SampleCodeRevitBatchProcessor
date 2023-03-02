@@ -97,14 +97,15 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
     for do in collector:
         designOName = rdb.Element.Name.GetValue(do)
-        # check if primary in name if so remove...( this is language agnostic!!!!!)
-        if (designOName.endswith(' (primary)')):
-            designOName = designOName[:-len(' (primary)')]
+        # check if '< 'in name indicating a primary option, if so remove from name
+        index_chevron = designOName.find('<')
+        if (index_chevron > 0):
+            designOName = designOName[:index_chevron-2]
         # design set
-        e = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
-        designSName = rdb.Element.Name.GetValue(e)
+        design_set = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
+        design_set_name = rdb.Element.Name.GetValue(design_set)
         # check for match on both set and option
-        if(designSName == designSetName and designOName == designOptionName):
+        if(design_set_name == designSetName and designOName == designOptionName):
             # get isPrimary property on design option
             isPrimary = do.IsPrimary
             break

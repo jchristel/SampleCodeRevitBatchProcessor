@@ -56,7 +56,7 @@ def get_levels_in_model(doc):
   :rtype: Autodesk.Revit.DB.FilteredElementCollector
   '''
 
-  collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+  collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
   return collector
 
 # --------------------------------------------- visibility functions ------------------

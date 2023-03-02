@@ -53,7 +53,8 @@ from duHast.APISamples import RevitGroups as rGroup
 
 def InTransaction(
     tranny, # 
-    action  # type: Callable[[], res.Result]
+    action, # type: Callable[[], res.Result]
+    doc = None    
     ):
     # type: (...) -> res.Result
     '''
@@ -412,7 +413,7 @@ def setParameterValue(
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = in_transaction(transaction, action)
+        returnValue = in_transaction(transaction, action, doc)
     else:  
         # dead end
         returnValue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
@@ -1581,4 +1582,3 @@ def EnableWorksharing(
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
-

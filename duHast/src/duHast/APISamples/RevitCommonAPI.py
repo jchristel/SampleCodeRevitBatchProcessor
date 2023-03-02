@@ -49,6 +49,48 @@ from duHast.APISamples import RevitGroups as rGroup
 # type checker
 #from typing import List, Callable
 
+#--------------------------------------------Transactions-----------------------------------------
+
+def InTransaction(
+    tranny, # 
+    action  # type: Callable[[], res.Result]
+    ):
+    # type: (...) -> res.Result
+    '''
+    Revit transaction wrapper.
+
+    This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.
+
+    :param tranny: The transaction to be executed.
+    :type tranny: Autodesk.Revit.DB.Transaction 
+    :param action: The action to be nested within the transaction. This needs to return a Result class instance!
+    :type action: action().
+    
+    :return: 
+        Result class instance.
+        
+        - .result = True if successfully executed transaction, otherwise False.
+        
+    :rtype: :class:`.Result`
+    '''
+
+    returnValue = res.Result()
+    try:
+        tranny.Start()
+        try:
+            trannyResult = action()
+            tranny.Commit()
+            # check what came back
+            if (trannyResult != None):
+                # store false value 
+                returnValue = trannyResult
+        except Exception as e:
+            tranny.RollBack()
+            returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    except Exception as e:
+        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+    return returnValue
+
 #----------------------------------------parameters-----------------------------------------------
 
 def CheckParameterValue(
@@ -281,7 +323,8 @@ def GetParameterValueByName(
 def setParameterValue(
     para, 
     valueAsString, # type: str
-    doc
+    doc,
+    in_transaction = InTransaction
     ):
     '''
     Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
@@ -369,7 +412,7 @@ def setParameterValue(
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = InTransaction(transaction, action)
+        returnValue = in_transaction(transaction, action)
     else:  
         # dead end
         returnValue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
@@ -1539,44 +1582,3 @@ def EnableWorksharing(
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
-#--------------------------------------------Transactions-----------------------------------------
-
-def InTransaction(
-    tranny, # 
-    action  # type: Callable[[], res.Result]
-    ):
-    # type: (...) -> res.Result
-    '''
-    Revit transaction wrapper.
-
-    This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.
-
-    :param tranny: The transaction to be executed.
-    :type tranny: Autodesk.Revit.DB.Transaction 
-    :param action: The action to be nested within the transaction. This needs to return a Result class instance!
-    :type action: action().
-    
-    :return: 
-        Result class instance.
-        
-        - .result = True if successfully executed transaction, otherwise False.
-        
-    :rtype: :class:`.Result`
-    '''
-
-    returnValue = res.Result()
-    try:
-        tranny.Start()
-        try:
-            trannyResult = action()
-            tranny.Commit()
-            # check what came back
-            if (trannyResult != None):
-                # store false value 
-                returnValue = trannyResult
-        except Exception as e:
-            tranny.RollBack()
-            returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
-    return returnValue

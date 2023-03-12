@@ -295,7 +295,7 @@ def GetParameterValueByName(
     '''
     Returns the parameter value by parameter name.
 
-    Returns the parameter value by the parameter name. Return value type depends on past in value getter function. Default is UTF-8 encoded string.
+    Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
     :param element: Element to which the built-in parameter belongs.
     :type element: Autodesk.Revit.DB.Element

@@ -53,29 +53,64 @@ class ReadDataFromFile:
         self.dataType = ''
         self.data = []
 
-    def _read_tab_separated_file(self, filePath):
+    def _read_json_file(self, file_path):
         '''
-        Read a tab delimited files into a list of rows
+        Reads a json formatted text file into a dictionary.
 
-        :param filePath: Fully qualified file path to tab separated file.
-        :type filePath: str
+        :param file_path: Fully qualified file path to json formatted data file.
+        :type file_path: str
 
-        :return: List of List [str] representing rows and columns in text file.
-        :rtype: list[list[str]]
+        :return: A dictionary.
+        :rtype: {}
         '''
 
-        rowList = []
+        data = {}
         try:
-            with codecs.open (filePath,'r',encoding='utf-8') as f:
-                reader = csv.reader(f, dialect='excel-tab')
-                for row in reader: # each row is a list
-                    rowList.append(row)
-                f.close()
+            # Opening JSON file
+            f = open(file_path)
+            # returns JSON object as
+            # a dictionary
+            data = json.load(f)
         except Exception as e:
-            print (str(e))
-            rowList = []
-        return rowList
+            pass
+        return data
 
+
+    def _get_room_data_from_JSON(self,room_data):
+        '''
+        Converts dictionary into data room objects.
+
+        :param room_data: List of dictionaries describing rooms
+        :type room_data:  [{var}]
+
+        :return: List of data room objects.
+        :rtype: [:class:`.DataRoom`]
+        '''
+
+        all_rooms =[]
+        for d in room_data:
+            p = dr.DataRoom(d)
+            all_rooms.append(p)
+        return all_rooms 
+
+    def _get_ceiling_data_from_JSON(self,ceiling_data):
+        '''
+        Converts dictionary into data ceiling objects.
+
+        :param ceiling_data: List of dictionaries describing ceilings
+        :type ceiling_data: [{var}]
+
+        :return: List of data ceiling objects.
+        :rtype: [:class:`.DataCeiling`]
+        '''
+         
+        all_ceilings =[]
+
+        for d in ceiling_data:
+            p = dc.DataCeiling(d)
+            all_ceilings.append(p)
+        return all_ceilings 
+    
     def load_Data(self):
         '''
         Load json formatted rows into data objects and stores them in this class.
@@ -87,22 +122,23 @@ class ReadDataFromFile:
 
         '''
 
-        dataJson = self._read_tab_separated_file(self.dataFilePath)
         dataObjects = []
-        for d in dataJson:
-            p = None
-            #load json string into dic and check what the data type is
-            dummy = json.loads(d[0])
-            if('dataType' in dummy):
-                if(dummy['dataType'] == dr.DataRoom.dataType):
-                    p = dr.DataRoom(d[0])
-                    self.dataType = p.dataType
-                elif(dummy['dataType'] == dc.DataCeiling.dataType):
-                    dic = json.loads(d[0])
-                    json_data = json.dumps(dic, default=lambda o: o.__dict__, indent=None)
-                    p = dc.DataCeiling(json_data)
-                    self.dataType = p.dataType
-            dataObjects.append(p)
+        dataJson = self._read_json_file(self.dataFilePath)
+
+        # load rooms {Root}.rooms
+        room_json = self._get_room_data_from_JSON(dataJson[dr.DataRoom.dataType])
+
+        # add to global list
+        for rj in room_json:
+            dataObjects.append(rj)
+
+        #load ceiling at {Root}.ceilings
+        ceiling_json = self. _get_ceiling_data_from_JSON(dataJson[dc.DataCeiling.dataType])
+        
+        # add to global list
+        for cj in ceiling_json:
+            dataObjects.append(cj)
+        
         self.data = dataObjects
     
     def get_data_by_level(self, levelName):
@@ -117,6 +153,19 @@ class ReadDataFromFile:
         '''
 
         return (list(filter(lambda x: (x.levelName == levelName ) , self.data)))
+    
+    def get_data_by_type(self, data_type):
+        '''
+        Returns all data objects where type equals past in type name
+
+        :param data_type: The data type name.
+        :type data_type: str
+
+        :return: A list of room and ceiling data objects
+        :rtype: list [data objects]
+        '''
+
+        return (list(filter(lambda x: (x.dataType == data_type ) , self.data)))
     
     def get_data_by_level_and_dataType(self, levelName, dataType):
         '''

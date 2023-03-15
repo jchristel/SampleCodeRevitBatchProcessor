@@ -36,8 +36,9 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 import json
+from duHast.DataSamples import DataBase
 
-class DataGeometry():
+class DataGeometry(DataBase.DataBase):
     
     def __init__(self, j = {}
         ):
@@ -48,23 +49,46 @@ class DataGeometry():
         :type j: dict, optional
         '''
 
-        self.dataType = 'polygons'
-        self.outerLoop = []        
-        self.innerLoops = []
-        self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
-        self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file
-        if(len(j) > 0 ):
+        # store data type  in base class
+        super(DataGeometry, self).__init__('polygons')
+        
+        # check if any data was past in with constructor!
+        if(j != None and len(j) > 0 ):
+            # check type of data that came in: 
             if(type(j) == str):
-                self.__dict__ = json.loads(j)
+                # a string
+                j = json.loads(j)
             elif(type(j) == dict):
-                self.__dict__ = j
-       
-    def to_json(self):
-        '''
-        Convert the instance of this class to json.
+                # no action required
+                pass
+            else:
+                raise  ValueError ('Argument supplied must be of type string or type dictionary')
+        
+            if('outerLoop' in j ):
+                self.outerLoop = j['outerLoop']
+            else:
+                self.outerLoop = []
 
-        :return: A Json object.
-        :rtype: json
-        '''
+            if('innerLoops' in j ):
+                self.innerLoops = j['innerLoops']
+            else:
+                self.innerLoops = []
+            
+            # translation as per shared coordinates in revit file
+            if('translationCoord' in j ):
+                self.translationCoord = j['translationCoord']
+            else:
+                self.translationCoord = [0.0, 0.0, 0.0]
+            
+            # rotation as per shared coordinates in revit file
+            if('rotationCoord' in j ):
+                self.rotationCoord = j['rotationCoord']
+            else:
+                self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
 
-        return json.dumps(self, indent = None, default=lambda o: o.__dict__)
+        else:
+            # set default values
+            self.outerLoop = []        
+            self.innerLoops = []
+            self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
+            self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file

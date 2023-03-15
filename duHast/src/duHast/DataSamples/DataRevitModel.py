@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit design option properties.
+Data storage class for Revit elements model properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -29,6 +29,7 @@ Data storage class for Revit design option properties.
 '''
 TODO: implement an interface 
 '''
+
 import clr
 clr.AddReference("System.Core")
 from System import Linq
@@ -37,20 +38,20 @@ clr.ImportExtensions(Linq)
 import json
 from duHast.DataSamples import DataBase
 
-class DataDesignSetOption(DataBase.DataBase):
+class DataRevitModel(DataBase.DataBase):
     
     def __init__(self, j = {}
         ):
         '''
-        Class constructor.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
 
         # store data type  in base class
-        super(DataDesignSetOption, self).__init__('design set')
-
+        super(DataRevitModel, self).__init__('revit model')
+        
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
             # check type of data that came in: 
@@ -63,22 +64,9 @@ class DataDesignSetOption(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('designSetName' in j ):
-                self.designSetName = j['designSetName']
+            if('modelName' in j ):
+                self.modelName = j['modelName']
             else:
-                self.designSetName = '-'
-        
-            if('designOptionName' in j ):
-                self.designOptionName = j['designOptionName']
-            else:
-                self.designOptionName = '-'
-
-            if('isPrimary' in j ):
-                self.isPrimary = j['isPrimary']
-            else:
-                self.isPrimary = True
+                self.modelName = '-'
         else:
-            # set default values
-            self.designSetName = '-'
-            self.designOptionName = '-'
-            self.isPrimary = True
+            self.modelName = '-'     

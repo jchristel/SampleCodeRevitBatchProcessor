@@ -31,16 +31,22 @@ Data storage class for Revit room properties.
 TODO: implement an interface 
 '''
 import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
+#clr.AddReference("System.Core")
+#from System import Linq
+#clr.ImportExtensions(Linq)
 
 import json
 
+
 from duHast.DataSamples import DataGeometry
 from duHast.DataSamples import DataDesignSetOption
+from duHast.DataSamples import DataPhasing
+from duHast.DataSamples import DataLevel
+from duHast.DataSamples import DataInstanceProperties
+from duHast.DataSamples import DataRevitModel
+from duHast.DataSamples import DataBase
 
-class DataRoom():
+class DataRoom(DataBase.DataBase):
 
     dataType = 'room'
     
@@ -51,39 +57,68 @@ class DataRoom():
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
+        
+        # store data type  in base class
+        super(DataRoom, self).__init__('room')
+        
+        # check if any data was past in with constructor!
+        if(j != None and len(j) > 0 ):
+            # check type of data that came in: 
+            if(type(j) == str):
+                # a string
+                j = json.loads(j)
+            elif(type(j) == dict):
+                # no action required
+                pass
+            else:
+                raise  ValueError ('Argument supplied must be of type string or type dictionary')
 
-        self.dataType = 'room'
-        self.id = -1
-        self.name = '-'
-        self.number = '-'
-        self.levelName = '-'
-        self.levelId = '-'
-        self.modelName = '-'
-        self.phase = '-'
-        self.geometry = [[]]
-        self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
-        self.functionNumber = '-'
-        self.associatedElements = []
-        if(len(j) > 0 ):
-            self.__dict__ = json.loads(j)
+            if ('instanceProperties' in j):
+                self.instanceProperties = DataInstanceProperties.DataInstanceProperties(j['instanceProperties'])
+            else:
+                self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
+
+            if('designSetAndOption' in j):
+                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(j['designSetAndOption'])
+            else:
+                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
+            
+            if('associatedElements' in j ):
+                self.associatedElements = j['associatedElements']
+            else:
+                self.associatedElements = []
+            
+            if('level' in j):
+                self.level = DataLevel.DataLevel(j['level'])
+            else:
+                self.level = DataLevel.DataLevel()
+
+            if('revitModel' in j):
+                self.revitModel = DataRevitModel.DataRevitModel(j['revitModel'])
+            else:
+                self.revitModel = DataRevitModel.DataRevitModel()  
+
+            if('phasing' in j):
+                self.phasing = DataPhasing.DataPhasing(j['phasing'])
+            else:
+                self.phasing = DataPhasing.DataPhasing() 
+            
             geoDataList = []
-            for item in self.geometry:
-                if('dataType' in item):
-                    if(item['dataType']):
-                        dummy = DataGeometry.DataGeometry(item)
-                        geoDataList.append(dummy)
-                else:
-                    print('no data type in item')
+            if('geometry' in j):
+                for item in j['geometry']:
+                    if('dataType' in item):
+                        if(item['dataType']):
+                            dummy = DataGeometry.DataGeometry(item)
+                            geoDataList.append(dummy)
+                    else:
+                        print('no data type in item')
             self.geometry = geoDataList
-            # initialise design option
-            self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(self.designSetAndOption)
-
-    def to_json(self):
-        '''
-        Convert the instance of this class to json.
-
-        :return: A Json object.
-        :rtype: json
-        '''
-
-        return json.dumps(self, indent = None, default=lambda o: o.__dict__)
+        else:
+            # initialise classes with default values
+            self.geometry = [[]]
+            self.associatedElements = []
+            self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
+            self.level = DataLevel.DataLevel()
+            self.revitModel = DataRevitModel.DataRevitModel()
+            self.phasing = DataPhasing.DataPhasing()
+            self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()

@@ -9,7 +9,7 @@ Utility functions writing revit geometry data to file.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2022  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,35 +31,48 @@ from duHast.APISamples import RevitCeilings as rCeil
 from duHast.APISamples import RevitRooms as rRoom
 from duHast.Utilities import Result as res
 
+from duHast.DataSamples import DataCeiling as dc
+from duHast.DataSamples import DataRoom as dr
 
-# dataIn         
-def ConvertDataToListJson(dataIn):
-    '''
-    Converts lists of data classes into a single list of list of Json string representing the data class
-
-    :param dataIn: list of data class instances
-    :type dataIn: [data class]
-
-    :return: list of list of Json string
-    :rtype: [[str]]
-    '''
-
-    dataJsonAll = []
-    for dataList in dataIn:
-        for d in dataList:
-            dataRow = []
-            dataRow.append(d.to_json())
-            dataJsonAll.append(dataRow)
-    return dataJsonAll
+import json
+import codecs
 
 # -------------------------------- write data to file -------------------------------------------------------
 
-def WriteJsonDataToFile (doc, dataOutPutFileName):
+def get_data_from_model(doc):
     '''
-    Collects geometry data and writes it to a new json formatted file
+    Gets element data from the model. This is currently limited to
 
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
+    - rooms
+    - ceilings
+
+    :param doc: The current model document.
+    :type doc: Autodeks.Revit.DB.Document
+
+    :return: A dictionary in format {file name: str, date processed : str, room:[], ceiling:[]}
+    :rtype: {}
+    '''
+
+    # get data
+    allRoomData = rRoom.GetAllRoomData(doc)
+    allCeilingData = rCeil.GetAllCeilingData(doc)
+
+    data_json = {
+        "file name": doc.Title,
+        "date processed": util.GetDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
+        dr.DataRoom.dataType: allRoomData,
+        dc.DataCeiling.dataType: allCeilingData
+    }
+
+    return data_json
+
+
+def write_json_to_file (json_data, dataOutPutFileName):
+    '''
+    Writes collected data to a new json formatted file.
+
+    :param json_data: A dictionary to be written to file.
+    :type json_data: json object (dictionary)
     :param dataOutPutFileName: Fully qualified file path to json data file.
     :type dataOutPutFileName: str
 
@@ -80,17 +93,14 @@ def WriteJsonDataToFile (doc, dataOutPutFileName):
     '''
 
     result = res.Result()
-    # get data
-    allRoomData = rRoom.GetAllRoomData(doc)
-    allCeilingData = rCeil.GetAllCeilingData(doc)
-    # convert data to json string
-    data = ConvertDataToListJson(
-        [
-            allRoomData, 
-            allCeilingData
-        ])
+   
+
     try:
-        util.writeReportData(dataOutPutFileName, [], data)
+        json_object = json.dumps(json_data, indent = None, default=lambda o: o.__dict__)
+        with codecs.open(dataOutPutFileName, 'w', encoding='utf-8') as f:
+            f.write(json_object)
+            f.close()
+
         result.UpdateSep(True, 'Data written to file: ' + dataOutPutFileName)
     except  Exception as e:
         result.UpdateSep(False, 'Failed to write data to file with exception: ' + str(e))

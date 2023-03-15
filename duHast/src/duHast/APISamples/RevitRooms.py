@@ -310,30 +310,41 @@ def PopulateDataRoomObject(doc, revitRoom):
             dataGeometryConverted = rGeo.ConvertXYZInDataGeometry(doc, roomPointGroupByPoly)
             roomPointGroupsAsDoubles.append(dataGeometryConverted)
         dataR.geometry = roomPointGroupsAsDoubles
-        # get other data
-        dataR.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
-        dataR.id = revitRoom.Id.IntegerValue
-        dataR.name = rdb.Element.Name.GetValue(revitRoom).encode('utf-8')
-        dataR.number = revitRoom.Number.encode('utf-8')
+        # get design set data
+        design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
+        dataR.designSetAndOption.designOptionName = design_set_data['designOptionName']
+        dataR.designSetAndOption.designSetName = design_set_data['designSetName']
+        dataR.designSetAndOption.isPrimary = design_set_data['isPrimary']
+        
+        # get instance properties
+        dataR.instanceProperties.instanceId=revitRoom.Id.IntegerValue
+        # custom parameter value getters
+        value_getter = {
+            rdb.StorageType.Double : com.getter_double_as_double, 
+            rdb.StorageType.Integer : com.getter_int_as_int, 
+            rdb.StorageType.String : com.getter_string_as_UTF8_string, # encode ass utf 8 just in case
+            rdb.StorageType.ElementId : com.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+        }
+        dataR.instanceProperties.properties=com.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
+        
         # get the model name
         if(doc.IsDetached):
-            dataR.modelName = 'Detached Model'
+            dataR.revitModel.modelName = 'Detached Model'
         else:
-            dataR.modelName = doc.Title
+            dataR.revitModel.modelName = doc.Title
+        
         # get phase name
-        dataR.phase = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, com.GetParameterValueAsElementId)).encode('utf-8')
-        funcNumberValue = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number')
-        if(funcNumberValue != None):
-            dataR.functionNumber = com.GetParameterValueByName(revitRoom, 'SP_Room_Function_Number').encode('utf-8')
-        else:
-            # use default instead
-            pass
+        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataR.phasing.phaseDemolished = -1
+        
+        # get level data
         try:
-            dataR.levelName = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
-            dataR.levelId = revitRoom.Level.Id.IntegerValue
+            dataR.level.levelName = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+            dataR.level.levelId = revitRoom.Level.Id.IntegerValue
         except:
-            dataR.levelName = 'no level'
-            dataR.levelId = -1
+            dataR.level.levelName = 'no level'
+            dataR.level.levelId = -1
         return dataR
+    
     else:
         return None

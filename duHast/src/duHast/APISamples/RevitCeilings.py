@@ -471,25 +471,45 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             dataGeoConverted = rGeo.ConvertXYZInDataGeometry(doc, allCeilingPointGroups)
             ceilingPointGroupsAsDoubles.append(dataGeoConverted)
         dataC.geometry = ceilingPointGroupsAsDoubles
-        # get other data
-        dataC.designSetAndOption = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)
-        ceilingTypeId = revitCeiling.GetTypeId()
-        ceilingType = doc.GetElement(ceilingTypeId)
-        dataC.id = revitCeiling.Id.IntegerValue
-        dataC.typeName = rdb.Element.Name.GetValue(revitCeiling).encode('utf-8')
-        dataC.mark = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.ALL_MODEL_MARK)  # need to get the mark here...
-        dataC.typeMark = com.GetBuiltInParameterValue(ceilingType, rdb.BuiltInParameter.ALL_MODEL_TYPE_MARK)
-        dataC.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
-        dataC.levelId = revitCeiling.LevelId.IntegerValue
-        dataC.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        # get design set data
+        design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)
+        dataC.designSetAndOption.designOptionName = design_set_data['designOptionName']
+        dataC.designSetAndOption.designSetName = design_set_data['designSetName']
+        dataC.designSetAndOption.isPrimary = design_set_data['isPrimary']
+        
+        # get type properties
+        dataC.typeProperties.typeId = revitCeiling.GetTypeId().IntegerValue
+        dataC.typeProperties.typeName = rdb.Element.Name.GetValue(revitCeiling).encode('utf-8')
+        ceilingType = doc.GetElement(revitCeiling.GetTypeId())
+        
+        # custom parameter value getters
+        value_getter = {
+            rdb.StorageType.Double : com.getter_double_as_double, 
+            rdb.StorageType.Integer : com.getter_int_as_int, 
+            rdb.StorageType.String : com.getter_string_as_UTF8_string, # encode ass utf 8 just in case
+            rdb.StorageType.ElementId : com.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+        }
+        dataC.typeProperties.properties = com.get_all_parameters_and_values_wit_custom_getters(ceilingType, value_getter)
+        
+        # get instance properties
+        dataC.instanceProperties.instanceId = revitCeiling.Id.IntegerValue
+        dataC.instanceProperties.properties = com.get_all_parameters_and_values_wit_custom_getters(revitCeiling, value_getter)
+        
+        # get level properties
+        dataC.level.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
+        dataC.level.levelId = revitCeiling.LevelId.IntegerValue
+        dataC.level.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        
         # get the model name
         if(doc.IsDetached):
-            dataC.modelName = 'Detached Model'
+            dataC.revitModel.modelName = 'Detached Model'
         else:
-            dataC.modelName = doc.Title
+            dataC.revitModel.modelName = doc.Title
+        
         # get phasing information
-        dataC.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, com.GetParameterValueAsElementId)).encode('utf-8')
-        dataC.phaseDemolished = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataC.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataC.phasing.phaseDemolished = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, com.GetParameterValueAsElementId)).encode('utf-8')
+
         return dataC
     else:
         return None

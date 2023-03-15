@@ -135,6 +135,195 @@ def CheckParameterValue(
         isMatch = True
     return isMatch
 
+#----------------------------------------parameters value getter over loads-----------------------------------------------
+
+def getter_double_or_int_as_string(para):
+    '''
+    Returns a parameter value of type double or integer as string.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: String representation of double or integer value. If value is empty it will return None
+    :rtype: str or None
+    '''
+
+    pValue = None
+    if(para.AsValueString() != None and para.AsValueString() != ''):
+        pValue = para.AsValueString()
+    return pValue
+
+def getter_double_as_double(para):
+    '''
+    Returns a parameter value of type double as a double.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: Double value. If value is empty it will return None
+    :rtype: Double or None
+    '''
+
+    pValue = None
+    if(para.AsValueString() != None and para.AsValueString() != ''):
+        pValue = para.AsDouble()
+    return pValue
+
+def getter_int_as_int(para):
+    '''
+    Returns a parameter value of type integer as a integer.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: Integer value. If value is empty it will return None
+    :rtype: Integer or None
+    '''
+
+    pValue = None
+    if(para.AsValueString() != None and para.AsValueString() != ''):
+        pValue = para.AsInteger()
+    return pValue
+
+def getter_string_as_UTF8_string(para):
+    '''
+    Returns a parameter value of type string as a utf-8 formatted string.
+    
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: String value. If value is empty it will return None
+    :rtype: String or None
+    '''
+
+    pValue = None
+    if(para.StorageType == rdb.StorageType.String):
+        if(para.AsString() != None and para.AsString() != ''):
+            pValue = para.AsString().encode('utf-8')
+    return pValue
+
+def getter_string_as_string(para):
+    '''
+    Returns a parameter value of type string as a string.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: String value. If value is empty it will return None
+    :rtype: String or None
+    '''
+
+    pValue = None
+    if(para.StorageType == rdb.StorageType.String):
+        if(para.AsString() != None and para.AsString() != ''):
+            pValue = para.AsString()
+    return pValue
+
+def getter_element_id_as_string(para):
+    '''
+    Returns a parameter value of type element id as a string.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: String value. If value is empty it will return None
+    :rtype: String or None
+    '''
+
+    pValue = None
+    if(para.StorageType == rdb.StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = str(para.AsElementId())
+    return pValue     
+
+def getter_element_id_as_element_id(para):
+    '''
+    Returns a parameter value of type element id as a element id.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: Element id value. If value is empty it will return None
+    :rtype: Element id or None
+    '''
+
+    pValue = None
+    if(para.StorageType == rdb.StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = para.AsElementId()
+    return pValue
+
+def getter_element_id_as_element_int(para):
+    '''
+    Returns a parameter value of type element id as an integer.
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: Integer value. If value is empty it will return None
+    :rtype: Integer or None
+    '''
+
+    pValue = None
+    if(para.StorageType == rdb.StorageType.ElementId):
+        if(para.AsElementId() != None):
+            pValue = para.AsElementId().IntegerValue
+    return pValue 
+
+#----------------------------------------parameters value getters -----------------------------------------------
+
+def get_parameter_value_with_over_load (para, parameter_value_getters):
+    '''
+    Returns a parameter value in format depending on storage type.
+    
+    Storage type can be:
+
+    - Double
+    - Integer
+    - String
+    - ElementId
+
+    Will throw an exception if a storage type is not covered by parameter value getter functions.
+
+    :param para: The Parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: The parameter value or if empty: None.
+    :rtype: Depends on value getters functions
+    '''
+
+    # set return value default 
+    pValue = None
+    try:
+        # extract parameter value depending on its storage type
+        if(para.StorageType == rdb.StorageType.Double):
+            if(para.AsValueString()!= None and para.AsValueString() != ''):
+                if(rdb.StorageType.Double in parameter_value_getters):
+                    pValue = parameter_value_getters[rdb.StorageType.Double](para)
+                else:
+                    raise ValueError('No parameter value getter for storage type Double provided')
+        elif(para.StorageType == rdb.StorageType.Integer):
+            if(para.AsValueString()!= None and para.AsValueString() != ''):
+                if(rdb.StorageType.Integer in parameter_value_getters):
+                    pValue = parameter_value_getters[rdb.StorageType.Integer](para)
+                else:
+                    raise ValueError('No parameter value getter for storage type Integer provided')
+        elif(para.StorageType == rdb.StorageType.String):
+            if(para.AsString() != None and para.AsString() != ''):
+                if(rdb.StorageType.String in parameter_value_getters):
+                    pValue = parameter_value_getters[rdb.StorageType.String](para)
+                else:
+                    raise ValueError('No parameter value getter for storage type String provided')
+        elif(para.StorageType == rdb.StorageType.ElementId):
+            if(para.AsElementId() != None):
+                if(rdb.StorageType.ElementId in parameter_value_getters):
+                    pValue = parameter_value_getters[rdb.StorageType.ElementId](para)
+                else:
+                    raise ValueError('No parameter value getter for storage type Element Id provided')
+    except  Exception as e:
+        pValue = 'Exception: {}'.format(e)
+    return pValue
+
 def getParameterValue(
     para
     ):
@@ -158,6 +347,16 @@ def getParameterValue(
     # set return value default 
     pValue = 'no Value'
     try:
+        value_getter = {
+            rdb.StorageType.Double : getter_double_or_int_as_string,
+            rdb.StorageType.Integer : getter_double_or_int_as_string,
+            rdb.StorageType.String : getter_string_as_string,
+            rdb.StorageType.ElementId : getter_element_id_as_string
+        }
+
+        pValue = get_parameter_value_with_over_load (para, value_getter)
+
+        '''
         # extract parameter value depending on its storage type
         if(para.StorageType == rdb.StorageType.Double or para.StorageType == rdb.StorageType.Integer):
             if(para.AsValueString()!= None and para.AsValueString() != ''):
@@ -167,9 +366,11 @@ def getParameterValue(
                 pValue = para.AsString()
         elif(para.StorageType == rdb.StorageType.ElementId):
             if(para.AsElementId() != None):
-                pValue = para.AsElementId()
+                pValue = str(para.AsElementId())
+    '''
     except  Exception as e:
         pValue = 'Exception: '+str(e)
+    
     return pValue
 
 def GetParameterValueUTF8String(
@@ -194,6 +395,17 @@ def GetParameterValueUTF8String(
 
     # set return value default 
     pValue = 'no Value'
+
+    value_getter = {
+            rdb.StorageType.Double : getter_double_or_int_as_string, # no specific utf encoding required
+            rdb.StorageType.Integer : getter_double_or_int_as_string, # no specific utf encoding required
+            rdb.StorageType.String : getter_string_as_UTF8_string,
+            rdb.StorageType.ElementId : getter_element_id_as_string # no specific utf encoding required
+        }
+    
+    pValue = get_parameter_value_with_over_load (para, value_getter)
+
+    '''
     # extract parameter value depending on its storage type
     if(para.StorageType == rdb.StorageType.Double or para.StorageType == rdb.StorageType.Integer):
         if(para.AsValueString()!= None and para.AsValueString() != ''):
@@ -204,6 +416,7 @@ def GetParameterValueUTF8String(
     elif(para.StorageType == rdb.StorageType.ElementId):
         if(para.AsElementId() != None):
             pValue = str(para.AsElementId()).encode('utf-8')
+    '''
     return pValue
 
 def GetParameterValueAsInteger(
@@ -256,6 +469,23 @@ def GetParameterValueAsElementId(
     if(para.StorageType == rdb.StorageType.ElementId):
         pValue = para.AsElementId()
     return pValue
+
+def get_all_parameters_and_values_wit_custom_getters(element, parameter_value_getters):
+    '''
+    Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.
+
+    :param element: The element
+    :type element: var
+
+    :return: Dictionary where key is the parameter name, and the value is the parameter value.
+    :rtype: {str:var}
+    '''
+    return_value = {}
+    paras = element.GetOrderedParameters()
+    for p in paras:
+        p_value =  get_parameter_value_with_over_load (p, parameter_value_getters)
+        return_value[p.Definition.Name] = p_value
+    return return_value
 
 def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
     '''
@@ -320,6 +550,8 @@ def GetParameterValueByName(
             parameterValue = parameterValueGetter(para)
             break
     return parameterValue
+
+#----------------------------------------parameters value setters -----------------------------------------------
 
 def setParameterValue(
     para, 

@@ -26,22 +26,14 @@ Data storage class for Revit elements model properties.
 #
 #
 
-'''
-TODO: implement an interface 
-'''
-
-import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
-
 import json
 from duHast.DataSamples import DataBase
 
 class DataRevitModel(DataBase.DataBase):
     
-    def __init__(self, j = {}
-        ):
+    dataType = 'revit model'
+
+    def __init__(self, j = {}):
         '''
         Class constructor
 

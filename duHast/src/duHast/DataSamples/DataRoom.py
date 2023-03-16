@@ -27,14 +27,6 @@ Data storage class for Revit room properties.
 #
 #
 
-'''
-TODO: implement an interface 
-'''
-import clr
-#clr.AddReference("System.Core")
-#from System import Linq
-#clr.ImportExtensions(Linq)
-
 import json
 
 
@@ -103,16 +95,16 @@ class DataRoom(DataBase.DataBase):
             else:
                 self.phasing = DataPhasing.DataPhasing() 
             
-            geoDataList = []
+            geometry_data_list = []
             if('geometry' in j):
                 for item in j['geometry']:
                     if('dataType' in item):
                         if(item['dataType']):
                             dummy = DataGeometry.DataGeometry(item)
-                            geoDataList.append(dummy)
+                            geometry_data_list.append(dummy)
                     else:
                         print('no data type in item')
-            self.geometry = geoDataList
+            self.geometry = geometry_data_list
         else:
             # initialise classes with default values
             self.geometry = [[]]

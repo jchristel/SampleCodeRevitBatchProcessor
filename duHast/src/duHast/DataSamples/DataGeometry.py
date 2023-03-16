@@ -26,22 +26,13 @@ Geometry data storage class.
 #
 #
 
-'''
-TODO: implement an interface 
-'''
-
-import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
-
 import json
 from duHast.DataSamples import DataBase
 
 class DataGeometry(DataBase.DataBase):
-    
-    def __init__(self, j = {}
-        ):
+    dataType = 'polygons'
+
+    def __init__(self, j = {}):
         '''
         Class constructor
 

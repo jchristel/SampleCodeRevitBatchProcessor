@@ -26,22 +26,14 @@ Data storage class for Revit element level properties.
 #
 #
 
-'''
-TODO: implement an interface 
-'''
-
-import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
-
 import json
 from duHast.DataSamples import DataBase
 
 class DataLevel(DataBase.DataBase):
+
+    dataType = 'level'
     
-    def __init__(self, j = {}
-        ):
+    def __init__(self, j = {}):
         '''
         Class constructor
 

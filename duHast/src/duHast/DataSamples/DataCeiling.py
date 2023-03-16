@@ -26,14 +26,6 @@ Data storage class for Revit ceiling properties.
 #
 #
 
-'''
-TODO: implement an interface 
-'''
-import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
-
 import json
 from duHast.DataSamples import DataGeometry
 from duHast.DataSamples import DataDesignSetOption
@@ -45,6 +37,7 @@ from duHast.DataSamples import DataRevitModel
 from duHast.DataSamples import DataBase
 
 class DataCeiling(DataBase.DataBase):
+
     dataType = 'ceiling'
     
     def __init__(self, j = {}):
@@ -102,16 +95,16 @@ class DataCeiling(DataBase.DataBase):
                 self.phasing = DataPhasing.DataPhasing() 
 
             # load geometry
-            geoDataList = []
+            geometry_data_list = []
             if('geometry' in j):
                 for item in j['geometry']:
                     if('dataType' in item):
                         if(item['dataType']):
                             dummy = DataGeometry.DataGeometry(item)
-                            geoDataList.append(dummy)
+                            geometry_data_list.append(dummy)
                         else:
                             print('no data type in geometry item')
-            self.geometry = geoDataList
+            self.geometry = geometry_data_list
 
             # load associated elements
             if('associatedElements' in j):

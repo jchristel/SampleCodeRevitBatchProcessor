@@ -169,6 +169,26 @@ def getter_double_as_double(para):
         pValue = para.AsDouble()
     return pValue
 
+def getter_double_as_double_converted_to_millimeter(para):
+    '''
+    Returns a parameter value of type double as a double converted to mm (if required).
+    Revit uses feet internally for any length value!
+
+    :param para: The parameter.
+    :type para: Autodesk.Revit.DB.Parameter
+
+    :return: Double value. If value is empty it will return None
+    :rtype: Double or None
+    '''
+
+    pValue = None
+    if(para.AsValueString() != None and para.AsValueString() != ''):
+        if(para.Definition.ParameterType == rdb.ParameterType.Length):
+            pValue = para.AsDouble() * 304.8
+        else:
+            pValue = para.AsDouble()
+    return pValue
+
 def getter_int_as_int(para):
     '''
     Returns a parameter value of type integer as a integer.

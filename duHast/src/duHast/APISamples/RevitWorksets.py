@@ -27,6 +27,10 @@ A number of helper functions relating to Revit worksets.
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 import System
 
 # import common library modules

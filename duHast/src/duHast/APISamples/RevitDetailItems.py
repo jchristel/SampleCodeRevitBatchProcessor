@@ -27,6 +27,9 @@ This module contains a number of functions around Revit detail items.
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 import System
 
 # import common library modules

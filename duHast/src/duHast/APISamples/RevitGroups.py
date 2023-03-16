@@ -27,6 +27,9 @@ Revit groups helper functions.
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 import System
 
 # import common library modules

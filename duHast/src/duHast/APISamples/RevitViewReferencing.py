@@ -27,6 +27,9 @@ This module contains a number of helper functions relating to Revit view referen
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 import System
 from System.Collections.Generic import List
 

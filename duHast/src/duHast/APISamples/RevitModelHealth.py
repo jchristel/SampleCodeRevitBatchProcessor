@@ -31,6 +31,9 @@ and or data can be exported to text files which can be used to visualize key met
 #
 
 import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 import System
 
 from duHast.Utilities import Utility as util

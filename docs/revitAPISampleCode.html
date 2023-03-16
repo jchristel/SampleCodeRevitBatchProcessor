@@ -180,6 +180,185 @@ Will return False if compare function returns None or a False.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_double_or_int_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_or_int_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_or_int_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double or integer as string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String representation of double or integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_double_as_double">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_as_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double as a double.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_double_as_double_converted_to_millimeter">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double_converted_to_millimeter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_as_double_converted_to_millimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double as a double converted to mm (if required).
+Revit uses feet internally for any length value!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_int_as_int">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_int_as_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_int_as_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type integer as a integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_string_as_UTF8_string">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_UTF8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_string_as_UTF8_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a utf-8 formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_string_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_string_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_element_id">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a element id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Element id value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Element id or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_element_int">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_element_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.get_parameter_value_with_over_load">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_with_over_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.get_parameter_value_with_over_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value in format depending on storage type.</p>
+<p>Storage type can be:</p>
+<ul class="simple">
+<li><p>Double</p></li>
+<li><p>Integer</p></li>
+<li><p>String</p></li>
+<li><p>ElementId</p></li>
+</ul>
+<p>Will throw an exception if a storage type is not covered by parameter value getter functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The Parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parameter value or if empty: None.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Depends on value getters functions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getParameterValue">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitCommonAPI.getParameterValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a parameter value as string.</p>
@@ -270,6 +449,23 @@ Otherwise the actual parameter value.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.get_all_parameters_and_values_wit_custom_getters">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">get_all_parameters_and_values_wit_custom_getters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.get_all_parameters_and_values_wit_custom_getters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>var</em>) – The element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary where key is the parameter name, and the value is the parameter value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{str:var}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetBuiltInParameterValue">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the built-in parameter value.</p>
@@ -299,7 +495,7 @@ Otherwise the actual parameter value as per value getter method.</p>
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueByName">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueByName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the parameter value by parameter name.</p>
-<p>Returns the parameter value by the parameter name. Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
+<p>Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

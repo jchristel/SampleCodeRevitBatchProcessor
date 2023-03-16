@@ -87,35 +87,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="DataCeiling.DataCeiling">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">DataCeiling.</span></span><span class="sig-name descname"><span class="pre">DataCeiling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataCeiling.DataCeiling" title="Permalink to this definition">¶</a></dt>
-<dd><p>constructor</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="DataCeiling.DataCeiling.DataType">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DataType</span></span><a class="headerlink" href="#DataCeiling.DataCeiling.DataType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Property: returns the data type of this class.</p>
+<dd><p>Class constructor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>‘ceiling’</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="DataCeiling.DataCeiling.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataCeiling.DataCeiling.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the instance of this class to json.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A Json object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>json</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -127,20 +104,6 @@
 <dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="DataDesignSetOption.DataDesignSetOption.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataDesignSetOption.DataDesignSetOption.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the instance of this class to json.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A Json object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>json</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -152,20 +115,6 @@
 <dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – json formatted dictionary of this class, defaults to {}</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="DataGeometry.DataGeometry.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataGeometry.DataGeometry.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the instance of this class to json.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A Json object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>json</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -178,8 +127,8 @@
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.load_Data">
-<span class="sig-name descname"><span class="pre">load_Data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.load_Data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.load_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load json formatted rows into data objects and stores them in this class.</p>
 <p>In the moment the following data objects are supported:</p>
 <ul class="simple">
@@ -200,11 +149,11 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level">
-<span class="sig-name descname"><span class="pre">get_data_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_data_by_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all data objects where level name equals past in value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>levelName</strong> (<em>str</em>) – The building level name.</p>
+<dd class="field-odd"><p><strong>level_name</strong> (<em>str</em>) – The building level name.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A list of room and ceiling data objects</p>
@@ -216,14 +165,31 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType">
-<span class="sig-name descname"><span class="pre">get_data_by_level_and_dataType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levelName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataType</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level_and_dataType" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_type">
+<span class="sig-name descname"><span class="pre">get_data_by_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all data objects where type equals past in type name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_type</strong> (<em>str</em>) – The data type name.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of room and ceiling data objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list [data objects]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DataReadFromFile.ReadDataFromFile.get_data_by_level_and_data_type">
+<span class="sig-name descname"><span class="pre">get_data_by_level_and_data_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataReadFromFile.ReadDataFromFile.get_data_by_level_and_data_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all data objects where level name and data type equal past in values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>levelName</strong> (<em>str</em>) – The building level name.</p></li>
-<li><p><strong>dataType</strong> (<em>str</em>) – A string describing the data type            refer to property .dataType on data object class</p></li>
+<li><p><strong>level_name</strong> (<em>str</em>) – The building level name.</p></li>
+<li><p><strong>data_type</strong> (<em>str</em>) – A string describing the data type            refer to property .dataType on data object class</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -246,49 +212,39 @@
 <dd class="field-odd"><p><strong>j</strong> (<em>dict</em><em>, </em><em>optional</em>) – A json formatted dictionary of this class, defaults to {}</p>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="DataRoom.DataRoom.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DataRoom.DataRoom.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the instance of this class to json.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A Json object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>json</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <span class="target" id="module-DataExport"></span><section id="utility-functions-writing-revit-geometry-data-to-file">
 <h2>Utility functions writing revit geometry data to file.<a class="headerlink" href="#utility-functions-writing-revit-geometry-data-to-file" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="DataExport.ConvertDataToListJson">
-<span class="sig-prename descclassname"><span class="pre">DataExport.</span></span><span class="sig-name descname"><span class="pre">ConvertDataToListJson</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataIn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataExport.ConvertDataToListJson" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts lists of data classes into a single list of list of Json string representing the data class</p>
+<dt class="sig sig-object py" id="DataExport.get_data_from_model">
+<span class="sig-prename descclassname"><span class="pre">DataExport.</span></span><span class="sig-name descname"><span class="pre">get_data_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataExport.get_data_from_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets element data from the model. This is currently limited to</p>
+<ul class="simple">
+<li><p>rooms</p></li>
+<li><p>ceilings</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dataIn</strong> (<em>[</em><em>data class</em><em>]</em>) – list of data class instances</p>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodeks.Revit.DB.Document</em>) – The current model document.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of list of Json string</p>
+<dd class="field-even"><p>A dictionary in format {file name: str, date processed : str, room:[], ceiling:[]}</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[[str]]</p>
+<dd class="field-odd"><p>{}</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="DataExport.WriteJsonDataToFile">
-<span class="sig-prename descclassname"><span class="pre">DataExport.</span></span><span class="sig-name descname"><span class="pre">WriteJsonDataToFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataOutPutFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataExport.WriteJsonDataToFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collects geometry data and writes it to a new json formatted file</p>
+<dt class="sig sig-object py" id="DataExport.write_json_to_file">
+<span class="sig-prename descclassname"><span class="pre">DataExport.</span></span><span class="sig-name descname"><span class="pre">write_json_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataOutPutFileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DataExport.write_json_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes collected data to a new json formatted file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>json_data</strong> (<em>json object</em><em> (</em><em>dictionary</em><em>)</em>) – A dictionary to be written to file.</p></li>
 <li><p><strong>dataOutPutFileName</strong> (<em>str</em>) – Fully qualified file path to json data file.</p></li>
 </ul>
 </dd>

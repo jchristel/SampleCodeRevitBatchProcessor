@@ -27,14 +27,14 @@ Data storage reader class.
 #
 #
 
-import codecs
-import csv
-import json
 
-import clr
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
+
+#import clr
+#clr.AddReference("System.Core")
+#from System import Linq
+#clr.ImportExtensions(Linq)
+
+import json
 
 from duHast.DataSamples import DataCeiling as dc
 from duHast.DataSamples import DataRoom as dr
@@ -111,7 +111,7 @@ class ReadDataFromFile:
             all_ceilings.append(p)
         return all_ceilings 
     
-    def load_Data(self):
+    def load_data(self):
         '''
         Load json formatted rows into data objects and stores them in this class.
 
@@ -122,37 +122,37 @@ class ReadDataFromFile:
 
         '''
 
-        dataObjects = []
-        dataJson = self._read_json_file(self.dataFilePath)
+        data_objects = []
+        data_json = self._read_json_file(self.dataFilePath)
 
         # load rooms {Root}.rooms
-        room_json = self._get_room_data_from_JSON(dataJson[dr.DataRoom.dataType])
+        room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.dataType])
 
         # add to global list
         for rj in room_json:
-            dataObjects.append(rj)
+            data_objects.append(rj)
 
         #load ceiling at {Root}.ceilings
-        ceiling_json = self. _get_ceiling_data_from_JSON(dataJson[dc.DataCeiling.dataType])
+        ceiling_json = self._get_ceiling_data_from_JSON(data_json[dc.DataCeiling.dataType])
         
         # add to global list
         for cj in ceiling_json:
-            dataObjects.append(cj)
+            data_objects.append(cj)
         
-        self.data = dataObjects
+        self.data = data_objects
     
-    def get_data_by_level(self, levelName):
+    def get_data_by_level(self, level_name):
         '''
         Returns all data objects where level name equals past in value.
 
-        :param levelName: The building level name.
-        :type levelName: str
+        :param level_name: The building level name.
+        :type level_name: str
 
         :return: A list of room and ceiling data objects
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.levelName == levelName ) , self.data)))
+        return (list(filter(lambda x: (x.level.levelName == level_name ) , self.data)))
     
     def get_data_by_type(self, data_type):
         '''
@@ -167,19 +167,19 @@ class ReadDataFromFile:
 
         return (list(filter(lambda x: (x.dataType == data_type ) , self.data)))
     
-    def get_data_by_level_and_dataType(self, levelName, dataType):
+    def get_data_by_level_and_data_type(self, level_name, data_type):
         '''
         Returns all data objects where level name and data type equal past in values.
 
-        :param levelName: The building level name.
-        :type levelName: str
-        :param dataType: A string describing the data type\
+        :param level_name: The building level name.
+        :type level_name: str
+        :param data_type: A string describing the data type\
             refer to property .dataType on data object class
-        :type dataType: str
+        :type data_type: str
 
         :return: A list of data objects
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.levelName == levelName and x.dataType == dataType), self.data)))
+        return (list(filter(lambda x: (x.level.levelName == level_name and x.dataType == data_type), self.data)))
 

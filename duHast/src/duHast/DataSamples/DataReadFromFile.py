@@ -125,19 +125,20 @@ class ReadDataFromFile:
         data_objects = []
         data_json = self._read_json_file(self.dataFilePath)
 
-        # load rooms {Root}.rooms
-        room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.dataType])
+        if(len(data_json) > 0):
+            # load rooms {Root}.rooms
+            room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.dataType])
 
-        # add to global list
-        for rj in room_json:
-            data_objects.append(rj)
+            # add to global list
+            for rj in room_json:
+                data_objects.append(rj)
 
-        #load ceiling at {Root}.ceilings
-        ceiling_json = self._get_ceiling_data_from_JSON(data_json[dc.DataCeiling.dataType])
+            #load ceiling at {Root}.ceilings
+            ceiling_json = self._get_ceiling_data_from_JSON(data_json[dc.DataCeiling.dataType])
         
-        # add to global list
-        for cj in ceiling_json:
-            data_objects.append(cj)
+            # add to global list
+            for cj in ceiling_json:
+                data_objects.append(cj)
         
         self.data = data_objects
     

@@ -320,7 +320,7 @@ def PopulateDataRoomObject(doc, revitRoom):
         dataR.instanceProperties.instanceId=revitRoom.Id.IntegerValue
         # custom parameter value getters
         value_getter = {
-            rdb.StorageType.Double : com.getter_double_as_double, 
+            rdb.StorageType.Double : com.getter_double_as_double_converted_to_millimeter, 
             rdb.StorageType.Integer : com.getter_int_as_int, 
             rdb.StorageType.String : com.getter_string_as_UTF8_string, # encode ass utf 8 just in case
             rdb.StorageType.ElementId : com.getter_element_id_as_element_int # needs to be an integer for JSON encoding

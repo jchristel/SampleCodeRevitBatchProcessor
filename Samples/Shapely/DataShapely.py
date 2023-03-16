@@ -36,6 +36,18 @@ import sys
 import codecs
 
 
+# path to shared packages on network drive (currently debug path only)
+DUHAST_SOURCE_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src'
+
+
+
+LIBRARY = r'\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\Lib\site-packages'
+
+LIBRARY_LIB = r'C:\Users\jchristel\AppData\Roaming\Python\Python39\site-packages'
+
+# set path to shared packages
+sys.path += [DUHAST_SOURCE_PATH, LIBRARY_LIB]
+
 # these packages are not available in an ironpython environment .e.g. Revit Python shell
 # to avoid an exception stopping the entire package to load these are within a try catch block
 
@@ -78,37 +90,37 @@ def GetTranslationMatrix(geoObject):
     combinedM = np.transpose(combinedM)
     return combinedM
 
-def GetOuterLoopAsShape(geoObject, translationM):
+def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     '''
     Returns the boundary loop of an object as list of shapely points. 
     
     Points are translated with passed in matrix.
     Any loops containing less then 3 points will be ignored. (Empty list will be returned)
 
-    :param geoObject: A data geometry object instance.
-    :type geoObject: :class:`.DataGeometry`
-    :param translationM: A translation matrix.
-    :type translationM: numpy array
+    :param geometry_object: A data geometry object instance.
+    :type geometry_object: :class:`.DataGeometry`
+    :param translation_matrix: A translation matrix.
+    :type translation_matrix: numpy array
 
     :return: List of shapely points defining a polygon. (Empty list will be returned if less then 3 points in loop.)
     :rtype: List[shapely.point]
     '''
 
-    singlePolygonLoop = []
-    if(geoObject.dataType == 'polygons'):
-        for pointDouble in geoObject.outerLoop:
+    single_polygon_loop = []
+    if(geometry_object.dataType == 'polygons'):
+        for point_double in geometry_object.outerLoop:
             # need to add 1 to list for matrix multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)
-            translatedPoint = np.dot(translationM,[pointDouble[0], pointDouble[1], pointDouble[2], 1.0])
-            p = sg.Point(translatedPoint[0],translatedPoint[1],translatedPoint[2])
-            singlePolygonLoop.append(p)
+            translated_point = np.dot(translation_matrix,[point_double[0], point_double[1], point_double[2], 1.0])
+            p = sg.Point(translated_point[0],translated_point[1],translated_point[2])
+            single_polygon_loop.append(p)
     # ignore any poly loops with less then 3 sides (less then 3 points)
-    if(len(singlePolygonLoop) > 2):
-        return singlePolygonLoop
+    if(len(single_polygon_loop) > 2):
+        return single_polygon_loop
     else:
         return []
 
-def GetInnerLoopsAsShape(geoObject, translationM):
+def get_inner_loops_as_shapely_points(geometry_object, translation_matrix):
     '''
     Returns the inner loops (holes) of an object as list of lists of shapely points. 
     
@@ -124,22 +136,22 @@ def GetInnerLoopsAsShape(geoObject, translationM):
     :rtype: list [list[shapely.point]]
     '''
     
-    shapeS = []
+    shapely_points = []
     # get inner loops
-    if(len(geoObject.innerLoops) > 0):
+    if(len(geometry_object.innerLoops) > 0):
         # there might be more then one inner loop
-        for innerLoop in geoObject.innerLoops:
-            singlePolygonLoop = []
-            for pointDouble in innerLoop:
+        for inner_loop in geometry_object.innerLoops:
+            single_polygon_loop = []
+            for point_double in inner_loop:
                 # need to add 1 to list for matrix multiplication
                 # number of columns in first matrix (translation) must match number of rows in second matrix (point)
-                translatedPoint = np.dot(translationM,[pointDouble[0], pointDouble[1], pointDouble[2], 1.0])
-                p = sg.Point(translatedPoint[0],translatedPoint[1],translatedPoint[2])
-                singlePolygonLoop.append(p)
+                translated_point = np.dot(translation_matrix,[point_double[0], point_double[1], point_double[2], 1.0])
+                p = sg.Point(translated_point[0],translated_point[1],translated_point[2])
+                single_polygon_loop.append(p)
             # ignore any poly loops with less then 3 sides ( less then 3 points)
-            if(len(singlePolygonLoop)>2):
-                shapeS.append(singlePolygonLoop)
-    return shapeS
+            if(len(single_polygon_loop)>2):
+                shapely_points.append(single_polygon_loop)
+    return shapely_points
 
 def buildShapelyPolygon(shapeS):
     '''
@@ -175,48 +187,48 @@ def buildShapelyPolygon(shapeS):
             if poly.within(sg.Polygon(shapeS[0])) is True])
     return poly
 
-def GetShapelyPolygonsFromDataInstance(dataInstance):
+def get_shapely_polygons_from_data_instance(data_instance):
     '''
     Returns a list of of shapely polygons from data instances past in.
     
     Polygons may contain holes
 
-    :param dataInstance: _description_
-    :type dataInstance: A class with .geometry property returning a :class:`.DataGeometry` instance.
+    :param data_instance: _description_
+    :type data_instance: A class with .geometry property returning a :class:`.DataGeometry` instance.
     
     :return: A list of shapely polygons.
     :rtype: list [shapely.polygon]
     '''
 
-    allPolygons = []
+    all_polygons = []
     # loop over data geometry and convert into shapely polygons
 
-    for geoObject in dataInstance.geometry:
-        if(geoObject.dataType == 'polygons'):
-            translationM = GetTranslationMatrix(geoObject)
-            shapeS = []
-            outerLoop = GetOuterLoopAsShape(geoObject, translationM)
-            shapeS.append(outerLoop)
-            if(len(outerLoop) > 0):
-                innerLoops = GetInnerLoopsAsShape(geoObject, translationM)
-                if(len(innerLoops) > 0):
-                    for l in innerLoops:
-                        shapeS.append(l)
-            poly = buildShapelyPolygon(shapeS)
-            allPolygons.append(poly)
+    for geometry_object in data_instance.geometry:
+        if(geometry_object.dataType == 'polygons'):
+            translation_matrix = GetTranslationMatrix(geometry_object)
+            shape_shapely = []
+            outer_loop = get_outer_loop_as_shapely_points(geometry_object, translation_matrix)
+            shape_shapely.append(outer_loop)
+            if(len(outer_loop) > 0):
+                inner_loops = get_inner_loops_as_shapely_points(geometry_object, translation_matrix)
+                if(len(inner_loops) > 0):
+                    for l in inner_loops:
+                        shape_shapely.append(l)
+            poly = buildShapelyPolygon(shape_shapely)
+            all_polygons.append(poly)
         else:
             print('Not a polygon data instance!')
-    return allPolygons
+    return all_polygons
 
 # --------------- end generics ------------------
 
 #: List of available geometry (from revit to shapely ) converters
-geometryConverter_ = {
-    dr.DataRoom.dataType : GetShapelyPolygonsFromDataInstance,
-    dc.DataCeiling.dataType: GetShapelyPolygonsFromDataInstance
+GEOMETRY_CONVERTER = {
+    dr.DataRoom.dataType : get_shapely_polygons_from_data_instance,
+    dc.DataCeiling.dataType: get_shapely_polygons_from_data_instance
 }
 
-def ReadData(filePath):
+def read_data(file_path):
     '''
     Reads text files into data objects within data reader class which is returned
 
@@ -229,8 +241,8 @@ def ReadData(filePath):
     :rtype: :class:`.ReadDataFromFile`
     '''
     # read json file and convert into data objects
-    dataReader = dReader.ReadDataFromFile(filePath)
-    dataReader.load_Data()
+    dataReader = dReader.ReadDataFromFile(file_path)
+    dataReader.load_data()
     return dataReader
 
 # --------------- data processing ------------------
@@ -258,13 +270,20 @@ def writeReportData(fileName, header, data, writeType = 'w'):
         if(len(data) > 0):
             for d in data:
                 if (len(d) > 1):
-                    f.write('\t'.join(d + ['\n']))
+                    to_file = ''
+                    for v in d:
+                        if(v==None):
+                            v = 'null'
+                        to_file = to_file + "\t{}".format(v)
+                    # replace any NONE values to avoid issue with join command below
+                    to_file = to_file.strip()
+                    f.write(to_file + '\n')
                 elif(len(d) == 1):
                     f.write(d[0] + '\n')
         f.close()
 
 
-def BuildDictionaryByLevelAndDataType(dataReader):
+def build_dictionary_by_level_and_data_type(dataReader):
     '''
     Returns a dictionary where:
 
@@ -282,36 +301,36 @@ def BuildDictionaryByLevelAndDataType(dataReader):
 
     dic = {}
     for dObject in dataReader.data:
-        if(dObject.levelName not in dic):
-            roomsByLevel = dataReader.get_data_by_level_and_dataType(dObject.levelName, dr.DataRoom.dataType)
-            ceilingsByLevel = dataReader.get_data_by_level_and_dataType(dObject.levelName, dc.DataCeiling.dataType)
-            dic[dObject.levelName] = (roomsByLevel, ceilingsByLevel)
+        if(dObject.level.levelName not in dic):
+            roomsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dr.DataRoom.dataType)
+            ceilingsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dc.DataCeiling.dataType)
+            dic[dObject.level.levelName] = (roomsByLevel, ceilingsByLevel)
     return dic
         
-def GetShapelyPolygonsFromGeoObject(geoObjects, dataType):
+def get_shapely_polygons_from_geo_object(geometry_objects, data_type):
     '''
     Converts polygon points from DataGeometry instances to shapely polygon instances and returns them as a dictionary where:
 
     - key is the geometry objects id
     - value is a list of shapely polygons
 
-    :param geoObjects: A list of instances of the the same type (i.e DataRoom)
-    :type geoObjects: list[data object]
-    :param dataType: _string human readable identifying the data type ( each Data... class has this as a static field: dr.DataRoom.dataType)
-    :type dataType: str
+    :param geometry_objects: A list of instances of the the same type (i.e DataRoom)
+    :type geometry_objects: list[data object]
+    :param data_type: string human readable identifying the data type ( each Data... class has this as a static field: dr.DataRoom.dataType)
+    :type data_type: str
 
     :return: A dictionary.
     :rtype: {int:[shapely.polygon]}
     '''
 
-    multiPolygons = {}
-    for i in range (len(geoObjects)):
-        multiPolygons[geoObjects[i].id] = []
-        poly = geometryConverter_[dataType](geoObjects[i])
+    multi_polygons = {}
+    for i in range (len(geometry_objects)):
+        multi_polygons[geometry_objects[i].instanceProperties.instanceId] = []
+        poly = GEOMETRY_CONVERTER[data_type](geometry_objects[i])
         for p in poly:
             if(p != None):
-                multiPolygons[geoObjects[i].id].append(p)
-    return multiPolygons
+                multi_polygons[geometry_objects[i].instanceProperties.instanceId].append(p)
+    return multi_polygons
 
 def SortMultipleDataRows(associatedDataRows, roomData):
     '''
@@ -336,8 +355,9 @@ def SortMultipleDataRows(associatedDataRows, roomData):
         # build dictionary based on unique keys
         dic = {}
         for row in associatedDataRows:
+            print(row)
             # Build unique key from type mark, offset from level, design set name, design option name, isPrimary
-            key = row[0] + row[2] + row[5] + row[6] + row[7]
+            key = '{}{}{}{}{}'.format(row[0],row[2],row[5],row[6],row[7])
             if(key in dic):
                 dic[key].append(row)
             else:
@@ -370,26 +390,26 @@ def SortMultipleDataRows(associatedDataRows, roomData):
         data.append(roomData)
     return data
       
-def GetReportData(dicObject):
+def get_report_data(dic_object):
     '''
     Converts a dictionary of DataRoom objects by level into list of lists of data entries per room so it can be written to file.
 
-    :param dicObject:  A dictionary where key is the level name and values is a list of DataRoom instances.
-    :type dicObject: {str:[:class: `.DataRoom`]}
+    :param dic_object:  A dictionary where key is the level name and values is a list of DataRoom instances.
+    :type dic_object: {str:[:class: `.DataRoom`]}
 
     :return: List of list of strings representing room data
     :rtype: list of list [str]
     '''
 
     data = []
-    for levelName in dicObject:
-        for room in dicObject[levelName][0]:
+    for levelName in dic_object:
+        for room in dic_object[levelName][0]:
             dataRow = [
-                room.functionNumber, 
-                room.number, 
-                room.name, 
-                room.levelName, 
-                str(room.id),
+                room.instanceProperties.properties['drofus_room_function_number'], 
+                room.instanceProperties.properties['Number'], 
+                room.instanceProperties.properties['Name'], 
+                room.level.levelName, 
+                str(room.instanceProperties.instanceId),
                 room.designSetAndOption.designSetName,
                 room.designSetAndOption.designOptionName,
                 str(room.designSetAndOption.isPrimary)
@@ -399,11 +419,11 @@ def GetReportData(dicObject):
                 # only add ceiling data for now
                 if(associatedElement.dataType == dc.DataCeiling.dataType):
                     associatedDataRow = [
-                        associatedElement.typeMark, 
-                        associatedElement.typeName, 
-                        str(associatedElement.offsetFromLevel), 
-                        associatedElement.levelName, 
-                        str(associatedElement.id),
+                        associatedElement.typeProperties.properties['Type Mark'], 
+                        associatedElement.typeProperties.typeName, 
+                        str(associatedElement.instanceProperties.properties['Height Offset From Level']), 
+                        associatedElement.level.levelName, 
+                        str(associatedElement.instanceProperties.instanceId),
                         associatedElement.designSetAndOption.designSetName,
                         associatedElement.designSetAndOption.designOptionName,
                         str(associatedElement.designSetAndOption.isPrimary)
@@ -417,14 +437,14 @@ def GetReportData(dicObject):
                 data.append(d)
     return data
 
-def GetCeilingsByRoom (dataSourcePath, outputFilePath):
+def GetCeilingsByRoom (data_source_path, outputFilePath):
     '''
     Reads geometry data from json formatted text file and does an intersection check between room and ceiling polygons.
     
     The result is written  to a report to provided path containing a row per room and ceiling within room.
     
-    :param dataSourcePath: The fully qualified file path of json formatted data file containing room and ceiling data.
-    :type dataSourcePath: str
+    :param data_source_path: The fully qualified file path of json formatted data file containing room and ceiling data.
+    :type data_source_path: str
     :param outputFilePath: The fully qualified file path of the output report. 
     :type outputFilePath: str
 
@@ -450,75 +470,82 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
     '''
 
     result = res.Result()
-    dataReader = ReadData(dataSourcePath)
+    data_reader = read_data(data_source_path)
     # check if read returned anything
-    if(len(dataReader.data) > 0):
+    if(len(data_reader.data) > 0):
         # build dictionary of objects by level and object type
-        dicObjects = BuildDictionaryByLevelAndDataType(dataReader)
+        data_objects = build_dictionary_by_level_and_data_type(data_reader)
         # key level name, value tuple ( rooms [index 0] and ceilings [index 1])
         # loop over dic and process each key (level):
         #       - check if rooms and ceilings
         #       - intersection check
         #       - update room object with ceiling match
-        for levelName in dicObjects:
+        for level_name in data_objects:
             # check rooms are on this level
-            if(len(dicObjects[levelName][0]) > 0):
+            if(len(data_objects[level_name][0]) > 0):
                 # check ceilings are on this level
-                if(len(dicObjects[levelName][1]) > 0):
-                    polygonsByType = {}
+                if(len(data_objects[level_name][1]) > 0):
+                    polygons_by_type = {}
                     # convert geometry data off all rooms and ceilings into dictionaries : key is Revit element id, values are shapely polygons
-                    roomPolygons = GetShapelyPolygonsFromGeoObject(dicObjects[levelName][0], dr.DataRoom.dataType)
-                    ceilingPolygons = GetShapelyPolygonsFromGeoObject(dicObjects[levelName][1], dc.DataCeiling.dataType)
-                    polygonsByType[dr.DataRoom.dataType] = roomPolygons
-                    polygonsByType[dc.DataCeiling.dataType] = ceilingPolygons
-                    # loop over rooms ids
-                    for roomPolyId in polygonsByType[dr.DataRoom.dataType]:
+                    room_polygons = get_shapely_polygons_from_geo_object(data_objects[level_name][0], dr.DataRoom.dataType)
+                    ceilingPolygons = get_shapely_polygons_from_geo_object(data_objects[level_name][1], dc.DataCeiling.dataType)
+                    polygons_by_type[dr.DataRoom.dataType] = room_polygons
+                    polygons_by_type[dc.DataCeiling.dataType] = ceilingPolygons
+                    # loop over rooms ids and find intersecting ceilings
+                    for room_poly_id in polygons_by_type[dr.DataRoom.dataType]:
                         # check if valid room poly ( just in case that is a room in schedule only >> not placed in model , or unbound, or overlapping with other room)
-                        if(len(roomPolygons[roomPolyId]) > 0):
+                        if(len(room_polygons[room_poly_id]) > 0):
                             # loop over each room polygon per room...there should only be one...
-                            for rPolygon in roomPolygons[roomPolyId]:
+                            for room_polygon in room_polygons[room_poly_id]:
                                 # find overlapping ceiling polygons
                                 intersections = {}
-                                for ceilingPolyId in polygonsByType[dc.DataCeiling.dataType]:
-                                    for cPolygon in ceilingPolygons[ceilingPolyId]:
+                                for ceiling_poly_id in polygons_by_type[dc.DataCeiling.dataType]:
+                                    for ceiling_polygon in ceilingPolygons[ceiling_poly_id]:
                                         # add some exception handling here in case intersect check throws an error
                                         try:
                                             # debug
                                             match = False
                                             # check what exactly is happening
-                                            if(cPolygon.intersects(rPolygon)):
+                                            if(ceiling_polygon.intersects(room_polygon)):
                                                 # calculates percentage of overlapping ceiling area vs room area
                                                 # anything less then 0.1 will be ignored...
-                                                areaIntersectionPercentageOfCeilingVsRoom = (cPolygon.intersection(rPolygon).area/rPolygon.area)*100
+                                                area_intersection_percentage_of_ceiling_vs_room = (ceiling_polygon.intersection(room_polygon).area/room_polygon.area)*100
                                                 # check what percentage the overlap area is...if less then 0.1 percent ignore!
-                                                if(areaIntersectionPercentageOfCeilingVsRoom < 0.1):
+                                                if(area_intersection_percentage_of_ceiling_vs_room < 0.1):
                                                     # ceiling overlap area is to small...not in room
                                                     pass
                                                 else:
                                                     # ceiling is within the room: add to room data object
                                                     # get the room object by its Revit ID
-                                                    dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
+                                                    data_object_room =  list(filter(lambda x: (x.instanceProperties.instanceId == room_poly_id ) , data_objects[level_name][0]))[0]
                                                     # get the ceiling object by its Revit id
-                                                    dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
+                                                    data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
                                                     # add ceiling object to associated elements list of room object 
-                                                    dataObjectRoom.associatedElements.append(dataObjectCeiling)
+                                                    data_object_room.associatedElements.append(data_object_Ceiling)
                                         except Exception as e:
                                             # get the offending elements:
-                                            dataObjectRoom =  list(filter(lambda x: (x.id == roomPolyId ) , dicObjects[levelName][0]))[0]
-                                            dataObjectCeiling =  list(filter(lambda x: (x.id == ceilingPolyId ) , dicObjects[levelName][1]))[0]
+                                            data_object_room =  list(filter(lambda x: (x.instanceProperties.instanceId == room_poly_id ) , data_objects[level_name][0]))[0]
+                                            data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
                                             result.AppendMessage(
-                                                'Exception: ' + str(e) + '\n' +
-                                                'offending room: room name '+ dataObjectRoom.name+ ' room number '+ dataObjectRoom.number + ' room id ' + str(dataObjectRoom.id) + ' is valid polygon ' + str(rPolygon.is_valid) +  '\n' +
-                                                'offending ceiling id ' + str(dataObjectCeiling.id) + ' is valid polygon ' + str(cPolygon.is_valid)
+                                                'Exception: {} \n' +
+                                                'offending room: room name: {} , room number: {} , room id: {} , is valid polygon: {}\n' +
+                                                'offending ceiling id: {} , is valid polygon: {}').format(
+                                                e.message, 
+                                                data_object_room.instanceProperties.properties['Name'],
+                                                data_object_room.instanceProperties.properties['Number'],
+                                                data_object_room.instanceProperties.instanceId,
+                                                room_polygon.is_valid,
+                                                data_object_Ceiling.instanceProperties.instanceId,
+                                                ceiling_polygon.is_valid
                                                 )
                 else:
-                    result.AppendMessage('No ceilings found for level: ' + str(dicObjects[levelName][0][0].levelName))
+                    result.AppendMessage('No ceilings found for level: {}'.format(data_objects[level_name][0][0].level.levelName))
             else:
-                result.AppendMessage('No rooms found for level: ' + str(dicObjects[levelName]))
+                result.AppendMessage('No rooms found for level: {}'.format(data_objects[level_name]))
         # write data out:
         # loop over dic
         # write single row for room and matching ceiling ( multiple rows for single room if multiple ceilings)
-        reportData = GetReportData(dicObjects)
+        reportData = get_report_data(data_objects)
         writeReportData(outputFilePath, [       # header
             'room function number', 
             'room number',
@@ -539,5 +566,9 @@ def GetCeilingsByRoom (dataSourcePath, outputFilePath):
             ], reportData)
         result.UpdateSep(True, 'Wrote data to file: ' + outputFilePath)
     else:
-        result.UpdateSep(False, 'No data was fond in: ' + dataSourcePath)
+        result.UpdateSep(False, 'No data was fond in: ' + data_source_path)
     return result
+
+
+GetCeilingsByRoom (r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromFile.json', 
+                   r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\roomsOut_.txt')

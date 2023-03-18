@@ -1,0 +1,52 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Export a ceilings and rooms data from a file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This flow demonstrates how to use DataSamples name space to export all ceilings and rooms data from Revit.
+
+'''
+
+#
+# Copyright (c) 2023  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+# ---------------------------------
+# default path locations
+# ---------------------------------
+
+# add library to du hast( if not on path )
+import sys
+DU_HAST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src'
+sys.path += [DU_HAST_PATH]
+
+from duHast.DataSamples import DataExport as dEx
+
+
+# json formatted data file location
+file_out = r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromModel.json'
+
+
+def export_data(doc, file_path):
+    # get json data from model:
+    json_from_model = dEx.get_data_from_model(doc)
+    # Write data to file
+    write_data = dEx.write_json_to_file (json_from_model, file_out)
+    print (write_data.message)
+
+# write data to file
+export_data (doc, file_out)

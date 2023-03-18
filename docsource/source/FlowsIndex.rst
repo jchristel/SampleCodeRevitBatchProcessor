@@ -100,5 +100,5 @@ Batch Process - Post processing Flows
 Using Shapely and data extracted from Revit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: DataShapely
+.. automodule:: CeilingsToRooms
     :members:

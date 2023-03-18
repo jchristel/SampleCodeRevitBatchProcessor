@@ -62,33 +62,33 @@ from duHast.DataSamples import DataReadFromFile as dReader
 
 # --------------- generics shape creation ------------------
 
-def GetTranslationMatrix(geoObject):
+def get_translation_matrix(geometry_object):
     '''
     Gets the rotation/ translation matrix from the geometry object
 
-    :param geoObject: A data geometry object instance.
-    :type geoObject: :class:`.DataGeometry`
+    :param geometry_object: A data geometry object instance.
+    :type geometry_object: :class:`.DataGeometry`
 
     :return: A translation matrix.
     :rtype: numpy array
     '''
 
-    transM = [] # translation only matrix
+    translation_matrix = [] # translation only matrix
     # note numpy creates arrays by row!
     # need to append one more row since matrix dot multiplication rule:
     # number of columns in first matrix must match number of rows in second matrix (point later on)
-    for vector in geoObject.rotationCoord:
+    for vector in geometry_object.rotationCoord:
         vector.append(0.0)
-        transM.append(vector)
-    rotationM = geoObject.translationCoord # rotation matrix
+        translation_matrix.append(vector)
+    rotation_matrix = geometry_object.translationCoord # rotation matrix
     # adding extra row here
-    rotationM.append(1.0)
-    transM.append(rotationM)
+    rotation_matrix.append(1.0)
+    translation_matrix.append(rotation_matrix)
     # build combined rotation and translation matrix
-    combinedM = np.array(transM)
+    combined_matrix = np.array(translation_matrix)
     # transpose matrix (translation matrix in json file is stored by columns not by rows!)
-    combinedM = np.transpose(combinedM)
-    return combinedM
+    combined_matrix = np.transpose(combined_matrix)
+    return combined_matrix
 
 def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     '''
@@ -153,15 +153,15 @@ def get_inner_loops_as_shapely_points(geometry_object, translation_matrix):
                 shapely_points.append(single_polygon_loop)
     return shapely_points
 
-def buildShapelyPolygon(shapeS):
+def build_shapely_polygon(shapely_polygons):
     '''
-    Creates shapely polygons from list of polygons past in.
+    Creates shapely polygon with nested polygons from list of shapely polygons past in.
 
-    Assumptions is first polygon describes the boundary loop and any subsequent polygons are describing\
+    Assumptions is: first polygon describes the boundary loop and any subsequent polygons are describing\
          holes within the boundary 
 
-    :param shapeS: list of shapely polygons
-    :type shapeS: list[shapely.polygon]
+    :param shapely_polygons: list of shapely polygons
+    :type shapely_polygons: list[shapely.polygon]
 
     :return: A shapely polygon.
     :rtype: shapely.polygon
@@ -170,21 +170,21 @@ def buildShapelyPolygon(shapeS):
     # convert to shapely
     poly = None
     # check if we got multiple polygons
-    if(len(shapeS) == 1):
+    if(len(shapely_polygons) == 1):
         # single exterior boundary ... no holes
-        poly = sg.Polygon(shapeS[0])
-    elif(len(shapeS) > 1):
+        poly = sg.Polygon(shapely_polygons[0])
+    elif(len(shapely_polygons) > 1):
         # got holes...
         # set up interior holes to be added to polygon
         # (remember exterior point order is ccw, holes cw else
         # holes may not appear as holes.)
         interiors = {}
-        for i in range(1,len(shapeS)):
-            interiors[i-1] = shapeS[i]
+        for i in range(1,len(shapely_polygons)):
+            interiors[i-1] = shapely_polygons[i]
         i_p = {k: sg.Polygon(v) for k, v in interiors.items()}
         # create polygon with holes
-        poly = sg.Polygon(shapeS[0], [poly.exterior.coords for poly in i_p.values() \
-            if poly.within(sg.Polygon(shapeS[0])) is True])
+        poly = sg.Polygon(shapely_polygons[0], [poly.exterior.coords for poly in i_p.values() \
+            if poly.within(sg.Polygon(shapely_polygons[0])) is True])
     return poly
 
 def get_shapely_polygons_from_data_instance(data_instance):
@@ -205,7 +205,7 @@ def get_shapely_polygons_from_data_instance(data_instance):
 
     for geometry_object in data_instance.geometry:
         if(geometry_object.dataType == 'polygons'):
-            translation_matrix = GetTranslationMatrix(geometry_object)
+            translation_matrix = get_translation_matrix(geometry_object)
             shape_shapely = []
             outer_loop = get_outer_loop_as_shapely_points(geometry_object, translation_matrix)
             shape_shapely.append(outer_loop)
@@ -214,7 +214,7 @@ def get_shapely_polygons_from_data_instance(data_instance):
                 if(len(inner_loops) > 0):
                     for l in inner_loops:
                         shape_shapely.append(l)
-            poly = buildShapelyPolygon(shape_shapely)
+            poly = build_shapely_polygon(shape_shapely)
             all_polygons.append(poly)
         else:
             print('Not a polygon data instance!')

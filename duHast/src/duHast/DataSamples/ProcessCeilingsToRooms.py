@@ -5,16 +5,16 @@ Sample showing how to find which ceilings are in which rooms.
 
 This module requires python >3.9 due to dependencies:
 
-- numpy
-- shapely
+    - numpy
+    - shapely
 
 This module:
-- collects ceiling and room data instances by level ( assume a ceiling is always modelled as the room it is in )
-- converts room and ceiling outlines to shapely polygons
-- test for intersection of all ceilings on a given level with all rooms on a given level
-- stores any intersections found ( does a check how much area is  intersecting...if to small its assumed its not an intended intersection)
-- reports all rooms and any associated ceiling(s) found
 
+    - collects ceiling and room data instances by level ( assume a ceiling is always modelled as the room it is in )
+    - converts room and ceiling outlines to shapely polygons
+    - test for intersection of all ceilings on a given level with all rooms on a given level
+    - stores any intersections found ( does a check how much area is  intersecting...if to small its assumed its not an intended intersection)
+    - reports all rooms and any associated ceiling(s) found
 
 '''
 #
@@ -64,6 +64,7 @@ def _read_data(file_path):
     :return: A file data reader instance.
     :rtype: :class:`.ReadDataFromFile`
     '''
+
     # read json file and convert into data objects
     dataReader = dReader.ReadDataFromFile(file_path)
     dataReader.load_data()
@@ -96,7 +97,6 @@ def _write_report_data(file_name, header, data,):
         - result.result: will be an empty list
 
     :rtype: :class:`.Result`
-
     '''
 
     return_value = res.Result()
@@ -246,11 +246,11 @@ def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, r
 
         - result.status (bool) will be False.
         - result.message will contain the exception message.
-        - result.result: will be an empty list
+        - result.result will be an empty list
 
     :rtype: :class:`.Result`
-
     '''
+
     return_value = res.Result()
     # add some exception handling here in case intersect check throws an error
     try:
@@ -300,12 +300,12 @@ def write_data_to_file(data, output_file_path, room_instance_property_keys= ['Nu
 
     - Room data consists of fixed (always reported) instance properties and custom instance properties defined in room_instance_property_keys
     - Ceiling data consists of fixed (always reported) instance properties, custom type properties defined in ceiling_type_property_keys and custom instance properties defined in ceiling_instance_property_keys
-    - the report contains a row per associated element per room ( if 2 ceiliungs are in a room, the report will contain 2 rows)
+    - the report contains a row per associated element per room ( if 2 ceilings are in a room, the report will contain 2 rows)
 
     :param data: A dictionary where key is the level name and values is a list of DataRoom instances.
     :type data: {str:[:class: `.DataRoom`]}
     :param output_file_path: Fully qualified file path to output report file.
-    :type output_file_path:str
+    :type output_file_path: str
     :param room_instance_property_keys: Names of room instance properties to be reported, defaults to ['Number', 'Name']
     :type room_instance_property_keys: list, optional
     :param ceiling_type_property_keys: Names of ceiling type properties to be reported, defaults to ['Type Mark']
@@ -318,7 +318,7 @@ def write_data_to_file(data, output_file_path, room_instance_property_keys= ['Nu
 
         - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the processing messages.
-        -.result will contain
+        - result.result will be an empty list
         
         On exception:
 
@@ -367,13 +367,13 @@ def get_ceilings_by_room(data_source_path):
 
         - result.status False if an exception occurred, otherwise True.
         - result.message will contain processing messages.
-        - result.result: A dictionary where key is the level name, value is a tuple of two lists: first one are rooms, second ones are ceiling data objects.
+        - result.result A dictionary where key is the level name, value is a tuple of two lists: first one are rooms, second ones are ceiling data objects.
         
         On exception:
 
         - result.status (bool) will be False.
         - result.message will contain the exception message.
-        - result.result: will be an empty list
+        - result.result will be an empty list
 
     :rtype: :class:`.Result`
     '''

@@ -621,7 +621,7 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.Set(newId)
-                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type Id.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -638,7 +638,7 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.SetValueString(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type double.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -649,7 +649,7 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.Set(int(valueAsString))
-                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type integer.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
@@ -660,7 +660,7 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.Set(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type string.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type string.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue

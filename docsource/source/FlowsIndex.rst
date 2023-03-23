@@ -76,18 +76,6 @@ Modules useful when running batch processor without its user interface.
 .. automodule:: Pre_BuildFileList
     :members:
 
-.. _UI Flow :
-
-File selection UI
-""""""""""""""""""""
-
-.. automodule:: script
-    :members:
-
-.. automodule:: UIFileSelect
-    :members:
-
-
 Batch Process - Post processing Flows
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

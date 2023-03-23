@@ -34,6 +34,7 @@ clr.ImportExtensions(Linq)
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.APISamples import RevitFamilyUtils as rFamU
 from duHast.Utilities import Result as res
@@ -495,7 +496,7 @@ def GetUnusedLevelHeadFamilies(doc):
     # get family symbol in use at level as symbol
     for lId in usedTypes:
         type = doc.GetElement(lId)
-        id = com.GetBuiltInParameterValue(type, rdb.BuiltInParameter.LEVEL_HEAD_TAG)
+        id = rParaGet.get_built_in_parameter_value(type, rdb.BuiltInParameter.LEVEL_HEAD_TAG)
         if(id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     # get all level head symbols available

@@ -35,6 +35,7 @@ clr.ImportExtensions(Linq)
 from collections import namedtuple
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 
 # import Autodesk
@@ -227,7 +228,7 @@ def _check_Revision_against_filters(revision, revision_description_filter):
     for paraName, paraCondition, conditionValue in revision_description_filter:
         for p in paras:
             if(p.Definition.Name == paraName):
-                match = com.CheckParameterValue(p, paraCondition, conditionValue)
+                match = rParaGet.check_parameter_value(p, paraCondition, conditionValue)
                 ruleMatch = ruleMatch and match
     return ruleMatch
 

@@ -38,6 +38,7 @@ from System.Collections.Generic import List
 # import common library
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 # utilities
 from duHast.Utilities import Utility as util
 # class used for stats reporting
@@ -422,10 +423,10 @@ def IsAnyNestedFamilyInstanceLabelDriven(doc):
     
     for famInstance in famInstances:
         # get the Label parameter value
-        pValue = com.GetBuiltInParameterValue(
+        pValue = rParaGet.get_built_in_parameter_value(
             famInstance,
             rdb.BuiltInParameter.ELEM_TYPE_LABEL,
-            com.GetParameterValueAsElementId
+            rParaGet.get_parameter_value_as_element_id
             )
         # a valid Element Id means family instance is driven by Label
         if (pValue != rdb.ElementId.InvalidElementId):
@@ -587,7 +588,7 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
             # check if shared families are to be excluded from return list
             if(excludeSharedFam):
                 fam = el.Family
-                pValue = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
+                pValue = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
                 if(pValue != None):
                     if(pValue == 'No' and el.Id not in ids):
                         ids.append(el.Id)
@@ -795,10 +796,10 @@ def SetRefPlanesToNotAReference(doc):
     matchAtAll = False
     collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     for refP in collectorRefPlanes:
-        valueInt = com.GetBuiltInParameterValue(
+        valueInt = rParaGet.get_built_in_parameter_value(
             refP, 
             rdb.BuiltInParameter.ELEM_REFERENCE_NAME, 
-            com.GetParameterValueAsInteger)
+            rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id is greater then 12)
         if (valueInt > 13):
             resultChange = com.SetBuiltInParameterValue(
@@ -852,10 +853,10 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     curves = GetAllCurveBasedElementsInFamily(doc)
     for curve in curves:
         # get the current reference type
-        valueInt = com.GetBuiltInParameterValue(
+        valueInt = rParaGet.get_built_in_parameter_value(
             curve, 
             rdb.BuiltInParameter.ELEM_IS_REFERENCE, 
-            com.GetParameterValueAsInteger)
+            rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id equals 1)
         if (valueInt == 1):
             resultChange = com.SetBuiltInParameterValue(

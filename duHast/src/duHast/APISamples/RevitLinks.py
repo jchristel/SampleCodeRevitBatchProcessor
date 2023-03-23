@@ -31,6 +31,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 import glob
@@ -691,7 +692,7 @@ def GetRevitLinkReportData(doc, revitFilePath):
         linkType = GetRevitLinkTypeFromInstance(doc, c)
         linkTypeData = GetRevitLinkTypeData(doc, linkType)
         # add other data
-        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [com.getParameterValue(wsParameter)] + [com.getParameterValue(doParameter)]
+        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [rParaGet.get_parameter_value (wsParameter)] + [rParaGet.get_parameter_value(doParameter)]
         data.append(linkTypeData)
     return data
         

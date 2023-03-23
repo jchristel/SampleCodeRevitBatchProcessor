@@ -32,6 +32,7 @@ from System.Collections.Generic import List
 
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 
 # import Autodesk
@@ -317,7 +318,7 @@ def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
     for c in collector:
         if(c.GetType() == rdb.FamilySymbol):
             fam = c.Family
-            pValue = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
+            pValue = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
             if(pValue != None and  pValue == 'No' and c.Id not in ids):
                 ids.append(c.Id)
     return ids

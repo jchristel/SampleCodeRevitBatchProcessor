@@ -35,6 +35,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 
@@ -252,7 +253,7 @@ def IsElementOnWorksetById(doc, el, worksetId):
     flag = True
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsParam)
+        currentWorksetName = rParaGet.get_parameter_value(wsParam)
         compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
         if(compareToWorksetName != currentWorksetName):
             flag = False
@@ -277,7 +278,7 @@ def IsElementOnWorksetByName(el, worksetName):
     flag = True
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsParam)
+        currentWorksetName = rParaGet.get_parameter_value(wsParam)
         if(worksetName != currentWorksetName):
             flag = False
     except Exception as e:
@@ -298,7 +299,7 @@ def GetElementWorksetName(el):
     workSetname = 'invalid workset'
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        workSetname = com.getParameterValue(wsParam)
+        workSetname = rParaGet.get_parameter_value(wsParam)
     except Exception as e:
         print ("GetElementWorksetName: " + str(e))
     return workSetname

@@ -30,7 +30,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 
@@ -124,7 +124,7 @@ def GetMaterialReportData(doc, revitFilePath):
             paras = mat.GetOrderedParameters()
             for p in paras:
                 paraName = p.Definition.Name
-                pValue = com.getParameterValue(p)
+                pValue = rParaGet.get_parameter_value(p)
                 data.append(
                     [revitFilePath,
                     str(mat.Id),

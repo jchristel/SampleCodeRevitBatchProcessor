@@ -31,6 +31,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 
 # import Autodesk
@@ -387,7 +388,7 @@ def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
     types = typeGetter(doc)
     for t in types:
         for pInt in parameterList:
-            id = com.GetBuiltInParameterValue(t, pInt)
+            id = rParaGet.get_built_in_parameter_value(t, pInt)
             if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
                 usedIds.append(id)
             break
@@ -455,7 +456,7 @@ def GetIndependentTagTypeArrowHeadIds(doc):
     for t in tags:
         tTypeId = t.GetTypeId()
         tTypeElement = doc.GetElement(tTypeId)
-        id = com.GetBuiltInParameterValue(tTypeElement, rdb.BuiltInParameter.LEADER_ARROWHEAD)
+        id = rParaGet.get_built_in_parameter_value(tTypeElement, rdb.BuiltInParameter.LEADER_ARROWHEAD)
         if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
             usedIds.append(id)
     return usedIds
@@ -660,7 +661,7 @@ def GetSymbolIdsFromDimTypes(doc):
     ids = []
     dimTs = GetDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
+        id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
@@ -679,7 +680,7 @@ def GetSymbolIdsFromSpotTypes(doc):
     ids = []
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
+        id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids
@@ -730,7 +731,7 @@ def GetUnusedSymbolIdsFromSpotTypes(doc):
     idsAvailable = GetAllSpotElevationSymbolIdsInModel(doc)
     dimTs = GetAllSpotDimTypes(doc)
     for t in dimTs:
-        id = com.GetBuiltInParameterValue(t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
+        id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
         if(id not in idsUsed and id != rdb.ElementId.InvalidElementId and id != None):
             idsUsed.append(id)
                 

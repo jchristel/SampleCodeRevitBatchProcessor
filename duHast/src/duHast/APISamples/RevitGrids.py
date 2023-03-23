@@ -35,6 +35,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
@@ -494,9 +495,9 @@ def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
     :rtype: bool
     '''
     ruleMatch = False
-    pValue = com.GetParameterValueByName(g, paraName)
+    pValue = rParaGet.get_parameter_value_by_name (g, paraName)
     if (pValue != None):
-        ruleMatch = com.CheckParameterValue(g, paraCondition, conditionValue)
+        ruleMatch = rParaGet.check_parameter_value(g, paraCondition, conditionValue)
     return ruleMatch
 
 def GetMaxExtentAsString(g):
@@ -655,7 +656,7 @@ def GetUnusedGridHeadFamilies(doc):
     headsInUseIds = []
     for Id in usedTypes:
         type = doc.GetElement(Id)
-        id = com.GetBuiltInParameterValue(type, rdb.BuiltInParameter.GRID_HEAD_TAG)
+        id = rParaGet.get_built_in_parameter_value(type, rdb.BuiltInParameter.GRID_HEAD_TAG)
         if (id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     allSymbolsInModel = GetAllGridHeadsByCategory(doc)

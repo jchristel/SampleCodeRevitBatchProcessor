@@ -30,6 +30,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 
@@ -620,7 +621,7 @@ def DeleteViews(doc, viewRules, collectorViews):
             for paraName, paraCondition, conditionValue in viewRules:
                 for p in paras:
                     if(p.Definition.Name == paraName):
-                        ruleMatch = ruleMatch and com.CheckParameterValue(p, paraCondition, conditionValue)
+                        ruleMatch = ruleMatch and rParaGet.check_parameter_value(p, paraCondition, conditionValue)
             if (ruleMatch == True):
                 # delete view
                 ids.append(v.Id)
@@ -728,7 +729,7 @@ def DeleteSheets(doc, viewRules, collectorViews):
             for paraName, paraCondition, conditionValue in viewRules:
                 for p in paras:
                     if(p.Definition.Name == paraName):
-                        ruleMatch = ruleMatch and com.CheckParameterValue(p, paraCondition, conditionValue)
+                        ruleMatch = ruleMatch and rParaGet.check_parameter_value(p, paraCondition, conditionValue)
             if (ruleMatch == True):
                 # delete view
                 ids.append(v.Id)
@@ -786,7 +787,7 @@ def GetSheetsByFilters(doc, viewRules = None):
             for paraName, paraCondition, conditionValue in viewRules:
                 for p in paras:
                     if(p.Definition.Name == paraName):
-                        ruleMatch = ruleMatch and com.CheckParameterValue(p, paraCondition, conditionValue)
+                        ruleMatch = ruleMatch and rParaGet.check_parameter_value(p, paraCondition, conditionValue)
             if (ruleMatch == True):
                 # delete view
                 views.append(v)
@@ -923,7 +924,7 @@ def GetSheetReportData(doc, hostName):
         data = [hostName, str(v.Id)]
         for para in paras:
             # get values as utf-8 encoded strings
-            value = com.GetParameterValueUTF8String(para)
+            value = rParaGet.get_parameter_value_utf8_string (para)
             try:
                 data.append (value)
             except:

@@ -33,6 +33,7 @@ import sys
 #sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 from duHast.APISamples import RevitAnnotation as rAnno
 
@@ -80,7 +81,7 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
         parameterMatch = False
         # get the family object to check whether it is a shared family
         fam = c.Family
-        id = com.GetBuiltInParameterValue(fam, rdb.BuiltInParameter.FAMILY_SHARED)
+        id =  rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
         if(id != None):
             parameterMatch = True
             if(id == 'No' and c.Id not in ids):

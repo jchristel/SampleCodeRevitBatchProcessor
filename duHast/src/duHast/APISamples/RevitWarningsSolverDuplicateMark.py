@@ -28,6 +28,7 @@ Duplicate mark warnings solver class.
 #
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 
 
@@ -81,7 +82,7 @@ class RevitWarningsSolverDuplicateMark:
                     # check whether element passes filter
                     if(self.filter(doc, elId, self.filterValues)):
                         try:
-                            pValue = com.GetBuiltInParameterValue(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
+                            pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
                             if (pValue != None):
                                 result = com.SetBuiltInParameterValue(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
                                 returnValue.Update(result)

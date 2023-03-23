@@ -34,6 +34,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 
 
@@ -100,7 +101,7 @@ def GetLinePatternFromLevelElement(doc, level):
     try:
         lTypeId = level.GetTypeId()
         levelType = doc.GetElement(lTypeId)
-        linePatternIdString = com.GetBuiltInParameterValue(levelType, rdb.BuiltInParameter.LINE_PATTERN)
+        linePatternIdString = rParaGet.get_built_in_parameter_value(levelType, rdb.BuiltInParameter.LINE_PATTERN)
         dicPattern[PROPERTY_PATTERN_ID] = rdb.ElementId(int(linePatternIdString))
         dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(levelType)
     except Exception as ex:

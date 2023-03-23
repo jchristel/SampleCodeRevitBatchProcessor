@@ -34,6 +34,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
@@ -320,12 +321,12 @@ def PopulateDataRoomObject(doc, revitRoom):
         dataR.instanceProperties.instanceId=revitRoom.Id.IntegerValue
         # custom parameter value getters
         value_getter = {
-            rdb.StorageType.Double : com.getter_double_as_double_converted_to_millimeter, 
-            rdb.StorageType.Integer : com.getter_int_as_int, 
-            rdb.StorageType.String : com.getter_string_as_UTF8_string, # encode ass utf 8 just in case
-            rdb.StorageType.ElementId : com.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+            rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter, 
+            rdb.StorageType.Integer : rParaGet.getter_int_as_int, 
+            rdb.StorageType.String : rParaGet.getter_string_as_UTF8_string, # encode ass utf 8 just in case
+            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int # needs to be an integer for JSON encoding
         }
-        dataR.instanceProperties.properties=com.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
+        dataR.instanceProperties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
         
         # get the model name
         if(doc.IsDetached):
@@ -334,7 +335,7 @@ def PopulateDataRoomObject(doc, revitRoom):
             dataR.revitModel.modelName = doc.Title
         
         # get phase name
-        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
         dataR.phasing.phaseDemolished = -1
         
         # get level data

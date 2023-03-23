@@ -34,6 +34,7 @@ import System
 from System.Collections.Generic import List
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFamU
 from duHast.APISamples import RevitViews as rView
 
@@ -179,7 +180,7 @@ def GetReferenceTypeIdsFromViewType(viewType):
 
     dic = {}
     for pDef in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
-        pValue = com.GetBuiltInParameterValue(viewType, pDef)
+        pValue = rParaGet.get_built_in_parameter_value(viewType, pDef)
         if(pValue != None):
             # there should only ever be one value per key!
             if(dic.has_key(pDef)):
@@ -327,7 +328,7 @@ def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
     for vrtId in viewRefTypesIds:
         el = doc.GetElement(vrtId)
         for pDef in VIEW_TAG_SYMBOL_PARAMETER_DEF:
-            pValue = com.GetBuiltInParameterValue(el, pDef)
+            pValue = rParaGet.get_built_in_parameter_value(el, pDef)
             if (pValue != None and pValue not in ids):
                 ids.append(pValue)
     return ids

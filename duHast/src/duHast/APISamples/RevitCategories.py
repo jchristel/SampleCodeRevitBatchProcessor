@@ -32,6 +32,7 @@ import System
 from System.Collections.Generic import List
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFamUtils
 from duHast.APISamples import RevitLinks as rLink
 from duHast.Utilities import Result as res
@@ -756,7 +757,7 @@ def SortElementsByCategory(elements, elementDic):
 
     for el in elements:
         for builtinDef in ELEMENTS_PARAS_SUB:
-            value = com.GetBuiltInParameterValue(el, builtinDef, com.GetParameterValueAsElementId)
+            value = rParaGet.get_built_in_parameter_value(el, builtinDef, rParaGet.get_parameter_value_as_element_id)
             if (value != None):
                 if(value in elementDic):
                     elementDic[value].append(el.Id)

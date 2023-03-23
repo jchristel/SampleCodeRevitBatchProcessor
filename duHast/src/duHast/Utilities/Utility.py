@@ -1074,14 +1074,18 @@ def EncodeAscii (string):
     '''
     Encode a string as ascii and replaces all non ascii characters
 
+    If a non string is past in the value will be returned unchanged.
+    
     :param string: The string to be ascii encoded.
     :type string: str
 
     :return: ascii encoded string
     :rtype: str
     '''
-    
-    return string.encode('ascii','replace')
+    if (type(string) == str):
+        return string.encode('ascii','replace')
+    else:
+        return string
 
 def GetFirst(iterable, default, condition = lambda x: True):
     '''

@@ -33,7 +33,6 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitGeometry as rGeo
@@ -41,6 +40,7 @@ from duHast.APISamples import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples import DataRoom as dRoom
 from duHast.DataSamples import DataGeometry as dGeometry
 from duHast.APISamples import RevitPhases as rPhase
+from duHast.APISamples import RevitTransaction as rTran
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -160,7 +160,7 @@ def MoveTagToRoom(doc, tagId):
             actionReturnValue.UpdateSep(False, 'Failed to move tag to room ' + roomData + ' with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + roomData)
-    returnValue.Update(com.InTransaction(transaction, action))
+    returnValue.Update(rTran.in_transaction(transaction, action))
     return returnValue
 
 # -------------------------------- room geometry -------------------------------------------------------

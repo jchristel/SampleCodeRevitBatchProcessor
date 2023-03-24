@@ -33,6 +33,7 @@ import System
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 import glob
 import os
@@ -251,7 +252,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
                             actionReturnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     transaction = rdb.Transaction(doc, 'Reloading: ' + linkTypeName)
-                    reloadResult = com.InTransaction(transaction, action)
+                    reloadResult = rTran.in_transaction(transaction, action)
                     returnValue.Update(reloadResult)
                 else:
                     returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')

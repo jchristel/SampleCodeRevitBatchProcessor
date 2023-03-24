@@ -32,6 +32,7 @@ import System
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 
 # import Autodesk
@@ -412,7 +413,7 @@ def ChangeSharedParameterToFamilyParameter(doc, parameterName, prefix = '_'):
                     actionReturnValue.UpdateSep(False, paraOldName + ': Failed to change shared parameter to family parameter: ' + str(e))
                 return actionReturnValue
             transaction = rdb.Transaction(doc, "change to family parameter")
-            returnValue = com.InTransaction(transaction, action)
+            returnValue = rTran.in_transaction(transaction, action)
             changedParameter = returnValue.status
     if(changedParameter == False):
         returnValue.status = False
@@ -476,7 +477,7 @@ def ChangeFamilyParameterToSharedParameter(doc, parameterName, parameterData, pa
                     actionReturnValue.UpdateSep(False, parameterName+': Failed to change family parameter to shared parameter.')
                 return actionReturnValue
             transaction = rdb.Transaction(doc, "change to shared parameter")
-            returnValue = com.InTransaction(transaction, action)
+            returnValue = rTran.in_transaction(transaction, action)
             changedParameter = returnValue.status
     if(changedParameter == False):
         returnValue.status = False

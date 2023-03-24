@@ -27,8 +27,8 @@ Duplicate mark warnings solver class.
 #
 #
 
-from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 from duHast.Utilities import Result as res
 
 
@@ -84,7 +84,7 @@ class RevitWarningsSolverDuplicateMark:
                         try:
                             pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
                             if (pValue != None):
-                                result = com.SetBuiltInParameterValue(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
+                                result = rParaSet.set_built_in_parameter_value(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
                                 returnValue.Update(result)
                         except Exception as e:
                             returnValue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))

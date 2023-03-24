@@ -39,6 +39,7 @@ from System.Collections.Generic import List
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 # utilities
 from duHast.Utilities import Utility as util
 # class used for stats reporting
@@ -47,6 +48,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
 from duHast.APISamples.RevitFamilyLoadOption import *
+from duHast.APISamples import RevitTransaction as rTran
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
@@ -100,7 +102,7 @@ def LoadFamily(doc, familyFilePath):
                 actionReturnValue.UpdateSep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.GetFileNameWithoutExt(familyFilePath)))
-        dummy = com.InTransaction(transaction, action)
+        dummy = rTran.in_transaction(transaction, action)
         result.Update(dummy)
     except Exception as e:
         result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
@@ -802,7 +804,7 @@ def SetRefPlanesToNotAReference(doc):
             rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id is greater then 12)
         if (valueInt > 13):
-            resultChange = com.SetBuiltInParameterValue(
+            resultChange = rParaSet.set_built_in_parameter_value(
                 doc, 
                 refP, 
                 rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
@@ -859,7 +861,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
             rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id equals 1)
         if (valueInt == 1):
-            resultChange = com.SetBuiltInParameterValue(
+            resultChange = rParaSet.set_built_in_parameter_value(
                 doc, 
                 curve, 
                 rdb.BuiltInParameter.ELEM_IS_REFERENCE,

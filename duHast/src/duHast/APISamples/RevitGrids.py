@@ -38,6 +38,7 @@ from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitFamilyUtils as rFamU
 
@@ -109,7 +110,7 @@ def change_grids_2D (doc, grids, view):
             action_return_value.UpdateSep(True, 'No grids visible in view {}'.format(view.Name))
         return action_return_value
     transaction = rdb.Transaction(doc, "Grids to 2D")
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def show_bubble_end (doc, grid, view, end_identifier, show_bubble):
@@ -157,7 +158,7 @@ def show_bubble_end (doc, grid, view, end_identifier, show_bubble):
         return action_return_value
     
     transaction = rdb.Transaction(doc, "Toggle Bubble. {}".format((show_bubble)))
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def hide_both_bubbles (doc, grids, view):
@@ -305,7 +306,7 @@ def toggle_bubble_end (doc, grid, view, end_identifier):
             action_return_value.UpdateSep(False, 'Failed to change grid {} bubble visibility at end: {} with exception: {}'.format(grid.Name, end_identifier, e))
         return action_return_value
     transaction = rdb.Transaction(doc, "Toggle Bubble.")
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def toggle_bubble_one_end (doc, grids, view ):

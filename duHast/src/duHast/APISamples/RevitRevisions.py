@@ -34,9 +34,9 @@ clr.ImportExtensions(Linq)
 #import System
 from collections import namedtuple
 
-from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -86,7 +86,7 @@ def CreateRevision (doc, revData):
             actionReturnValue.UpdateSep(False, 'Failed to create new revision in document with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to file")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def MarkRevisionAsIssued(doc, revision):
@@ -123,7 +123,7 @@ def MarkRevisionAsIssued(doc, revision):
             actionReturnValue.UpdateSep(False,'Failed to mark revision as issued with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "Setting revision to issued")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def MarkRevisionAsIssuedByRevisionId(doc, revisionId):
@@ -205,7 +205,7 @@ def AddRevisionsToSheet(doc, sheet, revIds):
             actionReturnValue.UpdateSep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to sheet")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 # ---------------------------------------- deleting revisions --------------------------------------------
@@ -294,7 +294,7 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
                 action_return_value.UpdateSep(False, 'Failed to delete revisions with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc, 'Deleting Revisions')
-        return_value.Update(com.InTransaction(transaction, action))
+        return_value.Update(rTran.in_transaction(transaction, action))
     else:
         return_value.UpdateSep(False, 'Only one revision in file which can not be deleted!')
     return return_value

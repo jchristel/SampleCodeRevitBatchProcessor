@@ -10,6 +10,16 @@ RevitCommonAPI
 .. automodule:: RevitCommonAPI
     :members:
 
+.. automodule:: RevitTransaction
+    :members:
+
+.. automodule:: RevitElementParameterGetUtils
+    :members:
+
+.. automodule:: RevitElementParameterSetUtils
+    :members:
+
+
 Revit Annotation
 ----------------
 .. automodule:: RevitAnnotation

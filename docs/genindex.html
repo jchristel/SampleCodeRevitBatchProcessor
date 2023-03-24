@@ -340,6 +340,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitSharedParameters.ChangeSharedParameterToFamilyParameter">ChangeSharedParameterToFamilyParameter() (in module RevitSharedParameters)</a>
 </li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.check_parameter_value">check_parameter_value() (in module RevitElementParameterGetUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.CheckDuplicateEdge">CheckDuplicateEdge() (in module RevitGeometry)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitGeometry.CheckDuplicatePoint">CheckDuplicatePoint() (in module RevitGeometry)</a>
@@ -360,10 +362,10 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.CheckParameterValue">CheckParameterValue() (in module RevitCommonAPI)</a>
 </li>
-      <li><a href="revitAPISampleCode.html#RevitGeometry.CheckSolidIsZeroHeight">CheckSolidIsZeroHeight() (in module RevitGeometry)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="revitAPISampleCode.html#RevitGeometry.CheckSolidIsZeroHeight">CheckSolidIsZeroHeight() (in module RevitGeometry)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitStairs.CheckSystemFamilies">CheckSystemFamilies() (in module RevitStairs)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.CheckUniqueTypeData">CheckUniqueTypeData() (in module RevitCommonAPI)</a>
@@ -784,6 +786,12 @@
       <li><a href="revitAPISampleCode.html#RevitRooms.Get2DPointsFromRevitRoom">Get2DPointsFromRevitRoom() (in module RevitRooms)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.get_all_parameters_and_values_wit_custom_getters">get_all_parameters_and_values_wit_custom_getters() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_all_parameters_and_values_wit_custom_getters">(in module RevitElementParameterGetUtils)</a>
+</li>
+      </ul></li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_built_in_parameter_value">get_built_in_parameter_value() (in module RevitElementParameterGetUtils)</a>
 </li>
       <li><a href="dataExport.html#ProcessCeilingsToRooms.get_ceilings_by_room">get_ceilings_by_room() (in module ProcessCeilingsToRooms)</a>
 </li>
@@ -809,8 +817,22 @@
 </li>
       <li><a href="dataExport.html#DataToShapely.get_outer_loop_as_shapely_points">get_outer_loop_as_shapely_points() (in module DataToShapely)</a>
 </li>
-      <li><a href="revitAPISampleCode.html#RevitCommonAPI.get_parameter_value_with_over_load">get_parameter_value_with_over_load() (in module RevitCommonAPI)</a>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value">get_parameter_value() (in module RevitElementParameterGetUtils)</a>
 </li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value_as_element_id">get_parameter_value_as_element_id() (in module RevitElementParameterGetUtils)</a>
+</li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value_as_integer">get_parameter_value_as_integer() (in module RevitElementParameterGetUtils)</a>
+</li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value_by_name">get_parameter_value_by_name() (in module RevitElementParameterGetUtils)</a>
+</li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value_utf8_string">get_parameter_value_utf8_string() (in module RevitElementParameterGetUtils)</a>
+</li>
+      <li><a href="revitAPISampleCode.html#RevitCommonAPI.get_parameter_value_with_over_load">get_parameter_value_with_over_load() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.get_parameter_value_with_over_load">(in module RevitElementParameterGetUtils)</a>
+</li>
+      </ul></li>
       <li><a href="dataExport.html#DataToShapely.get_shapely_polygons_from_data_instance">get_shapely_polygons_from_data_instance() (in module DataToShapely)</a>
 </li>
       <li><a href="dataExport.html#DataToShapely.get_shapely_polygons_from_geo_object">get_shapely_polygons_from_geo_object() (in module DataToShapely)</a>
@@ -1367,12 +1389,12 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.GetLegendComponentsInModel">GetLegendComponentsInModel() (in module RevitCommonAPI)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="revitAPISampleCode.html#RevitLevels.GetLevelReportData">GetLevelReportData() (in module RevitLevels)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitLevels.GetLevelsListAscending">GetLevelsListAscending() (in module RevitLevels)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="revitAPISampleCode.html#RevitLineStylesPatterns.GetLinePatternFromCategory">GetLinePatternFromCategory() (in module RevitLineStylesPatterns)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitLineStylesPatterns.GetLinePatternFromLevelElement">GetLinePatternFromLevelElement() (in module RevitLineStylesPatterns)</a>
@@ -1610,23 +1632,65 @@
       <li><a href="revitAPISampleCode.html#RevitViews.GetTemplateIdsWhichCanHaveFilters">GetTemplateIdsWhichCanHaveFilters() (in module RevitViews)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_double_as_double">getter_double_as_double() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_double_as_double">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_double_as_double_converted_to_millimeter">getter_double_as_double_converted_to_millimeter() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_double_as_double_converted_to_millimeter">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_double_or_int_as_string">getter_double_or_int_as_string() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_double_or_int_as_string">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_element_id_as_element_id">getter_element_id_as_element_id() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_element_id_as_element_id">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_element_id_as_element_int">getter_element_id_as_element_int() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_element_id_as_element_int">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_element_id_as_string">getter_element_id_as_string() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_element_id_as_string">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_int_as_int">getter_int_as_int() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_int_as_int">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
+      <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_none">getter_none() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_none">(in module RevitElementParameterGetUtils)</a>
+</li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_string_as_string">getter_string_as_string() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_string_as_string">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.getter_string_as_UTF8_string">getter_string_as_UTF8_string() (in module RevitCommonAPI)</a>
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#RevitElementParameterGetUtils.getter_string_as_UTF8_string">(in module RevitElementParameterGetUtils)</a>
 </li>
+      </ul></li>
       <li><a href="utilities.html#BatchProcessorLogUtils.GetTextBetween">GetTextBetween() (in module BatchProcessorLogUtils)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitAnnotation.GetTextTypeArrowHeadIds">GetTextTypeArrowHeadIds() (in module RevitAnnotation)</a>
@@ -2035,6 +2099,8 @@
 </li>
       <li><a href="revitAPISampleCode.html#RevitExport.IFCSpaceBoundaries">IFCSpaceBoundaries (class in RevitExport)</a>
 </li>
+      <li><a href="revitAPISampleCode.html#RevitTransaction.in_transaction">in_transaction() (in module RevitTransaction)</a>
+</li>
       <li><a href="utilities.html#Utility.IndexOf">IndexOf() (in module Utility)</a>
 </li>
   </ul></td>
@@ -2322,6 +2388,10 @@
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitDetailItems">RevitDetailItems</a>
 </li>
+        <li><a href="revitAPISampleCode.html#module-RevitElementParameterGetUtils">RevitElementParameterGetUtils</a>
+</li>
+        <li><a href="revitAPISampleCode.html#module-RevitElementParameterSetUtils">RevitElementParameterSetUtils</a>
+</li>
         <li><a href="revitAPISampleCode.html#module-RevitExport">RevitExport</a>
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitExportIFCConfig">RevitExportIFCConfig</a>
@@ -2403,6 +2473,8 @@
         <li><a href="revitAPISampleCode.html#module-RevitSharedParameterSwap">RevitSharedParameterSwap</a>
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitStairs">RevitStairs</a>
+</li>
+        <li><a href="revitAPISampleCode.html#module-RevitTransaction">RevitTransaction</a>
 </li>
         <li><a href="revitAPISampleCode.html#module-RevitViewReferencing">RevitViewReferencing</a>
 </li>
@@ -3013,12 +3085,28 @@
 </li>
       </ul></li>
       <li>
+    RevitElementParameterGetUtils
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#module-RevitElementParameterGetUtils">module</a>
+</li>
+      </ul></li>
+      <li>
+    RevitElementParameterSetUtils
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#module-RevitElementParameterSetUtils">module</a>
+</li>
+      </ul></li>
+      <li>
     RevitExport
 
       <ul>
         <li><a href="revitAPISampleCode.html#module-RevitExport">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitExportIFCConfig
 
@@ -3026,8 +3114,6 @@
         <li><a href="revitAPISampleCode.html#module-RevitExportIFCConfig">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     RevitFamilyBaseDataAnalysisCircularReferencing
 
@@ -3304,6 +3390,13 @@
 </li>
       </ul></li>
       <li>
+    RevitTransaction
+
+      <ul>
+        <li><a href="revitAPISampleCode.html#module-RevitTransaction">module</a>
+</li>
+      </ul></li>
+      <li>
     RevitViewReferencing
 
       <ul>
@@ -3387,6 +3480,10 @@
         <li><a href="fileSelectUI.html#module-script">module</a>
 </li>
       </ul></li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterSetUtils.set_built_in_parameter_value">set_built_in_parameter_value() (in module RevitElementParameterSetUtils)</a>
+</li>
+      <li><a href="revitAPISampleCode.html#RevitElementParameterSetUtils.set_parameter_value">set_parameter_value() (in module RevitElementParameterSetUtils)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitCommonAPI.SetBuiltInParameterValue">SetBuiltInParameterValue() (in module RevitCommonAPI)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitCategories.SetCategoryColour">SetCategoryColour() (in module RevitCategories)</a>
@@ -3448,10 +3545,10 @@
         <li><a href="utilities.html#module-SolibriIFCOptimizer">module</a>
 </li>
       </ul></li>
-      <li><a href="utilities.html#SolibriIFCOptimizer.solibriInstallPath_">solibriInstallPath_ (in module SolibriIFCOptimizer)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="utilities.html#SolibriIFCOptimizer.solibriInstallPath_">solibriInstallPath_ (in module SolibriIFCOptimizer)</a>
+</li>
       <li><a href="revitAPISampleCode.html#RevitWarningsSolver.RevitWarningsSolver.solveRoomTagToRoom">solveRoomTagToRoom (RevitWarningsSolver.RevitWarningsSolver attribute)</a>
 </li>
       <li><a href="revitAPISampleCode.html#RevitWarningsSolver.RevitWarningsSolver.SolveWarnings">SolveWarnings() (RevitWarningsSolver.RevitWarningsSolver method)</a>

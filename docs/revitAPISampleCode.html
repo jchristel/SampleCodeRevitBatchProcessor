@@ -2613,6 +2613,67 @@ and symbols used</p>
 </dd></dl>
 
 </section>
+<span class="target" id="module-UtilBIM360"></span><section id="this-module-contains-a-number-of-helper-functions-relating-to-bim360">
+<h3>This module contains a number of helper functions relating to BIM360.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-bim360" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.getBIM360RevitFilesFromFileList">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">getBIM360RevitFilesFromFileList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.getBIM360RevitFilesFromFileList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method reading BIM360 file data from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepathCSV</strong> (<em>str</em>) – Fully qualified file path to CSV to be read.</p></li>
+<li><p><strong>extension</strong> (<em>TODO</em>) – Is an empty place holder…this method is past into another where it expects 2 arguments…</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>On exception an empty list is returned.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List in format [Revit version, Project GUID, File GUID, file size in MB, file name]</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.GetBIM360Data">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">GetBIM360Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.GetBIM360Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a csv file containing BIM 360 file data into list of FileItem instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepathCSV</strong> (<em>str</em>) – Fully qualified file path to CSV to be read.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of FileItem instances representing BIM360 file data.
+Will return an empty list of an exception occurred.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of SampleCodeBatchProcessor.FileItem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.ProcessBIM360Row">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">ProcessBIM360Row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rowData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.ProcessBIM360Row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of str into file item class object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rowData</strong> (<em>list of str in format</em><em> [</em><em>Revit version</em><em>, </em><em>Project GUID</em><em>, </em><em>File GUID</em><em>, </em><em>file size in MB</em><em>, </em><em>file name</em><em>]</em>) – the list containing the file data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized file item instance, None if row is not the right length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.FileItem</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 <section id="module-RevitBuildingPads">
 <span id="revit-building-pads"></span><h2>Revit Building Pads<a class="headerlink" href="#module-RevitBuildingPads" title="Permalink to this headline">¶</a></h2>

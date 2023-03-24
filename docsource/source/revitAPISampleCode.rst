@@ -30,9 +30,8 @@ Revit BIM 360
 .. automodule:: RevitBIM360
     :members:
 
-..
-    UtilBIM360
-
+.. automodule::  UtilBIM360
+    :members:
 
 Revit Building Pads
 -------------------

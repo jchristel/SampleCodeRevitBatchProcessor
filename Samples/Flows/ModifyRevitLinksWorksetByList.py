@@ -63,6 +63,7 @@ from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -140,7 +141,7 @@ def _changeWorkset(doc, el, linkName, fromWorksetName, toWorksetName, toWorksetI
 
     Output(str(descriptor) + ':: Moving '+ str(linkName) + ' from ' + str(fromWorksetName) + ' to ' + str(toWorksetName))
     transaction = rdb.Transaction(doc, "Changing workset of " + linkName)
-    result = com.InTransaction(transaction,  rWork.GetActionChangeElementWorkset(el,toWorksetId))
+    result = rTran.in_transaction(transaction,  rWork.GetActionChangeElementWorkset(el,toWorksetId))
     Output(linkName + ' ' + str(result.status))
     return result
 

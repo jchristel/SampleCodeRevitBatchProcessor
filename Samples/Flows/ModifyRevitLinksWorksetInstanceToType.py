@@ -62,6 +62,7 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -175,7 +176,7 @@ def _modifyRevitLinkTypeData(revitLink, doc):
     if(instanceWorksetId!= rdb.ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         Output('Moving '+ str(rdb.Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
         transaction = rdb.Transaction(doc, "Changing workset of " + str(rdb.Element.Name.GetValue(revitLink)))
-        returnValue = com.InTransaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        returnValue = rTran.in_transaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
         Output(str(rdb.Element.Name.GetValue(revitLink)) + ' ' + str(returnValue.status))
     else:
         returnValue.message = str(rdb.Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)

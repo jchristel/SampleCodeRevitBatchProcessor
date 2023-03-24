@@ -88,6 +88,16 @@ def check_parameter_value(
 
 #----------------------------------------parameters value getter over loads-----------------------------------------------
 
+def getter_none(para):
+    '''
+    Used for parameters where the storage type is None
+    
+    :param para: _description_
+    :type para: _type_
+    '''
+
+    return 'Invalid storage type: (NONE)'
+
 def getter_double_or_int_as_string(para):
     '''
     Returns a parameter value of type double or integer as string.
@@ -291,6 +301,10 @@ def get_parameter_value_with_over_load (para, parameter_value_getters):
                     parameter_value = parameter_value_getters[rdb.StorageType.ElementId](para)
                 else:
                     raise ValueError('No parameter value getter for storage type Element Id provided')
+        else:
+            # this should be invalid storage type only
+            parameter_value = parameter_value_getters[str(None)](para)
+
     except  Exception as e:
         parameter_value = 'Exception: {}'.format(e)
     return parameter_value
@@ -320,7 +334,8 @@ def get_parameter_value(
             rdb.StorageType.Double : getter_double_or_int_as_string,
             rdb.StorageType.Integer : getter_double_or_int_as_string,
             rdb.StorageType.String : getter_string_as_string,
-            rdb.StorageType.ElementId : getter_element_id_as_string
+            rdb.StorageType.ElementId : getter_element_id_as_string,
+            str(None) : getter_none
         }
 
         parameter_value = get_parameter_value_with_over_load (para, value_getter)
@@ -355,7 +370,8 @@ def get_parameter_value_utf8_string(
             rdb.StorageType.Double : getter_double_or_int_as_string, # no specific utf encoding required
             rdb.StorageType.Integer : getter_double_or_int_as_string, # no specific utf encoding required
             rdb.StorageType.String : getter_string_as_UTF8_string,
-            rdb.StorageType.ElementId : getter_element_id_as_string # no specific utf encoding required
+            rdb.StorageType.ElementId : getter_element_id_as_string, # no specific utf encoding required
+            str(None) : getter_none
         }
     
     parameter_value = get_parameter_value_with_over_load (para, value_getter)

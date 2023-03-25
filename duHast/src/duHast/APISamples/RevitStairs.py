@@ -30,9 +30,9 @@ import clr
 import System
 
 from duHast.APISamples import RevitCommonAPI as com
-from duHast.Utilities import Result as res
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
-from duHast.Utilities import Utility as util
+
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -494,7 +494,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     ids = []
     stairType = doc.GetElement(stairTypeId)
     for pDef in paras:
-        pValue = com.GetBuiltInParameterValue(stairType, pDef)
+        pValue = rParaGet.get_built_in_parameter_value(stairType, pDef)
         if(pValue !=None and pValue not in ids):
             ids.append(pValue)
     return ids

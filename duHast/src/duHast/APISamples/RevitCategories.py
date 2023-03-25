@@ -32,10 +32,13 @@ import System
 from System.Collections.Generic import List
 
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 from duHast.APISamples import RevitFamilyUtils as rFamUtils
 from duHast.APISamples import RevitLinks as rLink
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitLineStylesPatterns as rPat
+from duHast.APISamples import RevitTransaction as rTran
 
 import Autodesk.Revit.DB as rdb
 
@@ -488,7 +491,7 @@ def SetCategoryMaterial(doc, cat, materialId):
                 actionReturnValue.UpdateSep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory material: ' + str(rdb.Element.Name.GetValue(mat)))
-        updateMat = com.InTransaction(transaction, action)
+        updateMat = rTran.in_transaction(transaction, action)
         flag = updateMat.status
     except Exception as e:
         flag = False
@@ -533,7 +536,7 @@ def SetCategoryLinePattern(doc, cat, linePatternId, ignoreMissingCutStyle):
                 actionReturnValue.UpdateSep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory line pattern')
-        updateLinePattern = com.InTransaction(transaction, action)
+        updateLinePattern = rTran.in_transaction(transaction, action)
         flag = updateLinePattern.status
     except Exception as e:
         flag = False
@@ -577,7 +580,7 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection, 
                 actionReturnValue.UpdateSep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory line weights')
-        updateLineWeights = com.InTransaction(transaction, action)
+        updateLineWeights = rTran.in_transaction(transaction, action)
         flag = updateLineWeights.status
     except Exception as e:
         flag = False
@@ -614,7 +617,7 @@ def SetCategoryColour(doc, cat, red, green, blue):
                 actionReturnValue.UpdateSep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,'Updating subcategory colour')
-        updateColour = com.InTransaction(transaction, action)
+        updateColour = rTran.in_transaction(transaction, action)
         flag = updateColour.status
     except Exception as e:
         flag = False
@@ -679,7 +682,7 @@ def SetFamilyCategory(doc, newCategoryName):
             def action():
                 doc.OwnerFamily.FamilyCategory = doc.Settings.Categories.get_Item(newCategoryName)
             transaction = rdb.Transaction(doc,'Changing family category to:' + str(newCategoryName))
-            changeCat = com.InTransaction(transaction, action)
+            changeCat = rTran.in_transaction(transaction, action)
             if(changeCat.status):
                 returnValue.UpdateSep(True, 'Successfully changed family category to: '+str(newCategoryName))
             else:
@@ -734,7 +737,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
                         actionReturnValue.UpdateSep(False, 'Failed to create ' + str(newSubCategoryName) + ' with exception: ' + str(e))
                     return actionReturnValue
                 transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(newSubCategoryName))
-                returnValue = com.InTransaction(transaction, action)
+                returnValue = rTran.in_transaction(transaction, action)
             else:
                 returnValue.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
     else:
@@ -756,7 +759,7 @@ def SortElementsByCategory(elements, elementDic):
 
     for el in elements:
         for builtinDef in ELEMENTS_PARAS_SUB:
-            value = com.GetBuiltInParameterValue(el, builtinDef, com.GetParameterValueAsElementId)
+            value = rParaGet.get_built_in_parameter_value(el, builtinDef, rParaGet.get_parameter_value_as_element_id)
             if (value != None):
                 if(value in elementDic):
                     elementDic[value].append(el.Id)
@@ -1048,7 +1051,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
                                 if(key == 'Cut' and targetId == rdb.ElementId.InvalidElementId):
                                     targetId = destinationCatIds['Projection']
                                     returnValue.AppendMessage('No cut style present in family, using projection style instead')
-                                updatedPara = com.setParameterValue(p, str(targetId), doc)
+                                updatedPara = rParaSet.set_parameter_value(p, str(targetId), doc)
                                 returnValue.Update(updatedPara)
                                 break
     else:

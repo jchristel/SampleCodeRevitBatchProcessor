@@ -61,6 +61,7 @@ from duHast.APISamples import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitFamilyUtils as rFamU
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -146,7 +147,7 @@ def renameLoadedFamilies(doc):
                         actionReturnValue.UpdateSep(False, 'Failed to rename family: ' + oldname + ' with exception: ' + str(e))
                     return actionReturnValue
                 transaction = rdb.Transaction(doc, 'Renaming: ' + newname)
-                returnValue.Update( com.InTransaction(transaction, action) )
+                returnValue.Update( rTran.in_transaction(transaction, action) )
     Output(returnValue.message)
 
 def readFamilyNames():

@@ -34,6 +34,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 
 # import Autodesk
@@ -244,7 +245,7 @@ def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
     ids = []
     for idR in idsRepeatDet:
         repeatDetail = doc.GetElement(idR)
-        id = com.GetBuiltInParameterValue(repeatDetail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
+        id = rParaGet.get_built_in_parameter_value(repeatDetail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids

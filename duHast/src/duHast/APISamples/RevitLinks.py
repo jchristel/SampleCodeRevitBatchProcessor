@@ -31,7 +31,9 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 import glob
 import os
@@ -250,7 +252,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
                             actionReturnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     transaction = rdb.Transaction(doc, 'Reloading: ' + linkTypeName)
-                    reloadResult = com.InTransaction(transaction, action)
+                    reloadResult = rTran.in_transaction(transaction, action)
                     returnValue.Update(reloadResult)
                 else:
                     returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
@@ -691,7 +693,7 @@ def GetRevitLinkReportData(doc, revitFilePath):
         linkType = GetRevitLinkTypeFromInstance(doc, c)
         linkTypeData = GetRevitLinkTypeData(doc, linkType)
         # add other data
-        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [com.getParameterValue(wsParameter)] + [com.getParameterValue(doParameter)]
+        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [rParaGet.get_parameter_value (wsParameter)] + [rParaGet.get_parameter_value(doParameter)]
         data.append(linkTypeData)
     return data
         

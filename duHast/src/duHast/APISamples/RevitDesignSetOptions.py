@@ -31,9 +31,8 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -134,7 +133,7 @@ def GetDesignSetOptionInfo(doc, element):
     new_value= ['Main Model','-',True]
     dic = dict(zip(new_key,new_value))
     # get design option data from element
-    pValue = com.GetBuiltInParameterValue(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
+    pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
     if(pValue != None):
         designOptionData = pValue.split(':')
         # check if main model ( length is 1! )

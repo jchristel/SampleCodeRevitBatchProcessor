@@ -31,6 +31,7 @@ import System
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
@@ -484,21 +485,21 @@ def PopulateDataCeilingObject(doc, revitCeiling):
         
         # custom parameter value getters
         value_getter = {
-            rdb.StorageType.Double : com.getter_double_as_double_converted_to_millimeter, 
-            rdb.StorageType.Integer : com.getter_int_as_int, 
-            rdb.StorageType.String : com.getter_string_as_UTF8_string, # encode ass utf 8 just in case
-            rdb.StorageType.ElementId : com.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+            rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter, 
+            rdb.StorageType.Integer : rParaGet.getter_int_as_int, 
+            rdb.StorageType.String : rParaGet.getter_string_as_UTF8_string, # encode ass utf 8 just in case
+            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int # needs to be an integer for JSON encoding
         }
-        dataC.typeProperties.properties = com.get_all_parameters_and_values_wit_custom_getters(ceilingType, value_getter)
+        dataC.typeProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceilingType, value_getter)
         
         # get instance properties
         dataC.instanceProperties.instanceId = revitCeiling.Id.IntegerValue
-        dataC.instanceProperties.properties = com.get_all_parameters_and_values_wit_custom_getters(revitCeiling, value_getter)
+        dataC.instanceProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(revitCeiling, value_getter)
         
         # get level properties
         dataC.level.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
         dataC.level.levelId = revitCeiling.LevelId.IntegerValue
-        dataC.level.offsetFromLevel = com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        dataC.level.offsetFromLevel = rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
         
         # get the model name
         if(doc.IsDetached):
@@ -507,8 +508,8 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             dataC.revitModel.modelName = doc.Title
         
         # get phasing information
-        dataC.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, com.GetParameterValueAsElementId)).encode('utf-8')
-        dataC.phasing.phaseDemolished = rPhase.GetPhaseNameById(doc, com.GetBuiltInParameterValue(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, com.GetParameterValueAsElementId)).encode('utf-8')
+        dataC.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        dataC.phasing.phaseDemolished = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
 
         return dataC
     else:

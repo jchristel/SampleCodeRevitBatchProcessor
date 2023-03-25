@@ -37,7 +37,7 @@ from System.IO import Path
 import Autodesk.Revit.DB as rdb
 
 # import common library
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.APISamples import RevitViews as rView
 # this imports 3rd party ifc exporters depending on version of Revit in use.
 from duHast.APISamples import RevitExportIFCConfig as ifcCon
@@ -106,7 +106,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
             actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,'Export to IFC')
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def IFCGetThirdPartyExportConfigByView(doc, ifcVersion, ifcSettings = None):

@@ -43,6 +43,9 @@ import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
 from duHast.Utilities import Utility as util
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples import RevitTransaction as rTran
 # importing revit groups module
 from duHast.APISamples import RevitGroups as rGroup
 
@@ -58,7 +61,7 @@ def InTransaction(
     ):
     # type: (...) -> res.Result
     '''
-    Revit transaction wrapper.
+    !DEPRECATED! Refer to module RevitTransaction. Revit transaction wrapper.
 
     This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.
 
@@ -100,6 +103,7 @@ def CheckParameterValue(
     conditionValue):
     # type: (...) -> bool
     '''
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils:check_parameter_value 
     Checks a parameter value based on passed in condition function.
 
     This extracts the value of the past in parameter and compares it against a past in value using 
@@ -127,7 +131,7 @@ def CheckParameterValue(
     '''
     # set default return value
     isMatch = False
-    pValue = getParameterValue(para)
+    pValue = rParaGet.get_parameter_value(para)
     # evaluate parameter value with past in value using past in function
     compareOutCome = paraCondition(util.EncodeAscii(conditionValue), util.EncodeAscii(pValue))
     # check the return value for a bool (True) only. Everything else will return False
@@ -137,9 +141,19 @@ def CheckParameterValue(
 
 #----------------------------------------parameters value getter over loads-----------------------------------------------
 
+def getter_none(para):
+    '''
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Used for parameters where the storage type is None
+    
+    :param para: _description_
+    :type para: _type_
+    '''
+
+    return 'Invalid storage type: (NONE)'
+
 def getter_double_or_int_as_string(para):
     '''
-    Returns a parameter value of type double or integer as string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double or integer as string.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -155,7 +169,7 @@ def getter_double_or_int_as_string(para):
 
 def getter_double_as_double(para):
     '''
-    Returns a parameter value of type double as a double.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double as a double.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -171,7 +185,7 @@ def getter_double_as_double(para):
 
 def getter_double_as_double_converted_to_millimeter(para):
     '''
-    Returns a parameter value of type double as a double converted to mm (if required).
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double as a double converted to mm (if required).
     Revit uses feet internally for any length value!
 
     :param para: The parameter.
@@ -191,7 +205,7 @@ def getter_double_as_double_converted_to_millimeter(para):
 
 def getter_int_as_int(para):
     '''
-    Returns a parameter value of type integer as a integer.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type integer as a integer.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -207,7 +221,7 @@ def getter_int_as_int(para):
 
 def getter_string_as_UTF8_string(para):
     '''
-    Returns a parameter value of type string as a utf-8 formatted string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type string as a utf-8 formatted string.
     
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -224,7 +238,7 @@ def getter_string_as_UTF8_string(para):
 
 def getter_string_as_string(para):
     '''
-    Returns a parameter value of type string as a string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type string as a string.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -241,7 +255,7 @@ def getter_string_as_string(para):
 
 def getter_element_id_as_string(para):
     '''
-    Returns a parameter value of type element id as a string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as a string.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -258,7 +272,7 @@ def getter_element_id_as_string(para):
 
 def getter_element_id_as_element_id(para):
     '''
-    Returns a parameter value of type element id as a element id.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as a element id.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -275,7 +289,7 @@ def getter_element_id_as_element_id(para):
 
 def getter_element_id_as_element_int(para):
     '''
-    Returns a parameter value of type element id as an integer.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as an integer.
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -294,7 +308,7 @@ def getter_element_id_as_element_int(para):
 
 def get_parameter_value_with_over_load (para, parameter_value_getters):
     '''
-    Returns a parameter value in format depending on storage type.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value in format depending on storage type.
     
     Storage type can be:
 
@@ -340,6 +354,9 @@ def get_parameter_value_with_over_load (para, parameter_value_getters):
                     pValue = parameter_value_getters[rdb.StorageType.ElementId](para)
                 else:
                     raise ValueError('No parameter value getter for storage type Element Id provided')
+        else:
+            # this should be invalid storage type only
+            pValue = parameter_value_getters[str(None)](para)
     except  Exception as e:
         pValue = 'Exception: {}'.format(e)
     return pValue
@@ -349,7 +366,7 @@ def getParameterValue(
     ):
     # type: (...) -> str
     '''
-    Returns a parameter value as string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value as string.
 
     Returns a parameter value as string independent of its storage type.
 
@@ -371,8 +388,9 @@ def getParameterValue(
             rdb.StorageType.Double : getter_double_or_int_as_string,
             rdb.StorageType.Integer : getter_double_or_int_as_string,
             rdb.StorageType.String : getter_string_as_string,
-            rdb.StorageType.ElementId : getter_element_id_as_string
-        }
+            rdb.StorageType.ElementId : getter_element_id_as_string,
+            str(None) : getter_none
+       }
 
         pValue = get_parameter_value_with_over_load (para, value_getter)
 
@@ -398,7 +416,7 @@ def GetParameterValueUTF8String(
     ):
     # type: (...) -> str
     '''
-    Returns the parameter value as utf-8 encoded string.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. 
 
     Returns the parameter value as utf-8 string independent of its storage type.
 
@@ -420,8 +438,9 @@ def GetParameterValueUTF8String(
             rdb.StorageType.Double : getter_double_or_int_as_string, # no specific utf encoding required
             rdb.StorageType.Integer : getter_double_or_int_as_string, # no specific utf encoding required
             rdb.StorageType.String : getter_string_as_UTF8_string,
-            rdb.StorageType.ElementId : getter_element_id_as_string # no specific utf encoding required
-        }
+            rdb.StorageType.ElementId : getter_element_id_as_string, # no specific utf encoding required
+            str(None) : getter_none
+       }
     
     pValue = get_parameter_value_with_over_load (para, value_getter)
 
@@ -444,7 +463,7 @@ def GetParameterValueAsInteger(
     ):
     # type: (...) -> int
     '''
-    Returns the parameter value as integer.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. 
 
     Returns the parameter value as integer only if the storage type is integer.
 
@@ -469,7 +488,7 @@ def GetParameterValueAsElementId(
     para
     ):
     '''
-    Returns the parameter value as Element Id.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. 
 
     Returns the parameter value as element Id only if the storage type is ElementId.
 
@@ -492,7 +511,7 @@ def GetParameterValueAsElementId(
 
 def get_all_parameters_and_values_wit_custom_getters(element, parameter_value_getters):
     '''
-    Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.
 
     :param element: The element
     :type element: var
@@ -507,9 +526,9 @@ def get_all_parameters_and_values_wit_custom_getters(element, parameter_value_ge
         return_value[p.Definition.Name] = p_value
     return return_value
 
-def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = GetParameterValueUTF8String):
+def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter = rParaGet.get_parameter_value_utf8_string):
     '''
-    Returns the built-in parameter value.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. 
 
     Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
@@ -540,10 +559,10 @@ def GetBuiltInParameterValue(element, builtInParameterDef, parameterValueGetter 
 def GetParameterValueByName(
     element, 
     parameterName, # type: str
-    parameterValueGetter = GetParameterValueUTF8String
+    parameterValueGetter = rParaGet.get_parameter_value_utf8_string
     ):
     '''
-    Returns the parameter value by parameter name.
+    !DEPRECATED! Refer to module RevitElementParameterGetUtils. 
 
     Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
@@ -577,9 +596,11 @@ def setParameterValue(
     para, 
     valueAsString, # type: str
     doc,
-    in_transaction = InTransaction
+    in_transaction = rTran.in_transaction
     ):
     '''
+    !DEPRECATED! Refer to module RevitElementParameterSetUtils.
+
     Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
     Changing a parameter value requires this action to run inside a transaction.
@@ -590,6 +611,9 @@ def setParameterValue(
     :type valueAsString: str
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+    :param in_transaction: The transaction wrapper function to be used.
+    :type in_transaction: func(Autodesk.Revit.DB.Transaction, action(), Autodesk.Revit.DB.Document)
+
     :raise: Any exception will need to be managed by the function caller.
 
     ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters
@@ -609,7 +633,7 @@ def setParameterValue(
     '''
 
     returnValue = res.Result()
-    oldValue = getParameterValue(para)
+    oldValue = rParaGet.get_parameter_value(para)
     transactionName = 'Update to parameter value'
     # different parameter storage types will require different actions due to value type past in is a string which will need converting
     # first before applied to the parameter
@@ -621,12 +645,12 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.Set(newId)
-                actionReturnValue.message = 'Changed parameter value of type Id.[' + para.Definition.Name + '] : '  + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type Id.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = InTransaction(transaction, action)
+        returnValue = rTran.in_transaction(transaction, action)
     elif(para.StorageType == rdb.StorageType.Double):
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
         # whatever internal units of measure Revit uses. SetValueString expects your value to 
@@ -638,34 +662,34 @@ def setParameterValue(
             actionReturnValue = res.Result()
             try:
                 para.SetValueString(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type double.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type double.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = InTransaction(transaction, action)
+        returnValue = rTran.in_transaction(transaction, action)
     elif (para.StorageType == rdb.StorageType.Integer):
         def action():
             actionReturnValue = res.Result()
             try:
                 para.Set(int(valueAsString))
-                actionReturnValue.message = 'Changed parameter value of type integer.[' + para.Definition.Name + '] : ' + str(oldValue) + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type integer.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = InTransaction(transaction, action)
+        returnValue = rTran.in_transaction(transaction, action)
     elif (para.StorageType == rdb.StorageType.String):
         def action():
             actionReturnValue = res.Result()
             try:
                 para.Set(valueAsString)
-                actionReturnValue.message = 'Changed parameter value of type string.[' + para.Definition.Name + '] : ' + oldValue + ' to: ' + valueAsString
+                actionReturnValue.message = 'Changed parameter value of type string.[ {} ] from: {} to: {}'.format(para.Definition.Name ,oldValue ,valueAsString)
             except Exception as e:
                 actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue = in_transaction(transaction, action, doc)
+        returnValue = rTran.in_transaction(transaction, action, doc)
     else:  
         # dead end
         returnValue.UpdateSep(False,'Dont know what to do with this storage type: (NONE) '+ str(para.StorageType))
@@ -676,9 +700,11 @@ def SetBuiltInParameterValue(
     element, 
     builtInParameterDef, 
     valueAsString, # type: str
-    parameterValueSetter = setParameterValue
+    parameterValueSetter = rParaSet.set_parameter_value
     ):
     '''
+    !DEPRECATED! Refer to module RevitElementParameterSetUtils.
+
     Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
     Changing a parameter value requires this action to run inside a transaction.
@@ -825,7 +851,7 @@ def GetLegendComponentsInModel(doc, typeIds):
     # get all legend components in the model to check against list past in
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LegendComponents)
     for c in col:
-        id = GetBuiltInParameterValue(c, rdb.BuiltInParameter.LEGEND_COMPONENT, getParameterValue)
+        id = rParaGet.get_built_in_parameter_value (c, rdb.BuiltInParameter.LEGEND_COMPONENT, rParaGet.get_parameter_value)
         if (id in typeIds and id not in ids):
             ids.append(id)
             break
@@ -1180,7 +1206,7 @@ def FilterOutWarnings(doc, dependentElements):
     ids = []
     for id in dependentElements:
         el = doc.GetElement(id)
-        pValue = GetBuiltInParameterValue(el, rdb.BuiltInParameter.ELEM_PARTITION_PARAM, getParameterValue)
+        pValue = rParaGet.get_built_in_parameter_value(el, rdb.BuiltInParameter.ELEM_PARTITION_PARAM, rParaGet.get_parameter_value)
         if(pValue != 'Reviewable Warnings'):
             ids.append(id)
     return ids
@@ -1296,7 +1322,7 @@ def DeleteByElementIds(
             actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,transactionName)
-    returnValue = InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def DeleteByElementIdsOneByOne(
@@ -1341,7 +1367,7 @@ def DeleteByElementIdsOneByOne(
                 actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return actionReturnValue
         transaction = rdb.Transaction(doc,transactionName)
-        returnValue.Update( InTransaction(transaction, action))
+        returnValue.Update( rTran.in_transaction(transaction, action))
     return returnValue
 
 def GetIdsFromElementCollector(col):

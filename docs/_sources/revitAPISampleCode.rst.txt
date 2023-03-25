@@ -10,6 +10,16 @@ RevitCommonAPI
 .. automodule:: RevitCommonAPI
     :members:
 
+.. automodule:: RevitTransaction
+    :members:
+
+.. automodule:: RevitElementParameterGetUtils
+    :members:
+
+.. automodule:: RevitElementParameterSetUtils
+    :members:
+
+
 Revit Annotation
 ----------------
 .. automodule:: RevitAnnotation
@@ -20,9 +30,8 @@ Revit BIM 360
 .. automodule:: RevitBIM360
     :members:
 
-..
-    UtilBIM360
-
+.. automodule::  UtilBIM360
+    :members:
 
 Revit Building Pads
 -------------------

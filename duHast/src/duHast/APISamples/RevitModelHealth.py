@@ -51,6 +51,7 @@ from duHast.APISamples import RevitFamilyUtils as rFams
 from duHast.APISamples import RevitGroups as rGrp
 from duHast.APISamples import RevitRooms as rRooms
 from duHast.APISamples import RevitDetailItems as rDetItems
+from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
@@ -130,7 +131,7 @@ def GetParametersOfInstance(famInstance, doc):
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
                 parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
                 if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
-                    flag = com.setParameterValue(p, _castParameterValue(parameterValue), doc)
+                    flag = rParaSet.set_parameter_value (p, _castParameterValue(parameterValue), doc)
                     resultValue.Update(flag)
                     flagUpdate = True
                 else:

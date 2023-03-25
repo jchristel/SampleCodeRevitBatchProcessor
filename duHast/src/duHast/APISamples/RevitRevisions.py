@@ -27,11 +27,16 @@ This module contains a number of helper functions relating to Revit revisions.
 #
 
 import clr
-import System
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
+#import System
 from collections import namedtuple
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -81,7 +86,7 @@ def CreateRevision (doc, revData):
             actionReturnValue.UpdateSep(False, 'Failed to create new revision in document with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to file")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def MarkRevisionAsIssued(doc, revision):
@@ -118,7 +123,7 @@ def MarkRevisionAsIssued(doc, revision):
             actionReturnValue.UpdateSep(False,'Failed to mark revision as issued with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "Setting revision to issued")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def MarkRevisionAsIssuedByRevisionId(doc, revisionId):
@@ -200,7 +205,7 @@ def AddRevisionsToSheet(doc, sheet, revIds):
             actionReturnValue.UpdateSep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to sheet")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 # ---------------------------------------- deleting revisions --------------------------------------------
@@ -223,7 +228,7 @@ def _check_Revision_against_filters(revision, revision_description_filter):
     for paraName, paraCondition, conditionValue in revision_description_filter:
         for p in paras:
             if(p.Definition.Name == paraName):
-                match = com.CheckParameterValue(p, paraCondition, conditionValue)
+                match = rParaGet.check_parameter_value(p, paraCondition, conditionValue)
                 ruleMatch = ruleMatch and match
     return ruleMatch
 
@@ -262,11 +267,13 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
             if (ruleMatch == True):
                 # delete view
                 to_delete.append(rev.Id)
+                return_value.AppendMessage('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
             else:
                 filtered_at_least_one = True
                 return_value.AppendMessage('Revision: {} {} will not be deleted.'.format(rev.Description, rev.RevisionDate))
         else:
             to_delete.append(rev.Id)
+            return_value.AppendMessage('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
        
     # check if any revisions to delete
     if(len(to_delete) > 0 ): 
@@ -275,19 +282,19 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
         if(filtered_at_least_one == False):
             # one revision need to stay in file...
             to_delete.pop()
-        else:
-            # delete them all
-            def action():
-                action_return_value = res.Result()
-                action_return_value.AppendMessage ('Attempting to delete revisions: {}'.format(len(to_delete)))
-                try:
-                    doc.Delete(to_delete.ToList[rdb.ElementId]())
-                    action_return_value.AppendMessage('Deleted {} revisions.'.format(len(to_delete)))              
-                except Exception as e:
-                    action_return_value.UpdateSep(False, 'Failed to delete revisions with exception: {}'.format(e))
-                return action_return_value
-            transaction = rdb.Transaction(doc, 'Deleting Revisions')
-            return_value.Update(com.InTransaction(transaction, action))
+            return_value.AppendMessage('Removing at one revision from selection since Revit requires at least one revision in the model.')
+        # delete them 
+        def action():
+            action_return_value = res.Result()
+            action_return_value.AppendMessage ('Attempting to delete revisions: {}'.format(len(to_delete)))
+            try:
+                doc.Delete(to_delete.ToList[rdb.ElementId]())
+                action_return_value.AppendMessage('Deleted {} revisions.'.format(len(to_delete)))              
+            except Exception as e:
+                action_return_value.UpdateSep(False, 'Failed to delete revisions with exception: {}'.format(e))
+            return action_return_value
+        transaction = rdb.Transaction(doc, 'Deleting Revisions')
+        return_value.Update(rTran.in_transaction(transaction, action))
     else:
         return_value.UpdateSep(False, 'Only one revision in file which can not be deleted!')
     return return_value

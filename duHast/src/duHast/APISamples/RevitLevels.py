@@ -34,9 +34,11 @@ clr.ImportExtensions(Linq)
 
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitWorksets as rWork
 from duHast.APISamples import RevitFamilyUtils as rFamU
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 
 # import Autodesk
@@ -105,7 +107,7 @@ def change_levels_2D (doc, levels, view):
             action_return_value.UpdateSep(True, 'No levels visible in view {}'.format(view.Name))
         return action_return_value
     transaction = rdb.Transaction(doc, "levels to 2D")
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def show_head_end (doc, level, view, end_identifier, show_head):
@@ -153,7 +155,7 @@ def show_head_end (doc, level, view, end_identifier, show_head):
         return action_return_value
     
     transaction = rdb.Transaction(doc, "Toggle head. {}".format(show_head))
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def hide_both_heads (doc, levels, view):
@@ -301,7 +303,7 @@ def toggle_head_end (doc, level, view, end_identifier):
             action_return_value.UpdateSep(False, 'Failed to change level {} head visibility at end: {} with exception: {}'.format(level.Name, end_identifier, e))
         return action_return_value
     transaction = rdb.Transaction(doc, "Toggle head.")
-    return_value = com.InTransaction(transaction, action)
+    return_value = rTran.in_transaction(transaction, action)
     return return_value
 
 def toggle_head_one_end (doc, levels, view ):
@@ -495,7 +497,7 @@ def GetUnusedLevelHeadFamilies(doc):
     # get family symbol in use at level as symbol
     for lId in usedTypes:
         type = doc.GetElement(lId)
-        id = com.GetBuiltInParameterValue(type, rdb.BuiltInParameter.LEVEL_HEAD_TAG)
+        id = rParaGet.get_built_in_parameter_value(type, rdb.BuiltInParameter.LEVEL_HEAD_TAG)
         if(id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     # get all level head symbols available

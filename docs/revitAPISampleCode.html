@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 0.0.5 documentation</title>
+    <title>Revit API sample code. &#8212; Sample Code Revit Batch Processor 0.0.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/css/adctheme.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -16,13 +16,13 @@
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="Sample Code Revit Batch Processor 0.0.5 documentation" href="index.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.6 documentation" href="index.html" />
     <link rel="next" title="Revit API family property reporting." href="familyReporting.html" />
     <link rel="prev" title="Revit Batch Processor - File Selection User Interface." href="fileSelectUI.html" />
     <link media="only screen and (max-device-width: 480px)" href="_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
-    <p>Sample Code Revit Batch Processor 0.0.5 documentation</p>
+    <p>Sample Code Revit Batch Processor 0.0.6 documentation</p>
 </div>
 <div id="header">
     <div id="title"><h1>Revit API sample code.</h1></div>
@@ -125,7 +125,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.InTransaction">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">InTransaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">res.Result</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">res.Result</span></span></span><a class="headerlink" href="#RevitCommonAPI.InTransaction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Revit transaction wrapper.</p>
+<dd><p>!DEPRECATED! Refer to module RevitTransaction. Revit transaction wrapper.</p>
 <p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -150,7 +150,8 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.CheckParameterValue">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">CheckParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paraCondition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditionValue</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitCommonAPI.CheckParameterValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks a parameter value based on passed in condition function.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils:check_parameter_value 
+Checks a parameter value based on passed in condition function.</p>
 <p>This extracts the value of the past in parameter and compares it against a past in value using 
 the also past in compare function. 
 Note that values will be past into compare function as ASCII encoded.</p>
@@ -180,9 +181,20 @@ Will return False if compare function returns None or a False.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="RevitCommonAPI.getter_none">
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Used for parameters where the storage type is None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_double_or_int_as_string">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_or_int_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_or_int_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type double or integer as string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double or integer as string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -199,7 +211,7 @@ Will return False if compare function returns None or a False.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_double_as_double">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_as_double" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type double as a double.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double as a double.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -216,7 +228,7 @@ Will return False if compare function returns None or a False.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_double_as_double_converted_to_millimeter">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double_converted_to_millimeter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_double_as_double_converted_to_millimeter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type double as a double converted to mm (if required).
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type double as a double converted to mm (if required).
 Revit uses feet internally for any length value!</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -234,7 +246,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_int_as_int">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_int_as_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_int_as_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type integer as a integer.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type integer as a integer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -251,7 +263,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_string_as_UTF8_string">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_UTF8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_string_as_UTF8_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type string as a utf-8 formatted string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type string as a utf-8 formatted string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -268,7 +280,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_string_as_string">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_string_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type string as a string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type string as a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -285,7 +297,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_string">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type element id as a string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as a string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -302,7 +314,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_element_id">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_element_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type element id as a element id.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as a element id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -319,7 +331,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getter_element_id_as_element_int">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.getter_element_id_as_element_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value of type element id as an integer.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value of type element id as an integer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
@@ -336,7 +348,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.get_parameter_value_with_over_load">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_with_over_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.get_parameter_value_with_over_load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value in format depending on storage type.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value in format depending on storage type.</p>
 <p>Storage type can be:</p>
 <ul class="simple">
 <li><p>Double</p></li>
@@ -361,7 +373,7 @@ Revit uses feet internally for any length value!</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.getParameterValue">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">getParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitCommonAPI.getParameterValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a parameter value as string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns a parameter value as string.</p>
 <p>Returns a parameter value as string independent of its storage type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -384,7 +396,7 @@ Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueUTF8String">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueUTF8String</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueUTF8String" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the parameter value as utf-8 encoded string.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils.</p>
 <p>Returns the parameter value as utf-8 string independent of its storage type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -407,7 +419,7 @@ Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueAsInteger">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueAsInteger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueAsInteger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the parameter value as integer.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils.</p>
 <p>Returns the parameter value as integer only if the storage type is integer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -429,7 +441,7 @@ Otherwise the actual parameter value.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueAsElementId">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueAsElementId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueAsElementId" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the parameter value as Element Id.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils.</p>
 <p>Returns the parameter value as element Id only if the storage type is ElementId.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -451,7 +463,7 @@ Otherwise the actual parameter value.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.get_all_parameters_and_values_wit_custom_getters">
 <span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">get_all_parameters_and_values_wit_custom_getters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.get_all_parameters_and_values_wit_custom_getters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.</p>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils. Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>element</strong> (<em>var</em>) – The element</p>
@@ -467,8 +479,8 @@ Otherwise the actual parameter value.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetBuiltInParameterValue">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the built-in parameter value.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils.</p>
 <p>Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -493,8 +505,8 @@ Otherwise the actual parameter value as per value getter method.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.GetParameterValueByName">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">GetParameterValueUTF8String&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueByName" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the parameter value by parameter name.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">GetParameterValueByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.GetParameterValueByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterGetUtils.</p>
 <p>Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -519,8 +531,9 @@ Otherwise the actual parameter value as per value getter method.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.setParameterValue">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">setParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueAsString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">InTransaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.setParameterValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">setParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueAsString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.setParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterSetUtils.</p>
+<p>Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
 <p>Changing a parameter value requires this action to run inside a transaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -528,6 +541,7 @@ Otherwise the actual parameter value as per value getter method.</p>
 <li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be set.</p></li>
 <li><p><strong>valueAsString</strong> (<em>str</em>) – The new parameter value.</p></li>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>in_transaction</strong> (<em>func</em><em>(</em><em>Autodesk.Revit.DB.Transaction</em><em>, </em><em>action</em><em>(</em><em>)</em><em>, </em><em>Autodesk.Revit.DB.Document</em><em>)</em>) – The transaction wrapper function to be used.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raise</dt>
@@ -557,8 +571,9 @@ Otherwise the actual parameter value as per value getter method.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="RevitCommonAPI.SetBuiltInParameterValue">
-<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueAsString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueSetter=&lt;function</span> <span class="pre">setParameterValue&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<span class="sig-prename descclassname"><span class="pre">RevitCommonAPI.</span></span><span class="sig-name descname"><span class="pre">SetBuiltInParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueAsString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueSetter=&lt;function</span> <span class="pre">set_parameter_value&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitCommonAPI.SetBuiltInParameterValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>!DEPRECATED! Refer to module RevitElementParameterSetUtils.</p>
+<p>Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
 <p>Changing a parameter value requires this action to run inside a transaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1340,6 +1355,497 @@ File will bew compacted on save.</p>
 </dd></dl>
 
 </section>
+<span class="target" id="module-RevitTransaction"></span><section id="revit-transaction-wrapper-utility-functions">
+<h3>Revit transaction wrapper utility functions.<a class="headerlink" href="#revit-transaction-wrapper-utility-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitTransaction.in_transaction">
+<span class="sig-prename descclassname"><span class="pre">RevitTransaction.</span></span><span class="sig-name descname"><span class="pre">in_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tranny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">res.Result</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">res.Result</span></span></span><a class="headerlink" href="#RevitTransaction.in_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revit transaction wrapper.</p>
+<p>This function is used to execute any actions requiring a transaction in the Revit api. On exception this will roll back the transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tranny</strong> (<em>Autodesk.Revit.DB.Transaction</em>) – The transaction to be executed.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document. (not used in this function)</p></li>
+<li><p><strong>action</strong> (<em>action</em><em>(</em><em>)</em><em>.</em>) – The action to be nested within the transaction. This needs to return a Result class instance!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if successfully executed transaction, otherwise False.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitElementParameterGetUtils"></span><section id="revit-api-utility-functions-to-get-parameter-values">
+<h3>Revit API utility functions to get parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-get-parameter-values" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.check_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">check_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#RevitElementParameterGetUtils.check_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks a parameter value based on passed in condition function.</p>
+<p>This extracts the value of the past in parameter and compares it against a past in value using 
+the also past in compare function. 
+Note that values will be past into compare function as ASCII encoded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be checked.</p></li>
+<li><p><strong>para_condition</strong> (<em>function</em>) – Function taking 2 arguments:
+First argument is the value to be checked against
+Second argument is the actual parameter value
+Needs to return a bool!
+Both arguments will be ASCII encoded at passing in.</p></li>
+<li><p><strong>condition_value</strong> (<em>var</em>) – The value to be checked for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if condition value is evaluated to be True by past in function paraCondition.
+Will return False if compare function returns None or a False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_none">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_none</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_none" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for parameters where the storage type is None</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_double_or_int_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_double_or_int_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_double_or_int_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double or integer as string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String representation of double or integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_double_as_double">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_double_as_double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double as a double.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_double_as_double_converted_to_millimeter">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_double_as_double_converted_to_millimeter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_double_as_double_converted_to_millimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type double as a double converted to mm (if required).
+Revit uses feet internally for any length value!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Double value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Double or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_int_as_int">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_int_as_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_int_as_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type integer as a integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_string_as_UTF8_string">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_UTF8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_string_as_UTF8_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a utf-8 formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_string_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_string_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_string_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type string as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_element_id_as_string">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_element_id_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>String or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_element_id_as_element_id">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_element_id_as_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as a element id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Element id value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Element id or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.getter_element_id_as_element_int">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">getter_element_id_as_element_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.getter_element_id_as_element_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value of type element id as an integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Integer value. If value is empty it will return None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Integer or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value_with_over_load">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_with_over_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value_with_over_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value in format depending on storage type.</p>
+<p>Storage type can be:</p>
+<ul class="simple">
+<li><p>Double</p></li>
+<li><p>Integer</p></li>
+<li><p>String</p></li>
+<li><p>ElementId</p></li>
+</ul>
+<p>Will throw an exception if a storage type is not covered by parameter value getter functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – The Parameter.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parameter value or if empty: None.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Depends on value getters functions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a parameter value as string independent of its storage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
+Otherwise the actual parameter value.
+Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value_utf8_string">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_utf8_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value_utf8_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as utf-8 string independent of its storage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>If an exception occurs the exception message will be returned as the parameter value prefixed with ‘Exception: ‘</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is ‘no Value’ if parameter value is empty.
+Otherwise the actual parameter value.
+Will return ‘Exception: ‘ + exception message if an exception occurred.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value_as_integer">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_as_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as integer only if the storage type is integer. Otherwise -1 will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is -1 if parameter value is empty or storage type is not integer.
+Otherwise the actual parameter value.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value_as_element_id">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_as_element_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value_as_element_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value as element Id only if the storage type is ElementId. Otherwise InvalidElementId (-1) will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be returned.</p>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is -1 if parameter value is empty or storage type is not integer.
+Otherwise the actual parameter value.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_all_parameters_and_values_wit_custom_getters">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_all_parameters_and_values_wit_custom_getters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_getters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.get_all_parameters_and_values_wit_custom_getters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all parameters and their values as using custom value getter associated with provided element in form of a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>var</em>) – The element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary where key is the parameter name, and the value is the parameter value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{str:var}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_built_in_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_built_in_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtInParameterDef</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.get_built_in_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>builtInParameterDef</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The parameters built-in definition of which the value is to be returned.</p></li>
+<li><p><strong>parameterValueGetter</strong> (<em>function</em>) – The function which takes the parameter as an argument and returns it’s value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>As per value getter method.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is None if parameter does not exist on element.
+Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterGetUtils.get_parameter_value_by_name">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterGetUtils.</span></span><span class="sig-name descname"><span class="pre">get_parameter_value_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterValueGetter=&lt;function</span> <span class="pre">get_parameter_value_utf8_string&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterGetUtils.get_parameter_value_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter value by parameter name.</p>
+<p>Return value type depends on past in value getter function. Default is UTF-8 encoded string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>parameterName</strong> (<em>str</em>) – The parameters name of which the value is to be returned.</p></li>
+<li><p><strong>parameterValueGetter</strong> (<em>function</em>) – The function which takes the parameter as an argument and returns it’s value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>As per value getter method.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Default value is None if parameter does not exist on element.
+Otherwise the actual parameter value as per value getter method.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-RevitElementParameterSetUtils"></span><section id="revit-api-utility-functions-to-set-parameter-values">
+<h3>Revit API utility functions to set parameter values.<a class="headerlink" href="#revit-api-utility-functions-to-set-parameter-values" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterSetUtils.set_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterSetUtils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_as_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_transaction=&lt;function</span> <span class="pre">in_transaction&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterSetUtils.set_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<p>Changing a parameter value requires this action to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>para</strong> (<em>Autodesk.Revit.DB.Parameter</em>) – Parameter of which the value is to be set.</p></li>
+<li><p><strong>value_as_string</strong> (<em>str</em>) – The new parameter value.</p></li>
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>in_transaction</strong> (<em>func</em><em>(</em><em>Autodesk.Revit.DB.Transaction</em><em>, </em><em>action</em><em>(</em><em>)</em><em>, </em><em>Autodesk.Revit.DB.Document</em><em>)</em>) – The transaction wrapper function to be used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>Any exception will need to be managed by the function caller.</p>
+</dd>
+</dl>
+<p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="RevitElementParameterSetUtils.set_built_in_parameter_value">
+<span class="sig-prename descclassname"><span class="pre">RevitElementParameterSetUtils.</span></span><span class="sig-name descname"><span class="pre">set_built_in_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_parameter_def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_as_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_value_setter=&lt;function</span> <span class="pre">set_parameter_value&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#RevitElementParameterSetUtils.set_built_in_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.</p>
+<p>Changing a parameter value requires this action to run inside a transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – Element to which the built-in parameter belongs.</p></li>
+<li><p><strong>built_in_parameter_def</strong> (<em>Autodesk.Revit.DB.Definition</em>) – The parameters built-in definition of which the value is to be returned.</p></li>
+<li><p><strong>value_as_string</strong> (<em>str</em>) – The new parameter value.</p></li>
+<li><p><strong>parameter_value_setter</strong> (<em>function</em>) – The function which takes the parameter as an argument and changes it’s value to.
+The function needs to accept these args: parameter, new parameter value as string, document</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>As per value setter method.</p>
+</dd>
+</dl>
+<p>ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Set parameter status (bool) returned in result.status. False if an exception occurred, or parameter does not exist on element, otherwise True.</p></li>
+<li><p>Result.message property updated in format: Changed parameter value of type x [‘parameter name’] : ‘old value’ to: ‘new value’.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>Set parameter.status (bool) will be False.</p></li>
+<li><p>Set parameter.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 <section id="module-RevitAnnotation">
 <span id="revit-annotation"></span><h2>Revit Annotation<a class="headerlink" href="#module-RevitAnnotation" title="Permalink to this headline">¶</a></h2>
@@ -2102,6 +2608,67 @@ and symbols used</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-UtilBIM360"></span><section id="this-module-contains-a-number-of-helper-functions-relating-to-bim360">
+<h3>This module contains a number of helper functions relating to BIM360.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-bim360" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.getBIM360RevitFilesFromFileList">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">getBIM360RevitFilesFromFileList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.getBIM360RevitFilesFromFileList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method reading BIM360 file data from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepathCSV</strong> (<em>str</em>) – Fully qualified file path to CSV to be read.</p></li>
+<li><p><strong>extension</strong> (<em>TODO</em>) – Is an empty place holder…this method is past into another where it expects 2 arguments…</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>On exception an empty list is returned.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List in format [Revit version, Project GUID, File GUID, file size in MB, file name]</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.GetBIM360Data">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">GetBIM360Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.GetBIM360Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a csv file containing BIM 360 file data into list of FileItem instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filepathCSV</strong> (<em>str</em>) – Fully qualified file path to CSV to be read.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of FileItem instances representing BIM360 file data.
+Will return an empty list of an exception occurred.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of SampleCodeBatchProcessor.FileItem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="UtilBIM360.ProcessBIM360Row">
+<span class="sig-prename descclassname"><span class="pre">UtilBIM360.</span></span><span class="sig-name descname"><span class="pre">ProcessBIM360Row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rowData</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UtilBIM360.ProcessBIM360Row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a list of str into file item class object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rowData</strong> (<em>list of str in format</em><em> [</em><em>Revit version</em><em>, </em><em>Project GUID</em><em>, </em><em>File GUID</em><em>, </em><em>file size in MB</em><em>, </em><em>file name</em><em>]</em>) – the list containing the file data</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized file item instance, None if row is not the right length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SampleCodeBatchProcessor.FileItem</p>
 </dd>
 </dl>
 </dd></dl>

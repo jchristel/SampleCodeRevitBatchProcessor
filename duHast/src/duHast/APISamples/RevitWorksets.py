@@ -34,8 +34,9 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 
 # import Autodesk
@@ -199,7 +200,7 @@ def ModifyElementWorkset(doc, defaultWorksetName, collector, elementTypeName):
                     pass
                 # move element to new workset
                 transaction = rdb.Transaction(doc, "Changing workset: " + elementName)
-                trannyStatus = com.InTransaction(transaction, GetActionChangeElementWorkset(p, defaultId))
+                trannyStatus = rTran.in_transaction(transaction, GetActionChangeElementWorkset(p, defaultId))
                 if (trannyStatus.status == True):
                     counterSuccess += 1
                 else:
@@ -252,7 +253,7 @@ def IsElementOnWorksetById(doc, el, worksetId):
     flag = True
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsParam)
+        currentWorksetName = rParaGet.get_parameter_value(wsParam)
         compareToWorksetName = GetWorksetNameById(doc, worksetId.IntegerValue)
         if(compareToWorksetName != currentWorksetName):
             flag = False
@@ -277,7 +278,7 @@ def IsElementOnWorksetByName(el, worksetName):
     flag = True
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = com.getParameterValue(wsParam)
+        currentWorksetName = rParaGet.get_parameter_value(wsParam)
         if(worksetName != currentWorksetName):
             flag = False
     except Exception as e:
@@ -298,7 +299,7 @@ def GetElementWorksetName(el):
     workSetname = 'invalid workset'
     try:
         wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        workSetname = com.getParameterValue(wsParam)
+        workSetname = rParaGet.get_parameter_value(wsParam)
     except Exception as e:
         print ("GetElementWorksetName: " + str(e))
     return workSetname
@@ -361,7 +362,7 @@ def UpdateWorksetDefaultVisibilityFromReport(doc, reportPath, revitFilePath):
                         return actionReturnValue
                     # move element to new workset
                     transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
-                    trannyStatus = com.InTransaction(transaction, action)
+                    trannyStatus = rTran.in_transaction(transaction, action)
                     returnValue.Update(trannyStatus)
                 else:
                     returnValue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')

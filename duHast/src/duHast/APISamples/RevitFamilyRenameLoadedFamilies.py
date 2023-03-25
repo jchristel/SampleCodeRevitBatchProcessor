@@ -36,9 +36,9 @@ This helper function expect a folder containing rename directive files. For form
 import clr
 import System
 
-from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitFamilyRenameFilesUtils as rFamRenameUtils
 from duHast.APISamples import RevitFamilyUtils as rFamUtils
+from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 
 # import Autodesk Revit DataBase namespace
@@ -98,7 +98,7 @@ def _renameLoadedFamilies(doc, renameDirectives, familyIds):
                                 'Failed to rename family of category [' + familyCategoryName + '] vs directive category [' + renameDirective.category + '] from: ' + renameDirective.name + ' to: ' + renameDirective.newName)
                         return actionReturnValue
                     transaction = rdb.Transaction(doc, 'Renaming: ' + renameDirective.name)
-                    renameResult = com.InTransaction(transaction, action)
+                    renameResult = rTran.in_transaction(transaction, action)
                     if(renameResult.status):
                         # make sure that this returns true as soon as one family renamed successfully
                         returnValue.status = True

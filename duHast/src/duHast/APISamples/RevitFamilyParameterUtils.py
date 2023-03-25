@@ -31,7 +31,7 @@ import System
 
 # import common library
 # utility functions for most commonly used Revit API tasks
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitTransaction as rTran
 # class used for stats reporting
 from duHast.Utilities import Result as res
 
@@ -80,7 +80,7 @@ def SetFamilyParameterValue(doc, manager, famPara, value):
             actionReturnValue.message = famPara.Definition.Name + ' : Failed to set parameter value: with exception: ' + str(e)
         return actionReturnValue
     transaction = rdb.Transaction(doc, "Setting parameter value")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
 def SetParameterFormula(doc, manager, famPara, formula):
@@ -96,5 +96,5 @@ def SetParameterFormula(doc, manager, famPara, formula):
             actionReturnValue.message = famPara.Definition.Name + ' : Failed to set parameter formula: with exception: ' + str(e)
         return actionReturnValue
     transaction = rdb.Transaction(doc, "Setting parameter formula")
-    returnValue = com.InTransaction(transaction, action)
+    returnValue = rTran.in_transaction(transaction, action)
     return returnValue

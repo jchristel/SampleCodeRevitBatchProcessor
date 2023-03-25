@@ -13,7 +13,7 @@ import Autodesk.Revit.DB as rdb
 # custom result class
 from duHast.Utilities import Result as res
 # import InTransaction from common module
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples import RevitTransaction as rTran
 
 def LoadSharedParameterFile(doc, path):
     '''
@@ -181,7 +181,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
                     actionReturnValue.message = parameterName + ' : Failed to bind parameter to: ' + catObject.Name + ' with exception: ' + str(e)
                 return actionReturnValue
             transaction = rdb.Transaction(doc,'Binding parameter')
-            returnValue = com.InTransaction(transaction, action)
+            returnValue = rTran.in_transaction(transaction, action)
         else:
             returnValue.UpdateSep(False, 'Failed to get category object for ' + str(category)) 
         return returnValue
@@ -244,7 +244,7 @@ def AddSharedParameterToFamily(para, mgr, doc, defFile):
                         actionReturnValue.message = para.name + ' : Failed to add shared parameter: with exception: ' + str(e)
                     return actionReturnValue
                 transaction = rdb.Transaction(doc, "Adding shared parameter")
-                returnValue = com.InTransaction(transaction, action)
+                returnValue = rTran.in_transaction(transaction, action)
                 # set flag for parameter found
                 foundPara = True
 

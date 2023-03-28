@@ -36,9 +36,9 @@ from duHast.DataSamples.Objects.Properties import DataTypeProperties
 from duHast.DataSamples.Objects.Properties import DataInstanceProperties
 from duHast.DataSamples.Objects.Properties import DataRevitModel
 from duHast.DataSamples.Utils import DataBase
-from duHast.DataSamples.Objects.Properties import DataElementGeometryBase
+from duHast.DataSamples.Objects.Properties import DataElementGeometry
 
-class DataCeiling(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
+class DataCeiling(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
 
     dataType = 'ceiling'
     

@@ -35,9 +35,9 @@ from duHast.DataSamples.Objects.Properties import DataLevel
 from duHast.DataSamples.Objects.Properties import DataInstanceProperties
 from duHast.DataSamples.Objects.Properties import DataRevitModel
 from duHast.DataSamples.Utils import DataBase
-from duHast.DataSamples.Objects.Properties import DataElementGeometryBase
+from duHast.DataSamples.Objects.Properties import DataElementGeometry
 
-class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
+class DataRoom(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
     dataType = 'room'
     
     def __init__(self, j = {}):

@@ -38,7 +38,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataRoom as dRoom
-from duHast.DataSamples.Objects.Properties import DataGeometryPolygon as dGeometryPoly
+from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
 from duHast.APISamples import RevitPhases as rPhase
 from duHast.APISamples import RevitTransaction as rTran
 

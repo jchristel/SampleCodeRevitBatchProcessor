@@ -27,10 +27,10 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples.Utils import DataGeometryBase
+from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryBase
 
-class DataPolygon(DataGeometryBase.DataGeometryBase):
-    dataType = 'polygons'
+class DataTopologyCell(DataGeometryBase.DataGeometryBase):
+    dataType = 'topology cell'
 
     def __init__(self, j = {}):
         '''
@@ -41,7 +41,7 @@ class DataPolygon(DataGeometryBase.DataGeometryBase):
         '''
 
         # store data type  in base class
-        super(DataPolygon, self).__init__('polygons', j)
+        super(DataTopologyCell, self).__init__(DataTopologyCell.dataType, j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -54,17 +54,6 @@ class DataPolygon(DataGeometryBase.DataGeometryBase):
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('outerLoop' in j ):
-                self.outerLoop = j['outerLoop']
-            else:
-                self.outerLoop = []
-
-            if('innerLoops' in j ):
-                self.innerLoops = j['innerLoops']
-            else:
-                self.innerLoops = []
         else:
             # set default values
-            self.outerLoop = []        
-            self.innerLoops = []
+            pass

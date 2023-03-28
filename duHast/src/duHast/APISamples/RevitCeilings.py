@@ -469,9 +469,9 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     if(len(revitGeometryPointGroups) > 0):
         ceilingPointGroupsAsDoubles = []
         for allCeilingPointGroups in revitGeometryPointGroups:
-            dataGeoConverted = rGeo.ConvertXYZInDataGeometry(doc, allCeilingPointGroups)
+            dataGeoConverted = rGeo.ConvertXYZInDataGeometryPolygons(doc, allCeilingPointGroups)
             ceilingPointGroupsAsDoubles.append(dataGeoConverted)
-        dataC.geometry = ceilingPointGroupsAsDoubles
+        dataC.geometryPolygon = ceilingPointGroupsAsDoubles
         # get design set data
         design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)
         dataC.designSetAndOption.designOptionName = design_set_data['designOptionName']

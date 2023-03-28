@@ -29,17 +29,15 @@ Data storage class for Revit room properties.
 
 import json
 
-
-from duHast.DataSamples import DataGeometry
 from duHast.DataSamples import DataDesignSetOption
 from duHast.DataSamples import DataPhasing
 from duHast.DataSamples import DataLevel
 from duHast.DataSamples import DataInstanceProperties
 from duHast.DataSamples import DataRevitModel
 from duHast.DataSamples import DataBase
+from duHast.DataSamples import DataElementGeometryBase
 
-class DataRoom(DataBase.DataBase):
-
+class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
     dataType = 'room'
     
     def __init__(self, j = {}):
@@ -50,8 +48,8 @@ class DataRoom(DataBase.DataBase):
         :type j: dict, optional
         '''
         
-        # store data type  in base class
-        super(DataRoom, self).__init__('room')
+        # initialise parent classes with values
+        super(DataRoom, self).__init__(data_type=DataRoom.dataType, j=j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -94,20 +92,8 @@ class DataRoom(DataBase.DataBase):
                 self.phasing = DataPhasing.DataPhasing(j['phasing'])
             else:
                 self.phasing = DataPhasing.DataPhasing() 
-            
-            geometry_data_list = []
-            if('geometry' in j):
-                for item in j['geometry']:
-                    if('dataType' in item):
-                        if(item['dataType']):
-                            dummy = DataGeometry.DataGeometry(item)
-                            geometry_data_list.append(dummy)
-                    else:
-                        print('no data type in item')
-            self.geometry = geometry_data_list
         else:
             # initialise classes with default values
-            self.geometry = [[]]
             self.associatedElements = []
             self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
             self.level = DataLevel.DataLevel()

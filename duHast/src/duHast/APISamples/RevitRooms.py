@@ -38,7 +38,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples import DataRoom as dRoom
-from duHast.DataSamples import DataGeometry as dGeometry
+from duHast.DataSamples import DataGeometryPolygon as dGeometryPoly
 from duHast.APISamples import RevitPhases as rPhase
 from duHast.APISamples import RevitTransaction as rTran
 
@@ -203,7 +203,7 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
 
     loopCounter = 0
     hasInnerLoops = False
-    dataGeometry = dGeometry.DataGeometry()
+    data_geo_polygon = dGeometryPoly.DataPolygon()
     for boundaryLoop in boundaryLoops:
         for roomLoop in boundaryLoop:
             p = None # segment start point
@@ -212,14 +212,14 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
                 p = segment.GetCurve().GetEndPoint(0)
                 loopPoints.append(p)
             if(loopCounter == 0):
-                dataGeometry.outerLoop = loopPoints
+                data_geo_polygon.outerLoop = loopPoints
             else:
-                dataGeometry.innerLoops.append(loopPoints)
+                data_geo_polygon.innerLoops.append(loopPoints)
                 hasInnerLoops = True
             loopCounter += 1
     if (not hasInnerLoops):
-        dataGeometry.innerLoops = []
-    return dataGeometry
+        data_geo_polygon.innerLoops = []
+    return data_geo_polygon
 
 def Get2DPointsFromRevitRoom(revitRoom):
     '''
@@ -308,9 +308,9 @@ def PopulateDataRoomObject(doc, revitRoom):
     if(len(revitGeometryPointGroups) > 0):
         roomPointGroupsAsDoubles = []
         for roomPointGroupByPoly in revitGeometryPointGroups:
-            dataGeometryConverted = rGeo.ConvertXYZInDataGeometry(doc, roomPointGroupByPoly)
+            dataGeometryConverted = rGeo.ConvertXYZInDataGeometryPolygons(doc, roomPointGroupByPoly)
             roomPointGroupsAsDoubles.append(dataGeometryConverted)
-        dataR.geometry = roomPointGroupsAsDoubles
+        dataR.geometryPolygon = roomPointGroupsAsDoubles
         # get design set data
         design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
         dataR.designSetAndOption.designOptionName = design_set_data['designOptionName']

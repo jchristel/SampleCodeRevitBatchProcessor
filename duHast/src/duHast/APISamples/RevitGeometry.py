@@ -34,7 +34,7 @@ clr.ImportExtensions(Linq)
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.DataSamples import DataGeometry as dGeometry
+from duHast.DataSamples import DataGeometryPolygon as dGeometryPoly
 
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):
@@ -421,7 +421,7 @@ def GetEdgePoints(edge):
         points.append(p)
     return points
 
-def ConvertXYZInDataGeometry(doc, dgObject):
+def ConvertXYZInDataGeometryPolygons(doc, dgObject):
     '''
     Converts revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops\
         and stores them in new data geometry object. It also populates translation and rotation matrix data of\
@@ -430,13 +430,13 @@ def ConvertXYZInDataGeometry(doc, dgObject):
     :param doc: _description_
     :type doc: _type_
     :param dgObject: A data geometry object.
-    :type dgObject: :class:`.DataGeometry`
+    :type dgObject: :class:`.DataGeometryPolygon`
     
     :return: A data geometry object.
-    :rtype: :class:`.DataGeometry`
+    :rtype: :class:`.DataGeometryPolygon`
     '''
 
-    dataGeometry = dGeometry.DataGeometry()
+    dataGeometry = dGeometryPoly.DataPolygon()
     outerLoop = []
     for xyzPoint in dgObject.outerLoop:
         pointDouble = GetPointAsDoubles(xyzPoint)
@@ -796,7 +796,7 @@ def ConvertSolidToFlattened2DPoints(solid):
     :type solid: Autodesk.Revit.DB.Solid
 
     :return: A list of data geometry instances.
-    :rtype: list of :class:`.DataGeometry`
+    :rtype: list of :class:`.DataGeometryPolygon`
     '''
 
     '''
@@ -850,7 +850,7 @@ def ConvertSolidToFlattened2DPoints(solid):
         # sort loops into exterior and hole loops
         loopDic = BuildLoopsDictionary(uvLoops)
         for key in loopDic:
-            dataGeometry = dGeometry.DataGeometry()
+            dataGeometry = dGeometryPoly.DataPolygon()
             keyList =[]
             # find matching loop by id
             for x in uvLoops:

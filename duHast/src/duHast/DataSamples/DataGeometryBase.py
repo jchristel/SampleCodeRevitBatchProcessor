@@ -29,10 +29,9 @@ Geometry data storage class.
 import json
 from duHast.DataSamples import DataBase
 
-class DataGeometry(DataBase.DataBase):
-    dataType = 'polygons'
+class DataGeometryBase(DataBase.DataBase):
 
-    def __init__(self, j = {}):
+    def __init__(self, data_type, j = {}):
         '''
         Class constructor
 
@@ -41,7 +40,7 @@ class DataGeometry(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataGeometry, self).__init__('polygons')
+        super(DataGeometryBase, self).__init__(data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -53,17 +52,8 @@ class DataGeometry(DataBase.DataBase):
                 # no action required
                 pass
             else:
+                print('j', j)
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('outerLoop' in j ):
-                self.outerLoop = j['outerLoop']
-            else:
-                self.outerLoop = []
-
-            if('innerLoops' in j ):
-                self.innerLoops = j['innerLoops']
-            else:
-                self.innerLoops = []
             
             # translation as per shared coordinates in revit file
             if('translationCoord' in j ):
@@ -79,7 +69,5 @@ class DataGeometry(DataBase.DataBase):
 
         else:
             # set default values
-            self.outerLoop = []        
-            self.innerLoops = []
             self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
             self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file

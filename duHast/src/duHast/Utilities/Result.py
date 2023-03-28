@@ -2,6 +2,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A class used to return status, messages and objects back to a caller.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).
+
 '''
 #
 #License:
@@ -27,7 +31,6 @@ A class used to return status, messages and objects back to a caller.
 #
 
 
-#a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
 class Result: 
     def __init__(self):
         '''

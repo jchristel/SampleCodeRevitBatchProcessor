@@ -35,8 +35,8 @@ Data storage base class used for geometry aspects of Revit elements.
 import json
 from duHast.Utilities import Base
 
-from duHast.DataSamples.Properties import DataGeometryPolygon
-from duHast.DataSamples.Properties import DataGeometryTopoCell
+from duHast.DataSamples.Objects.Properties import DataGeometryPolygon
+from duHast.DataSamples.Objects.Properties import DataGeometryTopoCell
 
 class DataElementGeometryBase(Base.Base):
     

@@ -29,13 +29,13 @@ Data storage class for Revit room properties.
 
 import json
 
-from duHast.DataSamples.Properties import DataDesignSetOption
-from duHast.DataSamples.Properties import DataPhasing
-from duHast.DataSamples.Properties import DataLevel
-from duHast.DataSamples.Properties import DataInstanceProperties
-from duHast.DataSamples.Properties import DataRevitModel
+from duHast.DataSamples.Objects.Properties import DataDesignSetOption
+from duHast.DataSamples.Objects.Properties import DataPhasing
+from duHast.DataSamples.Objects.Properties import DataLevel
+from duHast.DataSamples.Objects.Properties import DataInstanceProperties
+from duHast.DataSamples.Objects.Properties import DataRevitModel
 from duHast.DataSamples.Utils import DataBase
-from duHast.DataSamples.Properties import DataElementGeometryBase
+from duHast.DataSamples.Objects.Properties import DataElementGeometryBase
 
 class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
     dataType = 'room'

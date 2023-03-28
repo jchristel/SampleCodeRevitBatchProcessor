@@ -1,7 +1,13 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data base class for Revit object properties.
+Vase class for objects.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This class provides some utility functions to all child classes:
+
+- __repr__() a way of providing detailed debug output through print
+_ to_json() A json formatted dump of the class
+
 '''
 
 #
@@ -27,30 +33,35 @@ Data base class for Revit object properties.
 #
 #
 
-from duHast.Utilities import Base
+import json
 
-class DataBase(Base.Base):
+class Base(object):
 
     def __init__(self, data_type, **kwargs):
         '''
         Class constructor
-
-        :param data_type: human readable data type
-        :type data_type: str
         '''
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__(**kwargs)  
-        self.dataType = data_type
+        super(Base, self).__init__(**kwargs)  
+        
+    def __repr__(self):
+        '''
+        Enables detailed debug output of all class properties using: rep(obj)
+
+        :return: A string listing class properties and their respective values.
+        :rtype: string
+        '''
+
+        return '{}({})'.format(self.__class__.__name__, ', '.join('{}={!r}'.format(k, v) for k, v in self.__dict__.items()))
     
-    @property
-    def DataType(self):
+    def to_json(self):
         '''
-        Property: returns the data type of this class.
-
-        :return: 'ceiling'
-        :rtype: str
+        Convert the instance of this class to json.
+        
+        :return: A Json object.
+        :rtype: json
         '''
 
-        return self.dataType
+        return json.dumps(self, indent = None, default=lambda o: o.__dict__)

@@ -1,12 +1,13 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data geometry storage base class for Revit elements.
+Data storage base class used for geometry aspects of Revit elements.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - contains 
 
     - polygon
     - topology cell (WIP)
+
 '''
 #
 #License:
@@ -32,11 +33,12 @@ Data geometry storage base class for Revit elements.
 #
 
 import json
+from duHast.Utilities import Base
 
 from duHast.DataSamples import DataGeometryPolygon
 from duHast.DataSamples import DataGeometryTopoCell
 
-class DataElementGeometryBase(object):
+class DataElementGeometryBase(Base.Base):
     
     def __init__(self, j , **kwargs):
         '''
@@ -63,6 +65,7 @@ class DataElementGeometryBase(object):
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
             
             # check for polygon data
+            # this is stored as a list since there could be multiple polygons representing an object
             geometry_data_list = []
             if('geometryPolygon' in j):
                 for item in j['geometryPolygon']:
@@ -84,24 +87,3 @@ class DataElementGeometryBase(object):
             # initialise classes with default values
             self.geometryPolygon = []
             self.geometryTopologicCell = DataGeometryTopoCell.DataTopologyCell()
-
-    def __repr__(self):
-        '''
-        Enables detailed debug output of all class properties using: rep(obj)
-
-        :return: A string listing class properties and their respective values.
-        :rtype: string
-        '''
-
-        return '{}({})'.format(self.__class__.__name__, ', '.join('{}={!r}'.format(k, v) for k, v in self.__dict__.items()))
-    
-    def to_json(self):
-        '''
-        Convert the instance of this class to json.
-        
-        :return: A Json object.
-        :rtype: json
-        '''
-
-        return json.dumps(self, indent = None, default=lambda o: o.__dict__)
-    

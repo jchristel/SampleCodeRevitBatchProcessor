@@ -27,11 +27,12 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.Utils import DataGeometryBase
 
-class DataGeometryBase(DataBase.DataBase):
+class DataTopologyCell(DataGeometryBase.DataGeometryBase):
+    dataType = 'topology cell'
 
-    def __init__(self, data_type, j = {}):
+    def __init__(self, j = {}):
         '''
         Class constructor
 
@@ -40,7 +41,7 @@ class DataGeometryBase(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataGeometryBase, self).__init__(data_type)
+        super(DataTopologyCell, self).__init__(DataTopologyCell.dataType, j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -52,22 +53,7 @@ class DataGeometryBase(DataBase.DataBase):
                 # no action required
                 pass
             else:
-                print('j', j)
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-            
-            # translation as per shared coordinates in revit file
-            if('translationCoord' in j ):
-                self.translationCoord = j['translationCoord']
-            else:
-                self.translationCoord = [0.0, 0.0, 0.0]
-            
-            # rotation as per shared coordinates in revit file
-            if('rotationCoord' in j ):
-                self.rotationCoord = j['rotationCoord']
-            else:
-                self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
-
         else:
             # set default values
-            self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
-            self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file
+            pass

@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element level properties.
+Data storage class for Revit design option properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,23 +27,22 @@ Data storage class for Revit element level properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.utils import DataBase
 
-class DataLevel(DataBase.DataBase):
+class DataDesignSetOption(DataBase.DataBase):
+    dataType = 'design set'
 
-    dataType = 'level'
-    
     def __init__(self, j = {}):
         '''
-        Class constructor
+        Class constructor.
 
-        :param j:  json formatted dictionary of this class, defaults to {}
+        :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
 
         # store data type  in base class
-        super(DataLevel, self).__init__('level')
-        
+        super(DataDesignSetOption, self).__init__('design set')
+
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
             # check type of data that came in: 
@@ -56,21 +55,22 @@ class DataLevel(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('levelName' in j ):
-                self.levelName = j['levelName']
+            if('designSetName' in j ):
+                self.designSetName = j['designSetName']
             else:
-                self.levelName = '-'
-            
-            if('levelId' in j ):
-                self.levelId = j['levelId']
+                self.designSetName = '-'
+        
+            if('designOptionName' in j ):
+                self.designOptionName = j['designOptionName']
             else:
-                self.levelId = -1
-            
-            if('offsetFromLevel' in j ):
-                self.offsetFromLevel = j['offsetFromLevel']
+                self.designOptionName = '-'
+
+            if('isPrimary' in j ):
+                self.isPrimary = j['isPrimary']
             else:
-                self.offsetFromLevel = 0.0
+                self.isPrimary = True
         else:
-            self.levelName = '-'     
-            self.levelId = -1
-            self.offsetFromLevel = 0.0
+            # set default values
+            self.designSetName = '-'
+            self.designOptionName = '-'
+            self.isPrimary = True

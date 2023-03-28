@@ -34,7 +34,7 @@ clr.ImportExtensions(Linq)
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.DataSamples import DataGeometryPolygon as dGeometryPoly
+from duHast.DataSamples.Properties import DataGeometryPolygon as dGeometryPoly
 
 # ---------------------------- debug ----------------------------
 def GetPointAsString (point):

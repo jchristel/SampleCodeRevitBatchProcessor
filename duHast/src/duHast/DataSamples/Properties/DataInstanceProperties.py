@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element type properties.
+Data storage class for Revit element instance properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,12 +27,12 @@ Data storage class for Revit element type properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.Utils import DataBase
 
-class DataTypeProperties(DataBase.DataBase):
-
-    dataType = 'type properties'
+class DataInstanceProperties(DataBase.DataBase):
     
+    dataType = 'instance properties'
+
     def __init__(self, j = {}):
         '''
         Class constructor
@@ -40,9 +40,9 @@ class DataTypeProperties(DataBase.DataBase):
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
-
+        
         # store data type  in base class
-        super(DataTypeProperties, self).__init__('type properties')
+        super(DataInstanceProperties, self).__init__('instance properties')
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -55,23 +55,16 @@ class DataTypeProperties(DataBase.DataBase):
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('typeName' in j ):
-                self.typeName = j['typeName']
-            else:
-                self.typeName = '-'
             
-            if('typeId' in j ):
-                self.typeId = j['typeId']
+            if('instanceId' in j ):
+                self.instanceId = j['instanceId']
             else:
-                self.typeId = -1
+                self.instanceId = -1
             
             if('properties' in j ):
                 self.properties = j['properties']
             else:
                 self.properties = {}
-
         else:
-            self.typeName = '-'
-            self.typeId = -1
+            self.instanceId = -1
             self.properties = {}

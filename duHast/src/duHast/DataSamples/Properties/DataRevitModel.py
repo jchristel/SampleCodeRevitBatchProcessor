@@ -27,7 +27,7 @@ Data storage class for Revit elements model properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.Utils import DataBase
 
 class DataRevitModel(DataBase.DataBase):
     

@@ -31,8 +31,8 @@ from duHast.APISamples import RevitCeilings as rCeil
 from duHast.APISamples import RevitRooms as rRoom
 from duHast.Utilities import Result as res
 
-from duHast.DataSamples import DataCeiling as dc
-from duHast.DataSamples import DataRoom as dr
+from duHast.DataSamples.objects import DataCeiling as dc
+from duHast.DataSamples.objects import DataRoom as dr
 
 import json
 import codecs

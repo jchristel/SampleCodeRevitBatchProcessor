@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element phasing properties.
+Data storage class for Revit element type properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,12 +27,12 @@ Data storage class for Revit element phasing properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.utils import DataBase
 
-class DataPhasing(DataBase.DataBase):
+class DataTypeProperties(DataBase.DataBase):
+
+    dataType = 'type properties'
     
-    dataType = 'phasing'
-
     def __init__(self, j = {}):
         '''
         Class constructor
@@ -42,7 +42,7 @@ class DataPhasing(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataPhasing, self).__init__('phasing')
+        super(DataTypeProperties, self).__init__('type properties')
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,15 +56,22 @@ class DataPhasing(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('phaseCreated' in j ):
-                self.phaseCreated = j['phaseCreated']
+            if('typeName' in j ):
+                self.typeName = j['typeName']
             else:
-                self.phaseCreated = '-'
+                self.typeName = '-'
             
-            if('phaseDemolished' in j ):
-                self.phaseDemolished = j['phaseDemolished']
+            if('typeId' in j ):
+                self.typeId = j['typeId']
             else:
-                self.phaseDemolished = '-'
+                self.typeId = -1
+            
+            if('properties' in j ):
+                self.properties = j['properties']
+            else:
+                self.properties = {}
+
         else:
-            self.phaseCreated = '-'     
-            self.phaseDemolished = '-'
+            self.typeName = '-'
+            self.typeId = -1
+            self.properties = {}

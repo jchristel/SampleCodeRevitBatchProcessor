@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data storage class.
+Data storage class for Revit element phasing properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Geometry data storage class.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2022  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,10 +27,11 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples import DataGeometryBase
+from duHast.DataSamples.utils import DataBase
 
-class DataTopologyCell(DataGeometryBase.DataGeometryBase):
-    dataType = 'topology cell'
+class DataPhasing(DataBase.DataBase):
+    
+    dataType = 'phasing'
 
     def __init__(self, j = {}):
         '''
@@ -41,7 +42,7 @@ class DataTopologyCell(DataGeometryBase.DataGeometryBase):
         '''
 
         # store data type  in base class
-        super(DataTopologyCell, self).__init__(DataTopologyCell.dataType, j)
+        super(DataPhasing, self).__init__('phasing')
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -54,6 +55,16 @@ class DataTopologyCell(DataGeometryBase.DataGeometryBase):
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
+        
+            if('phaseCreated' in j ):
+                self.phaseCreated = j['phaseCreated']
+            else:
+                self.phaseCreated = '-'
+            
+            if('phaseDemolished' in j ):
+                self.phaseDemolished = j['phaseDemolished']
+            else:
+                self.phaseDemolished = '-'
         else:
-            # set default values
-            pass
+            self.phaseCreated = '-'     
+            self.phaseDemolished = '-'

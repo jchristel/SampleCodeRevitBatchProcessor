@@ -35,7 +35,7 @@ from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitFamilyUtils as rFam
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
-from duHast.DataSamples import DataCeiling as dCeiling
+from duHast.DataSamples.Objects import DataCeiling as dCeiling
 from duHast.APISamples import RevitPhases as rPhase
 
 # import Autodesk

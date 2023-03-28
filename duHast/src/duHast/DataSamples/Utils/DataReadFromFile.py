@@ -36,8 +36,8 @@ Data storage reader class.
 
 import json
 
-from duHast.DataSamples import DataCeiling as dc
-from duHast.DataSamples import DataRoom as dr
+from duHast.DataSamples.objects import DataCeiling as dc
+from duHast.DataSamples.objects import DataRoom as dr
 
 
 class ReadDataFromFile:

@@ -45,9 +45,9 @@ import csv
 
 
 from duHast.Utilities import Result as res
-from duHast.DataSamples import DataCeiling as dc
-from duHast.DataSamples import DataRoom as dr
-from duHast.DataSamples import DataReadFromFile as dReader
+from duHast.DataSamples.Objects import DataCeiling as dc
+from duHast.DataSamples.Objects import DataRoom as dr
+from duHast.DataSamples.Utils import DataReadFromFile as dReader
 from duHast.DataSamples import DataToShapely as dToS
 
 # --------------- writing out data ------------------

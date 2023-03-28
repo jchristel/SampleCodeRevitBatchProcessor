@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element instance properties.
+Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,12 +27,12 @@ Data storage class for Revit element instance properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.Utils import DataBase
 
-class DataInstanceProperties(DataBase.DataBase):
+class DataLevel(DataBase.DataBase):
+
+    dataType = 'level'
     
-    dataType = 'instance properties'
-
     def __init__(self, j = {}):
         '''
         Class constructor
@@ -40,9 +40,9 @@ class DataInstanceProperties(DataBase.DataBase):
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
-        
+
         # store data type  in base class
-        super(DataInstanceProperties, self).__init__('instance properties')
+        super(DataLevel, self).__init__('level')
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -55,16 +55,22 @@ class DataInstanceProperties(DataBase.DataBase):
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-            
-            if('instanceId' in j ):
-                self.instanceId = j['instanceId']
+        
+            if('levelName' in j ):
+                self.levelName = j['levelName']
             else:
-                self.instanceId = -1
+                self.levelName = '-'
             
-            if('properties' in j ):
-                self.properties = j['properties']
+            if('levelId' in j ):
+                self.levelId = j['levelId']
             else:
-                self.properties = {}
+                self.levelId = -1
+            
+            if('offsetFromLevel' in j ):
+                self.offsetFromLevel = j['offsetFromLevel']
+            else:
+                self.offsetFromLevel = 0.0
         else:
-            self.instanceId = -1
-            self.properties = {}
+            self.levelName = '-'     
+            self.levelId = -1
+            self.offsetFromLevel = 0.0

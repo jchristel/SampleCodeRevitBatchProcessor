@@ -27,7 +27,7 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples import DataGeometryBase
+from duHast.DataSamples.Utils import DataGeometryBase
 
 class DataPolygon(DataGeometryBase.DataGeometryBase):
     dataType = 'polygons'

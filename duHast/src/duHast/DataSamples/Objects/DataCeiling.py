@@ -1,7 +1,6 @@
-
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit room properties.
+Data storage class for Revit ceiling properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -29,16 +28,19 @@ Data storage class for Revit room properties.
 
 import json
 
-from duHast.DataSamples import DataDesignSetOption
-from duHast.DataSamples import DataPhasing
-from duHast.DataSamples import DataLevel
-from duHast.DataSamples import DataInstanceProperties
-from duHast.DataSamples import DataRevitModel
-from duHast.DataSamples import DataBase
-from duHast.DataSamples import DataElementGeometryBase
+#from duHast.DataSamples import DataGeometry
+from duHast.DataSamples.Properties import DataDesignSetOption
+from duHast.DataSamples.Properties import DataPhasing
+from duHast.DataSamples.Properties import DataLevel
+from duHast.DataSamples.Properties import DataTypeProperties
+from duHast.DataSamples.Properties import DataInstanceProperties
+from duHast.DataSamples.Properties import DataRevitModel
+from duHast.DataSamples.Utils import DataBase
+from duHast.DataSamples.Properties import DataElementGeometryBase
 
-class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
-    dataType = 'room'
+class DataCeiling(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBase):
+
+    dataType = 'ceiling'
     
     def __init__(self, j = {}):
         '''
@@ -47,9 +49,9 @@ class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBas
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
-        
-        # initialise parent classes with values
-        super(DataRoom, self).__init__(data_type=DataRoom.dataType, j=j)
+
+        # store data type  in base class
+        super(DataCeiling, self).__init__(data_type=DataCeiling.dataType, j=j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -62,22 +64,22 @@ class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBas
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-
+            
             if ('instanceProperties' in j):
                 self.instanceProperties = DataInstanceProperties.DataInstanceProperties(j['instanceProperties'])
             else:
                 self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
-
+            
             if('designSetAndOption' in j):
                 self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(j['designSetAndOption'])
             else:
-                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
+                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()            
             
-            if('associatedElements' in j ):
-                self.associatedElements = j['associatedElements']
+            if('typeProperties' in j):
+                self.typeProperties = DataTypeProperties.DataTypeProperties(j['typeProperties'])
             else:
-                self.associatedElements = []
-            
+                self.typeProperties = DataTypeProperties.DataTypeProperties()       
+
             if('level' in j):
                 self.level = DataLevel.DataLevel(j['level'])
             else:
@@ -92,10 +94,18 @@ class DataRoom(DataBase.DataBase, DataElementGeometryBase.DataElementGeometryBas
                 self.phasing = DataPhasing.DataPhasing(j['phasing'])
             else:
                 self.phasing = DataPhasing.DataPhasing() 
+
+            # load associated elements
+            if('associatedElements' in j):
+                self.associatedElements = j['associatedElements']
+            else:
+                self.associatedElements =[] 
+
         else:
-            # initialise classes with default values
             self.associatedElements = []
+            # initialise classes with default values
             self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
+            self.typeProperties = DataTypeProperties.DataTypeProperties()
             self.level = DataLevel.DataLevel()
             self.revitModel = DataRevitModel.DataRevitModel()
             self.phasing = DataPhasing.DataPhasing()

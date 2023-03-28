@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit design option properties.
+Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Data storage class for Revit design option properties.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2023  Jan Christel
+# Copyright (c) 2022  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,22 +27,21 @@ Data storage class for Revit design option properties.
 #
 
 import json
-from duHast.DataSamples import DataBase
+from duHast.DataSamples.Utils import DataBase
 
-class DataDesignSetOption(DataBase.DataBase):
-    dataType = 'design set'
+class DataGeometryBase(DataBase.DataBase):
 
-    def __init__(self, j = {}):
+    def __init__(self, data_type, j = {}):
         '''
-        Class constructor.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
 
         # store data type  in base class
-        super(DataDesignSetOption, self).__init__('design set')
-
+        super(DataGeometryBase, self).__init__(data_type)
+        
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
             # check type of data that came in: 
@@ -53,24 +52,22 @@ class DataDesignSetOption(DataBase.DataBase):
                 # no action required
                 pass
             else:
+                print('j', j)
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('designSetName' in j ):
-                self.designSetName = j['designSetName']
+            
+            # translation as per shared coordinates in revit file
+            if('translationCoord' in j ):
+                self.translationCoord = j['translationCoord']
             else:
-                self.designSetName = '-'
-        
-            if('designOptionName' in j ):
-                self.designOptionName = j['designOptionName']
+                self.translationCoord = [0.0, 0.0, 0.0]
+            
+            # rotation as per shared coordinates in revit file
+            if('rotationCoord' in j ):
+                self.rotationCoord = j['rotationCoord']
             else:
-                self.designOptionName = '-'
+                self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
 
-            if('isPrimary' in j ):
-                self.isPrimary = j['isPrimary']
-            else:
-                self.isPrimary = True
         else:
             # set default values
-            self.designSetName = '-'
-            self.designOptionName = '-'
-            self.isPrimary = True
+            self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
+            self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file

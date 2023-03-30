@@ -59,10 +59,10 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitWorksets as rWork
+from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

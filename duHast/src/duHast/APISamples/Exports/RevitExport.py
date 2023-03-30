@@ -37,7 +37,7 @@ from System.IO import Path
 import Autodesk.Revit.DB as rdb
 
 # import common library
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.APISamples.Views import RevitViews as rView
 # this imports 3rd party ifc exporters depending on version of Revit in use.
 from duHast.APISamples import RevitExportIFCConfig as ifcCon

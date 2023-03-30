@@ -29,7 +29,7 @@ Revit building pads helper functions.
 import clr
 import System
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.Utilities import Utility as util

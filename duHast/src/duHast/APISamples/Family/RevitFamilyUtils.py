@@ -37,7 +37,7 @@ from System.Collections.Generic import List
 
 # import common library
 # utility functions for most commonly used Revit API tasks
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 # utilities
@@ -48,7 +48,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
 from duHast.APISamples.Family.RevitFamilyLoadOption import *
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 

@@ -34,11 +34,11 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitWorksets as rWork
+from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 

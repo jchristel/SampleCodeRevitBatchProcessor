@@ -30,9 +30,9 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
 
 # import Autodesk

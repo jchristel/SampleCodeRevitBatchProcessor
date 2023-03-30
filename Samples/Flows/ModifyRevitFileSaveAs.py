@@ -64,7 +64,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 
 # flag whether this runs in debug or not
 debug_ = False

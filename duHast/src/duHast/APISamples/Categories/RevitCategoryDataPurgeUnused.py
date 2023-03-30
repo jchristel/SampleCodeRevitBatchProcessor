@@ -33,7 +33,7 @@ This will delete all subcategories which are user created ( id greater then 0) a
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.APISamples.Categories import RevitCategoryData as rCatData
 

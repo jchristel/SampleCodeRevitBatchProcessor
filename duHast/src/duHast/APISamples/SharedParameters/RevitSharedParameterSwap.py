@@ -48,12 +48,12 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 from duHast.APISamples import RevitSharedParameterAdd as rSharedPAdd
 from duHast.APISamples import RevitSharedParametersTuple as rSharedT
-from duHast.APISamples import RevitParameterGrouping as rPG
+from duHast.APISamples.Common import RevitParameterGrouping as rPG
 from duHast.APISamples import RevitSharedParameters as rSharedPara
 
 from collections import namedtuple

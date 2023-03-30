@@ -54,7 +54,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitGrids as rGrid
 from duHast.APISamples import RevitLevels as rLevel
 from duHast.Utilities import Utility as util

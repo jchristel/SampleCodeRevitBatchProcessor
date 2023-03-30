@@ -31,14 +31,14 @@ import clr
 import System
 from System.Collections.Generic import List
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils
 from duHast.APISamples import RevitLinks as rLink
 from duHast.Utilities import Result as res
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 
 import Autodesk.Revit.DB as rdb
 

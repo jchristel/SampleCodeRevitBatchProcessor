@@ -38,7 +38,7 @@ import System
 
 from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 
 # import Autodesk Revit DataBase namespace

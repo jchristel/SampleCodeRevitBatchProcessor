@@ -32,7 +32,7 @@ from System.Collections.Generic import List
 
 import sys
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 
 # import Autodesk

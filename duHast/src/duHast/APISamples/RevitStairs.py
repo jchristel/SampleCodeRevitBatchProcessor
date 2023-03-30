@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit stairs.
 import clr
 import System
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 

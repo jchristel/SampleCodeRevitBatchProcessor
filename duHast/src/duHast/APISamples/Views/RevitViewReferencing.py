@@ -33,7 +33,7 @@ clr.ImportExtensions(Linq)
 import System
 from System.Collections.Generic import List
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.APISamples.Views import RevitViews as rView

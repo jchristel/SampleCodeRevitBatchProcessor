@@ -45,7 +45,7 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitAnnotation as rAnn
@@ -56,7 +56,7 @@ from duHast.APISamples import RevitDetailItems as rDet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.APISamples import RevitFloors as rFlo
 from duHast.APISamples import RevitGenericAnnotation as rGAnno
-from duHast.APISamples import RevitGroups as rGrp
+from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples import RevitGrids as rGrid
 from duHast.APISamples import RevitLevels as rLev
 from duHast.APISamples import RevitLinks as rLink

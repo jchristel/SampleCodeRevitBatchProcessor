@@ -42,7 +42,7 @@ from duHast.UI import FileSelectSettings as set
 from duHast.UI import Workloader as wl
 
 # import bim360 utils from Library
-from duHast.APISamples import UtilBIM360 as ub360
+from duHast.APISamples.BIM360 import UtilBIM360 as ub360
 
 def main(argv):
     '''

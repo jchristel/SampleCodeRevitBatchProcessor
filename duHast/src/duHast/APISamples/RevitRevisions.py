@@ -36,7 +36,7 @@ from collections import namedtuple
 
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

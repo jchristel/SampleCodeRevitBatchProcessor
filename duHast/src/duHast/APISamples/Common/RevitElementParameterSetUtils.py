@@ -34,7 +34,7 @@ from duHast.Utilities import Result as res
 import Autodesk.Revit.DB as rdb
 # utilities
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitTransaction as rTran
 
 # type checker
 #from typing import List, Callable

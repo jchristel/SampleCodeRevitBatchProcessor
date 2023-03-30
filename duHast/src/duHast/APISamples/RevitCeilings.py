@@ -30,13 +30,13 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples import RevitGeometry as rGeo
-from duHast.APISamples import RevitDesignSetOptions as rDesignO
+from duHast.APISamples.Common.Geometry import RevitGeometry as rGeo
+from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataCeiling as dCeiling
-from duHast.APISamples import RevitPhases as rPhase
+from duHast.APISamples.Common import RevitPhases as rPhase
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

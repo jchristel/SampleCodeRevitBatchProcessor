@@ -35,12 +35,12 @@ import System
 # import common library modules
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitGeometry as rGeo
-from duHast.APISamples import RevitDesignSetOptions as rDesignO
+from duHast.APISamples.Common.Geometry import RevitGeometry as rGeo
+from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataRoom as dRoom
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
-from duHast.APISamples import RevitPhases as rPhase
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitPhases as rPhase
+from duHast.APISamples.Common import RevitTransaction as rTran
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

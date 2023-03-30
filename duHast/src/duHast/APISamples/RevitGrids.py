@@ -40,7 +40,7 @@ from duHast.APISamples import RevitWorksets as rWork
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

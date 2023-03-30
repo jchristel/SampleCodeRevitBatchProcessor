@@ -59,7 +59,7 @@ sys.path.append(commonlibraryDebugLocation_)
 # import common library
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitFamilyUtils as rFamU
+from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.Utilities import Result as res
 from duHast.APISamples import RevitTransaction as rTran
 

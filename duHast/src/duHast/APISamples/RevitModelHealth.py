@@ -43,11 +43,11 @@ from duHast.Utilities import Result as res
 from duHast.APISamples import RevitDesignSetOptions as rDoS
 from duHast.APISamples import RevitWarnings as rWarn
 from duHast.APISamples import RevitWorksets as rWork
-from duHast.APISamples import RevitViews as rViews
-from duHast.APISamples import RevitLineStylesPatterns as rLsp
+from duHast.APISamples.Views import RevitViews as rViews
+from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rLsp
 from duHast.APISamples import RevitLinks as rLinks
 from duHast.APISamples import RevitModelHealthReportFileNames as rFns
-from duHast.APISamples import RevitFamilyUtils as rFams
+from duHast.APISamples.Family import RevitFamilyUtils as rFams
 from duHast.APISamples import RevitGroups as rGrp
 from duHast.APISamples import RevitRooms as rRooms
 from duHast.APISamples import RevitDetailItems as rDetItems

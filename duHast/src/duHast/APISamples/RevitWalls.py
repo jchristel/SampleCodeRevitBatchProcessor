@@ -35,7 +35,7 @@ import System
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitMaterials as rMat
-from duHast.APISamples import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.Utilities import Utility as util
 
 # import Autodesk

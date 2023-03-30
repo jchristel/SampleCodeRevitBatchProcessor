@@ -33,7 +33,7 @@ from System.Collections.Generic import List
 
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import RevitFamilyUtils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -32,7 +32,7 @@ import System
 # import common library modules
 from duHast.APISamples import RevitCommonAPI as com
 from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.APISamples import RevitGeometry as rGeo
 from duHast.APISamples import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataCeiling as dCeiling

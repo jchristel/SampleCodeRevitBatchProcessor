@@ -38,7 +38,7 @@ from duHast.Utilities import Base
 
 class IFamilyProcessor(Base.Base):
     
-    def __init__(self, dataType = 'not declared', preActions = None, postActions = None, **kwargs):
+    def __init__(self, dataType = 'not declared', preActions = None, postActions = None, stringReportHeaders = [], **kwargs):
         
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -46,7 +46,7 @@ class IFamilyProcessor(Base.Base):
 
         self.data = []
         self.dataType = dataType
-        self.stringReportHeaders = []
+        self.stringReportHeaders = stringReportHeaders
         self.preActions = preActions
         self.postActions = postActions
 

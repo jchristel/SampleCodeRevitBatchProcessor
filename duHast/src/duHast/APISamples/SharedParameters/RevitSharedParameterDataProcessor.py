@@ -34,9 +34,12 @@ from duHast.Utilities import Result as res
 class SharedParameterProcessor(IFamilyProcessor):
 
     def __init__(self,preActions = None, postActions = None):
-        self.data = []
-        self.dataType = 'SharedParameter'
-        self.stringReportHeaders = [
+        '''
+        Class constructor.
+        '''
+
+        # setup report header
+        stringReportHeaders = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -48,16 +51,39 @@ class SharedParameterProcessor(IFamilyProcessor):
             IFamData.USED_BY
         ]
 
-        self.preActions = preActions
+        # store data type  in base class
+        super(SharedParameterProcessor, self).__init__(
+            preActions=preActions, 
+            postActions=[self._postActionUpdateUsedSharedParameters], 
+            dataType='SharedParameter', 
+            stringReportHeaders=stringReportHeaders
+        )
+
+        #self.data = []
+        #self.dataType = 'SharedParameter'
+        #self.preActions = preActions
         # set default post action to updated shared parameters used in root processor with any shared parameters found in nested 
         # families
-        self.postActions = [self._postActionUpdateUsedSharedParameters]
+        #self.postActions = [self._postActionUpdateUsedSharedParameters]
         # add any other post actions
         if (postActions != None):
             for pAction in postActions:
                 self.postActions.append(pAction)
 
     def process(self, doc, rootPath, rootCategoryPath):
+        '''
+        Calls processor instance with the document and root path provided and adds processor instance to class property .data
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+            This includes the actual family name as the last node.
+        :type rootPath: str
+        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type rootCategoryPath: str
+        '''
+
         dummy = rSharedData.SharedParameterData(rootPath, rootCategoryPath, self.dataType)
         dummy.process(doc)
         self.data.append(dummy)

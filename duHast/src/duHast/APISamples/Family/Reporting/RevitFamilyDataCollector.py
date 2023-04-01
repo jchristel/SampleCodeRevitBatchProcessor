@@ -36,7 +36,7 @@ from duHast.Utilities import Base
 
 class RevitFamilyDataCollector(Base.Base):
 
-    def __init__(self, dataProcessors, **kwargs):
+    def __init__(self, dataProcessors):
         '''
         Class constructor taking a list of processor instances as argument.
 
@@ -46,7 +46,7 @@ class RevitFamilyDataCollector(Base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(RevitFamilyDataCollector, self).__init__(**kwargs) 
+        super(RevitFamilyDataCollector, self).__init__() 
 
         self.dataProcessors = dataProcessors
     

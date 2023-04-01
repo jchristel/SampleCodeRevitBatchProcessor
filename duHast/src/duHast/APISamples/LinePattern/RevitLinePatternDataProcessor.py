@@ -38,9 +38,9 @@ class LinePatternProcessor(IFamilyProcessor):
         '''
         Class constructor.
         '''
-        self.data = []
-        self.dataType = 'LinePattern'
-        self.stringReportHeaders = [
+
+        # setup report header
+        stringReportHeaders = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -51,10 +51,21 @@ class LinePatternProcessor(IFamilyProcessor):
             rLinePatData.PATTERN_ID
         ]
 
-        self.preActions = preActions
+        # store data type  in base class
+        super(LinePatternProcessor, self).__init__(
+            preActions=preActions, 
+            postActions=[self._postActionUpdateUsedLinePatterns], 
+            dataType='LinePattern', 
+            stringReportHeaders=stringReportHeaders
+        )
+
+        #self.data = []
+        #self.dataType = 'LinePattern'
+        #self.preActions = preActions
+
         # set default post action to updated line patterns used in root processor with any line patterns found in nested 
         # families
-        self.postActions = [self._postActionUpdateUsedLinePatterns]
+        #self.postActions = [self._postActionUpdateUsedLinePatterns]
         # add any other post actions
         if (postActions != None):
             for pAction in postActions:
@@ -69,6 +80,9 @@ class LinePatternProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
+        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type rootCategoryPath: str
         '''
 
         dummy = rLinePatData.LinePatternData(rootPath, rootCategoryPath, self.dataType)

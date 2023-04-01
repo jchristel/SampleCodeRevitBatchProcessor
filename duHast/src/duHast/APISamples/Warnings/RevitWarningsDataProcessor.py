@@ -34,9 +34,12 @@ from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 class WarningsProcessor(IFamilyProcessor):
 
     def __init__(self,preActions = None, postActions = None):
-        self.data = []
-        self.dataType = 'Warnings'
-        self.stringReportHeaders = [
+        '''
+        Class constructor.
+        '''
+
+        # setup report header
+        stringReportHeaders = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -47,10 +50,33 @@ class WarningsProcessor(IFamilyProcessor):
             rWarnData.WARNING_OTHER_IDS
         ]
 
-        self.preActions = preActions
-        self.postActions = postActions
+        # store data type  in base class
+        super(WarningsProcessor, self).__init__(
+            preActions=preActions, 
+            postActions=postActions, 
+            dataType='Warnings', 
+            stringReportHeaders=stringReportHeaders
+        )
+
+        #self.data = []
+        #self.dataType = 'Warnings'
+        #self.preActions = preActions
+        #self.postActions = postActions
 
     def process(self, doc, rootPath, rootCategoryPath):
+        '''
+        Calls processor instance with the document and root path provided and adds processor instance to class property .data
+
+        :param doc: Current family document.
+        :type doc: Autodesk.Revit.DB.Document
+        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+            This includes the actual family name as the last node.
+        :type rootPath: str
+        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type rootCategoryPath: str
+        '''
+         
         dummy = rWarnData.WarningsData(rootPath, rootCategoryPath, self.dataType)
         dummy.process(doc)
         self.data.append(dummy)

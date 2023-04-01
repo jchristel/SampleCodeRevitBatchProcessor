@@ -38,17 +38,10 @@ class CategoryProcessor(IFamilyProcessor):
         '''
         Class constructor.
         '''
-        self.data = []
-        self.dataType = 'Category'
 
-        # list of corner cases when it comes to category checking: imports in families or Reference planes ... ( english language specific!! )
-        self.CategoryCheckCornerCases = [
-            'Imports in Families',
-            'Reference Planes'
-        ]
-
+        # setup report header
         keyPrefix = rCatData.GRAPHIC_PROPERTY_KEY_PREFIX + rCatData.GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
-        self.stringReportHeaders = [
+        stringReportHeaders = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -69,15 +62,32 @@ class CategoryProcessor(IFamilyProcessor):
             keyPrefix + rCat.PROPERTY_LINE_COLOUR_GREEN_NAME,
             keyPrefix + rCat.PROPERTY_LINE_COLOUR_BLUE_NAME
         ]
-        self.preActions = preActions
+
+        # store data type  in base class
+        super(CategoryProcessor, self).__init__(
+            preActions=preActions, 
+            postActions=[self._postActionUpdateUsedSubcategories], 
+            dataType='Category', 
+            stringReportHeaders=stringReportHeaders
+        )
+
+        #self.data = []
+        #self.dataType = 'Category'
+
+        # list of corner cases when it comes to category checking: imports in families or Reference planes ... ( english language specific!! )
+        self.CategoryCheckCornerCases = [
+            'Imports in Families',
+            'Reference Planes'
+        ]
+
+        #self.preActions = preActions
         # set default post action to updated categories used in root processor with any categories found in nested 
         # families
-        self.postActions = [self._postActionUpdateUsedSubcategories]
+        #self.postActions = [self._postActionUpdateUsedSubcategories]
         # add any other post actions
         if (postActions != None):
             for pAction in postActions:
                 self.postActions.append(pAction)
-
 
     def process(self, doc, rootPath, rootCategoryPath):
         '''
@@ -88,6 +98,9 @@ class CategoryProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
+        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+            This includes the actual family category as the last node.
+        :type rootCategoryPath: str
         '''
 
         dummy = rCatData.CategoryData(rootPath, rootCategoryPath, self.dataType)

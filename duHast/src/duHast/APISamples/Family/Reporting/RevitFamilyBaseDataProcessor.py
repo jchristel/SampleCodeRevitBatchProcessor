@@ -45,10 +45,21 @@ class FamilyBaseProcessor(IFamilyProcessor):
         '''
 
         # store data type  in base class
+        stringReportHeaders = [
+            IFamData.ROOT,
+            IFamData.ROOT_CATEGORY,
+            IFamData.FAMILY_NAME,
+            IFamData.FAMILY_FILE_PATH,
+            rFamData.CATEGORY_NAME
+        ]
+
+        # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
             dataType = 'FamilyBase',
             preActions=preActions, 
-            postActions=postActions)
+            postActions=postActions,
+            stringReportHeaders=stringReportHeaders
+        )
 
         #self.data = []
         #self.dataType = 'FamilyBase'
@@ -58,14 +69,6 @@ class FamilyBaseProcessor(IFamilyProcessor):
             self.sessionId = uBP.AdjustSessionIdForFolderName(sessionId)
         else:
             self.sessionId = sessionId
-
-        self.stringReportHeaders = [
-            IFamData.ROOT,
-            IFamData.ROOT_CATEGORY,
-            IFamData.FAMILY_NAME,
-            IFamData.FAMILY_FILE_PATH,
-            rFamData.CATEGORY_NAME
-        ]
 
         #self.preActions = preActions
         #self.postActions = postActions

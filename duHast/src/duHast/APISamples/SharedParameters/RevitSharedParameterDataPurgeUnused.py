@@ -35,7 +35,7 @@ This will delete all shared parameter definitions which are not used by any fami
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
-from duHast.APISamples import RevitSharedParameterData as rSharedData
+#from duHast.APISamples.SharedParameters import RevitSharedParameterData as rSharedData
 from duHast.APISamples.Categories import RevitCategories as rCat
 
 import Autodesk.Revit.DB as rdb

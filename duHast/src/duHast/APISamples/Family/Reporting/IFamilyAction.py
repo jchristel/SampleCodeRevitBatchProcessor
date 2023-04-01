@@ -27,9 +27,16 @@ Interface for family data storage / processing class.
 #
 #
 
-class IFamilyAction():
+from duHast.Utilities import Base
 
-    def __init__(self, actionType):
+class IFamilyAction(Base.Base):
+
+    def __init__(self, actionType, **kwargs):
+
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(IFamilyAction, self).__init__(**kwargs) 
+
         self.data = []
         
         if(actionType != None):

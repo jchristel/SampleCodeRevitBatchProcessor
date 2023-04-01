@@ -38,8 +38,8 @@ Note:
 #
 #
 
-import clr
-import System
+#import clr
+#import System
 import os
 
 from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils

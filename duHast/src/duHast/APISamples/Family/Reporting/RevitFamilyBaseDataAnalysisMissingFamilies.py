@@ -51,7 +51,6 @@ Algorithm description:
 from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 from duHast.Utilities.timer import Timer
 from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
 
 def _BuildUniqueNestedFamilyDic(overallFamilyBaseNestedData):
     '''

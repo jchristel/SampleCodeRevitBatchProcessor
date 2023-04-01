@@ -31,12 +31,12 @@ import System
 
 # import common library modules
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common.Geometry import RevitGeometry as rGeo
 from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataCeiling as dCeiling
 from duHast.APISamples.Common import RevitPhases as rPhase
+from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rCon
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -392,7 +392,7 @@ def Get2DPointsFromRevitCeiling(ceiling):
     # process solids to points 
     # in place families may have more then one solid
     for s in solids:
-        pointPerCeilings = rGeo.ConvertSolidToFlattened2DPoints(s)
+        pointPerCeilings = rCon.convert_solid_to_flattened_2d_points(s)
         if(len(pointPerCeilings) > 0):
             for pLists in pointPerCeilings:
                 allCeilingPoints.append(pLists)
@@ -469,7 +469,7 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     if(len(revitGeometryPointGroups) > 0):
         ceilingPointGroupsAsDoubles = []
         for allCeilingPointGroups in revitGeometryPointGroups:
-            dataGeoConverted = rGeo.ConvertXYZInDataGeometryPolygons(doc, allCeilingPointGroups)
+            dataGeoConverted = rCon.convert_xyz_in_data_geometry_polygons(doc, allCeilingPointGroups)
             ceilingPointGroupsAsDoubles.append(dataGeoConverted)
         dataC.geometryPolygon = ceilingPointGroupsAsDoubles
         # get design set data
@@ -488,7 +488,8 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter, 
             rdb.StorageType.Integer : rParaGet.getter_int_as_int, 
             rdb.StorageType.String : rParaGet.getter_string_as_UTF8_string, # encode ass utf 8 just in case
-            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
+            str(None) : rParaGet.getter_none
         }
         dataC.typeProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceilingType, value_getter)
         

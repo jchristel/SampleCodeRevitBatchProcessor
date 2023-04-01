@@ -27,7 +27,7 @@ Data storage class for Revit design option properties.
 #
 
 import json
-from duHast.DataSamples.utils import DataBase
+from duHast.DataSamples.Utils import DataBase
 
 class DataDesignSetOption(DataBase.DataBase):
     dataType = 'design set'

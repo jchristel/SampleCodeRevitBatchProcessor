@@ -48,7 +48,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
+#from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
 from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as rSharedPAdd

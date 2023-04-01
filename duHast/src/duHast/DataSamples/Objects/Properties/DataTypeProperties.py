@@ -27,7 +27,7 @@ Data storage class for Revit element type properties.
 #
 
 import json
-from duHast.DataSamples.utils import DataBase
+from duHast.DataSamples.Utils import DataBase
 
 class DataTypeProperties(DataBase.DataBase):
 

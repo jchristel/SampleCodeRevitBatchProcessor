@@ -43,8 +43,8 @@ Finds host families of nested families requiring to be renamed.
 #
 #
 
-import clr
-import System
+#import clr
+#import System
 from duHast.Utilities.timer import Timer
 
 from duHast.Utilities import Result as res

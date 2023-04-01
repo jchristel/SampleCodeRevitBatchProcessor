@@ -33,9 +33,9 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common.Geometry import RevitGeometry as rGeo
+from duHast.src.duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
 from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataRoom as dRoom
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
@@ -308,7 +308,7 @@ def PopulateDataRoomObject(doc, revitRoom):
     if(len(revitGeometryPointGroups) > 0):
         roomPointGroupsAsDoubles = []
         for roomPointGroupByPoly in revitGeometryPointGroups:
-            dataGeometryConverted = rGeo.ConvertXYZInDataGeometryPolygons(doc, roomPointGroupByPoly)
+            dataGeometryConverted = rGeo.convert_xyz_in_data_geometry_polygons(doc, roomPointGroupByPoly)
             roomPointGroupsAsDoubles.append(dataGeometryConverted)
         dataR.geometryPolygon = roomPointGroupsAsDoubles
         # get design set data
@@ -324,7 +324,8 @@ def PopulateDataRoomObject(doc, revitRoom):
             rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter, 
             rdb.StorageType.Integer : rParaGet.getter_int_as_int, 
             rdb.StorageType.String : rParaGet.getter_string_as_UTF8_string, # encode ass utf 8 just in case
-            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int # needs to be an integer for JSON encoding
+            rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
+            str(None) : rParaGet.getter_none
         }
         dataR.instanceProperties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
         
@@ -335,7 +336,10 @@ def PopulateDataRoomObject(doc, revitRoom):
             dataR.revitModel.modelName = doc.Title
         
         # get phase name
-        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(
+            doc, 
+            rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)
+            ).encode('utf-8')
         dataR.phasing.phaseDemolished = -1
         
         # get level data

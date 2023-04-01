@@ -34,7 +34,7 @@ clr.ImportExtensions(Linq)
 #import System
 from collections import namedtuple
 
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitTransaction as rTran
 

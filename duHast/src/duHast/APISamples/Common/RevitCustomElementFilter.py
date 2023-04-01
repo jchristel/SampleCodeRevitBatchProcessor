@@ -29,9 +29,11 @@ Customizable element filter class.
 # import Autodesk
 #import Autodesk.Revit.DB as rdb
 
-class RevitCustomElementFilter:
+from duHast.Utilities import Base
 
-    def __init__(self, elementFilters = [] , isLogicalANDFilter = True):
+class RevitCustomElementFilter(Base.Base):
+
+    def __init__(self, elementFilters = [] , isLogicalANDFilter = True,  **kwargs):
         '''
         Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)
 
@@ -40,6 +42,10 @@ class RevitCustomElementFilter:
         :param isLogicalANDFilter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)
         :type isLogicalANDFilter: bool, optional
         '''
+
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(RevitCustomElementFilter, self).__init__(**kwargs)  
 
         self.elementFilters = elementFilters
         self.isLogicalANDFilter = isLogicalANDFilter

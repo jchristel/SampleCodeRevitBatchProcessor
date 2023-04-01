@@ -32,16 +32,21 @@ Family data collector class.
 from duHast.Utilities import Result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from duHast.Utilities import Base
 
-class RevitFamilyDataCollector():
+class RevitFamilyDataCollector(Base.Base):
 
-    def __init__(self, dataProcessors):
+    def __init__(self, dataProcessors, **kwargs):
         '''
         Class constructor taking a list of processor instances as argument.
 
         :param dataProcessors: List of processor instances
         :type dataProcessors: [IFamilyProcessor]
         '''
+
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(RevitFamilyDataCollector, self).__init__(**kwargs) 
 
         self.dataProcessors = dataProcessors
     

@@ -51,9 +51,12 @@ class FamilyBaseData(IFamData.IFamilyData):
         :type dataType: str
         '''
 
-        # todo: check inheritance!!
+        
+        # store data type  in base class
+        super(FamilyBaseData, self).__init__(rootPath=rootPath, dataType=dataType)
         # super(CategoryData, self).__init__(rootPath, dataType)
-
+        
+        '''
         self.data = []
         
         if(dataType != None):
@@ -65,6 +68,7 @@ class FamilyBaseData(IFamData.IFamilyData):
             self.rootPath = rootPath
         else:
             self.rootPath = '-'
+        '''
 
         if(rootCategoryPath != None):
             self.rootCategoryPath = rootCategoryPath

@@ -34,12 +34,18 @@ import Autodesk.Revit.DB as rdb
 import json
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Result as res
+from duHast.Utilities import Base
 
-class IFamilyProcessor():
+class IFamilyProcessor(Base.Base):
     
-    def __init__(self, preActions = None, postActions = None):
+    def __init__(self, dataType = 'not declared', preActions = None, postActions = None, **kwargs):
+        
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(IFamilyProcessor, self).__init__(**kwargs) 
+
         self.data = []
-        self.dataType = 'not declared'
+        self.dataType = dataType
         self.stringReportHeaders = []
         self.preActions = preActions
         self.postActions = postActions

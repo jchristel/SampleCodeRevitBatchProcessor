@@ -43,11 +43,11 @@ import Autodesk.Revit.DB as rdb
 import os.path as path
 # utilities
 from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
-from duHast.APISamples import RevitTransaction as rTran
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import RevitTransaction as rTran
 # importing revit groups module
-from duHast.APISamples import RevitGroups as rGroup
+from duHast.APISamples.Common import RevitGroups as rGroup
 
 # type checker
 #from typing import List, Callable

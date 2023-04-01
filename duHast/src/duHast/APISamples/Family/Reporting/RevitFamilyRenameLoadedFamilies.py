@@ -33,8 +33,8 @@ This helper function expect a folder containing rename directive files. For form
 #
 #
 
-import clr
-import System
+#import clr
+#import System
 
 from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils

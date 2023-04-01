@@ -29,12 +29,12 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
+#from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.APISamples.Views import RevitViews as rView
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+#from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+#from duHast.Utilities import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -28,8 +28,9 @@ IFC export settings class.
 #
 
 import System
+from duHast.Utilities import Base
 
-class IFCSettings():
+class IFCSettings(Base.Base):
     
     supportedIfcVersions = {
             'Default' : 'The Autodesk Revit applications default export format. Note that this may change as the defaults change in the Revit user interface.',
@@ -95,7 +96,8 @@ class IFCSettings():
         geoRefEPSGCode,
         geoRefGeodeticDatum,
         geoRefMapUnit,
-        excludeFilter
+        excludeFilter,
+        **kwargs
         ):
 
         '''
@@ -184,6 +186,10 @@ class IFCSettings():
 
         :raises Exception: _description_
         '''
+
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(IFCSettings, self).__init__(**kwargs)  
 
         self.name = name
 

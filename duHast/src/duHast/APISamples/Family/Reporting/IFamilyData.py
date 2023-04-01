@@ -27,6 +27,8 @@ Interface for family data storage / processing class.
 #
 #
 
+from duHast.Utilities import Base
+
 # common data dictionary keys
 ROOT = 'root'
 ROOT_CATEGORY = 'rootCategory'
@@ -36,9 +38,14 @@ USAGE_COUNTER = 'usageCounter'
 USED_BY = 'usedBy'
 
 
-class IFamilyData():
+class IFamilyData(Base.Base):
 
-    def __init__(self, rootPath, dataType):
+    def __init__(self, rootPath, dataType, **kwargs):
+
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(IFamilyData, self).__init__(**kwargs) 
+
         self.data = []
         
         if(dataType != None):

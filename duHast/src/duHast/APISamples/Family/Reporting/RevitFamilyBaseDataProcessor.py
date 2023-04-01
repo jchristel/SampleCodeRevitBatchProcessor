@@ -43,8 +43,15 @@ class FamilyBaseProcessor(IFamilyProcessor):
         '''
         Class constructor.
         '''
-        self.data = []
-        self.dataType = 'FamilyBase'
+
+        # store data type  in base class
+        super(FamilyBaseProcessor, self).__init__(
+            dataType = 'FamilyBase',
+            preActions=preActions, 
+            postActions=postActions)
+
+        #self.data = []
+        #self.dataType = 'FamilyBase'
         self.referenceFilePath = referenceFilePath
         self.familyOutFolderPath = familyOutFolderPath
         if(sessionId != None):
@@ -60,8 +67,8 @@ class FamilyBaseProcessor(IFamilyProcessor):
             rFamData.CATEGORY_NAME
         ]
 
-        self.preActions = preActions
-        self.postActions = postActions
+        #self.preActions = preActions
+        #self.postActions = postActions
 
     def process(self, doc, rootPath, rootCategoryPath):
         '''

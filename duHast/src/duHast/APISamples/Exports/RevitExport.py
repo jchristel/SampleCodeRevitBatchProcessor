@@ -40,7 +40,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.APISamples.Views import RevitViews as rView
 # this imports 3rd party ifc exporters depending on version of Revit in use.
-from duHast.APISamples import RevitExportIFCConfig as ifcCon
+from duHast.APISamples.Exports import RevitExportIFCConfig as ifcCon
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 

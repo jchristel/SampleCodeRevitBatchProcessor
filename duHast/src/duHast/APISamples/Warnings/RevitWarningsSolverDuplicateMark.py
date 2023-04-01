@@ -27,8 +27,8 @@ Duplicate mark warnings solver class.
 #
 #
 
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 from duHast.Utilities import Result as res
 
 

@@ -31,7 +31,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
 # import Autodesk

@@ -41,17 +41,17 @@ from duHast.APISamples.BIM360 import RevitBIM360 as b360
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitDesignSetOptions as rDoS
-from duHast.APISamples import RevitWarnings as rWarn
+from duHast.APISamples.Warnings import RevitWarnings as rWarn
 from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.APISamples.Views import RevitViews as rViews
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rLsp
 from duHast.APISamples import RevitLinks as rLinks
-from duHast.APISamples import RevitModelHealthReportFileNames as rFns
+from duHast.APISamples.ModelHealth import RevitModelHealthReportFileNames as rFns
 from duHast.APISamples.Family import RevitFamilyUtils as rFams
 from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples import RevitRooms as rRooms
 from duHast.APISamples import RevitDetailItems as rDetItems
-from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

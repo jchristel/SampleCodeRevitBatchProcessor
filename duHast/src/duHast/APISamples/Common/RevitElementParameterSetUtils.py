@@ -33,7 +33,7 @@ from duHast.Utilities import Result as res
 # import everything from Autodesk Revit DataBase namespace (Revit API)
 import Autodesk.Revit.DB as rdb
 # utilities
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitTransaction as rTran
 
 # type checker

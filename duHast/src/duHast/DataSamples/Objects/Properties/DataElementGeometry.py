@@ -51,7 +51,8 @@ class DataElementGeometryBase(Base.Base):
         '''
 
         # ini super class to allow multi inheritance in children!
-        super(DataElementGeometryBase, self).__init__(**kwargs)  # forwards all unused arguments
+        # forwards all unused arguments
+        super(DataElementGeometryBase, self).__init__(**kwargs)  
         # check valid j input
         if(j != None and len(j) > 0 ):
             # check type of data that came in: 

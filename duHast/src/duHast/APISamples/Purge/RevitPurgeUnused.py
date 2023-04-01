@@ -69,7 +69,7 @@ from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
 from duHast.APISamples import RevitWalls as rWall
 from duHast.Utilities.timer import Timer
-from duHast.APISamples import RevitPurgeAction as pA
+from duHast.APISamples.Purge import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

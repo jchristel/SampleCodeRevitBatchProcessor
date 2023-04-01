@@ -34,8 +34,9 @@ from duHast.Utilities import Result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from duHast.Utilities import Base
 
-class RevitWarningsSolverDuplicateMark:
+class RevitWarningsSolverDuplicateMark(Base.Base):
 
     def __init__(self, filterFunc, filterValues = []):
         '''
@@ -46,6 +47,9 @@ class RevitWarningsSolverDuplicateMark:
         :param filterValues: A list of filter values, defaults to []
         :type filterValues: list, optional
         '''
+
+        # ini super class to allow multi inheritance in children!
+        super(RevitWarningsSolverDuplicateMark, self).__init__() 
 
         self.filter = filterFunc
         self.filterValues = filterValues

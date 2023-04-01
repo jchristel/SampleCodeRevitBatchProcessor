@@ -31,15 +31,18 @@ from duHast.APISamples import RevitRooms as rRoom
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from duHast.Utilities import Base
 
-class RevitWarningsSolverRoomTagToRoom:
+class RevitWarningsSolverRoomTagToRoom(Base.Base):
 
     def __init__(self):
         '''
         Empty constructor this solver does not take any further arguments.
         '''
+
+        # ini super class to allow multi inheritance in children!
+        super(RevitWarningsSolverRoomTagToRoom, self).__init__() 
         self.filterName = 'Room tag outside of room.'
-        pass
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning

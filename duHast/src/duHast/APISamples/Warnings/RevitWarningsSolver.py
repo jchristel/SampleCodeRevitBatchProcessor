@@ -39,8 +39,10 @@ from duHast.APISamples.Warnings import RevitWarningsSolverDuplicateMark as rwsDu
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
+from duHast.Utilities import Base
+
 # a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
-class RevitWarningsSolver:
+class RevitWarningsSolver(Base.Base):
 
     # --------------------------- available filters ---------------------------
 
@@ -76,6 +78,10 @@ class RevitWarningsSolver:
         '''
         Constructor: assigns the default element filter (pass all) 
         '''
+
+        # ini super class to allow multi inheritance in children!
+        super(RevitWarningsSolver, self).__init__() 
+
         self.filterFuncSameMark = self.DefaultFilterReturnAll
     
     def SetSameMarkFilterAndFilterSolver(self, sameMarkFilterSolver):

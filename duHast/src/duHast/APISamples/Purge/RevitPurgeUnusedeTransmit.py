@@ -32,7 +32,7 @@ https://thebuildingcoder.typepad.com/blog/2022/03/purge-unused-and-the-autodesk-
 
 import clr
 
-import Autodesk.Revit.DB as rdb
+#import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res
 from duHast.Utilities.timer import Timer

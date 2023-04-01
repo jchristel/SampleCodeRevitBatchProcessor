@@ -27,8 +27,8 @@ Purge action storage class for Revit purge unused.
 #
 
 
-import System
-import clr
+#import System
+#import clr
 
 from duHast.Utilities import Base
 
@@ -39,8 +39,7 @@ class PurgeAction(Base.Base):
         purgeIdsGetter, # the function which returns all element ids to be purged
         purgeReportHeader, # human readable report header for each test action
         testReportHeader, # human readable report header for each test action
-        testIdsGetter, # functions which returns all available type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
-        **kwargs
+        testIdsGetter # functions which returns all available type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
     ): 
         '''
         Class constructor.
@@ -60,7 +59,7 @@ class PurgeAction(Base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(PurgeAction, self).__init__(**kwargs) 
+        super(PurgeAction, self).__init__() 
 
         self.purgeTransactionName = purgeTransactionName
         self.purgeIdsGetter = purgeIdsGetter

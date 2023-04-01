@@ -73,7 +73,7 @@ from duHast.APISamples.Purge import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
-from collections import namedtuple
+#from collections import namedtuple
 
 # --------------------------------------------- Purge - utility ---------------------------------------------
 

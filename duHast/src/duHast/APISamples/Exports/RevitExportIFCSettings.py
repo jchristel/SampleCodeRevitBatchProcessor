@@ -96,8 +96,7 @@ class IFCSettings(Base.Base):
         geoRefEPSGCode,
         geoRefGeodeticDatum,
         geoRefMapUnit,
-        excludeFilter,
-        **kwargs
+        excludeFilter
         ):
 
         '''
@@ -189,7 +188,7 @@ class IFCSettings(Base.Base):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(IFCSettings, self).__init__(**kwargs)  
+        super(IFCSettings, self).__init__()  
 
         self.name = name
 

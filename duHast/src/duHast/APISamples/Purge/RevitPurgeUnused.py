@@ -67,12 +67,15 @@ from duHast.APISamples import RevitRoofs as rRoof
 from duHast.APISamples import RevitStairs as rStair
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
-from duHast.APISamples import RevitWalls as rWall
+from duHast.APISamples.Walls import RevitWalls as rWall
+from duHast.APISamples.Walls import PurgeUnusedWallTypes as rWallPurge
 from duHast.Utilities.timer import Timer
 from duHast.APISamples.Purge import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
+
+
 #from collections import namedtuple
 
 # --------------------------------------------- Purge - utility ---------------------------------------------
@@ -139,10 +142,10 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rView.Get
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rView.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rView.GetViewsTemplateIdsInInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rView.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rView.GetAllAvailableFilterIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Image Links', rLink.GetAllUnusedImageTypeIdsInModel, 'Images(s)', 'Images(s)', rLink.GetImagesTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWall.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rWall.GetAllStackedWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWall.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWall.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWall.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWallPurge.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rWall.GetAllStackedWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWallPurge.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWallPurge.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWallPurge.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCWE.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCWE.GetAllCurtainWallNonSharedSymbolIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed

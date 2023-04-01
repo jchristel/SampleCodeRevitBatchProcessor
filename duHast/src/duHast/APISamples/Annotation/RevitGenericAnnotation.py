@@ -9,7 +9,7 @@ Revit generic annotation helper functions.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,16 +29,11 @@ Revit generic annotation helper functions.
 import clr
 import System
 
-import sys
-#sys.path.append('C:\Users\jchristel\Documents\deployRevitBP')
-
-from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples import RevitAnnotation as rAnno
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
@@ -119,71 +114,3 @@ def SortGenericAnnotationTypesByFamilyName(doc):
     usedWts = {}
     usedWts = BuildGenericAnnotationTypesDictionary(wts_two, usedWts)
     return usedWts
-
-
-# doc   current model document
-def GetUsedGenericAnnotationTypeIds(doc):
-    '''
-    Returns all used generic annotation symbol ids ( used in model as well as dimension types)
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    
-    :return: _description_
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = []
-    # get ids from symbols used in dim types
-    idsDimTypes = rAnno.GetSymbolIdsFromDimTypes(doc)
-    # get ids from symbols used in spots
-    idsSpots = rAnno.GetSymbolIdsFromSpotTypes(doc)
-    # get detail types used in model
-    idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllGenericAnnotationTypeIdsByCategory, 1)
-    # build overall list
-    for id in idsUsedInModel:
-        ids.append(id)
-    for id in idsDimTypes:
-        if(id not in ids):
-            ids.append(id)
-    for id in idsSpots:
-        if (id not in ids):
-            ids.append(id)
-    return ids
-    
-# doc   current model document
-def GetUnusedGenericAnnotationTypeIds(doc):
-    '''
-    Returns all unused annotation symbol ids ( unused in model as well as dimension types)
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: _description_
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = []
-    idsUsed = GetUsedGenericAnnotationTypeIds(doc)
-    idsAll = GetAllGenericAnnotationTypeIdsByCategory(doc)
-    for id in idsAll:
-        if (id not in idsUsed):
-            ids.append(id)
-    return ids
-
-# --------------------------------------------- purge functions ------------------
-
-# doc   current document
-def GetUnusedGenericAnnotationIdsForPurge(doc):
-    '''
-    returns symbol(type) ids and family ids (when no type is in use) of in generic anno families which can be purged
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: _description_
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGenericAnnotationTypeIds)
-    return ids

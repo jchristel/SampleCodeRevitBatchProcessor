@@ -30,6 +30,70 @@ from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Walls import RevitWalls as rWall
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 
+
+# -------------------- used types --------------------------
+
+def GetUsedStackedWallTypeIds(doc):
+    '''
+    Returns all used stack wall type ids. 
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of element ids representing used stacked wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
+    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllStackedWallTypeIdsInModel, 1)
+    return ids
+
+
+def GetUsedInPlaceWallTypeIds(doc):
+    '''
+    Gets all used in place type ids in the model.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of element ids representing used in place wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
+    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 1)
+    return ids
+
+
+def GetUsedCurtainWallTypeIds(doc):
+    '''
+    Gets type ids off all used curtain wall types.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of element ids representing used in curtain wall types.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
+    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllCurtainWallTypeIdsInModel, 1)
+    return ids
+
+
+def GetUsedBasicWallTypeIds(doc):
+    '''
+    Gets type ids off all used basic wall types.
+    Used: at least one instance of this type is placed in the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: List of element ids representing all basic wall types in use.
+    :rtype: list of Autodesk.Revit.DB.ElementId
+    '''
+
+    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 1)
+    return ids
+
+# -------------------- purge unused types --------------------------
+
 def GetUnUsedBasicWallTypeIdsToPurge(doc):
     '''
     Gets type ids off all unused basic wall types in model.
@@ -45,7 +109,7 @@ def GetUnUsedBasicWallTypeIdsToPurge(doc):
 
     ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
-    # argh GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
+    # DOH! GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
     availableTypeCount = len(rWall.GetAllBasicWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
@@ -120,64 +184,4 @@ def GetUnusedStackedWallTypeIdsToPurge(doc):
     availableTypeCount = len(rWall.GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
-    return ids
-
-
-def GetUsedStackedWallTypeIds(doc):
-    '''
-    Returns all used stack wall type ids. 
-    Used: at least one instance of this type is placed in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: List of element ids representing used stacked wall types.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllStackedWallTypeIdsInModel, 1)
-    return ids
-
-
-def GetUsedInPlaceWallTypeIds(doc):
-    '''
-    Gets all used in place type ids in the model.
-    Used: at least one instance of this type is placed in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: List of element ids representing used in place wall types.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 1)
-    return ids
-
-
-def GetUsedCurtainWallTypeIds(doc):
-    '''
-    Gets type ids off all used curtain wall types.
-    Used: at least one instance of this type is placed in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: List of element ids representing used in curtain wall types.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllCurtainWallTypeIdsInModel, 1)
-    return ids
-
-
-def GetUsedBasicWallTypeIds(doc):
-    '''
-    Gets type ids off all used basic wall types.
-    Used: at least one instance of this type is placed in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: List of element ids representing all basic wall types in use.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 1)
     return ids

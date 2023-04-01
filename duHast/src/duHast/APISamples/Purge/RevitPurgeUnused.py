@@ -48,14 +48,14 @@ import System
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitAnnotation as rAnn
+from duHast.src.duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
 from duHast.APISamples import RevitBuildingPads as rBuildP
 from duHast.APISamples import RevitCeilings as rCeil
 from duHast.APISamples import RevitCurtainWallElements as rCWE
 from duHast.APISamples import RevitDetailItems as rDet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.APISamples import RevitFloors as rFlo
-from duHast.APISamples import RevitGenericAnnotation as rGAnno
+from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples import RevitGrids as rGrid
 from duHast.APISamples import RevitLevels as rLev
@@ -74,6 +74,12 @@ from duHast.APISamples.Purge import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
+
+from duHast.APISamples.Annotation import PurgeUnusedAnnoTypes as rAnnoPurge
+from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
+from duHast.APISamples.Annotation import RevitDimensions as rDim
+from duHast.APISamples.Annotation import RevitMultiRefAnno as rMultiRefAnno
+from duHast.APISamples.Annotation import RevitText as rText
 
 
 #from collections import namedtuple
@@ -184,12 +190,12 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rVi
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDet.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDet.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnn.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rAnn.GetAllMultiRefAnnotationTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnn.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rAnn.GetDimTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnn.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rAnn.GetAllTextTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnn.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rAnn.GetArrowTypesIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rGAnno.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnn.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnn.GetAllSpotElevationSymbolIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnnoPurge.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rMultiRefAnno.GetAllMultiRefAnnotationTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnnoPurge.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rDim.GetDimTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rText.GetAllTextTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnnoPurge.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rArrow.GetArrowTypesIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rAnnoPurge.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnnoPurge.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnnoSpot.GetAllSpotElevationSymbolIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 

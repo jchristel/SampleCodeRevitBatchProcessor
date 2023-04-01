@@ -48,14 +48,14 @@ import System
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
-from duHast.src.duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
+from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
+from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 from duHast.APISamples import RevitBuildingPads as rBuildP
 from duHast.APISamples import RevitCeilings as rCeil
-from duHast.APISamples import RevitCurtainWallElements as rCWE
 from duHast.APISamples import RevitDetailItems as rDet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.APISamples import RevitFloors as rFlo
-from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
+
 from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples import RevitGrids as rGrid
 from duHast.APISamples import RevitLevels as rLev
@@ -65,21 +65,28 @@ from duHast.APISamples import RevitRailings as rRail
 from duHast.APISamples import RevitRamps as rRam
 from duHast.APISamples import RevitRoofs as rRoof
 from duHast.APISamples import RevitStairs as rStair
+
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
+
 from duHast.APISamples.Walls import RevitWalls as rWall
 from duHast.APISamples.Walls import PurgeUnusedWallTypes as rWallPurge
-from duHast.Utilities.timer import Timer
-from duHast.APISamples.Purge import RevitPurgeAction as pA
-
-import Autodesk.Revit.DB as rdb
-from System.Collections.Generic import List
+from duHast.APISamples.Walls import RevitCurtainWallElements as rCurtainWallElem
+from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
+from duHast.APISamples.Walls import RevitStackedWalls as rStackedWall
+from duHast.APISamples.Walls import PurgeUnusedCurtainWallElementTypes as rCurtainWallElemPurge
 
 from duHast.APISamples.Annotation import PurgeUnusedAnnoTypes as rAnnoPurge
 from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 from duHast.APISamples.Annotation import RevitDimensions as rDim
 from duHast.APISamples.Annotation import RevitMultiRefAnno as rMultiRefAnno
 from duHast.APISamples.Annotation import RevitText as rText
+
+from duHast.Utilities.timer import Timer
+from duHast.APISamples.Purge import RevitPurgeAction as pA
+
+import Autodesk.Revit.DB as rdb
+from System.Collections.Generic import List
 
 
 #from collections import namedtuple
@@ -148,12 +155,12 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rView.Get
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rView.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rView.GetViewsTemplateIdsInInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rView.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rView.GetAllAvailableFilterIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Image Links', rLink.GetAllUnusedImageTypeIdsInModel, 'Images(s)', 'Images(s)', rLink.GetImagesTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWallPurge.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rWall.GetAllStackedWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWallPurge.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rStackedWall.GetAllStackedWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWallPurge.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWallPurge.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rWall.GetAllCurtainWallTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWallPurge.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rCurtainWall.GetAllCurtainWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWallPurge.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCWE.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCWE.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCWE.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCWE.GetAllCurtainWallNonSharedSymbolIdsByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCurtainWallElemPurge.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCurtainWallElem.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCurtainWallElemPurge.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeil.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeil.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...

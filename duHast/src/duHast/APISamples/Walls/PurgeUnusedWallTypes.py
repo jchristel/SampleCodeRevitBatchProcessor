@@ -29,6 +29,8 @@ This module contains a number of helper functions relating to purging Revit wall
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Walls import RevitWalls as rWall
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.src.duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
+from duHast.APISamples.Walls import RevitStackedWalls as rStackWall
 
 
 # -------------------- used types --------------------------
@@ -44,7 +46,7 @@ def GetUsedStackedWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllStackedWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 1)
     return ids
 
 
@@ -74,7 +76,7 @@ def GetUsedCurtainWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllCurtainWallTypeIdsInModel, 1)
+    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 1)
     return ids
 
 
@@ -129,8 +131,8 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllCurtainWallTypeIdsInModel, 0)
-    availableTypeCount = len(rWall.GetAllCurtainWallTypeIdsInModel(doc).ToList())
+    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 0)
+    availableTypeCount = len(rCurtainWall.GetAllCurtainWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
     return ids
@@ -180,8 +182,8 @@ def GetUnusedStackedWallTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllStackedWallTypeIdsInModel, 0)
-    availableTypeCount = len(rWall.GetAllStackedWallTypeIdsInModel(doc).ToList())
+    ids = com.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 0)
+    availableTypeCount = len(rStackWall.GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
     return ids

@@ -51,10 +51,10 @@ import System
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitSharedParameterAdd as rSharedPAdd
-from duHast.APISamples import RevitSharedParametersTuple as rSharedT
+from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as rSharedPAdd
+from duHast.APISamples.SharedParameters import RevitSharedParametersTuple as rSharedT
 from duHast.APISamples.Common import RevitParameterGrouping as rPG
-from duHast.APISamples import RevitSharedParameters as rSharedPara
+from duHast.APISamples.SharedParameters import RevitSharedParameters as rSharedPara
 
 from collections import namedtuple
 

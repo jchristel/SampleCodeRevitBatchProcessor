@@ -32,8 +32,8 @@ import System
 from System.Collections.Generic import List
 
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils
 from duHast.APISamples import RevitLinks as rLink
 from duHast.Utilities import Result as res

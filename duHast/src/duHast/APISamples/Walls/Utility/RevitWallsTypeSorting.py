@@ -27,7 +27,7 @@ This module contains a Revit walls utility functions.
 #
 
 import Autodesk.Revit.DB as rdb
-
+from duHast.APISamples.Walls.Utility import RevitWallsFilter as rWallFilter
 
 def BuildWallTypeDictionary(collector, dic):
     '''
@@ -50,32 +50,6 @@ def BuildWallTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def GetWallTypesByClass(doc):
-    '''
-    This will return a filtered element collector of all wall types by class in the model
-    It will therefore not return any in place wall types since revit treats those as families...
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector containing wall types.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
-
-    return  rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
-
-# --------------------------------------------- utility functions ------------------
-
-def GetAllWallTypes(doc):
-    '''
-    Gets all wall types in a model.
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector containing wall types.
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
-
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsElementType()
-    return collector
-
 def SortWallTypesByFamilyName(doc):
     '''
     Returns a dictionary of all wall types in the model where key is the build in wall family name, values are ids of associated wall types.
@@ -86,9 +60,9 @@ def SortWallTypesByFamilyName(doc):
     '''
 
     # get all Wall Type Elements
-    wts = GetWallTypesByClass(doc)
+    wts = rWallFilter._get_all_wall_types_by_class(doc)
     # get all wall types including in place wall families
-    wts_two = GetAllWallTypes(doc)
+    wts_two = rWallFilter._get_all_wall_types_by_category(doc)
     usedWts = {}
     usedWts = BuildWallTypeDictionary(wts, usedWts)
     usedWts = BuildWallTypeDictionary(wts_two, usedWts)

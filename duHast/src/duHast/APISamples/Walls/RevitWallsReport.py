@@ -26,10 +26,9 @@ This module contains a Revit walls properties report function.
 #
 #
 
-
 from duHast.APISamples import RevitMaterials as rMat
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Walls import RevitWallUtility as rWallUtil
+from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting as rWallTypeSort
 from duHast.Utilities import Utility as util
 
 import Autodesk.Revit.DB as rdb
@@ -46,7 +45,7 @@ def GetWallReportData(doc, revitFilePath):
     '''
 
     data = []
-    wallTypes = rWallUtil.GetAllWallTypes(doc)
+    wallTypes = rWallTypeSort.GetAllWallTypes(doc)
     for wt in wallTypes:
         try:
             wallTypeName = str(rdb.Element.Name.GetValue(wt))

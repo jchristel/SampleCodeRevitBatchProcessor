@@ -36,17 +36,15 @@ import System
 # import common library modules
 from duHast.APISamples.Common import RevitCommonAPI as com
 
-from duHast.APISamples.Walls import RevitWallUtility as rWallUtil
+from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting as rWallTypeSort
 from duHast.src.duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
 from duHast.APISamples.Walls import RevitStackedWalls as rStackedWall
-
+from duHast.APISamples.Walls.Utility import RevitWallsFilter as rWallFilter
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 # -------------------------------------------- common variables --------------------
-#: Header used in reports
-REPORT_WALLS_HEADER = ['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', 'LAYERMATERIALMARK']
 
 #: Built in wall family name for basic wall
 BASIC_WALL_FAMILY_NAME = 'Basic Wall'
@@ -57,6 +55,32 @@ BUILTIN_WALL_TYPE_FAMILY_NAMES = [
     rCurtainWall.CURTAIN_WALL_FAMILY_NAME,
     BASIC_WALL_FAMILY_NAME
 ]
+
+def GetAllWallTypes(doc): 
+    '''
+    Gets all wall types in a model.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector containing wall types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
+    collector = rWallFilter._get_all_wall_types_by_category(doc)
+    return collector
+
+def GetWallTypesByClass(doc):
+    '''
+    This will return a filtered element collector of all wall types by class in the model
+    
+    It will therefore not return any in place wall types since revit treats those as families...
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A filtered element collector containing wall types.
+    :rtype: Autodesk.Revit.DB.FilteredElementCollector
+    '''
+
+    collector = rWallFilter._get_all_wall_types_by_class(doc)
+    return  collector
 
 # -------------------------------- in place wall types -------------------------------------------------------
 
@@ -105,7 +129,7 @@ def GetAllBasicWallTypeIdsInModel(doc):
     '''
 
     ids = []
-    dic = rWallUtil.SortWallTypesByFamilyName(doc)
+    dic = rWallTypeSort.SortWallTypesByFamilyName(doc)
     if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
         ids = dic[BASIC_WALL_FAMILY_NAME]
     return ids

@@ -52,9 +52,12 @@ class CategoryData(IFamData.IFamilyData):
         :param dataType: Human readable data type descriptor
         :type dataType: str
         '''
-        # todo: check inheritance!!
+
+        # store data type  in base class
+        super(CategoryData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
         # super(CategoryData, self).__init__(rootPath, dataType)
 
+        '''
         self.data = []
         
         if(dataType != None):
@@ -71,7 +74,7 @@ class CategoryData(IFamData.IFamilyData):
             self.rootCategoryPath = rootCategoryPath
         else:
             self.rootCategoryPath = '-'
-
+        '''
 
     def add_Data(self,root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, catGraStyleThreeD,
         catGraStyleCut, catGraStylePro, propMatName, propMatId, propLineWeightCutName, propLineWeightProjectionName, propLineColRed, propLineColGreen, propLineColBlue):

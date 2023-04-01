@@ -42,9 +42,10 @@ class SharedParameterData(IFamData.IFamilyData):
     
     def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
 
-        # todo: check inheritance!!
+        super(SharedParameterData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
         # super(CategoryData, self).__init__(rootPath, dataType)
 
+        '''
         self.data = []
         
         if(dataType != None):
@@ -61,6 +62,7 @@ class SharedParameterData(IFamData.IFamilyData):
             self.rootCategoryPath = rootCategoryPath
         else:
             self.rootCategoryPath = '-'
+        '''
     
     def process(self, doc):
         collector = rSharedPara.GetAllSharedParameters(doc)

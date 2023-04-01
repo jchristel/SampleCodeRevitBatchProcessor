@@ -53,7 +53,7 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         
         # store data type  in base class
-        super(FamilyBaseData, self).__init__(rootPath=rootPath, dataType=dataType)
+        super(FamilyBaseData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
         # super(CategoryData, self).__init__(rootPath, dataType)
         
         '''
@@ -68,13 +68,13 @@ class FamilyBaseData(IFamData.IFamilyData):
             self.rootPath = rootPath
         else:
             self.rootPath = '-'
-        '''
 
         if(rootCategoryPath != None):
             self.rootCategoryPath = rootCategoryPath
         else:
             self.rootCategoryPath = '-'
-        
+        '''
+
         if(rootCategoryPath != None):
             categoryChunks = rootCategoryPath.split(' :: ')
             self.category = categoryChunks[-1]

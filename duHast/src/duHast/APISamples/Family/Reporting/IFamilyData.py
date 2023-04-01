@@ -40,7 +40,7 @@ USED_BY = 'usedBy'
 
 class IFamilyData(Base.Base):
 
-    def __init__(self, rootPath, dataType, **kwargs):
+    def __init__(self, rootPath, rootCategoryPath=None, dataType=None, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -57,6 +57,11 @@ class IFamilyData(Base.Base):
             self.rootPath = rootPath
         else:
             self.rootPath = '-'
+        
+        if(rootCategoryPath != None):
+            self.rootCategoryPath = rootCategoryPath
+        else:
+            self.rootCategoryPath = '-'
 
     def process(self, doc):
         pass

@@ -53,9 +53,9 @@ class LinePatternData(IFamData.IFamilyData):
         :type dataType: str
         '''
 
-        # todo: check inheritance!!
+        super(LinePatternData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
         # super(CategoryData, self).__init__(rootPath, dataType)
-
+        '''
         self.data = []
         
         if(dataType != None):
@@ -72,7 +72,7 @@ class LinePatternData(IFamData.IFamilyData):
             self.rootCategoryPath = rootCategoryPath
         else:
             self.rootCategoryPath = '-'
-    
+        '''
 
     def _addCategoryToDic(self, linePatternIds, patternId, category):
         '''

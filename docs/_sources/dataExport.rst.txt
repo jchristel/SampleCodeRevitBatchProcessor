@@ -3,41 +3,55 @@ Export data samples.
 
 The following modules are classes used to store varies data retrieved from Revit to be used for data processing outside of Revit. 
 
-.. autoclass:: DataCeiling.DataBase
+
+.. autoclass:: Objects/DataCeiling.DataCeiling
     :members:
 
-.. autoclass:: DataCeiling.DataCeiling
+.. autoclass:: Objects/DataRoom.DataRoom
     :members:
 
-.. autoclass:: DataDesignSetOption.DataDesignSetOption
+.. autoclass:: Objects/Properties/DataDesignSetOption.DataDesignSetOption
     :members:
 
-.. automodule:: DataExport
+.. autoclass:: Objects/Properties/DataElementGeometry.DataElementGeometryBase
     :members:
 
-.. autoclass:: DataGeometry.DataGeometry
+.. autoclass:: Objects/Properties/DataInstanceProperties.DataInstanceProperties
     :members:
 
-.. autoclass:: DataInstanceProperties.DataInstanceProperties
+.. autoclass:: Objects/Properties/DataLevel.DataLevel
     :members:
 
-.. autoclass:: DataLevel.DataLevel
+.. autoclass:: Objects/Properties/DataPhasing.DataPhasing
     :members:
 
-.. autoclass:: DataPhasing.DataPhasing
+.. autoclass:: Objects/Properties/DataRevitModel.DataRevitModel
     :members:
 
-.. autoclass:: DataReadFromFile.ReadDataFromFile
+.. autoclass:: Objects/Properties/DataTypeProperties.DataTypeProperties
     :members:
 
-.. autoclass:: DataRevitModel.DataRevitModel
+.. autoclass:: Objects/Properties/Geometry/DataGeometryBase.DataGeometryBase
     :members:
 
-.. autoclass:: DataRoom.DataRoom
+.. autoclass:: Objects/Properties/Geometry/DataGeometryPolygon.DataPolygon
     :members:
 
-.. autoclass:: DataTypeProperties.DataTypeProperties
+.. autoclass:: Objects/Properties/Geometry/DataGeometryTopoCell.DataTopologyCell
     :members:
+
+.. automodule:: Objects/Properties/Geometry/FromRevitConversion
+    :members:
+
+.. automodule:: Utils/DataExport
+    :members:
+
+.. autoclass:: Utils/DataImport.ReadDataFromFile
+    :members:
+
+.. autoclass:: Utils/DataBase.DataBase
+    :members:
+
 
 Convert exported data to shapely objects
 ---------------------------------------------------------

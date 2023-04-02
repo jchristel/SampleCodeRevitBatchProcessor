@@ -37,7 +37,7 @@ import System
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting as rWallTypeSort
-from duHast.src.duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
+from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
 from duHast.APISamples.Walls import RevitStackedWalls as rStackedWall
 from duHast.APISamples.Walls.Utility import RevitWallsFilter as rWallFilter
 

@@ -35,7 +35,7 @@ import System
 # import common library modules
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
-from duHast.src.duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
+from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
 from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO
 from duHast.DataSamples.Objects import DataRoom as dRoom
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly

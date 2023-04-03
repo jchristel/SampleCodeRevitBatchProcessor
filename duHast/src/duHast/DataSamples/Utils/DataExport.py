@@ -27,7 +27,7 @@ Utility functions writing revit geometry data to file.
 #
 
 from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitCeilings as rCeil
+from duHast.APISamples.Ceilings.Export import ToDataCeiling as rCeil
 from duHast.APISamples import RevitRooms as rRoom
 from duHast.Utilities import Result as res
 

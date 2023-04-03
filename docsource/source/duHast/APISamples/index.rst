@@ -11,7 +11,9 @@ Subpackages
    BIM360/index
    BuildingPads/index
    Categories/index
+   Ceilings/index
    Common/index
+   DetailItems/index
    Exports/index
    Family/index
    LinePattern/index
@@ -27,10 +29,8 @@ Submodules
 ----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
-   RevitCeilings
-   RevitDetailItems
    RevitFloors
    RevitGrids
    RevitLevels

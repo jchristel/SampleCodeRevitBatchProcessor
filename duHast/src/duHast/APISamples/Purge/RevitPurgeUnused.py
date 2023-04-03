@@ -51,7 +51,6 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
 from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 
-from duHast.APISamples import RevitDetailItems as rDet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 from duHast.APISamples import RevitFloors as rFlo
 
@@ -93,6 +92,9 @@ from duHast.APISamples.BuildingPads import PurgeUnusedBuildingPadTypes as rBuild
 
 from duHast.APISamples.Ceilings import RevitCeilings as rCeil
 from duHast.APISamples.Ceilings import PurgeUnusedCeilingTypes as rCeilingPurge
+
+from duHast.APISamples.DetailItems import RevitDetailItems as rDet
+from duHast.APISamples.DetailItems import PurgeUnusedDetailItemTypes as rDetailItemPurge
 
 from duHast.Utilities.timer import Timer
 from duHast.APISamples.Purge import RevitPurgeAction as pA
@@ -206,9 +208,9 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Head Types', rGrid.GetUn
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Types', rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDet.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDet.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDet.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDetailItemPurge.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDetailItemPurge.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDetailItemPurge.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnnoPurge.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rMultiRefAnno.GetAllMultiRefAnnotationTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnnoPurge.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rDim.GetDimTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rText.GetAllTextTypeIds))

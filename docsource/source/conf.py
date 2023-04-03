@@ -53,6 +53,7 @@ release = "0.0.6"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx_nested_apidoc',
     'sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
     'sphinx.ext.autosummary'
@@ -93,7 +94,9 @@ html_theme_path = [sphinx_adc_theme.get_html_theme_path()]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-add_module_names = True
+add_module_names = False
+
+# Name of the package directory.
+sphinx_nested_apidoc_package_dir = "duHast"

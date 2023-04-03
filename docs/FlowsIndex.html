@@ -47,7 +47,7 @@
 <li class="toctree-l1"><a class="reference internal" href="dataExport.html">Export data samples.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Misc modules and classes</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Flows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-ModifyAddSharedParas">Modifying element properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ModifyDeleteSheetsAndViews">Modifying element properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ReportGridsLevels">Reporting element properties</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#batch-process-pre-processing-flows">Batch Process - Pre processing Flows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Post_CombineReports">Batch Process - Post processing Flows</a></li>
@@ -87,77 +87,9 @@
 <h1>Flows<a class="headerlink" href="#flows" title="Permalink to this headline">¶</a></h1>
 <p>Flows are Python modules which use the functions provided in the sample library and the Revit Batch Processor to solve a particular task.
 They can be as simple as a single module which can be run using the GUI version of Revit Batch Processor only, or, on the other end of the spectrum, can be made up of a number of modules which are run in parallel through batch or powershell scripts.</p>
-<section id="module-ModifyAddSharedParas">
-<span id="modifying-element-properties"></span><h2>Modifying element properties<a class="headerlink" href="#module-ModifyAddSharedParas" title="Permalink to this headline">¶</a></h2>
-<section id="add-shared-parameters-to-project-files">
-<h3>Add shared parameters to project files.<a class="headerlink" href="#add-shared-parameters-to-project-files" title="Permalink to this headline">¶</a></h3>
-<p>This flow demonstrates how to add any number of shared parameters to workshared Revit project files.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyAddSharedParas.Output">
-<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyAddSharedParas.Output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyAddSharedParas.UpDateParameters">
-<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">UpDateParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyAddSharedParas.UpDateParameters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bind parameters to category</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
-<li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>str</em><em>, </em><em>ParameterType</em><em>, </em><em>bool</em><em>,</em><em>[</em><em>BuiltInCategory</em><em>]</em><em>,</em><em>BuiltInParameterGroup</em><em>, </em><em>bool</em><em>]</em><em>,</em><em>...</em><em>]</em>) – List describing shared parameter to be added. Refer to <cite>listOfParameters_</cite> below</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>result.status: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.</p></li>
-<li><p>result.message will contain the names of the shared parameters added.</p></li>
-<li><p>result.result will be an empty list</p></li>
-</ul>
-<p>On exception</p>
-<ul class="simple">
-<li><p>Reload.status (bool) will be False</p></li>
-<li><p>Reload.message will contain the exception message</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="ModifyAddSharedParas.sharedParameterFilePath_">
-<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">sharedParameterFilePath_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C:\\temp\\Shared</span> <span class="pre">Parameters.txt'</span></em><a class="headerlink" href="#ModifyAddSharedParas.sharedParameterFilePath_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fully qualified path to shared parameter file</p>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="ModifyAddSharedParas.listOfParameters_">
-<span class="sig-prename descclassname"><span class="pre">ModifyAddSharedParas.</span></span><span class="sig-name descname"><span class="pre">listOfParameters_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['ParameterOne',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Length,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_GEOMETRY,</span> <span class="pre">True],</span> <span class="pre">['ParameterTwo',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.YesNo,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Windows,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_Walls],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True],</span> <span class="pre">['ParameterThree',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Text,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Rooms],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True]]</span></em><a class="headerlink" href="#ModifyAddSharedParas.listOfParameters_" title="Permalink to this definition">¶</a></dt>
-<dd><p>List containing the parameters to be added and their properties</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Parameter Name,</p></li>
-<li><p>parameter group name ( in shared parameter file),</p></li>
-<li><p>the parameter storage type as rdb.ParameterType</p></li>
-<li><p>a list of all categories as rdb.BuiltInCategory the parameter is to be added to</p></li>
-<li><p>the property group the parameter is to be added to as rdb.BuiltInParameterGroup</p></li>
-<li><p>True if parameter is an instance parameter, False if it is a type parameter</p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
-
-</section>
-<span class="target" id="module-ModifyDeleteSheetsAndViews"></span><section id="delete-sheets-and-views-from-project-files">
+<section id="module-ModifyDeleteSheetsAndViews">
+<span id="modifying-element-properties"></span><h2>Modifying element properties<a class="headerlink" href="#module-ModifyDeleteSheetsAndViews" title="Permalink to this headline">¶</a></h2>
+<section id="delete-sheets-and-views-from-project-files">
 <h3>Delete sheets and views from project files.<a class="headerlink" href="#delete-sheets-and-views-from-project-files" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to delete sheets and views from workshared Revit project files using filters.
 A likely scenario for this is models being send out for coordination requiring some clean up prior issue.</p>
@@ -273,144 +205,6 @@ A likely scenario for this is models being send out for coordination requiring s
 <dt class="sig sig-object py" id="ModifyDeleteSheetsAndViews.viewRules_">
 <span class="sig-prename descclassname"><span class="pre">ModifyDeleteSheetsAndViews.</span></span><span class="sig-name descname"><span class="pre">viewRules_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['File',</span> <span class="pre">[['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value'],</span> <span class="pre">['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value'],</span> <span class="pre">['Parameter</span> <span class="pre">Name',</span> <span class="pre">&lt;function</span> <span class="pre">ConDoesNotEqual&gt;,</span> <span class="pre">'Parameter</span> <span class="pre">Value']]]]</span></em><a class="headerlink" href="#ModifyDeleteSheetsAndViews.viewRules_" title="Permalink to this definition">¶</a></dt>
 <dd><p>List containing the view rules by project file</p>
-</dd></dl>
-
-</section>
-<span class="target" id="module-ModifyExportNWC_IFC"></span><section id="export-views-or-entire-models-to-ifc-or-navisworks">
-<h3>Export views or entire models to IFC or NavisWorks.<a class="headerlink" href="#export-views-or-entire-models-to-ifc-or-navisworks" title="Permalink to this headline">¶</a></h3>
-<p>This flow demonstrates how to export views or entire models to IFC or NavisWorks.</p>
-<p>Note:</p>
-<ul>
-<li><p>Revit Batch Processor settings:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>open all worksets to ensure everything required gets exported</p></li>
-</ul>
-</div></blockquote>
-</li>
-<li><p>the model will not be saved after the export</p></li>
-</ul>
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyExportNWC_IFC.Output">
-<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.Output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyExportNWC_IFC.IFCExportView">
-<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">IFCExportView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.IFCExportView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports a view to IFC using open source third party IFC exporter supported by Autodesk.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>result.status: View export status returned in result.status. False if an exception occurred, otherwise True.</p></li>
-<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
-<li><p>result.result: will be an empty list</p></li>
-</ul>
-<p>On exception</p>
-<ul class="simple">
-<li><p>Reload.status (bool) will be False</p></li>
-<li><p>Reload.message will contain the exception message</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyExportNWC_IFC.IFCExportViewDefault">
-<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">IFCExportViewDefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.IFCExportViewDefault" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports a view to IFC using the build in (basic) IFC exporter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
-<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
-<li><p>result.result: will be an empty list</p></li>
-</ul>
-<p>On exception</p>
-<ul class="simple">
-<li><p>Reload.status (bool) will be False</p></li>
-<li><p>Reload.message will contain the exception message</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyExportNWC_IFC.NWCExportByView">
-<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">NWCExportByView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.NWCExportByView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports a view as a NavisWorks cache file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
-<li><p>result.message: will contain the fully qualified file path of the exported file</p></li>
-<li><p>result.result: will be an empty list</p></li>
-</ul>
-<p>On exception</p>
-<ul class="simple">
-<li><p>Reload.status (bool) will be False</p></li>
-<li><p>Reload.message will contain the exception message</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ModifyExportNWC_IFC.NWCExportModel">
-<span class="sig-prename descclassname"><span class="pre">ModifyExportNWC_IFC.</span></span><span class="sig-name descname"><span class="pre">NWCExportModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ModifyExportNWC_IFC.NWCExportModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports the entire model as a NavisWorks cache file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p>Result class instance.</p>
-<ul class="simple">
-<li><p>result.status: View deletion status returned in result.status. False if an exception occurred, otherwise True.</p></li>
-<li><p>result.message: will contain the fully qualified file path of the exported file.</p></li>
-<li><p>result.result: will be an empty list</p></li>
-</ul>
-<p>On exception</p>
-<ul class="simple">
-<li><p>Reload.status (bool) will be False</p></li>
-<li><p>Reload.message will contain the exception message</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utilities.html#Result.Result" title="Result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
@@ -1187,85 +981,11 @@ For material properties reported refer to <a class="reference internal" href="re
 </dd></dl>
 
 </section>
-<span class="target" id="module-ReportSharedParameters"></span><section id="write-shared-parameter-data-to-file">
-<h3>Write shared parameter data to file.<a class="headerlink" href="#write-shared-parameter-data-to-file" title="Permalink to this headline">¶</a></h3>
-<p>This flow demonstrates how to write shared parameter data to file.</p>
-<p>Note:
-For shared parameter properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitSharedParameters.GetSharedParameterReportData" title="RevitSharedParameters.GetSharedParameterReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitSharedParameters.GetSharedParameterReportData</span></code></a>.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ReportSharedParameters.Output">
-<span class="sig-prename descclassname"><span class="pre">ReportSharedParameters.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportSharedParameters.Output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ReportSharedParameters.writeSharedParaData">
-<span class="sig-prename descclassname"><span class="pre">ReportSharedParameters.</span></span><span class="sig-name descname"><span class="pre">writeSharedParaData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportSharedParameters.writeSharedParaData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes shared parameter data to a tab separated text file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
-<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<span class="target" id="module-ReportWallsDetails"></span><section id="write-wall-type-data-to-file">
-<h3>Write wall type data to file.<a class="headerlink" href="#write-wall-type-data-to-file" title="Permalink to this headline">¶</a></h3>
-<p>This flow demonstrates how to write wall type data to file.</p>
-<p>Note:
-For wall type properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWalls.GetWallReportData" title="RevitWalls.GetWallReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWalls.GetWallReportData</span></code></a>.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ReportWallsDetails.Output">
-<span class="sig-prename descclassname"><span class="pre">ReportWallsDetails.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWallsDetails.Output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ReportWallsDetails.WriteWallTypeData">
-<span class="sig-prename descclassname"><span class="pre">ReportWallsDetails.</span></span><span class="sig-name descname"><span class="pre">WriteWallTypeData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWallsDetails.WriteWallTypeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes wall type data to a tab separated text file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
-<li><p><strong>fileName</strong> (<em>str</em>) – Fully qualified file path to report file.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True if report file was written successfully, otherwise False</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <span class="target" id="module-ReportWorksets"></span><section id="write-workset-data-to-file">
 <h3>Write workset data to file.<a class="headerlink" href="#write-workset-data-to-file" title="Permalink to this headline">¶</a></h3>
 <p>This flow demonstrates how to write workset data to file.</p>
 <p>Note:
-For workset properties reported refer to <a class="reference internal" href="revitAPISampleCode.html#RevitWorksets.GetWorksetReportData" title="RevitWorksets.GetWorksetReportData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWorksets.GetWorksetReportData</span></code></a>.</p>
+For workset properties reported refer to <code class="xref py py-obj docutils literal notranslate"><span class="pre">RevitWorksets.GetWorksetReportData</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ReportWorksets.Output">
 <span class="sig-prename descclassname"><span class="pre">ReportWorksets.</span></span><span class="sig-name descname"><span class="pre">Output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ReportWorksets.Output" title="Permalink to this definition">¶</a></dt>

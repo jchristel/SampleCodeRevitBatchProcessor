@@ -1,0 +1,3 @@
+graft src/duHast/APISamples/
+global-exclude *.py[co]
+global-exclude .DS_Store

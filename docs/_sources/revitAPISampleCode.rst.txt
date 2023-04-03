@@ -7,10 +7,10 @@ Provides python samples on how to use some aspects of the Revit API.
 RevitCommonAPI
 --------------
 
-.. automodule:: RevitCommonAPI
+.. automodule:: Common/RevitCommonAPI
     :members:
 
-.. automodule:: RevitTransaction
+.. automodule:: Common/RevitTransaction
     :members:
 
 .. automodule:: RevitElementParameterGetUtils

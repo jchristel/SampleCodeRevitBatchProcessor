@@ -54,7 +54,7 @@ from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 
 from duHast.APISamples.Common import RevitGroups as rGrp
-from duHast.APISamples import RevitGrids as rGrid
+
 from duHast.APISamples import RevitLevels as rLev
 from duHast.APISamples import RevitLinks as rLink
 from duHast.APISamples import RevitMEPSystems as rMEP
@@ -97,6 +97,9 @@ from duHast.APISamples.DetailItems import PurgeUnusedDetailItemTypes as rDetailI
 
 from duHast.APISamples.Floors import RevitFloors as rFlo
 from duHast.APISamples.Floors import PurgeUnusedFloorTypes as rFloorPurge
+
+from duHast.APISamples.Grids import RevitGrids as rGrid
+from duHast.APISamples.Grids import PurgeUnusedGridTypes as rGridPurge
 
 from duHast.Utilities.timer import Timer
 from duHast.APISamples.Purge import RevitPurgeAction as pA
@@ -205,8 +208,8 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', r
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', rMEP.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Family(s)','Pipe Symbols and Family(s)', rMEP.GetSymbolIdsForPipeTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadFamilyTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGrid.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Head Types', rGrid.GetUnusedGridHeadFamiliesForPurge, 'Grid Head family Type(s)', 'Grid Head family Type(s)', rGrid.GetAllGridHeadFamilyTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGridPurge.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Head Types', rGridPurge.GetUnusedGridHeadFamiliesForPurge, 'Grid Head family Type(s)', 'Grid Head family Type(s)', rGrid.GetAllGridHeadFamilyTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Types', rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))

@@ -29,10 +29,11 @@ This module contains a Revit ceilings export to DATA class functions.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO, RevitElementParameterGetUtils as rParaGet, RevitPhases as rPhase
-from duHast.APISamples.Ceilings.Geometry import Geometry
+#from duHast.APISamples.Ceilings.Geometry import Geometry
 from duHast.APISamples.Ceilings import RevitCeilings as rCeiling
 from duHast.DataSamples.Objects import DataCeiling as dCeiling
 from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rCon
+from duHast.APISamples.Common.Geometry import RevitSolids as rSolid
 
 
 def PopulateDataCeilingObject(doc, revitCeiling):
@@ -59,7 +60,8 @@ def PopulateDataCeilingObject(doc, revitCeiling):
     # set up data class object
     dataC = dCeiling.DataCeiling()
     # get ceiling geometry (boundary points)
-    revitGeometryPointGroups = Geometry.Get2DPointsFromRevitCeiling(revitCeiling)
+    revitGeometryPointGroups = rSolid.get_2d_points_from_solid(revitCeiling)
+    #revitGeometryPointGroups = Geometry.Get2DPointsFromRevitCeiling(revitCeiling)
     if(len(revitGeometryPointGroups) > 0):
         ceilingPointGroupsAsDoubles = []
         for allCeilingPointGroups in revitGeometryPointGroups:

@@ -8,6 +8,7 @@ Submodules
    :maxdepth: 4
 
    RevitGeometry
+   RevitSolids
 
 Module contents
 ---------------

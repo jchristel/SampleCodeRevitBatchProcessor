@@ -16,6 +16,8 @@ Subpackages
    DetailItems/index
    Exports/index
    Family/index
+   Floors/index
+   Grids/index
    LinePattern/index
    ModelHealth/index
    Purge/index
@@ -31,8 +33,6 @@ Submodules
 .. toctree::
    :maxdepth: 2
 
-   RevitFloors
-   RevitGrids
    RevitLevels
    RevitLinks
    RevitMEPSystems

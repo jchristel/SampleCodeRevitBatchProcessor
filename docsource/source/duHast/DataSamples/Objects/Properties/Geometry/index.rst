@@ -11,6 +11,7 @@ Submodules
    DataGeometryPolygon
    DataGeometryTopoCell
    FromRevitConversion
+   FromRevitElements
 
 Module contents
 ---------------

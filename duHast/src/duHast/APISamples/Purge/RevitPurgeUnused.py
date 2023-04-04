@@ -52,7 +52,6 @@ from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
 from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
-from duHast.APISamples import RevitFloors as rFlo
 
 from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples import RevitGrids as rGrid
@@ -95,6 +94,9 @@ from duHast.APISamples.Ceilings import PurgeUnusedCeilingTypes as rCeilingPurge
 
 from duHast.APISamples.DetailItems import RevitDetailItems as rDet
 from duHast.APISamples.DetailItems import PurgeUnusedDetailItemTypes as rDetailItemPurge
+
+from duHast.APISamples.Floors import RevitFloors as rFlo
+from duHast.APISamples.Floors import PurgeUnusedFloorTypes as rFloorPurge
 
 from duHast.Utilities.timer import Timer
 from duHast.APISamples.Purge import RevitPurgeAction as pA
@@ -177,8 +179,8 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', 
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCurtainWallElemPurge.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeilingPurge.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeilingPurge.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFlo.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Floor Types', rFlo.GetUnusedInPlaceFloorIdsForPurge, 'InPlace Floor Type(s)', 'InPlace Floor Type(s)', rFlo.GetAllInPlaceFloorTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFloorPurge.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Floor Types', rFloorPurge.GetUnusedInPlaceFloorIdsForPurge, 'InPlace Floor Type(s)', 'InPlace Floor Type(s)', rFlo.GetAllInPlaceFloorTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Roof Types', rRoof.GetUnusedNonInPlaceRoofTypeIdsToPurge, 'Roof Type(s)', 'Roof Type(s)', rRoof.GetAllRoofTypeIdsInModelByClass)) #TODO check why by class
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Roof Types', rRoof.GetUnusedInPlaceRoofIdsForPurge, 'InPlace Roof Type(s)', 'InPlace Roof Type(s)', rRoof.GetAllInPlaceRoofTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Types', rStairPurge.GetUnusedNonInPlaceStairTypeIdsToPurge, 'Stair Type(s)', 'Stair Type(s)', rStair.GetAllStairTypeIdsInModelByClass)) #TODO check why by class

@@ -9,7 +9,7 @@ Revit materials helper functions.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,16 +30,9 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
-# -------------------------------------------- common variables --------------------
-#: header used in reports
-REPORT_MATERIALS_HEADER = ['HOSTFILE', 'ID', 'MATERIALNAME', 'PARAMETERNAME', 'PARAMETERVALUE']
 
 # --------------------------------------------- utility functions ------------------
 
@@ -97,45 +90,3 @@ def GetMaterialNameById(doc, id):
             mName = rdb.Element.Name.GetValue(m)
             name = '' if mName == None else mName
     return name
-# ------------------------------------------------------- Material reporting --------------------------------------------------------------------
-
-def GetMaterialReportData(doc, revitFilePath):
-    '''
-    Gets material data ready for being written to file.
-
-    - HOSTFILE
-    - ID
-    - NAME
-    - and any parameter names and values attached to a material
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The fully qualified file path of Revit file.
-    :type revitFilePath: str
-    
-    :return: The material data in a nested list of string
-    :rtype: list of list of str
-    '''
-
-    data = []
-    mats = GetAllMaterials(doc)
-    for mat in mats:
-        try:
-            paras = mat.GetOrderedParameters()
-            for p in paras:
-                paraName = p.Definition.Name
-                pValue = rParaGet.get_parameter_value(p)
-                data.append(
-                    [revitFilePath,
-                    str(mat.Id),
-                    util.EncodeAscii(rdb.Element.Name.GetValue(mat)),
-                    util.EncodeAscii(paraName),
-                    util.EncodeAscii(pValue)]
-                )                  
-        except Exception:
-            data.append([
-                util.GetFileNameWithoutExt(revitFilePath), 
-                str(mat.Id),
-                util.EncodeAscii(rdb.Element.Name.GetValue(mat))
-            ])
-    return data

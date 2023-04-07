@@ -55,7 +55,6 @@ from duHast.APISamples.Family import RevitFamilyUtils as rFamU
 
 from duHast.APISamples.Common import RevitGroups as rGrp
 
-from duHast.APISamples import RevitRamps as rRam
 from duHast.APISamples import RevitRoofs as rRoof
 
 from duHast.APISamples.Views import RevitViews as rView
@@ -113,6 +112,9 @@ from duHast.APISamples.MEP_Systems import RevitCableTrays as rCableTray
 from duHast.APISamples.MEP_Systems import RevitConduits as rConduit
 from duHast.APISamples.MEP_Systems  import RevitDucts as rDuct
 from duHast.APISamples.MEP_Systems import RevitPipes as rPipe
+
+from duHast.APISamples.Ramps import RevitRamps as rRam
+from duHast.APISamples.Ramps import PurgeUnusedRampTypes as rRampPurge
 
 from duHast.Utilities.timer import Timer
 from duHast.APISamples.Purge import RevitPurgeAction as pA
@@ -204,7 +206,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Landing Types', rStairPurge.G
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Run Types', rStairPurge.GetUnusedStairRunTypeIdsToPurge, 'Stair Run Type(s)', 'Stair Run Type(s)', rStairRun.GetAllStairRunTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stringers and Carriage Types', rStairPurge.GetUnusedStairStringersCarriageTypeIdsToPurge, 'Stair Stringers and Carriage Type(s)', 'Stair Stringers and Carriage Type(s)', rStairStringerAndCarriage.GetAllStairStringCarriageTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Stair Types', rStairPurge.GetUnusedInPlaceStairIdsForPurge,'InPlace Stair Type(s)', 'InPlace Stair Type(s)', rStair.GetAllInPlaceStairTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ramp Types', rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ramp Types', rRampPurge.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Cut Mark Types', rStairPurge.GetUnusedStairCutMarkTypeIdsToPurge, 'Stair Cut Mark Type(s)', 'Stair Cut Mark Type(s)', rStairCutMark.GetAllStairCutMarkTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildingPadPurge.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 'Building Pad Type(s)', 'Building Pad Type(s)', rBuildP.GetAllBuildingPadTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRailPurge.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))

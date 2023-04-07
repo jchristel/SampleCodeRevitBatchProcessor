@@ -57,7 +57,6 @@ from duHast.APISamples.Common import RevitGroups as rGrp
 
 from duHast.APISamples import RevitLevels as rLev
 from duHast.APISamples import RevitLinks as rLink
-from duHast.APISamples import RevitMEPSystems as rMEP
 from duHast.APISamples import RevitRailings as rRail
 from duHast.APISamples import RevitRamps as rRam
 from duHast.APISamples import RevitRoofs as rRoof
@@ -106,6 +105,13 @@ from duHast.APISamples.Purge import RevitPurgeAction as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
+import duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPSymbols
+import duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes
+import duHast.src.duHast.APISamples.MEP_Systems.RevitCableTrays
+import duHast.src.duHast.APISamples.MEP_Systems.RevitConduits
+
+import duHast.src.duHast.APISamples.MEP_Systems.RevitDucts
+import duHast.src.duHast.APISamples.MEP_Systems.RevitPipes
 
 
 #from collections import namedtuple
@@ -198,14 +204,14 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildin
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', rRail.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', rRail.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',rRail.GetAllBalusterSymbolIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', rMEP.GetUnUsedCableTrayTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', rMEP.GetAllCableTrayTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', rMEP.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', rMEP.GetAllConduitTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', rMEP.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', rMEP.GetAllDuctTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Types', rMEP.GetUnUsedPipeTypeIdsToPurge,'Pipe Type(s)','Pipe Type(s)', rMEP.GetAllPipeTypeIdsInModelByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Symbols and Families', rMEP.GetUnUsedCableTraySymbolIdsForPurge,'Cable Tray Symbols and Family(s)','Cable Tray Symbols and Family(s)', rMEP.GetSymbolIdsForCableTrayTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Symbols and Families', rMEP.GetUnUsedConduitSymbolIdsForPurge,'Conduit Symbols and Family(s)','Conduit Symbols and Family(s)', rMEP.GetSymbolIdsForConduitTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', rMEP.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge,'Duct Symbols and Family(s)','Duct Symbols and Family(s)', rMEP.GetSymbolIdsForDuctTypesInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', rMEP.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Family(s)','Pipe Symbols and Family(s)', rMEP.GetSymbolIdsForPipeTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedCableTrayTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitCableTrays.GetAllCableTrayTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitConduits.GetAllConduitTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitDucts.GetAllDuctTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedPipeTypeIdsToPurge,'Pipe Type(s)','Pipe Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitPipes.GetAllPipeTypeIdsInModelByCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Symbols and Families', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPSymbols.GetUnUsedCableTraySymbolIdsForPurge,'Cable Tray Symbols and Family(s)','Cable Tray Symbols and Family(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitCableTrays.GetSymbolIdsForCableTrayTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Symbols and Families', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPSymbols.GetUnUsedConduitSymbolIdsForPurge,'Conduit Symbols and Family(s)','Conduit Symbols and Family(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitConduits.GetSymbolIdsForConduitTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Symbols and Families', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPSymbols.GetUnUsedDuctAndFlexDuctSymbolIdsForPurge,'Duct Symbols and Family(s)','Duct Symbols and Family(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitDucts.GetSymbolIdsForDuctTypesInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Pipe Symbols and Families', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPSymbols.GetUnUsedPipeSymbolIdsForPurge,'Pipe Symbols and Family(s)','Pipe Symbols and Family(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitPipes.GetSymbolIdsForPipeTypesInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLev.GetUnusedLevelTypesForPurge, 'Level Type(s)', 'Level Type(s)',rLev.GetAllLevelTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLev.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadFamilyTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGridPurge.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))

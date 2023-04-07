@@ -112,6 +112,8 @@ import duHast.src.duHast.APISamples.MEP_Systems.RevitConduits
 
 import duHast.src.duHast.APISamples.MEP_Systems.RevitDucts
 import duHast.src.duHast.APISamples.MEP_Systems.RevitPipes
+import duHast.src.duHast.APISamples.Railings.PurgeUnusedRailingAndBalusterTypes
+import duHast.src.duHast.APISamples.Railings.RevitBalusters
 
 
 #from collections import namedtuple
@@ -201,9 +203,9 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Stair Types', rStairP
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ramp Types', rRam.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Cut Mark Types', rStairPurge.GetUnusedStairCutMarkTypeIdsToPurge, 'Stair Cut Mark Type(s)', 'Stair Cut Mark Type(s)', rStairCutMark.GetAllStairCutMarkTypeIdsInModelByClass))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildingPadPurge.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 'Building Pad Type(s)', 'Building Pad Type(s)', rBuildP.GetAllBuildingPadTypeIdsInModelByClass))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRail.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', rRail.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', rRail.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',rRail.GetAllBalusterSymbolIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', duHast.src.duHast.APISamples.Railings.PurgeUnusedRailingAndBalusterTypes.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', duHast.src.duHast.APISamples.Railings.PurgeUnusedRailingAndBalusterTypes.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', duHast.src.duHast.APISamples.Railings.PurgeUnusedRailingAndBalusterTypes.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',duHast.src.duHast.APISamples.Railings.RevitBalusters.GetAllBalusterSymbolIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Cable Tray Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedCableTrayTypeIdsToPurge,'Cable Tray Type(s)','Cable Tray Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitCableTrays.GetAllCableTrayTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Conduit Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedConduitTypeIdsToPurge,'Conduit Type(s)','Conduit Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitConduits.GetAllConduitTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Duct Types', duHast.src.duHast.APISamples.MEP_Systems.PurgeUnusedMEPTypes.GetUnUsedDuctTypeIdsToPurge,'Duct Type(s)','Duct Type(s)', duHast.src.duHast.APISamples.MEP_Systems.RevitDucts.GetAllDuctTypeIdsInModelByCategory))

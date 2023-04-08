@@ -26,7 +26,6 @@ This module contains a number of helper functions relating to purging Revit roof
 #
 #
 
-
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Roofs.RevitRoofs import GetAllInPlaceRoofTypeIdsInModel, GetAllRoofTypeIdsInModelByClass, GetAllRoofTypeIdsInModelByCategory

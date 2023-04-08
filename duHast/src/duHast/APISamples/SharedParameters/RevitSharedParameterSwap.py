@@ -55,8 +55,11 @@ from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as rShare
 from duHast.APISamples.SharedParameters import RevitSharedParametersTuple as rSharedT
 from duHast.APISamples.Common import RevitParameterGrouping as rPG
 from duHast.APISamples.SharedParameters import RevitSharedParameters as rSharedPara
+from duHast.APISamples.SharedParameters import RevitSharedParametersDelete as rSharedParaDelete
 
 from collections import namedtuple
+
+import duHast.src.duHast.APISamples.SharedParameters.RevitSharedParameterTypeChange
 
 '''
 Tuple containing settings data on how to swap a shared parameter retrieved from a file.
@@ -123,11 +126,11 @@ def SwapSharedParameters(doc, changeDirectiveFilePath):
             returnValue.AppendMessage('Read shared parameter file: ' + parameterDirectives[pDirective].sharedParameterPath)
             if(sharedParaDefFile != None):
                 #   - swap shared parameter to family parameter
-                statusChangeToFamPara = rSharedPara.ChangeSharedParameterToFamilyParameter(doc, pDirective, _parameterPrefix_)
+                statusChangeToFamPara = duHast.src.duHast.APISamples.SharedParameters.RevitSharedParameterTypeChange.ChangeSharedParameterToFamilyParameter(doc, pDirective, _parameterPrefix_)
                 returnValue.Update(statusChangeToFamPara)
                 if(statusChangeToFamPara.status):
                     #   - delete all shared parameter definition
-                    statusDeleteOldSharedParaDef = rSharedPara.DeleteSharedParameterByName(doc, pDirective)
+                    statusDeleteOldSharedParaDef = rSharedParaDelete.DeleteSharedParameterByName(doc, pDirective)
                     returnValue.Update(statusDeleteOldSharedParaDef)
                     if(statusDeleteOldSharedParaDef.status):
                         # get shared parameter definition
@@ -136,7 +139,7 @@ def SwapSharedParameters(doc, changeDirectiveFilePath):
                         if(sParaDef != None):
                             returnValue.AppendMessage('Retrieved shared parameter definition for: ' + parameterDirectives[pDirective].newParameterData.name) 
                             #   - swap family parameter to shared parameter
-                            statusSwapFamToSharedP = rSharedPara.ChangeFamilyParameterToSharedParameter(
+                            statusSwapFamToSharedP = duHast.src.duHast.APISamples.SharedParameters.RevitSharedParameterTypeChange.ChangeFamilyParameterToSharedParameter(
                                 doc, 
                                 _parameterPrefix_ + pDirective, # add prefix
                                 parameterDirectives[pDirective].newParameterData, 

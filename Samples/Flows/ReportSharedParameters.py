@@ -53,6 +53,8 @@ import System
 
 # set path to library and this script
 import sys
+
+from duHast.Utilities import Utility as util
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
@@ -136,3 +138,5 @@ result_ = writeSharedParaData(doc, fileName_)
 
 Output('Writing Shared Parameter Data.... status: ' + str(result_))
 Output('Writing Shared Parameter Data.... finished ' + fileName_)
+
+

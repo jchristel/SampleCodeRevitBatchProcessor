@@ -33,10 +33,10 @@ This will delete all shared parameter definitions which are not used by any fami
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
-#from duHast.APISamples.SharedParameters import RevitSharedParameterData as rSharedData
+from duHast.APISamples.SharedParameters import RevitSharedParameterData as rSharedParaData
 from duHast.APISamples.Categories import RevitCategories as rCat
+from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 import Autodesk.Revit.DB as rdb
 
@@ -85,11 +85,11 @@ def PurgeUnused(doc, processor):
                 idsToDelete.append(rdb.ElementId(rootFam[rSharedParaData.PARAMETER_ID]))
         # delete any subcategories found
         if(len(idsToDelete) > 0):
-            resultDelete = com.DeleteByElementIds(doc, idsToDelete, 'Deleting unused shared parameters.', 'Shared Parameters')
+            resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused shared parameters.', 'Shared Parameters')
             returnValue.Update(resultDelete)
             # may need to delete shared parameters one by one if one or more cant be deleted
             if (resultDelete.status == False):
-                resultDeleteOneByOne = com.DeleteByElementIdsOneByOne(doc, idsToDelete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
+                resultDeleteOneByOne = rDel.DeleteByElementIdsOneByOne(doc, idsToDelete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
                 returnValue.Update(resultDeleteOneByOne)
         else:
             returnValue.UpdateSep(True, 'No unused shared parameters found. Nothing was deleted.')

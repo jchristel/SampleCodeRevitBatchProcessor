@@ -45,7 +45,6 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
 from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
@@ -123,6 +122,8 @@ from duHast.APISamples.Purge import RevitPurgeAction as pA
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
+from duHast.APISamples.Common import RevitDeleteElements as rDel
+
 
 
 # --------------------------------------------- Purge - utility ---------------------------------------------
@@ -167,12 +168,12 @@ def PurgeUnplacedElements (doc,
                 unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ rdb.Element.Name.GetValue(doc.GetElement(unusedId)))
         else:
             unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
-        purgeResult = com.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+        purgeResult = rDel.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         # check if an exception occurred and in debug mode, purge elements one by one
         if(isDebug and purgeResult.status == False):
             #pass
             print('second debug run')
-            purgeResult = com.DeleteByElementIdsOneByOne(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+            purgeResult = rDel.DeleteByElementIdsOneByOne(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         resultValue.Update(purgeResult)
     except Exception as e:
         resultValue.UpdateSep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))

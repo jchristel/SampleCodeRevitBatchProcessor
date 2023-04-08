@@ -34,7 +34,7 @@ from System.Collections.Generic import List
 
 
 # import common library
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtil
@@ -116,7 +116,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                     result.UpdateSep(result.status,'Found no match for ' + famName)
             # delete any new symbols introduced during the reload
             if(len(symbolIdsToBeDeleted)>0):
-                resultDelete = com.DeleteByElementIds(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
+                resultDelete = rDel.DeleteByElementIds(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
                 result.AppendMessage (resultDelete.message)
             else:
                 message = 'No need to delete any new family types since no new types where created.'

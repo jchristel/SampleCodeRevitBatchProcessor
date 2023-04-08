@@ -33,7 +33,7 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.src.duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 
@@ -130,7 +130,7 @@ def DeleteLinePatternsContains(doc, contains):
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
-    result = com.DeleteByElementIds(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
+    result = rDel.DeleteByElementIds(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
     return result
 
 def DeleteLinePatternStartsWith(doc, startsWith):
@@ -153,7 +153,7 @@ def DeleteLinePatternStartsWith(doc, startsWith):
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = com.DeleteByElementIds(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
+    result = rDel.DeleteByElementIds(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
     return result
 
 def DeleteLinePatternsWithout(doc, contains):
@@ -178,7 +178,7 @@ def DeleteLinePatternsWithout(doc, contains):
     ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
     idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
     deleteIds = list(set(ids)-set(idsContain))
-    result = com.DeleteByElementIds(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
+    result = rDel.DeleteByElementIds(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
 def GetAllLinePatterns(doc):
@@ -238,7 +238,7 @@ def DeleteDuplicatLinePatterNames(doc):
         if(len(value) > 1):
             # keep the first one (original)
             value.remove(value[0])
-            flagDelete = com.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
+            flagDelete = rDel.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
             returnValue.Update (flagDelete)
     return returnValue
 
@@ -264,7 +264,7 @@ def DeleteLineStylesStartsWith(doc, startsWith):
 
     lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
     ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = com.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
+    result = rDel.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
     return result
 
 def GetAllLineStyleIds(doc):

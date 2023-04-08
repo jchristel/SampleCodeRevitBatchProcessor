@@ -33,7 +33,7 @@ This will delete all subcategories which are user created ( id greater then 0) a
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.APISamples.Categories import RevitCategoryData as rCatData
 
@@ -77,7 +77,7 @@ def PurgeUnused(doc, processor):
             idsToDelete.append(rdb.ElementId(rootFam[rCatData.SUB_CATEGORY_ID]))
     # delete any subcategories found
     if(len(idsToDelete) > 0):
-        resultDelete = com.DeleteByElementIds(doc, idsToDelete, 'Deleting unused sub categories.', 'Subcategories')
+        resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused sub categories.', 'Subcategories')
         returnValue.Update(resultDelete)
     else:
         returnValue.UpdateSep(True, 'No unused categories found. Nothing was deleted.')

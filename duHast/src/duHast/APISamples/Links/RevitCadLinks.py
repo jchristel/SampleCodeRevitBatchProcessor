@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to CAD links.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitTransaction as rTran, RevitCommonAPI as com
+from duHast.APISamples.Common import RevitTransaction as rTran, RevitDeleteElements as rDel
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links.Utility.LinkPath import GetLinkPath
 
@@ -149,7 +149,7 @@ def DeleteCADLinks(doc):
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance):
         ids.append(p.Id)
     # delete all links at once
-    returnValue = com.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
+    returnValue = rDel.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
     return returnValue
 
 

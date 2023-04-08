@@ -30,7 +30,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links.Utility.LinkPath import GetLinkPath
 
@@ -105,7 +105,7 @@ def DeleteRevitLinks(doc):
     for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     # delete all links at once
-    returnValue = com.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
+    returnValue = rDel.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
     return returnValue
 
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):

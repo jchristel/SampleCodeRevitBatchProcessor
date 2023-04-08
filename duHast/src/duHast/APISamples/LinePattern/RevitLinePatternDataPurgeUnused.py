@@ -33,7 +33,7 @@ This will delete all line patterns which are not used by any element in the fami
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.APISamples.LinePattern import RevitLinePatternData as rLinePatData
 
@@ -77,7 +77,7 @@ def PurgeUnused(doc, processor):
             idsToDelete.append(rdb.ElementId(rootFam[rLinePatData.PATTERN_ID]))
     # delete any subcategories found
     if(len(idsToDelete) > 0):
-        resultDelete = com.DeleteByElementIds(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
+        resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
         returnValue.Update(resultDelete)
     else:
         returnValue.UpdateSep(True, 'No unused line patterns found. Nothing was deleted.')

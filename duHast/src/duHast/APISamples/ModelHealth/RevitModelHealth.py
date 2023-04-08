@@ -31,6 +31,8 @@ and or data can be exported to text files which can be used to visualize key met
 #
 
 import clr
+
+import duHast.src.duHast.APISamples.Views.RevitViewSheets
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
@@ -43,13 +45,15 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitDesignSetOptions as rDoS
 from duHast.APISamples.Warnings import RevitWarnings as rWarn
 from duHast.APISamples.Common import RevitWorksets as rWork
+from duHast.APISamples.Views import RevitViewSheets as rViewSheets
 from duHast.APISamples.Views import RevitViews as rViews
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rLsp
-from duHast.APISamples import RevitLinks as rLinks
+from duHast.APISamples.Links import RevitCadLinks as rCadLink
+from duHast.APISamples.Links import RevitImageLinks as rImageLink
 from duHast.APISamples.ModelHealth import RevitModelHealthReportFileNames as rFns
 from duHast.APISamples.Family import RevitFamilyUtils as rFams
 from duHast.APISamples.Common import RevitGroups as rGrp
-from duHast.APISamples import RevitRooms as rRooms
+from duHast.APISamples.Rooms import RevitRooms as rRooms
 from duHast.APISamples.DetailItems import RevitDetailItems as rDetItems
 from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 
@@ -267,7 +271,7 @@ def GetNumberOfSheets(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViews.GetSheetsInModel(doc))
+        number = len(rViewSheets.GetSheetsInModel(doc))
     except:
         pass
     return number
@@ -389,7 +393,7 @@ def GetNumberOfCADImports(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinks.GetCADTypeImportsOnly(doc))
+        number = len(rCadLink.GetCADTypeImportsOnly(doc))
     except:
         pass
     return number
@@ -407,7 +411,7 @@ def GetNumberOfCADLinksToModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinks.GetAllCADLinkTypeInModelOnly(doc))
+        number = len(rCadLink.GetAllCADLinkTypeInModelOnly(doc))
     except:
         pass
     return number
@@ -425,7 +429,7 @@ def GetNumberOfCADLinksToView(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinks.GetAllCADLinkTypeByViewOnly(doc))
+        number = len(rCadLink.GetAllCADLinkTypeByViewOnly(doc))
     except:
         pass
     return number
@@ -445,7 +449,7 @@ def GetNumberOfImageImports(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinks.GetAllImageLinkTypeImportedInModel(doc))
+        number = len(rImageLink.GetAllImageLinkTypeImportedInModel(doc))
     except:
         pass
     return number
@@ -463,7 +467,7 @@ def GetNumberOfImageLinks(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinks.GetAllImageLinkTypeLinkedInModel(doc))
+        number = len(rImageLink.GetAllImageLinkTypeLinkedInModel(doc))
     except:
         pass
     return number

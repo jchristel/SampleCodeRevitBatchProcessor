@@ -56,6 +56,9 @@ from duHast.APISamples.Common import RevitGroups as rGrp
 
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
+from duHast.APISamples.Views import RevitViewFilters as rViewFilter
+from duHast.APISamples.Views import RevitViewsPurgeUnused as rViewPurge
+from duHast.APISamples.Views import RevitViewTemplates as rViewTemp
 
 from duHast.APISamples.Walls import RevitWalls as rWall
 from duHast.APISamples.Walls import PurgeUnusedWallTypes as rWallPurge
@@ -186,9 +189,9 @@ PURGE_ACTIONS = []
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Model Group(s)', rGrp.GetUnplacedModelGroupIds, 'Model Group(s)', 'Model Group(s)', rGrp.GetModelGroupIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Detail Group(s)', rGrp.GetUnplacedDetailGroupIds, 'Detail Group(s)', 'Detail Group(s)', rGrp.GetDetailGroupIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Nested Detail Group(s)', rGrp.GetUnplacedNestedDetailGroupIds, 'Nested Detail Group(s)', 'Nested Detail Group(s)', rGrp.GetNestedDetailGroupIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rView.GetUnusedViewTypeIdsInModel, 'View Family Type(s)', 'View Family Type(s)', rView.GetViewTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rView.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rView.GetViewsTemplateIdsInInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rView.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rView.GetAllAvailableFilterIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rViewPurge.GetUnusedViewTypeIdsInModel, 'View Family Type(s)', 'View Family Type(s)', rView.GetViewTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rViewTemp.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rViewTemp.GetViewsTemplateIdsInInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rViewFilter.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rViewFilter.GetAllAvailableFilterIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Image Links', rLinkPurge.GetAllUnusedImageTypeIdsInModel, 'Images(s)', 'Images(s)', rImageLink.GetImagesTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWallPurge.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rStackedWall.GetAllStackedWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWallPurge.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
@@ -226,9 +229,9 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Types', rLevelPurge.Get
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Level Head Types', rLevelPurge.GetUnusedLevelHeadFamiliesForPurge, 'Level Head family Type(s)', 'Level Head family Type(s)', rLev.GetAllLevelHeadFamilyTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Types', rGridPurge.GetUnusedGridTypesForPurge, 'Grid Type(s)', 'Grid Type(s)', rGrid.GetAllGridTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Head Types', rGridPurge.GetUnusedGridHeadFamiliesForPurge, 'Grid Head family Type(s)', 'Grid Head family Type(s)', rGrid.GetAllGridHeadFamilyTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Types', rViewRef.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rViewRef.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewRef.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Types', rViewPurge.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rViewPurge.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewPurge.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDetailItemPurge.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDetailItemPurge.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDetailItemPurge.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))

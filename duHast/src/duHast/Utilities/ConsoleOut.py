@@ -27,7 +27,7 @@ A function used to output messages to a console.
 #
 #
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import DateStamps as dateStamp
 
 def Output(message = ''):
     '''
@@ -49,7 +49,7 @@ def Output(message = ''):
 
     # get the current time string
     # 2022-08-09 19:09:19 :
-    timestamp = util.GetDateStamp('%y-%m-%d %H_%M_%S : ')
+    timestamp = dateStamp.GetDateStamp('%y-%m-%d %H_%M_%S : ')
 
     # check for multi row messages
     if('/n' in message):

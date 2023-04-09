@@ -28,7 +28,8 @@ Helper functions relating to system processes.
 import subprocess
 import os, signal
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import DateStamps as dateStamp
+
 
 def GetAllRunningProcesses():
     '''
@@ -167,7 +168,7 @@ def WriteOutProcessData(directoryPath, processList, fileName, fileExtension):
 
     status = True
     # setup file name
-    filePath = directoryPath + '\\' + util.GetFileDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension
+    filePath = directoryPath + '\\' + dateStamp.GetFileDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension
     try:
         f = open(filePath, "w")
         for p in processList:

@@ -26,11 +26,10 @@ Utility functions writing revit geometry data to file.
 #
 #
 
-from duHast.Utilities import Utility as util
 from duHast.APISamples.Ceilings.Export import ToDataCeiling as rCeil
 from duHast.APISamples.Rooms.Export import ToDataRoom as rRoom
 from duHast.Utilities import Result as res
-
+from duHast.Utilities import DateStamps as dateStamp
 from duHast.DataSamples.Objects import DataCeiling as dc
 from duHast.DataSamples.Objects import DataRoom as dr
 
@@ -59,7 +58,7 @@ def get_data_from_model(doc):
 
     data_json = {
         "file name": doc.Title,
-        "date processed": util.GetDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
+        "date processed": dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
         dr.DataRoom.dataType: allRoomData,
         dc.DataCeiling.dataType: allCeilingData
     }

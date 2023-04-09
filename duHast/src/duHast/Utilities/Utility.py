@@ -4,7 +4,6 @@ This module contains a number of helper functions relating to:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - file system tasks (copy, create, delete...)
-- date stamps (with varies formatting options)
 - write data ( text files )
 
 '''
@@ -36,7 +35,6 @@ This module contains a number of helper functions relating to:
 #from numpy import empty
 from System.IO import Path
 import glob
-import datetime
 import os
 import shutil
 import os.path
@@ -46,73 +44,13 @@ import csv
 import collections
 
 import clr
+
+from duHast.Utilities.DateStamps import GetFileDateStamp
+
+
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
-
-#: default file stamp date format using underscores as delimiter: 21_03_01
-FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
-#: file stamp date format using spaces as delimiter: 21 03 01
-FILE_DATE_STAMP_YYMMDD_SPACE = '%y %m %d'
-#: file stamp date format using spaces as delimiter: 2021 03 01
-FILE_DATE_STAMP_YYYYMMDD_SPACE = '%Y %m %d'
-#: file stamp date format using underscores as delimiter: 2021_03_01
-FILE_DATE_STAMP_YYYY_MM_DD = '%Y_%m_%d'
-#: file stamp date time format using underscores as delimiter: 2021_03_01_18_59_59
-FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
-
-#: time stamp using colons: 18:59:59
-TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
-
-def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
-    '''
-    Returns a date stamp formatted suitable for a file name.
-
-    :param format: The date stamp format, defaults to FILE_DATE_STAMP_YY_MM_DD
-    :type format: str, optional
-    
-    :return: datetime.now() string formatted using supplied format string
-    :rtype: str
-    '''
-
-    d = datetime.datetime.now()
-    return d.strftime(format)
-
-#: folder date format: no delimiter 210301
-FOLDER_DATE_STAMP_YYMMDD = '%y%m%d'
-#: folder date format: no delimiter 20210301
-FOLDER_DATE_STAMP_YYYYMMDD = '%Y%m%d'
-#: folder date format: no delimiter 2021
-FOLDER_DATE_STAMP_YYYY = '%Y'
-
-def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
-    '''
-    Returns a date stamp formatted suitable for a folder name.
-
-    :param format: The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD
-    :type format: str, optional
-    
-    :return: datetime.now() string formatted using supplied format string
-    :rtype: str
-    '''
-
-    d = datetime.datetime.now()
-    return d.strftime(format)
-
-# get the date stamp in provided format
-def GetDateStamp(format):
-    '''
-    Returns a date stamp formatted using past in format string.
-
-    :param format: The date stamp format
-    :type format: str
-
-    :return: datetime.now() string formatted using supplied format string
-    :rtype: str
-    '''
-
-    d = datetime.datetime.now()
-    return d.strftime(format)
 
 def GetLocalAppDataPath():
     '''

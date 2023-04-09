@@ -35,6 +35,8 @@ import clr
 
 
 
+
+
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
@@ -60,6 +62,7 @@ from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples.Rooms import RevitRooms as rRooms
 from duHast.APISamples.DetailItems import RevitDetailItems as rDetItems
 from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
+from duHast.Utilities import DateStamps as dateStamp
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
@@ -166,7 +169,7 @@ def GetCurrentDate(doc):
     :rtype: str
 
     '''
-    return util.GetFileDateStamp(util.FILE_DATE_STAMP_YYYY_MM_DD)
+    return dateStamp.GetFileDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD)
 
 def GetWorksetNumber(doc):
     '''
@@ -778,7 +781,7 @@ def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
         parameterValue = PARAM_ACTIONS[key].getData(doc)
-        fileName = util.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
+        fileName = dateStamp.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
         resExport = res.Result()
         try:
             util.writeReportData(
@@ -788,8 +791,8 @@ def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
                     [
                         revitFileName, 
                         key, 
-                        util.GetDateStamp(util.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
-                        util.GetDateStamp(util.TIME_STAMP_HHMMSEC_COLON), 
+                        dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
+                        dateStamp.GetDateStamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
                         _castParameterValue(parameterValue)
                         ]
                     ]

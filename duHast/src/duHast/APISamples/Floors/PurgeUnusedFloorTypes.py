@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit floo
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Floors import RevitFloors as rFloor
 from duHast.APISamples.Floors.Utility import RevitFloorsTypeSorting as rFloorTypeSort
 
@@ -44,7 +44,7 @@ def GetUsedFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rFloor.GetAllFloorTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rFloor.GetAllFloorTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -87,7 +87,7 @@ def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, rFloor.GetAllFloorTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rFloor.GetAllFloorTypeIdsInModelByClass, 0)
     # make sure there is at least on Floor type per system family left in model
     floorTypes = rFloorTypeSort.SortFloorTypesByFamilyName(doc)
     for key, value in floorTypes.items():
@@ -109,7 +109,7 @@ def GetUsedInPlaceFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 1)
     return ids
 
 
@@ -124,7 +124,7 @@ def GetUnusedInPlaceFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 0)
     return ids
 
 

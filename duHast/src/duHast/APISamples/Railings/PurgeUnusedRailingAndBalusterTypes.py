@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit rail
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Railings.RevitBalusters import GetAllBalusterSymbolIds, GetBalusterTypesFromRailings
 from duHast.APISamples.Railings.RevitRailings import GetAllInPlaceRailingTypeIdsInModel, GetAllRailingTypeIdsInModelByClassAndCategory
 from duHast.APISamples.Railings.Utility.RevitRailingFamilyNames import BUILTIN_RAILING_TYPE_FAMILY_NAMES
@@ -45,7 +45,7 @@ def GetUsedRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
 
@@ -90,7 +90,7 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
     RailingTypes = SortRailingTypesByFamilyName(doc)
     for key, value in RailingTypes.items():
@@ -111,7 +111,7 @@ def GetUsedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
 
@@ -124,7 +124,7 @@ def GetUnusedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
 
@@ -153,7 +153,7 @@ def GetUsedBalusterTypeIds(doc):
     '''
 
     ids = []
-    idsUsedInModel = com.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
+    idsUsedInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
     idsUsedInRailings = GetBalusterTypesFromRailings(doc)
     ids = MergeIntoUniqueList(ids, idsUsedInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInRailings)

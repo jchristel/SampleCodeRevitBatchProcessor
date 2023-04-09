@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit stai
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Stairs import RevitStairs as rStair
 from duHast.APISamples.Stairs.Utility import RevitStairsTypeSorting as rStairSort
@@ -67,7 +67,7 @@ def GetUsedStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc,  rStair.GetAllStairTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc,  rStair.GetAllStairTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -109,7 +109,7 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, rStair.GetAllStairTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllStairTypeIdsInModelByClass, 0)
     # make sure there is at least on Stair type per system family left in model
     StairTypes =  rStairSort.SortStairTypesByFamilyName(doc)
     for key, value in StairTypes.items():
@@ -360,7 +360,7 @@ def GetUsedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 1)
     return ids
 
 
@@ -373,7 +373,7 @@ def GetUnusedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 0)
     return ids
 
 

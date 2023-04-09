@@ -29,17 +29,17 @@ This module contains a number of helper functions relating to purging Revit grid
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
-from duHast.APISamples.Common import RevitCommonAPI as com, RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils, RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Grids import RevitGrids as rGrids 
 
 def GetUnusedGridTypesForPurge(doc):
     ''' this will return all ids of unused grid types in the model to be purged'''
-    return com.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 0, 8)
+    return rPurgeUtils.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 0, 8)
 
 
 def GetUnusedGridHeadFamilies(doc):
     ''' this will return all ids of unused family symbols (types) of grid head families'''
-    usedTypes = com.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 1, 8)
+    usedTypes = rPurgeUtils.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 1, 8)
     headsInUseIds = []
     for Id in usedTypes:
         type = doc.GetElement(Id)

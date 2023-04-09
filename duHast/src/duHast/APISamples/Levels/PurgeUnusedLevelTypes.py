@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to purging Revit leve
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
-from duHast.APISamples.Common import RevitCommonAPI as com, RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils, RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Levels import RevitLevels as rLevel
 
 def GetUnusedLevelTypesForPurge(doc):
@@ -43,7 +43,7 @@ def GetUnusedLevelTypesForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    return com.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 0, 6)
+    return rPurgeUtils.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 0, 6)
 
 def GetUnusedLevelHeadFamilies(doc):
     '''
@@ -55,7 +55,7 @@ def GetUnusedLevelHeadFamilies(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedTypes = com.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 1, 6)
+    usedTypes = rPurgeUtils.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
     for lId in usedTypes:

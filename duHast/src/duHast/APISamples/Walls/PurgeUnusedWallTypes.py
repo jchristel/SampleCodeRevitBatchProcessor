@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit wall
 #
 #
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Walls import RevitWalls as rWall
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
@@ -46,7 +46,7 @@ def GetUsedStackedWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 1)
     return ids
 
 
@@ -61,7 +61,7 @@ def GetUsedInPlaceWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 1)
     return ids
 
 
@@ -76,7 +76,7 @@ def GetUsedCurtainWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 1)
     return ids
 
 
@@ -91,7 +91,7 @@ def GetUsedBasicWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 1)
     return ids
 
 # -------------------- purge unused types --------------------------
@@ -109,7 +109,7 @@ def GetUnUsedBasicWallTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rWall.GetAllBasicWallTypeIdsInModel, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
     # DOH! GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
     availableTypeCount = len(rWall.GetAllBasicWallTypeIdsInModel(doc).ToList())
@@ -131,7 +131,7 @@ def GetUnUsedCurtainWallTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWall.GetAllCurtainWallTypeIdsInModel, 0)
     availableTypeCount = len(rCurtainWall.GetAllCurtainWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)
@@ -149,7 +149,7 @@ def GetUnusedInPlaceWallTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rWall.GetAllInPlaceWallTypeIdsInModel, 0)
     return ids
 
 
@@ -182,7 +182,7 @@ def GetUnusedStackedWallTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStackWall.GetAllStackedWallTypeIdsInModel, 0)
     availableTypeCount = len(rStackWall.GetAllStackedWallTypeIdsInModel(doc).ToList())
     if len(ids) == availableTypeCount:
         ids.pop(0)

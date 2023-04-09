@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to purging Revit deta
 
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.DetailItems import RevitDetailItems as rDetail
 from duHast.APISamples.DetailItems.Utility import RevitDetailItemsTypeSorting as rDetailTypeSort
 
@@ -44,7 +44,7 @@ def GetUsedRepeatingDetailTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
     return ids
 
 
@@ -58,7 +58,7 @@ def GetUnUsedRepeatingDetailTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     return ids
 
 
@@ -74,7 +74,7 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
     allIds = rDetail.GetAllRepeatingDetailTypeIdsAvailable(doc)
     # need to keep at least one
     if(len(allIds) == len(ids)):
@@ -103,7 +103,7 @@ def GetAllUsedDetailSymbolIds(doc):
         # get detail types used in repeating details only
         idsOfDetailsUsedRepeatDetails = rDetail.GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet)
         # get detail types used in model
-        idsUsedInModel = com.GetUsedUnusedTypeIds(doc, rDetail.GetAllDetailSymbolIdsAvailable, 1)
+        idsUsedInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllDetailSymbolIdsAvailable, 1)
         print('ids used in model ' + str(len(idsUsedInModel)))
         # built overall ids list
         for id in idsOfDetailsUsedRepeatDetails:

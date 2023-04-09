@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit ramp
 #
 #
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Ramps.Utility.RevitRampsFamilyNames import BUILTIN_RAMP_TYPE_FAMILY_NAMES
 from duHast.APISamples.Ramps.Utility.RevitRampsTypeSorting import SortRampTypesByFamilyName
 from duHast.APISamples.Ramps.RevitRamps import GetAllRampTypeIdsInModelByCategory
@@ -42,7 +42,7 @@ def GetUsedRampTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
     return ids
 
 
@@ -83,7 +83,7 @@ def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
     # make sure there is at least on Ramp type per system family left in model
     RampTypes = SortRampTypesByFamilyName(doc)
     for key, value in RampTypes.items():

@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit curt
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Walls import RevitCurtainWallElements as rCurtainWallElem
 
 def GetUsedCurtainWallElementTypeIds(doc):
@@ -43,7 +43,7 @@ def GetUsedCurtainWallElementTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
     return ids
 
 def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
@@ -77,7 +77,7 @@ def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols, 0)
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
     return ids
 
@@ -93,7 +93,7 @@ def GetUsedCurtainWallSymbolIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 1)
     return ids
 
 def GetUnusedCurtainWallSymbolIds(doc):
@@ -108,7 +108,7 @@ def GetUnusedCurtainWallSymbolIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 0)
     return ids
 
 def GetUnusedICurtainWallSymbolIdsForPurge(doc):

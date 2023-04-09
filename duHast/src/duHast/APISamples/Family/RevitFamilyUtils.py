@@ -37,7 +37,7 @@ from System.Collections.Generic import List
 
 # import common library
 # utility functions for most commonly used Revit API tasks
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 # utilities
@@ -646,7 +646,7 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
     ids = []
     for typeId in allTypeIds:
         type = doc.GetElement(typeId)
-        hasDependents = com.HasDependentElements(doc, type)
+        hasDependents = rPurgeUtils.HasDependentElements(doc, type)
         if(hasDependents == useType):
             ids.append(typeId)
     return ids

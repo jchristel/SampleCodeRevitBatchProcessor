@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit ceil
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Ceilings import RevitCeilings as rCeiling
 from duHast.APISamples.Ceilings.Utility import RevitCeilingsTypeSorting as rCeilingTypeSort
 
@@ -60,7 +60,7 @@ def GetUsedCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCeiling.GetAllCeilingTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllCeilingTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -102,7 +102,7 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc,  rCeiling.GetAllCeilingTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc,  rCeiling.GetAllCeilingTypeIdsInModelByClass, 0)
     # make sure there is at least on ceiling type per system family left in model
     ceilingTypes = rCeilingTypeSort.SortCeilingTypesByFamilyName(doc)
     for key, value in ceilingTypes.items():
@@ -123,7 +123,7 @@ def GetUsedInPlaceCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 1)
     return ids
 
 
@@ -137,7 +137,7 @@ def GetUnusedInPlaceCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 0)
     return ids
 
 

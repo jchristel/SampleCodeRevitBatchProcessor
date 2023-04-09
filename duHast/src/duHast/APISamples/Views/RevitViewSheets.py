@@ -27,6 +27,7 @@ This module contains a number of helper functions relating to Revit view sheets.
 #
 
 import Autodesk.Revit.DB as rdb
+from duHast.Utilities import Utility as util
 
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
@@ -72,3 +73,59 @@ def GetSheetsInModel(doc):
     '''
 
     return _get_view_types(doc, rdb.ViewType.DrawingSheet)
+
+def GetSheetRevByNumber(
+    doc,
+    sheetNumber # type: str
+    ):
+
+    '''
+    Returns the revision of a sheet identified by its number. Default value is '-'.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param sheetNumber: The number of the sheet of which the revision is to be returned.
+    :type sheetNumber: str
+    :raise: Any exception will need to be managed by the function caller.
+    :return:
+        The sheets current revision value.  
+        If no matching sheet is found, '-' is returned.
+    :rtype: str
+    '''
+
+    revValue = '-'
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.SheetNumber == sheetNumber)
+    results = collector.ToList()
+    if (len(results)>0):
+        sheet = results[0]
+        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        revValue = revP.AsString()
+    return revValue
+
+
+def GetSheetRevByName(
+    doc,
+    sheetName # type: str
+    ):
+
+    '''
+    Returns the revision of a sheet identified by its name. Default value is '-'.
+    Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document 
+    :param sheetName: The name of the sheet of which the revision is to be returned.
+    :type sheetName: str
+    :raise: Any exception will need to be managed by the function caller.
+    :return:
+        The sheets current revision value.  
+        If no matching sheet is found, '-' is returned.
+    :rtype: str
+    '''
+
+    revValue = '-'
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.Name == sheetName)
+    results = collector.ToList()
+    if (len(results)>0):
+        sheet = results[0]
+        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        revValue = util.PadSingleDigitNumericString(revP.AsString())
+    return revValue

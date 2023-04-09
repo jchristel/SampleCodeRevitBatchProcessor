@@ -30,7 +30,7 @@ This module contains a number of helper functions relating to purging unused fam
 # -------------------------------- purge loaded families which can be used in system types --------------------------------
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 
 from duHast.APISamples.MEP_Systems.RevitPipes import GetSymbolIdsForPipeTypesInModel, GetSymbolIdsUsedInPipeTypes
 from duHast.APISamples.MEP_Systems.RevitConduits import GetSymbolIdsForConduitTypesInModel, GetSymbolIdsUsedInConduitTypes
@@ -54,7 +54,7 @@ def GetUsedDuctAndFlexDuctSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
+    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
     idsUsedInFlexTypes = GetSymbolIdsUsedInFlexDuctTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
@@ -115,7 +115,7 @@ def GetUsedCableTraySymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
+    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInCableTrayTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)
@@ -170,7 +170,7 @@ def GetUsedConduitSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForConduitTypesInModel, 1)
+    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForConduitTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInConduitTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)
@@ -226,7 +226,7 @@ def GetUsedPipeSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = com.GetUsedUnusedTypeIds(doc, GetSymbolIdsForPipeTypesInModel, 1)
+    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForPipeTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInPipeTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)

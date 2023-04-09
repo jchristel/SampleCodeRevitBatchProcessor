@@ -42,7 +42,8 @@ from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 from duHast.APISamples.Annotation import RevitIndependentTags as rIndyTags
 from duHast.APISamples.Annotation import RevitSpotDimensions as rSpots
 from duHast.APISamples.Annotation import RevitStairPath as rStairPath
-
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
+ 
 
 # ------------------ used annotation types  ------------------
 
@@ -271,7 +272,7 @@ def GetUsedGenericAnnotationTypeIds(doc):
     # get ids from symbols used in spots
     idsSpots = rAnno.GetSymbolIdsFromSpotTypes(doc)
     # get detail types used in model
-    idsUsedInModel = com.GetUsedUnusedTypeIds(doc, rGenericAnno.GetAllGenericAnnotationTypeIdsByCategory, 1)
+    idsUsedInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, rGenericAnno.GetAllGenericAnnotationTypeIdsByCategory, 1)
     # build overall list
     for id in idsUsedInModel:
         ids.append(id)

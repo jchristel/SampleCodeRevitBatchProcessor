@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit buil
 #
 #
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.BuildingPads.Utility import RevitBuildingPadTypeSorting as rBuildingPadSort
 from duHast.APISamples.BuildingPads import RevitBuildingPads as rBuildingPads
 
@@ -49,7 +49,7 @@ def GetUsedBuildingPadTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -87,7 +87,7 @@ def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByClass, 0)
     # make sure there is at least on BuildingPad type per system family left in model
     BuildingPadTypes = rBuildingPadSort.SortBuildingPadTypesByFamilyName(doc)
     for key, value in BuildingPadTypes.items():

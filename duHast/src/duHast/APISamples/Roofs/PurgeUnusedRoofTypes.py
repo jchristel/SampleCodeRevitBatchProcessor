@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit roof
 #
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Roofs.RevitRoofs import GetAllInPlaceRoofTypeIdsInModel, GetAllRoofTypeIdsInModelByClass, GetAllRoofTypeIdsInModelByCategory
 from duHast.APISamples.Roofs.Utility.RevitRoofsFamilyNames import BUILTIN_ROOF_TYPE_FAMILY_NAMES
 from duHast.APISamples.Roofs.Utility.RevitRoofsTypeSorting import SortRoofTypesByFamilyName
@@ -43,7 +43,7 @@ def GetUsedRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -86,7 +86,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
     # make sure there is at least on Roof type per system family left in model
     RoofTypes = SortRoofTypesByFamilyName(doc)
     for key, value in RoofTypes.items():
@@ -107,7 +107,7 @@ def GetUsedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
     return ids
 
 
@@ -121,7 +121,7 @@ def GetUnusedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = com.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
+    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
     return ids
 
 

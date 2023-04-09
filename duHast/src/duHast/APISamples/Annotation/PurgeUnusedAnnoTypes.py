@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 
 from duHast.APISamples.Annotation import RevitGenericAnnotation as rGenericAnno
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Annotation import RevitAnnotation as rAnno
@@ -253,7 +253,7 @@ def GetUnusedSymbolIdsFromSpotTypesToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedSymbolIdsFromSpotTypes)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedSymbolIdsFromSpotTypes)
     return ids
 
 
@@ -312,5 +312,5 @@ def GetUnusedGenericAnnotationIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGenericAnnotationTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGenericAnnotationTypeIds)
     return ids

@@ -50,7 +50,8 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
 from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFamU
+from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 
 from duHast.APISamples.Common import RevitGroups as rGrp
 
@@ -126,6 +127,7 @@ import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
 from duHast.APISamples.Common import RevitDeleteElements as rDel
+
 
 
 
@@ -241,7 +243,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.GetAl
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnnoPurge.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rArrow.GetArrowTypesIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rAnnoPurge.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnnoPurge.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnnoSpot.GetAllSpotElevationSymbolIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamU.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamU.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamPurge.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamUPurge.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 
 #: indentation for names of items purged

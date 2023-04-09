@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to purging Revit wall
 
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Walls import RevitWalls as rWall
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
 from duHast.APISamples.Walls import RevitStackedWalls as rStackWall
 
@@ -165,7 +165,7 @@ def GetUnusedInPlaceWallIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceWallTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceWallTypeIds)
     return ids
 
 

@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit rail
 #
 #
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Railings.RevitBalusters import GetAllBalusterSymbolIds, GetBalusterTypesFromRailings
 from duHast.APISamples.Railings.RevitRailings import GetAllInPlaceRailingTypeIdsInModel, GetAllRailingTypeIdsInModelByClassAndCategory
@@ -138,7 +138,7 @@ def GetUnusedInPlaceRailingIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
     return ids
 
 
@@ -190,5 +190,5 @@ def GetUnUsedBalusterTypeIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
     return ids

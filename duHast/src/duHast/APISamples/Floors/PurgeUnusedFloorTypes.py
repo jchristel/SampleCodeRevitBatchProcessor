@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit floo
 #
 #
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Floors import RevitFloors as rFloor
 from duHast.APISamples.Floors.Utility import RevitFloorsTypeSorting as rFloorTypeSort
@@ -140,5 +140,5 @@ def GetUnusedInPlaceFloorIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceFloorTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceFloorTypeIds)
     return ids

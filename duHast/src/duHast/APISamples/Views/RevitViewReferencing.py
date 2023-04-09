@@ -35,7 +35,7 @@ from System.Collections.Generic import List
 
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples.Family import RevitFamilyUtils as rFamU
+from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
 from duHast.APISamples.Views.Utility import ViewTypes as rViewType
 
 # import Autodesk
@@ -386,7 +386,7 @@ def GetNestedFamilyMarkerNames(doc, usedIds):
             # open family
             try:
                 famDoc = doc.EditFamily(fam)
-                nestedFamCol = rFamU.GetAllLoadableFamilies(famDoc)
+                nestedFamCol = rFamUPurge.GetAllLoadableFamilies(famDoc)
                 for nFam in nestedFamCol:
                     if(nFam.Name not in names and nFam.Name != ''):
                         names.append(nFam.Name)        

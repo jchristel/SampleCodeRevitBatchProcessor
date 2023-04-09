@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to purging unused fam
 
 # -------------------------------- purge loaded families which can be used in system types --------------------------------
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 
 from duHast.APISamples.MEP_Systems.RevitPipes import GetSymbolIdsForPipeTypesInModel, GetSymbolIdsUsedInPipeTypes
@@ -99,7 +99,7 @@ def GetUnUsedDuctAndFlexDuctSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
     return ids
 
 
@@ -154,7 +154,7 @@ def GetUnUsedCableTraySymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedCableTraySymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedCableTraySymbolIds)
     return ids
 
 
@@ -209,7 +209,7 @@ def GetUnUsedConduitSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedConduitSymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedConduitSymbolIds)
     return ids
 
 
@@ -267,5 +267,5 @@ def GetUnUsedPipeSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedPipeSymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedPipeSymbolIds)
     return ids

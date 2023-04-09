@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to purging Revit deta
 #
 
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.DetailItems import RevitDetailItems as rDetail
 from duHast.APISamples.DetailItems.Utility import RevitDetailItemsTypeSorting as rDetailTypeSort
@@ -146,7 +146,7 @@ def GetAllUnUsedDetailSymbolIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
     return ids
 
 

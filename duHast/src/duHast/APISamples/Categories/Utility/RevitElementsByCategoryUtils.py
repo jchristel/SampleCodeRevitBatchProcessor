@@ -31,12 +31,12 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links import RevitCadLinksGeometry as rCadLinkGeo
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 from duHast.APISamples.Categories.RevitCategories import ELEMENTS_PARAS_SUB, GetMainSubCategories
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetCategoryGraphicStyleIds
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D
+from duHast.APISamples.Family import RevitFamilyElementUtils as rFamElementUtils
 
 
 def SortElementsByCategory(elements, elementDic):
@@ -99,10 +99,10 @@ def _sortAllElementsByCategory(doc):
 
     # get all elements in family
     dic = {}
-    elCurve = rFamUtils.GetAllCurveBasedElementsInFamily(doc)
-    elForms = rFamUtils.GetAllGenericFormsInFamily(doc)
-    elMText = rFamUtils.GetAllModelTextElementsInFamily(doc)
-    elRefPlanes = rFamUtils.GetAllReferencePlanesInFamily(doc)
+    elCurve = rFamElementUtils.GetAllCurveBasedElementsInFamily(doc)
+    elForms = rFamElementUtils.GetAllGenericFormsInFamily(doc)
+    elMText = rFamElementUtils.GetAllModelTextElementsInFamily(doc)
+    elRefPlanes = rFamElementUtils.GetAllReferencePlanesInFamily(doc)
     # get import Instance elements
     elImport = rCadLinkGeo.GetAllCADImportInstancesGeometry(doc)
     # build dictionary where key is category or graphic style id of  a category

@@ -30,9 +30,10 @@ Views purge unused utilities.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Family import RevitFamilyUtils as rFamU
+from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 
 
 # view reference purging
@@ -100,7 +101,7 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
             checkIds.append(aId)
     # check for any instances
     for id in checkIds:
-        instances = rFamU.GetFamilyInstancesBySymbolTypeId(doc, id).ToList()
+        instances = rFamUPurge.GetFamilyInstancesBySymbolTypeId(doc, id).ToList()
         if(len(instances) == 0):
             if(IsNestedFamilySymbol(doc, id, nestedFamilyNames) == False):
                 ids.append(id)
@@ -118,7 +119,7 @@ def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    return rFamU.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)
+    return rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)
 
 def GetUnusedViewReferenceTypeIdsForPurge(doc):
     '''

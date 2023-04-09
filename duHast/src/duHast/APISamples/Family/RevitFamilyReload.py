@@ -40,6 +40,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtil
 from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
 from duHast.APISamples.Family.RevitFamilyLoadOption import *
+from duHast.APISamples.Family.Utility import LoadableFamilyCategories as rFamLoadable
 
 import Autodesk.Revit.DB as rdb
 
@@ -142,10 +143,10 @@ def getFamilyIdsFromSymbols(doc):
 
     familyIds = []
     # build list of all categories we want families to be reloaded of
-    famCats = List[rdb.BuiltInCategory] (rFamUtil.catsLoadableTags)
-    famCats.AddRange(rFamUtil.catsLoadableTagsOther) 
-    famCats.AddRange(rFamUtil.catsLoadableThreeD)
-    famCats.AddRange(rFamUtil.catsLoadableThreeDOther)
+    famCats = List[rdb.BuiltInCategory] (rFamLoadable.catsLoadableTags)
+    famCats.AddRange(rFamLoadable.catsLoadableTagsOther) 
+    famCats.AddRange(rFamLoadable.catsLoadableThreeD)
+    famCats.AddRange(rFamLoadable.catsLoadableThreeDOther)
     # get all symbols in file
     famSymbols = rFamUtil.GetFamilySymbols(doc, famCats)
     # get families from symbols and filter out in place families

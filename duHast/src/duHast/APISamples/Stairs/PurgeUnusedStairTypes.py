@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit stai
 #
 #
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Stairs import RevitStairs as rStair
@@ -386,7 +386,7 @@ def GetUnusedInPlaceStairIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceStairTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceStairTypeIds)
     return ids
 
 

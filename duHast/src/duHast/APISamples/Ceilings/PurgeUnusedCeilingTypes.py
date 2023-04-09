@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit ceil
 #
 #
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Ceilings import RevitCeilings as rCeiling
 from duHast.APISamples.Ceilings.Utility import RevitCeilingsTypeSorting as rCeilingTypeSort
@@ -152,6 +152,6 @@ def GetUnusedInPlaceCeilingIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
     return ids
 

@@ -111,13 +111,13 @@ def SaveAsWorksharedFile(
 
 def SaveAsFamily(
     doc,
-    targetFolderPath, # type: str
-    currentFullFileName, # type: str
-    nameData, # type: List[List[str]]
-    fileExtension = '.rfa', # type: str
-    compactFile = False # type: bool
+    targetFolderPath, 
+    currentFullFileName, 
+    nameData, 
+    fileExtension = '.rfa',
+    compactFile = False 
     ):
-    # type: (...) -> res.Result
+   
     '''
     Saves a family file under new name in given location.
     :param doc: Current Revit family document.
@@ -170,12 +170,12 @@ def SaveAsFamily(
 
 def SaveAs(
     doc,
-    targetFolderPath, # type: str
-    currentFullFileName, # type: str
-    nameData, # type: List[List[str]]
-    fileExtension = '.rvt' # type: str
+    targetFolderPath, 
+    currentFullFileName, 
+    nameData, 
+    fileExtension = '.rvt' 
     ):
-    # type: (...) -> res.Result
+    
     '''
     Saves a project file under new name in given location.
     :param doc: Current Revit model document.

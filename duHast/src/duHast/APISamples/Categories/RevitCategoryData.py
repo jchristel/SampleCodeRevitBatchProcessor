@@ -29,6 +29,10 @@ Family category data class.
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Utility as util
 from duHast.APISamples.Categories import RevitCategories as rCat
+from duHast.APISamples.Categories.Utility import RevitCategoryPropertiesGetUtils as rCatPropGet
+from duHast.APISamples.Categories.Utility import RevitCategoryPropertyNames as rCatPropNames
+from duHast.APISamples.Categories.Utility import RevitElementsByCategoryUtils as rElementByCatUtils
+
 
 # import Autodesk
 #import Autodesk.Revit.DB as rdb
@@ -89,16 +93,16 @@ class CategoryData(IFamData.IFamilyData):
             CATEGORY_NAME : famCatName,
             SUB_CATEGORY_NAME : subCatName,
             SUB_CATEGORY_ID : subCatId,
-            rCat.CATEGORY_GRAPHIC_STYLE_3D : catGraStyleThreeD,
-            rCat.CATEGORY_GRAPHIC_STYLE_CUT : catGraStyleCut,
-            rCat.CATEGORY_GRAPHIC_STYLE_PROJECTION : catGraStylePro,
-            rCat.PROPERTY_MATERIAL_NAME : propMatName,
-            rCat.PROPERTY_MATERIAL_ID : propMatId,
-            rCat.PROPERTY_LINE_WEIGHT_CUT_NAME : propLineWeightCutName,
-            rCat.PROPERTY_LINE_WEIGHT_PROJECTION_NAME : propLineWeightProjectionName,
-            rCat.PROPERTY_LINE_COLOUR_RED_NAME : propLineColRed,
-            rCat.PROPERTY_LINE_COLOUR_GREEN_NAME : propLineColGreen,
-            rCat.PROPERTY_LINE_COLOUR_BLUE_NAME : propLineColBlue
+            rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D : catGraStyleThreeD,
+            rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT : catGraStyleCut,
+            rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION : catGraStylePro,
+            rCatPropNames.PROPERTY_MATERIAL_NAME : propMatName,
+            rCatPropNames.PROPERTY_MATERIAL_ID : propMatId,
+            rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME : propLineWeightCutName,
+            rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME : propLineWeightProjectionName,
+            rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME : propLineColRed,
+            rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME : propLineColGreen,
+            rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME : propLineColBlue
             }
 
         self.data.append(dic)
@@ -167,9 +171,9 @@ class CategoryData(IFamData.IFamilyData):
         # get usage of each main sub category
         for key,subCat in mainSubCats.items():
             # get elements using category
-            elementDic = rCat.GetElementsByCategory(doc, subCat)
+            elementDic = rElementByCatUtils.GetElementsByCategory(doc, subCat)
             # get category property
-            catProps = rCat.GetCategoryProperties(subCat, doc)
+            catProps = rCatPropGet.GetCategoryProperties(subCat, doc)
             # add element counter for 3D, Cut, Elevation style
             useCounter = 0
             for key in elementDic:
@@ -214,9 +218,9 @@ class CategoryData(IFamData.IFamilyData):
             elementDic = {}
             if(mainCatName == 'Imports in Families' or mainCatName == 'Reference Planes'):
                 # get elements using category
-                elementDic = rCat.GetElementsByCategory(doc, subCat)
+                elementDic = rElementByCatUtils.GetElementsByCategory(doc, subCat)
             # get category property
-            catProps = rCat.GetCategoryProperties(subCat, doc)
+            catProps = rCatPropGet.GetCategoryProperties(subCat, doc)
             # add element counter for 3D, Cut, Elevation style
             useCounter = 0
             for key in elementDic:

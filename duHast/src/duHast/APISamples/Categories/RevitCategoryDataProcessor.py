@@ -27,10 +27,10 @@ Family category data processor class.
 #
 
 from duHast.APISamples.Family.Reporting.IFamilyProcessor import IFamilyProcessor
-from duHast.APISamples.Categories import RevitCategories as rCat
 from duHast.APISamples.Categories import RevitCategoryData as rCatData
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Result as res
+from duHast.APISamples.Categories.Utility import RevitCategoryPropertyNames as rCatPropNames
 
 class CategoryProcessor(IFamilyProcessor):
 
@@ -51,16 +51,16 @@ class CategoryProcessor(IFamilyProcessor):
             rCatData.CATEGORY_NAME,
             rCatData.SUB_CATEGORY_NAME,
             rCatData.SUB_CATEGORY_ID,
-            keyPrefix + rCat.CATEGORY_GRAPHIC_STYLE_3D,
-            keyPrefix + rCat.CATEGORY_GRAPHIC_STYLE_CUT,
-            keyPrefix + rCat.CATEGORY_GRAPHIC_STYLE_PROJECTION,
-            keyPrefix + rCat.PROPERTY_MATERIAL_NAME,
-            keyPrefix + rCat.PROPERTY_MATERIAL_ID,
-            keyPrefix + rCat.PROPERTY_LINE_WEIGHT_CUT_NAME,
-            keyPrefix + rCat.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
-            keyPrefix + rCat.PROPERTY_LINE_COLOUR_RED_NAME,
-            keyPrefix + rCat.PROPERTY_LINE_COLOUR_GREEN_NAME,
-            keyPrefix + rCat.PROPERTY_LINE_COLOUR_BLUE_NAME
+            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D,
+            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT,
+            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION,
+            keyPrefix + rCatPropNames.PROPERTY_MATERIAL_NAME,
+            keyPrefix + rCatPropNames.PROPERTY_MATERIAL_ID,
+            keyPrefix + rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME,
+            keyPrefix + rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
+            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME,
+            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME,
+            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME
         ]
 
         # store data type  in base class
@@ -98,7 +98,7 @@ class CategoryProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         '''

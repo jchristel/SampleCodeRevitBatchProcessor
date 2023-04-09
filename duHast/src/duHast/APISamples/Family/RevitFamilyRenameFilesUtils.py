@@ -45,9 +45,9 @@ import System
 from collections import namedtuple
 from duHast.Utilities.timer import Timer
 
-from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+from duHast.Utilities import Result as res, FilesCSV as fileCSV, FilesGet as fileGet
 from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDUtils
+
 
 # tuples containing rename directive read from file
 renameDirective = namedtuple('renameDirective', 'name filePath category newName')
@@ -78,7 +78,7 @@ def _readRenameDirectives(files):
 
     renameDirectives = []
     for file in files:
-        rows = util.ReadCSVfile(file)
+        rows = fileCSV.ReadCSVfile(file)
         # read rows in tuples ignoring the header row
         for i in range (1, len(rows)):
             if (len(rows[i]) >= 4):
@@ -116,7 +116,7 @@ def GetRenameDirectives(directoryPath):
 
     returnValue = res.Result()
     # check whether csv files matching file name filter exist in directory path
-    renameDirectiveFiles = util.GetFilesFromDirectoryWalkerWithFilters(
+    renameDirectiveFiles = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
         _RENAME_DIRECTIVE_FILE_NAME_PREFIX,
         '',

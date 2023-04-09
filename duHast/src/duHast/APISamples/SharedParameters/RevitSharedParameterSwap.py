@@ -50,7 +50,7 @@ import System
 # import common library modules
 #from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesCSV as fileCSV
 from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as rSharedPAdd
 from duHast.APISamples.SharedParameters import RevitSharedParametersTuple as rSharedT
 from duHast.APISamples.Common import RevitParameterGrouping as rPG
@@ -79,7 +79,7 @@ def _loadSharedParameterDataFromFile(filePath):
     '''
 
     parameterMapper = {}
-    fileData = util.ReadCSVfile(filePath)
+    fileData = fileCSV.ReadCSVfile(filePath)
     for i in range (1, len(fileData)):
         row = fileData[i]
         if(len(row) == 5):

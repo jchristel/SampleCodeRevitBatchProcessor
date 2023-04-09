@@ -29,9 +29,8 @@ This module contains utility function(s) for material reports.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.Utilities import Utility as util
+from duHast.Utilities import Utility as util, FilesIO as util
 from duHast.APISamples.Materials.RevitMaterials import GetAllMaterials
-
 
 def GetMaterialReportData(doc, revitFilePath):
     '''

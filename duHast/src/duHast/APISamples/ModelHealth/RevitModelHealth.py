@@ -32,17 +32,11 @@ and or data can be exported to text files which can be used to visualize key met
 
 import clr
 
-
-
-
-
-
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
 import System
 
-from duHast.Utilities import Utility as util
 from duHast.APISamples.BIM360 import RevitBIM360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
@@ -62,7 +56,7 @@ from duHast.APISamples.Common import RevitGroups as rGrp
 from duHast.APISamples.Rooms import RevitRooms as rRooms
 from duHast.APISamples.DetailItems import RevitDetailItems as rDetItems
 from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
-from duHast.Utilities import DateStamps as dateStamp
+from duHast.Utilities import DateStamps as dateStamp, FilesIO as util, FilesTab as fileTab
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
@@ -784,7 +778,7 @@ def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
         fileName = dateStamp.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
         resExport = res.Result()
         try:
-            util.writeReportData(
+            fileTab.writeReportData(
                 outputDirectory + '\\' + fileName,
                 '',
                 [

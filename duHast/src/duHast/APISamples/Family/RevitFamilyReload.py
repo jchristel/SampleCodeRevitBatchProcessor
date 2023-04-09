@@ -35,8 +35,8 @@ from System.Collections.Generic import List
 
 # import common library
 from duHast.APISamples.Common import RevitDeleteElements as rDel
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
+
+from duHast.Utilities import Result as res , FilesGet as fileGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtil
 from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
 from duHast.APISamples.Family.RevitFamilyLoadOption import *
@@ -71,7 +71,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
     symbolIdsToBeDeleted = []   
     try:
         # build library
-        library = util.FilesAsDictionary(libraryLocation,'','','.rfa',includeSubFolders)
+        library = fileGet.FilesAsDictionary(libraryLocation,'','','.rfa',includeSubFolders)
         if(len(library) == 0):
             result.UpdateSep(False, 'Library is empty!')
             # get out...

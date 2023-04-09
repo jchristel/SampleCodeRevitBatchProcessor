@@ -28,7 +28,7 @@ Family base data class.
 #
 
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
-from duHast.Utilities import Utility as util
+from duHast.Utilities import DirectoryIO as dirIO, FilesIO as util
 from duHast.APISamples.Common import RevitFileIO as rFile
 from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 
@@ -116,9 +116,9 @@ class FamilyBaseData(IFamData.IFamilyData):
             # check if family needs saving out
             if(foundMatch == False):
                 # check session id folder exists
-                if(util.CreateTargetFolder(familyOutFolderPath, sessionId)):
+                if(dirIO.CreateTargetFolder(familyOutFolderPath, sessionId)):
                     # check category folder exists
-                    if(util.CreateTargetFolder(familyOutFolderPath + '\\' + sessionId, docCategory)):
+                    if(dirIO.CreateTargetFolder(familyOutFolderPath + '\\' + sessionId, docCategory)):
                         # save family out
                         rFile.SaveAsFamily(
                             doc,

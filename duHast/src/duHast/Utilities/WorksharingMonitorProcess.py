@@ -26,9 +26,10 @@ Helper functions relating to Revit worksharing monitor process.
 #
 #
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesCSV as filesCSV, FilesGet as fileGet, FilesIO as util
 from duHast.Utilities import Result as res
 from duHast.Utilities import SystemProcess as sp
+
 
 ''' 
 Process name of work sharing monitor
@@ -97,7 +98,7 @@ def DeleteWSMDataFiles(directoryPath):
 
     status = True
     # get files in directory
-    filesToDelete = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
+    filesToDelete = fileGet.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(filesToDelete) > 0):
         statusDelete = True
         for file in filesToDelete:
@@ -118,10 +119,10 @@ def ReadWSMDataFromFile(directoryPath):
     '''
     
     processData = []
-    files = util.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
+    files = fileGet.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(files) > 0):
         for file in files:
-            rows = util.ReadCSVfile(file)
+            rows = filesCSV.ReadCSVfile(file)
             if(len(rows)>0):
                 processData = processData + rows
     return processData

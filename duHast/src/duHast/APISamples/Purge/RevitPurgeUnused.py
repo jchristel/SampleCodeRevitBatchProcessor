@@ -45,8 +45,10 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as util
+from duHast.Utilities import FilesTab as filesTab
 from duHast.Utilities import Result as res
+
 from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
 from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
 
@@ -127,6 +129,7 @@ import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
 from duHast.APISamples.Common import RevitDeleteElements as rDel
+import duHast.src.duHast.Utilities.FilesTab
 
 
 
@@ -330,7 +333,7 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
             typeIdsAsString.append(str(tId))
         data.append(typeIdsAsString)
         # writer data to file
-        util.writeReportData(
+        filesTab.writeReportData(
             outputFilePath,
             '',
             data,
@@ -386,8 +389,8 @@ def CompareReportData(fileSource, fileTest):
     resultValue = res.Result()
     '''used to compare a bench mark results file containing type ids against a new results file
     will report missing or additional ids in results file'''
-    sourceRows = util.ReadTabSeparatedFile(fileSource)
-    testRows = util.ReadTabSeparatedFile(fileTest)
+    sourceRows = filesTab.ReadTabSeparatedFile(fileSource)
+    testRows = filesTab.ReadTabSeparatedFile(fileTest)
     sourceDic = ConvertReportDataIntoDictionary(sourceRows)
     testDic = ConvertReportDataIntoDictionary(testRows)
     # check benchmark against test

@@ -44,7 +44,7 @@ import os
 
 from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils
 from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as util
 
 def _renameFiles(renameDirectives):
     '''

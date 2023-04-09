@@ -29,7 +29,7 @@ This module contains utility function(s) for CAD link reports.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Links.RevitCadLinks import GetAllCADLinkInstances
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as util
 
 
 def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):

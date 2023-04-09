@@ -31,6 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as util
 
 
 def GetLevelReportData(doc, revitFilePath):

@@ -57,7 +57,7 @@ changeFamilyCategory:
 
 from collections import namedtuple
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as util
 
 # tuples containing change family category data read from file
 changeFamilyCategory = namedtuple('changeFamilyCategory', 'filePath newCategoryName')
@@ -280,7 +280,7 @@ def _getCategoryDataFileName(directoryPath):
     '''
 
     # get all base data files in folder
-    files = util.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
         _FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX,
         '',
@@ -306,7 +306,7 @@ def ReadOverallFamilyDataList(filePath):
 
     rows = []
     if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath)
+        rows = fileCSV.ReadCSVfile(filePath)
     else:
         raise Exception(_EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
     if(len(rows) > 0):
@@ -382,7 +382,7 @@ def ReadOverallChangeCategoryDirectivesList(filePaths):
         if(util.FileExist(filePath)):
             # set flag that we at least found one file
             matchAnyFile = True
-            rowsFile = util.ReadCSVfile(filePath)
+            rowsFile = fileCSV.ReadCSVfile(filePath)
             result = list(rows)
             result.extend(item for item in rowsFile
               if item not in result)
@@ -420,7 +420,7 @@ def _getCategoryChangeDirectiveFileNames(directoryPath):
     '''
 
     # get all base data files in folder
-    files = util.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
         _CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
@@ -476,7 +476,7 @@ def _getSubCategoryChangeDirectiveFileNames(directoryPath):
     '''
 
     # get all base data files in folder
-    files = util.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
         _SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
@@ -506,7 +506,7 @@ def ReadOverallChangeSubCategoryDirectivesList(filePaths):
         if(util.FileExist(filePath)):
             # set flag that we at least found one file
             matchAnyFile = True
-            rowsFile = util.ReadCSVfile(filePath)
+            rowsFile = fileCSV.ReadCSVfile(filePath)
             result = list(rows)
             result.extend(item for item in rowsFile
               if item not in result)

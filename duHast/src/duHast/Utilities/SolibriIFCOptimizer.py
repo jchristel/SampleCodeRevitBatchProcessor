@@ -36,9 +36,7 @@ List of imports:
 import subprocess
 from System.IO import Path
 
-from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
-
+from duHast.Utilities import Result as res, FilesGet as fileGet, FilesIO as util
 
 
 #: The default install path for solibri ifc optimizer.
@@ -70,7 +68,7 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
     # check if ifc optimizer is installed:
     if(util.FileExist(solibriInstallPath_)):
         returnValue.message = 'Solibri IFC optimizer is installed.'
-        ifcFiles = util.GetFiles(directoryPath, '.ifc')
+        ifcFiles = fileGet.GetFiles(directoryPath, '.ifc')
         if(len(ifcFiles) > 0):
             processFilesResult = ProcessIFCFiles(ifcFiles, directoryPath)
             returnValue.Update(processFilesResult)

@@ -1,0 +1,157 @@
+import glob
+
+from duHast.Utilities.FilesIO import GetFileNameWithoutExt
+import os
+
+
+def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
+    '''
+    Get files from a folder filtered by file prefix, file suffix, file extension
+    :param folderPath: Folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value.
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
+    fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
+    return fileList
+
+
+def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
+    '''
+    Returns a list of all files in directory and nested sub directories where file name matches filters value.
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
+    filesFound = []
+    for root, dirs, files in os.walk(folderPath):
+        for name in files:
+            fileName = GetFileNameWithoutExt(name)
+            if (name.endswith(fileExtension) and fileName.startswith(filePrefix) and fileName.endswith(fileSuffix)):
+                filesFound.append(root + '\\' + name)
+    return filesFound
+
+
+def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
+    '''
+    Returns a list of all files in directory and nested subdirectories where file name matches file extension filter value
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :return: A list of all the files matching the supplied filters.
+    :rtype: list str
+    '''
+
+    filesFound = []
+    filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
+    return filesFound
+
+
+def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
+    '''
+    Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value. 
+    - key file name without extension
+    - values: list of directories where this file occurs (based on file name only!)
+    Use case: check for duplicates by file name only
+    :param folderPath: Root folder path from which to get files.
+    :type folderPath: str
+    :param filePrefix: Filter: File name starts with this value
+    :type filePrefix: str
+    :param fileSuffix: Filter: File name ends with this value.
+    :type fileSuffix: str
+    :param fileExtension: Filter: File needs to have this file extension
+    :type fileExtension: str, format '.extension'
+    :param includeSubDirs: If True subdirectories will be included in search for files, defaults to False
+    :type includeSubDirs: bool, optional
+    :return: A dictionary where the key is the file name without the file extension. Value is a list of fully qualified file path to instances of that file.
+    :rtype: dictionary
+        key: str
+        value: lit of str
+    '''
+
+    filesFound = []
+    # set up a dictionary
+    fileDic = {}
+    try:
+        if(includeSubDirs):
+            filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', '.rfa')
+        else:
+            filesFound = GetFilesSingleFolder(folderPath, '', '', '.rfa')
+    except Exception:
+        return fileDic
+
+    # populate dictionary
+    for filePath in filesFound:
+        fileName = GetFileNameWithoutExt(filePath)
+        if(fileName in fileDic):
+            fileDic[fileName].append(filePath)
+        else:
+            fileDic[fileName] = [filePath]
+    return fileDic
+
+
+def GetFiles(folderPath, fileExtension='.rvt'):
+    '''
+    Gets a list of files from a given folder with a given file extension
+    :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type fileExtension: str, optional
+    :return: List of file path
+    :rtype: list of str
+    '''
+
+    file_list = glob.glob(folderPath + '\\*' + fileExtension)
+    return file_list
+
+
+def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
+    '''
+    Gets a list of files from a given folder with a given file extension and a matching a file name filter.
+    :param folderPath: Folder path from which to get files.
+    :type folderPath: str
+    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type fileExtension: str, optional
+    :param filter: File name filter ('something*'), defaults to '*'
+    :type filter: str, optional
+    :return: List of file path
+    :rtype: list of str
+    '''
+
+    file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
+    return file_list
+
+
+def GetFilesFromDirectoryWalker(path, filter):
+    '''
+    Gets all files in directory and nested subdirectories where file name contains filter value.
+    :param path: Folder path from which to get files.
+    :type path: str
+    :param filter: File name filter ('something*')
+    :type filter: str
+    :return: List of file path
+    :rtype: list of str
+    '''
+
+    filesFound = []
+    for root, dirs, files in os.walk(path):
+        for name in files:
+            if (name.Contains(filter)) :
+                filesFound.append(root + '\\' + name)
+    return filesFound

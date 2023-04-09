@@ -32,7 +32,7 @@ This module provides utility functions to read and write reload task lists for t
 
 from collections import namedtuple
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as util, FilesTab as fileTab
 
 # tuples containing base family data and changed family data read from files
 changedFamily = namedtuple('changedFamily', 'name category filePath')
@@ -73,7 +73,7 @@ def WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
         overallData.append(data)
     try:
         # write data
-        util.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -90,7 +90,7 @@ def DeleteOldTaskLists(directoryPath):
 
     flag = True
     # find all files in folder starting with and delete them
-    files = util.GetFiles(directoryPath, '.txt')
+    files = fileGet.GetFiles(directoryPath, '.txt')
     if (len(files) > 0):
         for f in files:
             if (util.GetFileNameWithoutExt(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
@@ -116,7 +116,7 @@ def WriteOutEmptyTaskList(directoryPath, counter = 0):
     overallData = []
     try:
         # write data
-        util.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -149,7 +149,7 @@ def ReadChangeList(filePath):
 
     rows = []
     if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath)
+        rows = fileCSV.ReadCSVfile(filePath)
     else:
         raise Exception("Changed families list files does not exist.")
     if(len(rows) > 0):

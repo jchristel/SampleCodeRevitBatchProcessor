@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Views.Reporting.RevitViewsReportHeader import REPORT_SHEETS_HEADER, GetReportHeaders
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.Utilities import Result as res, Utility as util
+from duHast.Utilities import Result as res, FilesTab as filesTab
 
 
 def GetSheetReportData(doc, hostName):
@@ -82,7 +82,7 @@ def WriteSheetData(doc, fileName, currentFileName):
     try:
         data = GetSheetReportData(doc, currentFileName)
         headers = GetReportHeaders(doc)
-        util.writeReportData(
+        filesTab.writeReportData(
             fileName,
             headers,
             data)
@@ -149,7 +149,7 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
         headers = REPORT_SHEETS_HEADER[:]
         headers = headers + sheetProperties
         # write data out to file
-        util.writeReportData(
+        filesTab.writeReportData(
             fileName,
             headers,
             data)

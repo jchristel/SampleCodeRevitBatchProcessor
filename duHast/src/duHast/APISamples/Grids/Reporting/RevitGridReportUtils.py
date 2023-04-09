@@ -28,7 +28,7 @@ This module contains utility function(s) for grid reports.
 
 import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitWorksets as rWork
-from duHast.Utilities import Utility as util
+from duHast.Utilities import Utility as util, FilesIO as util
 from duHast.APISamples.Grids import RevitGrids as rGrid
 
 

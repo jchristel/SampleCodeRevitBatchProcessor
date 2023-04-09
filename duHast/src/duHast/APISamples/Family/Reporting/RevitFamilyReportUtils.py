@@ -46,8 +46,7 @@ nestedFamily:
 
 from collections import namedtuple
 
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
+from duHast.Utilities import Result as res, FilesCSV as fileCSV, FilesIO as util
 
 # tuples containing base family data read from file
 rootFamily = namedtuple('rootFamily', 'name category filePath')
@@ -81,7 +80,7 @@ def ReadUniqueFamiliesFromReport(filePath):
 
     rows = []
     if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath)
+        rows = fileCSV.ReadCSVfile(filePath)
     else:
         raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -137,7 +136,7 @@ def ReadUniqueFamiliesWithRowDataFromReport(filePath):
 
     rows = []
     if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath, True)
+        rows = fileCSV.ReadCSVfile(filePath, True)
     else:
         raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -416,7 +415,7 @@ def CombineReports (previousReportPath, newReportPath):
         uniqueFamData = removeNoneExistingFamilies.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header = util.GetFirstRowInCSVFile(previousReportPath)
+    header = fileCSV.GetFirstRowInCSVFile(previousReportPath)
     headerRow = header.split(',')
     
     # build list of data rows

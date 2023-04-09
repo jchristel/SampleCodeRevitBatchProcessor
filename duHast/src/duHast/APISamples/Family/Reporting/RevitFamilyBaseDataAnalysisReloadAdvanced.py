@@ -44,8 +44,7 @@ Family Base data analysis module containing functions to build a reload tree.
 
 
 from duHast.Utilities.timer import Timer
-from duHast.Utilities import Result as res
-from duHast.Utilities import Utility as util
+from duHast.Utilities import Result as res, FilesGet as fileGet, FilesIO as util, FilesTab as fileTab
 from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 from duHast.APISamples.Family.Reporting import RevitFamilyReloadAdvancedUtils as rFamReloadAdvUtils
 
@@ -80,7 +79,7 @@ def _WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
         overallData.append(data)
     try:
         # write data
-        util.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -97,7 +96,7 @@ def _DeleteOldTaskLists(directoryPath):
 
     flag = True
     # find all files in folder starting with and delete them
-    files = util.GetFiles(directoryPath, '.txt')
+    files = fileGet.GetFiles(directoryPath, '.txt')
     if (len(files) > 0):
         for f in files:
             if (util.GetFileNameWithoutExt(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
@@ -124,7 +123,7 @@ def _WriteOutEmptyTaskList(directoryPath, counter = 0):
     overallData = []
     try:
         # write data
-        util.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False

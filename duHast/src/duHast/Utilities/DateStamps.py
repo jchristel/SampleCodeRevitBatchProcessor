@@ -33,6 +33,7 @@ This module contains a number of helper functions relating to:
 
 #: default file stamp date format using underscores as delimiter: 21_03_01
 import datetime
+from System.IO import Path
 
 
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
@@ -108,3 +109,24 @@ def GetDateStamp(format):
 
     d = datetime.datetime.now()
     return d.strftime(format)
+
+
+def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
+    '''
+    Returns a time stamped output file name based on the past in file name and file extension.
+    :param revitFilePath: Fully qualified file path to file
+    :type revitFilePath: str
+    :param fileExtension: File extension needs to include '.', defaults to '.txt'
+    :type fileExtension: str, optional
+    :param fileSuffix: File suffix will be appended after the name but before the file extension, defaults to ''
+    :type fileSuffix: str, optional
+    :return: File name.
+    :rtype: str
+    '''
+
+    # get date prefix for file name
+    filePrefix = GetFileDateStamp()
+    # added str() around this expression to satisfy sphinx auto code documentation
+    # it will throw an exception when concatenating the string in the return statement
+    name = str(Path.GetFileNameWithoutExtension(revitFilePath))
+    return filePrefix + '_' + name + fileSuffix + fileExtension

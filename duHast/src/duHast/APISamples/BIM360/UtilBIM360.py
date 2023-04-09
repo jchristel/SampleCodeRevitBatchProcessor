@@ -30,7 +30,7 @@ import System
 import clr
 
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesCSV as filesCSV
 from duHast.UI import FileItem as fi
         
 def getBIM360RevitFilesFromFileList(filepathCSV, extension):
@@ -63,7 +63,7 @@ def GetBIM360Data(filepathCSV):
     revitFiles = []
     try:
         # read the CSV into rows
-        rows = util.ReadCSVfile(filepathCSV)
+        rows = filesCSV.ReadCSVfile(filepathCSV)
         # check whether anything came back
         if(len(rows)>0):
             # process rows

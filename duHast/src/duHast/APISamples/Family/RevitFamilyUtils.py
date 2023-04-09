@@ -40,7 +40,7 @@ clr.AddReference('System')
 # utility functions for most commonly used Revit API tasks
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 # utilities
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as util
 # class used for stats reporting
 from duHast.Utilities import Result as res
 # implementation of Revit API callback required when loading families into a Revit model

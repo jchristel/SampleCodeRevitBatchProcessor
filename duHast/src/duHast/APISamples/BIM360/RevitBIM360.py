@@ -33,6 +33,8 @@ from duHast.Utilities import Utility as util
 #from System.IO import Path
 import Autodesk.Revit.DB as rdb
 
+from  duHast.Utilities import FilesGet as fileGet, FilesIO as util
+
 
 def GetBim360Path(doc):
     '''
@@ -116,7 +118,7 @@ def GetModelFileSize(doc):
         # local cache file name is same as file GUID on BIM360
         revitFile = doc.WorksharingCentralGUID.ToString()
         # get all files in cache folder matching GUID
-        file_list = util.GetFilesFromDirectoryWalker(folder, revitFile)
+        file_list = fileGet.GetFilesFromDirectoryWalker(folder, revitFile)
         if (len(file_list) > 0):
             for file in file_list:
                 # just select one of the file instance..not to sure why this one?

@@ -27,6 +27,7 @@ A number of helper functions relating to Revit worksets.
 #
 
 import clr
+
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
@@ -38,6 +39,10 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
+
+
+from duHast.Utilities import FilesIO as filesIO
+from duHast.Utilities import FilesTab as filesTab
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -339,11 +344,11 @@ def UpdateWorksetDefaultVisibilityFromReport(doc, reportPath, revitFilePath):
 
     returnValue = res.Result()
     # read report
-    worksetData = util.ReadTabSeparatedFile(reportPath)
-    fileName = util.GetFileNameWithoutExt(revitFilePath)
+    worksetData = filesTab.ReadTabSeparatedFile(reportPath)
+    fileName = filesIO.GetFileNameWithoutExt(revitFilePath)
     worksetDataForFile = {}
     for row in worksetData:
-        if(util.GetFileNameWithoutExt(row[0]).startswith(fileName) and len(row) > 3):
+        if(filesIO.GetFileNameWithoutExt(row[0]).startswith(fileName) and len(row) > 3):
             worksetDataForFile[row[1]] = util.ParsStringToBool(row[3])
     if(len(worksetDataForFile) > 0): 
         # updates worksets

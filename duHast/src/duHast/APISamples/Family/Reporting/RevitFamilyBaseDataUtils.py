@@ -47,7 +47,7 @@ nestedFamily:
 
 from collections import namedtuple
 
-from duHast.Utilities import Utility as util
+from duHast.Utilities import Utility as util, FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as fileIO
 
 # tuples containing base family data read from file
 rootFamily = namedtuple('rootFamily', 'name category filePath parent child')
@@ -82,7 +82,7 @@ def _getBaseDataFileName(directoryPath):
     '''
 
     # get all base data files in folder
-    files = util.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
         _FAMILY_BASE_DATA_FILE_NAME_PREFIX,
         '',
@@ -106,8 +106,8 @@ def ReadOverallFamilyDataList(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath)
+    if(fileIO.FileExist(filePath)):
+        rows = fileCSV.ReadCSVfile(filePath)
     else:
         raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -169,8 +169,8 @@ def ReadOverallFamilyDataListIntoNested(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = util.ReadCSVfile(filePath)
+    if(fileIO.FileExist(filePath)):
+        rows = fileCSV.ReadCSVfile(filePath)
     else:
         raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):

@@ -33,8 +33,7 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.src.duHast.APISamples.Common import RevitDeleteElements as rDel
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet, RevitDeleteElements as rDel
 from duHast.Utilities import Result as res
 
 

@@ -32,7 +32,7 @@ and or data can be exported to text files which can be used to visualize key met
 
 import clr
 
-import duHast.src.duHast.APISamples.Views.RevitViewSheets
+
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)

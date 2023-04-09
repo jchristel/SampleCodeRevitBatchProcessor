@@ -36,14 +36,6 @@ from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-
-# -------------------------------------------- common variables --------------------
-#: header used in dimensions reports
-REPORT_DIMENSIONS_HEADER = ['HOSTFILE','ID', 'NAME']
-#: header used in text reports
-REPORT_TEXT_HEADER = ['HOSTFILE','ID', 'NAME']
-
-
 # ----------------------------------------------
 
 def GetAllAnnoSymbolTypes(doc):

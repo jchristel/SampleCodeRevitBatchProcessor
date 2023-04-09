@@ -29,7 +29,7 @@ Family base data class.
 
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitFileIO as rFile
 from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
 
 # import Autodesk
@@ -120,7 +120,7 @@ class FamilyBaseData(IFamData.IFamilyData):
                     # check category folder exists
                     if(util.CreateTargetFolder(familyOutFolderPath + '\\' + sessionId, docCategory)):
                         # save family out
-                        com.SaveAsFamily(
+                        rFile.SaveAsFamily(
                             doc,
                             familyOutFolderPath + '\\' + sessionId + '\\'+ docCategory,
                             docName,

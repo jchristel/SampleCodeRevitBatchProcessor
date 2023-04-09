@@ -280,18 +280,3 @@ def GetAllLineStyleIds(doc):
     lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
     ids = list(c.Id for c in lc.SubCategories).ToList[rdb.ElementId]()
     return ids
-
-# ------------------------------------------------ Fill Patterns ----------------------------------------------
-
-def GetAllFillPattern(doc):
-    '''
-    Gets all fill pattern element ids in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: A list of all fill pattern elements.
-    :rtype: list of Autodesk.Revit.DB.FillPatternElement
-    '''
-
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.FillPatternElement).ToList()

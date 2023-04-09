@@ -33,6 +33,8 @@ and or data can be exported to text files which can be used to visualize key met
 import clr
 
 
+
+
 clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
@@ -48,6 +50,7 @@ from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.APISamples.Views import RevitViewSheets as rViewSheets
 from duHast.APISamples.Views import RevitViews as rViews
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rLsp
+from duHast.APISamples.LinePattern import RevitFillPatterns as rFill
 from duHast.APISamples.Links import RevitCadLinks as rCadLink
 from duHast.APISamples.Links import RevitImageLinks as rImageLink
 from duHast.APISamples.ModelHealth import RevitModelHealthReportFileNames as rFns
@@ -373,7 +376,7 @@ def GetNumberOfFillPatterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLsp.GetAllFillPattern(doc))
+        number = len(rFill.GetAllFillPattern(doc))
     except Exception as e:
         pass
     return number

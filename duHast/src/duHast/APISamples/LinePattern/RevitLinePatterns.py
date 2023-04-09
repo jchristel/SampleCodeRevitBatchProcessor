@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Revit line styles and line patterns helper functions. 
+Revit line line patterns helper functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -240,43 +240,3 @@ def DeleteDuplicatLinePatterNames(doc):
             flagDelete = rDel.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
             returnValue.Update (flagDelete)
     return returnValue
-
-# ------------------------------------------------ DELETE LINE STYLES ----------------------------------------------
-
-def DeleteLineStylesStartsWith(doc, startsWith):
-    '''
-    Deletes all line styles where the name starts with provided string
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param startsWith: Filter: style name needs to start with this string to be deleted.
-    :type startsWith: str
-
-    :return: 
-        Result class instance.
-
-        - .result = True if all views where deleted. Otherwise False.
-        - .message will contain deletion status.
-
-    :rtype: :class:`.Result`
-    '''
-
-    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = rDel.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
-    return result
-
-def GetAllLineStyleIds(doc):
-    '''
-    Gets all line styles ids in the model.
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: A list of all line style ids.
-    :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-
-    lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories).ToList[rdb.ElementId]()
-    return ids

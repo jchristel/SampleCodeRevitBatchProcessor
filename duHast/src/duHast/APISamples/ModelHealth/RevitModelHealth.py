@@ -49,8 +49,9 @@ from duHast.APISamples.Warnings import RevitWarnings as rWarn
 from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.APISamples.Views import RevitViewSheets as rViewSheets
 from duHast.APISamples.Views import RevitViews as rViews
-from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rLsp
+from duHast.APISamples.LinePattern import RevitLinePatterns as rLinePat
 from duHast.APISamples.LinePattern import RevitFillPatterns as rFill
+from duHast.APISamples.LinePattern import RevitLineStyles as rLineStyle
 from duHast.APISamples.Links import RevitCadLinks as rCadLink
 from duHast.APISamples.Links import RevitImageLinks as rImageLink
 from duHast.APISamples.ModelHealth import RevitModelHealthReportFileNames as rFns
@@ -340,7 +341,7 @@ def GetNumberOfLineStyles(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLsp.GetAllLineStyleIds(doc))
+        number = len(rLineStyle.GetAllLineStyleIds(doc))
     except:
         pass
     return number
@@ -358,7 +359,7 @@ def GetNumberOfLinePatterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLsp.GetAllLinePatterns(doc))
+        number = len(rLinePat.GetAllLinePatterns(doc))
     except:
         pass
     return number

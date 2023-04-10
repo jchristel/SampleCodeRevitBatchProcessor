@@ -48,10 +48,10 @@ import System
 import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
-# import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
+# import from duHast
+from duHast.Utilities import FilesIO as fileIO
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitSharedParameterAdd as paraAdd
+from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as paraAdd
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -222,7 +222,7 @@ Output(str(result.message) + '....' + str(result.status))
 # sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
+    syncing_ = fileIO.SyncFile (doc)
     Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

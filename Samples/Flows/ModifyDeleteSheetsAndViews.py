@@ -62,11 +62,12 @@ import System
 import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
-#import common libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Views import RevitViews as rView
-from duHast.Utilities import Utility as util
+# import from duHast
+from duHast.APISamples.Views import RevitViewsDelete as rViewDel
+from duHast.Utilities import FilesIO as fileIO
 from duHast.Utilities import Result as res
+from duHast.Utilities import Compare as compare
+from duHast.APISamples.Common import RevitFileIO as rFileIO
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -155,11 +156,11 @@ def ModifyViews(doc, revitFilePath, viewData):
     returnValue.status = False
     returnValue.message = 'No view data provided for current Revit file'
 
-    revitFileName =  util.GetFileNameWithoutExt(revitFilePath)
+    revitFileName =  fileIO.GetFileNameWithoutExt(revitFilePath)
     for fileName, viewRules in viewData:
         if (revitFileName.startswith(fileName)):
             collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rView.DeleteViews(doc, viewRules, collectorViews)
+            returnValue = rViewDel.DeleteViews(doc, viewRules, collectorViews)
             break
     return returnValue
 
@@ -192,13 +193,13 @@ def ModifySheets(doc, sheetsData):
     returnValue = res.Result()
     returnValue.UpdateSep(False,'No sheet data provided for current Revit file')
     
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
+    revitFileName = fileIO.GetFileNameWithoutExt(revitFilePath_)
     # Output(sheets)
     for fileName, sheetRules in sheetsData:
         # check if set of rules applies to this particular project file
         if (revitFileName.startswith(fileName)):
             collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rView.DeleteSheets(doc, sheetRules, collectorSheets)
+            returnValue = rViewDel.DeleteSheets(doc, sheetRules, collectorSheets)
             break
     return returnValue
 
@@ -213,13 +214,13 @@ rootPath_ = r'C:\temp'
 sheetRules_ = [
     ['FileOne', # project file name start (would apply to files FileOneOne and FileOneTwo)
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
         ]
     ],
     ['FileTwo', # project file name start
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # sheet condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # sheet condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
         ]
     ]
 ]
@@ -232,9 +233,9 @@ List containing the sheet rules by project file
 viewRules_ = [
     ['File', # project file name start
         [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'] # view condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # view condition rule
         ]
     ]
 ]
@@ -255,13 +256,13 @@ resultDeleteViews_ = ModifyViews(doc, revitFilePath_, viewRules_)
 Output(resultDeleteViews_.message + '.... status: ' + str(resultDeleteViews_.status))
 
 # delete views not on sheets
-resultDeleteViewsNotOnSheets_ = rView.DeleteViewsNotOnSheets(doc, CheckName)
+resultDeleteViewsNotOnSheets_ = rViewDel.DeleteViewsNotOnSheets(doc, CheckName)
 Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultDeleteViewsNotOnSheets_.status))
  
 # sync changes back to central, non workshared files will not be saved!
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
+    syncing_ = rFileIO.SyncFile (doc)
     Output('Syncing to Central: finished ' + str(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

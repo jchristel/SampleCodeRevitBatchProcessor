@@ -70,20 +70,20 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = debugRevitFileName_
 
 # -------------
 # my code here:
@@ -98,45 +98,46 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def IFCExportView(doc):
-    '''
+def ifc_export_view(doc):
+    """
     Exports a view to IFC using open source third party IFC exporter supported by Autodesk.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
 
-    :return: 
+    :return:
         Result class instance.
 
         - result.status: View export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message: will contain the fully qualified file path of the exported file.
         - result.result: will be an empty list
-        
+
         On exception
-        
-        - Reload.status (bool) will be False
-        - Reload.message will contain the exception message
+
+        - reload_status (bool) will be False
+        - reload_message will contain the exception message
 
     :rtype: :class:`.Result`
-    '''
+    """
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        ifcExportOption = rExIFC.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
+        ifc_export_option = rExIFC.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
         # exports 3D view where name starts with 'NWCP', Origin is project base point
-        returnValue = rExIFC.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, IFCCoordinates.IFCCoords.ProjectBasePoint)
+        return_value = rExIFC.Export3DViewsToIFC(doc, 'NWCP', ifc_export_option, ROOT_PATH, IFCCoordinates.IFCCoords.ProjectBasePoint)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
+    return return_value
 
-def IFCExportViewDefault(doc):
+
+def ifc_export_view_default(doc):
     '''
-    Exports a view to IFC using the build in (basic) IFC exporter.
+    Exports a view to IFC using the built-in (basic) IFC exporter.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
@@ -156,15 +157,16 @@ def IFCExportViewDefault(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        ifcExportOptionDefault = rExIFC.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.noBoundaries)
-        returnValue = rExIFC.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
+        ifc_export_option_default = rExIFC.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.noBoundaries)
+        return_value = rExIFC.Export3DViewsToIFCDefault(doc, 'NWCS', ifc_export_option_default, ROOT_PATH)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed to export view to IFC with exception{}'.format(e))
+    return return_value
 
-def NWCExportByView(doc):
+
+def nwc_export_by_view(doc):
     '''
     Exports a view as a NavisWorks cache file.
 
@@ -186,15 +188,16 @@ def NWCExportByView(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        nwcExportOption = rExNavis.SetUpNWCDefaultExportOptionSharedByView()
-        returnValue = rExNavis.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+        nwc_export_option = rExNavis.SetUpNWCDefaultExportOptionSharedByView()
+        return_value = rExNavis.Export3DViewsToNWC(doc, 'NWCS', nwc_export_option,  ROOT_PATH)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
+    return return_value
 
-def NWCExportModel(doc):
+
+def nwc_export_model(doc):
     '''
     Exports the entire model as a NavisWorks cache file.
 
@@ -216,37 +219,39 @@ def NWCExportModel(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        nwcExportOption = rExNavis.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
-        returnValue = rExNavis.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+        nwc_export_option = rExNavis.SetUpNWCCustomExportOption(False, True, False, True, False, False, True, False)
+        return_value = rExNavis.ExportModelToNWC(doc, nwc_export_option, ROOT_PATH, 'test_project Coords.nwc')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
+    return return_value
+
 
 # -------------
 # main:
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 Output('Exporting.... start')
 
 # export to IFC file format - view
-statusExport_ = IFCExportView(doc)
+status_export_view = ifc_export_view(DOC)
 # export to IFC file format - view but use default out of the box ifc exporter
-statusExportIFCDefault_ = IFCExportViewDefault(doc)
-statusExport_.Update(statusExportIFCDefault_)
+status_export_ifc_default = ifc_export_view_default(DOC)
+status_export_view.Update(status_export_ifc_default)
 
 # nwc by model
-statusExportNWCModel_ = NWCExportModel(doc)
-statusExport_.Update(statusExportNWCModel_)
+status_export_nwc_model = nwc_export_model(DOC)
+status_export_view.Update(status_export_nwc_model)
 
 # nwc by view
-statusExportNWCThreeDViews_= NWCExportByView(doc)
-statusExport_.Update(statusExportNWCThreeDViews_)
+status_export_nwc_3d_views = nwc_export_by_view(DOC)
+status_export_view.Update(status_export_nwc_3d_views)
 
-Output('{} :: [{}]'.format(statusExport_.message ,statusExport_.status))
+Output('{} :: [{}]'.format(status_export_view.message, status_export_view.status))
 
 Output('Exporting.... finished ')
+

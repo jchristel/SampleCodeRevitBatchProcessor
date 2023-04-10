@@ -79,7 +79,7 @@ else:
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -92,7 +92,7 @@ def Output(message = ''):
     else:
         print (message)
 
-def UpDateParameters (doc, data):
+def update_parameters (doc, data):
     '''
     Bind parameters to category
 
@@ -130,7 +130,7 @@ def UpDateParameters (doc, data):
                     is_visible, 
                     is_instance, 
                     parameter_group, 
-                    shared_parameter_file_path_
+                    SHARED_PARAMETER_FILE_PATH
                 )
                 status.Update(statusBind)
     except Exception as e:
@@ -142,9 +142,9 @@ def UpDateParameters (doc, data):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
-shared_parameter_file_path_ = r'C:\temp\Shared Parameters.txt'
+SHARED_PARAMETER_FILE_PATH = r'C:\temp\Shared Parameters.txt'
 '''
 Fully qualified path to shared parameter file
 '''
@@ -197,7 +197,7 @@ Fully qualified path to shared parameter file
             #{"Visibility",BuiltInParameterGroup.PG_VISIBILITY}
 # iS Instance - boolean
 
-list_of_parameters_ = [
+LIST_OF_PARAMETERS = [
     ['ParameterOne','Exported Parameters',rdb.ParameterType.Length, True, [rdb.BuiltInCategory.OST_Ceilings], rdb.BuiltInParameterGroup.PG_GEOMETRY, True],
     ['ParameterTwo','Exported Parameters',rdb.ParameterType.YesNo, True, [rdb.BuiltInCategory.OST_Windows,rdb.BuiltInCategory.OST_CurtainWallPanels, rdb.BuiltInCategory.OST_Walls], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True],
     ['ParameterThree','Exported Parameters',rdb.ParameterType.Text, True, [rdb.BuiltInCategory.OST_Rooms], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True]
@@ -214,15 +214,15 @@ List containing the parameters to be added and their properties
 
 '''
 
-Output('Updating Shared Parameter Data.... start')
+output('Updating Shared Parameter Data.... start')
 
-result = UpDateParameters (doc, list_of_parameters_)
-Output('{} [{}]'.format (result.message,result.status))
+result = update_parameters (doc, LIST_OF_PARAMETERS)
+output('{} [{}]'.format (result.message,result.status))
 
 # sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
+    output('Syncing to Central: start')
     syncing_ = fileIO.SyncFile (doc)
-    Output('Syncing to Central: finished [{}] '.format(syncing_.status))
+    output('Syncing to Central: finished [{}] '.format(syncing_.status))
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ')

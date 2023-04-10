@@ -49,18 +49,18 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import from duHast
 from duHast.APISamples.Views import RevitViewsDelete as rViewDel
@@ -76,26 +76,26 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -103,7 +103,7 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -193,7 +193,7 @@ def ModifySheets(doc, sheets_data):
     return_value = res.Result()
     return_value.UpdateSep(False,'No sheet data provided for current Revit file')
     
-    revit_file_name = fileIO.GetFileNameWithoutExt(revitFilePath_)
+    revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
     # Output(sheets)
     for file_name, sheet_rules in sheets_data:
         # check if set of rules applies to this particular project file
@@ -208,10 +208,10 @@ def ModifySheets(doc, sheets_data):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # sheets to delete rules 
-sheetRules_ = [
+SHEET_RULES = [
     ['FileOne', # project file name start (would apply to files FileOneOne and FileOneTwo)
         [
             ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
@@ -230,7 +230,7 @@ List containing the sheet rules by project file
 '''
 
 # views to delete rules
-viewRules_ = [
+VIEW_RULES = [
     ['File', # project file name start
         [
             ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # view condition rule
@@ -245,24 +245,24 @@ List containing the view rules by project file
 '''
 
 #s ave revit file to new location
-Output('Modifying Revit File.... start')
+output('Modifying Revit File.... start')
 
 # delete sheets
-resultDeleteSheets_ = ModifySheets(doc, sheetRules_)
-Output('{} .... status: [{}]'.format( resultDeleteSheets_.message,resultDeleteSheets_.status))
+RESULT_DELETE_SHEETS = ModifySheets(DOC, SHEET_RULES)
+output('{} .... status: [{}]'.format( RESULT_DELETE_SHEETS.message,RESULT_DELETE_SHEETS.status))
 
 # delete views
-resultDeleteViews_ = ModifyViews(doc, revitFilePath_, viewRules_)
-Output(resultDeleteViews_.message + '.... status: ' + str(resultDeleteViews_.status))
+RESULT_DELETE_VIEWS = ModifyViews(DOC, REVIT_FILE_PATH, VIEW_RULES)
+output(RESULT_DELETE_VIEWS.message + '.... status: ' + str(RESULT_DELETE_VIEWS.status))
 
 # delete views not on sheets
-resultDeleteViewsNotOnSheets_ = rViewDel.DeleteViewsNotOnSheets(doc, CheckName)
-Output(str(resultDeleteViewsNotOnSheets_.message)+ '.... status: ' + str(resultDeleteViewsNotOnSheets_.status))
+RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.DeleteViewsNotOnSheets(DOC, CheckName)
+output(str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.message)+ '.... status: ' + str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.status))
  
 # sync changes back to central, non workshared files will not be saved!
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    SYNCING = rFileIO.SyncFile (DOC)
+    output('Syncing to Central: finished ' + str(SYNCING.status))
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ')

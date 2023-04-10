@@ -44,18 +44,18 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.Utilities import Result as res
@@ -83,14 +83,14 @@ if not DEBUG:
     REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    REVIT_FILE_PATH = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -235,23 +235,23 @@ def nwc_export_model(doc):
 # store output here:
 ROOT_PATH = r'C:\temp'
 
-Output('Exporting.... start')
+output('Exporting.... start')
 
 # export to IFC file format - view
-status_export_view = ifc_export_view(DOC)
+STATUS_EXPORT_VIEW = ifc_export_view(DOC)
 # export to IFC file format - view but use default out of the box ifc exporter
-status_export_ifc_default = ifc_export_view_default(DOC)
-status_export_view.Update(status_export_ifc_default)
+STATUS_EXPORT_IFC_DEFAULT = ifc_export_view_default(DOC)
+STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_IFC_DEFAULT)
 
 # nwc by model
-status_export_nwc_model = nwc_export_model(DOC)
-status_export_view.Update(status_export_nwc_model)
+STATUS_EXPORT_NWC_MODEL = nwc_export_model(DOC)
+STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_NWC_MODEL)
 
 # nwc by view
-status_export_nwc_3d_views = nwc_export_by_view(DOC)
-status_export_view.Update(status_export_nwc_3d_views)
+STATUS_EXPORT_NWC_3D_VIEWS = nwc_export_by_view(DOC)
+STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_NWC_3D_VIEWS)
 
-Output('{} :: [{}]'.format(status_export_view.message, status_export_view.status))
+output('{} :: [{}]'.format(STATUS_EXPORT_VIEW.message, STATUS_EXPORT_VIEW.status))
 
-Output('Exporting.... finished ')
+output('Exporting.... finished ')
 

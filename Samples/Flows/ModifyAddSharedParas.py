@@ -118,19 +118,19 @@ def UpDateParameters (doc, data):
 
     status = res.Result()
     try:
-        for paraName, groupName, paraType, isVisible, elementCategory, paraGroup, isInstance in data:
+        for parameter_name, group_name, parameter_type, is_visible, element_category, parameter_group, is_instance in data:
             # add parameter to multiple categories if required
-            for cat in elementCategory:
+            for cat in element_category:
                 statusBind =  paraAdd.BindSharedParameter(
                     doc, 
                     cat, 
-                    paraName, 
-                    groupName, 
-                    paraType, 
-                    isVisible, 
-                    isInstance, 
-                    paraGroup, 
-                    sharedParameterFilePath_
+                    parameter_name, 
+                    group_name, 
+                    parameter_type, 
+                    is_visible, 
+                    is_instance, 
+                    parameter_group, 
+                    shared_parameter_file_path_
                 )
                 status.Update(statusBind)
     except Exception as e:
@@ -144,7 +144,7 @@ def UpDateParameters (doc, data):
 # store output here:
 rootPath_ = r'C:\temp'
 
-sharedParameterFilePath_ = r'C:\temp\Shared Parameters.txt'
+shared_parameter_file_path_ = r'C:\temp\Shared Parameters.txt'
 '''
 Fully qualified path to shared parameter file
 '''
@@ -197,7 +197,7 @@ Fully qualified path to shared parameter file
             #{"Visibility",BuiltInParameterGroup.PG_VISIBILITY}
 # iS Instance - boolean
 
-listOfParameters_ = [
+list_of_parameters_ = [
     ['ParameterOne','Exported Parameters',rdb.ParameterType.Length, True, [rdb.BuiltInCategory.OST_Ceilings], rdb.BuiltInParameterGroup.PG_GEOMETRY, True],
     ['ParameterTwo','Exported Parameters',rdb.ParameterType.YesNo, True, [rdb.BuiltInCategory.OST_Windows,rdb.BuiltInCategory.OST_CurtainWallPanels, rdb.BuiltInCategory.OST_Walls], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True],
     ['ParameterThree','Exported Parameters',rdb.ParameterType.Text, True, [rdb.BuiltInCategory.OST_Rooms], rdb.BuiltInParameterGroup.PG_IDENTITY_DATA, True]
@@ -216,13 +216,13 @@ List containing the parameters to be added and their properties
 
 Output('Updating Shared Parameter Data.... start')
 
-result = UpDateParameters (doc, listOfParameters_)
-Output(str(result.message) + '....' + str(result.status))
+result = UpDateParameters (doc, list_of_parameters_)
+Output('{} [{}]'.format (result.message,result.status))
 
 # sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
     syncing_ = fileIO.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    Output('Syncing to Central: finished [{}] '.format(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

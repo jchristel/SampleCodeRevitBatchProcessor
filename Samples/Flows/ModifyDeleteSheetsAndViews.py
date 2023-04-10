@@ -125,16 +125,16 @@ def CheckName(view):
     else:
         return True
 
-def ModifyViews(doc, revitFilePath, viewData):
+def ModifyViews(doc, revit_file_path, view_data):
     '''
     Deletes views based on rules
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The current model (document) file path.
-    :type revitFilePath: str
-    :param viewData: List of files and associated view filter rules. Refer to `viewRules_` below.
-    :type viewData: [[filename,[conditions]]]
+    :param revit_file_path: The current model (document) file path.
+    :type revit_file_path: str
+    :param view_data: List of files and associated view filter rules. Refer to `viewRules_` below.
+    :type view_data: [[filename,[conditions]]]
 
     :return: 
         Result class instance.
@@ -152,27 +152,27 @@ def ModifyViews(doc, revitFilePath, viewData):
     '''
 
     #set default values
-    returnValue = res.Result()
-    returnValue.status = False
-    returnValue.message = 'No view data provided for current Revit file'
+    return_value = res.Result()
+    return_value.status = False
+    return_value.message = 'No view data provided for current Revit file'
 
-    revitFileName =  fileIO.GetFileNameWithoutExt(revitFilePath)
-    for fileName, viewRules in viewData:
-        if (revitFileName.startswith(fileName)):
-            collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rViewDel.DeleteViews(doc, viewRules, collectorViews)
+    revit_file_name =  fileIO.GetFileNameWithoutExt(revit_file_path)
+    for file_name, view_rules in view_data:
+        if (revit_file_name.startswith(file_name)):
+            collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+            return_value = rViewDel.DeleteViews(doc, view_rules, collector_views)
             break
-    return returnValue
+    return return_value
 
 
-def ModifySheets(doc, sheetsData):
+def ModifySheets(doc, sheets_data):
     '''
     Deletes sheets based on rules.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param sheetsData: List of files and associated sheet filter rules. Refer to `sheetRules_` below.
-    :type sheetsData: [[filename,[conditions]]]
+    :param sheets_data: List of files and associated sheet filter rules. Refer to `sheetRules_` below.
+    :type sheets_data: [[filename,[conditions]]]
 
     :return: 
         Result class instance.
@@ -190,18 +190,18 @@ def ModifySheets(doc, sheetsData):
     '''
 
     # set default values
-    returnValue = res.Result()
-    returnValue.UpdateSep(False,'No sheet data provided for current Revit file')
+    return_value = res.Result()
+    return_value.UpdateSep(False,'No sheet data provided for current Revit file')
     
-    revitFileName = fileIO.GetFileNameWithoutExt(revitFilePath_)
+    revit_file_name = fileIO.GetFileNameWithoutExt(revitFilePath_)
     # Output(sheets)
-    for fileName, sheetRules in sheetsData:
+    for file_name, sheet_rules in sheets_data:
         # check if set of rules applies to this particular project file
-        if (revitFileName.startswith(fileName)):
-            collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            returnValue = rViewDel.DeleteSheets(doc, sheetRules, collectorSheets)
+        if (revit_file_name.startswith(file_name)):
+            collector_sheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+            return_value = rViewDel.DeleteSheets(doc, sheet_rules, collector_sheets)
             break
-    return returnValue
+    return return_value
 
 # -------------
 # main:
@@ -249,7 +249,7 @@ Output('Modifying Revit File.... start')
 
 # delete sheets
 resultDeleteSheets_ = ModifySheets(doc, sheetRules_)
-Output(resultDeleteSheets_.message + '.... status: ' + str(resultDeleteSheets_.status))
+Output('{} .... status: [{}]'.format( resultDeleteSheets_.message,resultDeleteSheets_.status))
 
 # delete views
 resultDeleteViews_ = ModifyViews(doc, revitFilePath_, viewRules_)

@@ -30,8 +30,9 @@ A class used to return the value if any, a message and the status of a method (t
 #
 #
 
+from duHast.Utilities import Base
 
-class Result: 
+class Result (Base.Base): 
     def __init__(self):
         '''
         Class constructor.
@@ -41,6 +42,8 @@ class Result:
         - result default value is []
         
         '''
+
+        super(Result, self).__init__()  
 
         self.message = '-'
         self.status = True

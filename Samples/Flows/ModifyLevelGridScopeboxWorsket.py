@@ -57,7 +57,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitFileIO as rFileIO
 from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
@@ -153,7 +153,7 @@ def Modify(doc, revitFilePath, gridData):
             
             break
     if (flag == False):
-        returnValue.UpdateSep(False, 'No grid data provided for current Revit file ' + revitFileName)
+        returnValue.UpdateSep(False, 'No grid data provided for current Revit file: {}'.format(revitFileName))
     return returnValue
 
 # -------------
@@ -181,12 +181,12 @@ List containing the workset name by project file
 
 # modify workset of levels, grids ands scope boxes
 statusModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
-Output(statusModifyWorkSets_.message + ' :: ' + str(statusModifyWorkSets_.status))
+Output('{} :: [{}]'.format( statusModifyWorkSets_.message,statusModifyWorkSets_.status))
 
 # sync changes back to central
 if (doc.IsWorkshared and debug == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    syncing_ = rFileIO.SyncFile (doc)
+    Output('Syncing to Central: finished [{}] '.format(syncing_.status))
 
 Output('Checking levels and grids.... finished ')

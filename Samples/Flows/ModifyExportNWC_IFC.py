@@ -59,7 +59,9 @@ sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
 from duHast.Utilities import Result as res
-from duHast.APISamples import RevitExport as rex
+from duHast.APISamples.Exports import RevitExportNavis as rExNavis
+from duHast.APISamples.Exports import RevitExportIFC as rExIFC
+from duHast.APISamples.Exports.Utility import  IFCCoordinates, IFCSpaceBoundaries
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -125,9 +127,9 @@ def IFCExportView(doc):
 
     returnValue = res.Result()
     try:
-        ifcExportOption = rex.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
+        ifcExportOption = rExIFC.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
         # exports 3D view where name starts with 'NWCP', Origin is project base point
-        returnValue = rex.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, rex.IFCCoords.ProjectBasePoint)
+        returnValue = rExIFC.Export3DViewsToIFC(doc, 'NWCP', ifcExportOption, rootPath_, IFCCoordinates.IFCCoords.ProjectBasePoint)
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return returnValue
@@ -156,8 +158,8 @@ def IFCExportViewDefault(doc):
 
     returnValue = res.Result()
     try:
-        ifcExportOptionDefault = rex.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, rex.IFCSpaceBoundaries.noBoundaries)
-        returnValue = rex.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
+        ifcExportOptionDefault = rExIFC.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.noBoundaries)
+        returnValue = rExIFC.Export3DViewsToIFCDefault(doc, 'NWCS', ifcExportOptionDefault,  rootPath_)
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return returnValue
@@ -186,8 +188,8 @@ def NWCExportByView(doc):
 
     returnValue = res.Result()
     try:
-        nwcExportOption = rex.SetUpNWCDefaultExportOptionSharedByView()
-        returnValue = rex.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
+        nwcExportOption = rExNavis.SetUpNWCDefaultExportOptionSharedByView()
+        returnValue = rExNavis.Export3DViewsToNWC(doc, 'NWCS', nwcExportOption,  rootPath_)
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
     return returnValue
@@ -216,8 +218,8 @@ def NWCExportModel(doc):
 
     returnValue = res.Result()
     try:
-        nwcExportOption = rex.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
-        returnValue = rex.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
+        nwcExportOption = rExNavis.SetUpNWCCustomExportOption(False,True,False,True,False,False,True,False)
+        returnValue = rExNavis.ExportModelToNWC(doc, nwcExportOption, rootPath_, 'test_project Coords.nwc')
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
     return returnValue
@@ -245,6 +247,6 @@ statusExport_.Update(statusExportNWCModel_)
 statusExportNWCThreeDViews_= NWCExportByView(doc)
 statusExport_.Update(statusExportNWCThreeDViews_)
 
-Output(statusExport_.message + ' :: ' + str(statusExport_.status))
+Output('{} :: [{}]'.format(statusExport_.message ,statusExport_.status))
 
 Output('Exporting.... finished ')

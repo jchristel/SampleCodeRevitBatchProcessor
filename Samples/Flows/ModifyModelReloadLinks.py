@@ -61,9 +61,9 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples import RevitLinks as rLink
-from duHast.Utilities import Utility as util
+from duHast.APISamples.Common import RevitFileIO as rFileIO
+from duHast.APISamples.Links import RevitLinks as rLink, RevitCadLinks as rCadLink
+from duHast.Utilities import DateStamps as dStamp
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -130,7 +130,7 @@ def LinkName(name):
 # store output here:
 rootPath_ = r'C:\temp'
 
-hostName_ = util.GetOutPutFileName(revitFilePath_)
+hostName_ = dStamp.GetOutPutFileName(revitFilePath_)
 
 # list containing directories where Revit links are located:
 # ['Directory path 1', 'Directory path 2']
@@ -152,22 +152,22 @@ resultRevitLinksReload_ = rLink.ReloadRevitLinks(
     rLink.DefaultWorksetConfigForReload
 )
 
-Output(resultRevitLinksReload_.message + ' :: ' + str(resultRevitLinksReload_.status))
+Output('{} :: [{}]'.format(resultRevitLinksReload_.message ,resultRevitLinksReload_.status))
 
 # reload CAD links
-resultCADLinksReload_ = rLink.ReloadCADLinks(
+resultCADLinksReload_ = rCadLink.ReloadCADLinks(
     doc, 
     linkCADLocations_, 
     hostName_, 
     rLink.DefaultLinkName # this could be replaced by custom function i.e. LinkName(name) provided above
 )
 
-Output(resultCADLinksReload_.message + ' :: ' + str(resultCADLinksReload_.status))
+Output('{} :: [{}]'.format(resultCADLinksReload_.message, resultCADLinksReload_.status))
 
 # sync changes back to central
 if (debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    syncing_ = rFileIO.SyncFile (doc)
+    Output('Syncing to Central: finished [{}]'.format (syncing_.status))
 
 Output('Modifying Revit File.... finished ')

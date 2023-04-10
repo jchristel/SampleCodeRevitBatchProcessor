@@ -66,10 +66,10 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Views import RevitViews as rView
-from duHast.APISamples import RevitRevisions as rRev
-from duHast.Utilities import Utility as util
+from duHast.APISamples.Common import RevitFileIO as rFileIO
+from duHast.APISamples.Views import RevitViews as rView, RevitViewSheets as rSheetView
+from duHast.APISamples.Revisions import RevitRevisions as rRev
+from duHast.Utilities import Utility as util, FilesIO as fileIO, Compare as comp
 from duHast.Utilities import Result as res
 
 # autodesk API
@@ -89,10 +89,10 @@ if not debug_:
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    revit_file_path_ = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    revit_file_path_ = debugRevitFileName_
 
 # -------------
 # my code here:
@@ -112,7 +112,7 @@ def Output(message = ''):
     else:
         print (message)
 
-def GetSheets(doc, sheetFilterRules):
+def GetSheets(doc, sheet_filter_rules):
     '''
     Get all sheets from the model matching filters supplied. 
 
@@ -127,10 +127,10 @@ def GetSheets(doc, sheetFilterRules):
 
     results = []
     # get sheets where revisions need to be applied to:
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
-    for fileName, sheetRules in sheetFilterRules:
-        if (revitFileName.startswith(fileName)):
-            results = rView.GetSheetsByFilters(doc, sheetRules)
+    revit_file_name = fileIO.GetFileNameWithoutExt(revit_file_path_)
+    for file_name, sheet_rules in sheet_filter_rules:
+        if (revit_file_name.startswith(file_name)):
+            results = rSheetView.GetSheetsByFilters(doc, sheet_rules)
             break
     return results
 
@@ -158,16 +158,16 @@ def MarkRevisionsAsIssued(doc, revIds):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get all revisions in file
-    revsInModel = rdb.Revision.GetAllRevisionIds(doc)
+    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
     # check against what was applied
-    idsToBeMarkedIssued = set(revIds).intersection(revsInModel)
-    for id in idsToBeMarkedIssued:
+    ids_to_be_marked_issued = set(revIds).intersection(revisions_in_model)
+    for id in ids_to_be_marked_issued:
         # set revision status to issued
-        resultSetToIssued = rRev.MarkRevisionAsIssuedByRevisionId(doc, id)
-        returnValue.Update(resultSetToIssued)
-    return returnValue
+        result_set_to_issued = rRev.MarkRevisionAsIssuedByRevisionId(doc, id)
+        return_value.Update(result_set_to_issued)
+    return return_value
 
 def AddRevToDocument(doc):
     '''
@@ -191,24 +191,24 @@ def AddRevToDocument(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # store rev id's in list 
     ids=[]
     try:
-        for rev in revisionsToAdd_:
+        for rev in revisions_to_add_:
             # create new revision
-            newRevStatus = rRev.CreateRevision(doc, rev)
-            if(newRevStatus.status):
+            new_rev_status = rRev.CreateRevision(doc, rev)
+            if(new_rev_status.status):
                 # append to existing revisions
-                newRev = newRevStatus.result[0]
+                newRev = new_rev_status.result[0]
                 ids.Add(newRev.Id)
-        returnValue.result = ids
+        return_value.result = ids
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to create revisions: ' + str(e))
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to create revisions: {}'.format(e))
+    return return_value
 
 # main function of this sample
-def AddRevsToSheetsRequired(doc, sheetFilterRules):
+def AddRevsToSheetsRequired(doc, sheet_filter_rules):
     '''
     Adds revision(s) to documents, applies revision(s) to sheet(s) and then sets the revision status to 'issued'.
 
@@ -232,32 +232,32 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get sheet to which revisions are to be applied
-    sheetsInModelFiltered = GetSheets(doc, sheetFilterRules)
-    if(len(sheetsInModelFiltered) > 0 ):
+    sheets_in_model_filtered = GetSheets(doc, sheet_filter_rules)
+    if(len(sheets_in_model_filtered) > 0 ):
         # set up revision
-        revIdResult = AddRevToDocument(doc)
-        returnValue.Update(revIdResult)
+        revision_id_result = AddRevToDocument(doc)
+        return_value.Update(revision_id_result)
         # check what came back
-        if(revIdResult.status):
-            revIds = revIdResult.result
+        if(revision_id_result.status):
+            revIds = revision_id_result.result
             # get sheets where revisions need to be applied to:
-            revitFileName = util.GetFileNameWithoutExt(revitFilePath_)
-            for fileName, sheetRules in sheetFilterRules:
-                if (revitFileName.startswith(fileName)):
+            revit_file_name = fileIO.GetFileNameWithoutExt(revit_file_path_)
+            for file_name, sheet_rules in sheet_filter_rules:
+                if (revit_file_name.startswith(file_name)):
                     # add revisions to sheets:
-                    for sheet in sheetsInModelFiltered:
-                        resultAddRevisionsToSheet = rRev.AddRevisionsToSheet(doc, sheet, revIds)
-                        returnValue.Update(resultAddRevisionsToSheet)
+                    for sheet in sheets_in_model_filtered:
+                        result_add_revisions_to_sheet = rRev.AddRevisionsToSheet(doc, sheet, revIds)
+                        return_value.Update(result_add_revisions_to_sheet)
             # set revisions as issued
-            resultMarkAsIssued = MarkRevisionsAsIssued(doc, revIds)
-            returnValue.Update(resultMarkAsIssued)
+            result_mark_as_issued = MarkRevisionsAsIssued(doc, revIds)
+            return_value.Update(result_mark_as_issued)
     else:
-        returnValue.UpdateSep(False, 'No sheet(s) matching filter(s) found')
+        return_value.UpdateSep(False, 'No sheet(s) matching filter(s) found')
     # wipe result list since it contains a mix of ids no longer required
-    returnValue.result = []
-    return returnValue
+    return_value.result = []
+    return return_value
 
 # -------------
 # main:
@@ -267,7 +267,7 @@ def AddRevsToSheetsRequired(doc, sheetFilterRules):
 rootPath_ = r'C:\temp'
 
 # list of revisions to be added to each model
-revisionsToAdd_ = [
+revisions_to_add_ = [
     rRev.revisionData(
         'Revision description text',
         'Issue to text',
@@ -282,13 +282,13 @@ revisionsToAdd_ = [
 sheetRules_ = [
     [
         'FileOne',[
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
+            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value']
         ]
     ],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
     [
         'FileTwo', [
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value'],
-            ['Parameter Name', util.ConDoesNotEqual, 'Parameter Value']
+            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value'],
+            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value']
         ]
     ]# applies to file FileTwoBeforeName
 ]
@@ -297,18 +297,18 @@ Output('Add revision.... start')
 
 #add revision to doc and to sheet named 'Splashscreen'
 result_  = AddRevsToSheetsRequired(doc, sheetRules_)
-Output('Add revision.... status: ' + str(result_.status))
+Output('Add revision.... status: [{}]'.format(result_.status))
 
 # synch the file
 if(debug_ == False):
   if (doc.IsWorkshared):
       Output('Add revision.... Syncing to Central: start')
-      result_ = com.SyncFile (doc)
-      Output('Add revision.... Syncing to Central: finished '+ str(result_.status))
+      syncing_ = rFileIO.SyncFile (doc)
+      Output('Syncing to Central: finished [{}]'.format (syncing_.status))
   else:
       #none work shared
       Output('Add revision.... Saving non workshared file: start')
-      doc.SaveAs(revitFilePath_)
+      doc.SaveAs(revit_file_path_)
       Output('Add revision.... Saving non workshared file: finished')
 
 Output('Add revision.... finished ')

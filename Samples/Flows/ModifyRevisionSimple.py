@@ -63,8 +63,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples import RevitRevisions as rRev
+from duHast.APISamples.Common import RevitFileIO as rFileIO
+from duHast.APISamples.Revisions import RevitRevisions as rRev
 from duHast.Utilities import Result as res
 
 # autodesk API
@@ -128,21 +128,21 @@ def AddRevToDocument(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # store rev id's in list 
     ids=[]
     try:
-        for rev in revisionsToAdd_:
+        for rev in revisions_to_add_:
             # create new revision
-            newRevStatus = rRev.CreateRevision(doc, rev)
-            if(newRevStatus.status):
+            new_revision_status = rRev.CreateRevision(doc, rev)
+            if(new_revision_status.status):
                 # append to existing revisions
-                newRev = newRevStatus.result[0]
-                ids.Add(newRev.Id)
-        returnValue.result = ids
+                new_revision = new_revision_status.result[0]
+                ids.Add(new_revision.Id)
+        return_value.result = ids
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to create revisions: ' + str(e))
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to create revisions: {}'.format(e))
+    return return_value
 
 # -------------
 # main:
@@ -152,7 +152,7 @@ def AddRevToDocument(doc):
 rootPath_ = r'C:\temp'
 
 # list of revisions in format:
-revisionsToAdd_ = [
+revisions_to_add_ = [
     rRev.revisionData(
         'Revision description text',
         'Issue to text',
@@ -167,14 +167,14 @@ Output('Add revision.... start')
 
 # add revision to doc
 result_  = AddRevToDocument(doc)
-Output('Add revision.... status: ' + str(result_.status))
+Output('Add revision.... status: [{}]'.format(result_.status))
 
 # synch the file
 if(debug_ == False):
   if (doc.IsWorkshared):
       Output('Add revision.... Syncing to Central: start')
-      result_ = com.SyncFile (doc)
-      Output('Add revision.... Syncing to Central: finished '+ str(result_.status))
+      syncing_ = rFileIO.SyncFile (doc)
+      Output('Syncing to Central: finished [{}]'.format (syncing_.status))
   else:
       #none work shared
       Output('Add revision.... Saving non workshared file: start')

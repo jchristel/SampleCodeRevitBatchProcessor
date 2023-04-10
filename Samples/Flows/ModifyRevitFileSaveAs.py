@@ -64,7 +64,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitFileIO as rFileIO
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -108,21 +108,21 @@ rootPath_ = r'C:\temp'
 
 # list containing the default file names:
 # [[revit host file name before save, revit host file name after save]]
-defaultFileNames_ = [
+default_file_names_ = [
     ['Test_Files', 'Test_Files_new']
 ]
 
 # save revit file to new location
 Output('Modifying Revit File.... start')
-result_ = com.SaveAs(doc, rootPath_, revitFilePath_, defaultFileNames_)
+result_ = rFileIO.SaveAs(doc, rootPath_, revitFilePath_, default_file_names_)
 
 # make further changes as required....
-Output('Modifying Revit File.... status: ' + str(result_.status))
+Output('Modifying Revit File.... status: {}'.format(result_.status))
 
 # sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    syncing_ = rFileIO.SyncFile (doc)
+    Output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
 Output('Modifying Revit File.... finished ')

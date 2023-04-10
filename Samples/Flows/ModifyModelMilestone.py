@@ -65,8 +65,9 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitFileIO as rFileIO
 from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesIO as fileIO, DateStamps as dStamp, DirectoryIO as dirIO
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -119,25 +120,25 @@ modelOutFolderSuffix_ = '_Milestone'
 # list containing the default file name:
 # which in case of this back up is the same as the current file name
 # [[revit host file name before save, revit host file name after save]]
-defaultFileNames_ = [[util.GetFileNameWithoutExt(revitFilePath_), util.GetFileNameWithoutExt(revitFilePath_)]]
+defaultFileNames_ = [[fileIO.GetFileNameWithoutExt(revitFilePath_), fileIO.GetFileNameWithoutExt(revitFilePath_)]]
 
 #save revit file to new location
 Output('Modifying Revit File.... start')
 
 # get mile stone folder
-milestonePath_ = rootPath_ + '\\' + util.GetFolderDateStamp() + modelOutFolderSuffix_
-flagGotFolder_ = util.CreateTargetFolder(rootPath_, util.GetFolderDateStamp() + modelOutFolderSuffix_)
+milestonePath_ = rootPath_ + '\\' + dStamp.GetFolderDateStamp() + modelOutFolderSuffix_
+flagGotFolder_ = dirIO.CreateTargetFolder(rootPath_, dStamp.GetFolderDateStamp() + modelOutFolderSuffix_)
 # do we have a valid folder?
 if (flagGotFolder_):
     # save new central file to back up folder
-    result_ = com.SaveAs(doc, rootPath_ + '\\' + milestonePath_, revitFilePath_ , defaultFileNames_)
-    Output(result_.message + ' :: ' + str(result_.status))
+    result_ = rFileIO.SaveAs(doc, rootPath_ + '\\' + milestonePath_, revitFilePath_ , defaultFileNames_)
+    Output('{} :: [{}]'.format(result_.message ,result_.status))
     # sync changes back to central
     if (debug_ == False):
         Output('Syncing to Central: start')
-        syncing_ = com.SyncFile (doc)
-        Output('Syncing to Central: finished ' + str(syncing_.status))
+        syncing_ = rFileIO.SyncFile (doc)
+        Output('Syncing to Central: finished [{}]'.format (syncing_.status))
 else:
-    Output('failed to create target folder ' + milestonePath_)
+    Output('failed to create target folder: {} '.format(milestonePath_))
 
 ('Modifying Revit File.... finished ')

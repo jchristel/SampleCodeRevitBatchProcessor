@@ -57,11 +57,9 @@ import sys
 sys.path.append(commonlibraryDebugLocation_)
 
 # import common library
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import Utility as util
+from duHast.APISamples.Common import RevitFileIO as rFileIO, RevitTransaction as rTran
+from duHast.Utilities import Utility as util, Result as res
 from duHast.APISamples.Family import RevitFamilyUtils as rFamU
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitTransaction as rTran
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -80,13 +78,10 @@ if not debug_:
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    revit_file_path_ = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
-
-
-
+    revit_file_path_ = debugRevitFileName_
 
 
 clr.AddReference('System.Core')
@@ -120,35 +115,35 @@ def renameLoadedFamilies(doc):
     :type doc: Autodesk.Revit.DB.Document
     '''
 
-    returnValue = res.Result()
-    famIds = rFamU.GetAllLoadableFamilyIdsThroughTypes(doc)
+    return_value = res.Result()
+    family_ids = rFamU.GetAllLoadableFamilyIdsThroughTypes(doc)
     counter = 0
-    for familyID in famIds:
+    for family_id in family_ids:
         # retrieve the family through the id
-        family = doc.GetElement(familyID)
+        family = doc.GetElement(family_id)
         # loop over rename directives from csv file
-        for oldname,newname in LIST_OF_FAMILY_NAMES:
+        for old_name,new_name in LIST_OF_FAMILY_NAMES:
             # remove file extension to old and new name
-            if(oldname.lower().endswith('.rfa')):
-                oldname = oldname[:-4]
-            if(newname.lower().endswith('.rfa')):
-                newname = newname[:-4]
-            if oldname == family.Name:
+            if(old_name.lower().endswith('.rfa')):
+                old_name = old_name[:-4]
+            if(new_name.lower().endswith('.rfa')):
+                new_name = new_name[:-4]
+            if old_name == family.Name:
                 counter = counter + 1
-                Output ('Found: ' + oldname)
+                Output ('Found: {}'.format(old_name))
             	# rename the family within an action ( needs to be wrapped into a Revit transaction)
                 def action():
-                    actionReturnValue = res.Result()
-                    Output ('Attempting to rename family: '+ oldname)
+                    action_return_value = res.Result()
+                    Output ('Attempting to rename family: {}'.format(old_name))
                     try:
-                        family.Name = newname
-                        actionReturnValue.UpdateSep(True, 'Renamed old: ' + oldname + ' to new: ' + newname)
+                        family.Name = new_name
+                        action_return_value.UpdateSep(True, 'Renamed old: {} to new: {}'.format(old_name, new_name))
                     except Exception as e:
-                        actionReturnValue.UpdateSep(False, 'Failed to rename family: ' + oldname + ' with exception: ' + str(e))
-                    return actionReturnValue
-                transaction = rdb.Transaction(doc, 'Renaming: ' + newname)
-                returnValue.Update( rTran.in_transaction(transaction, action) )
-    Output(returnValue.message)
+                        action_return_value.UpdateSep(False, 'Failed to rename family: {} with exception: {}'.format(old_name,e))
+                    return action_return_value
+                transaction = rdb.Transaction(doc, 'Renaming: {}'.format(new_name))
+                return_value.Update( rTran.in_transaction(transaction, action) )
+    Output(return_value.message)
 
 def readFamilyNames():
     '''
@@ -169,9 +164,9 @@ def readFamilyNames():
 
     try:
         LIST_OF_FAMILY_NAMES = util.ReadCSVfile(FAMILY_NAME_FILE_PATH)
-        Output('Read: ' + str(len(LIST_OF_FAMILY_NAMES)) + ' rename rules')
+        Output('Read: {} rename rules.'.format(len(LIST_OF_FAMILY_NAMES)))
     except Exception as e:
-        Output('Failed to read family name file: ' + str(e))
+        Output('Failed to read family name file: {}'.format(e))
 
 # -------------
 # main:
@@ -196,7 +191,7 @@ renameLoadedFamilies(doc)
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    syncing_ = rFileIO.SyncFile (doc)
+    Output('Syncing to Central: finished [{}]'.format (syncing_.status))
 
 Output('Modifying Revit File.... finished ')

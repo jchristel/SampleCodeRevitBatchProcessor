@@ -58,7 +58,7 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import RevitFileIO as rFileIO
 from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
@@ -223,12 +223,12 @@ rootPath_ = r'C:\temp'
 # modify revit links
 Output('Modifying Revit Link(s).... start')
 result_ = modifyRevitLinkInstance(doc)
-Output(str(result_.message) + ' ' + str(result_.status))
+Output('{} [{}]'.format(result_.message, result_.status))
 
 #sync changes back to central
 if (doc.IsWorkshared and debug_ == False):
     Output('Syncing to Central: start')
-    syncing_ = com.SyncFile (doc)
-    Output('Syncing to Central: finished ' + str(syncing_.status))
+    syncing_ = rFileIO.SyncFile (doc)
+    Output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
 Output('Modifying Revit Link(s).... finished ')

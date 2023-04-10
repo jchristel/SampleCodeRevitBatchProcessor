@@ -5,7 +5,6 @@ This module contains a number of helper functions relating to:
 
 - date stamps (with varies formatting options)
 
-
 '''
 #
 #License:

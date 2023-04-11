@@ -51,11 +51,11 @@ Notes:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
@@ -63,7 +63,7 @@ import datetime
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.APISamples.Common import RevitFileIO as rFileIO
@@ -79,27 +79,27 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revit_file_path_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revit_file_path_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -107,12 +107,12 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def GetSheets(doc, sheet_filter_rules):
+def get_sheets(doc, sheet_filter_rules):
     '''
     Get all sheets from the model matching filters supplied. 
 
@@ -127,14 +127,14 @@ def GetSheets(doc, sheet_filter_rules):
 
     results = []
     # get sheets where revisions need to be applied to:
-    revit_file_name = fileIO.GetFileNameWithoutExt(revit_file_path_)
+    revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
     for file_name, sheet_rules in sheet_filter_rules:
         if (revit_file_name.startswith(file_name)):
             results = rSheetView.GetSheetsByFilters(doc, sheet_rules)
             break
     return results
 
-def MarkRevisionsAsIssued(doc, revIds):
+def mark_revisions_as_issued(doc, revIds):
     '''
     Marks revisions as issued.
 
@@ -169,7 +169,7 @@ def MarkRevisionsAsIssued(doc, revIds):
         return_value.Update(result_set_to_issued)
     return return_value
 
-def AddRevToDocument(doc):
+def add_revision_to_document(doc):
     '''
     Adds a number of revisions to the document
 
@@ -195,7 +195,7 @@ def AddRevToDocument(doc):
     # store rev id's in list 
     ids=[]
     try:
-        for rev in revisions_to_add_:
+        for rev in REVISIONS_TO_ADD:
             # create new revision
             new_rev_status = rRev.CreateRevision(doc, rev)
             if(new_rev_status.status):
@@ -208,7 +208,7 @@ def AddRevToDocument(doc):
     return return_value
 
 # main function of this sample
-def AddRevsToSheetsRequired(doc, sheet_filter_rules):
+def add_revisions_to_sheets_required(doc, sheet_filter_rules):
     '''
     Adds revision(s) to documents, applies revision(s) to sheet(s) and then sets the revision status to 'issued'.
 
@@ -234,16 +234,16 @@ def AddRevsToSheetsRequired(doc, sheet_filter_rules):
 
     return_value = res.Result()
     # get sheet to which revisions are to be applied
-    sheets_in_model_filtered = GetSheets(doc, sheet_filter_rules)
+    sheets_in_model_filtered = get_sheets(doc, sheet_filter_rules)
     if(len(sheets_in_model_filtered) > 0 ):
         # set up revision
-        revision_id_result = AddRevToDocument(doc)
+        revision_id_result = add_revision_to_document(doc)
         return_value.Update(revision_id_result)
         # check what came back
         if(revision_id_result.status):
             revIds = revision_id_result.result
             # get sheets where revisions need to be applied to:
-            revit_file_name = fileIO.GetFileNameWithoutExt(revit_file_path_)
+            revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
             for file_name, sheet_rules in sheet_filter_rules:
                 if (revit_file_name.startswith(file_name)):
                     # add revisions to sheets:
@@ -251,7 +251,7 @@ def AddRevsToSheetsRequired(doc, sheet_filter_rules):
                         result_add_revisions_to_sheet = rRev.AddRevisionsToSheet(doc, sheet, revIds)
                         return_value.Update(result_add_revisions_to_sheet)
             # set revisions as issued
-            result_mark_as_issued = MarkRevisionsAsIssued(doc, revIds)
+            result_mark_as_issued = mark_revisions_as_issued(doc, revIds)
             return_value.Update(result_mark_as_issued)
     else:
         return_value.UpdateSep(False, 'No sheet(s) matching filter(s) found')
@@ -264,10 +264,10 @@ def AddRevsToSheetsRequired(doc, sheet_filter_rules):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # list of revisions to be added to each model
-revisions_to_add_ = [
+REVISIONS_TO_ADD = [
     rRev.revisionData(
         'Revision description text',
         'Issue to text',
@@ -279,7 +279,7 @@ revisions_to_add_ = [
 ]
 
 # sheets to add revisions to rules 
-sheetRules_ = [
+SHEET_RULES = [
     [
         'FileOne',[
             ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value']
@@ -293,22 +293,22 @@ sheetRules_ = [
     ]# applies to file FileTwoBeforeName
 ]
 
-Output('Add revision.... start')
+output('Add revision.... start')
 
 #add revision to doc and to sheet named 'Splashscreen'
-result_  = AddRevsToSheetsRequired(doc, sheetRules_)
-Output('Add revision.... status: [{}]'.format(result_.status))
+RESULT  = add_revisions_to_sheets_required(DOC, SHEET_RULES)
+output('Add revision.... status: [{}]'.format(RESULT.status))
 
 # synch the file
-if(debug_ == False):
-  if (doc.IsWorkshared):
-      Output('Add revision.... Syncing to Central: start')
-      syncing_ = rFileIO.SyncFile (doc)
-      Output('Syncing to Central: finished [{}]'.format (syncing_.status))
+if(DEBUG == False):
+  if (DOC.IsWorkshared):
+      output('Add revision.... Syncing to Central: start')
+      SYNCING = rFileIO.SyncFile (DOC)
+      output('Syncing to Central: finished [{}]'.format (SYNCING.status))
   else:
       #none work shared
-      Output('Add revision.... Saving non workshared file: start')
-      doc.SaveAs(revit_file_path_)
-      Output('Add revision.... Saving non workshared file: finished')
+      output('Add revision.... Saving non workshared file: start')
+      DOC.SaveAs(REVIT_FILE_PATH)
+      output('Add revision.... Saving non workshared file: finished')
 
-Output('Add revision.... finished ')
+output('Add revision.... finished ')

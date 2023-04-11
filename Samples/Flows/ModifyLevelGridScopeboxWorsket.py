@@ -43,18 +43,18 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
-# debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+SCRIPT_LOCATION = r'C:\temp'
+# DEBUG mode revit project file name
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
 from duHast.APISamples.Common import RevitFileIO as rFileIO
@@ -68,50 +68,50 @@ import Autodesk.Revit.DB as rdb
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
-# flag whether this runs in debug or not
-debug = False
+# flag whether this runs in DEBUG or not
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+# output messages either to batch processor (DEBUG = False) or console (DEBUG = True)
+def output(message = ''):
     '''
-    Output messages either to batch processor (debug = False) or console (debug = True)
+    Output messages either to batch processor (DEBUG = False) or console (DEBUG = True)
 
     :param message: the message, defaults to ''
     :type message: str, optional
     '''
 
-    if not debug:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def Modify(doc, revitFilePath, gridData):
+def modify(doc, revit_file_path, grid_data):
     '''
     Changes the worksets of grids, levels, reference planes and scope boxes.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The current model (document) file path.
-    :type revitFilePath: str
-    :param gridData: List of files and associated worksets names. Refer to `defaultWorksets_` below.
-    :type gridData: [[filename, workset name]]
+    :param revit_file_path: The current model (document) file path.
+    :type revit_file_path: str
+    :param grid_data: List of files and associated worksets names. Refer to `default_worksets` below.
+    :type grid_data: [[filename, workset name]]
 
     :return: 
         Result class instance.
@@ -128,42 +128,43 @@ def Modify(doc, revitFilePath, gridData):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    revitFileName = str(util.GetFileNameWithoutExt(revitFilePath))
+    return_value = res.Result()
+    revit_file_name = str(rFileIO.GetFileNameWithoutExt(revit_file_path))
     flag = False
-    for fileName, defaultWorksetName in gridData:
-        if (revitFileName.startswith(fileName)):
+    for file_name, default_workset_name in grid_data:
+        if (revit_file_name.startswith(file_name)):
             flag = True
-            collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
-            grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
-            returnValue.Update(grids)
+            collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+            grids = rWork.ModifyElementWorkset(doc, default_workset_name, collector_grids, 'grids')
+            return_value.Update(grids)
 
-            collectorLevels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
-            levels = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorLevels, 'levels')
-            returnValue.Update(levels)
+            collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
+            levels = rWork.ModifyElementWorkset(doc, default_workset_name, collector_levels, 'levels')
+            return_value.Update(levels)
 
-            collectorScopeBoxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
-            sboxes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorScopeBoxes, 'scope boxes')
-            returnValue.Update(sboxes)
+            collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
+            scope_boxes = rWork.ModifyElementWorkset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
+            return_value.Update(scope_boxes)
             
             # fix up ref planes
-            collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-            refPlanes = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorRefPlanes,  'reference planes')
-            returnValue.Update(refPlanes)
+            collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
+            ref_planes = rWork.ModifyElementWorkset(doc, default_workset_name, collector_ref_planes,  'reference planes')
+            return_value.Update(ref_planes)
             
             break
     if (flag == False):
-        returnValue.UpdateSep(False, 'No grid data provided for current Revit file: {}'.format(revitFileName))
-    return returnValue
+        return_value.UpdateSep(False, 'No grid data provided for current Revit file: {}'.format(revit_file_name))
+    return return_value
+
 
 # -------------
 # main:
 # -------------
 
 # store output here:
-rootPath = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
-Output('Checking levels and grids.... start')
+output('Checking levels and grids.... start')
 
 # a list in format
 #[
@@ -171,7 +172,7 @@ Output('Checking levels and grids.... start')
 #['Revit file name','workset levels, grids, scope boxes should be on']
 #]
 
-defaultWorksets_ = [
+DEFAULT_WORKSETS = [
     ['Test_grids', 'Shared Levels & Grids']
 ]
 
@@ -180,13 +181,13 @@ List containing the workset name by project file
 '''
 
 # modify workset of levels, grids ands scope boxes
-statusModifyWorkSets_ = Modify(doc, revitFilePath, defaultWorksets_)
-Output('{} :: [{}]'.format( statusModifyWorkSets_.message,statusModifyWorkSets_.status))
+STATUS_MODIFY_WORKSETS = modify(DOC, REVIT_FILE_PATH, DEFAULT_WORKSETS)
+output('{} :: [{}]'.format( STATUS_MODIFY_WORKSETS.message,STATUS_MODIFY_WORKSETS.status))
 
 # sync changes back to central
-if (doc.IsWorkshared and debug == False):
-    Output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (doc)
-    Output('Syncing to Central: finished [{}] '.format(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    SYNCING = rFileIO.SyncFile (DOC)
+    output('Syncing to Central: finished [{}] '.format(SYNCING.status))
 
-Output('Checking levels and grids.... finished ')
+output('Checking levels and grids.... finished ')

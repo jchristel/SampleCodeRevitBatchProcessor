@@ -109,7 +109,7 @@ def output(message = ''):
         print (message)
 
 # 
-def CheckName(view):
+def check_name(view):
     '''
     Checks whether view names starts with a number of given strings.
 
@@ -125,7 +125,7 @@ def CheckName(view):
     else:
         return True
 
-def ModifyViews(doc, revit_file_path, view_data):
+def modify_views(doc, revit_file_path, view_data):
     '''
     Deletes views based on rules
 
@@ -165,7 +165,7 @@ def ModifyViews(doc, revit_file_path, view_data):
     return return_value
 
 
-def ModifySheets(doc, sheets_data):
+def modify_sheets(doc, sheets_data):
     '''
     Deletes sheets based on rules.
 
@@ -248,15 +248,15 @@ List containing the view rules by project file
 output('Modifying Revit File.... start')
 
 # delete sheets
-RESULT_DELETE_SHEETS = ModifySheets(DOC, SHEET_RULES)
+RESULT_DELETE_SHEETS = modify_sheets(DOC, SHEET_RULES)
 output('{} .... status: [{}]'.format( RESULT_DELETE_SHEETS.message,RESULT_DELETE_SHEETS.status))
 
 # delete views
-RESULT_DELETE_VIEWS = ModifyViews(DOC, REVIT_FILE_PATH, VIEW_RULES)
+RESULT_DELETE_VIEWS = modify_views(DOC, REVIT_FILE_PATH, VIEW_RULES)
 output(RESULT_DELETE_VIEWS.message + '.... status: ' + str(RESULT_DELETE_VIEWS.status))
 
 # delete views not on sheets
-RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.DeleteViewsNotOnSheets(DOC, CheckName)
+RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.DeleteViewsNotOnSheets(DOC, check_name)
 output(str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.message)+ '.... status: ' + str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.status))
  
 # sync changes back to central, non workshared files will not be saved!

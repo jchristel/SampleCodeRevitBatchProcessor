@@ -82,7 +82,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -103,7 +103,7 @@ def Output(message = ''):
 rootPath_ = r'C:\temp'
 
 # combine data
-Output('Writing summary Data.... start')
+output('Writing summary Data.... start')
 
 # get the current date stamp to be used as a file prefix for the combined report
 dateStamp_ = dateStamp.GetFileDateStamp()
@@ -117,7 +117,7 @@ fileCombine.CombineFiles(
     dateStamp_ + '_CAD_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify users
-Output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
+output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
 
 # combine report files based on:
 fileCombine.CombineFiles(
@@ -128,4 +128,4 @@ fileCombine.CombineFiles(
     dateStamp_ + '_RVT_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify user
-Output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')
+output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')

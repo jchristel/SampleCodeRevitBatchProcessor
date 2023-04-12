@@ -96,7 +96,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -128,12 +128,12 @@ def _getNWCFileName(currentFileName):
                 returnValue = newNWCFileName
                 break
     except Exception as e:
-        Output('Failed to find match: ' + str(e))
+        output('Failed to find match: ' + str(e))
         returnValue = currentFileName
     if(foundMatch):
-        Output('Found match for:  ' + currentFileName + ' to: ' + returnValue)
+        output('Found match for:  ' + currentFileName + ' to: ' + returnValue)
     else:
-        Output('Found no match for:  ' + currentFileName )
+        output('Found no match for:  ' + currentFileName )
     return returnValue
 
 def _copyNWCFiles():
@@ -150,7 +150,7 @@ def _copyNWCFiles():
     for nwcFileNameStart, nwcTargetFolder in defaultNWCLocations_:
         files =  fileGet.GetFilesWithFilter (sourcePath_, fileFilter, nwcFileNameStart + '*')
         if(files != None and len(files) > 0):
-            Output('Copying nwc Files...' + str(len(files)))
+            output('Copying nwc Files...' + str(len(files)))
             for file in files:
                 try:
                     # extract file name only
@@ -160,12 +160,12 @@ def _copyNWCFiles():
                     dst = nwcTargetFolder + '\\' + destinationFileName
                     copy_status = fileIO.CopyFile(src,dst)
                     status = status & copy_status
-                    Output('Copied file from ' + src + ' to ' + dst)
+                    output('Copied file from ' + src + ' to ' + dst)
                 except Exception:
-                    Output('Failed to copy file from ' + src + ' to ' + dst)
+                    output('Failed to copy file from ' + src + ' to ' + dst)
                     status = False
         else:
-            Output('No nwc files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
+            output('No nwc files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
     return status
 
 def CreateTargetFolder(targetLocation, folderName):
@@ -220,7 +220,7 @@ def MoveFiles(fileData):
             if(files != None and len(files) > 0):
                 flagGotFolder = dirIO.CreateTargetFolder(targetLocation, folderName)
                 if (flagGotFolder):
-                    Output('Moving Files...' + str(len(files)))
+                    output('Moving Files...' + str(len(files)))
                     # move files
                     for file in files:
                         try:
@@ -230,16 +230,16 @@ def MoveFiles(fileData):
                             dst = targetLocation + '\\' + folderName + '\\' + fileName
                             shutil.move(src,dst)
                             status = status & True
-                            Output('Moved file from ' + src + ' to ' + dst)
+                            output('Moved file from ' + src + ' to ' + dst)
                         except Exception:
-                            Output('Failed to move file from ' + src + ' to ' + dst)
+                            output('Failed to move file from ' + src + ' to ' + dst)
                             status = False
                 else:
-                    Output('Failed to create target folder ' + targetLocation )
+                    output('Failed to create target folder ' + targetLocation )
             else:
-                Output('No files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
+                output('No files matching filter ' + fileFilter + ' in source location: ' + sourcePath_)
         else:
-            Output(targetLocation + ' no longer exists!')
+            output(targetLocation + ' no longer exists!')
             status = False
     return status
 
@@ -442,7 +442,7 @@ def _readCurrentFile():
     try:
         referenceList = fileCSV.ReadCSVfile(currentIssueDatafileName_)
     except Exception as e:
-        Output('Failed to open current model issue list with exception: ' + str(e))
+        output('Failed to open current model issue list with exception: ' + str(e))
     return referenceList
 
 def _writeNewData(data):
@@ -460,7 +460,7 @@ def _writeNewData(data):
         fileCSV.writeReportDataAsCSV(currentIssueDatafileName_,[],data)
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + currentIssueDatafileName_+ ' with exception: ' + str(e))
+        output('Failed to write data file!' + currentIssueDatafileName_+ ' with exception: ' + str(e))
     return status
 
 # -------------
@@ -531,7 +531,7 @@ rvtSE_ = [['.rvt',['SecurityFileBeforeName']]]
 
 # build full files received baseline 2D array
 
-Output('Building files received mapping table.... start')
+output('Building files received mapping table.... start')
 allFilesReceivedNWC_ = [nwcSTNorth_, nwcSTSteelOne_,  nwcHY_,  nwcFPW_, nwcFPD_, nwcME_,  nwcEL_,  nwcSE_]
 allFilesReceivedRVT_ = [rvtSTNorth_, rvtSTSteelOne_,  rvtHY_, rvtFPW_, rvtFPD_, rvtME_, rvtEL_, rvtSE_]
 
@@ -553,9 +553,9 @@ outPutRowHeadersCount_ = len(outPutRowHeaders_)
 
 # save files received list
 resultSaveFileStats_ = SaveFilesReceivedList()
-Output('Writing files received mapping table.... status ' + str(resultSaveFileStats_))
+output('Writing files received mapping table.... status ' + str(resultSaveFileStats_))
 
 # move files
-Output('Moving files .... start')
+output('Moving files .... start')
 result_ = MoveFiles(defaultModelInLocations_)
-Output('Moving files .... status: ' + str(result_))
+output('Moving files .... status: ' + str(result_))

@@ -82,7 +82,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -106,10 +106,10 @@ rootPathExport_ = r''
 taskFilesNumber_ = 1
 
 # get file data
-Output('Writing file Data.... start')
+output('Writing file Data.... start')
 try:
     result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
-    Output (result_.message)
-    Output('Writing file Data.... status: ' + str(result_.status))
+    output (result_.message)
+    output('Writing file Data.... status: ' + str(result_.status))
 except Exception as e:
-    Output ('Failed to write file list with exception: ' + str(e))
+    output ('Failed to write file list with exception: ' + str(e))

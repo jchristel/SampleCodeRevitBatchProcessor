@@ -64,7 +64,8 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import common library
-from duHast.Utilities import Utility as util
+from duHast.Utilities import DateStamps as dateStamp
+from duHast.Utilities import FilesCombine as fileCombine
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
@@ -105,10 +106,10 @@ rootPath_ = r'C:\temp'
 Output('Writing summary Data.... start')
 
 # get the current date stamp to be used as a file prefix for the combined report
-dateStamp_ = util.GetFileDateStamp()
+dateStamp_ = dateStamp.GetFileDateStamp()
 
 # combine report files based on:
-util.CombineFiles(
+fileCombine.CombineFiles(
     rootPath_,  # - part report location
     dateStamp_, # - part report prefix ( same date stamp as current)
     '_CAD',     # - part report file name suffix
@@ -119,7 +120,7 @@ util.CombineFiles(
 Output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
 
 # combine report files based on:
-util.CombineFiles(
+fileCombine.CombineFiles(
     rootPath_,      # - part report location
     dateStamp_,     # - part report prefix ( same date stamp as current)
     '_RVT',         # - part report file name suffix

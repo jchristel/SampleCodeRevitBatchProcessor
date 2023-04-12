@@ -68,7 +68,11 @@ import sys
 sys.path += [commonLibraryLocation_, scriptLocation_]
 
 # import libraries
-from duHast.Utilities import Utility as util
+from duHast.Utilities import FilesGet as fileGet
+from duHast.Utilities import FilesIO as fileIO
+from duHast.Utilities import DirectoryIO as dirIO
+from duHast.Utilities import DateStamps as dateStamp
+from duHast.Utilities import FilesCSV as fileCSV
 
 import os.path
 from os import path
@@ -144,7 +148,7 @@ def _copyNWCFiles():
     fileFilter = '*.nwc'
     # check whether any files match the filter
     for nwcFileNameStart, nwcTargetFolder in defaultNWCLocations_:
-        files = util.GetFilesWithFilter(sourcePath_, fileFilter, nwcFileNameStart + '*')
+        files =  fileGet.GetFilesWithFilter (sourcePath_, fileFilter, nwcFileNameStart + '*')
         if(files != None and len(files) > 0):
             Output('Copying nwc Files...' + str(len(files)))
             for file in files:
@@ -154,8 +158,8 @@ def _copyNWCFiles():
                     src = sourcePath_ + '\\' + fileName
                     destinationFileName = _getNWCFileName(fileName)
                     dst = nwcTargetFolder + '\\' + destinationFileName
-                    shutil.copy(src,dst)
-                    status = status & True
+                    copy_status = fileIO.CopyFile(src,dst)
+                    status = status & copy_status
                     Output('Copied file from ' + src + ' to ' + dst)
                 except Exception:
                     Output('Failed to copy file from ' + src + ' to ' + dst)
@@ -179,13 +183,13 @@ def CreateTargetFolder(targetLocation, folderName):
     returnFolderName = folderName
     # check if folder exists
     flag = False
-    if(util.DirectoryExists(targetLocation + '\\' + folderName) == False):
+    if(dirIO.DirectoryExists(targetLocation + '\\' + folderName) == False):
         gotFolder = False
         n = 1
         # create new folder (stop at 10 attempts)
         while (gotFolder == False and n < 10):
-            if (util.DirectoryExists(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
-                flag = util.CreateFolder(targetLocation, folderName + '(' + str(n) + ')')
+            if (dirIO.DirectoryExists(targetLocation + '\\' + folderName + '(' + str(n) + ')') == False):
+                flag = dirIO.CreateFolder(targetLocation, folderName + '(' + str(n) + ')')
                 returnFolderName = folderName + '(' + str(n) + ')'
                 # ignore the flag coming back in to avoid infinite loops
                 gotFolder = True
@@ -204,17 +208,17 @@ def MoveFiles(fileData):
 
     status = True
     # get the date stamp
-    folderName = util.GetFolderDateStamp() + str('_Models')
+    folderName = dateStamp.GetFolderDateStamp() + str('_Models')
     for fileFilter, targetLocation in fileData:
         # check if target root path still exists
         if(path.exists(targetLocation)):
             # check whether any files match the filter
-            files = util.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
+            files = fileGet.GetFilesWithFilter(sourcePath_, '.*', fileFilter + '*')
             # copy any *.nwc files into the right folders first
             _copyNWCFiles()
             # move files into file in location
             if(files != None and len(files) > 0):
-                flagGotFolder = util.CreateTargetFolder(targetLocation, folderName)
+                flagGotFolder = dirIO.CreateTargetFolder(targetLocation, folderName)
                 if (flagGotFolder):
                     Output('Moving Files...' + str(len(files)))
                     # move files
@@ -349,10 +353,10 @@ def _getMatch(fileExtension, nameFilter):
     revision = '-'
     # check whether valid name filter otherwise return '-'
     if(nameFilter is not ''):
-        files = util.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
+        files = fileGet.GetFilesWithFilter(sourcePath_, fileExtension, nameFilter + '*')
         if (files is not None and len(files) > 0):
             # got a match
-            returnValue = util.GetFolderDateStamp()
+            returnValue = dateStamp.GetFolderDateStamp()
             # get the revision
             revision = _getRevision(files[0])
     return returnValue, revision
@@ -436,10 +440,7 @@ def _readCurrentFile():
 
     referenceList = []
     try:
-        with open(currentIssueDatafileName_) as csvFile:
-            reader = csv.reader(csvFile)
-            for row in reader: # each row is a list
-                referenceList.append(row)
+        referenceList = fileCSV.ReadCSVfile(currentIssueDatafileName_)
     except Exception as e:
         Output('Failed to open current model issue list with exception: ' + str(e))
     return referenceList
@@ -456,14 +457,9 @@ def _writeNewData(data):
 
     status = True
     try:
-        f = open(currentIssueDatafileName_, "w")
-        for row in data:
-            f.write(','.join(row) + "\n")
-        f.close()
+        fileCSV.writeReportDataAsCSV(currentIssueDatafileName_,[],data)
     except Exception as e:
         status = False
-        if (f is not None):
-            f.close()
         Output('Failed to write data file!' + currentIssueDatafileName_+ ' with exception: ' + str(e))
     return status
 

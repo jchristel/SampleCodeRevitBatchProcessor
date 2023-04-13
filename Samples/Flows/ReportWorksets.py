@@ -42,47 +42,51 @@ For workset properties reported refer to :obj:`RevitWorksets.GetWorksetReportDat
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_worksets.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_worksets.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
 from duHast.Utilities import Utility as util
 from duHast.APISamples.Common import RevitWorksets as rWks
+from duHast.Utilities import DateStamps as dStamp
+from duHast.Utilities import FilesCSV as fileCSV
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -90,14 +94,14 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def WriteWorksetData(doc, fileName):
+def write_workset_data(doc, file_name):
     '''
-    Writes workset data to a tab separated text file.
+    Writes workset data to a comma separated text file.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
@@ -111,13 +115,13 @@ def WriteWorksetData(doc, fileName):
     status = True
     try:
         status = util.writeReportData(
-            fileName, 
+            file_name, 
             rWks.REPORT_WORKSETS_HEADER, 
-            rWks.GetWorksetReportData(doc, revitFilePath_))
+            rWks.GetWorksetReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-        Output (str(e))
+        output('Failed to write data file: {}'.format(file_name))
+        output (str(e))
     return status
 
 # -------------
@@ -125,15 +129,15 @@ def WriteWorksetData(doc, fileName):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # build output file name
-fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_Worksets')
+FILE_NAME_WORKSET_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_Worksets')
 
-Output('Writing Workset Data.... start')
+output('Writing Workset Data.... start')
 
 # write out workset data
-result_ = WriteWorksetData(doc, fileName_)
+RESULT = write_workset_data(DOC, FILE_NAME_WORKSET_REPORT)
 
-Output('Writing Workset Data.... status: ' + str(result_))
-Output('Writing Workset Data.... finished ' + fileName_)
+output('Writing Workset Data.... status: ' + str(RESULT))
+output('Writing Workset Data.... finished ' + FILE_NAME_WORKSET_REPORT)

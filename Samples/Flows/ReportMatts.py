@@ -40,43 +40,47 @@ For material properties reported refer to :obj:`RevitMaterials.GetMaterialReport
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_mats.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_mats.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitMaterials as rMat
+from duHast.Utilities import DateStamps as dStamp
+from duHast.Utilities import FilesCSV as fileCSV
+from duHast.APISamples.Materials.Reporting import RevitMaterialsReportHeader as rMatHeader
+from duHast.APISamples.Materials.Reporting import RevitMaterialsReportUtils as rMatRep
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -84,19 +88,19 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def writeMaterialData(doc, fileName):
+def write_material_data(doc, file_name):
     '''
-    Writes material data to a tab separated text file.
+    Writes material data to a comma separated text file.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param fileName: Fully qualified file path to report file.
-    :type fileName: str
+    :param file_name: Fully qualified file path to report file.
+    :type file_name: str
 
     :return: True if report file was written successfully, otherwise False
     :rtype: bool
@@ -104,26 +108,26 @@ def writeMaterialData(doc, fileName):
 
     status = True
     try:
-        status = util.writeReportData(
-            fileName, 
-            rMat.REPORT_MATERIALS_HEADER, 
-            rMat.GetMaterialReportData(doc, revitFilePath_))
+        status = fileCSV.writeReportDataAsCSV(
+            file_name, 
+            rMatHeader.REPORT_MATERIALS_HEADER, 
+            rMatRep.GetMaterialReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-        Output (str(e))
+        output('Failed to write data file: {}'.format(file_name))
+        output (str(e))
     return status
 
 # -------------
 # main:
 # -------------
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # build output file name
-fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_Materials')
+FILE_NAME_MAT_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_Materials')
 
-Output('Writing Material Data.... start')
-result_ = writeMaterialData(doc, fileName_)
-Output('Writing Material Data.... status: ' + str(result_))
-Output('Writing Material Data.... finished ' + fileName_)
+output('Writing Material Data.... start')
+RESULT = write_material_data(DOC, FILE_NAME_MAT_REPORT)
+output('Writing Material Data.... status: ' + str(RESULT))
+output('Writing Material Data.... finished ' + FILE_NAME_MAT_REPORT)

@@ -90,6 +90,8 @@ if not DEBUG:
 else:
     #get default revit file name
     REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:

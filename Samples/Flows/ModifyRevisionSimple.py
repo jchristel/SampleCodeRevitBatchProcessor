@@ -48,11 +48,11 @@ Notes:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
@@ -60,7 +60,7 @@ import datetime
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.APISamples.Common import RevitFileIO as rFileIO
@@ -74,26 +74,28 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -101,7 +103,7 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -163,22 +165,22 @@ revisions_to_add_ = [
     )
 ]
 
-Output('Add revision.... start')
+output('Add revision.... start')
 
 # add revision to doc
-result_  = AddRevToDocument(doc)
-Output('Add revision.... status: [{}]'.format(result_.status))
+result_  = AddRevToDocument(DOC)
+output('Add revision.... status: [{}]'.format(result_.status))
 
 # synch the file
-if(debug_ == False):
-  if (doc.IsWorkshared):
-      Output('Add revision.... Syncing to Central: start')
-      syncing_ = rFileIO.SyncFile (doc)
-      Output('Syncing to Central: finished [{}]'.format (syncing_.status))
+if(DEBUG == False):
+  if (DOC.IsWorkshared):
+      output('Add revision.... Syncing to Central: start')
+      syncing_ = rFileIO.SyncFile (DOC)
+      output('Syncing to Central: finished [{}]'.format (syncing_.status))
   else:
       #none work shared
-      Output('Add revision.... Saving non workshared file: start')
-      doc.SaveAs(revitFilePath_)
-      Output('Add revision.... Saving non workshared file: finished')
+      output('Add revision.... Saving non workshared file: start')
+      DOC.SaveAs(REVIT_FILE_PATH)
+      output('Add revision.... Saving non workshared file: finished')
 
-Output('Add revision.... finished ')
+output('Add revision.... finished ')

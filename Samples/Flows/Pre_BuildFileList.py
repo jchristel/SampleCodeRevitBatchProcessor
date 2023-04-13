@@ -56,25 +56,25 @@ This script can be used when:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.UI import FileList as fl
 
 # flag whether this runs in debug or not 
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import script_util
 
 # -------------
@@ -89,7 +89,7 @@ def output(message = ''):
     :param message: the message, defaults to ''
     :type message: str, optional
     '''
-    if not debug_:
+    if not DEBUG:
         script_util.Output(str(message))
     else:
         print (message)
@@ -99,17 +99,17 @@ def output(message = ''):
 # -------------
 
 # directory containing files
-rootPath_ = r''
+ROOT_PATH = r''
 # store task files lists here
-rootPathExport_ = r''
+ROOT_PATH_EXPORT = r''
 # number of task list files to be written out
-taskFilesNumber_ = 1
+TASK_FILES_NUMBER = 1
 
 # get file data
 output('Writing file Data.... start')
 try:
-    result_ = fl.WriteFileList(rootPath_ ,'.rvt', rootPathExport_, taskFilesNumber_, fl.getRevitFiles)
-    output (result_.message)
-    output('Writing file Data.... status: ' + str(result_.status))
+    RESULT = fl.WriteFileList(ROOT_PATH ,'.rvt', ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.getRevitFiles)
+    output (RESULT.message)
+    output('Writing file Data.... status: [{}]'.format(RESULT.status))
 except Exception as e:
-    output ('Failed to write file list with exception: ' + str(e))
+    output ('Failed to write file list with exception: {}'.format(e))

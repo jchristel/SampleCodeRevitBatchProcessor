@@ -52,16 +52,16 @@ This script can be used when:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
 from duHast.Utilities import DateStamps as dateStamp
@@ -71,10 +71,10 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import script_util
 
 # -------------
@@ -90,7 +90,7 @@ def output(message = ''):
     :type message: str, optional
     '''
     
-    if not debug_:
+    if not DEBUG:
         script_util.Output(str(message))
     else:
         print (message)
@@ -100,32 +100,32 @@ def output(message = ''):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # combine data
 output('Writing summary Data.... start')
 
 # get the current date stamp to be used as a file prefix for the combined report
-dateStamp_ = dateStamp.GetFileDateStamp()
+DATE_STAMP = dateStamp.GetFileDateStamp()
 
 # combine report files based on:
 fileCombine.CombineFiles(
-    rootPath_,  # - part report location
-    dateStamp_, # - part report prefix ( same date stamp as current)
+    ROOT_PATH,  # - part report location
+    DATE_STAMP, # - part report prefix ( same date stamp as current)
     '_CAD',     # - part report file name suffix
     '.txt',     # - part report file extension
-    dateStamp_ + '_CAD_Links_summary.txt'   # - combined report file name in same location as part reports
+    DATE_STAMP + '_CAD_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify users
-output('Writing summary Data.... finished: ' + dateStamp_ + '_CAD_Links_summary.txt')
+output('Writing summary Data.... finished: {}_CAD_Links_summary.txt'.format(DATE_STAMP))
 
 # combine report files based on:
 fileCombine.CombineFiles(
-    rootPath_,      # - part report location
-    dateStamp_,     # - part report prefix ( same date stamp as current)
+    ROOT_PATH,      # - part report location
+    DATE_STAMP,     # - part report prefix ( same date stamp as current)
     '_RVT',         # - part report file name suffix
     '.txt',         # - part report file extension
-    dateStamp_ + '_RVT_Links_summary.txt'   # - combined report file name in same location as part reports
+    DATE_STAMP + '_RVT_Links_summary.txt'   # - combined report file name in same location as part reports
 )
 # notify user
-output('Writing summary Data.... finished: ' + dateStamp_ + '_RVT_Links_summary.txt')
+output('Writing summary Data.... finished: {}_RVT_Links_summary.txt'.format(DATE_STAMP))

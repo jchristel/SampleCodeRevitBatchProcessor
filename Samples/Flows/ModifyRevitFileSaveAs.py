@@ -50,44 +50,46 @@ Notes:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_Files.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_Files.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.APISamples.Common import RevitFileIO as rFileIO
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
      # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -95,7 +97,7 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
@@ -113,16 +115,16 @@ default_file_names_ = [
 ]
 
 # save revit file to new location
-Output('Modifying Revit File.... start')
-result_ = rFileIO.SaveAs(doc, rootPath_, revitFilePath_, default_file_names_)
+output('Modifying Revit File.... start')
+result_ = rFileIO.SaveAs(DOC, rootPath_, REVIT_FILE_PATH, default_file_names_)
 
 # make further changes as required....
-Output('Modifying Revit File.... status: {}'.format(result_.status))
+output('Modifying Revit File.... status: {}'.format(result_.status))
 
 # sync changes back to central
-if (doc.IsWorkshared and debug_ == False):
-    Output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (doc)
-    Output('Syncing to Central: finished [{}]'.format(syncing_.status))
+if (DOC.IsWorkshared and DEBUG == False):
+    output('Syncing to Central: start')
+    syncing_ = rFileIO.SyncFile (DOC)
+    output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ')

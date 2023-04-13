@@ -40,46 +40,51 @@ Note:
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_grids.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_grids.rvt'
 
 import clr
 import System
 
 # set path to library and this script
 import sys
-sys.path += [commonLibraryLocation_, scriptLocation_]
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples import RevitGrids as rGrid
-from duHast.APISamples import RevitLevels as rLevel
-from duHast.Utilities import Utility as util
+from duHast.APISamples.Grids.Reporting import RevitGridsReportHeader as rGridHeader
+from duHast.APISamples.Grids.Reporting import RevitGridReportUtils as rGridRep
+from duHast.APISamples.Levels.Reporting import RevitLevelsReportHeader as rLevelHeader
+from duHast.APISamples.Levels.Reporting import RevitLevelsReportUtils as rLevelRep
+
+from duHast.Utilities import DateStamps as dStamp
+from duHast.Utilities import FilesCSV as fileCSV
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -87,19 +92,19 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def writeGridData(doc, fileName):
+def write_grid_data(doc, file_name):
     '''
-    Writes grid data to a tab separated text file.
+    Writes grid data to a comma separated text file.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param fileName: Fully qualified file path to report file.
-    :type fileName: str
+    :param file_name: Fully qualified file path to report file.
+    :type file_name: str
 
     :return: True if report file was written successfully, otherwise False
     :rtype: bool
@@ -107,24 +112,24 @@ def writeGridData(doc, fileName):
 
     status = True
     try:
-        status = util.writeReportData(
-            fileName, 
-            rGrid.REPORT_GRIDS_HEADER, 
-            rGrid.GetGridReportData(doc, revitFilePath_))
+        status = fileCSV.writeReportDataAsCSV(
+            file_name, 
+            rGridHeader.REPORT_GRIDS_HEADER, 
+            rGridRep.GetGridReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-        Output (str(e))
+        output('Failed to write data file: {}'.format(file_name))
+        output (str(e))
     return status
 
-def writeLevelData(doc, fileName):
+def write_level_data(doc, file_name):
     '''
-    Writes levels data to a tab separated text file.
+    Writes levels data to a comma separated text file.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param fileName: Fully qualified file path to report file.
-    :type fileName: str
+    :param file_name: Fully qualified file path to report file.
+    :type file_name: str
 
     :return: True if report file was written successfully, otherwise False
     :rtype: bool
@@ -132,14 +137,14 @@ def writeLevelData(doc, fileName):
 
     status = True
     try:
-        status = util.writeReportData(
-            fileName, 
-            rLevel.REPORT_LEVELS_HEADER, 
-            rLevel.GetLevelReportData(doc, revitFilePath_))
+        status = fileCSV.writeReportDataAsCSV(
+            file_name, 
+            rLevelHeader.REPORT_LEVELS_HEADER, 
+            rLevelRep.GetLevelReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-        Output (str(e))
+        output('Failed to write data file: {}'.format(file_name))
+        output (str(e))
     return status
 
 # -------------
@@ -147,20 +152,20 @@ def writeLevelData(doc, fileName):
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # build output file names
-fileNameGrid_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_grids')
-fileNameLevel_ = rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_levels')
+FILE_NAME_GRID_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_grids')
+FILE_NAME_LEVEL_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_levels')
 
 #write out grid data
-Output('Writing Grid Data.... start')
-result_ = writeGridData(doc, fileNameGrid_)
-Output('Writing Grid Data.... status: ' + str(result_))
-Output('Writing Grid Data.... finished ' + fileNameGrid_)
+output('Writing Grid Data.... start')
+RESULT = write_grid_data(DOC, FILE_NAME_GRID_REPORT)
+output('Writing Grid Data.... status: {}'.format(RESULT))
+output('Writing Grid Data.... finished: {}'.format(FILE_NAME_GRID_REPORT))
 
 #write out Level data
-Output('Writing Level Data.... start')
-result_ = writeLevelData(doc, fileNameLevel_)
-Output('Writing Level Data.... status: ' + str(result_))
-Output('Writing Level Data.... finished ' + fileNameLevel_)
+output('Writing Level Data.... start')
+RESULT = write_level_data(DOC, FILE_NAME_LEVEL_REPORT)
+output('Writing Level Data.... status: {}'.format(RESULT))
+output('Writing Level Data.... finished: {}'.format(FILE_NAME_LEVEL_REPORT))

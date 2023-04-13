@@ -42,11 +42,11 @@ For shared parameter properties reported refer to :obj:`RevitSharedParameters.Ge
 # default path locations
 # ---------------------------------
 # path to library modules
-commonLibraryLocation_ = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r'C:\temp'
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-scriptLocation_ = r'C:\temp'
+SCRIPT_LOCATION = r'C:\temp'
 # debug mode revit project file name
-debugRevitFileName_ = r'C:\temp\Test_sharedPara.rvt'
+DEBUG_REVIT_FILE_NAME = r'C:\temp\Test_sharedPara.rvt'
 
 import clr
 import System
@@ -54,8 +54,12 @@ import System
 # set path to library and this script
 import sys
 
-from duHast.Utilities import Utility as util
-sys.path += [commonLibraryLocation_, scriptLocation_]
+from duHast.Utilities import DateStamps as dStamp
+from duHast.Utilities import FilesCSV as fileCSV
+from duHast.APISamples.SharedParameters.Reporting import RevitSharedParameterReportHeader as rSharedParaHeader
+from duHast.APISamples.SharedParameters.Reporting import RevitSharedParameterReport as rSharedParaRep
+
+sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
 from duHast.Utilities import Utility as util
@@ -65,26 +69,28 @@ clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)
 
 # flag whether this runs in debug or not
-debug_ = False
+DEBUG = False
 
 # Add batch processor scripting references
-if not debug_:
+if not DEBUG:
     import revit_script_util
     import revit_file_util
     clr.AddReference('RevitAPI')
     clr.AddReference('RevitAPIUI')
     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
+    DOC = revit_script_util.GetScriptDocument()
+    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name
-    revitFilePath_ = debugRevitFileName_
+    REVIT_FILE_PATH = DEBUG_REVIT_FILE_NAME
+    # get document from python shell
+    DOC = doc
 
 # -------------
 # my code here:
 # -------------
 
-def Output(message = ''):
+def output(message = ''):
     '''
     Output messages either to batch processor (debug = False) or console (debug = True)
 
@@ -92,19 +98,19 @@ def Output(message = ''):
     :type message: str, optional
     '''
 
-    if not debug_:
+    if not DEBUG:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
-def writeSharedParaData(doc, fileName):
+def write_shared_parameter_data(doc, file_name):
     '''
-    Writes shared parameter data to a tab separated text file.
+    Writes shared parameter data to a comma separated text file.
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param fileName: Fully qualified file path to report file.
-    :type fileName: str
+    :param file_name: Fully qualified file path to report file.
+    :type file_name: str
 
     :return: True if report file was written successfully, otherwise False
     :rtype: bool
@@ -112,31 +118,32 @@ def writeSharedParaData(doc, fileName):
 
     status = True
     try:
-        status = util.writeReportData(
-            fileName, 
-            rSp.REPORT_SHAREDPARAMETERS_HEADER, 
-            rSp.GetSharedParameterReportData(doc, revitFilePath_))
+        status = fileCSV.writeReportDataAsCSV(
+            file_name, 
+            rSharedParaHeader.REPORT_SHAREDPARAMETERS_HEADER, 
+            rSharedParaRep.GetSharedParameterReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
-        Output('Failed to write data file!' + fileName)
-        Output (str(e))
+        output('Failed to write data file: {}'.format(file_name))
+        output(str(e))
     return status
+
 # -------------
 # main:
 # -------------
 
 # store output here:
-rootPath_ = r'C:\temp'
+ROOT_PATH = r'C:\temp'
 
 # build output file name
-fileName_ =  rootPath_ + '\\'+ util.GetOutPutFileName(revitFilePath_,'.txt', '_SharedParas')
+FILE_NAME_SHARED_PARA_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_SharedParas')
 
-Output('Writing Shared Parameter Data.... start')
+output('Writing Shared Parameter Data.... start')
 
 #write out shared parameter data
-result_ = writeSharedParaData(doc, fileName_)
+RESULT = write_shared_parameter_data(DOC, FILE_NAME_SHARED_PARA_REPORT)
 
-Output('Writing Shared Parameter Data.... status: ' + str(result_))
-Output('Writing Shared Parameter Data.... finished ' + fileName_)
+output('Writing Shared Parameter Data.... status: ' + str(RESULT))
+output('Writing Shared Parameter Data.... finished ' + FILE_NAME_SHARED_PARA_REPORT)
 
 

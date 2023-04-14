@@ -56,8 +56,8 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.Utilities import Utility as util
-from duHast.APISamples.Common import RevitWorksets as rWks
+from duHast.APISamples.Common.Reporting import RevitWorksetsReportHeader as rWksReportHeader
+from duHast.APISamples.Common.Reporting import RevitWorksetsReportUtils as rWksReportUtils
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV
 
@@ -114,10 +114,10 @@ def write_workset_data(doc, file_name):
 
     status = True
     try:
-        status = util.writeReportData(
+        status = fileCSV.writeReportDataAsCSV(
             file_name, 
-            rWks.REPORT_WORKSETS_HEADER, 
-            rWks.GetWorksetReportData(doc, REVIT_FILE_PATH))
+            rWksReportHeader.REPORT_WORKSETS_HEADER, 
+            rWksReportUtils.GetWorksetReportData(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))

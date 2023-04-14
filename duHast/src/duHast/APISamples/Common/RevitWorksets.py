@@ -39,17 +39,11 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Utility as util
-
-
 from duHast.Utilities import FilesIO as filesIO
 from duHast.Utilities import FilesTab as filesTab
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-
-# -------------------------------------------- common variables --------------------
-#: header used in reports
-REPORT_WORKSETS_HEADER = ['HOSTFILE','ID', 'NAME', 'ISVISIBLEBYDEFAULT']
 
 # --------------------------------------------- utility functions ------------------
 
@@ -376,34 +370,3 @@ def UpdateWorksetDefaultVisibilityFromReport(doc, reportPath, revitFilePath):
     else:
         returnValue.UpdateSep(True, 'No settings found for file: ' + fileName)
     return returnValue
-
-# ------------------------------------------------------- workset reporting --------------------------------------------------------------------
-
-
-def GetWorksetReportData(doc, revitFilePath):
-    '''
-    Gets workset data ready for being written to file.
-
-    - HOSTFILE
-    - ID
-    - NAME
-    - ISVISIBLEBYDEFAULT
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The fully qualified file path of Revit file.
-    :type revitFilePath: str
-    
-    :return: The workset data in a nested list of string
-    :rtype: list of list of str
-    '''
-
-    data = []
-    worksets = GetWorksetsFromCollector(doc)
-    for ws in worksets:
-        data.append([
-            revitFilePath, 
-            str(ws.Id.IntegerValue), 
-            util.EncodeAscii(ws.Name), 
-            str(ws.IsVisibleByDefault)])
-    return data

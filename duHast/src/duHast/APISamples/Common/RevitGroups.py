@@ -38,10 +38,6 @@ from duHast.APISamples.Common import RevitCommonAPI as com
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-# -------------------------------------------- common variables --------------------
-#: header used in reports
-REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'NAME', 'GROUP TYPE', 'NUMBER OF INSTANCES']
-
 # --------------------------------------------- utility functions ------------------
 
 # doc   current document

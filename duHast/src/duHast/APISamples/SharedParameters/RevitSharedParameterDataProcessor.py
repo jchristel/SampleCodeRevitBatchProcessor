@@ -131,11 +131,11 @@ class SharedParameterProcessor(IFamilyProcessor):
         returnValue = res.Result()
         try:
             # find all shared parameters of nested families
-            nestedFamilyData = self._findNestedFamiliesData()
+            nestedFamilyData = self._find_nested_families_data()
             # get used shared parameters from nested data
             nestedFamilySharedParameters = self._getUsedSharedParameters(nestedFamilyData)
             # update root family data only
-            rootFamilyData = self._findRootFamilyData()
+            rootFamilyData = self._find_root_family_data()
             # update root processor data as required
             self._updateRootFamilyData(rootFamilyData, nestedFamilySharedParameters)
             returnValue.UpdateSep(True, 'Post Action Update shared parameters data successful completed.')

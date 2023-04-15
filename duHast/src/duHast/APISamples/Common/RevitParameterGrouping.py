@@ -30,7 +30,7 @@ built in parameter grouping to human readable names.
 import Autodesk.Revit.DB as rdb
 
 
-ParameterGroupingToBuiltInParameterGroups = {
+PRAMETER_GROPUING_TO_BUILD_IN_PARAMETER_GROUPS = {
     'Analysis Results' : rdb.BuiltInParameterGroup.PG_ANALYSIS_RESULTS,
     'Analytical Alignment' : rdb.BuiltInParameterGroup.PG_ANALYTICAL_ALIGNMENT,
     'Analytical Model': rdb.BuiltInParameterGroup.PG_ANALYTICAL_MODEL,

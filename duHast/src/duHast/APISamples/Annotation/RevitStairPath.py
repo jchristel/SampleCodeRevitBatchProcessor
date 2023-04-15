@@ -33,7 +33,7 @@ import Autodesk.Revit.DB.Architecture as rdbA
 from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 
 
-def GetAllStairPathTypes(doc):
+def get_all_stair_path_types(doc):
     '''
     Gets all stairs path types in the model/
     :param doc: Current Revit model document.
@@ -44,7 +44,7 @@ def GetAllStairPathTypes(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
 
-def GetStairsPathArrowHeadIds(doc):
+def get_stairs_path_arrow_head_ids(doc):
     '''
     Gets all arrow head symbol ids used in stairs path types in a model.
     :param doc: Current Revit model document.
@@ -53,5 +53,5 @@ def GetStairsPathArrowHeadIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = rArrow.GetArrowHeadIdsFromType(doc, GetAllStairPathTypes, rArrow.ARROWHEAD_PARAS_STAIRS_PATH)
+    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_stair_path_types, rArrow.ARROWHEAD_PARAS_STAIRS_PATH)
     return usedIds

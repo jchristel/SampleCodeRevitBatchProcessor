@@ -79,5 +79,5 @@ def GetAllRampTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllRampTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids

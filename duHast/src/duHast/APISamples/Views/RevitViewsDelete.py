@@ -72,7 +72,7 @@ def DeleteViews(doc, viewRules, collectorViews):
     if(len(ids) == viewCounter and len(ids) > 0):
         ids.pop()
     # delete all views at once
-    result = rDel.DeleteByElementIds(doc,ids, 'deleting views not matching filters','views')
+    result = rDel.delete_by_element_ids(doc,ids, 'deleting views not matching filters','views')
     return result
 
 
@@ -101,7 +101,7 @@ def DeleteViewsNotOnSheets(doc, filter):
         # remove a random view from this list
         ids.pop(0)
     if(len(ids) > 0):
-        returnValue = rDel.DeleteByElementIds(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
+        returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
     else:
         returnValue.UpdateSep(True, 'No views not placed on sheets found.')
     return returnValue
@@ -133,7 +133,7 @@ def DeleteUnusedElevationViewMarkers(doc):
             ids.append(e.Id)
             counter += 1
     if(len(ids) > 0):
-        returnValue = rDel.DeleteByElementIds(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
+        returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
     else:
         returnValue.UpdateSep(True, 'No unused elevation markers in model')
     return returnValue
@@ -167,7 +167,7 @@ def DeleteSheets(doc, viewRules, collectorViews):
             if (ruleMatch == True):
                 # delete view
                 ids.append(v.Id)
-    result = rDel.DeleteByElementIds(doc,ids, 'deleting sheets', 'sheets')
+    result = rDel.delete_by_element_ids(doc,ids, 'deleting sheets', 'sheets')
     return result
 
 
@@ -190,7 +190,7 @@ def DeleteAllSheetsInModel(doc):
         if(v.ViewType == rdb.ViewType.DrawingSheet):
            ids.append(v.Id)
     if (len(ids)>0):
-        returnValue = rDel.DeleteByElementIds(doc,ids, 'deleting all sheets', 'sheets')
+        returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting all sheets', 'sheets')
     else:
         returnValue.UpdateSep(True, 'No sheets in the model')
     return returnValue

@@ -123,5 +123,5 @@ class WarningsData(IFamData.IFamilyData):
                 }
             )
 
-    def get_Data(self):
+    def get_data(self):
         return self.data

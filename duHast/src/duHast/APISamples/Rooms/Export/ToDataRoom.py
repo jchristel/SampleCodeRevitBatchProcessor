@@ -62,7 +62,7 @@ def PopulateDataRoomObject(doc, revitRoom):
             roomPointGroupsAsDoubles.append(dataGeometryConverted)
         dataR.geometryPolygon = roomPointGroupsAsDoubles
         # get design set data
-        design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitRoom)
+        design_set_data = rDesignO.get_design_set_option_info(doc, revitRoom)
         dataR.designSetAndOption.designOptionName = design_set_data['designOptionName']
         dataR.designSetAndOption.designSetName = design_set_data['designSetName']
         dataR.designSetAndOption.isPrimary = design_set_data['isPrimary']
@@ -86,7 +86,7 @@ def PopulateDataRoomObject(doc, revitRoom):
             dataR.revitModel.modelName = doc.Title
 
         # get phase name
-        dataR.phasing.phaseCreated = rPhase.GetPhaseNameById(
+        dataR.phasing.phaseCreated = rPhase.get_phase_name_by_id(
             doc,
             rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)
             ).encode('utf-8')

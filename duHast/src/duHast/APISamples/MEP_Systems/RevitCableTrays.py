@@ -102,7 +102,7 @@ def GetAllCableTrayTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllCableTrayTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
@@ -117,7 +117,7 @@ def GetAllCableTrayTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetCableTrayTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector (colClass)
+    ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 

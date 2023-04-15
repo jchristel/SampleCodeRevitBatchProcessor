@@ -38,7 +38,7 @@ import Autodesk.Revit.DB.Architecture as rdbA
 
 # ----------------------------------------------
 
-def GetAllAnnoSymbolTypes(doc):
+def get_all_anno_symbol_types(doc):
     '''
     Gets all annotation symbol types, area tag types, room tag types in the model
 
@@ -56,7 +56,7 @@ def GetAllAnnoSymbolTypes(doc):
             types.append(c)
     return types
 
-def GetAnnoSymbolArrowHeadIds(doc):
+def get_anno_symbol_arrow_head_ids(doc):
     '''
     Gets all arrow head ids used in annotation symbol types, area tag types, room tag types in the model.
 
@@ -67,7 +67,7 @@ def GetAnnoSymbolArrowHeadIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = rArrow.GetArrowHeadIdsFromType(doc, GetAllAnnoSymbolTypes, rArrow.ARROWHEAD_PARAS_TEXT)
+    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
     return usedIds
 
 

@@ -105,7 +105,7 @@ def DeleteRevitLinks(doc):
     for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     # delete all links at once
-    returnValue = rDel.DeleteByElementIds(doc, ids, 'Deleting Revit links', 'Revit link(s)')
+    returnValue = rDel.delete_by_element_ids(doc, ids, 'Deleting Revit links', 'Revit link(s)')
     return returnValue
 
 def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):

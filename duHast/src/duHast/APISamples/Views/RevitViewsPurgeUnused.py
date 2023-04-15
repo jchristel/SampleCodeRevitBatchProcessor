@@ -181,5 +181,5 @@ def GetUnusedViewTypeIdsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filteredUnusedViewTypeIds = com.GetUnusedTypeIdsInModel(doc, _get_view_types, GetUsedViewTypeIdsInTheModel)
+    filteredUnusedViewTypeIds = com.get_unused_type_ids_in_model(doc, _get_view_types, GetUsedViewTypeIdsInTheModel)
     return filteredUnusedViewTypeIds

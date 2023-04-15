@@ -53,7 +53,7 @@ def ModifyGridWorkSetsDefault (doc, worksetRules):
     collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
     for rule in worksetRules:
         for defaultWorksetName in rule:
-            grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+            grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
             gridsResults.Update(grids)
     return gridsResults
 
@@ -86,7 +86,7 @@ def ModifyGridWorkSetsByTypeName(doc, worksetRules):
         # get the grid type id from the type name
         typeId = rGrid.GetGridTypeIdByName(doc, typeName)
         collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
-        grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+        grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 
@@ -116,7 +116,7 @@ def ModifyGridWorkSetsByParameterValue(doc, worksetRules):
     # get all grids matching filter
     for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
         collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: rGrid.GridCheckParameterValue(e, paraName, paraCondition, conditionValue))
-        grids = rWork.ModifyElementWorkset(doc, defaultWorksetName, collectorGrids, 'grids')
+        grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 

@@ -33,7 +33,7 @@ import clr
 from duHast.Utilities import FilesCSV as filesCSV
 from duHast.UI import FileItem as fi
         
-def getBIM360RevitFilesFromFileList(filepathCSV, extension):
+def get_bim_360_revit_files_from_file_list(filepathCSV, extension):
     '''
     Method reading BIM360 file data from a CSV file.
 
@@ -47,10 +47,10 @@ def getBIM360RevitFilesFromFileList(filepathCSV, extension):
     :rtype: list of str
     '''
 
-    files = GetBIM360Data(filepathCSV)
+    files = get_bim_360_file_data(filepathCSV)
     return files
 
-def GetBIM360Data(filepathCSV):
+def get_bim_360_file_data(filepathCSV):
     '''
     Reads a csv file containing BIM 360 file data into list of FileItem instances.
 
@@ -68,7 +68,7 @@ def GetBIM360Data(filepathCSV):
         if(len(rows)>0):
             # process rows
             for row in rows:
-                dummy = ProcessBIM360Row(row)
+                dummy = process_bim_360_file_data_row(row)
                 # check whether row got processed ok
                 if (dummy is not None):
                     revitFiles.append(dummy)
@@ -78,7 +78,7 @@ def GetBIM360Data(filepathCSV):
         revitFiles = []
     return revitFiles
 
-def ProcessBIM360Row (rowData):
+def process_bim_360_file_data_row (rowData):
     '''
     Reads a list of str into file item class object
 

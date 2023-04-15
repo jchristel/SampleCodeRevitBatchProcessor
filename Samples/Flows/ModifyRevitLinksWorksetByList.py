@@ -143,7 +143,7 @@ def _changeWorkset(doc, el, link_name, from_workset_name, to_workset_name, to_wo
 
     output('{} :: Moving {} from: {} to: {}'.format(descriptor, link_name, from_workset_name, to_workset_name))
     transaction = rdb.Transaction(doc, "Changing workset of " + link_name)
-    result = rTran.in_transaction(transaction,  rWork.GetActionChangeElementWorkset(el,to_workset_id))
+    result = rTran.in_transaction(transaction,  rWork.get_action_change_element_workset(el,to_workset_id))
     output('{} [{}] '.format(link_name ,result.status))
     return result
 
@@ -175,7 +175,7 @@ def _ModifyRevitLinkTypeWorksetName(doc, link_name, workset_name):
     
     return_value = res.Result()
     # get the target workset id
-    target_workset_id = rWork.GetWorksetIdByName(doc, workset_name)
+    target_workset_id = rWork.get_workset_id_by_name(doc, workset_name)
     # check if workset still exists
     if(target_workset_id != rdb.ElementId.InvalidElementId):
         # loop over link types and try to find a match
@@ -223,7 +223,7 @@ def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
 
     return_value = res.Result()
     # get the target workset id
-    target_workset_id = rWork.GetWorksetIdByName(doc, workset_name)
+    target_workset_id = rWork.get_workset_id_by_name(doc, workset_name)
     # check if workset still exists
     if(target_workset_id != rdb.ElementId.InvalidElementId):
         # loop over instances and find match
@@ -333,7 +333,7 @@ output('{} [{}]'.format(result_.message, result_.status))
 # sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (DOC)
+    syncing_ = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
 output('Modifying Revit Link(s).... finished ')

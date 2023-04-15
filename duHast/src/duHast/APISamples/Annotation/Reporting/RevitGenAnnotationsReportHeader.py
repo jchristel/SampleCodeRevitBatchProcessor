@@ -1,16 +1,15 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Interface for family data storage / processing class.
+This module contains the header row for any (future) generic annotation reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-
 #
 #License:
 #
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2022  Jan Christel
+# Copyright (c) 2021  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,25 +26,6 @@ Interface for family data storage / processing class.
 #
 #
 
-from duHast.Utilities import Base
-
-class IFamilyAction(Base.Base):
-
-    def __init__(self, actionType, **kwargs):
-
-        # forwards all unused arguments
-        # ini super class to allow multi inheritance in children!
-        super(IFamilyAction, self).__init__(**kwargs) 
-
-        self.data = []
-        
-        if(actionType != None):
-            self.dataType = actionType
-        else:
-            self.dataType = 'not declared'
-
-    def process(self, doc):
-        pass
-
-    def get_data(self):
-        pass
+# -------------------------------------------- common variables --------------------
+#: header used in reports
+REPORT_GENERIC_ANNOTATIONS_HEADER = ['HOSTFILE', 'GENERICANNOTATIONTYPEID', 'GENERICANNOTATIONTYPENAME']

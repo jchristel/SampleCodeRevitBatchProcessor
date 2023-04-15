@@ -49,6 +49,6 @@ def GetGridReportData(doc, revitFilePath):
             util.GetFileNameWithoutExt(revitFilePath),
             str(p.Id.IntegerValue),
             util.EncodeAscii(p.Name),
-            rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue),
+            rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),
             rGrid.GetMaxExtentAsString(p)])
     return data

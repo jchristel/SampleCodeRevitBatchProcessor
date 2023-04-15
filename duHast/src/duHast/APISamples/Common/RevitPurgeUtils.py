@@ -33,11 +33,12 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
-def BuildCategoryDictionary(doc, elementIds):
+def build_category_dictionary(doc, elementIds):
     '''
     Builds a dictionary from elementId s past in.
     Dictionary key is the element category and values are all the elements of that category.
     If no category can be found the key 'invalid category' will be used.
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param elementIds: List of element id of which to build the dictionary from.
@@ -68,9 +69,10 @@ def BuildCategoryDictionary(doc, elementIds):
     return dic
 
 
-def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, elementIds):
+def check_whether_dependent_elements_are_multiple_orphaned_legend_components (doc, elementIds):
     '''
     Check if element are orphaned legend components
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param elementIds: List of elements to check
@@ -88,7 +90,7 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     #   no other entry
     # if so: check whether any of the legend component entry has a valid view id
     #   if none has return true, otherwise return false
-    dic = BuildCategoryDictionary(doc,  elementIds)
+    dic = build_category_dictionary(doc,  elementIds)
     # check if dictionary has legend component key first up
     if(dic.has_key(categoryName) == True):
         # if so check number of keys and length of elements per key
@@ -105,10 +107,11 @@ def CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents (doc, eleme
     return flag
 
 
-def FilterOutWarnings(doc, dependentElements):
+def filter_out_warnings(doc, dependentElements):
     '''
     Attempts to filter out any warnings from ids supplied by checking the workset name
     of each element for 'Reviewable Warnings'
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param dependentElements: List of elements to check.
@@ -126,7 +129,7 @@ def FilterOutWarnings(doc, dependentElements):
     return ids
 
 
-def HasDependentElements(
+def has_dependent_elements(
     doc,
     el,
     filter = None,
@@ -136,6 +139,7 @@ def HasDependentElements(
     Checks whether an element has dependent elements.
     The dependent elements are collected via Element.GetDependentElements(filter).
     This also includes a check as to whether elements returned as dependent are orphaned. (for lack of better words)
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param el: The element to be checked for dependent elements.
@@ -152,20 +156,20 @@ def HasDependentElements(
     try:
         dependentElements = el.GetDependentElements(filter)
         # remove any warnings from dependent elements
-        dependentElements = FilterOutWarnings(doc, dependentElements)
+        dependentElements = filter_out_warnings(doc, dependentElements)
         # check if dependent elements pass threshold value
         if(len(dependentElements)) > threshold :
             # there appear to be situations where dependent elements are multiple (orphaned?) legend components only
             # or warnings belonging to a type (same type mark ...)
             # these are legend components with an invalid OwnerViewId, check whether this is the case...
-            if (CheckWhetherDependentElementsAreMultipleOrphanedLegendComponents(doc, dependentElements) == False):
+            if (check_whether_dependent_elements_are_multiple_orphaned_legend_components(doc, dependentElements) == False):
                 value = 1
     except Exception as e:
         value = -1
     return value
 
 
-def GetUsedUnusedTypeIds(
+def get_used_unused_type_ids(
     doc,
     typeIdGetter,
     useType = 0, # type: int
@@ -191,7 +195,7 @@ def GetUsedUnusedTypeIds(
     ids = []
     for typeId in allTypeIds:
         type = doc.GetElement(typeId)
-        hasDependents = HasDependentElements(doc, type, None, threshold)
+        hasDependents = has_dependent_elements(doc, type, None, threshold)
         if(hasDependents == useType):
             ids.append(typeId)
     return ids

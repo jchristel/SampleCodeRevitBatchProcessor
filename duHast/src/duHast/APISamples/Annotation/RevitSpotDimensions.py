@@ -34,7 +34,7 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
 
-def GetAllSpotDimTypes(doc):
+def get_all_spot_dim_types(doc):
     '''
     Gets all spot Dim types in the model
 
@@ -47,7 +47,7 @@ def GetAllSpotDimTypes(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.SpotDimensionType)
 
-def GetSymbolIdsFromSpotTypes(doc):
+def get_symbol_ids_from_spot_types(doc):
     '''
     Gets all family symbol ids used as a symbol from all spot elevation type definitions and spot coordinate type definitions.
     :param doc: Current Revit model document.
@@ -57,7 +57,7 @@ def GetSymbolIdsFromSpotTypes(doc):
     '''
 
     ids = []
-    dimTs = GetAllSpotDimTypes(doc)
+    dimTs = get_all_spot_dim_types(doc)
     for t in dimTs:
         id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
@@ -65,7 +65,7 @@ def GetSymbolIdsFromSpotTypes(doc):
     return ids
 
 
-def GetAllSpotElevationSymbolsInModel(doc):
+def get_all_spot_elevation_symbols_in_model(doc):
     '''
     Gets all family symbols of category Spot Elevation Symbol in model.
     :param doc: Current Revit model document.
@@ -78,7 +78,7 @@ def GetAllSpotElevationSymbolsInModel(doc):
     return col
 
 
-def GetAllSpotElevationSymbolIdsInModel(doc):
+def get_all_spot_elevation_symbol_ids_in_model(doc):
     '''
     Gets all family symbol ids of category Spot Elevation Symbol in model
     :param doc: Current Revit model document.
@@ -87,14 +87,14 @@ def GetAllSpotElevationSymbolIdsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    col = GetAllSpotElevationSymbolsInModel(doc)
-    ids = com.GetIdsFromElementCollector(col)
+    col = get_all_spot_elevation_symbols_in_model(doc)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def GetSpotTypeArrowHeadIds(doc):
+def get_spot_type_arrow_head_ids(doc):
     '''
     returns all arrow head ids used in text types in a model
     '''
-    usedIds = rArrow.GetArrowHeadIdsFromType(doc, GetAllSpotDimTypes, rArrow.ARROWHEAD_PARAS_SPOT_DIMS)
+    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_spot_dim_types, rArrow.ARROWHEAD_PARAS_SPOT_DIMS)
     return usedIds

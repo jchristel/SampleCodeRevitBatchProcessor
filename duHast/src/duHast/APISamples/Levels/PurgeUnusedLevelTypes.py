@@ -43,7 +43,7 @@ def GetUnusedLevelTypesForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    return rPurgeUtils.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 0, 6)
+    return rPurgeUtils.get_used_unused_type_ids(doc, rLevel.GetAllLevelTypeIdsByCategory, 0, 6)
 
 def GetUnusedLevelHeadFamilies(doc):
     '''
@@ -55,7 +55,7 @@ def GetUnusedLevelHeadFamilies(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedTypes = rPurgeUtils.GetUsedUnusedTypeIds(doc, rLevel.GetAllLevelTypeIdsByCategory, 1, 6)
+    usedTypes = rPurgeUtils.get_used_unused_type_ids(doc, rLevel.GetAllLevelTypeIdsByCategory, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
     for lId in usedTypes:

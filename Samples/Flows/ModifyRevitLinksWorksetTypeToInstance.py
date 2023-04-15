@@ -127,7 +127,7 @@ def _getRevitLinkTypeDataByName(revitLinkName, doc):
             wsparam = p.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
             typeWorksetName = wsparam.AsValueString()
             break
-    return rWork.GetWorksetIdByName(doc, typeWorksetName)
+    return rWork.get_workset_id_by_name(doc, typeWorksetName)
 
 def _modifyRevitLinkInstanceData(revitLink, doc):
     '''
@@ -157,7 +157,7 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
     #get the workset ot the revit link instance
     wsparam = revitLink.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     instanceWorksetName = wsparam.AsValueString()
-    instanceWorksetId = rWork.GetWorksetIdByName(doc, instanceWorksetName)
+    instanceWorksetId = rWork.get_workset_id_by_name(doc, instanceWorksetName)
 
     lN = "unknown"
     #split revit link name at colon
@@ -167,14 +167,14 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
         #get the link type data before extension is stripped from the name,
         # strip space of end of name too
         typeWorksetId = _getRevitLinkTypeDataByName(lN[0:-1], doc)
-        typeWorksetName = rWork.GetWorksetNameById(doc, typeWorksetId)
+        typeWorksetName = rWork.get_workset_name_by_id(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != rdb.ElementId.InvalidElementId):
             linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
             if(instanceWorksetId != typeWorksetId):
                 output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
                 transaction = rdb.Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
-                returnValue = rTran.in_transaction(transaction,  rWork.GetActionChangeElementWorkset(revitLink, typeWorksetId))
+                returnValue = rTran.in_transaction(transaction,  rWork.get_action_change_element_workset(revitLink, typeWorksetId))
                 output(linkInstanceNameEncoded + ' ' + str(returnValue.status))
             else:
                returnValue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
@@ -230,7 +230,7 @@ output('{} [{}]'.format(result_.message, result_.status))
 #sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (DOC)
+    syncing_ = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
 output('Modifying Revit Link(s).... finished ')

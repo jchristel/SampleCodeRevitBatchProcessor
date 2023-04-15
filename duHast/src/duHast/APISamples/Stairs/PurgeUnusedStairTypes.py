@@ -67,7 +67,7 @@ def GetUsedStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc,  rStair.GetAllStairTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc,  rStair.GetAllStairTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -109,7 +109,7 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllStairTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllStairTypeIdsInModelByClass, 0)
     # make sure there is at least on Stair type per system family left in model
     StairTypes =  rStairSort.SortStairTypesByFamilyName(doc)
     for key, value in StairTypes.items():
@@ -360,7 +360,7 @@ def GetUsedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 1)
     return ids
 
 
@@ -373,7 +373,7 @@ def GetUnusedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 0)
     return ids
 
 

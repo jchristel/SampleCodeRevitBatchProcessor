@@ -93,7 +93,7 @@ def GetAllGridTypeIdsByCategory(doc):
     '''
 
     collector = GetAllGridTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector(collector)
+    ids = com.get_ids_from_element_collector(collector)
     return ids
 
 def GetGridTypeNames (doc, g):
@@ -206,7 +206,7 @@ def GetAllGridHeadFamilyTypeIds(doc):
     ids = []
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_GridHeads)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 

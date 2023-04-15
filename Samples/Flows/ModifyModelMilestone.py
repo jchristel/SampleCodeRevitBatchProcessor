@@ -133,12 +133,12 @@ GOT_DIRECTORY = dirIO.CreateTargetFolder(ROOT_PATH, dStamp.GetFolderDateStamp() 
 # do we have a valid folder?
 if GOT_DIRECTORY:
     # save new central file to back up folder
-    RESULT = rFileIO.SaveAs(DOC, ROOT_PATH + '\\' + MILESTONE_PATH, REVIT_FILE_PATH , DEFAULT_FILE_NAMES)
+    RESULT = rFileIO.save_as(DOC, ROOT_PATH + '\\' + MILESTONE_PATH, REVIT_FILE_PATH , DEFAULT_FILE_NAMES)
     output('{} :: [{}]'.format(RESULT.message ,RESULT.status))
     # sync changes back to central
     if (DEBUG == False):
         output('Syncing to Central: start')
-        SYNCING = rFileIO.SyncFile (DOC)
+        SYNCING = rFileIO.sync_file (DOC)
         output('Syncing to Central: finished [{}]'.format (SYNCING.status))
 else:
     output('failed to create target folder: {} '.format(MILESTONE_PATH))

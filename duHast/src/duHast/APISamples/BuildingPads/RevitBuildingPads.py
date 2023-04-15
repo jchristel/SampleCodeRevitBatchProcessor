@@ -37,7 +37,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllBuildingPadTypesByCategory(doc):
+def get_all_building_pad_types_by_category(doc):
     '''
     Gets a filtered element collector of all BuildingPad types in the model.
     
@@ -55,7 +55,7 @@ def GetAllBuildingPadTypesByCategory(doc):
     collector = rBuildingPadFilter._get_all_building_pad_types_by_category(doc)
     return collector
 
-def GetBuildingPadTypesByClass(doc):
+def get_building_pad_types_by_class(doc):
     '''
     Gets a filtered element collector of all building pad types in the model:
 
@@ -76,7 +76,7 @@ def GetBuildingPadTypesByClass(doc):
 
 # -------------------------------- none in place BuildingPad types -------------------------------------------------------
 
-def GetAllBuildingPadInstancesInModelByCategory(doc):
+def get_all_building_pad_instances_in_model_by_category(doc):
     '''
     Gets all building pad elements placed in model.
 
@@ -91,7 +91,7 @@ def GetAllBuildingPadInstancesInModelByCategory(doc):
     
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
     
-def GetAllBuildingPadInstancesInModelByClass(doc):
+def get_all_building_pad_instances_in_model_by_class(doc):
     '''
     Gets all building pad elements placed in model.
 
@@ -107,7 +107,7 @@ def GetAllBuildingPadInstancesInModelByClass(doc):
    
     return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPad).WhereElementIsNotElementType()
 
-def GetAllBuildingPadTypeIdsInModelByCategory(doc):
+def get_all_building_pad_type_ids_in_model_by_category(doc):
     '''
     Gets all building pad element type ids available in model.
 
@@ -121,11 +121,11 @@ def GetAllBuildingPadTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllBuildingPadTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    colCat = get_all_building_pad_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllBuildingPadTypeIdsInModelByClass(doc):
+def get_all_building_pad_type_ids_in_model_by_class(doc):
     '''
     Gets all building pad element type ids available in model.
 
@@ -140,8 +140,8 @@ def GetAllBuildingPadTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetBuildingPadTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector (colClass)
+    colClass = get_building_pad_types_by_class(doc)
+    ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 

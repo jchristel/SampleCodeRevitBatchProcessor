@@ -66,10 +66,10 @@ class IFamilyData(Base.Base):
     def process(self, doc):
         pass
 
-    def get_Data(self):
+    def get_data(self):
         pass
     
-    def update_Data(self, identifyByThisPropertyName, identifyByThisPropertyValue, updateDic):
+    def update_data(self, identifyByThisPropertyName, identifyByThisPropertyValue, updateDic):
         match = False
         matchUpdate = True
         for d in self.data:
@@ -90,10 +90,10 @@ class IFamilyData(Base.Base):
         else:
             return match
 
-    def add_Data(self):
+    def add_data(self):
         pass
 
-    def _stripFileExtension(self, famName):
+    def _strip_file_extension(self, famName):
         '''
         Strips the file extension '.rfa. , if exists, of the family  name.
 

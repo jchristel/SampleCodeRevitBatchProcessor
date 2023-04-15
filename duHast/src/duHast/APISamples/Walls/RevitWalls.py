@@ -112,7 +112,7 @@ def GetAllInPlaceWallTypeIdsInModel(doc):
     ids = []
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 # -------------------------------- basic wall types -------------------------------------------------------

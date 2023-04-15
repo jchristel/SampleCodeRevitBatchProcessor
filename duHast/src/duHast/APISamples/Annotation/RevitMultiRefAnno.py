@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllMultiRefAnnotationTypes(doc):
+def get_all_multi_ref_annotation_types(doc):
     '''
     Gets all multi reference annotation types in the model.
     :param doc: Current Revit model document.
@@ -42,7 +42,7 @@ def GetAllMultiRefAnnotationTypes(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
 
-def GetAllMultiRefAnnotationTypeIds(doc):
+def get_all_multi_ref_annotation_type_ids(doc):
     '''
     Gets all multi reference annotation type ids in the model.
     :param doc: Current Revit model document.
@@ -53,11 +53,11 @@ def GetAllMultiRefAnnotationTypeIds(doc):
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def GetAllMultiRefAnnotationElements(doc):
+def get_all_multi_ref_annotation_elements(doc):
     '''
     Gets all multi reference annotation elements in the model.
     :param doc: Current Revit model document.
@@ -68,7 +68,7 @@ def GetAllMultiRefAnnotationElements(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotation)
 
-def GetAllSimilarMultiReferenceAnnoTypes(doc):
+def get_all_similar_multi_reference_anno_types(doc):
     '''
     Gets all multi reference annotation types using get similar types in the model.
     :param doc: Current Revit model document.
@@ -77,5 +77,5 @@ def GetAllSimilarMultiReferenceAnnoTypes(doc):
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     '''
 
-    multiReferenceAnnoTypes = com.GetSimilarTypeFamiliesByType(doc, GetAllMultiRefAnnotationTypes)
+    multiReferenceAnnoTypes = com.get_similar_type_families_by_type(doc, get_all_multi_ref_annotation_types)
     return multiReferenceAnnoTypes

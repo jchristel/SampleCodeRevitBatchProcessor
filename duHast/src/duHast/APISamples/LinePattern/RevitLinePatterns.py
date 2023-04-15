@@ -129,7 +129,7 @@ def DeleteLinePatternsContains(doc, contains):
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
-    result = rDel.DeleteByElementIds(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
+    result = rDel.delete_by_element_ids(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
     return result
 
 def DeleteLinePatternStartsWith(doc, startsWith):
@@ -152,7 +152,7 @@ def DeleteLinePatternStartsWith(doc, startsWith):
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = rDel.DeleteByElementIds(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
+    result = rDel.delete_by_element_ids(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
     return result
 
 def DeleteLinePatternsWithout(doc, contains):
@@ -177,7 +177,7 @@ def DeleteLinePatternsWithout(doc, contains):
     ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
     idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
     deleteIds = list(set(ids)-set(idsContain))
-    result = rDel.DeleteByElementIds(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
+    result = rDel.delete_by_element_ids(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
 def GetAllLinePatterns(doc):
@@ -237,6 +237,6 @@ def DeleteDuplicatLinePatterNames(doc):
         if(len(value) > 1):
             # keep the first one (original)
             value.remove(value[0])
-            flagDelete = rDel.DeleteByElementIds(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
+            flagDelete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
             returnValue.Update (flagDelete)
     return returnValue

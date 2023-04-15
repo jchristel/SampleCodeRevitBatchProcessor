@@ -90,7 +90,7 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
     ids = []
     for typeId in allTypeIds:
         type = doc.GetElement(typeId)
-        hasDependents = rPurgeUtils.HasDependentElements(doc, type)
+        hasDependents = rPurgeUtils.has_dependent_elements(doc, type)
         if(hasDependents == useType):
             ids.append(typeId)
     return ids

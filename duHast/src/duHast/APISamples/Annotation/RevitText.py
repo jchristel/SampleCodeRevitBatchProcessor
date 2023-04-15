@@ -32,7 +32,7 @@ from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 
 
-def GetAllTextTypes(doc):
+def get_all_text_types(doc):
     '''
     Gets all text types in the model
     :param doc: Current Revit model document.
@@ -43,7 +43,7 @@ def GetAllTextTypes(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
 
-def GetAllTextTypeIds(doc):
+def get_all_text_type_ids(doc):
     '''
     Gets all text type ids in the model.
     :param doc: Current Revit model document.
@@ -54,11 +54,11 @@ def GetAllTextTypeIds(doc):
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def GetAllTextAnnotationElements(doc):
+def get_all_text_annotation_elements(doc):
     '''
     Gets all text annotation elements in the model.
     :param doc: Current Revit model document.
@@ -69,7 +69,7 @@ def GetAllTextAnnotationElements(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElement)
 
-def GetTextTypeArrowHeadIds(doc):
+def get_text_type_arrow_head_ids(doc):
     '''
     Gets all arrow head ids used in text types in a model.
     :param doc: Current Revit model document.
@@ -77,5 +77,5 @@ def GetTextTypeArrowHeadIds(doc):
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
-    usedIds = rArrow.GetArrowHeadIdsFromType(doc, GetAllTextTypes, rArrow.ARROWHEAD_PARAS_TEXT)
+    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_text_types, rArrow.ARROWHEAD_PARAS_TEXT)
     return usedIds

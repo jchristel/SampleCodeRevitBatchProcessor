@@ -34,7 +34,7 @@ from duHast.APISamples.DetailItems.Utility import RevitDetailItemsTypeSorting as
 
 # -------------------------------- repeating detail types -------------------------------------------------------
 
-def GetUsedRepeatingDetailTypeIds(doc):
+def get_used_repeating_detail_type_ids(doc):
     '''
     Gets all used repeating detail type ids in the model.
     Used: at least one instance of this type is placed in the model.
@@ -44,11 +44,11 @@ def GetUsedRepeatingDetailTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 1, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_repeating_detail_type_ids_available, 1, 1)
     return ids
 
 
-def GetUnUsedRepeatingDetailTypeIds(doc):
+def get_unused_repeating_detail_type_ids(doc):
     '''
     Gets all unused repeating detail type ids in the model.
     Unused: not one instance of this type is placed in the model.
@@ -58,11 +58,11 @@ def GetUnUsedRepeatingDetailTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_repeating_detail_type_ids_available, 0, 1)
     return ids
 
 
-def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
+def get_unused_repeating_detail_type_ids_for_purge(doc):
     '''
     Gets type ids off all unused repeating detail types in model.
     This method can be used to safely delete unused repeating detail types. In the case that no basic\
@@ -74,8 +74,8 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllRepeatingDetailTypeIdsAvailable, 0, 1)
-    allIds = rDetail.GetAllRepeatingDetailTypeIdsAvailable(doc)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_repeating_detail_type_ids_available, 0, 1)
+    allIds = rDetail.get_all_repeating_detail_type_ids_available(doc)
     # need to keep at least one
     if(len(allIds) == len(ids)):
         ids.pop(0)
@@ -83,7 +83,7 @@ def GetUnUsedRepeatingDetailTypeIdsForPurge(doc):
 
 # -------------------------------- Detail families -------------------------------------------------------
 
-def GetAllUsedDetailSymbolIds(doc):
+def get_all_used_detail_symbol_ids(doc):
     '''
     Gets all used detail symbol type ids in model.
     Used: at least one instance of this type is placed in the model.
@@ -94,16 +94,16 @@ def GetAllUsedDetailSymbolIds(doc):
     '''
 
     ids = []
-    dic = rDetailTypeSort.BuildDetailTypeIdsDictionary(rDetail.GetAllDetailTypesByCategory(doc))
+    dic = rDetailTypeSort.build_detail_type_ids_dictionary(rDetail.get_all_detail_types_by_category(doc))
     if (dic.has_key(rDetail.ELEMENT_TYPE)):
         idsUnfiltered = dic[rDetail.FAMILY_SYMBOL]
         # check if used in repeating details
-        idsRepeatDet = rDetail.GetAllRepeatingDetailTypeIdsAvailable(doc)
+        idsRepeatDet = rDetail.get_all_repeating_detail_type_ids_available(doc)
         #print('ids used in repeating details ' + str(len(idsRepeatDet)))
         # get detail types used in repeating details only
-        idsOfDetailsUsedRepeatDetails = rDetail.GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet)
+        idsOfDetailsUsedRepeatDetails = rDetail.get_detail_symbols_used_in_repeating_details(doc, idsRepeatDet)
         # get detail types used in model
-        idsUsedInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, rDetail.GetAllDetailSymbolIdsAvailable, 1)
+        idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_detail_symbol_ids_available, 1)
         print('ids used in model ' + str(len(idsUsedInModel)))
         # built overall ids list
         for id in idsOfDetailsUsedRepeatDetails:
@@ -117,7 +117,7 @@ def GetAllUsedDetailSymbolIds(doc):
         return []
 
 
-def GetAllUnUsedDetailSymbolIds(doc):
+def get_all_unused_detail_symbol_ids(doc):
     '''
     Gets all unused detail symbol type ids in model.
     Unused: Not one instance of this type is placed in the model.
@@ -128,15 +128,15 @@ def GetAllUnUsedDetailSymbolIds(doc):
     '''
 
     ids = []
-    allAvailableIds = rDetail.GetAllDetailSymbolIdsAvailable(doc)
-    allUsedIds = GetAllUsedDetailSymbolIds(doc)
+    allAvailableIds = rDetail.get_all_detail_symbol_ids_available(doc)
+    allUsedIds = get_all_used_detail_symbol_ids(doc)
     for id in allAvailableIds:
         if(id not in allUsedIds):
             ids.append(id)
     return ids
 
 
-def GetAllUnUsedDetailSymbolIdsForPurge(doc):
+def get_all_unused_detail_symbol_ids_for_purge(doc):
     '''
     Gets type ids off all unused detail symbols (types) in model.
     This method can be used to safely delete all unused detail symbols (types) and families.
@@ -146,11 +146,11 @@ def GetAllUnUsedDetailSymbolIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetAllUnUsedDetailSymbolIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_all_unused_detail_symbol_ids)
     return ids
 
 
-def GetUsedFilledRegionTypeIds(doc):
+def get_used_filled_region_type_ids(doc):
     '''
     Gets all used filled region type ids in model.
     Used: at least one instance of this type is placed in the model.
@@ -161,16 +161,16 @@ def GetUsedFilledRegionTypeIds(doc):
     '''
 
     ids = []
-    idsAll = rDetail.GetAllFilledRegionTypeIdsAvailable(doc)
+    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
     for id in idsAll:
         el = doc.GetElement(id)
-        dic = rDetailTypeSort.BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
+        dic = rDetailTypeSort.build_dependent_elements_dictionary(doc, el.GetDependentElements(None))
         if(dic.has_key('Autodesk.Revit.DB.FilledRegion')):
             ids.append(id)
     return ids
 
 
-def GetUnUsedFilledRegionTypeIds(doc):
+def get_unused_filled_region_type_ids(doc):
     ''''
     Gets all unused filled region type ids in model.
     Unused: Not one instance of this type is placed in the model.
@@ -181,16 +181,16 @@ def GetUnUsedFilledRegionTypeIds(doc):
     '''
 
     ids = []
-    idsAll = rDetail.GetAllFilledRegionTypeIdsAvailable(doc)
+    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
     for id in idsAll:
         el = doc.GetElement(id)
-        dic = rDetailTypeSort.BuildDependentElementsDictionary(doc, el.GetDependentElements(None))
+        dic = rDetailTypeSort.build_dependent_elements_dictionary(doc, el.GetDependentElements(None))
         if(dic.has_key('Autodesk.Revit.DB.FilledRegion') == False):
             ids.append(id)
     return ids
 
 
-def GetUnUsedFilledRegionTypeIdsForPurge(doc):
+def get_unused_filled_region_type_ids_for_purge(doc):
     '''
     Gets ids off all unused filled region types in model.
     This method can be used to safely delete all unused filled region types in model. In the case that no filled\
@@ -202,8 +202,8 @@ def GetUnUsedFilledRegionTypeIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedFilledRegionTypeIds(doc)
-    idsAll = rDetail.GetAllFilledRegionTypeIdsAvailable(doc)
+    ids = get_unused_filled_region_type_ids(doc)
+    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
     # need to keep at least one
     if(len(idsAll) == len(ids)):
         ids.pop(0)

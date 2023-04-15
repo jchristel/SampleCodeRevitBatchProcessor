@@ -36,7 +36,7 @@ import Autodesk.Revit.DB as rdb
 from  duHast.Utilities import FilesGet as fileGet, FilesIO as util
 
 
-def GetBim360Path(doc):
+def get_bim_360_path(doc):
     '''
     Gets human readable BIM 360 path.
 
@@ -56,7 +56,7 @@ def GetBim360Path(doc):
         revitFilePath = ''
     return revitFilePath
 
-def ConvertBIM360FilePath(path):
+def convert_bim_360_file_path(path):
     '''
     Pretend this is a file server path rather than cloud model path and swap cloud path with C:/
 
@@ -76,7 +76,7 @@ def ConvertBIM360FilePath(path):
         path = r'C:/' + path[len('autodesk docs://'):]
     return path
 
-def GetModelBIM360Ids(doc):
+def get_model_bim_360_ids(doc):
     '''
     Gets project id, model id, human readable path from the model.
 
@@ -96,7 +96,7 @@ def GetModelBIM360Ids(doc):
     human = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     return projectGuid,modelGuid,str(human)
 
-def GetModelFileSize(doc):
+def get_model_file_size(doc):
     '''
     Gets BIM360 file size, if file does not exists on local cache it will return -1.
 

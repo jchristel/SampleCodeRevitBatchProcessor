@@ -171,12 +171,12 @@ def PurgeUnplacedElements (doc,
                 unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ rdb.Element.Name.GetValue(doc.GetElement(unusedId)))
         else:
             unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
-        purgeResult = rDel.DeleteByElementIds(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+        purgeResult = rDel.delete_by_element_ids(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         # check if an exception occurred and in debug mode, purge elements one by one
         if(isDebug and purgeResult.status == False):
             #pass
             print('second debug run')
-            purgeResult = rDel.DeleteByElementIdsOneByOne(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+            purgeResult = rDel.delete_by_element_ids_one_by_one(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
         resultValue.Update(purgeResult)
     except Exception as e:
         resultValue.UpdateSep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
@@ -186,9 +186,9 @@ def PurgeUnplacedElements (doc,
 
 #: list containing purge action names and the purge action method
 PURGE_ACTIONS = []
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Model Group(s)', rGrp.GetUnplacedModelGroupIds, 'Model Group(s)', 'Model Group(s)', rGrp.GetModelGroupIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Detail Group(s)', rGrp.GetUnplacedDetailGroupIds, 'Detail Group(s)', 'Detail Group(s)', rGrp.GetDetailGroupIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Nested Detail Group(s)', rGrp.GetUnplacedNestedDetailGroupIds, 'Nested Detail Group(s)', 'Nested Detail Group(s)', rGrp.GetNestedDetailGroupIds))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Model Group(s)', rGrp.get_unplaced_model_group_ids, 'Model Group(s)', 'Model Group(s)', rGrp.get_model_group_ids))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Detail Group(s)', rGrp.get_unplaced_detail_group_ids, 'Detail Group(s)', 'Detail Group(s)', rGrp.get_detail_group_ids))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Nested Detail Group(s)', rGrp.get_unplaced_nested_detail_group_ids, 'Nested Detail Group(s)', 'Nested Detail Group(s)', rGrp.get_nested_detail_group_ids))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rViewPurge.GetUnusedViewTypeIdsInModel, 'View Family Type(s)', 'View Family Type(s)', rView.GetViewTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rViewTemp.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rViewTemp.GetViewsTemplateIdsInInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rViewFilter.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rViewFilter.GetAllAvailableFilterIdsInModel))
@@ -199,8 +199,8 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWallPur
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Basic Types', rWallPurge.GetUnUsedBasicWallTypeIdsToPurge, 'Basic Wall Type(s)', 'Basic Wall Type(s)', rWall.GetAllBasicWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Element Types', rCurtainWallElemPurge.GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge,'Curtain Wall Element Type(s)', 'Curtain Wall Element Type(s)', rCurtainWallElem.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Curtain Wall Symbol (Types)', rCurtainWallElemPurge.GetUnusedICurtainWallSymbolIdsForPurge,'Curtain Wall Loadable Symbols (Type(s))', 'Curtain Wall Loadable Symbols (Type(s))', rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeilingPurge.GetUnusedNonInPlaceCeilingTypeIdsToPurge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.GetAllCeilingTypeIdsInModelByClass)) # used by class filter to avoid in place families listed
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeilingPurge.GetUnusedInPlaceCeilingIdsForPurge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.GetAllInPlaceCeilingTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ceiling Types', rCeilingPurge.get_unused_non_in_place_ceiling_type_ids_to_purge, 'Ceiling Type(s)', 'Ceiling Type(s)', rCeil.get_all_ceiling_type_ids_in_model_by_class)) # used by class filter to avoid in place families listed
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Ceiling Types', rCeilingPurge.get_unused_in_place_ceiling_ids_for_purge, 'InPlace Ceiling Type(s)', 'InPlace Ceiling Type(s)', rCeil.get_all_in_place_ceiling_type_ids_in_model))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Floor Types', rFloorPurge.GetUnusedNonInPlaceFloorTypeIdsToPurge, 'Floor Type(s)', 'Floor Type(s)', rFlo.GetAllFloorTypeIdsInModelByClass)) #TODO check why this is using by class...
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Floor Types', rFloorPurge.GetUnusedInPlaceFloorIdsForPurge, 'InPlace Floor Type(s)', 'InPlace Floor Type(s)', rFlo.GetAllInPlaceFloorTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Roof Types', rRoofPurge.GetUnusedNonInPlaceRoofTypeIdsToPurge, 'Roof Type(s)', 'Roof Type(s)', rRoof.GetAllRoofTypeIdsInModelByClass)) #TODO check why by class
@@ -213,7 +213,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stringers and Carriage Types'
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Stair Types', rStairPurge.GetUnusedInPlaceStairIdsForPurge,'InPlace Stair Type(s)', 'InPlace Stair Type(s)', rStair.GetAllInPlaceStairTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Ramp Types', rRampPurge.GetUnusedNonInPlaceRampTypeIdsToPurge, 'Ramp Type(s)', 'Ramp Type(s)', rRam.GetAllRampTypeIdsInModelByCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stair Cut Mark Types', rStairPurge.GetUnusedStairCutMarkTypeIdsToPurge, 'Stair Cut Mark Type(s)', 'Stair Cut Mark Type(s)', rStairCutMark.GetAllStairCutMarkTypeIdsInModelByClass))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildingPadPurge.GetUnusedNonInPlaceBuildingPadTypeIdsToPurge, 'Building Pad Type(s)', 'Building Pad Type(s)', rBuildP.GetAllBuildingPadTypeIdsInModelByClass))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Building Pad Types', rBuildingPadPurge.get_unused_non_in_place_building_pad_type_ids_to_purge, 'Building Pad Type(s)', 'Building Pad Type(s)', rBuildP.get_all_building_pad_type_ids_in_model_by_class))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Railing Types', rRailPurge.GetUnusedNonInPlaceRailingTypeIdsToPurge, 'Railing Type(s)','Railing Type(s)', rRail.GetAllRailingTypeIdsInModelByClassAndCategory))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Railing Types', rRailPurge.GetUnusedInPlaceRailingIdsForPurge,'In Place Railing Type(s)','In Place Railing Type(s)',rRail.GetAllInPlaceRailingTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Baluster Types', rRailPurge.GetUnUsedBalusterTypeIdsForPurge,'Baluster Type(s)','Baluster Type(s)',rBal.GetAllBalusterSymbolIds))
@@ -232,15 +232,15 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Grid Head Types', rGridPurge.
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Types', rViewPurge.GetUnusedViewReferenceTypeIdsForPurge, 'View Ref Type(s)', 'View Ref Type(s)', rViewRef.GetAllViewReferenceTypeIdDataAsList))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Continuation Types', rViewPurge.GetUnusedContinuationMarkerTypeIdsForPurge, 'View Continuation Type(s)', 'View Continuation Type(s)', rViewRef.GetAllViewContinuationTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Reference Families', rViewPurge.GetUnusedViewRefAndContinuationMarkerFamiliesForPurge, 'View Ref and Continuation Marker families(s)', 'View Ref and Continuation Marker families(s)', rViewRef.GetAllViewReferenceSymbolIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDetailItemPurge.GetUnUsedRepeatingDetailTypeIdsForPurge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.GetAllRepeatingDetailTypeIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDetailItemPurge.GetUnUsedFilledRegionTypeIdsForPurge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.GetAllFilledRegionTypeIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDetailItemPurge.GetAllUnUsedDetailSymbolIdsForPurge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.GetAllDetailSymbolIdsAvailable))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnnoPurge.GetAllUnusedMultiRefDimTypeIdsInModel,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rMultiRefAnno.GetAllMultiRefAnnotationTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnnoPurge.GetAllUnusedDimTypeIdsInModel, 'Dimension Type(s)', 'Dimension Type(s)', rDim.GetDimTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.GetAllUnusedTextTypeIdsInModel,'Text Type(s)', 'Text Type(s)', rText.GetAllTextTypeIds))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnnoPurge.GetAllUnusedArrowTypeIdsInModel, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rArrow.GetArrowTypesIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rAnnoPurge.GetUnusedGenericAnnotationIdsForPurge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.GetAllGenericAnnotationTypeIdsByCategory))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnnoPurge.GetUnusedSymbolIdsFromSpotTypesToPurge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnnoSpot.GetAllSpotElevationSymbolIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Repeating Details', rDetailItemPurge.get_unused_repeating_detail_type_ids_for_purge, 'Repeating Detail Type(s)', 'Repeating Detail Type(s)', rDet.get_all_repeating_detail_type_ids_available))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Filled Regions', rDetailItemPurge.get_unused_filled_region_type_ids_for_purge, 'Filled Region Type(s)', 'Filled Region Type(s)', rDet.get_all_filled_region_type_ids_available))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Details Symbols', rDetailItemPurge.get_all_unused_detail_symbol_ids_for_purge, 'Detail Symbol(s)', 'Detail Symbol(s)', rDet.get_all_detail_symbol_ids_available))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused MultiRef Dimension Types', rAnnoPurge.get_all_unused_multi_ref_dim_type_ids_in_model,'MultiRef Dimension Type(s)', 'MultiRef Dimension Type(s)', rMultiRefAnno.get_all_multi_ref_annotation_type_ids))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Dimension Types', rAnnoPurge.get_all_unused_dim_type_ids_in_model, 'Dimension Type(s)', 'Dimension Type(s)', rDim.get_dim_type_ids))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.get_all_unused_text_type_ids_in_model,'Text Type(s)', 'Text Type(s)', rText.get_all_text_type_ids))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnnoPurge.get_all_unused_arrow_type_ids_in_model, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rArrow.get_arrow_type_ids_in_model))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rAnnoPurge.get_unused_generic_annotation_ids_for_purge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.get_all_generic_annotation_type_ids_by_category))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnnoPurge.get_unused_symbol_ids_from_spot_types_to_purge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnnoSpot.get_all_spot_elevation_symbol_ids_in_model))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamPurge.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamUPurge.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
 
 

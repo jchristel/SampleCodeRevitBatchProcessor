@@ -70,7 +70,7 @@ ARROWHEAD_PARAS_STAIRS_PATH = [
 ]
 
 
-def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
+def get_arrow_head_ids_from_type(doc, typeGetter, parameterList):
     '''
     Gets all arrow head symbol ids used in dim types in a model.
     :param doc: Current Revit model document.
@@ -94,7 +94,7 @@ def GetArrowHeadIdsFromType(doc, typeGetter, parameterList):
     return usedIds
 
 
-def GetArrowTypesInModel(doc):
+def get_arrow_types_in_model(doc):
     '''
     Gets all arrow head types in the model.
     TODO: This uses a plain english name comparison to get arrow head types...may not work in non english versions of Revit!
@@ -116,7 +116,7 @@ def GetArrowTypesInModel(doc):
     return types
 
 
-def GetArrowTypesIdsInModel(doc):
+def get_arrow_type_ids_in_model(doc):
     '''
     Gets all arrow type ids in the model.
     :param doc: Current Revit model document.
@@ -125,7 +125,7 @@ def GetArrowTypesIdsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    arrowTypes = GetArrowTypesInModel(doc)
+    arrowTypes = get_arrow_types_in_model(doc)
     ids = []
     for at in arrowTypes:
             if(at.Id not in ids):

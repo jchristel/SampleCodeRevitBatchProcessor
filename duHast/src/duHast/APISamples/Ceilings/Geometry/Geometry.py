@@ -31,7 +31,7 @@ from duHast.APISamples.Ceilings import RevitCeilings as rCeiling
 from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rCon
 
 
-def Get2DPointsFromRevitCeiling(ceiling):
+def get_2d_points_from_revit_ceiling(ceiling):
     '''
     Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
     List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
@@ -65,7 +65,7 @@ def Get2DPointsFromRevitCeiling(ceiling):
     return allCeilingPoints
 
 
-def Get2DPointsFromRevitCeilingsInModel(doc):
+def get_2d_points_from_revit_ceilings_in_model(doc):
     '''
     Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
     List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
@@ -78,10 +78,10 @@ def Get2DPointsFromRevitCeilingsInModel(doc):
     :rtype: list of :class:`.DataGeometry`
     '''
 
-    ceilingInstances =  rCeiling.GetAllCeilingInstancesInModelByCategory(doc)
+    ceilingInstances =  rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
     allCeilingPoints = []
     for cI in ceilingInstances:
-       ceilingPoints = Get2DPointsFromRevitCeiling(cI)
+       ceilingPoints = get_2d_points_from_revit_ceiling(cI)
        if(len(ceilingPoints) > 0 ):
            allCeilingPoints.append (ceilingPoints)
     return allCeilingPoints

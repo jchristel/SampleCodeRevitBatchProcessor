@@ -49,7 +49,7 @@ BUILTIN_CEILING_TYPE_FAMILY_NAMES = [
 ]
 
 
-def GetUsedCeilingTypeIds(doc):
+def get_used_ceiling_type_ids(doc):
     '''
     Gets all used ceiling type ids.
     Filters by category.
@@ -60,11 +60,11 @@ def GetUsedCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllCeilingTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCeiling.get_all_ceiling_type_ids_in_model_by_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -86,7 +86,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
 
 # -------------------------------- In place ceiling types -------------------------------------------------------
 
-def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
+def get_unused_non_in_place_ceiling_type_ids_to_purge(doc):
     '''
     Gets all unused ceiling type id's.
     - Roof Soffit
@@ -102,18 +102,18 @@ def GetUnusedNonInPlaceCeilingTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc,  rCeiling.GetAllCeilingTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc,  rCeiling.get_all_ceiling_type_ids_in_model_by_class, 0)
     # make sure there is at least on ceiling type per system family left in model
-    ceilingTypes = rCeilingTypeSort.SortCeilingTypesByFamilyName(doc)
+    ceilingTypes = rCeilingTypeSort.sort_ceiling_types_by_family_name(doc)
     for key, value in ceilingTypes.items():
         if(key in BUILTIN_CEILING_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 
-def GetUsedInPlaceCeilingTypeIds(doc):
+def get_used_in_place_ceiling_type_ids(doc):
     '''
     Gets all used in place ceiling type ids in the model.
     Used: at least one instance of this type is placed in the model.
@@ -123,11 +123,11 @@ def GetUsedInPlaceCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCeiling.get_all_in_place_ceiling_type_ids_in_model, 1)
     return ids
 
 
-def GetUnusedInPlaceCeilingTypeIds(doc):
+def get_unused_in_place_ceiling_type_ids(doc):
     '''
     Gets all unused in place ceiling type ids in the model.
     Unused: Not one instance of this type is placed in the model.
@@ -137,11 +137,11 @@ def GetUnusedInPlaceCeilingTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rCeiling.GetAllInPlaceCeilingTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCeiling.get_all_in_place_ceiling_type_ids_in_model, 0)
     return ids
 
 
-def GetUnusedInPlaceCeilingIdsForPurge(doc):
+def get_unused_in_place_ceiling_ids_for_purge(doc):
     '''
     Gets symbol(type) ids and family ids (when no type is in use) of in place ceiling families which can be safely deleted from the model.
     This method can be used to safely delete unused in place ceiling types. There is no requirement by Revit to have at least one\
@@ -152,6 +152,6 @@ def GetUnusedInPlaceCeilingIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceCeilingTypeIds)
+    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_unused_in_place_ceiling_type_ids)
     return ids
 

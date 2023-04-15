@@ -89,7 +89,7 @@ class SharedParameterData(IFamData.IFamilyData):
             self.data.append({
                 IFamData.ROOT : self.rootPath,
                 IFamData.ROOT_CATEGORY : self.rootCategoryPath,
-                IFamData.FAMILY_NAME : self._stripFileExtension(doc.Title),
+                IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName,
                 PARAMETER_GUID : para.GuidValue.ToString(),
                 PARAMETER_NAME : parameterName,
@@ -105,7 +105,7 @@ class SharedParameterData(IFamData.IFamilyData):
             self.data.append({
                 IFamData.ROOT : self.rootPath,
                 IFamData.ROOT_CATEGORY : self.rootCategoryPath,
-                IFamData.FAMILY_NAME : self._stripFileExtension(doc.Title),
+                IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName,
                 PARAMETER_GUID : '',
                 PARAMETER_NAME : 'No shared parameter present in family.',
@@ -116,5 +116,5 @@ class SharedParameterData(IFamData.IFamilyData):
             )
 
         
-    def get_Data(self):
+    def get_data(self):
         return self.data

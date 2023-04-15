@@ -49,7 +49,7 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitGroups as rGroup
 
 
-def GetElementMark(e):
+def get_element_mark(e):
     '''
     Returns the mark value of an element.
 
@@ -72,7 +72,7 @@ def GetElementMark(e):
 
 #----------------------------------------Legend Components -----------------------------------------------
 
-def GetLegendComponentsInModel(doc, typeIds):
+def get_legend_components_in_model(doc, typeIds):
     ''' 
     Returns all symbol (type) ids of families which have been placed as legend components and have match in list past in.
     
@@ -98,7 +98,7 @@ def GetLegendComponentsInModel(doc, typeIds):
 
 #----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-def GetSimilarTypeFamiliesByType(doc, typeGetter):
+def get_similar_type_families_by_type(doc, typeGetter):
     '''
     Returns a list of unique types its similar family (symbol) types.
     
@@ -122,11 +122,11 @@ def GetSimilarTypeFamiliesByType(doc, typeGetter):
             simData.append(sim)
         # simData.sort() # not sure a sort is actually doing anything
         tData.append(simData)
-        if(CheckUniqueTypeData(simTypes, tData)):
+        if(check_unique_type_data(simTypes, tData)):
             simTypes.append(tData)
     return simTypes
 
-def CheckUniqueTypeData(existingTypes, newTypeData):
+def check_unique_type_data(existingTypes, newTypeData):
     '''
     Compares two lists of types and their similar types (ids).
 
@@ -164,7 +164,7 @@ def CheckUniqueTypeData(existingTypes, newTypeData):
                     break
     return result
 
-def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
+def get_unused_type_ids_in_model(doc, typeGetter, instanceGetter):
     '''
     Returns ID of unused family types in the model.
 
@@ -182,7 +182,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
     '''
     
     # get all  types available and associated family types
-    familyTypesAvailable = GetSimilarTypeFamiliesByType(doc, typeGetter)
+    familyTypesAvailable = get_similar_type_families_by_type(doc, typeGetter)
     # get used type ids
     usedFamilyTypeIds = instanceGetter(doc)
     # flag indicating that at least one type was removed from list because it is in use
@@ -234,7 +234,7 @@ def GetUnusedTypeIdsInModel(doc, typeGetter, instanceGetter):
 
 #----------------------------------------instances of types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-def GetNotPlacedTypes(doc, getTypes, getInstances):
+def get_not_placed_types(doc, getTypes, getInstances):
     '''
     
     returns a list of unused types foo by comparing type Ids of placed instances with types past in.
@@ -272,7 +272,7 @@ def GetNotPlacedTypes(doc, getTypes, getInstances):
 
 # --------------------------------------------- check whether groups contain certain element types - Autodesk.Revit.DB ElementType  ------------------
 
-def CheckGroupForTypeIds(doc, groupType, typeIds):
+def check_group_for_type_ids(doc, groupType, typeIds):
     '''
     
     Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
@@ -307,7 +307,7 @@ def CheckGroupForTypeIds(doc, groupType, typeIds):
             unusedTypeIds.append(checkId)
     return unusedTypeIds
 
-def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
+def check_groups_for_matching_type_ids(doc, groupTypes, typeIds):
     '''
     Checks all elements in groups past in whether group includes element of which type Id is matching any type ids past in
     
@@ -323,13 +323,13 @@ def CheckGroupsForMatchingTypeIds(doc, groupTypes, typeIds):
     '''
 
     for groupType in groupTypes:
-        typeIds = CheckGroupForTypeIds(doc, groupType, typeIds)
+        typeIds = check_group_for_type_ids(doc, groupType, typeIds)
         # check if all type ids where matched up
         if (len(typeIds) == 0):
             break
     return typeIds
 
-def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
+def get_unused_type_ids_from_detail_groups(doc, typeIds):
     '''
     Checks elements in nested detail groups and detail groups whether their type ElementId is in the list past in.
     
@@ -345,15 +345,15 @@ def GetUnusedTypeIdsFromDetailGroups(doc, typeIds):
     '''
 
     unusedTypeIds = []
-    nestedDetailGroups = rGroup.GetNestedDetailGroups(doc)
-    detailGroups = rGroup.GetDetailGroups(doc)
-    unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, nestedDetailGroups, typeIds)
-    unusedTypeIds = CheckGroupsForMatchingTypeIds(doc, detailGroups, typeIds)
+    nestedDetailGroups = rGroup.get_nested_detail_groups(doc)
+    detailGroups = rGroup.get_detail_groups(doc)
+    unusedTypeIds = check_groups_for_matching_type_ids(doc, nestedDetailGroups, typeIds)
+    unusedTypeIds = check_groups_for_matching_type_ids(doc, detailGroups, typeIds)
     return unusedTypeIds
 
 #----------------------------------------elements-----------------------------------------------
 
-def GetIdsFromElementCollector(col):
+def get_ids_from_element_collector(col):
     '''
     This will return a list of all element ids in collector.
 

@@ -137,20 +137,20 @@ def modify(doc, revit_file_path, grid_data):
         if (revit_file_name.startswith(file_name)):
             flag = True
             collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
-            grids = rWork.ModifyElementWorkset(doc, default_workset_name, collector_grids, 'grids')
+            grids = rWork.modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
             return_value.Update(grids)
 
             collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
-            levels = rWork.ModifyElementWorkset(doc, default_workset_name, collector_levels, 'levels')
+            levels = rWork.modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
             return_value.Update(levels)
 
             collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
-            scope_boxes = rWork.ModifyElementWorkset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
+            scope_boxes = rWork.modify_element_workset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
             return_value.Update(scope_boxes)
             
             # fix up ref planes
             collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-            ref_planes = rWork.ModifyElementWorkset(doc, default_workset_name, collector_ref_planes,  'reference planes')
+            ref_planes = rWork.modify_element_workset(doc, default_workset_name, collector_ref_planes,  'reference planes')
             return_value.Update(ref_planes)
             
             break
@@ -189,7 +189,7 @@ output('{} :: [{}]'.format( STATUS_MODIFY_WORKSETS.message,STATUS_MODIFY_WORKSET
 # sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    SYNCING = rFileIO.SyncFile (DOC)
+    SYNCING = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}] '.format(SYNCING.status))
 
 output('Checking levels and grids.... finished ')

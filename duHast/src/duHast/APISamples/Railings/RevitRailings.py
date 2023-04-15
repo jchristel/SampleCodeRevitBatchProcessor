@@ -154,7 +154,7 @@ def GetAllRailingTypeIdsInModelByCategory(doc):
     
     ids = []
     colCat = GetAllRailingTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 def GetAllRailingTypeIdsInModelByClass(doc):
@@ -170,7 +170,7 @@ def GetAllRailingTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetRailingTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector(colClass)
+    ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
@@ -186,9 +186,9 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
 
     ids = []
     colClass = GetRailingTypesByClass(doc)
-    idsClass = com.GetIdsFromElementCollector(colClass)
+    idsClass = com.get_ids_from_element_collector(colClass)
     colCat = GetAllRailingTypesByCategoryExclInPlace(doc)
-    idsCat = com.GetIdsFromElementCollector(colCat)
+    idsCat = com.get_ids_from_element_collector(colCat)
     for idClass in idsClass:
         if (idClass not in ids):
             ids.append (idClass)

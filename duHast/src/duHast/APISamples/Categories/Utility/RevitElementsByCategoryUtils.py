@@ -33,13 +33,13 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Links import RevitCadLinksGeometry as rCadLinkGeo
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
-from duHast.APISamples.Categories.RevitCategories import ELEMENTS_PARAS_SUB, GetMainSubCategories
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetCategoryGraphicStyleIds
+from duHast.APISamples.Categories.RevitCategories import ELEMENTS_PARAS_SUB, get_main_sub_categories
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_graphic_style_ids
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D
 from duHast.APISamples.Family import RevitFamilyElementUtils as rFamElementUtils
 
 
-def SortElementsByCategory(elements, elementDic):
+def sort_elements_by_category(elements, elementDic):
     '''
     Returns a dictionary of element ids where key is the category they belong to.
     :param elements:  List of revit elements.
@@ -62,7 +62,7 @@ def SortElementsByCategory(elements, elementDic):
     return elementDic
 
 
-def SortGeometryElementsByCategory(elements, elementDic, doc):
+def sort_geometry_elements_by_category(elements, elementDic, doc):
     counter = 0
     for el in elements:
         counter = counter + 1
@@ -88,7 +88,7 @@ def SortGeometryElementsByCategory(elements, elementDic, doc):
     return elementDic
 
 
-def _sortAllElementsByCategory(doc):
+def _sort_all_elements_by_category(doc):
     '''
     Sorts all elements in a family by category.
     :param doc: Current Revit family document.
@@ -106,16 +106,16 @@ def _sortAllElementsByCategory(doc):
     # get import Instance elements
     elImport = rCadLinkGeo.GetAllCADImportInstancesGeometry(doc)
     # build dictionary where key is category or graphic style id of  a category
-    dic = SortElementsByCategory(elCurve, dic)
-    dic = SortElementsByCategory(elForms, dic)
-    dic = SortElementsByCategory(elMText, dic)
-    dic = SortElementsByCategory(elRefPlanes, dic)
+    dic = sort_elements_by_category(elCurve, dic)
+    dic = sort_elements_by_category(elForms, dic)
+    dic = sort_elements_by_category(elMText, dic)
+    dic = sort_elements_by_category(elRefPlanes, dic)
     # geometry instances use a property rather then a parameter to store the category style Id
-    dic = SortGeometryElementsByCategory(elImport, dic, doc)
+    dic = sort_geometry_elements_by_category(elImport, dic, doc)
     return dic
 
 
-def GetElementsByCategory(doc, cat):
+def get_elements_by_category(doc, cat):
     '''
     Returns elements in family assigned to a specific category
     :param doc: Current Revit family document.
@@ -127,9 +127,9 @@ def GetElementsByCategory(doc, cat):
     '''
 
     # get all elements in family
-    dic = _sortAllElementsByCategory(doc)
+    dic = _sort_all_elements_by_category(doc)
     # get id and graphic style id of category to be filtered by
-    categoryIds = GetCategoryGraphicStyleIds(cat)
+    categoryIds = get_category_graphic_style_ids(cat)
     # check whether category past in is same as owner family category
     if(doc.OwnerFamily.FamilyCategory.Name == cat.Name):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
@@ -147,7 +147,7 @@ def GetElementsByCategory(doc, cat):
     return dicFiltered
 
 
-def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
+def move_elements_to_category(doc, elements, toCategoryName, destinationCatIds):
     '''
     Moves elements provided in dictionary to another category specified by name.
     :param doc: Current Revit family document.
@@ -172,7 +172,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
 
     returnValue = res.Result()
     # check whether destination category exist in file
-    cats = GetMainSubCategories(doc)
+    cats = get_main_sub_categories(doc)
     if(toCategoryName in cats):
         for key,value in elements.items():
                 # anything needing moving?
@@ -198,7 +198,7 @@ def MoveElementsToCategory(doc, elements, toCategoryName, destinationCatIds):
     return returnValue
 
 
-def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryName):
+def move_elements_from_sub_category_to_sub_category(doc, fromCategoryName, toCategoryName):
     '''
     Moves elements from one subcategory to another one identified by their names.
     :param doc: Current Revit family document.
@@ -221,15 +221,15 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
 
     returnValue = res.Result()
     # check whether source and destination category exist in file
-    cats = GetMainSubCategories(doc)
+    cats = get_main_sub_categories(doc)
     if(fromCategoryName in cats):
         if(toCategoryName in cats):
             # dictionary containing destination category ids (3D, cut and projection)
-            destinationCatIds = GetCategoryGraphicStyleIds(cats[toCategoryName])
+            destinationCatIds = get_category_graphic_style_ids(cats[toCategoryName])
             # get elements on source category
-            dic = GetElementsByCategory(doc, cats[fromCategoryName])
+            dic = get_elements_by_category(doc, cats[fromCategoryName])
             # move elements
-            returnValue = MoveElementsToCategory(doc, dic, toCategoryName, destinationCatIds)
+            returnValue = move_elements_to_category(doc, dic, toCategoryName, destinationCatIds)
         else:
             returnValue.UpdateSep(False, 'Destination category: '+ str(toCategoryName) + ' does not exist in file!')
     else:
@@ -237,7 +237,7 @@ def MoveElementsFromSubCategoryToSubCategory(doc, fromCategoryName, toCategoryNa
     return returnValue
 
 
-def GetUsedCategoryIds(doc):
+def get_used_category_ids(doc):
     '''
     Returns all category ids in a family which have an element assigned to them
     :param doc: Current Revit family document.
@@ -247,5 +247,5 @@ def GetUsedCategoryIds(doc):
     '''
 
     # get all elements in family
-    dic = _sortAllElementsByCategory(doc)
+    dic = _sort_all_elements_by_category(doc)
     return dic.keys ()

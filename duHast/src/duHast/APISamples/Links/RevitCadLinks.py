@@ -149,7 +149,7 @@ def DeleteCADLinks(doc):
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.ImportInstance):
         ids.append(p.Id)
     # delete all links at once
-    returnValue = rDel.DeleteByElementIds(doc, ids, 'Deleting CAD links', 'CAD link(s)')
+    returnValue = rDel.delete_by_element_ids(doc, ids, 'Deleting CAD links', 'CAD link(s)')
     return returnValue
 
 

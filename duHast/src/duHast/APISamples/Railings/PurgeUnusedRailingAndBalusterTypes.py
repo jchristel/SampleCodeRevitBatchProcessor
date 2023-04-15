@@ -45,7 +45,7 @@ def GetUsedRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
     return ids
 
 
@@ -90,7 +90,7 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
     # make sure there is at least on Railing type per system family left in model
     RailingTypes = SortRailingTypesByFamilyName(doc)
     for key, value in RailingTypes.items():
@@ -111,7 +111,7 @@ def GetUsedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
     return ids
 
 
@@ -124,7 +124,7 @@ def GetUnusedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
     return ids
 
 
@@ -153,7 +153,7 @@ def GetUsedBalusterTypeIds(doc):
     '''
 
     ids = []
-    idsUsedInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllBalusterSymbolIds, 1)
+    idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetAllBalusterSymbolIds, 1)
     idsUsedInRailings = GetBalusterTypesFromRailings(doc)
     ids = MergeIntoUniqueList(ids, idsUsedInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInRailings)

@@ -42,7 +42,7 @@ def GetUsedRampTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
     return ids
 
 
@@ -83,7 +83,7 @@ def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
     # make sure there is at least on Ramp type per system family left in model
     RampTypes = SortRampTypesByFamilyName(doc)
     for key, value in RampTypes.items():

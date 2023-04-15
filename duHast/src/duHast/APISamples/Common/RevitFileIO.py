@@ -32,13 +32,14 @@ import Autodesk.Revit.DB as rdb
 from duHast.Utilities import Result as res, FilesIO as util
 
 
-def SyncFile (
+def sync_file (
     doc,
     compactCentralFile = False # type: bool
     ):
     # type: (...) -> res.Result
     '''
     Synchronizes a Revit central file.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param compactCentralFile: option to compact the central file, defaults to False
@@ -70,7 +71,7 @@ def SyncFile (
     return returnValue
 
 
-def SaveAsWorksharedFile(
+def saves_as_workshared_file(
     doc,
     fullFileName  # type: str
     ):
@@ -82,6 +83,7 @@ def SaveAsWorksharedFile(
     Any existing file will be overwritten.
     Number of backups is 5
     File will bew compacted on save.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param fullFileName: The fully qualified file path of where to save the file.
@@ -109,7 +111,7 @@ def SaveAsWorksharedFile(
     return returnValue
 
 
-def SaveAsFamily(
+def save_as_family(
     doc,
     targetFolderPath, 
     currentFullFileName, 
@@ -120,6 +122,7 @@ def SaveAsFamily(
    
     '''
     Saves a family file under new name in given location.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
     :param targetFolderPath: The directory path of where to save the file.
@@ -168,7 +171,7 @@ def SaveAsFamily(
     return returnValue
 
 
-def SaveAs(
+def save_as(
     doc,
     targetFolderPath, 
     currentFullFileName, 
@@ -178,6 +181,7 @@ def SaveAs(
     
     '''
     Saves a project file under new name in given location.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param targetFolderPath: The directory path of where to save the file.
@@ -213,20 +217,21 @@ def SaveAs(
         # added str.format around this expression to satisfy sphinx auto code documentation
         returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
     try:
-        returnValue.status = SaveAsWorksharedFile(doc, newFileName).status
+        returnValue.status = saves_as_workshared_file(doc, newFileName).status
         returnValue.AppendMessage('Saved file: ' + newFileName)
     except Exception as e:
         returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnValue
 
 
-def SaveFile(
+def save_file(
     doc,
     compactFile = False # type: bool
     ):
     # type: (...) -> res.Result
     '''
     Saves a non workshared Revit file. To be used for families and non workshared revit files only.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param compactFile: True file will be compacted on save, defaults to False
@@ -252,7 +257,7 @@ def SaveFile(
     return returnValue
 
 
-def EnableWorksharing(
+def enable_worksharing(
     doc, #
     worksetNameGridLevel = 'Shared Levels and Grids', # type: str
     worksetName = 'Workset1' # type: str

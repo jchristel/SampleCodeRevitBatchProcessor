@@ -102,7 +102,7 @@ def GetAllDuctTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllDuctTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
@@ -117,7 +117,7 @@ def GetAllDuctTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetDuctTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector(colClass)
+    ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 

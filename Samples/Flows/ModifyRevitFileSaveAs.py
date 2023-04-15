@@ -116,7 +116,7 @@ default_file_names_ = [
 
 # save revit file to new location
 output('Modifying Revit File.... start')
-result_ = rFileIO.SaveAs(DOC, rootPath_, REVIT_FILE_PATH, default_file_names_)
+result_ = rFileIO.save_as(DOC, rootPath_, REVIT_FILE_PATH, default_file_names_)
 
 # make further changes as required....
 output('Modifying Revit File.... status: {}'.format(result_.status))
@@ -124,7 +124,7 @@ output('Modifying Revit File.... status: {}'.format(result_.status))
 # sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (DOC)
+    syncing_ = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format(syncing_.status))
 
 output('Modifying Revit File.... finished ')

@@ -57,7 +57,7 @@ DETAIL_COMPONENT_TYPES = [
 
 # --------------------------------------------- filled region ------------------
 
-def GetFilledRegionsInModel(doc):
+def get_filled_regions_in_model(doc):
     '''
     Gets all filled region instances in a model.
 
@@ -74,7 +74,7 @@ def GetFilledRegionsInModel(doc):
 
 
 
-def GetAllFilledRegionTypeIdsAvailable(doc):
+def get_all_filled_region_type_ids_available(doc):
     '''
     Gets all filled region types ids in model.
 
@@ -85,7 +85,7 @@ def GetAllFilledRegionTypeIdsAvailable(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    dic = rDetailItemTypeSort.BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
+    dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(get_all_detail_types_by_category(doc))
     if (dic.has_key(FILLED_REGION_TYPE)):
         return dic[FILLED_REGION_TYPE]
     else:
@@ -97,7 +97,7 @@ TODO: check for actual class...
 
 # -------------------------------- detail components -------------------------------------------------------
 
-def GetAllDetailTypesByCategory(doc):
+def get_all_detail_types_by_category(doc):
     '''
     Gets all detail component types in the model.
 
@@ -115,7 +115,7 @@ def GetAllDetailTypesByCategory(doc):
 
 # -------------------------------- repeating detail types -------------------------------------------------------
 
-def GetAllRepeatingDetailTypeIdsAvailable(doc):
+def get_all_repeating_detail_type_ids_available(doc):
     '''
     Get all repeating detail type id's in model.
 
@@ -126,7 +126,7 @@ def GetAllRepeatingDetailTypeIdsAvailable(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    dic = rDetailItemTypeSort.BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
+    dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(get_all_detail_types_by_category(doc))
     if (dic.has_key(ELEMENT_TYPE)):
         return dic[ELEMENT_TYPE]
     else:
@@ -134,7 +134,7 @@ def GetAllRepeatingDetailTypeIdsAvailable(doc):
 
 # -------------------------------- Detail families -------------------------------------------------------
 
-def GetAllDetailSymbolIdsAvailable(doc):
+def get_all_detail_symbol_ids_available(doc):
     '''
     Gets all detail symbol (types) ids in model.
 
@@ -145,13 +145,13 @@ def GetAllDetailSymbolIdsAvailable(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    dic = rDetailItemTypeSort.BuildDetailTypeIdsDictionary(GetAllDetailTypesByCategory(doc))
+    dic = rDetailItemTypeSort.build_detail_type_ids_dictionary(get_all_detail_types_by_category(doc))
     if (dic.has_key(FAMILY_SYMBOL)):
         return dic[FAMILY_SYMBOL]
     else:
         return []
 
-def GetDetailSymbolsUsedInRepeatingDetails(doc, idsRepeatDet):
+def get_detail_symbols_used_in_repeating_details(doc, idsRepeatDet):
     '''
     Gets the ids of all symbols used in repeating details.
 

@@ -169,7 +169,7 @@ output('{} :: [{}]'.format(RESULT_CAD_LINKS_RELOAD.message, RESULT_CAD_LINKS_REL
 # sync changes back to central
 if (DEBUG == False):
     output('Syncing to Central: start')
-    SYNCING = rFileIO.SyncFile (DOC)
+    SYNCING = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format (SYNCING.status))
 
 output('Modifying Revit File.... finished ')

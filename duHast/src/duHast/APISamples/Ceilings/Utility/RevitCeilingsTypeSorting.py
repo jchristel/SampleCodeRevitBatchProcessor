@@ -29,7 +29,7 @@ This module contains a Revit ceilings utility functions.
 from duHast.APISamples.Ceilings.Utility import RevitCeilingsFilter as rCeilingsFilter
 
 
-def BuildCeilingTypeDictionary(collector, dic):
+def build_ceiling_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in ceiling family type names.
@@ -51,7 +51,7 @@ def BuildCeilingTypeDictionary(collector, dic):
     return dic
 
 
-def SortCeilingTypesByFamilyName(doc):
+def sort_ceiling_types_by_family_name(doc):
     '''
     Returns a dictionary of all ceiling types in the model where key is the build in wall family name, values are ids of associated wall types.
     TODO: Use more generic code.
@@ -66,8 +66,8 @@ def SortCeilingTypesByFamilyName(doc):
     # get all ceiling types including in place ceiling families
     wts_two = rCeilingsFilter._get_all_ceiling_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildCeilingTypeDictionary(wts, usedWts)
-    usedWts = BuildCeilingTypeDictionary(wts_two, usedWts)
+    usedWts = build_ceiling_type_dictionary(wts, usedWts)
+    usedWts = build_ceiling_type_dictionary(wts_two, usedWts)
     return usedWts
 
 

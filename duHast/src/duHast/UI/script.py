@@ -214,7 +214,7 @@ def GetFileData(settings):
     try:
         if(os.path.isfile(settings.inputDir)):
             # got a text file...extract BIM 360 data
-            revitFiles = ub360.GetBIM360Data(settings.inputDir)
+            revitFiles = ub360.get_bim_360_file_data(settings.inputDir)
         elif(os.path.isdir(settings.inputDir)):
             # check a to search for files is to include sub dirs
             revitFilesUnfiltered = []

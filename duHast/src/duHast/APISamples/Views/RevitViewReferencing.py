@@ -60,14 +60,14 @@ def Deprecated_GetAllReferenceViewTypesByCategory(doc):
 def Deprecated_GetAllCallOutTypeIdsByCategory(doc):
     ''' this will return an EMPTY filtered element collector of all call out type ids in the model'''
     collector = Deprecated_GetAllCallOutTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector(collector)
+    ids = com.get_ids_from_element_collector(collector)
     return ids
 
 # doc:   current model document
 def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
     ''' this will return an EMPTY filtered element collector of all reference view types in the model'''
     collector = Deprecated_GetAllReferenceViewTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector(collector)
+    ids = com.get_ids_from_element_collector(collector)
     return ids
 
 # ---------------------- utility -----------------------
@@ -306,7 +306,7 @@ def GetAllViewReferenceSymbolIds(doc):
     ids = []
     multiCatFilter = rdb.ElementMulticategoryFilter(VIEW_REF_CATEGORY_FILTER)
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
-    ids = com.GetIdsFromElementCollector(collector)
+    ids = com.get_ids_from_element_collector(collector)
     return ids
 
 # ---------------------- view refs and continuation symbols -----------------------

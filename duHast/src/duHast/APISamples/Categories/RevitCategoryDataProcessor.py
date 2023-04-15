@@ -66,7 +66,7 @@ class CategoryProcessor(IFamilyProcessor):
         # store data type  in base class
         super(CategoryProcessor, self).__init__(
             preActions=preActions, 
-            postActions=[self._postActionUpdateUsedSubcategories], 
+            postActions=[self._post_action_update_used_subcategories], 
             dataType='Category', 
             stringReportHeaders=stringReportHeaders
         )
@@ -134,7 +134,7 @@ class CategoryProcessor(IFamilyProcessor):
             propLineColBlue)
         
 
-    def _isSubCategoryPresent(self,rootFamilyData, nestedFamilySubCategory):
+    def _is_sub_category_present(self,rootFamilyData, nestedFamilySubCategory):
         match = None
         # check whether sub category is present
         for rootFam in rootFamilyData:
@@ -143,11 +143,11 @@ class CategoryProcessor(IFamilyProcessor):
                 break
         return match
 
-    def _updateRootFamilyData(self, rootFamilyData, nestedFamiliesSubCategories):
+    def _update_root_family_data(self, rootFamilyData, nestedFamiliesSubCategories):
         # loop over nested family subcategory data
         for nestedSubCategory in nestedFamiliesSubCategories:
             # check if sub category is already in root family
-            matchingRootFamCategory = self._isSubCategoryPresent(rootFamilyData, nestedSubCategory)
+            matchingRootFamCategory = self._is_sub_category_present(rootFamilyData, nestedSubCategory)
             if(matchingRootFamCategory != None):
                 # update used by list
                 if(nestedSubCategory[IFamData.FAMILY_NAME] not in matchingRootFamCategory[IFamData.USED_BY]):
@@ -160,7 +160,7 @@ class CategoryProcessor(IFamilyProcessor):
                 # nothing to do if that category has not been reported to start off with 
                 # this category could, for example, belong to the section marker family present in most 3d families
 
-    def _getUsedSubcategories(self, data):
+    def _get_used_subcategories(self, data):
         usedSubcategories = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
@@ -174,17 +174,17 @@ class CategoryProcessor(IFamilyProcessor):
                     usedSubcategories.append(d)
         return usedSubcategories
 
-    def _postActionUpdateUsedSubcategories(self, doc):
+    def _post_action_update_used_subcategories(self, doc):
         returnValue = res.Result()
         try:
             # find all subcategories of nested families
-            nestedFamilyData = self._findNestedFamiliesData()
+            nestedFamilyData = self._find_nested_families_data()
             # get used sub categories from nested data
-            nestedFamilyUsedSubCategories = self._getUsedSubcategories(nestedFamilyData)
+            nestedFamilyUsedSubCategories = self._get_used_subcategories(nestedFamilyData)
             # update root family data only
-            rootFamilyData = self._findRootFamilyData()
+            rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._updateRootFamilyData(rootFamilyData, nestedFamilyUsedSubCategories)
+            self._update_root_family_data(rootFamilyData, nestedFamilyUsedSubCategories)
             returnValue.UpdateSep(True, 'Post Action Update subcategories data successful completed.')
         except Exception as e:
             returnValue.UpdateSep(False, 'Post Action Update subcategories data failed with exception: ' + str(e))

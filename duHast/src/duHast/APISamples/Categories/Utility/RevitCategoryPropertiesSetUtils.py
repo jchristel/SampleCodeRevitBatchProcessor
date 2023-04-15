@@ -32,10 +32,10 @@ from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetSavedCategoryPropertyByName
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_saved_category_property_by_name
 
 
-def SetCategoryMaterial(doc, cat, materialId):
+def set_category_material(doc, cat, materialId):
     '''
     Updates material property of a given category.
     :param doc: Current Revit family document.
@@ -67,7 +67,7 @@ def SetCategoryMaterial(doc, cat, materialId):
     return flag
 
 
-def SetCategoryLinePattern(doc, cat, linePatternId, ignoreMissingCutStyle):
+def set_category_line_pattern(doc, cat, linePatternId, ignoreMissingCutStyle):
     '''
     Updates line pattern property of a given category.
     Note: in cases where the 'cut' property does not exist on a sub category this will return false even though the 'projection' property will most
@@ -110,7 +110,7 @@ def SetCategoryLinePattern(doc, cat, linePatternId, ignoreMissingCutStyle):
     return flag
 
 
-def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection, ignoreMissingCutStyle):
+def set_category_line_weights(doc, cat, lineThickNessCut, lineThicknessProjection, ignoreMissingCutStyle):
     '''
     Updates line weight properties of a given category.
     :param doc: Current Revit family document.
@@ -153,7 +153,7 @@ def SetCategoryLineWeights(doc, cat, lineThickNessCut, lineThicknessProjection, 
     return flag
 
 
-def SetCategoryColour(doc, cat, red, green, blue):
+def set_category_colour(doc, cat, red, green, blue):
     '''
     Updates colour properties of a given category.
     :param doc: Current Revit family document.
@@ -189,7 +189,7 @@ def SetCategoryColour(doc, cat, red, green, blue):
     return flag
 
 
-def SetCategoryProperties(doc, cat, properties, ignoreMissingCutStyle):
+def set_category_properties(doc, cat, properties, ignoreMissingCutStyle):
     '''
     Updates varies property values of a given category.
     :param doc: Current Revit family document.
@@ -205,19 +205,19 @@ def SetCategoryProperties(doc, cat, properties, ignoreMissingCutStyle):
     '''
 
     # material
-    matId = GetSavedCategoryPropertyByName(properties, [PROPERTY_MATERIAL_ID])
-    flagMat = SetCategoryMaterial(doc, cat, matId[0])
+    matId = get_saved_category_property_by_name(properties, [PROPERTY_MATERIAL_ID])
+    flagMat = set_category_material(doc, cat, matId[0])
 
     # line pattern
-    linePatternId = GetSavedCategoryPropertyByName(properties, [rPat.PROPERTY_PATTERN_ID])
-    flagPattern = SetCategoryLinePattern(doc, cat, linePatternId[0], ignoreMissingCutStyle)
+    linePatternId = get_saved_category_property_by_name(properties, [rPat.PROPERTY_PATTERN_ID])
+    flagPattern = set_category_line_pattern(doc, cat, linePatternId[0], ignoreMissingCutStyle)
 
     # line weights
-    lineWeights = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
-    flagLineWeights = SetCategoryLineWeights(doc, cat, lineWeights[0], lineWeights[1], ignoreMissingCutStyle)
+    lineWeights = get_saved_category_property_by_name(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
+    flagLineWeights = set_category_line_weights(doc, cat, lineWeights[0], lineWeights[1], ignoreMissingCutStyle)
 
     # category colour
-    colourRGB = GetSavedCategoryPropertyByName(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
-    flagColours = SetCategoryColour(doc, cat, colourRGB[0], colourRGB[1], colourRGB[2])
+    colourRGB = get_saved_category_property_by_name(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
+    flagColours = set_category_colour(doc, cat, colourRGB[0], colourRGB[1], colourRGB[2])
 
     return flagMat & flagPattern & flagLineWeights & flagColours

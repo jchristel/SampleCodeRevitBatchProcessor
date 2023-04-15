@@ -52,12 +52,12 @@ class IFamilyProcessor(Base.Base):
 
     # -------------------------------------- utility ----------------------
 
-    def _updateData(self, processor, identifyByThisPropertyName, identifyByThisPropertyValue, updateByPropertyName, updatedToThisPropertyValue):
+    def _update_Data(self, processor, identifyByThisPropertyName, identifyByThisPropertyValue, updateByPropertyName, updatedToThisPropertyValue):
         updateStatus = processor.update_Data(identifyByThisPropertyName, identifyByThisPropertyValue, updateByPropertyName, updatedToThisPropertyValue)
         return updateStatus
 
 
-    def _findRootFamilyProcessor(self):
+    def _find_root_family_processor(self):
         '''
         Finds the processor instance which processed the root family.
 
@@ -70,7 +70,7 @@ class IFamilyProcessor(Base.Base):
                 if ' :: ' not in d[IFamData.ROOT]:
                     return processor
 
-    def _findRootFamilyData(self):
+    def _find_root_family_data(self):
         '''
         Returns all data from root families (top most in tree) from all processor instances.
 
@@ -88,7 +88,7 @@ class IFamilyProcessor(Base.Base):
                     familyData.append (d)
         return familyData
     
-    def _findNestedFamiliesData(self):
+    def _find_nested_families_data(self):
         '''
         Returns all data from nested families from each processor instances.
 
@@ -106,7 +106,7 @@ class IFamilyProcessor(Base.Base):
                     nestedFamilyData.append (d)
         return nestedFamilyData
 
-    def _fixDataTypes(self, flattenedDic):
+    def _fix_data_types(self, flattenedDic):
         '''
         Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
         Any other type of values are not changed.
@@ -129,7 +129,7 @@ class IFamilyProcessor(Base.Base):
     
     # -------------------------------------- pre process actions ----------------------
 
-    def preProcessActions(self, doc):
+    def pre_process_actions(self, doc):
         '''
         Actions any pre processing before family data will be collected.
 
@@ -168,7 +168,7 @@ class IFamilyProcessor(Base.Base):
 
     # -------------------------------------- post process actions ----------------------
 
-    def postProcessActions(self, doc):
+    def post_process_actions(self, doc):
         '''
         Actions any post processing after family data has been collected.
 
@@ -199,7 +199,7 @@ class IFamilyProcessor(Base.Base):
                 dataOut.append(d)
         return dataOut
 
-    def get_Data_JSON(self):
+    def get_data_json(self):
         '''
         Returns data objects as JSON formatted strings.
 
@@ -210,12 +210,12 @@ class IFamilyProcessor(Base.Base):
         outValue = ''
         flattenedData = self.get_Data()
         for d in flattenedData:
-            dFixedTypes = self._fixDataTypes(d)
+            dFixedTypes = self._fix_data_types(d)
             json_object = json.dumps(dict(dFixedTypes))
             outValue = outValue + '\n' + json_object
         return outValue
 
-    def get_Data_StringList(self):
+    def get_data_string_list(self):
         '''
         Returns data objects as list of strings in order of headers list of this class.
 

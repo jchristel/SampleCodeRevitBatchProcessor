@@ -70,7 +70,7 @@ def GetAllAvailableFilterIdsInModel(doc):
 
     ids = []
     col = GetAllAvailableFiltersInModel(doc)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 

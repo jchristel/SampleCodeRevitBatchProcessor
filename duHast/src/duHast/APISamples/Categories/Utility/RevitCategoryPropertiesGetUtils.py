@@ -32,7 +32,7 @@ from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME, PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
 
 
-def GetCategoryGraphicStyleIds(cat):
+def get_category_graphic_style_ids(cat):
     '''
     Returns a dictionary with keys: Projection, Cut, 3D and their respective ids
     :param cat: A category.
@@ -57,7 +57,7 @@ def GetCategoryGraphicStyleIds(cat):
     return dic
 
 
-def GetCategoryMaterial(cat):
+def get_category_material(cat):
     '''
     Returns the material properties name and id as a dictionary where key is property name and\
          value the property id.
@@ -78,7 +78,7 @@ def GetCategoryMaterial(cat):
     return dicMaterial
 
 
-def GetCategoryLineWeights(cat):
+def get_category_line_weights(cat):
     '''
     Returns the line weight properties (cut and projection) as a dictionary\
          where key is property description and value the property value
@@ -94,7 +94,7 @@ def GetCategoryLineWeights(cat):
     return dicLineWeights
 
 
-def GetCategoryColour(cat):
+def get_category_colour(cat):
     '''
     Returns the colour properties (RGB) and values as a dictionary where key is colour name\
          and value the property value
@@ -115,7 +115,7 @@ def GetCategoryColour(cat):
     return dicColour
 
 
-def GetCategoryProperties(cat, doc):
+def get_category_properties(cat, doc):
     '''
     Returns a dictionary where keys are category property names and value is the associated property value.
     :param cat: A category.
@@ -129,7 +129,7 @@ def GetCategoryProperties(cat, doc):
     properties = []
 
     # material
-    dicMaterial = GetCategoryMaterial(cat)
+    dicMaterial = get_category_material(cat)
     properties.append(dicMaterial)
 
     # line pattern
@@ -137,16 +137,16 @@ def GetCategoryProperties(cat, doc):
     properties.append(dicPattern)
 
     # line weights
-    dicLineWeights = GetCategoryLineWeights(cat)
+    dicLineWeights = get_category_line_weights(cat)
     properties.append(dicLineWeights)
 
     # category colour
-    dicColour = GetCategoryColour(cat)
+    dicColour = get_category_colour(cat)
     properties.append(dicColour)
     return properties
 
 
-def GetSavedCategoryPropertyByName(properties, propNames):
+def get_saved_category_property_by_name(properties, propNames):
     '''
     Returns property values matching property names in saved category data.
     :param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.

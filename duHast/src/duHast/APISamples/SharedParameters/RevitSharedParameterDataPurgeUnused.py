@@ -73,7 +73,7 @@ def PurgeUnused(doc, processor):
     # there is currently no way in the api (Revit 2022) to find out what parameter is driving the label...
 
     # get the family category name:
-    famCatName = list(rCat.GetFamilyCategory(doc))[0]
+    famCatName = list(rCat.get_family_category(doc))[0]
     if(famCatName != 'Generic Annotations' and famCatName.endswith( 'Tags') == False):
         idsToDelete = []
         # get categories found in root processor data only
@@ -85,11 +85,11 @@ def PurgeUnused(doc, processor):
                 idsToDelete.append(rdb.ElementId(rootFam[rSharedParaData.PARAMETER_ID]))
         # delete any subcategories found
         if(len(idsToDelete) > 0):
-            resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused shared parameters.', 'Shared Parameters')
+            resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused shared parameters.', 'Shared Parameters')
             returnValue.Update(resultDelete)
             # may need to delete shared parameters one by one if one or more cant be deleted
             if (resultDelete.status == False):
-                resultDeleteOneByOne = rDel.DeleteByElementIdsOneByOne(doc, idsToDelete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
+                resultDeleteOneByOne = rDel.delete_by_element_ids_one_by_one(doc, idsToDelete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
                 returnValue.Update(resultDeleteOneByOne)
         else:
             returnValue.UpdateSep(True, 'No unused shared parameters found. Nothing was deleted.')

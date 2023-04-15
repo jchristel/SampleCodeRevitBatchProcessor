@@ -51,6 +51,6 @@ def GetLevelReportData(doc, revitFilePath):
             util.GetFileNameWithoutExt(revitFilePath),
             str(p.Id.IntegerValue),
             util.EncodeAscii(p.Name),
-            util.EncodeAscii(rWork.GetWorksetNameById(doc, p.WorksetId.IntegerValue)),
+            util.EncodeAscii(rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)),
             str(p.Elevation)])
     return data

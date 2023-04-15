@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to sorting Revit buil
 
 from duHast.APISamples.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
 
-def BuildBuildingPadTypeDictionary(collector, dic):
+def build_building_pad_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in building pad family type names.
@@ -50,7 +50,7 @@ def BuildBuildingPadTypeDictionary(collector, dic):
     return dic
 
 
-def SortBuildingPadTypesByFamilyName(doc):
+def sort_building_pad_types_by_family_name(doc):
     '''
     Returns a dictionary of all building pad types in the model where key is the build in wall family name, values are ids of associated wall types.
     TODO: Use more generic code.
@@ -65,6 +65,6 @@ def SortBuildingPadTypesByFamilyName(doc):
     # get all pad types including in place pad families
     wts_two = rBuildingPadFilter._get_all_building_pad_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildBuildingPadTypeDictionary(wts, usedWts)
-    usedWts = BuildBuildingPadTypeDictionary(wts_two, usedWts)
+    usedWts = build_building_pad_type_dictionary(wts, usedWts)
+    usedWts = build_building_pad_type_dictionary(wts_two, usedWts)
     return usedWts

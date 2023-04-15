@@ -38,7 +38,7 @@ BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES = [
     BASIC_BUILDING_PAD_FAMILY_NAME
 ]
 
-def GetUsedBuildingPadTypeIds(doc):
+def get_used_building_pad_type_ids(doc):
     '''
     Gets all used building pad type ids.
     Filters by category.
@@ -49,11 +49,11 @@ def GetUsedBuildingPadTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rBuildingPads.get_all_building_pad_type_ids_in_model_by_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -73,7 +73,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
+def get_unused_non_in_place_building_pad_type_ids_to_purge(doc):
     '''
     Gets all unused building pad type id's.
     - Basic BuildingPad
@@ -87,12 +87,12 @@ def GetUnusedNonInPlaceBuildingPadTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, rBuildingPads.GetAllBuildingPadTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rBuildingPads.get_all_building_pad_type_ids_in_model_by_class, 0)
     # make sure there is at least on BuildingPad type per system family left in model
-    BuildingPadTypes = rBuildingPadSort.SortBuildingPadTypesByFamilyName(doc)
+    BuildingPadTypes = rBuildingPadSort.sort_building_pad_types_by_family_name(doc)
     for key, value in BuildingPadTypes.items():
         if(key in BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids

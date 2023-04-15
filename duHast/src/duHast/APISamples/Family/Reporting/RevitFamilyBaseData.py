@@ -120,7 +120,7 @@ class FamilyBaseData(IFamData.IFamilyData):
                     # check category folder exists
                     if(dirIO.CreateTargetFolder(familyOutFolderPath + '\\' + sessionId, docCategory)):
                         # save family out
-                        rFile.SaveAsFamily(
+                        rFile.save_as_family(
                             doc,
                             familyOutFolderPath + '\\' + sessionId + '\\'+ docCategory,
                             docName,
@@ -143,7 +143,7 @@ class FamilyBaseData(IFamData.IFamilyData):
             self._saveOut(
                 doc, 
                 referenceFilePath, 
-                self._stripFileExtension(doc.Title), 
+                self._strip_file_extension(doc.Title), 
                 self.category, 
                 familyOutFolderPath, 
                 sessionId
@@ -154,11 +154,11 @@ class FamilyBaseData(IFamData.IFamilyData):
             {
                 IFamData.ROOT : self.rootPath,
                 IFamData.ROOT_CATEGORY : self.rootCategoryPath,
-                IFamData.FAMILY_NAME : self._stripFileExtension(doc.Title),
+                IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName, # this property will often be an empty string in nested families
                 CATEGORY_NAME : self.category
             }
         )
 
-    def get_Data(self):
+    def get_data(self):
         return self.data

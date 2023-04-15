@@ -305,7 +305,7 @@ output('Add revision.... status: [{}]'.format(RESULT.status))
 if(DEBUG == False):
   if (DOC.IsWorkshared):
       output('Add revision.... Syncing to Central: start')
-      SYNCING = rFileIO.SyncFile (DOC)
+      SYNCING = rFileIO.sync_file (DOC)
       output('Syncing to Central: finished [{}]'.format (SYNCING.status))
   else:
       #none work shared

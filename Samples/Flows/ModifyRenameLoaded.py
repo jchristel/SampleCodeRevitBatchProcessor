@@ -193,7 +193,7 @@ rename_loaded_families(DOC)
 #sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    SYNCING = rFileIO.SyncFile (DOC)
+    SYNCING = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format (SYNCING.status))
 
 output('Modifying Revit File.... finished ')

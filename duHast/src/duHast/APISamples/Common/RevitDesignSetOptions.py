@@ -43,7 +43,7 @@ REPORT_DESIGNSET_HEADER = ['HOSTFILE','ID', 'NAME', 'PRIMARY OPTION', 'OTHER OPT
 
 # --------------------------------------------- utility functions ------------------
 
-def GetDesignOptions(doc):
+def get_design_options(doc):
     '''
     Gets all design options in a model,
 
@@ -56,7 +56,7 @@ def GetDesignOptions(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
     return collector
 
-def GetDesignSets(doc):
+def get_design_sets(doc):
     '''
     Gets all the design sets in a model,
 
@@ -77,7 +77,7 @@ def GetDesignSets(doc):
             designSetNames.append(designSetName)
     return designSets
 
-def IsDesignOptionPrimary(doc, designSetName, designOptionName):
+def is_design_option_primary(doc, designSetName, designOptionName):
     '''
     Checks whether a design option is the primary option within a design set.
     
@@ -110,7 +110,7 @@ def IsDesignOptionPrimary(doc, designSetName, designOptionName):
             break
     return isPrimary
 
-def GetDesignSetOptionInfo(doc, element):
+def get_design_set_option_info(doc, element):
     '''
     Get the design set, design option information of an element.
 
@@ -140,7 +140,7 @@ def GetDesignSetOptionInfo(doc, element):
         if(len(designOptionData) > 1):
             dic['designSetName'] = designOptionData[0].Trim()
             dic['designOptionName'] = designOptionData[1].Trim()
-            dic['isPrimary'] = IsDesignOptionPrimary(doc, dic['designSetName'], dic['designOptionName'])
+            dic['isPrimary'] = is_design_option_primary(doc, dic['designSetName'], dic['designOptionName'])
         else:
             # use default values
             pass

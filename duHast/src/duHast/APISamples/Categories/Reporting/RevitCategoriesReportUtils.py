@@ -28,13 +28,13 @@ Revit category report functions .
 
 
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
-from duHast.APISamples.Categories.RevitCategories import GetFamilyCategory, GetMainSubCategories, GetOtherSubCategories
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetCategoryColour, GetCategoryLineWeights, GetCategoryMaterial
+from duHast.APISamples.Categories.RevitCategories import get_family_category, get_main_sub_categories, get_other_sub_categories
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_colour, get_category_line_weights, get_category_material
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME
-from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import GetElementsByCategory
+from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import get_elements_by_category
 
 
-def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
+def build_report_data_by_category(doc, dic, familyCat, mainCatName, docFilePath):
     '''
     Formats category properties into lists for reports
     :param doc: Current Revit family document.
@@ -59,9 +59,9 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
             key.encode('utf-8'),
             str(dic[key].Id)]
         # get elements
-        elements = GetElementsByCategory (doc, dic[key])
+        elements = get_elements_by_category (doc, dic[key])
         # get properties
-        dicMaterial = GetCategoryMaterial(dic[key])
+        dicMaterial = get_category_material(dic[key])
         row.append(str(dicMaterial[PROPERTY_MATERIAL_NAME]).encode('utf-8'))
         row.append(str(dicMaterial[PROPERTY_MATERIAL_ID]).encode('utf-8'))
         # line pattern
@@ -69,11 +69,11 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
         row.append(str(dicPattern[rPat.PROPERTY_PATTERN_NAME]).encode('utf-8'))
         row.append(str(dicPattern[rPat.PROPERTY_PATTERN_ID]).encode('utf-8'))
         # line weights
-        dicLineWeights = GetCategoryLineWeights(dic[key])
+        dicLineWeights = get_category_line_weights(dic[key])
         row.append(str(dicLineWeights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME]).encode('utf-8'))
         row.append(str(dicLineWeights[PROPERTY_LINE_WEIGHT_CUT_NAME]).encode('utf-8'))
         # category colour
-        dicColour = GetCategoryColour(dic[key])
+        dicColour = get_category_colour(dic[key])
         row.append(str(dicColour[PROPERTY_LINE_COLOUR_RED_NAME]).encode('utf-8'))
         row.append(str(dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME]).encode('utf-8'))
         row.append(str(dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME]).encode('utf-8'))
@@ -86,7 +86,7 @@ def BuildReportDataByCategory(doc, dic, familyCat, mainCatName, docFilePath):
     return data
 
 
-def GetReportData(doc, revitFilePath):
+def get_report_data(doc, revitFilePath):
     '''
     Reports all categories, their properties and all elements belonging to them.
     :param doc: Current Revit family document.
@@ -99,14 +99,14 @@ def GetReportData(doc, revitFilePath):
 
     data = []
     # get all sub categories in family and associates elements;
-    subCats = GetMainSubCategories(doc) # i/e family is specialty equipment and all its associated sub categories
-    familyCat = GetFamilyCategory(doc) # any 3D element which is set to 'None' in subcategory (if family is specialty equipment so is this element)
-    otherCats = GetOtherSubCategories(doc) # Imports in Families cats are here
+    subCats = get_main_sub_categories(doc) # i/e family is specialty equipment and all its associated sub categories
+    familyCat = get_family_category(doc) # any 3D element which is set to 'None' in subcategory (if family is specialty equipment so is this element)
+    otherCats = get_other_sub_categories(doc) # Imports in Families cats are here
     familyCatName = list(familyCat.keys())[0]
     # build output
-    data = BuildReportDataByCategory(doc, familyCat, familyCatName, familyCatName, revitFilePath)
-    data = data + BuildReportDataByCategory(doc, subCats, familyCatName, familyCatName, revitFilePath)
+    data = build_report_data_by_category(doc, familyCat, familyCatName, familyCatName, revitFilePath)
+    data = data + build_report_data_by_category(doc, subCats, familyCatName, familyCatName, revitFilePath)
     # check for imports
     if ('Imports in Families' in otherCats):
-        data = data + BuildReportDataByCategory(doc, otherCats['Imports in Families'], familyCatName, 'Imports in Families', revitFilePath)
+        data = data + build_report_data_by_category(doc, otherCats['Imports in Families'], familyCatName, 'Imports in Families', revitFilePath)
     return data

@@ -34,17 +34,11 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-
-# -------------------------------------------- common variables --------------------
-#: header used in reports
-REPORT_GENERIC_ANNOTATIONS_HEADER = ['HOSTFILE', 'GENERICANNOTATIONTYPEID', 'GENERICANNOTATIONTYPENAME']
-
-
 # --------------------------------------------- utility functions ------------------
 
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
-def GetAllGenericAnnotationTypesByCategory(doc):
+def get_all_generic_annotation_types_by_category(doc):
     '''
     This will return a filtered element collector of all GenericAnnotation types in the model.
 
@@ -59,7 +53,7 @@ def GetAllGenericAnnotationTypesByCategory(doc):
 
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
-def GetAllGenericAnnotationTypeIdsByCategory(doc):
+def get_all_generic_annotation_type_ids_by_category(doc):
     '''
     This will return a list of all GenericAnnotation types (symbols) id's in the model excluding shared families.
 
@@ -71,7 +65,7 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
     '''
 
     ids = []
-    col = GetAllGenericAnnotationTypesByCategory(doc)
+    col = get_all_generic_annotation_types_by_category(doc)
     for c in col:
         parameterMatch = False
         # get the family object to check whether it is a shared family
@@ -85,32 +79,3 @@ def GetAllGenericAnnotationTypeIdsByCategory(doc):
             # family cant be of type shared...
             ids.append(c.Id)
     return ids
-
-def BuildGenericAnnotationTypesDictionary(collector, dic):
-    '''
-    Returns the dictionary past in with keys and or values added retrieved from collector past in.
-
-    :param collector: Filtered element collector containing GenericAnnotation type elements of family symbols.
-    :type collector: Autodesk.Revit.DB.FilteredElementCollector
-    :param dic: Dictionary, the key is the family name and the value a list of element ids representing annotation types.
-    :type dic: dic: key str, values list of Autodesk.Revit.DB.ElementId
-    
-    :return: Past in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.
-    :rtype: dic: key str, values list of Autodesk.Revit.DB.ElementId
-    '''
-
-    for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
-                dic[c.FamilyName].append(c.Id)
-        else:
-            dic[c.FamilyName] = [c.Id]
-    return dic
-
-# doc   current model document
-def SortGenericAnnotationTypesByFamilyName(doc):
-    # get all GenericAnnotation types
-    wts_two = GetAllGenericAnnotationTypesByCategory(doc)
-    usedWts = {}
-    usedWts = BuildGenericAnnotationTypesDictionary(wts_two, usedWts)
-    return usedWts

@@ -97,7 +97,7 @@ def GetAllPipeTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllPipeTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
@@ -112,7 +112,7 @@ def GetAllPipeTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetPipeTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector (colClass)
+    ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 

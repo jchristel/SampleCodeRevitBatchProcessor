@@ -36,9 +36,9 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitTransaction as rTran
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Categories.RevitFamilySubCategories import CreateNewCategoryFromSavedProperties
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetCategoryGraphicStyleIds, GetCategoryProperties
-from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import GetElementsByCategory, MoveElementsToCategory
+from duHast.APISamples.Categories.RevitFamilySubCategories import create_new_category_from_saved_properties
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_graphic_style_ids, get_category_properties
+from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import get_elements_by_category, move_elements_to_category
 
 #: subcategory renaming sampled dictionary
 #: key is the current subcategory name, value is the new subcategory name 
@@ -54,7 +54,7 @@ ELEMENTS_PARAS_SUB = [
     rdb.BuiltInParameter.CLINE_SUBCATEGORY
 ]
 
-def GetMainSubCategories(doc):
+def get_main_sub_categories(doc):
     '''
     Returns all subcategories of the family category in a dictionary where\
         key: sub category name
@@ -80,7 +80,7 @@ def GetMainSubCategories(doc):
                 catData[subCat.Name] = subCat
     return catData
 
-def DoesMainSubCategoryExists(doc, subCatName):
+def does_main_sub_category_exists(doc, subCatName):
     '''
     Checks whether a given subcategory exists in the family.
 
@@ -96,13 +96,13 @@ def DoesMainSubCategoryExists(doc, subCatName):
     '''
 
     # get all sub categories belonging to family category
-    subCats = GetMainSubCategories(doc)
+    subCats = get_main_sub_categories(doc)
     if(subCatName in subCats):
         return True
     else:
         return False
 
-def DeleteMainSubCategory(doc, subCatName):
+def delete_main_sub_category(doc, subCatName):
     '''
     Deletes a given subcategory from the family.
 
@@ -118,10 +118,10 @@ def DeleteMainSubCategory(doc, subCatName):
     '''
 
     # get all sub categories belonging to family category
-    subCats = GetMainSubCategories(doc)
+    subCats = get_main_sub_categories(doc)
     if(subCatName in subCats):
         # delete subcategory
-        statusDelete = rDel.DeleteByElementIds(
+        statusDelete = rDel.delete_by_element_ids(
             doc,
             [subCats[subCatName].Id],
             'delete subcategory: ' + subCatName,
@@ -132,7 +132,7 @@ def DeleteMainSubCategory(doc, subCatName):
         return False
 
 
-def GetFamilyCategory(doc):
+def get_family_category(doc):
     '''
     Gets the family category in a dictionary where\
         key: category name
@@ -151,7 +151,7 @@ def GetFamilyCategory(doc):
     catData [currentFamCat.Name] = currentFamCat
     return catData
 
-def GetOtherSubCategories(doc):
+def get_other_sub_categories(doc):
     '''
     Returns all family subcategories which do not belong to the actual family category.
 
@@ -183,7 +183,7 @@ def GetOtherSubCategories(doc):
               
     return catData
 
-def GetOtherCustomSubCategories(doc):
+def get_other_custom_sub_categories(doc):
     '''
     Returns all family custom subcategories which do not belong to the actual family category.
     Custom categories have an Id greater then 0.
@@ -216,7 +216,7 @@ def GetOtherCustomSubCategories(doc):
                     catData[mainCat.Name][subCat.Name] = subCat
     return catData
 
-def GetOtherCategories(doc):
+def get_other_categories(doc):
     '''
     Returns all family pre defined categories which do not belong to the actual family category.
 
@@ -239,7 +239,7 @@ def GetOtherCategories(doc):
                 catData.append(mainCat)
     return catData
 
-def GetCategoryByBuiltInDefName(doc, builtInDefs):
+def get_category_by_built_in_def_name(doc, builtInDefs):
     '''
     Returns categories by their built in definition 
 
@@ -261,9 +261,9 @@ def GetCategoryByBuiltInDefName(doc, builtInDefs):
             cats.append(cat)
     return cats
    
-def SetFamilyCategory(doc, newCategoryName):
+def set_family_category(doc, newCategoryName):
     '''
-    Changes the family category to new one specified by name.
+    Changes the family category to new one specified by name. (this will not re-instate any custom sub categories created under the new family category)
     
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
@@ -294,7 +294,7 @@ def SetFamilyCategory(doc, newCategoryName):
    
 # --------------------------------------- family category  --------------------------------------------------------------
 
-def ChangeFamilyCategory(doc, newCategoryName):
+def change_family_category(doc, newCategoryName):
     '''
     Changes the current family category to the new one specified.
 
@@ -327,22 +327,22 @@ def ChangeFamilyCategory(doc, newCategoryName):
 
     returnValue = res.Result()
     # get sub categories in family
-    subCats = GetMainSubCategories (doc)
+    subCats = get_main_sub_categories (doc)
     
     # get all elements on custom subcategories
     elements = {}
     for subCat in subCats:
-        el = GetElementsByCategory(doc, subCats[subCat])
+        el = get_elements_by_category(doc, subCats[subCat])
         elements[subCat] = el
     
     # get properties of all custom sub categories
     props = {}
     for subCat in subCats:
-        prop = GetCategoryProperties(subCats[subCat], doc)
+        prop = get_category_properties(subCats[subCat], doc)
         props[subCat] = prop
     
     # change family category
-    changeFam = SetFamilyCategory(doc, newCategoryName)
+    changeFam = set_family_category(doc, newCategoryName)
     returnValue.Update(changeFam)
 
     if(changeFam.status):
@@ -351,13 +351,13 @@ def ChangeFamilyCategory(doc, newCategoryName):
             # only re-create custom sub categories (id greater then 0)
             if(subCats[subCat].Id.IntegerValue > 0):
                 # create new sub categories with flag: ignore if cut graphic style is missing set to true!
-                createCat = CreateNewCategoryFromSavedProperties(doc, subCat, props[subCat], True)
+                createCat = create_new_category_from_saved_properties(doc, subCat, props[subCat], True)
                 returnValue.Update(createCat)
                 if(createCat.status):
                     # get the graphic style ids of the new subcategory for elements to use
-                    destinationCatIds = GetCategoryGraphicStyleIds(createCat.result)
+                    destinationCatIds = get_category_graphic_style_ids(createCat.result)
                     # move elements back onto custom subcategories
-                    moveEl = MoveElementsToCategory(doc, elements[subCat], subCat, destinationCatIds)
+                    moveEl = move_elements_to_category(doc, elements[subCat], subCat, destinationCatIds)
                     returnValue.Update(moveEl)
                 else:
                     returnValue.Update(createCat)

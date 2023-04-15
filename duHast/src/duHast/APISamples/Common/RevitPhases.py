@@ -28,7 +28,7 @@ Model phase functions.
 #
 
 
-def GetAllPhases(doc):
+def get_all_phases(doc):
     '''
     Returns a dictionary where key is the id and value is the name of the phase.
 
@@ -46,7 +46,7 @@ def GetAllPhases(doc):
             returnValue[phase.Id] = phase.Name
     return returnValue
 
-def GetPhaseNameById(doc, phaseId):
+def get_phase_name_by_id(doc, phaseId):
     '''
     Returns the name of a phase by Id
 
@@ -60,7 +60,7 @@ def GetPhaseNameById(doc, phaseId):
     '''
 
     returnValue = 'No phase in document'
-    phases = GetAllPhases(doc)
+    phases = get_all_phases(doc)
     if(len(phases) > 0):
         if phaseId in phases:
             returnValue = phases[phaseId]

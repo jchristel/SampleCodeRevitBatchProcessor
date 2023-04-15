@@ -181,7 +181,7 @@ def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllCurtainWallElementTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):

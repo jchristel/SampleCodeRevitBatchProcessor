@@ -32,7 +32,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
-def GetAllIndependentTags(doc):
+def get_all_independent_tags(doc):
     '''
     Gets all independent tag types in the model.
     :param doc: Current Revit model document.
@@ -43,7 +43,7 @@ def GetAllIndependentTags(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.IndependentTag)
 
-def GetIndependentTagTypeArrowHeadIds(doc):
+def get_independent_tag_type_arrow_head_ids(doc):
     '''
     Gets all arrow head symbol ids used in independent tag types in a model.
     :param doc: Current Revit model document.
@@ -53,7 +53,7 @@ def GetIndependentTagTypeArrowHeadIds(doc):
     '''
 
     usedIds = []
-    tags = GetAllIndependentTags(doc)
+    tags = get_all_independent_tags(doc)
     for t in tags:
         tTypeId = t.GetTypeId()
         tTypeElement = doc.GetElement(tTypeId)

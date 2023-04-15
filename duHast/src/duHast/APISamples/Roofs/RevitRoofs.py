@@ -116,7 +116,7 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
 
     ids = []
     colCat = GetAllRoofTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector (colCat)
+    ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 def GetAllRoofTypeIdsInModelByClass(doc):
@@ -132,7 +132,7 @@ def GetAllRoofTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetRoofTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector(colClass)
+    ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 # -------------------------------- In place Roof types -------------------------------------------------------

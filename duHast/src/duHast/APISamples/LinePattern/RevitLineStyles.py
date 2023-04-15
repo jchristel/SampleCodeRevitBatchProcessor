@@ -51,7 +51,7 @@ def DeleteLineStylesStartsWith(doc, startsWith):
 
     lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
     ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = rDel.DeleteByElementIds(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
+    result = rDel.delete_by_element_ids(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
     return result
 
 

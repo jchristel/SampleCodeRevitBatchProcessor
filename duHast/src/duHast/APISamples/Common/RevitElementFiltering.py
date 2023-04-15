@@ -31,7 +31,7 @@ Varies Element filter / check functions.
 import Autodesk.Revit.DB as rdb
 
 
-def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
+def is_element_of_built_in_category(doc, elId, builtinCategories):
     '''
     Checks whether an element is of the built in categories past in.
     :param doc: Current Revit model document.
@@ -54,7 +54,7 @@ def IsElementOfBuiltInCategory(doc, elId, builtinCategories):
     return match
 
 
-def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
+def is_element_not_of_built_in_category(doc, elId, builtinCategories):
     '''
     Checks whether an element is not of the built in categories past in.
     :param doc: Current Revit model document.
@@ -77,7 +77,7 @@ def IsElementNotOfBuiltInCategory(doc, elId, builtinCategories):
     return match
 
 
-def IsFamilyNameFromInstance(
+def is_family_name_from_instance(
     doc,
     familyName, # type: str
     elementId
@@ -85,6 +85,7 @@ def IsFamilyNameFromInstance(
 
     '''
     Checks whether the family name of a given family instance matches filter value.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param familyName: The string the name of the family needs to match.
@@ -105,7 +106,7 @@ def IsFamilyNameFromInstance(
     return flag
 
 
-def IsFamilyNameFromInstanceContains(
+def is_family_name_from_instance_contains(
     doc,
     containsValue, # type: str
     elementId
@@ -113,6 +114,7 @@ def IsFamilyNameFromInstanceContains(
     # type: (...) -> bool
     '''
     Checks whether the family name of a given family instance contains filter value.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param containsValue: The string the name of the family instance is to be tested for.
@@ -133,7 +135,7 @@ def IsFamilyNameFromInstanceContains(
     return flag
 
 
-def IsFamilyNameFromInstanceDoesNotContains(
+def is_family_name_from_instance_does_not_contains(
     doc,
     containsValue, # type: str
     elementId
@@ -141,6 +143,7 @@ def IsFamilyNameFromInstanceDoesNotContains(
     # type: (...) -> bool
     '''
     Checks whether the family name of a given family instance does not contains filter value.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param containsValue: The string the name of the family instance is to be tested for.
@@ -161,7 +164,7 @@ def IsFamilyNameFromInstanceDoesNotContains(
     return flag
 
 
-def IsSymbolNameFromInstanceContains(
+def is_symbol_name_from_instance_contains(
     doc,
     containsValue, # type: str
     elementId
@@ -169,6 +172,7 @@ def IsSymbolNameFromInstanceContains(
     # type: (...) -> bool
     '''
     Checks whether the family symbol name of a given family instance contains filter value.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param containsValue: The string the name of the family instance is to be tested for.
@@ -189,7 +193,7 @@ def IsSymbolNameFromInstanceContains(
     return flag
 
 
-def IsSymbolNameFromInstanceDoesNotContains(
+def is_symbol_name_from_instance_does_not_contains(
     doc,
     containsValue, # type: str
     elementId
@@ -198,6 +202,7 @@ def IsSymbolNameFromInstanceDoesNotContains(
 
     '''
     Checks whether the family symbol name of a given family instance does not contains filter value.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param containsValue: The string the name of the family is to be tested for.

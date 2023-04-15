@@ -134,7 +134,7 @@ def _getRevitInstanceDataByName(revitLinkName, doc):
                 break
     if(match == True):
         # Output(instanceWorksetName)
-        return rWork.GetWorksetIdByName(doc, instanceWorksetName)
+        return rWork.get_workset_id_by_name(doc, instanceWorksetName)
     else:
         # Output('no match')
         return rdb.ElementId.InvalidElementId
@@ -168,17 +168,17 @@ def _modifyRevitLinkTypeData(revitLink, doc):
     # get the workset Id of the link type
     wsparam = revitLink.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
     typeWorksetName = wsparam.AsValueString()
-    typeWorksetId = rWork.GetWorksetIdByName(doc, typeWorksetName)
+    typeWorksetId = rWork.get_workset_id_by_name(doc, typeWorksetName)
 
     # get the workset id of a link instance belonging to same type
     instanceWorksetId = _getRevitInstanceDataByName(revitLink, doc)
-    instanceWorksetName = rWork.GetWorksetNameById(doc, instanceWorksetId.IntegerValue)
+    instanceWorksetName = rWork.get_workset_name_by_id(doc, instanceWorksetId.IntegerValue)
 
     # check if revit link type needs the workset changed?
     if(instanceWorksetId!= rdb.ElementId.InvalidElementId and instanceWorksetId != typeWorksetId):
         output('Moving '+ str(rdb.Element.Name.GetValue(revitLink)) + ' from ' + str(typeWorksetName) + ' to ' + str(instanceWorksetName))
         transaction = rdb.Transaction(doc, "Changing workset of " + str(rdb.Element.Name.GetValue(revitLink)))
-        returnValue = rTran.in_transaction(transaction, rWork.GetActionChangeElementWorkset(revitLink,instanceWorksetId))
+        returnValue = rTran.in_transaction(transaction, rWork.get_action_change_element_workset(revitLink,instanceWorksetId))
         output(str(rdb.Element.Name.GetValue(revitLink)) + ' ' + str(returnValue.status))
     else:
         returnValue.message = str(rdb.Element.Name.GetValue(revitLink)) + ' is already on default workset ' + str(instanceWorksetName)
@@ -231,6 +231,6 @@ output('{} [{}]'.format(result_.message, result_.status))
 # sync changes back to central
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    syncing_ = rFileIO.SyncFile (DOC)
+    syncing_ = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished [{}]'.format(syncing_.status))
 output('Modifying Revit Link(s).... finished ')

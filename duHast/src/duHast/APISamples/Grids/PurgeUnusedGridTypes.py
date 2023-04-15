@@ -34,12 +34,12 @@ from duHast.APISamples.Grids import RevitGrids as rGrids
 
 def GetUnusedGridTypesForPurge(doc):
     ''' this will return all ids of unused grid types in the model to be purged'''
-    return rPurgeUtils.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 0, 8)
+    return rPurgeUtils.get_used_unused_type_ids(doc, rGrids.GetAllGridTypeIdsByCategory, 0, 8)
 
 
 def GetUnusedGridHeadFamilies(doc):
     ''' this will return all ids of unused family symbols (types) of grid head families'''
-    usedTypes = rPurgeUtils.GetUsedUnusedTypeIds(doc, rGrids.GetAllGridTypeIdsByCategory, 1, 8)
+    usedTypes = rPurgeUtils.get_used_unused_type_ids(doc, rGrids.GetAllGridTypeIdsByCategory, 1, 8)
     headsInUseIds = []
     for Id in usedTypes:
         type = doc.GetElement(Id)

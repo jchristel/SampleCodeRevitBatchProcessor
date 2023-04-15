@@ -43,7 +43,7 @@ def GetUsedRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRoofTypeIdsInModelByCategory, 1)
     return ids
 
 
@@ -86,7 +86,7 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllRoofTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRoofTypeIdsInModelByClass, 0)
     # make sure there is at least on Roof type per system family left in model
     RoofTypes = SortRoofTypesByFamilyName(doc)
     for key, value in RoofTypes.items():
@@ -107,7 +107,7 @@ def GetUsedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
     return ids
 
 
@@ -121,7 +121,7 @@ def GetUnusedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
     return ids
 
 

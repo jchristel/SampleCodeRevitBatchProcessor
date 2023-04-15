@@ -55,7 +55,7 @@ def GetImagesTypeIdsInModel(doc):
 
     ids = []
     col = GetImagesTypesInModel(doc)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 

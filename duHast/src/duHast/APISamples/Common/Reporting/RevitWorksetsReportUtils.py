@@ -27,10 +27,10 @@ This module contains utility function(s) for workset reports.
 #
 
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Common.RevitWorksets import GetWorksetsFromCollector
+from duHast.APISamples.Common.RevitWorksets import get_worksets_from_collector
 
 
-def GetWorksetReportData(doc, revitFilePath):
+def get_workset_report_data(doc, revitFilePath):
     '''
     Gets workset data ready for being written to file.
     - HOSTFILE
@@ -46,7 +46,7 @@ def GetWorksetReportData(doc, revitFilePath):
     '''
 
     data = []
-    worksets = GetWorksetsFromCollector(doc)
+    worksets = get_worksets_from_collector(doc)
     for ws in worksets:
         data.append([
             revitFilePath,

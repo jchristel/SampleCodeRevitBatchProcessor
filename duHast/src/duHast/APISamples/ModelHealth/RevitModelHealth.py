@@ -176,7 +176,7 @@ def GetWorksetNumber(doc):
     :rtype: int
     '''
 
-    return len(rWork.GetWorksets(doc))
+    return len(rWork.get_worksets(doc))
 
 def GetFileSize(doc):
     '''
@@ -196,7 +196,7 @@ def GetFileSize(doc):
         revitFilePath = doc.PathName
         # check if bim 360 file
         if (revitFilePath.StartsWith('BIM 360')):
-            size = b360.GetModelFileSize(doc)
+            size = b360.get_model_file_size(doc)
         else:
             if(util.FileExist(revitFilePath)):
                 # get file size in MB
@@ -235,7 +235,7 @@ def GetNumberOfDesignSets(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rDoS.GetDesignSets(doc))
+        number = len(rDoS.get_design_sets(doc))
     except:
         pass
     return number
@@ -252,7 +252,7 @@ def GetNumberOfDesignOptions(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rDoS.GetDesignOptions(doc).ToList())
+        number = len(rDoS.get_design_options(doc).ToList())
     except:
         pass
     return number
@@ -526,7 +526,7 @@ def GetNumberOfDetailGroupsInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rGrp.GetDetailGroups(doc))
+        number = len(rGrp.get_detail_groups(doc))
     except:
         pass
     return number
@@ -544,7 +544,7 @@ def GetNumberOfModelGroupsInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rGrp.GetModelGroups(doc))
+        number = len(rGrp.get_model_groups(doc))
     except:
         pass
     return number
@@ -562,7 +562,7 @@ def GetNumberOfUnplacedDetailGroupsInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rGrp.GetUnplacedDetailGroups(doc))
+        number = len(rGrp.get_unplaced_detail_groups(doc))
     except:
         pass
     return number
@@ -580,7 +580,7 @@ def GetNumberOfUnplacedModelGroupsInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rGrp.GetUnplacedModelGroups(doc))
+        number = len(rGrp.get_unplaced_model_groups(doc))
     except:
         pass
     return number
@@ -673,7 +673,7 @@ def GetNumberOfFilledRegionInModel(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rDetItems.GetFilledRegionsInModel(doc))
+        number = len(rDetItems.get_filled_regions_in_model(doc))
     except:
         pass
     return number

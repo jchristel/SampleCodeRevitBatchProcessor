@@ -264,7 +264,7 @@ output(str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.message)+ '.... status: ' + str(RES
 # sync changes back to central, non workshared files will not be saved!
 if (DOC.IsWorkshared and DEBUG == False):
     output('Syncing to Central: start')
-    SYNCING = rFileIO.SyncFile (DOC)
+    SYNCING = rFileIO.sync_file (DOC)
     output('Syncing to Central: finished ' + str(SYNCING.status))
 
 output('Modifying Revit File.... finished ')

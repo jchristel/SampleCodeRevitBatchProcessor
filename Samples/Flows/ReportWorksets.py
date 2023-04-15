@@ -117,7 +117,7 @@ def write_workset_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rWksReportHeader.REPORT_WORKSETS_HEADER, 
-            rWksReportUtils.GetWorksetReportData(doc, REVIT_FILE_PATH))
+            rWksReportUtils.get_workset_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))

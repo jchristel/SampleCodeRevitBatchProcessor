@@ -54,7 +54,7 @@ def GetUsedDuctAndFlexDuctSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForDuctTypesInModel, 1)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForDuctTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
     idsUsedInFlexTypes = GetSymbolIdsUsedInFlexDuctTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
@@ -115,7 +115,7 @@ def GetUsedCableTraySymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInCableTrayTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)
@@ -170,7 +170,7 @@ def GetUsedConduitSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForConduitTypesInModel, 1)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForConduitTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInConduitTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)
@@ -226,7 +226,7 @@ def GetUsedPipeSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.GetUsedUnusedTypeIds(doc, GetSymbolIdsForPipeTypesInModel, 1)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForPipeTypesInModel, 1)
     idsUsedInTypes = GetSymbolIdsUsedInPipeTypes(doc)
     ids = MergeIntoUniqueList(ids, idsInModel)
     ids = MergeIntoUniqueList(ids, idsUsedInTypes)

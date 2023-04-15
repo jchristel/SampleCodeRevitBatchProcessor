@@ -29,14 +29,14 @@ Revit sub-category helper functions.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res
-from duHast.APISamples.Categories.RevitCategories import DeleteMainSubCategory, DoesMainSubCategoryExists, GetMainSubCategories
-from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import MoveElementsFromSubCategoryToSubCategory
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesSetUtils import SetCategoryProperties
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import GetCategoryProperties
+from duHast.APISamples.Categories.RevitCategories import delete_main_sub_category, does_main_sub_category_exists, get_main_sub_categories
+from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import move_elements_from_sub_category_to_sub_category
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesSetUtils import set_category_properties
+from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_properties
 from duHast.APISamples.Common import RevitTransaction as rTran
 
 
-def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
+def create_new_sub_category_to_family_category(doc, newSubCategoryName):
     '''
     Creates a new subcategory to the family category and returns it.
     Note: if a subcategory with the name provided already exist it will be returned instead of trying to create another one with the same name.
@@ -51,9 +51,9 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     returnValue = res.Result()
     if (doc.IsFamilyDocument):
         # check if subcategory already exists
-        if(DoesMainSubCategoryExists(doc, newSubCategoryName)):
+        if(does_main_sub_category_exists(doc, newSubCategoryName)):
             # just return the already existing subcategory
-            mainSubCategories = GetMainSubCategories(doc)
+            mainSubCategories = get_main_sub_categories(doc)
             returnValue.UpdateSep(True, 'Subcategory already in family.')
             returnValue.result = mainSubCategories[newSubCategoryName]
         else:
@@ -85,7 +85,7 @@ def CreateNewSubCategoryToFamilyCategory(doc, newSubCategoryName):
     return returnValue
 
 
-def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps, ignoreMissingCutStyle = False):
+def create_new_category_from_saved_properties(doc, newCatName, savedCatProps, ignoreMissingCutStyle = False):
     '''
     Creates a new category and applies properties stored.
     :param doc: Current Revit family document.
@@ -109,10 +109,10 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps, ignoreM
     '''
 
     returnValue = res.Result()
-    resultNewSubCat = CreateNewSubCategoryToFamilyCategory(doc, newCatName)
+    resultNewSubCat = create_new_sub_category_to_family_category(doc, newCatName)
     if(resultNewSubCat.status):
         newSubCat = resultNewSubCat.result
-        flag = SetCategoryProperties(doc, newSubCat, savedCatProps, ignoreMissingCutStyle)
+        flag = set_category_properties(doc, newSubCat, savedCatProps, ignoreMissingCutStyle)
         if(flag):
             returnValue.UpdateSep(True, 'Successfully created category: '+ str(newCatName))
             returnValue.result = newSubCat
@@ -123,7 +123,7 @@ def CreateNewCategoryFromSavedProperties(doc, newCatName, savedCatProps, ignoreM
     return returnValue
 
 
-def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
+def create_new_category_and_transfer_properties(doc, newCatName, existingCatName):
     '''
     Creates a new subcategory and transfer properties from existing subcategory.
     :param doc: Current Revit family document.
@@ -145,14 +145,14 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     '''
 
     returnValue = res.Result()
-    cats = GetMainSubCategories(doc)
+    cats = get_main_sub_categories(doc)
     # check if existing category actually exists in family
     if(existingCatName in cats):
         # check whether the new category already exists!
         if (newCatName not in cats):
             copyFromCat = cats[existingCatName]
-            catProps = GetCategoryProperties(copyFromCat, doc)
-            resultNewSubCat = CreateNewCategoryFromSavedProperties(doc, newCatName, catProps)
+            catProps = get_category_properties(copyFromCat, doc)
+            resultNewSubCat = create_new_category_from_saved_properties(doc, newCatName, catProps)
             returnValue.Update(resultNewSubCat)
         else:
             returnValue.UpdateSep(True, 'Category already in file:'+ str(newCatName))
@@ -162,7 +162,7 @@ def CreateNewCategoryAndTransferProperties(doc, newCatName, existingCatName):
     return returnValue
 
 
-def RenameSubCategory(doc, oldSubCatName, newSubCatName):
+def rename_sub_category(doc, oldSubCatName, newSubCatName):
     '''
     Renames a family custom subcategory.
     Note: Only subcategory directly belonging to the family category will be checked for a match.
@@ -193,24 +193,24 @@ def RenameSubCategory(doc, oldSubCatName, newSubCatName):
 
     returnValue = res.Result()
     # check whether ol;d subcategory exists in family file
-    alreadyInFamilyOld = DoesMainSubCategoryExists(doc, oldSubCatName)
+    alreadyInFamilyOld = does_main_sub_category_exists(doc, oldSubCatName)
     if(alreadyInFamilyOld):
         # check whether new subcategory already in family
-        alreadyInFamily = DoesMainSubCategoryExists(doc, newSubCatName)
+        alreadyInFamily = does_main_sub_category_exists(doc, newSubCatName)
         if(alreadyInFamily):
             # just move elements from old sub category to new one
             returnValue.AppendMessage('Subcategory: ' + newSubCatName + ' already in family.')
         else:
             # duplicate old sub category
-            createNewStatus = CreateNewCategoryAndTransferProperties(doc, newSubCatName, oldSubCatName)
+            createNewStatus = create_new_category_and_transfer_properties(doc, newSubCatName, oldSubCatName)
             returnValue.Update(createNewStatus)
         # check if we have a subcategory to move elements to
         if(returnValue.status):
             # move elements
-            moveStatus = MoveElementsFromSubCategoryToSubCategory(doc, oldSubCatName, newSubCatName)
+            moveStatus = move_elements_from_sub_category_to_sub_category(doc, oldSubCatName, newSubCatName)
             returnValue.Update(moveStatus)
             if(moveStatus.status):
-                deletedOldSubCategory = DeleteMainSubCategory(doc, oldSubCatName)
+                deletedOldSubCategory = delete_main_sub_category(doc, oldSubCatName)
                 if(deletedOldSubCategory):
                     returnValue.UpdateSep(True, 'Subcategory: ' + oldSubCatName + ' deleted successfully.')
                 else:

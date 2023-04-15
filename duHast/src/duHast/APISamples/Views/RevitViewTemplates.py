@@ -104,7 +104,7 @@ def GetDefaultViewTypeTemplateIds(doc):
 
     viewTemplateIdsUsed = []
     # get all templates assigned to view family types:
-    viewFamilyTemplates = com.GetSimilarTypeFamiliesByType(doc, _get_view_types)
+    viewFamilyTemplates = com.get_similar_type_families_by_type(doc, _get_view_types)
     for vt in viewFamilyTemplates:
         for id in vt[1]:
             # get the element

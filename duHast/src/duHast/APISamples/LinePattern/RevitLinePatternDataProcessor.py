@@ -130,11 +130,11 @@ class LinePatternProcessor(IFamilyProcessor):
         returnValue = res.Result()
         try:
             # find all line patterns of nested families
-            nestedFamilyData = self._findNestedFamiliesData()
+            nestedFamilyData = self._find_nested_families_data()
             # get used sub categories from nested data
             nestedFamilyUsedLinePatterns = self._getUsedLinePatterns(nestedFamilyData)
             # update root family data only
-            rootFamilyData = self._findRootFamilyData()
+            rootFamilyData = self._find_root_family_data()
             # update root processor data as required
             self._updateRootFamilyData(rootFamilyData, nestedFamilyUsedLinePatterns)
             returnValue.UpdateSep(True, 'Post Action Update line pattern data successful completed.')

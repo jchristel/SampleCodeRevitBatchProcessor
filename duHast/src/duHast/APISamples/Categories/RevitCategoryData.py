@@ -80,7 +80,7 @@ class CategoryData(IFamData.IFamilyData):
             self.rootCategoryPath = '-'
         '''
 
-    def add_Data(self,root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, catGraStyleThreeD,
+    def add_data(self,root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, catGraStyleThreeD,
         catGraStyleCut, catGraStylePro, propMatName, propMatId, propLineWeightCutName, propLineWeightProjectionName, propLineColRed, propLineColGreen, propLineColBlue):
         
         dic = {
@@ -107,7 +107,7 @@ class CategoryData(IFamData.IFamilyData):
 
         self.data.append(dic)
     
-    def _createData(self,root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, categoryGraphicProperties):
+    def _create_data(self,root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, categoryGraphicProperties):
         '''
         Generates dictionary object from data past in.
 
@@ -156,7 +156,7 @@ class CategoryData(IFamData.IFamilyData):
 
         return dic
 
-    def _buildData(self, mainSubCats, mainCatName, doc):
+    def _build_data(self, mainSubCats, mainCatName, doc):
         '''
         Extracts for each category past in, its properties and usage and adds that data to class property .data
 
@@ -171,9 +171,9 @@ class CategoryData(IFamData.IFamilyData):
         # get usage of each main sub category
         for key,subCat in mainSubCats.items():
             # get elements using category
-            elementDic = rElementByCatUtils.GetElementsByCategory(doc, subCat)
+            elementDic = rElementByCatUtils.get_elements_by_category(doc, subCat)
             # get category property
-            catProps = rCatPropGet.GetCategoryProperties(subCat, doc)
+            catProps = rCatPropGet.get_category_properties(subCat, doc)
             # add element counter for 3D, Cut, Elevation style
             useCounter = 0
             for key in elementDic:
@@ -185,10 +185,10 @@ class CategoryData(IFamData.IFamilyData):
                     usedByIds.append(id.IntegerValue)
 
             # build data dictionary   
-            dic = self._createData(
+            dic = self._create_data(
                 self.rootPath,
                 self.rootCategoryPath,
-                self._stripFileExtension(doc.Title),
+                self._strip_file_extension(doc.Title),
                 doc.PathName,
                 useCounter,
                 usedByIds,
@@ -199,7 +199,7 @@ class CategoryData(IFamData.IFamilyData):
             )
             self.data.append(dic)
 
-    def _buildDataNonMainSubCats(self, mainSubCats, mainCatName, doc):
+    def _build_data_non_main_sub_cats(self, mainSubCats, mainCatName, doc):
         '''
         Extracts for each category past in, its properties and usage and adds that data to class property .data
 
@@ -218,9 +218,9 @@ class CategoryData(IFamData.IFamilyData):
             elementDic = {}
             if(mainCatName == 'Imports in Families' or mainCatName == 'Reference Planes'):
                 # get elements using category
-                elementDic = rElementByCatUtils.GetElementsByCategory(doc, subCat)
+                elementDic = rElementByCatUtils.get_elements_by_category(doc, subCat)
             # get category property
-            catProps = rCatPropGet.GetCategoryProperties(subCat, doc)
+            catProps = rCatPropGet.get_category_properties(subCat, doc)
             # add element counter for 3D, Cut, Elevation style
             useCounter = 0
             for key in elementDic:
@@ -232,10 +232,10 @@ class CategoryData(IFamData.IFamilyData):
                     usedByIds.append(id.IntegerValue)
 
             # build data dictionary   
-            dic = self._createData(
+            dic = self._create_data(
                 self.rootPath,
                 self.rootCategoryPath,
-                self._stripFileExtension(doc.Title),
+                self._strip_file_extension(doc.Title),
                 doc.PathName,
                 useCounter,
                 usedByIds,
@@ -255,20 +255,20 @@ class CategoryData(IFamData.IFamilyData):
         '''
 
         # get the family category name:
-        famCatName = list(rCat.GetFamilyCategory(doc))[0]
+        famCatName = list(rCat.get_family_category(doc))[0]
         # get all sub categories of the family category
-        mainSubCats = rCat.GetMainSubCategories(doc)
+        mainSubCats = rCat.get_main_sub_categories(doc)
         # get all sub categories of non family category with a positive Id (indicates a custom category)
         # this include imported element categories
-        otherCustomSubCats = rCat.GetOtherCustomSubCategories(doc)
+        otherCustomSubCats = rCat.get_other_custom_sub_categories(doc)
         # get usage of each main sub category
-        self._buildData(mainSubCats, famCatName, doc)
+        self._build_data(mainSubCats, famCatName, doc)
          # add any other sub category if exist
         if(len(otherCustomSubCats) > 0):
             for categoryKey, otherSubMainCat in otherCustomSubCats.items():
                 if(len(otherSubMainCat) > 0):
                     # get usage of each other sub category
-                    self._buildDataNonMainSubCats(otherSubMainCat, categoryKey, doc)
+                    self._build_data_non_main_sub_cats(otherSubMainCat, categoryKey, doc)
         
-    def get_Data(self):
+    def get_data(self):
         return self.data

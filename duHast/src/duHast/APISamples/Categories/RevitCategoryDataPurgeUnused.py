@@ -39,7 +39,7 @@ from duHast.APISamples.Categories import RevitCategoryData as rCatData
 
 import Autodesk.Revit.DB as rdb
 
-def PurgeUnused(doc, processor):
+def purge_unused_sub_categories(doc, processor):
     '''
     This will delete all subcategories which are user created ( id greater then 0) and are not used by any element in the family or nested families.
 
@@ -77,7 +77,7 @@ def PurgeUnused(doc, processor):
             idsToDelete.append(rdb.ElementId(rootFam[rCatData.SUB_CATEGORY_ID]))
     # delete any subcategories found
     if(len(idsToDelete) > 0):
-        resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused sub categories.', 'Subcategories')
+        resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused sub categories.', 'Subcategories')
         returnValue.Update(resultDelete)
     else:
         returnValue.UpdateSep(True, 'No unused categories found. Nothing was deleted.')

@@ -77,7 +77,7 @@ def PurgeUnused(doc, processor):
             idsToDelete.append(rdb.ElementId(rootFam[rLinePatData.PATTERN_ID]))
     # delete any subcategories found
     if(len(idsToDelete) > 0):
-        resultDelete = rDel.DeleteByElementIds(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
+        resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
         returnValue.Update(resultDelete)
     else:
         returnValue.UpdateSep(True, 'No unused line patterns found. Nothing was deleted.')

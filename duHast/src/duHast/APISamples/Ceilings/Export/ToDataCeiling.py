@@ -36,7 +36,7 @@ from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion a
 from duHast.APISamples.Common.Geometry import RevitSolids as rSolid
 
 
-def PopulateDataCeilingObject(doc, revitCeiling):
+def populate_data_ceiling_object(doc, revitCeiling):
     '''
     Returns a custom ceiling data objects populated with some data from the revit model ceiling past in.
 
@@ -69,7 +69,7 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             ceilingPointGroupsAsDoubles.append(dataGeoConverted)
         dataC.geometryPolygon = ceilingPointGroupsAsDoubles
         # get design set data
-        design_set_data = rDesignO.GetDesignSetOptionInfo(doc, revitCeiling)
+        design_set_data = rDesignO.get_design_set_option_info(doc, revitCeiling)
         dataC.designSetAndOption.designOptionName = design_set_data['designOptionName']
         dataC.designSetAndOption.designSetName = design_set_data['designSetName']
         dataC.designSetAndOption.isPrimary = design_set_data['isPrimary']
@@ -105,15 +105,15 @@ def PopulateDataCeilingObject(doc, revitCeiling):
             dataC.revitModel.modelName = doc.Title
 
         # get phasing information
-        dataC.phasing.phaseCreated = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
-        dataC.phasing.phaseDemolished = rPhase.GetPhaseNameById(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        dataC.phasing.phaseCreated = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        dataC.phasing.phaseDemolished = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
 
         return dataC
     else:
         return None
 
 
-def GetAllCeilingData(doc):
+def get_all_ceiling_data(doc):
     '''
     Gets a list of ceiling data objects for each ceiling element in the model.
 
@@ -124,9 +124,9 @@ def GetAllCeilingData(doc):
     '''
 
     allCeilingData = []
-    ceilings = rCeiling.GetAllCeilingInstancesInModelByCategory(doc)
+    ceilings = rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
     for ceiling in ceilings:
-        cd = PopulateDataCeilingObject(doc, ceiling)
+        cd = populate_data_ceiling_object(doc, ceiling)
         if(cd is not None):
             allCeilingData.append(cd)
     return allCeilingData

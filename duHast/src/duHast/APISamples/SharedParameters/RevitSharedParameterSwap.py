@@ -86,7 +86,7 @@ def _loadSharedParameterDataFromFile(filePath):
             flag = False
             if(row[3].upper() == "TRUE"):
                 flag = True
-            t = rSharedT.parameterData (row[1], flag, rPG.ParameterGroupingToBuiltInParameterGroups[row[4]])
+            t = rSharedT.parameterData (row[1], flag, rPG.PRAMETER_GROPUING_TO_BUILD_IN_PARAMETER_GROUPS[row[4]])
             parameterMapper[row[0]] = parameterSettingsData(row[0], t, row[2])
     return parameterMapper
 

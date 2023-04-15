@@ -127,7 +127,7 @@ def GetSymbolIdsForMEPSystemTypes(doc, categoryList, systemTypeName):
     try:
         multiCatFilter = rdb.ElementMulticategoryFilter(categoryList)
         col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
-        ids = com.GetIdsFromElementCollector (col)
+        ids = com.get_ids_from_element_collector (col)
     except Exception as ex:
         print (systemTypeName+ ' threw exception: ' + str(ex))
     return ids

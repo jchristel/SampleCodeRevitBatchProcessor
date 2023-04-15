@@ -54,7 +54,7 @@ def GetAllStairPathTypeIdsInModelByClass(doc):
 
     ids = []
     colClass = GetStairPathTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector (colClass)
+    ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 

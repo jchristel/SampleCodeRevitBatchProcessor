@@ -39,7 +39,7 @@ def GetAllUnusedImageTypeIdsInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedImages = com.GetNotPlacedTypes(doc, GetImageTypeInModel, GetImageInstancesInModel)
+    unusedImages = com.get_not_placed_types(doc, GetImageTypeInModel, GetImageInstancesInModel)
     unusedTypeIds = []
     for i in unusedImages:
         unusedTypeIds.append(i.Id)
@@ -59,5 +59,5 @@ def GetAllUnusedImageTypeIdsInModelWithGroupCheck(doc):
 
     unusedTypeIds = GetAllUnusedImageTypeIdsInModel(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
-    unusedTypeIds = com.GetUnusedTypeIdsFromDetailGroups(doc, unusedTypeIds)
+    unusedTypeIds = com.get_unused_type_ids_from_detail_groups(doc, unusedTypeIds)
     return unusedTypeIds

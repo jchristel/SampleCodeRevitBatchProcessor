@@ -105,21 +105,21 @@ class LinePatternData(IFamData.IFamilyData):
         linePatternIdsToCategories = {}
 
         # get any line pattern added to the family category itself
-        mainCat = rCats.GetFamilyCategory(doc)
+        mainCat = rCats.get_family_category(doc)
         for mCatName in mainCat:
             lStyle = rPat.GetLinePatternFromCategory (mainCat[mCatName], doc)
             # update dictionary
             self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCat[mCatName])
         
         # get line patterns from sub categories of the family category
-        mainCats = rCats.GetMainSubCategories(doc)
+        mainCats = rCats.get_main_sub_categories(doc)
         for mCatName in mainCats:
             lStyle = rPat.GetLinePatternFromCategory (mainCats[mCatName], doc)
             # update dictionary
             self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCats[mCatName])
         
         # get line pattern from unrelated sub categories
-        subCatsOther = rCats.GetOtherSubCategories(doc)
+        subCatsOther = rCats.get_other_sub_categories(doc)
         for sCatName in subCatsOther:
             for sCatItem in subCatsOther[sCatName]:
                 # only use custom categories not build in ones (id smaller then 0)
@@ -129,7 +129,7 @@ class LinePatternData(IFamData.IFamilyData):
                     self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], subCatsOther[sCatName][sCatItem])
         
         # get line pattern from reference lines and planes categories import in families main cat
-        otherCats = rCats.GetCategoryByBuiltInDefName(
+        otherCats = rCats.get_category_by_built_in_def_name(
             doc, [
             rdb.BuiltInCategory.OST_ReferenceLines, # reference lines
             rdb.BuiltInCategory.OST_CLines,     # reference planes
@@ -256,7 +256,7 @@ class LinePatternData(IFamData.IFamilyData):
                 {
                     IFamData.ROOT : self.rootPath,
                     IFamData.ROOT_CATEGORY : self.rootCategoryPath,
-                    IFamData.FAMILY_NAME : self._stripFileExtension(doc.Title),
+                    IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                     IFamData.FAMILY_FILE_PATH : doc.PathName,
                     IFamData.USAGE_COUNTER : counter,
                     IFamData.USED_BY : usageAll,
@@ -265,5 +265,5 @@ class LinePatternData(IFamData.IFamilyData):
                 }
             )
     
-    def get_Data(self):
+    def get_data(self):
         return self.data

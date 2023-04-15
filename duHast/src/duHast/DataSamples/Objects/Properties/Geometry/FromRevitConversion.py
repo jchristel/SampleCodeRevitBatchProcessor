@@ -46,19 +46,19 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     dataGeometry = dGeometryPoly.DataPolygon()
     outerLoop = []
     for xyzPoint in dgObject.outerLoop:
-        pointDouble = rGeo.GetPointAsDoubles(xyzPoint)
+        pointDouble = rGeo.get_point_as_doubles(xyzPoint)
         outerLoop.append(pointDouble)
     innerLoops = []
     for innerLoop in dgObject.innerLoops:
         innerLoopPoints = []
         for xyzPoint in innerLoop:
-            pointDouble = rGeo.GetPointAsDoubles(xyzPoint)
+            pointDouble = rGeo.get_point_as_doubles(xyzPoint)
             innerLoopPoints.append(pointDouble)
         innerLoops.append(innerLoopPoints)
     dataGeometry.outerLoop = outerLoop
     dataGeometry.innerLoops = innerLoops
     # add coordinate system translation and rotation data
-    dataGeometry.rotationCoord, dataGeometry.translationCoord = rGeo.GetCoordinateSystemTranslationAndRotation(doc)
+    dataGeometry.rotationCoord, dataGeometry.translationCoord = rGeo.get_coordinate_system_translation_and_rotation(doc)
     return dataGeometry
 
 def convert_solid_to_flattened_2d_points(solid):
@@ -98,26 +98,26 @@ def convert_solid_to_flattened_2d_points(solid):
 
     ceilingGeos = []
     # sort faces by size
-    sortedBySizeFaces = rGeo.GetFacesSortedByAreaFromSolid(solid)
+    sortedBySizeFaces = rGeo.get_faces_sorted_by_area_from_solid(solid)
     # get all faces which are horizontal only
-    horizontalFaces = rGeo.GetUniqueHorizontalFaces(sortedBySizeFaces)
+    horizontalFaces = rGeo.get_unique_horizontal_faces(sortedBySizeFaces)
     # loop of all horizontal faces and extract loops
     for hf in horizontalFaces:
-        edgeLoops = rGeo.ConvertEdgeArraysIntoListOfPoints(hf.EdgeLoops)
+        edgeLoops = rGeo.convert_edge_arrays_into_list_of_points(hf.EdgeLoops)
         # convert in UV coordinates
-        edgeLoopsFlattened = rGeo.FlattenXYZPointListOfLists(edgeLoops)
+        edgeLoopsFlattened = rGeo.flatten_xyz_point_list_of_lists(edgeLoops)
         #set up a named tuple to store data in it
         uvLoops = []
         uvLoop = namedtuple('uvLoop', 'loop area id threeDPoly')
         counter = 0
         for edgeLoopFlat in edgeLoopsFlattened:
-            areaLoop = rGeo.GetSignedPolygonArea( edgeLoopFlat )
+            areaLoop = rGeo.get_signed_polygon_area( edgeLoopFlat )
             uvTuple = uvLoop(edgeLoopFlat, abs(areaLoop), counter, edgeLoops[counter])
             uvLoops.append(uvTuple)
             counter += 1
         uvLoops = sorted(uvLoops, key=lambda x: x.area, reverse=True)
         # sort loops into exterior and hole loops
-        loopDic = rGeo.BuildLoopsDictionary(uvLoops)
+        loopDic = rGeo.build_loops_dictionary(uvLoops)
         for key in loopDic:
             dataGeometry = dGeometryPoly.DataPolygon()
             keyList =[]

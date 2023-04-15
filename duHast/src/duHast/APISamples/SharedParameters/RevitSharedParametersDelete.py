@@ -63,7 +63,7 @@ def DeleteSharedParameterByName(doc, sharedParameterName):
             parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
-        returnValue = rDel.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+        returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
     else:
         returnValue.UpdateSep(False, 'parameter with guid: ' + sharedParameterName + ' does not exist in file.')
     return returnValue
@@ -99,7 +99,7 @@ def DeleteSharedParameterByGUID(doc, guid):
             parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
-        returnValue = rDel.DeleteByElementIds(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+        returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
     else:
         returnValue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
     return returnValue

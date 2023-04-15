@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a Revit detail items utility functions. 
+This module contains a Revit generic annotation utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ This module contains a Revit detail items utility functions.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,28 +26,30 @@ This module contains a Revit detail items utility functions.
 #
 #
 
-def build_detail_type_ids_dictionary(collector):
-    '''
-    Returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids.
+from duHast.APISamples.Annotation.RevitGenericAnnotation import get_all_generic_annotation_types_by_category
 
-    :param collector: A filtered element collector containing detail component types.
+
+def build_generic_annotation_types_dictionary(collector, dic):
+    '''
+    Returns the dictionary past in with keys and or values added retrieved from collector past in.
+    :param collector: Filtered element collector containing GenericAnnotation type elements of family symbols.
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
-
-    :return: Dictionary where key is the element type as string and value is a list of all type ids belonging to the element type.
-    :rtype: dic{str:list[Autodesk.Revit.DB.ElementId]}
+    :param dic: Dictionary, the key is the family name and the value a list of element ids representing annotation types.
+    :type dic: dic: key str, values list of Autodesk.Revit.DB.ElementId
+    :return: Past in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.
+    :rtype: dic: key str, values list of Autodesk.Revit.DB.ElementId
     '''
 
-    dic = {}
     for c in collector:
-        if(dic.has_key(str(c.GetType()))):
-            if(c.Id not in dic[str(c.GetType())]):
-                dic[str(c.GetType())].append(c.Id)
+        if(dic.has_key(c.FamilyName)):
+            if(c.Id not in dic[c.FamilyName]):
+                dic[c.FamilyName].append(c.Id)
         else:
-            dic[str(c.GetType())] = [c.Id]
+            dic[c.FamilyName] = [c.Id]
     return dic
 
 
-def build_dependent_elements_dictionary(doc, collector):
+def sort_generic_annotation_types_by_family_name(doc):
     '''
     Returns the dictionary keys is autodesk.revit.db element type as string and values are elements of that type.
 
@@ -60,12 +62,7 @@ def build_dependent_elements_dictionary(doc, collector):
     :rtype: dic{str:list[Autodesk.Revit.DB.Element]}
     '''
 
-    dic = {}
-    for c in collector:
-        el = doc.GetElement(c)
-        if(dic.has_key(str(el.GetType()))):
-            if(c not in dic[str(el.GetType())]):
-                dic[str(el.GetType())].append(c)
-        else:
-            dic[str(el.GetType())] = [c]
-    return dic
+    wts_two = get_all_generic_annotation_types_by_category(doc)
+    usedWts = {}
+    usedWts = build_generic_annotation_types_dictionary(wts_two, usedWts)
+    return usedWts

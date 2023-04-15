@@ -50,7 +50,7 @@ class RevitCustomElementFilter(Base.Base):
         self.elementFilters = elementFilters
         self.isLogicalANDFilter = isLogicalANDFilter
     
-    def CheckElement(self, doc, elementId):
+    def check_element(self, doc, elementId):
         '''
         Filter checking whether element meets criteria.
 

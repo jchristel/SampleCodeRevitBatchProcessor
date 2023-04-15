@@ -40,7 +40,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllCeilingTypesByCategory(doc):
+def get_all_ceiling_types_by_category(doc):
     '''
     Gets a filtered element collector of all ceiling types in the model:
 
@@ -61,7 +61,7 @@ def GetAllCeilingTypesByCategory(doc):
     collector = rCeilingsFilter._get_all_ceiling_types_by_category(doc)
     return collector
 
-def GetCeilingTypesByClass(doc):
+def get_ceiling_types_by_class(doc):
     '''
     Gets a filtered element collector of all ceiling types in the model:
 
@@ -84,7 +84,7 @@ def GetCeilingTypesByClass(doc):
 
 # -------------------------------- none in place ceiling types -------------------------------------------------------
 
-def GetAllCeilingInstancesInModelByCategory(doc):
+def get_all_ceiling_instances_in_model_by_category(doc):
     '''
     Gets all ceiling elements placed in model. Ignores roof soffits.
 
@@ -99,7 +99,7 @@ def GetAllCeilingInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsNotElementType()
 
-def GetAllCeilingInstancesInModelByClass(doc):
+def get_all_ceiling_instances_in_model_by_class(doc):
     '''
     Gets all ceiling elements placed in model. Ignores in place families.
 
@@ -114,7 +114,7 @@ def GetAllCeilingInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Ceiling).WhereElementIsNotElementType()
 
-def GetAllCeilingTypeIdsInModelByCategory(doc):
+def get_all_ceiling_type_ids_in_model_by_category(doc):
     '''
     Gets all ceiling element type ids available in model.
 
@@ -128,11 +128,11 @@ def GetAllCeilingTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllCeilingTypesByCategory(doc)
-    ids = com.GetIdsFromElementCollector(colCat)
+    colCat = get_all_ceiling_types_by_category(doc)
+    ids = com.get_ids_from_element_collector(colCat)
     return ids
 
-def GetAllCeilingTypeIdsInModelByClass(doc):
+def get_all_ceiling_type_ids_in_model_by_class(doc):
     '''
     Gets all ceiling element type ids available in model.
 
@@ -146,13 +146,13 @@ def GetAllCeilingTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetCeilingTypesByClass(doc)
-    ids = com.GetIdsFromElementCollector(colClass)
+    colClass = get_ceiling_types_by_class(doc)
+    ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 # -------------------------------- In place ceiling types -------------------------------------------------------
 
-def GetInPlaceCeilingFamilyInstances(doc):
+def get_in_place_ceiling_family_instances(doc):
     '''
     Gets all instances of in place families of category ceiling.
 
@@ -166,7 +166,7 @@ def GetInPlaceCeilingFamilyInstances(doc):
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Ceilings)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceCeilingTypeIdsInModel(doc):
+def get_all_in_place_ceiling_type_ids_in_model(doc):
     '''
     Gets all type ids off all available in place families of category ceiling.
 

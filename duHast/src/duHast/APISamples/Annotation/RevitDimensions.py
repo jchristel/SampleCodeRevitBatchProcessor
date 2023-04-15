@@ -34,7 +34,7 @@ from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
 
 
-def GetDimTypes(doc):
+def get_dim_types(doc):
     '''
     Gets all dimension types in a model
     :param doc: Current Revit model document.
@@ -45,7 +45,7 @@ def GetDimTypes(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
 
-def GetDimTypeIds(doc):
+def get_dim_type_ids(doc):
     '''
     Gets all dimension type ids in a model
     :param doc: Current Revit model document.
@@ -56,11 +56,11 @@ def GetDimTypeIds(doc):
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def GetAllDimensionElements(doc):
+def get_all_dimension_elements(doc):
     '''
     Gets all dimension elements placed in the model.
     :param doc: Current Revit model document.
@@ -71,7 +71,7 @@ def GetAllDimensionElements(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Dimension)
 
-def GetSymbolIdsFromDimTypes(doc):
+def get_symbol_ids_from_dim_types(doc):
     '''
     Gets all family symbol ids used as centre line symbol from all dim styles in the model.
     :param doc: Current Revit model document.
@@ -81,7 +81,7 @@ def GetSymbolIdsFromDimTypes(doc):
     '''
 
     ids = []
-    dimTs = GetDimTypes(doc)
+    dimTs = get_dim_types(doc)
     for t in dimTs:
         id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
@@ -89,7 +89,7 @@ def GetSymbolIdsFromDimTypes(doc):
     return ids
 
 
-def GetDimTypeArrowHeadIds(doc):
+def get_dim_type_arrow_head_ids(doc):
     '''
     Gets all arrow head symbol ids used in dim types in a model.
     :param doc: Current Revit model document.
@@ -98,5 +98,5 @@ def GetDimTypeArrowHeadIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = rArrow.GetArrowHeadIdsFromType(doc, GetDimTypes, rArrow.ARROWHEAD_PARAS_DIM)
+    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM)
     return usedIds

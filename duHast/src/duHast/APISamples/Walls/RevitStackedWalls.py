@@ -68,7 +68,7 @@ def GetAllStackedWallTypeIdsInModel(doc):
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
-    ids = com.GetIdsFromElementCollector(col)
+    ids = com.get_ids_from_element_collector(col)
     return ids
 
 

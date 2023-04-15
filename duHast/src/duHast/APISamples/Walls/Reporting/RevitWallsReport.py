@@ -55,7 +55,7 @@ def GetWallReportData(doc, revitFilePath):
                 print(len(csLayers))
                 for csLayer in csLayers:
                     layerMat = rMat.GetMaterialById(doc, csLayer.MaterialId)
-                    materialMark = com.GetElementMark(layerMat)
+                    materialMark = com.get_element_mark(layerMat)
                     materialName = rMat.GetMaterialNameById(doc, csLayer.MaterialId)
                     layerFunction = str(csLayer.Function)
                     layerWidth = str(util.ConvertImperialToMetricMM(csLayer.Width)) # conversion from imperial to metric

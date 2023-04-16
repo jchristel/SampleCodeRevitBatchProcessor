@@ -39,7 +39,7 @@ from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATE
 from duHast.APISamples.Family import RevitFamilyElementUtils as rFamElementUtils
 
 
-def sort_elements_by_category(elements, elementDic):
+def sort_elements_by_category(elements, element_dic):
     '''
     Returns a dictionary of element ids where key is the category they belong to.
     :param elements:  List of revit elements.
@@ -51,41 +51,41 @@ def sort_elements_by_category(elements, elementDic):
     '''
 
     for el in elements:
-        for builtinDef in ELEMENTS_PARAS_SUB:
-            value = rParaGet.get_built_in_parameter_value(el, builtinDef, rParaGet.get_parameter_value_as_element_id)
+        for builtin_def in ELEMENTS_PARAS_SUB:
+            value = rParaGet.get_built_in_parameter_value(el, builtin_def, rParaGet.get_parameter_value_as_element_id)
             if (value != None):
-                if(value in elementDic):
-                    elementDic[value].append(el.Id)
+                if(value in element_dic):
+                    element_dic[value].append(el.Id)
                 else:
-                    elementDic[value] = [el.Id]
+                    element_dic[value] = [el.Id]
                 break
-    return elementDic
+    return element_dic
 
 
-def sort_geometry_elements_by_category(elements, elementDic, doc):
+def sort_geometry_elements_by_category(elements, element_dic, doc):
     counter = 0
     for el in elements:
         counter = counter + 1
-        graphicStyleId = rdb.ElementId.InvalidElementId
+        graphic_style_id = rdb.ElementId.InvalidElementId
         if(type(el) is rdb.Solid):
             # get graphic style id from edges
-            edgeArray = el.Edges
-            if(edgeArray.IsEmpty == False):
-                for edge in edgeArray:
-                    graphicStyleId = edge.GraphicsStyleId
+            edge_array = el.Edges
+            if(edge_array.IsEmpty == False):
+                for edge in edge_array:
+                    graphic_style_id = edge.GraphicsStyleId
         else:
-            graphicStyleId = el.GraphicsStyleId
+            graphic_style_id = el.GraphicsStyleId
         # failed to get an id?
-        if(graphicStyleId != rdb.ElementId.InvalidElementId):
-            graphicStyle = doc.GetElement(graphicStyleId)
-            graphCatId = graphicStyle.GraphicsStyleCategory.Id
+        if(graphic_style_id != rdb.ElementId.InvalidElementId):
+            graphic_style = doc.GetElement(graphic_style_id)
+            graph_cat_id = graphic_style.GraphicsStyleCategory.Id
             # geometry elements have no Id property ... Doh!! pass in invalid element id...
-            if (graphCatId != None):
-                if(graphCatId in elementDic):
-                    elementDic[graphCatId].append(rdb.ElementId.InvalidElementId)
+            if (graph_cat_id != None):
+                if(graph_cat_id in element_dic):
+                    element_dic[graph_cat_id].append(rdb.ElementId.InvalidElementId)
                 else:
-                    elementDic[graphCatId] = [rdb.ElementId.InvalidElementId]
-    return elementDic
+                    element_dic[graph_cat_id] = [rdb.ElementId.InvalidElementId]
+    return element_dic
 
 
 def _sort_all_elements_by_category(doc):
@@ -99,19 +99,19 @@ def _sort_all_elements_by_category(doc):
 
     # get all elements in family
     dic = {}
-    elCurve = rFamElementUtils.GetAllCurveBasedElementsInFamily(doc)
-    elForms = rFamElementUtils.GetAllGenericFormsInFamily(doc)
-    elMText = rFamElementUtils.GetAllModelTextElementsInFamily(doc)
-    elRefPlanes = rFamElementUtils.GetAllReferencePlanesInFamily(doc)
+    el_curve = rFamElementUtils.GetAllCurveBasedElementsInFamily(doc)
+    el_forms = rFamElementUtils.GetAllGenericFormsInFamily(doc)
+    el_m_text = rFamElementUtils.GetAllModelTextElementsInFamily(doc)
+    el_ref_planes = rFamElementUtils.GetAllReferencePlanesInFamily(doc)
     # get import Instance elements
-    elImport = rCadLinkGeo.GetAllCADImportInstancesGeometry(doc)
+    el_import = rCadLinkGeo.GetAllCADImportInstancesGeometry(doc)
     # build dictionary where key is category or graphic style id of  a category
-    dic = sort_elements_by_category(elCurve, dic)
-    dic = sort_elements_by_category(elForms, dic)
-    dic = sort_elements_by_category(elMText, dic)
-    dic = sort_elements_by_category(elRefPlanes, dic)
+    dic = sort_elements_by_category(el_curve, dic)
+    dic = sort_elements_by_category(el_forms, dic)
+    dic = sort_elements_by_category(el_m_text, dic)
+    dic = sort_elements_by_category(el_ref_planes, dic)
     # geometry instances use a property rather then a parameter to store the category style Id
-    dic = sort_geometry_elements_by_category(elImport, dic, doc)
+    dic = sort_geometry_elements_by_category(el_import, dic, doc)
     return dic
 
 
@@ -129,25 +129,25 @@ def get_elements_by_category(doc, cat):
     # get all elements in family
     dic = _sort_all_elements_by_category(doc)
     # get id and graphic style id of category to be filtered by
-    categoryIds = get_category_graphic_style_ids(cat)
+    category_ids = get_category_graphic_style_ids(cat)
     # check whether category past in is same as owner family category
     if(doc.OwnerFamily.FamilyCategory.Name == cat.Name):
         # 3d elements within family which have subcategory set to 'none' belong to owner family
         # category. Revit uses a None value as id rather then the actual category id
         # my get parameter value translates that into -1 (invalid element id)
-        categoryIds[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
-    dicFiltered = {}
+        category_ids[CATEGORY_GRAPHIC_STYLE_3D] = rdb.ElementId.InvalidElementId
+    dic_filtered = {}
     # filter elements by category ids
-    for key,value in categoryIds.items():
+    for key,value in category_ids.items():
         #print (key + ' ' + str(value))
         if value in dic:
-            dicFiltered[key] = dic[value]
+            dic_filtered[key] = dic[value]
         else:
-            dicFiltered[key] = []
-    return dicFiltered
+            dic_filtered[key] = []
+    return dic_filtered
 
 
-def move_elements_to_category(doc, elements, toCategoryName, destinationCatIds):
+def move_elements_to_category(doc, elements, to_category_name, destination_cat_ids):
     '''
     Moves elements provided in dictionary to another category specified by name.
     :param doc: Current Revit family document.
@@ -170,35 +170,35 @@ def move_elements_to_category(doc, elements, toCategoryName, destinationCatIds):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # check whether destination category exist in file
     cats = get_main_sub_categories(doc)
-    if(toCategoryName in cats):
+    if(to_category_name in cats):
         for key,value in elements.items():
                 # anything needing moving?
                 if(len(value)>0):
-                    for elId in value:
-                        el = doc.GetElement(elId)
+                    for el_id in value:
+                        el = doc.GetElement(el_id)
                         paras = el.GetOrderedParameters()
                         # find the parameter driving the subcategory
                         for p in paras:
                             if (p.Definition.BuiltInParameter in ELEMENTS_PARAS_SUB):
                                 # get the subcategory style id
-                                targetId = destinationCatIds[key]
+                                target_id = destination_cat_ids[key]
                                 # check if a 'cut' style id exists...if not move to 'projection' instead
                                 # not sure how this works in none - english versions of Revit...
-                                if(key == 'Cut' and targetId == rdb.ElementId.InvalidElementId):
-                                    targetId = destinationCatIds['Projection']
-                                    returnValue.AppendMessage('No cut style present in family, using projection style instead')
-                                updatedPara = rParaSet.set_parameter_value(p, str(targetId), doc)
-                                returnValue.Update(updatedPara)
+                                if(key == 'Cut' and target_id == rdb.ElementId.InvalidElementId):
+                                    target_id = destination_cat_ids['Projection']
+                                    return_value.AppendMessage('No cut style present in family, using projection style instead')
+                                updated_para = rParaSet.set_parameter_value(p, str(target_id), doc)
+                                return_value.Update(updated_para)
                                 break
     else:
-        returnValue.UpdateSep(False, 'Destination category: '+ str(toCategoryName) + ' does not exist in file!')
-    return returnValue
+        return_value.UpdateSep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
+    return return_value
 
 
-def move_elements_from_sub_category_to_sub_category(doc, fromCategoryName, toCategoryName):
+def move_elements_from_sub_category_to_sub_category(doc, from_category_name, to_category_name):
     '''
     Moves elements from one subcategory to another one identified by their names.
     :param doc: Current Revit family document.
@@ -219,22 +219,22 @@ def move_elements_from_sub_category_to_sub_category(doc, fromCategoryName, toCat
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # check whether source and destination category exist in file
     cats = get_main_sub_categories(doc)
-    if(fromCategoryName in cats):
-        if(toCategoryName in cats):
+    if(from_category_name in cats):
+        if(to_category_name in cats):
             # dictionary containing destination category ids (3D, cut and projection)
-            destinationCatIds = get_category_graphic_style_ids(cats[toCategoryName])
+            destination_cat_ids = get_category_graphic_style_ids(cats[to_category_name])
             # get elements on source category
-            dic = get_elements_by_category(doc, cats[fromCategoryName])
+            dic = get_elements_by_category(doc, cats[from_category_name])
             # move elements
-            returnValue = move_elements_to_category(doc, dic, toCategoryName, destinationCatIds)
+            return_value = move_elements_to_category(doc, dic, to_category_name, destination_cat_ids)
         else:
-            returnValue.UpdateSep(False, 'Destination category: '+ str(toCategoryName) + ' does not exist in file!')
+            return_value.UpdateSep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
     else:
-       returnValue.UpdateSep(False, 'Source category: '+ str(fromCategoryName) + ' does not exist in file!')
-    return returnValue
+       return_value.UpdateSep(False, 'Source category: '+ str(from_category_name) + ' does not exist in file!')
+    return return_value
 
 
 def get_used_category_ids(doc):

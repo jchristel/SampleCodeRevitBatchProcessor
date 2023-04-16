@@ -35,7 +35,7 @@ from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import PROP
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_saved_category_property_by_name
 
 
-def set_category_material(doc, cat, materialId):
+def set_category_material(doc, cat, material_id):
     '''
     Updates material property of a given category.
     :param doc: Current Revit family document.
@@ -50,24 +50,24 @@ def set_category_material(doc, cat, materialId):
 
     flag = True
     try:
-        mat = doc.GetElement(materialId)
+        mat = doc.GetElement(material_id)
         def action():
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             try:
                 cat.Material = mat
-                actionReturnValue.UpdateSep(True, 'Successfully set material value of subcategory')
+                action_return_value.UpdateSep(True, 'Successfully set material value of subcategory')
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
-            return actionReturnValue
+                action_return_value.UpdateSep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
+            return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory material: ' + str(rdb.Element.Name.GetValue(mat)))
-        updateMat = rTran.in_transaction(transaction, action)
-        flag = updateMat.status
+        update_mat = rTran.in_transaction(transaction, action)
+        flag = update_mat.status
     except Exception as e:
         flag = False
     return flag
 
 
-def set_category_line_pattern(doc, cat, linePatternId, ignoreMissingCutStyle):
+def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_style):
     '''
     Updates line pattern property of a given category.
     Note: in cases where the 'cut' property does not exist on a sub category this will return false even though the 'projection' property will most
@@ -87,30 +87,30 @@ def set_category_line_pattern(doc, cat, linePatternId, ignoreMissingCutStyle):
     flag = True
     try:
         def action():
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             try:
-                cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Cut)
-                actionReturnValue.UpdateSep(True, 'Successfully set cut line pattern of subcategory')
+                cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Cut)
+                action_return_value.UpdateSep(True, 'Successfully set cut line pattern of subcategory')
             except Exception as e:
-                if(ignoreMissingCutStyle):
-                    actionReturnValue.UpdateSep(True, 'Failed to set cut line pattern of subcategory with exception: {}. Exception ignored!'.format(e))
+                if(ignore_missing_cut_style):
+                    action_return_value.UpdateSep(True, 'Failed to set cut line pattern of subcategory with exception: {}. Exception ignored!'.format(e))
                 else:
-                    actionReturnValue.UpdateSep(False, 'Failed to set cut line pattern of subcategory with exception: {}'.format(e))
+                    action_return_value.UpdateSep(False, 'Failed to set cut line pattern of subcategory with exception: {}'.format(e))
             try:
-                cat.SetLinePatternId(linePatternId, rdb.GraphicsStyleType.Projection)
-                actionReturnValue.UpdateSep(True, 'Successfully set projection line pattern of subcategory')
+                cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Projection)
+                action_return_value.UpdateSep(True, 'Successfully set projection line pattern of subcategory')
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
-            return actionReturnValue
+                action_return_value.UpdateSep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
+            return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory line pattern')
-        updateLinePattern = rTran.in_transaction(transaction, action)
-        flag = updateLinePattern.status
+        update_line_pattern = rTran.in_transaction(transaction, action)
+        flag = update_line_pattern.status
     except Exception as e:
         flag = False
     return flag
 
 
-def set_category_line_weights(doc, cat, lineThickNessCut, lineThicknessProjection, ignoreMissingCutStyle):
+def set_category_line_weights(doc, cat, line_thick_ness_cut, line_thickness_projection, ignore_missing_cut_style):
     '''
     Updates line weight properties of a given category.
     :param doc: Current Revit family document.
@@ -130,24 +130,24 @@ def set_category_line_weights(doc, cat, lineThickNessCut, lineThicknessProjectio
     flag = True
     try:
         def action():
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             try:
-                cat.SetLineWeight(lineThickNessCut, rdb.GraphicsStyleType.Cut)
-                actionReturnValue.UpdateSep(True, 'Successfully set cut line weight of subcategory')
+                cat.SetLineWeight(line_thick_ness_cut, rdb.GraphicsStyleType.Cut)
+                action_return_value.UpdateSep(True, 'Successfully set cut line weight of subcategory')
             except Exception as e:
-                if(ignoreMissingCutStyle):
-                    actionReturnValue.UpdateSep(True, 'Failed to set cut line weight of subcategory with exception: {}. Exception ignored!'.format(e))
+                if(ignore_missing_cut_style):
+                    action_return_value.UpdateSep(True, 'Failed to set cut line weight of subcategory with exception: {}. Exception ignored!'.format(e))
                 else:
-                    actionReturnValue.UpdateSep(False, 'Failed to set cut line weight of subcategory with exception: {}'.format(e))
+                    action_return_value.UpdateSep(False, 'Failed to set cut line weight of subcategory with exception: {}'.format(e))
             try:
-                cat.SetLineWeight(lineThicknessProjection, rdb.GraphicsStyleType.Projection)
-                actionReturnValue.UpdateSep(True, 'Successfully set projection line weight of subcategory')
+                cat.SetLineWeight(line_thickness_projection, rdb.GraphicsStyleType.Projection)
+                action_return_value.UpdateSep(True, 'Successfully set projection line weight of subcategory')
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
-            return actionReturnValue
+                action_return_value.UpdateSep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
+            return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory line weights')
-        updateLineWeights = rTran.in_transaction(transaction, action)
-        flag = updateLineWeights.status
+        update_line_weights = rTran.in_transaction(transaction, action)
+        flag = update_line_weights.status
     except Exception as e:
         flag = False
     return flag
@@ -173,23 +173,23 @@ def set_category_colour(doc, cat, red, green, blue):
     flag = True
     try:
         def action():
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             try:
-                newColour = rdb.Color(red, green, blue)
-                cat.LineColor = newColour
-                actionReturnValue.UpdateSep(True, 'Successfully set colour value of subcategory')
+                new_colour = rdb.Color(red, green, blue)
+                cat.LineColor = new_colour
+                action_return_value.UpdateSep(True, 'Successfully set colour value of subcategory')
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
-            return actionReturnValue
+                action_return_value.UpdateSep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
+            return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory colour')
-        updateColour = rTran.in_transaction(transaction, action)
-        flag = updateColour.status
+        update_colour = rTran.in_transaction(transaction, action)
+        flag = update_colour.status
     except Exception as e:
         flag = False
     return flag
 
 
-def set_category_properties(doc, cat, properties, ignoreMissingCutStyle):
+def set_category_properties(doc, cat, properties, ignore_missing_cut_style):
     '''
     Updates varies property values of a given category.
     :param doc: Current Revit family document.
@@ -205,19 +205,19 @@ def set_category_properties(doc, cat, properties, ignoreMissingCutStyle):
     '''
 
     # material
-    matId = get_saved_category_property_by_name(properties, [PROPERTY_MATERIAL_ID])
-    flagMat = set_category_material(doc, cat, matId[0])
+    mat_id = get_saved_category_property_by_name(properties, [PROPERTY_MATERIAL_ID])
+    flag_mat = set_category_material(doc, cat, mat_id[0])
 
     # line pattern
-    linePatternId = get_saved_category_property_by_name(properties, [rPat.PROPERTY_PATTERN_ID])
-    flagPattern = set_category_line_pattern(doc, cat, linePatternId[0], ignoreMissingCutStyle)
+    line_pattern_id = get_saved_category_property_by_name(properties, [rPat.PROPERTY_PATTERN_ID])
+    flag_pattern = set_category_line_pattern(doc, cat, line_pattern_id[0], ignore_missing_cut_style)
 
     # line weights
-    lineWeights = get_saved_category_property_by_name(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
-    flagLineWeights = set_category_line_weights(doc, cat, lineWeights[0], lineWeights[1], ignoreMissingCutStyle)
+    line_weights = get_saved_category_property_by_name(properties, [PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME])
+    flag_line_weights = set_category_line_weights(doc, cat, line_weights[0], line_weights[1], ignore_missing_cut_style)
 
     # category colour
-    colourRGB = get_saved_category_property_by_name(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
-    flagColours = set_category_colour(doc, cat, colourRGB[0], colourRGB[1], colourRGB[2])
+    colour_rgb = get_saved_category_property_by_name(properties, [PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_BLUE_NAME])
+    flag_colours = set_category_colour(doc, cat, colour_rgb[0], colour_rgb[1], colour_rgb[2])
 
-    return flagMat & flagPattern & flagLineWeights & flagColours
+    return flag_mat & flag_pattern & flag_line_weights & flag_colours

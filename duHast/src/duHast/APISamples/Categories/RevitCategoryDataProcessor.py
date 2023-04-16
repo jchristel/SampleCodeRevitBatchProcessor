@@ -34,14 +34,14 @@ from duHast.APISamples.Categories.Utility import RevitCategoryPropertyNames as r
 
 class CategoryProcessor(IFamilyProcessor):
 
-    def __init__(self, preActions = None, postActions = None):
+    def __init__(self, pre_actions = None, post_actions = None):
         '''
         Class constructor.
         '''
 
         # setup report header
-        keyPrefix = rCatData.GRAPHIC_PROPERTY_KEY_PREFIX + rCatData.GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
-        stringReportHeaders = [
+        key_prefix = rCatData.GRAPHIC_PROPERTY_KEY_PREFIX + rCatData.GRAPHIC_PROPERTY_KEY_PREFIX_DELIMITER
+        string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -51,31 +51,31 @@ class CategoryProcessor(IFamilyProcessor):
             rCatData.CATEGORY_NAME,
             rCatData.SUB_CATEGORY_NAME,
             rCatData.SUB_CATEGORY_ID,
-            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D,
-            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT,
-            keyPrefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION,
-            keyPrefix + rCatPropNames.PROPERTY_MATERIAL_NAME,
-            keyPrefix + rCatPropNames.PROPERTY_MATERIAL_ID,
-            keyPrefix + rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME,
-            keyPrefix + rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
-            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME,
-            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME,
-            keyPrefix + rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME
+            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_3D,
+            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_CUT,
+            key_prefix + rCatPropNames.CATEGORY_GRAPHIC_STYLE_PROJECTION,
+            key_prefix + rCatPropNames.PROPERTY_MATERIAL_NAME,
+            key_prefix + rCatPropNames.PROPERTY_MATERIAL_ID,
+            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_CUT_NAME,
+            key_prefix + rCatPropNames.PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
+            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_RED_NAME,
+            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_GREEN_NAME,
+            key_prefix + rCatPropNames.PROPERTY_LINE_COLOUR_BLUE_NAME
         ]
 
         # store data type  in base class
         super(CategoryProcessor, self).__init__(
-            preActions=preActions, 
-            postActions=[self._post_action_update_used_subcategories], 
-            dataType='Category', 
-            stringReportHeaders=stringReportHeaders
+            pre_actions=pre_actions, 
+            post_actions=[self._post_action_update_used_subcategories], 
+            data_type='Category', 
+            string_report_headers=string_report_headers
         )
 
         #self.data = []
         #self.dataType = 'Category'
 
         # list of corner cases when it comes to category checking: imports in families or Reference planes ... ( english language specific!! )
-        self.CategoryCheckCornerCases = [
+        self.category_check_corner_cases = [
             'Imports in Families',
             'Reference Planes'
         ]
@@ -85,11 +85,11 @@ class CategoryProcessor(IFamilyProcessor):
         # families
         #self.postActions = [self._postActionUpdateUsedSubcategories]
         # add any other post actions
-        if (postActions != None):
-            for pAction in postActions:
-                self.postActions.append(pAction)
+        if (post_actions != None):
+            for p_action in post_actions:
+                self.postActions.append(p_action)
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
@@ -103,89 +103,89 @@ class CategoryProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
 
-        dummy = rCatData.CategoryData(rootPath, rootCategoryPath, self.dataType)
+        dummy = rCatData.CategoryData(root_path, root_category_path, self.dataType)
         dummy.process(doc)
         self.data.append(dummy)
     
     # --------------------------------------------- post action ----------------------------------------------------------
 
-    def _add_Data(self, processor, root, rootCategoryPath, famName, famPath, useCounter, usedBy, famCatName, subCatName, subCatId, catGraStyleThreeD,
-        catGraStyleCut, catGraStylePro, propMatName, propMatId, propLineWeightCutName, propLineWeightProjectionName, propLineColRed, propLineColGreen, propLineColBlue):
+    def _add__data(self, processor, root, root_category_path, fam_name, fam_path, use_counter, used_by, fam_cat_name, sub_cat_name, sub_cat_id, cat_gra_style_three_d,
+        cat_gra_style_cut, cat_gra_style_pro, prop_mat_name, prop_mat_id, prop_line_weight_cut_name, prop_line_weight_projection_name, prop_line_col_red, prop_line_col_green, prop_line_col_blue):
         
         processor.add_Data(
             root,
-            rootCategoryPath, 
-            famName, 
-            famPath, 
-            useCounter, 
-            usedBy, 
-            famCatName, 
-            subCatName, 
-            subCatId,
-            catGraStyleThreeD,
-            catGraStyleCut,
-            catGraStylePro,
-            propMatName,
-            propMatId,
-            propLineWeightCutName,
-            propLineWeightProjectionName,
-            propLineColRed,
-            propLineColGreen,
-            propLineColBlue)
+            root_category_path, 
+            fam_name, 
+            fam_path, 
+            use_counter, 
+            used_by, 
+            fam_cat_name, 
+            sub_cat_name, 
+            sub_cat_id,
+            cat_gra_style_three_d,
+            cat_gra_style_cut,
+            cat_gra_style_pro,
+            prop_mat_name,
+            prop_mat_id,
+            prop_line_weight_cut_name,
+            prop_line_weight_projection_name,
+            prop_line_col_red,
+            prop_line_col_green,
+            prop_line_col_blue)
         
 
-    def _is_sub_category_present(self,rootFamilyData, nestedFamilySubCategory):
+    def _is_sub_category_present(self,root_family_data, nested_family_sub_category):
         match = None
         # check whether sub category is present
-        for rootFam in rootFamilyData:
-            if (rootFam[rCatData.CATEGORY_NAME] == nestedFamilySubCategory[rCatData.CATEGORY_NAME] and rootFam[rCatData.SUB_CATEGORY_NAME] == nestedFamilySubCategory[rCatData.SUB_CATEGORY_NAME]):
-                match = rootFam
+        for root_fam in root_family_data:
+            if (root_fam[rCatData.CATEGORY_NAME] == nested_family_sub_category[rCatData.CATEGORY_NAME] and root_fam[rCatData.SUB_CATEGORY_NAME] == nested_family_sub_category[rCatData.SUB_CATEGORY_NAME]):
+                match = root_fam
                 break
         return match
 
-    def _update_root_family_data(self, rootFamilyData, nestedFamiliesSubCategories):
+    def _update_root_family_data(self, root_family_data, nested_families_sub_categories):
         # loop over nested family subcategory data
-        for nestedSubCategory in nestedFamiliesSubCategories:
+        for nested_sub_category in nested_families_sub_categories:
             # check if sub category is already in root family
-            matchingRootFamCategory = self._is_sub_category_present(rootFamilyData, nestedSubCategory)
-            if(matchingRootFamCategory != None):
+            matching_root_fam_category = self._is_sub_category_present(root_family_data, nested_sub_category)
+            if(matching_root_fam_category != None):
                 # update used by list
-                if(nestedSubCategory[IFamData.FAMILY_NAME] not in matchingRootFamCategory[IFamData.USED_BY]):
+                if(nested_sub_category[IFamData.FAMILY_NAME] not in matching_root_fam_category[IFamData.USED_BY]):
                     # add the root path to the used by list for ease of identification of the origin of this subcategory usage
-                    matchingRootFamCategory[IFamData.USED_BY].append(nestedSubCategory[IFamData.ROOT])
+                    matching_root_fam_category[IFamData.USED_BY].append(nested_sub_category[IFamData.ROOT])
                     # update used by counter
-                    matchingRootFamCategory[IFamData.USAGE_COUNTER] = matchingRootFamCategory[IFamData.USAGE_COUNTER] + 1
+                    matching_root_fam_category[IFamData.USAGE_COUNTER] = matching_root_fam_category[IFamData.USAGE_COUNTER] + 1
             else:
                 pass
                 # nothing to do if that category has not been reported to start off with 
                 # this category could, for example, belong to the section marker family present in most 3d families
 
     def _get_used_subcategories(self, data):
-        usedSubcategories = []
+        used_subcategories = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
                 # get the family category
-                categoryPath = d[IFamData.ROOT_CATEGORY].split(' :: ')
+                category_path = d[IFamData.ROOT_CATEGORY].split(' :: ')
                 # which is the last entry in the root category path
-                category = categoryPath[len(categoryPath)-1]
+                category = category_path[len(category_path)-1]
                 # select only items which either belong to the category of the family or 
                 # are corner cases like imports in families or Reference planes ... ( english language specific!! )
-                if (category == d[rCatData.CATEGORY_NAME] or d[rCatData.CATEGORY_NAME] in self.CategoryCheckCornerCases):
-                    usedSubcategories.append(d)
-        return usedSubcategories
+                if (category == d[rCatData.CATEGORY_NAME] or d[rCatData.CATEGORY_NAME] in self.category_check_corner_cases):
+                    used_subcategories.append(d)
+        return used_subcategories
 
     def _post_action_update_used_subcategories(self, doc):
-        returnValue = res.Result()
+        return_value = res.Result()
         try:
             # find all subcategories of nested families
-            nestedFamilyData = self._find_nested_families_data()
+            nested_family_data = self._find_nested_families_data()
             # get used sub categories from nested data
-            nestedFamilyUsedSubCategories = self._get_used_subcategories(nestedFamilyData)
+            nested_family_used_sub_categories = self._get_used_subcategories(nested_family_data)
             # update root family data only
-            rootFamilyData = self._find_root_family_data()
+            root_family_data = self._find_root_family_data()
             # update root processor data as required
-            self._update_root_family_data(rootFamilyData, nestedFamilyUsedSubCategories)
-            returnValue.UpdateSep(True, 'Post Action Update subcategories data successful completed.')
+            self._update_root_family_data(root_family_data, nested_family_used_sub_categories)
+            return_value.UpdateSep(True, 'Post Action Update subcategories data successful completed.')
         except Exception as e:
-            returnValue.UpdateSep(False, 'Post Action Update subcategories data failed with exception: ' + str(e))
-        return returnValue
+            return_value.UpdateSep(False, 'Post Action Update subcategories data failed with exception: ' + str(e))
+        return return_value

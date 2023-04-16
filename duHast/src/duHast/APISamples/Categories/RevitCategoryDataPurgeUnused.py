@@ -65,21 +65,21 @@ def purge_unused_sub_categories(doc, processor):
     # from processor instance get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     # delete those subcategories by id
 
-    returnValue = res.Result()
+    return_value = res.Result()
 
-    idsToDelete = []
+    ids_to_delete = []
     # get categories found in root processor data only
-    rootFamData = processor._findRootFamilyData()
+    root_fam_data = processor._findRootFamilyData()
     # get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
-    for rootFam in rootFamData:
-        if (rootFam[IFamData.USAGE_COUNTER] == 0 and rootFam[rCatData.SUB_CATEGORY_ID] > 0):
-            returnValue.AppendMessage('Found unused sub category: ' + rootFam[rCatData.CATEGORY_NAME] + ':' + rootFam[rCatData.SUB_CATEGORY_NAME] +' ['+str(rootFam[rCatData.SUB_CATEGORY_ID])+']')
-            idsToDelete.append(rdb.ElementId(rootFam[rCatData.SUB_CATEGORY_ID]))
+    for root_fam in root_fam_data:
+        if (root_fam[IFamData.USAGE_COUNTER] == 0 and root_fam[rCatData.SUB_CATEGORY_ID] > 0):
+            return_value.AppendMessage('Found unused sub category: ' + root_fam[rCatData.CATEGORY_NAME] + ':' + root_fam[rCatData.SUB_CATEGORY_NAME] +' ['+str(root_fam[rCatData.SUB_CATEGORY_ID])+']')
+            ids_to_delete.append(rdb.ElementId(root_fam[rCatData.SUB_CATEGORY_ID]))
     # delete any subcategories found
-    if(len(idsToDelete) > 0):
-        resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused sub categories.', 'Subcategories')
-        returnValue.Update(resultDelete)
+    if(len(ids_to_delete) > 0):
+        result_delete = rDel.delete_by_element_ids(doc, ids_to_delete, 'Deleting unused sub categories.', 'Subcategories')
+        return_value.Update(result_delete)
     else:
-        returnValue.UpdateSep(True, 'No unused categories found. Nothing was deleted.')
-    return returnValue
+        return_value.UpdateSep(True, 'No unused categories found. Nothing was deleted.')
+    return return_value
     

@@ -41,18 +41,18 @@ def get_category_graphic_style_ids(cat):
     :rtype: dictionary {str: Autodesk.Revit.DB.ElementId}
     '''
 
-    iDGraphicStyleProjection = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Projection).Id
+    i_d_graphic_style_projection = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Projection).Id
 
     # check if this category has a cut style ( some families always appear in elevation only!)
-    graphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut)
+    graphic_style_cut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut)
     # set as default invalid element id
-    iDGraphicStyleCut = rdb.ElementId.InvalidElementId
-    if(graphicStyleCut != None):
-        iDGraphicStyleCut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
+    i_d_graphic_style_cut = rdb.ElementId.InvalidElementId
+    if(graphic_style_cut != None):
+        i_d_graphic_style_cut = cat.GetGraphicsStyle(rdb.GraphicsStyleType.Cut).Id
     # build category dictionary where key is the style type, values is the corresponding Id
     dic = {}
-    dic[CATEGORY_GRAPHIC_STYLE_PROJECTION] = iDGraphicStyleProjection
-    dic[CATEGORY_GRAPHIC_STYLE_CUT] = iDGraphicStyleCut
+    dic[CATEGORY_GRAPHIC_STYLE_PROJECTION] = i_d_graphic_style_projection
+    dic[CATEGORY_GRAPHIC_STYLE_CUT] = i_d_graphic_style_cut
     dic[CATEGORY_GRAPHIC_STYLE_3D] = cat.Id
     return dic
 
@@ -68,14 +68,14 @@ def get_category_material(cat):
         If no material is assigned to a category it will return {'None: Autodesk.Revit.DB.ElementId.InvalidElementId}
     '''
 
-    dicMaterial = {}
-    dicMaterial[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
-    dicMaterial[PROPERTY_MATERIAL_ID] = rdb.ElementId.InvalidElementId
+    dic_material = {}
+    dic_material[PROPERTY_MATERIAL_NAME] = PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
+    dic_material[PROPERTY_MATERIAL_ID] = rdb.ElementId.InvalidElementId
     material = cat.Material
     if(material != None):
-        dicMaterial[PROPERTY_MATERIAL_NAME] = rdb.Element.Name.GetValue(material)
-        dicMaterial[PROPERTY_MATERIAL_ID] = material.Id
-    return dicMaterial
+        dic_material[PROPERTY_MATERIAL_NAME] = rdb.Element.Name.GetValue(material)
+        dic_material[PROPERTY_MATERIAL_ID] = material.Id
+    return dic_material
 
 
 def get_category_line_weights(cat):
@@ -88,10 +88,10 @@ def get_category_line_weights(cat):
     :rtype: dictionary {str: nullable integer}
     '''
 
-    dicLineWeights = {}
-    dicLineWeights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
-    dicLineWeights[PROPERTY_LINE_WEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
-    return dicLineWeights
+    dic_line_weights = {}
+    dic_line_weights[PROPERTY_LINE_WEIGHT_PROJECTION_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Projection)
+    dic_line_weights[PROPERTY_LINE_WEIGHT_CUT_NAME] = cat.GetLineWeight(rdb.GraphicsStyleType.Cut)
+    return dic_line_weights
 
 
 def get_category_colour(cat):
@@ -104,15 +104,15 @@ def get_category_colour(cat):
     :rtype: dictionary {str: byte}
     '''
 
-    dicColour = {}
-    dicColour[PROPERTY_LINE_COLOUR_RED_NAME] = 0
-    dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME] = 0
-    dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME] = 0
+    dic_colour = {}
+    dic_colour[PROPERTY_LINE_COLOUR_RED_NAME] = 0
+    dic_colour[PROPERTY_LINE_COLOUR_GREEN_NAME] = 0
+    dic_colour[PROPERTY_LINE_COLOUR_BLUE_NAME] = 0
     if (cat.LineColor.IsValid):
-        dicColour[PROPERTY_LINE_COLOUR_RED_NAME] = cat.LineColor.Red
-        dicColour[PROPERTY_LINE_COLOUR_GREEN_NAME] = cat.LineColor.Green
-        dicColour[PROPERTY_LINE_COLOUR_BLUE_NAME] = cat.LineColor.Blue
-    return dicColour
+        dic_colour[PROPERTY_LINE_COLOUR_RED_NAME] = cat.LineColor.Red
+        dic_colour[PROPERTY_LINE_COLOUR_GREEN_NAME] = cat.LineColor.Green
+        dic_colour[PROPERTY_LINE_COLOUR_BLUE_NAME] = cat.LineColor.Blue
+    return dic_colour
 
 
 def get_category_properties(cat, doc):
@@ -129,24 +129,24 @@ def get_category_properties(cat, doc):
     properties = []
 
     # material
-    dicMaterial = get_category_material(cat)
-    properties.append(dicMaterial)
+    dic_material = get_category_material(cat)
+    properties.append(dic_material)
 
     # line pattern
-    dicPattern = rPat.GetLinePatternFromCategory(cat, doc)
-    properties.append(dicPattern)
+    dic_pattern = rPat.GetLinePatternFromCategory(cat, doc)
+    properties.append(dic_pattern)
 
     # line weights
-    dicLineWeights = get_category_line_weights(cat)
-    properties.append(dicLineWeights)
+    dic_line_weights = get_category_line_weights(cat)
+    properties.append(dic_line_weights)
 
     # category colour
-    dicColour = get_category_colour(cat)
-    properties.append(dicColour)
+    dic_colour = get_category_colour(cat)
+    properties.append(dic_colour)
     return properties
 
 
-def get_saved_category_property_by_name(properties, propNames):
+def get_saved_category_property_by_name(properties, prop_names):
     '''
     Returns property values matching property names in saved category data.
     :param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.
@@ -157,13 +157,13 @@ def get_saved_category_property_by_name(properties, propNames):
     :rtype: list var
     '''
 
-    propValues = []
-    for propName in propNames:
+    prop_values = []
+    for prop_name in prop_names:
         match = False
-        for savedProp in properties:
-            if (propName in savedProp):
-                propValues.append(savedProp[propName])
+        for saved_prop in properties:
+            if (prop_name in saved_prop):
+                prop_values.append(saved_prop[prop_name])
                 match = True
         if(match == False):
-            propValues.append(None)
-    return propValues
+            prop_values.append(None)
+    return prop_values

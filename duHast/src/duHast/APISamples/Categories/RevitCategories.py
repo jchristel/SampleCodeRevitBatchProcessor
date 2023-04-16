@@ -67,20 +67,20 @@ def get_main_sub_categories(doc):
     :rtype: dictionary {str: Autodesk.Revit.DB.Category}
     '''
 
-    catData = {}
+    cat_data = {}
     # get the family category
-    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    family_category_name = doc.OwnerFamily.FamilyCategory.Name
     # get all subcategories in Document
-    for mainCat in doc.Settings.Categories:
+    for main_cat in doc.Settings.Categories:
         # find the category matching this docs category
         # to ensure default subcategories with an id less then 0 are also extracted
-        if (mainCat.Name == familyCategoryName):
+        if (main_cat.Name == family_category_name):
             # loop over all sub categories
-            for subCat in mainCat.SubCategories:
-                catData[subCat.Name] = subCat
-    return catData
+            for sub_cat in main_cat.SubCategories:
+                cat_data[sub_cat.Name] = sub_cat
+    return cat_data
 
-def does_main_sub_category_exists(doc, subCatName):
+def does_main_sub_category_exists(doc, sub_cat_name):
     '''
     Checks whether a given subcategory exists in the family.
 
@@ -96,13 +96,13 @@ def does_main_sub_category_exists(doc, subCatName):
     '''
 
     # get all sub categories belonging to family category
-    subCats = get_main_sub_categories(doc)
-    if(subCatName in subCats):
+    sub_cats = get_main_sub_categories(doc)
+    if(sub_cat_name in sub_cats):
         return True
     else:
         return False
 
-def delete_main_sub_category(doc, subCatName):
+def delete_main_sub_category(doc, sub_cat_name):
     '''
     Deletes a given subcategory from the family.
 
@@ -118,16 +118,16 @@ def delete_main_sub_category(doc, subCatName):
     '''
 
     # get all sub categories belonging to family category
-    subCats = get_main_sub_categories(doc)
-    if(subCatName in subCats):
+    sub_cats = get_main_sub_categories(doc)
+    if(sub_cat_name in sub_cats):
         # delete subcategory
-        statusDelete = rDel.delete_by_element_ids(
+        status_delete = rDel.delete_by_element_ids(
             doc,
-            [subCats[subCatName].Id],
-            'delete subcategory: ' + subCatName,
+            [sub_cats[sub_cat_name].Id],
+            'delete subcategory: ' + sub_cat_name,
             'subcategory'
         )
-        return statusDelete.status
+        return status_delete.status
     else:
         return False
 
@@ -145,11 +145,11 @@ def get_family_category(doc):
     :rtype: dictionary {str: Autodesk.Revit.DB.Category}
     '''
 
-    catData = {}
+    cat_data = {}
     # get the family category
-    currentFamCat = doc.OwnerFamily.FamilyCategory
-    catData [currentFamCat.Name] = currentFamCat
-    return catData
+    current_fam_cat = doc.OwnerFamily.FamilyCategory
+    cat_data [current_fam_cat.Name] = current_fam_cat
+    return cat_data
 
 def get_other_sub_categories(doc):
     '''
@@ -167,21 +167,21 @@ def get_other_sub_categories(doc):
     :rtype: dictionary {str: {str:Autodesk.Revit.DB.Category} }
     '''
 
-    catData = {}
+    cat_data = {}
     # get the family category
-    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    family_category_name = doc.OwnerFamily.FamilyCategory.Name
     # get all subcategories in Document
-    for mainCat in doc.Settings.Categories:
+    for main_cat in doc.Settings.Categories:
         # find the category not matching this docs category
         # to ensure default subcategories with an id less then 0 are also extracted
-        if (mainCat.Name != familyCategoryName):
-            if (mainCat.Name not in catData):
-                catData[mainCat.Name] = {}
+        if (main_cat.Name != family_category_name):
+            if (main_cat.Name not in cat_data):
+                cat_data[main_cat.Name] = {}
             # loop over all sub categories
-            for subCat in mainCat.SubCategories:
-                catData[mainCat.Name][subCat.Name] = subCat
+            for sub_cat in main_cat.SubCategories:
+                cat_data[main_cat.Name][sub_cat.Name] = sub_cat
               
-    return catData
+    return cat_data
 
 def get_other_custom_sub_categories(doc):
     '''
@@ -200,21 +200,21 @@ def get_other_custom_sub_categories(doc):
     :rtype: dictionary {str: {str:Autodesk.Revit.DB.Category} }
     '''
 
-    catData = {}
+    cat_data = {}
     # get the family category
-    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    family_category_name = doc.OwnerFamily.FamilyCategory.Name
     # get all subcategories in Document
-    for mainCat in doc.Settings.Categories:
+    for main_cat in doc.Settings.Categories:
         # find the category not matching this docs category
         # to ensure default subcategories with an id less then 0 are also extracted
-        if (mainCat.Name != familyCategoryName):
-            if (mainCat.Name not in catData):
-                catData[mainCat.Name] = {}
+        if (main_cat.Name != family_category_name):
+            if (main_cat.Name not in cat_data):
+                cat_data[main_cat.Name] = {}
             # loop over all sub categories
-            for subCat in mainCat.SubCategories:
-                if(subCat.Id.IntegerValue > 0):
-                    catData[mainCat.Name][subCat.Name] = subCat
-    return catData
+            for sub_cat in main_cat.SubCategories:
+                if(sub_cat.Id.IntegerValue > 0):
+                    cat_data[main_cat.Name][sub_cat.Name] = sub_cat
+    return cat_data
 
 def get_other_categories(doc):
     '''
@@ -227,19 +227,19 @@ def get_other_categories(doc):
     :rtype: [Autodesk.Revit.DB.Category]
     '''
 
-    catData = []
+    cat_data = []
     # get the family category
-    familyCategoryName = doc.OwnerFamily.FamilyCategory.Name
+    family_category_name = doc.OwnerFamily.FamilyCategory.Name
     # get all subcategories in Document
-    for mainCat in doc.Settings.Categories:
+    for main_cat in doc.Settings.Categories:
         # find the category not matching this docs category
         # to ensure default subcategories with an id less then 0 are also extracted
-        if (mainCat.Name != familyCategoryName):
-            if (mainCat not in catData):
-                catData.append(mainCat)
-    return catData
+        if (main_cat.Name != family_category_name):
+            if (main_cat not in cat_data):
+                cat_data.append(main_cat)
+    return cat_data
 
-def get_category_by_built_in_def_name(doc, builtInDefs):
+def get_category_by_built_in_def_name(doc, built_in_defs):
     '''
     Returns categories by their built in definition 
 
@@ -253,15 +253,15 @@ def get_category_by_built_in_def_name(doc, builtInDefs):
     '''
 
     cats = []
-    documentSettings = doc.Settings
-    groups = documentSettings.Categories
-    for builtInDef in builtInDefs:
-        cat = groups.get_Item(builtInDef)
+    document_settings = doc.Settings
+    groups = document_settings.Categories
+    for built_in_def in built_in_defs:
+        cat = groups.get_Item(built_in_def)
         if cat!=None:
             cats.append(cat)
     return cats
    
-def set_family_category(doc, newCategoryName):
+def set_family_category(doc, new_category_name):
     '''
     Changes the family category to new one specified by name. (this will not re-instate any custom sub categories created under the new family category)
     
@@ -274,27 +274,27 @@ def set_family_category(doc, newCategoryName):
     :rtype: bool
     '''
     
-    returnValue = res.Result()
+    return_value = res.Result()
     cat = doc.OwnerFamily.FamilyCategory
-    if (cat.Name != newCategoryName):
-        if (doc.Settings.Categories.Contains(newCategoryName)):
+    if (cat.Name != new_category_name):
+        if (doc.Settings.Categories.Contains(new_category_name)):
             def action():
-                doc.OwnerFamily.FamilyCategory = doc.Settings.Categories.get_Item(newCategoryName)
-            transaction = rdb.Transaction(doc,'Changing family category to:' + str(newCategoryName))
-            changeCat = rTran.in_transaction(transaction, action)
-            if(changeCat.status):
-                returnValue.UpdateSep(True, 'Successfully changed family category to: '+str(newCategoryName))
+                doc.OwnerFamily.FamilyCategory = doc.Settings.Categories.get_Item(new_category_name)
+            transaction = rdb.Transaction(doc,'Changing family category to:' + str(new_category_name))
+            change_cat = rTran.in_transaction(transaction, action)
+            if(change_cat.status):
+                return_value.UpdateSep(True, 'Successfully changed family category to: '+str(new_category_name))
             else:
-                returnValue.Update(changeCat)
+                return_value.Update(change_cat)
         else:
-            returnValue.UpdateSep(False, 'Invalid Category name supplied: ' + str(newCategoryName))
+            return_value.UpdateSep(False, 'Invalid Category name supplied: ' + str(new_category_name))
     else:
-        returnValue.UpdateSep(False, 'Family is already of category: '+str(newCategoryName))
-    return returnValue
+        return_value.UpdateSep(False, 'Family is already of category: '+str(new_category_name))
+    return return_value
    
 # --------------------------------------- family category  --------------------------------------------------------------
 
-def change_family_category(doc, newCategoryName):
+def change_family_category(doc, new_category_name):
     '''
     Changes the current family category to the new one specified.
 
@@ -325,42 +325,42 @@ def change_family_category(doc, newCategoryName):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get sub categories in family
-    subCats = get_main_sub_categories (doc)
+    sub_cats = get_main_sub_categories (doc)
     
     # get all elements on custom subcategories
     elements = {}
-    for subCat in subCats:
-        el = get_elements_by_category(doc, subCats[subCat])
-        elements[subCat] = el
+    for sub_cat in sub_cats:
+        el = get_elements_by_category(doc, sub_cats[sub_cat])
+        elements[sub_cat] = el
     
     # get properties of all custom sub categories
     props = {}
-    for subCat in subCats:
-        prop = get_category_properties(subCats[subCat], doc)
-        props[subCat] = prop
+    for sub_cat in sub_cats:
+        prop = get_category_properties(sub_cats[sub_cat], doc)
+        props[sub_cat] = prop
     
     # change family category
-    changeFam = set_family_category(doc, newCategoryName)
-    returnValue.Update(changeFam)
+    change_fam = set_family_category(doc, new_category_name)
+    return_value.Update(change_fam)
 
-    if(changeFam.status):
+    if(change_fam.status):
         # re-create custom sub categories
-        for subCat in subCats:
+        for sub_cat in sub_cats:
             # only re-create custom sub categories (id greater then 0)
-            if(subCats[subCat].Id.IntegerValue > 0):
+            if(sub_cats[sub_cat].Id.IntegerValue > 0):
                 # create new sub categories with flag: ignore if cut graphic style is missing set to true!
-                createCat = create_new_category_from_saved_properties(doc, subCat, props[subCat], True)
-                returnValue.Update(createCat)
-                if(createCat.status):
+                create_cat = create_new_category_from_saved_properties(doc, sub_cat, props[sub_cat], True)
+                return_value.Update(create_cat)
+                if(create_cat.status):
                     # get the graphic style ids of the new subcategory for elements to use
-                    destinationCatIds = get_category_graphic_style_ids(createCat.result)
+                    destination_cat_ids = get_category_graphic_style_ids(create_cat.result)
                     # move elements back onto custom subcategories
-                    moveEl = move_elements_to_category(doc, elements[subCat], subCat, destinationCatIds)
-                    returnValue.Update(moveEl)
+                    move_el = move_elements_to_category(doc, elements[sub_cat], sub_cat, destination_cat_ids)
+                    return_value.Update(move_el)
                 else:
-                    returnValue.Update(createCat)
+                    return_value.Update(create_cat)
     else:
-        returnValue.UpdateSep(False, 'Failed to change family category:' + changeFam.message)
-    return returnValue
+        return_value.UpdateSep(False, 'Failed to change family category:' + change_fam.message)
+    return return_value

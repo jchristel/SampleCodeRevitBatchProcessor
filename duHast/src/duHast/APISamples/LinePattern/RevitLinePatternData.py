@@ -42,7 +42,7 @@ PATTERN_ID = 'patternId'
 
 class LinePatternData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
+    def __init__(self, root_path=None, root_category_path=None, data_type=None):
         '''
         Class constructor
 
@@ -53,7 +53,7 @@ class LinePatternData(IFamData.IFamilyData):
         :type dataType: str
         '''
 
-        super(LinePatternData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
+        super(LinePatternData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
         # super(CategoryData, self).__init__(rootPath, dataType)
         '''
         self.data = []
@@ -74,7 +74,7 @@ class LinePatternData(IFamData.IFamilyData):
             self.rootCategoryPath = '-'
         '''
 
-    def _addCategoryToDic(self, linePatternIds, patternId, category):
+    def _add_category_to_dic(self, line_pattern_ids, pattern_id, category):
         '''
         Adds a category to a dictionary using the line pattern ID as value
 
@@ -86,12 +86,12 @@ class LinePatternData(IFamData.IFamilyData):
         :type category: Autodesk.Revit.DB.Category
         '''
 
-        if(patternId in linePatternIds):
-            linePatternIds[patternId].append(category)
+        if(pattern_id in line_pattern_ids):
+            line_pattern_ids[pattern_id].append(category)
         else:
-            linePatternIds[patternId] = [category]
+            line_pattern_ids[pattern_id] = [category]
 
-    def _get_LinePatternFromCategories(self, doc):
+    def _get_line_pattern_from_categories(self, doc):
         '''
         Loops over all family categories and sub categories and any other categories and sub categories with a positive Id (custom sub category) and
         returns a dictionary of line pattern ids to categories using them.
@@ -109,14 +109,14 @@ class LinePatternData(IFamData.IFamilyData):
         for mCatName in mainCat:
             lStyle = rPat.GetLinePatternFromCategory (mainCat[mCatName], doc)
             # update dictionary
-            self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCat[mCatName])
+            self._add_category_to_dic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCat[mCatName])
         
         # get line patterns from sub categories of the family category
         mainCats = rCats.get_main_sub_categories(doc)
         for mCatName in mainCats:
             lStyle = rPat.GetLinePatternFromCategory (mainCats[mCatName], doc)
             # update dictionary
-            self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCats[mCatName])
+            self._add_category_to_dic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], mainCats[mCatName])
         
         # get line pattern from unrelated sub categories
         subCatsOther = rCats.get_other_sub_categories(doc)
@@ -126,7 +126,7 @@ class LinePatternData(IFamData.IFamilyData):
                 if(subCatsOther[sCatName][sCatItem].Id.IntegerValue > 0):
                     lStyle = rPat.GetLinePatternFromCategory (subCatsOther[sCatName][sCatItem], doc)
                     # update dictionary
-                    self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], subCatsOther[sCatName][sCatItem])
+                    self._add_category_to_dic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], subCatsOther[sCatName][sCatItem])
         
         # get line pattern from reference lines and planes categories import in families main cat
         otherCats = rCats.get_category_by_built_in_def_name(
@@ -138,12 +138,12 @@ class LinePatternData(IFamData.IFamilyData):
         for oCat in otherCats:
             lStyle = rPat.GetLinePatternFromCategory (oCat, doc)
             # update dictionary
-            self._addCategoryToDic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], oCat)
+            self._add_category_to_dic(linePatternIdsToCategories, lStyle[rPat.PROPERTY_PATTERN_ID], oCat)
         
         return linePatternIdsToCategories
 
 
-    def _getPatternFromLevelElement(self, doc):
+    def _get_pattern_from_level_element(self, doc):
         '''
         Gets the pattern data from all level types in document.
 
@@ -158,10 +158,10 @@ class LinePatternData(IFamData.IFamilyData):
         levels = rLevel.GetLevelsListAscending(doc)
         for level in levels:
             patternData = rPat.GetLinePatternFromLevelElement(doc, level)
-            self._addCategoryToDic(levelPatternData, patternData[rPat.PROPERTY_PATTERN_ID], level)
+            self._add_category_to_dic(levelPatternData, patternData[rPat.PROPERTY_PATTERN_ID], level)
         return levelPatternData
 
-    def _getPatternName(self, element):
+    def _get_pattern_name(self, element):
         '''
         Get the element name.
 
@@ -178,7 +178,7 @@ class LinePatternData(IFamData.IFamilyData):
             elementName = elementName + ' Exception: ' + str(ex)
         return elementName
 
-    def _getPatternUsageDataFromCategories(self, linePatternIds, element):
+    def _get_pattern_usage_data_from_categories(self, line_pattern_ids, element):
         '''
         Returns how often and on which category a line pattern is used
 
@@ -194,13 +194,13 @@ class LinePatternData(IFamData.IFamilyData):
         counter = 0
         patternNames = []
         # how often used
-        if (element.Id in linePatternIds):
-            counter = len(linePatternIds[element.Id])
-            for pat in  linePatternIds[element.Id]:
+        if (element.Id in line_pattern_ids):
+            counter = len(line_pattern_ids[element.Id])
+            for pat in  line_pattern_ids[element.Id]:
                 patternNames.append({"categoryId" : pat.Id.IntegerValue, "categoryName" : pat.Name})
         return counter, patternNames
 
-    def _getPatternUsageDataFromLevel(self, linePatternIds, element):
+    def _get_pattern_usage_data_from_level(self, line_pattern_ids, element):
         '''
         Returns how often and on which Level type a line pattern is used
 
@@ -217,9 +217,9 @@ class LinePatternData(IFamData.IFamilyData):
         patternNames = []
 
         # how often used
-        if (element.Id in linePatternIds):
-            counter = len(linePatternIds[element.Id])
-            for pat in  linePatternIds[element.Id]:
+        if (element.Id in line_pattern_ids):
+            counter = len(line_pattern_ids[element.Id])
+            for pat in  line_pattern_ids[element.Id]:
                 patternNames.append({"levelId" : pat.Id.IntegerValue, "levelTypeName" : rdb.Element.Name.GetValue(pat)})
         return counter, patternNames
 
@@ -233,18 +233,18 @@ class LinePatternData(IFamData.IFamilyData):
 
         # get all line patterns used in categories (includes sub categories of family category and any custom subcategories of non family category present, includes also 
         # ref planes , ref lines, import styles)
-        linePatternIdsByCategory = self._get_LinePatternFromCategories(doc)
+        linePatternIdsByCategory = self._get_line_pattern_from_categories(doc)
         # get line pattern used on level element
-        linePatternIdsByFromLevel = self._getPatternFromLevelElement(doc)
+        linePatternIdsByFromLevel = self._get_pattern_from_level_element(doc)
 
         collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
         for element in collector:
             # just in case parameter name is not unicode
-            elementName = self._getPatternName(element)
+            elementName = self._get_pattern_name(element)
             # get usage data from categories
-            counter, patternNames = self._getPatternUsageDataFromCategories(linePatternIdsByCategory, element)
+            counter, patternNames = self._get_pattern_usage_data_from_categories(linePatternIdsByCategory, element)
             # get usage data from levels
-            counterLevel, patternNamesLevel = self._getPatternUsageDataFromLevel(linePatternIdsByFromLevel, element)
+            counterLevel, patternNamesLevel = self._get_pattern_usage_data_from_level(linePatternIdsByFromLevel, element)
             
             # get overall count
             counter = counter + counterLevel
@@ -254,8 +254,8 @@ class LinePatternData(IFamData.IFamilyData):
             # build data
             self.data.append(
                 {
-                    IFamData.ROOT : self.rootPath,
-                    IFamData.ROOT_CATEGORY : self.rootCategoryPath,
+                    IFamData.ROOT : self.root_path,
+                    IFamData.ROOT_CATEGORY : self.root_category_path,
                     IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                     IFamData.FAMILY_FILE_PATH : doc.PathName,
                     IFamData.USAGE_COUNTER : counter,

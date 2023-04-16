@@ -38,17 +38,17 @@ from duHast.Utilities import Base
 
 class IFamilyProcessor(Base.Base):
     
-    def __init__(self, dataType = 'not declared', preActions = None, postActions = None, stringReportHeaders = [], **kwargs):
+    def __init__(self, data_type = 'not declared', pre_actions = None, post_actions = None, string_report_headers = [], **kwargs):
         
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
         super(IFamilyProcessor, self).__init__(**kwargs) 
 
         self.data = []
-        self.dataType = dataType
-        self.stringReportHeaders = stringReportHeaders
-        self.preActions = preActions
-        self.postActions = postActions
+        self.data_type = data_type
+        self.string_report_headers = string_report_headers
+        self.pre_actions = pre_actions
+        self.post_actions = post_actions
 
     # -------------------------------------- utility ----------------------
 
@@ -141,8 +141,8 @@ class IFamilyProcessor(Base.Base):
         '''
 
         returnValue = res.Result()
-        if(self.preActions != None):
-            for preAction in self.preActions:
+        if(self.pre_actions != None):
+            for preAction in self.pre_actions:
                 resultAction = preAction(doc)
                 returnValue.Update(resultAction)
         return returnValue
@@ -177,15 +177,15 @@ class IFamilyProcessor(Base.Base):
         '''
 
         returnValue = res.Result()
-        if(self.postActions != None):
-            for postAction in self.postActions:
+        if(self.post_actions != None):
+            for postAction in self.post_actions:
                 resultAction = postAction(doc)
                 returnValue.Update(resultAction)
         return returnValue
 
     # -------------------------------------- get data ----------------------
 
-    def get_Data(self):
+    def get_data(self):
         '''
         Returns list of flattened dictionaries. One dictionary for each document processed.
 
@@ -208,7 +208,7 @@ class IFamilyProcessor(Base.Base):
         '''
 
         outValue = ''
-        flattenedData = self.get_Data()
+        flattenedData = self.get_data()
         for d in flattenedData:
             dFixedTypes = self._fix_data_types(d)
             json_object = json.dumps(dict(dFixedTypes))
@@ -226,10 +226,10 @@ class IFamilyProcessor(Base.Base):
         :rtype: [str]
         '''
         outValue = []
-        flattenedData = self.get_Data()
+        flattenedData = self.get_data()
         for d in flattenedData:
             row = []
-            for headerKey in self.stringReportHeaders:
+            for headerKey in self.string_report_headers:
                 if(headerKey in d):
                     value = None
                     if(type(d[headerKey]) == str):

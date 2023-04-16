@@ -87,7 +87,7 @@ class CategoryProcessor(IFamilyProcessor):
         # add any other post actions
         if (post_actions != None):
             for p_action in post_actions:
-                self.postActions.append(p_action)
+                self.post_actions.append(p_action)
 
     def process(self, doc, root_path, root_category_path):
         '''
@@ -103,13 +103,13 @@ class CategoryProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
 
-        dummy = rCatData.CategoryData(root_path, root_category_path, self.dataType)
+        dummy = rCatData.CategoryData(root_path, root_category_path, self.data_type)
         dummy.process(doc)
         self.data.append(dummy)
     
     # --------------------------------------------- post action ----------------------------------------------------------
 
-    def _add__data(self, processor, root, root_category_path, fam_name, fam_path, use_counter, used_by, fam_cat_name, sub_cat_name, sub_cat_id, cat_gra_style_three_d,
+    def _add_data(self, processor, root, root_category_path, fam_name, fam_path, use_counter, used_by, fam_cat_name, sub_cat_name, sub_cat_id, cat_gra_style_three_d,
         cat_gra_style_cut, cat_gra_style_pro, prop_mat_name, prop_mat_id, prop_line_weight_cut_name, prop_line_weight_projection_name, prop_line_col_red, prop_line_col_green, prop_line_col_blue):
         
         processor.add_Data(

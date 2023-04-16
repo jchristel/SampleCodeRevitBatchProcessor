@@ -34,13 +34,13 @@ from duHast.Utilities import Result as res
 
 class LinePatternProcessor(IFamilyProcessor):
 
-    def __init__(self, preActions = None, postActions = None):
+    def __init__(self, pre_actions = None, post_actions = None):
         '''
         Class constructor.
         '''
 
         # setup report header
-        stringReportHeaders = [
+        string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -53,10 +53,10 @@ class LinePatternProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(LinePatternProcessor, self).__init__(
-            preActions=preActions, 
-            postActions=[self._postActionUpdateUsedLinePatterns], 
-            dataType='LinePattern', 
-            stringReportHeaders=stringReportHeaders
+            pre_actions=pre_actions, 
+            post_actions=[self._post_action_update_used_line_patterns], 
+            data_type='LinePattern', 
+            string_report_headers=string_report_headers
         )
 
         #self.data = []
@@ -67,11 +67,11 @@ class LinePatternProcessor(IFamilyProcessor):
         # families
         #self.postActions = [self._postActionUpdateUsedLinePatterns]
         # add any other post actions
-        if (postActions != None):
-            for pAction in postActions:
-                self.postActions.append(pAction)
+        if (post_actions != None):
+            for post_action in post_actions:
+                self.post_actions.append(post_action)
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
@@ -85,11 +85,11 @@ class LinePatternProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
 
-        dummy = rLinePatData.LinePatternData(rootPath, rootCategoryPath, self.dataType)
+        dummy = rLinePatData.LinePatternData(root_path, root_category_path, self.data_type)
         dummy.process(doc)
         self.data.append(dummy)
     
-    def _isSubLinePatternPresent(self,rootFamilyData, nestedFamilyLinePattern):
+    def _is_sub_line_pattern_present(self,rootFamilyData, nestedFamilyLinePattern):
         match = None
         for rootFam in rootFamilyData:
             if (rootFam[rLinePatData.PATTERN_NAME] == nestedFamilyLinePattern[rLinePatData.PATTERN_NAME]):
@@ -97,11 +97,11 @@ class LinePatternProcessor(IFamilyProcessor):
                 break
         return match
     
-    def _updateRootFamilyData(self, rootFamilyData, nestedFamiliesLinePatterns):
+    def _update_root_family_data(self, root_family_data, nested_families_line_patterns):
         # loop over nested family line pattern data
-        for nestedLinePattern in nestedFamiliesLinePatterns:
+        for nestedLinePattern in nested_families_line_patterns:
             # check if pattern is already in root family
-            matchingRootFamPattern = self._isSubLinePatternPresent(rootFamilyData, nestedLinePattern)
+            matchingRootFamPattern = self._is_sub_line_pattern_present(root_family_data, nestedLinePattern)
             if(matchingRootFamPattern != None):
                 # update used by list
                 if( nestedLinePattern[rLinePatData.PATTERN_NAME] not in matchingRootFamPattern[IFamData.USED_BY]):
@@ -119,24 +119,24 @@ class LinePatternProcessor(IFamilyProcessor):
                 # nothing to do if that pattern has not been reported to start off with 
                 # this patter could, for example, belong to the section marker family present in most 3d families
 
-    def _getUsedLinePatterns(self, data):
+    def _get_used_line_patterns(self, data):
         usedLinePatterns = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
                 usedLinePatterns.append(d)
         return usedLinePatterns
 
-    def _postActionUpdateUsedLinePatterns(self, doc):
+    def _post_action_update_used_line_patterns(self, doc):
         returnValue = res.Result()
         try:
             # find all line patterns of nested families
             nestedFamilyData = self._find_nested_families_data()
             # get used sub categories from nested data
-            nestedFamilyUsedLinePatterns = self._getUsedLinePatterns(nestedFamilyData)
+            nestedFamilyUsedLinePatterns = self._get_used_line_patterns(nestedFamilyData)
             # update root family data only
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._updateRootFamilyData(rootFamilyData, nestedFamilyUsedLinePatterns)
+            self._update_root_family_data(rootFamilyData, nestedFamilyUsedLinePatterns)
             returnValue.UpdateSep(True, 'Post Action Update line pattern data successful completed.')
         except Exception as e:
             returnValue.UpdateSep(False, 'Post Action Update line pattern data failed with exception: ' + str(e))

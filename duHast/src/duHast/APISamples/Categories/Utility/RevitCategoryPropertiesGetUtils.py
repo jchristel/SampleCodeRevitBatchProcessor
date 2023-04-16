@@ -28,7 +28,7 @@ Revit sub-category property get functions .
 
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
+from duHast.APISamples.LinePattern import RevitLinePatterns as rPat
 from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME, PROPERTY_MATERIAL_NAME_VALUE_DEFAULT
 
 

@@ -40,7 +40,7 @@ USED_BY = 'usedBy'
 
 class IFamilyData(Base.Base):
 
-    def __init__(self, rootPath, rootCategoryPath=None, dataType=None, **kwargs):
+    def __init__(self, root_path, root_category_path=None, data_type=None, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -48,20 +48,20 @@ class IFamilyData(Base.Base):
 
         self.data = []
         
-        if(dataType != None):
-            self.dataType = dataType
+        if(data_type != None):
+            self.data_type = data_type
         else:
-            self.dataType = 'not declared'
+            self.data_type = 'not declared'
         
-        if(rootPath != None):
-            self.rootPath = rootPath
+        if(root_path != None):
+            self.root_path = root_path
         else:
-            self.rootPath = '-'
+            self.root_path = '-'
         
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
+        if(root_category_path != None):
+            self.root_category_path = root_category_path
         else:
-            self.rootCategoryPath = '-'
+            self.root_category_path = '-'
 
     def process(self, doc):
         pass
@@ -69,19 +69,19 @@ class IFamilyData(Base.Base):
     def get_data(self):
         pass
     
-    def update_data(self, identifyByThisPropertyName, identifyByThisPropertyValue, updateDic):
+    def update_data(self, identify_by_this_property_name, identify_by_this_property_value, update_dic):
         match = False
         matchUpdate = True
         for d in self.data:
             #print(identifyByThisPropertyName, d)
-            if(identifyByThisPropertyName in d):
+            if(identify_by_this_property_name in d):
                 #print('identify by property found')
-                if (d[identifyByThisPropertyName] == identifyByThisPropertyValue):
+                if (d[identify_by_this_property_name] == identify_by_this_property_value):
                     #print ('dic', updateDic)
-                    for updateProp in updateDic:
+                    for updateProp in update_dic:
                         if(updateProp in d):
                             oldValue = d[updateProp]
-                            d[updateProp] = updateDic[updateProp]
+                            d[updateProp] = update_dic[updateProp]
                             #print ('updated:', updateProp, ' from value ', oldValue, ' to value ', d[updateProp])
                             matchUpdate = matchUpdate and True
                             
@@ -93,7 +93,7 @@ class IFamilyData(Base.Base):
     def add_data(self):
         pass
 
-    def _strip_file_extension(self, famName):
+    def _strip_file_extension(self, fam_name):
         '''
         Strips the file extension '.rfa. , if exists, of the family  name.
 
@@ -103,6 +103,6 @@ class IFamilyData(Base.Base):
         :rtype: str
         '''
 
-        if(famName.lower().endswith('.rfa')):
-                famName = famName[:-4]
-        return famName
+        if(fam_name.lower().endswith('.rfa')):
+                fam_name = fam_name[:-4]
+        return fam_name

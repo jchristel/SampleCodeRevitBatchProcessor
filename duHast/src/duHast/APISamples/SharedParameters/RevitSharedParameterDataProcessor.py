@@ -33,13 +33,13 @@ from duHast.Utilities import Result as res
 
 class SharedParameterProcessor(IFamilyProcessor):
 
-    def __init__(self,preActions = None, postActions = None):
+    def __init__(self,pre_actions = None, post_actions = None):
         '''
         Class constructor.
         '''
 
         # setup report header
-        stringReportHeaders = [
+        string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -53,10 +53,10 @@ class SharedParameterProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(SharedParameterProcessor, self).__init__(
-            preActions=preActions, 
-            postActions=[self._postActionUpdateUsedSharedParameters], 
-            dataType='SharedParameter', 
-            stringReportHeaders=stringReportHeaders
+            pre_actions=pre_actions, 
+            post_actions=[self._post_action_update_used_shared_parameters], 
+            data_type='SharedParameter', 
+            string_report_headers=string_report_headers
         )
 
         #self.data = []
@@ -66,11 +66,11 @@ class SharedParameterProcessor(IFamilyProcessor):
         # families
         #self.postActions = [self._postActionUpdateUsedSharedParameters]
         # add any other post actions
-        if (postActions != None):
-            for pAction in postActions:
-                self.postActions.append(pAction)
+        if (post_actions != None):
+            for post_action in post_actions:
+                self.post_actions.append(post_action)
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
@@ -84,24 +84,24 @@ class SharedParameterProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
 
-        dummy = rSharedData.SharedParameterData(rootPath, rootCategoryPath, self.dataType)
+        dummy = rSharedData.SharedParameterData(root_path, root_category_path, self.data_type)
         dummy.process(doc)
         self.data.append(dummy)
     
 
-    def _isSharedParameterPresent(self,rootFamilyData, nestedFamilyLinePattern):
+    def _is_shared_parameter_present(self,root_family_data, nested_family_line_pattern):
         match = None
-        for rootFam in rootFamilyData:
-            if (rootFam[rSharedData.PARAMETER_GUID] == nestedFamilyLinePattern[rSharedData.PARAMETER_GUID]):
+        for rootFam in root_family_data:
+            if (rootFam[rSharedData.PARAMETER_GUID] == nested_family_line_pattern[rSharedData.PARAMETER_GUID]):
                 match = rootFam
                 break
         return match
 
-    def _updateRootFamilyData(self, rootFamilyData, nestedFamiliesData):
+    def _update_root_family_data(self, root_family_data, nested_families_data):
         # loop over nested family data
-        for nestedItem in nestedFamiliesData:
+        for nestedItem in nested_families_data:
             # check if item is already in root family
-            matchingRootFamPattern = self._isSharedParameterPresent(rootFamilyData, nestedItem)
+            matchingRootFamPattern = self._is_shared_parameter_present(root_family_data, nestedItem)
             if(matchingRootFamPattern != None):
                 # update used by list
                 # TODO: this check looks odd!! ( guid vs a dictionary?)
@@ -120,24 +120,24 @@ class SharedParameterProcessor(IFamilyProcessor):
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with 
 
-    def _getUsedSharedParameters(self, data):
+    def _get_used_shared_parameters(self, data):
         usedSharedParas = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
                 usedSharedParas.append(d)
         return usedSharedParas
 
-    def _postActionUpdateUsedSharedParameters(self, doc):
+    def _post_action_update_used_shared_parameters(self, doc):
         returnValue = res.Result()
         try:
             # find all shared parameters of nested families
             nestedFamilyData = self._find_nested_families_data()
             # get used shared parameters from nested data
-            nestedFamilySharedParameters = self._getUsedSharedParameters(nestedFamilyData)
+            nestedFamilySharedParameters = self._get_used_shared_parameters(nestedFamilyData)
             # update root family data only
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._updateRootFamilyData(rootFamilyData, nestedFamilySharedParameters)
+            self._update_root_family_data(rootFamilyData, nestedFamilySharedParameters)
             returnValue.UpdateSep(True, 'Post Action Update shared parameters data successful completed.')
         except Exception as e:
             returnValue.UpdateSep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))

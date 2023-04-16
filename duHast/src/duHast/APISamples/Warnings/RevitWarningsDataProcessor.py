@@ -33,13 +33,13 @@ from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 
 class WarningsProcessor(IFamilyProcessor):
 
-    def __init__(self,preActions = None, postActions = None):
+    def __init__(self,pre_actions = None, post_actions = None):
         '''
         Class constructor.
         '''
 
         # setup report header
-        stringReportHeaders = [
+        string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -52,10 +52,10 @@ class WarningsProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(WarningsProcessor, self).__init__(
-            preActions=preActions, 
-            postActions=postActions, 
-            dataType='Warnings', 
-            stringReportHeaders=stringReportHeaders
+            pre_actions=pre_actions, 
+            post_actions=post_actions, 
+            data_type='Warnings', 
+            string_report_headers=string_report_headers
         )
 
         #self.data = []
@@ -63,7 +63,7 @@ class WarningsProcessor(IFamilyProcessor):
         #self.preActions = preActions
         #self.postActions = postActions
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
@@ -77,6 +77,6 @@ class WarningsProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
          
-        dummy = rWarnData.WarningsData(rootPath, rootCategoryPath, self.dataType)
+        dummy = rWarnData.WarningsData(root_path, root_category_path, self.data_type)
         dummy.process(doc)
         self.data.append(dummy)

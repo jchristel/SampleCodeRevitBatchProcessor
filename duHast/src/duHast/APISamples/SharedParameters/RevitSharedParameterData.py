@@ -40,9 +40,9 @@ PARAMETER_ID = 'parameterId'
 
 class SharedParameterData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
+    def __init__(self, root_path=None, root_category_path=None, data_type=None):
 
-        super(SharedParameterData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
+        super(SharedParameterData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
         # super(CategoryData, self).__init__(rootPath, dataType)
 
         '''
@@ -68,11 +68,11 @@ class SharedParameterData(IFamData.IFamilyData):
         collector = rSharedPara.GetAllSharedParameters(doc)
         for para in collector:
             # just in case parameter name is not unicode
-            parameterName = 'unknown'
+            parameter_name = 'unknown'
             try:   
-                parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(para))
+                parameter_name = util.EncodeAscii(rdb.Element.Name.GetValue(para))
             except Exception as ex:
-                parameterName = 'Exception: ' + str(ex)
+                parameter_name = 'Exception: ' + str(ex)
             # check if used:
             useCounter = 0
             usedByData = {}
@@ -81,18 +81,18 @@ class SharedParameterData(IFamData.IFamilyData):
                 # build used by data as required to be the same as post process update
                 usedByData = { 
                     PARAMETER_GUID : para.GuidValue.ToString(),
-                    PARAMETER_NAME : parameterName,
-                    IFamData.ROOT : self.rootPath
+                    PARAMETER_NAME : parameter_name,
+                    IFamData.ROOT : self.root_path
             }
             
             # build data
             self.data.append({
-                IFamData.ROOT : self.rootPath,
-                IFamData.ROOT_CATEGORY : self.rootCategoryPath,
+                IFamData.ROOT : self.root_path,
+                IFamData.ROOT_CATEGORY : self.root_category_path,
                 IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName,
                 PARAMETER_GUID : para.GuidValue.ToString(),
-                PARAMETER_NAME : parameterName,
+                PARAMETER_NAME : parameter_name,
                 PARAMETER_ID : para.Id.IntegerValue,
                 IFamData.USAGE_COUNTER : useCounter,
                 IFamData.USED_BY : [usedByData]
@@ -103,8 +103,8 @@ class SharedParameterData(IFamData.IFamilyData):
         if(len(self.data) == 0):
             # add message no shared parameter found
             self.data.append({
-                IFamData.ROOT : self.rootPath,
-                IFamData.ROOT_CATEGORY : self.rootCategoryPath,
+                IFamData.ROOT : self.root_path,
+                IFamData.ROOT_CATEGORY : self.root_category_path,
                 IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName,
                 PARAMETER_GUID : '',

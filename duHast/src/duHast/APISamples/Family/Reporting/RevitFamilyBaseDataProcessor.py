@@ -34,18 +34,18 @@ from duHast.Utilities import UtilBatchP as uBP
 class FamilyBaseProcessor(IFamilyProcessor):
 
     def __init__(self, 
-        referenceFilePath = None, 
-        familyOutFolderPath = None, 
-        sessionId = None,
-        preActions = None, 
-        postActions = None
+        reference_file_path = None, 
+        family_out_directory_path = None, 
+        session_id = None,
+        pre_actions = None, 
+        post_actions = None
         ):
         '''
         Class constructor.
         '''
 
         # store data type  in base class
-        stringReportHeaders = [
+        string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
@@ -55,25 +55,25 @@ class FamilyBaseProcessor(IFamilyProcessor):
 
         # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
-            dataType = 'FamilyBase',
-            preActions=preActions, 
-            postActions=postActions,
-            stringReportHeaders=stringReportHeaders
+            data_type = 'FamilyBase',
+            pre_actions=pre_actions, 
+            post_actions=post_actions,
+            string_report_headers=string_report_headers
         )
 
         #self.data = []
         #self.dataType = 'FamilyBase'
-        self.referenceFilePath = referenceFilePath
-        self.familyOutFolderPath = familyOutFolderPath
-        if(sessionId != None):
-            self.sessionId = uBP.AdjustSessionIdForFolderName(sessionId)
+        self.reference_file_path = reference_file_path
+        self.family_out_directory_path = family_out_directory_path
+        if(session_id != None):
+            self.session_id = uBP.AdjustSessionIdForFolderName(session_id)
         else:
-            self.sessionId = sessionId
+            self.session_id = session_id
 
         #self.preActions = preActions
         #self.postActions = postActions
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
@@ -87,6 +87,6 @@ class FamilyBaseProcessor(IFamilyProcessor):
         :type rootCategoryPath: str
         '''
 
-        dummy = rFamData.FamilyBaseData(rootPath, rootCategoryPath, self.dataType)
-        dummy.process(doc, self.referenceFilePath, self.familyOutFolderPath, self.sessionId)
+        dummy = rFamData.FamilyBaseData(root_path, root_category_path, self.data_type)
+        dummy.process(doc, self.reference_file_path, self.family_out_directory_path, self.session_id)
         self.data.append(dummy)

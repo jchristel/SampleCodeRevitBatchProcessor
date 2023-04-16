@@ -40,7 +40,7 @@ CATEGORY_NAME = 'categoryName'
 
 class FamilyBaseData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
+    def __init__(self, root_path=None, root_category_path=None, data_type=None):
         '''
         Class constructor
 
@@ -53,7 +53,7 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         
         # store data type  in base class
-        super(FamilyBaseData, self).__init__(rootPath=rootPath, rootCategoryPath=rootCategoryPath, dataType=dataType)
+        super(FamilyBaseData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
         # super(CategoryData, self).__init__(rootPath, dataType)
         
         '''
@@ -75,13 +75,13 @@ class FamilyBaseData(IFamData.IFamilyData):
             self.rootCategoryPath = '-'
         '''
 
-        if(rootCategoryPath != None):
-            categoryChunks = rootCategoryPath.split(' :: ')
-            self.category = categoryChunks[-1]
+        if(root_category_path != None):
+            category_chunks = root_category_path.split(' :: ')
+            self.category = category_chunks[-1]
         else:
             self.category = 'unknown'
 
-    def _saveOut(self, doc, referenceFilePath, docName, docCategory, familyOutFolderPath, sessionId):
+    def _saveOut(self, doc, reference_file_path, doc_name, doc_category, family_out_folder_path, session_id):
         '''
         Saves a family to file if there is no match for it in the provided reference file. 
         The reference file is a FamilyBaseDataCombinedReport and is read into tuples using RevitFamilyBaseDataUtils.
@@ -104,30 +104,30 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # process reference file list and look for a match:
         # based on file name and category
-        if(util.FileExist(referenceFilePath)):
+        if(util.FileExist(reference_file_path)):
             # read overall family base data from file 
-            overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(referenceFilePath)
+            overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(reference_file_path)
             foundMatch = False
             for rootFam in overallFamilyBaseRootData:
                 # check whether name and category are a match
-                if(rootFam.name == docName and rootFam.category == docCategory):
+                if(rootFam.name == doc_name and rootFam.category == doc_category):
                     foundMatch = True
                     break
             # check if family needs saving out
             if(foundMatch == False):
                 # check session id folder exists
-                if(dirIO.CreateTargetFolder(familyOutFolderPath, sessionId)):
+                if(dirIO.CreateTargetFolder(family_out_folder_path, session_id)):
                     # check category folder exists
-                    if(dirIO.CreateTargetFolder(familyOutFolderPath + '\\' + sessionId, docCategory)):
+                    if(dirIO.CreateTargetFolder(family_out_folder_path + '\\' + session_id, doc_category)):
                         # save family out
                         rFile.save_as_family(
                             doc,
-                            familyOutFolderPath + '\\' + sessionId + '\\'+ docCategory,
-                            docName,
-                            [[docName, docName]]
+                            family_out_folder_path + '\\' + session_id + '\\'+ doc_category,
+                            doc_name,
+                            [[doc_name, doc_name]]
                             )
 
-    def process(self, doc, referenceFilePath, familyOutFolderPath, sessionId):
+    def process(self, doc, reference_file_path, family_out_directory_path, session_id):
         '''
         Collects all base data from the document and stores it in the class property .data
 
@@ -139,21 +139,21 @@ class FamilyBaseData(IFamData.IFamilyData):
         #famCatName = doc.OwnerFamily.FamilyCategory.Name
 
         # check if a reference file list was provided and if so if family needs to be saved out
-        if (referenceFilePath != None and familyOutFolderPath != None and sessionId != None):
+        if (reference_file_path != None and family_out_directory_path != None and session_id != None):
             self._saveOut(
                 doc, 
-                referenceFilePath, 
+                reference_file_path, 
                 self._strip_file_extension(doc.Title), 
                 self.category, 
-                familyOutFolderPath, 
-                sessionId
+                family_out_directory_path, 
+                session_id
                 )
         
         # build data
         self.data.append(
             {
-                IFamData.ROOT : self.rootPath,
-                IFamData.ROOT_CATEGORY : self.rootCategoryPath,
+                IFamData.ROOT : self.root_path,
+                IFamData.ROOT_CATEGORY : self.root_category_path,
                 IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
                 IFamData.FAMILY_FILE_PATH : doc.PathName, # this property will often be an empty string in nested families
                 CATEGORY_NAME : self.category

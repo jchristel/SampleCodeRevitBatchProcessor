@@ -186,8 +186,8 @@ class CategoryData(IFamData.IFamilyData):
 
             # build data dictionary   
             dic = self._create_data(
-                self.rootPath,
-                self.rootCategoryPath,
+                self.root_path,
+                self.root_category_path,
                 self._strip_file_extension(doc.Title),
                 doc.PathName,
                 use_counter,
@@ -212,15 +212,15 @@ class CategoryData(IFamData.IFamilyData):
         '''
 
         # get usage of each main sub category
-        for key,subCat in main_sub_cats.items():
+        for key,sub_category in main_sub_cats.items():
             # set up an empty dic for any sub category not belonging to the main category (no elements in this family can be on those)
             # Exception: the only elements will be Imports and reference planes
             element_dic = {}
             if(main_cat_name == 'Imports in Families' or main_cat_name == 'Reference Planes'):
                 # get elements using category
-                element_dic = rElementByCatUtils.get_elements_by_category(doc, subCat)
+                element_dic = rElementByCatUtils.get_elements_by_category(doc, sub_category)
             # get category property
-            cat_props = rCatPropGet.get_category_properties(subCat, doc)
+            cat_props = rCatPropGet.get_category_properties(sub_category, doc)
             # add element counter for 3D, Cut, Elevation style
             use_counter = 0
             for key in element_dic:
@@ -233,15 +233,15 @@ class CategoryData(IFamData.IFamilyData):
 
             # build data dictionary   
             dic = self._create_data(
-                self.rootPath,
-                self.rootCategoryPath,
+                self.root_path,
+                self.root_category_path,
                 self._strip_file_extension(doc.Title),
                 doc.PathName,
                 use_counter,
                 used_by_ids,
                 main_cat_name,
-                subCat.Name,
-                subCat.Id.IntegerValue,
+                sub_category.Name,
+                sub_category.Id.IntegerValue,
                 cat_props
             )
             self.data.append(dic)

@@ -31,7 +31,7 @@ from duHast.Utilities import Base
 
 class IFamilyAction(Base.Base):
 
-    def __init__(self, actionType, **kwargs):
+    def __init__(self, action_type, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
@@ -39,10 +39,10 @@ class IFamilyAction(Base.Base):
 
         self.data = []
         
-        if(actionType != None):
-            self.dataType = actionType
+        if(action_type != None):
+            self.data_type = action_type
         else:
-            self.dataType = 'not declared'
+            self.data_type = 'not declared'
 
     def process(self, doc):
         pass

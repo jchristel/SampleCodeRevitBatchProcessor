@@ -40,28 +40,29 @@ WARNING_OTHER_IDS = 'warningOtherIds'
 
 class WarningsData(IFamData.IFamilyData):
     
-    def __init__(self, rootPath=None, rootCategoryPath=None, dataType=None):
-
-        # todo: check inheritance!!
-        # super(CategoryData, self).__init__(rootPath, dataType)
+    def __init__(self, root_path=None, root_category_path=None, data_type=None):
         
+        super(WarningsData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
+
+        '''
         self.data = []
         
-        if(dataType != None):
-            self.dataType = dataType
+        if(data_type != None):
+            self.dataType = data_type
         else:
             self.dataType = 'not declared'
         
-        if(rootPath != None):
-            self.rootPath = rootPath
+        if(root_path != None):
+            self.rootPath = root_path
         else:
             self.rootPath = '-'
 
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
+        if(root_category_path != None):
+            self.rootCategoryPath = root_category_path
         else:
             self.rootCategoryPath = '-'
-    
+        '''
+
     def process(self, doc):
         # get all warnings in document
         warnings = rWarn.GetWarnings(doc)

@@ -121,8 +121,8 @@ def get_all_building_pad_type_ids_in_model_by_category(doc):
     '''
 
     ids = []
-    colCat = get_all_building_pad_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (colCat)
+    col_cat = get_all_building_pad_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (col_cat)
     return ids
 
 def get_all_building_pad_type_ids_in_model_by_class(doc):
@@ -140,8 +140,8 @@ def get_all_building_pad_type_ids_in_model_by_class(doc):
     '''
 
     ids = []
-    colClass = get_building_pad_types_by_class(doc)
-    ids = com.get_ids_from_element_collector (colClass)
+    col_class = get_building_pad_types_by_class(doc)
+    ids = com.get_ids_from_element_collector (col_class)
     return ids
 
 

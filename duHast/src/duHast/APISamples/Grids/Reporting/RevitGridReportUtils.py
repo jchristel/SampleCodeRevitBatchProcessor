@@ -32,7 +32,7 @@ from duHast.Utilities import Utility as util, FilesIO as util
 from duHast.APISamples.Grids import RevitGrids as rGrid
 
 
-def GetGridReportData(doc, revitFilePath):
+def get_grid_report_data(doc, revitFilePath):
     '''
     Gets grid data ready for being printed to file
     :param doc: Current Revit model document.
@@ -50,5 +50,5 @@ def GetGridReportData(doc, revitFilePath):
             str(p.Id.IntegerValue),
             util.EncodeAscii(p.Name),
             rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),
-            rGrid.GetMaxExtentAsString(p)])
+            rGrid.get_max_extent_as_string(p)])
     return data

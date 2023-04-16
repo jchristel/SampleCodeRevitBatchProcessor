@@ -34,7 +34,7 @@ from duHast.Utilities import Utility as util
 from duHast.Utilities import FilesIO as util
 
 
-def GetLevelReportData(doc, revitFilePath):
+def get_level_report_data(doc, revitFilePath):
     '''
     Gets level data ready for being printed to file.
     :param doc: Current Revit model document.

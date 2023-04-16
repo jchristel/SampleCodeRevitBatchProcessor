@@ -56,7 +56,7 @@ def get_grids_in_model(doc):
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllGridHeadsByCategory(doc):
+def get_all_grid_heads_by_category(doc):
     '''
     Gets all grid head types in the model.
 
@@ -69,7 +69,7 @@ def GetAllGridHeadsByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_GridHeads).WhereElementIsElementType()
     return collector
 
-def GetAllGridTypesByCategory(doc):
+def get_all_grid_types_by_category(doc):
     '''
     Gets all grid types in the model
 
@@ -82,7 +82,7 @@ def GetAllGridTypesByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Grids).WhereElementIsElementType()
     return collector
 
-def GetAllGridTypeIdsByCategory(doc):
+def get_all_grid_type_ids_by_category(doc):
     '''
     Gets all grid types ids in the model.
 
@@ -92,11 +92,11 @@ def GetAllGridTypeIdsByCategory(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    collector = GetAllGridTypesByCategory(doc)
+    collector = get_all_grid_types_by_category(doc)
     ids = com.get_ids_from_element_collector(collector)
     return ids
 
-def GetGridTypeNames (doc, g):
+def get_grid_type_names (doc, g):
     '''
     Gets all valid grid types, based on a past in grid, available in model.
 
@@ -120,7 +120,7 @@ def GetGridTypeNames (doc, g):
         validGridTypes.append(gridData)
     return validGridTypes
 
-def GetGridTypeName (doc, g):
+def get_grid_type_name (doc, g):
     '''
     Gets the grid type name of a grid.
 
@@ -137,7 +137,7 @@ def GetGridTypeName (doc, g):
     value = rdb.Element.Name.GetValue(gtypeT)
     return value
 
-def GetGridTypeIdByName (doc, gridTypeName):
+def get_grid_type_id_by_name (doc, gridTypeName):
     '''
     Gets the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
 
@@ -161,7 +161,7 @@ def GetGridTypeIdByName (doc, gridTypeName):
                 break
     return id
 
-def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
+def grid_check_parameter_value(g, paraName, paraCondition, conditionValue):
     '''
     Returns true if a given parameter on a grid has a value meeting the parameter condition.
 
@@ -176,13 +176,14 @@ def GridCheckParameterValue(g, paraName, paraCondition, conditionValue):
     :return: True if parameter value is evaluated to True otherwise False.
     :rtype: bool
     '''
+
     ruleMatch = False
     pValue = rParaGet.get_parameter_value_by_name (g, paraName)
     if (pValue != None):
         ruleMatch = rParaGet.check_parameter_value(g, paraCondition, conditionValue)
     return ruleMatch
 
-def GetMaxExtentAsString(g):
+def get_max_extent_as_string(g):
     '''
     Gets the maximum extent of a grid.
 
@@ -198,7 +199,7 @@ def GetMaxExtentAsString(g):
     return '\t'.join([min, max])
 
 
-def GetAllGridHeadFamilyTypeIds(doc):
+def get_all_grid_head_family_type_ids(doc):
     ''' 
     This will return all ids grid head family types in the model
     '''

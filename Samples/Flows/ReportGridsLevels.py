@@ -115,7 +115,7 @@ def write_grid_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rGridHeader.REPORT_GRIDS_HEADER, 
-            rGridRep.GetGridReportData(doc, REVIT_FILE_PATH))
+            rGridRep.get_grid_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))
@@ -140,7 +140,7 @@ def write_level_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rLevelHeader.REPORT_LEVELS_HEADER, 
-            rLevelRep.GetLevelReportData(doc, REVIT_FILE_PATH))
+            rLevelRep.get_level_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))

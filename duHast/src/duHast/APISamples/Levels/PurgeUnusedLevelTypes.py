@@ -32,7 +32,7 @@ from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils, RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Levels import RevitLevels as rLevel
 
-def GetUnusedLevelTypesForPurge(doc):
+def get_unused_level_types_for_purge(doc):
     '''
     Gets all ids of unused level types in the model.
     Unused: not one instance per level type is placed in the model.
@@ -43,9 +43,9 @@ def GetUnusedLevelTypesForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    return rPurgeUtils.get_used_unused_type_ids(doc, rLevel.GetAllLevelTypeIdsByCategory, 0, 6)
+    return rPurgeUtils.get_used_unused_type_ids(doc, rLevel.get_all_level_type_ids_by_category, 0, 6)
 
-def GetUnusedLevelHeadFamilies(doc):
+def get_unused_level_head_families(doc):
     '''
     Gets all ids of unused family symbols (types) of level head families.
     Unused: not one instance per symbol is placed in the model.
@@ -55,7 +55,7 @@ def GetUnusedLevelHeadFamilies(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedTypes = rPurgeUtils.get_used_unused_type_ids(doc, rLevel.GetAllLevelTypeIdsByCategory, 1, 6)
+    usedTypes = rPurgeUtils.get_used_unused_type_ids(doc, rLevel.get_all_level_type_ids_by_category, 1, 6)
     headsInUseIds = []
     # get family symbol in use at level as symbol
     for lId in usedTypes:
@@ -64,7 +64,7 @@ def GetUnusedLevelHeadFamilies(doc):
         if(id != None and id not in headsInUseIds):
             headsInUseIds.append(id)
     # get all level head symbols available
-    allSymbolsInModel = rLevel.GetAllLevelHeadsByCategory(doc)
+    allSymbolsInModel = rLevel.get_all_level_heads_by_category(doc)
     unusedSymbolIds = []
     # filter out unused level head symbols and add to list to be returned
     for  levelSymbolInModel in  allSymbolsInModel:
@@ -73,7 +73,7 @@ def GetUnusedLevelHeadFamilies(doc):
     return unusedSymbolIds
 
 
-def GetUnusedLevelHeadFamiliesForPurge(doc):
+def get_unused_level_head_families_for_purge(doc):
     '''
     Gets ids of all unused level head symbols and families.
     Unused: not one instance per level symbol is placed in the model.
@@ -84,4 +84,4 @@ def GetUnusedLevelHeadFamiliesForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    return rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedLevelHeadFamilies)
+    return rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_level_head_families)

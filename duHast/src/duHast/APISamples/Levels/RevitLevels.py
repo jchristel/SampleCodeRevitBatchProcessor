@@ -56,7 +56,7 @@ def get_levels_in_model(doc):
 
 # --------------------------------------------- utility functions ------------------
 
-def GetLevelsListAscending(doc):
+def get_levels_list_ascending(doc):
     '''
     Gets a filtered element collector of all levels in the model ascending by project elevation.
 
@@ -74,7 +74,7 @@ def GetLevelsListAscending(doc):
 
 # ------------------------------------------------- filters --------------------------------------------------------------------
 
-def GetAllLevelHeadsByCategory(doc):
+def get_all_level_heads_by_category(doc):
     '''
     Gets a filtered element collector of all level head types in the model.
 
@@ -90,7 +90,7 @@ def GetAllLevelHeadsByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LevelHeads).WhereElementIsElementType()
     return collector
 
-def GetAllLevelTypesByCategory(doc):
+def get_all_level_types_by_category(doc):
     '''
     Gets a filtered element collector of all level types in the model.
 
@@ -106,7 +106,7 @@ def GetAllLevelTypesByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Levels).WhereElementIsElementType()
     return collector
 
-def GetAllLevelTypeIdsByCategory(doc):
+def get_all_level_type_ids_by_category(doc):
     '''
     Gets a list of all level type ids in the model.
 
@@ -123,7 +123,7 @@ def GetAllLevelTypeIdsByCategory(doc):
 
 # -------------------------------------------------  purge --------------------------------------------------------------------
 
-def GetAllLevelHeadFamilyTypeIds(doc):
+def get_all_level_head_family_type_ids(doc):
     '''
     Gets ids of all level head family symbols (types) in the model.
 

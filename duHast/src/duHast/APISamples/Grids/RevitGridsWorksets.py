@@ -33,7 +33,7 @@ from duHast.APISamples.Common import RevitWorksets as rWork
 from duHast.APISamples.Grids import RevitGrids as rGrid
 
 
-def ModifyGridWorkSetsDefault (doc, worksetRules):
+def modify_grid_worksets_default (doc, worksetRules):
     '''
     Workset modifier method. Moves all grids to one workset
     rules format:
@@ -58,7 +58,7 @@ def ModifyGridWorkSetsDefault (doc, worksetRules):
     return gridsResults
 
 
-def ModifyGridWorkSetsByTypeName(doc, worksetRules):
+def modify_grid_worksets_by_type_name(doc, worksetRules):
     '''
     Workset modifier method. Moves grids matching type condition to a particular workset
     defaultWorksetTypeRules_ = [
@@ -84,14 +84,14 @@ def ModifyGridWorkSetsByTypeName(doc, worksetRules):
     # get all grids matching type name filter
     for defaultWorksetName, typeNameCondition, typeName,  in worksetRules:
         # get the grid type id from the type name
-        typeId = rGrid.GetGridTypeIdByName(doc, typeName)
+        typeId = rGrid.get_grid_type_id_by_name(doc, typeName)
         collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
         grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 
 
-def ModifyGridWorkSetsByParameterValue(doc, worksetRules):
+def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     '''
     Workset modifier method. Moves grids matching parameter condition to a particular workset
     #defaultWorksetRulesNames_ = [
@@ -115,13 +115,13 @@ def ModifyGridWorkSetsByParameterValue(doc, worksetRules):
     # loop over grid parameter filter and address one at the time
     # get all grids matching filter
     for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
-        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: rGrid.GridCheckParameterValue(e, paraName, paraCondition, conditionValue))
+        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: rGrid.grid_check_parameter_value(e, paraName, paraCondition, conditionValue))
         grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
         gridsResults.Update(grids)
     return gridsResults
 
 
-def ModifyGridsWorksets(doc, revitFileName, worksetRules):
+def modify_grids_worksets(doc, revitFileName, worksetRules):
     '''
     Modifies worksets of grids as per workset rules
     rules format:

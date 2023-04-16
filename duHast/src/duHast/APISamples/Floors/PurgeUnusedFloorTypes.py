@@ -32,7 +32,7 @@ from duHast.APISamples.Floors import RevitFloors as rFloor
 from duHast.APISamples.Floors.Utility import RevitFloorsTypeSorting as rFloorTypeSort
 
 
-def GetUsedFloorTypeIds(doc):
+def get_used_floor_type_ids(doc):
     '''
     Returns all used in Floor type ids.
     Filters by builtin category.
@@ -44,11 +44,11 @@ def GetUsedFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.GetAllFloorTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.get_all_floor_type_ids_in_model_by_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -69,7 +69,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
+def get_unused_non_in_place_floor_type_ids_to_purge(doc):
     '''
     Gets all unused floor type id's.
     This method can be used to safely delete unused wall types:
@@ -87,18 +87,18 @@ def GetUnusedNonInPlaceFloorTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.GetAllFloorTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.get_all_floor_type_ids_in_model_by_class, 0)
     # make sure there is at least on Floor type per system family left in model
-    floorTypes = rFloorTypeSort.SortFloorTypesByFamilyName(doc)
+    floorTypes = rFloorTypeSort.sort_floor_types_by_family_name(doc)
     for key, value in floorTypes.items():
         if(key in rFloor.BUILTIN_FLOOR_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 
-def GetUsedInPlaceFloorTypeIds(doc):
+def get_used_in_place_floor_type_ids(doc):
     '''
     Gets all used in place family symbol (type) ids.
     Used: at least one instance of this type is placed in the model.
@@ -109,11 +109,11 @@ def GetUsedInPlaceFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.get_all_in_place_floor_type_ids_in_model, 1)
     return ids
 
 
-def GetUnusedInPlaceFloorTypeIds(doc):
+def get_unused_in_place_floor_type_ids(doc):
     '''
     Gets all used in place family symbol (type) ids.
     Unused: Not one instance of this type is placed in the model.
@@ -124,11 +124,11 @@ def GetUnusedInPlaceFloorTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.GetAllInPlaceFloorTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.get_all_in_place_floor_type_ids_in_model, 0)
     return ids
 
 
-def GetUnusedInPlaceFloorIdsForPurge(doc):
+def get_unused_in_place_floor_ids_for_purge(doc):
     '''
     Gets symbol(type) ids and family ids (when no type is in use) of in place floor families which can be safely deleted from the model.
     This method can be used to safely delete unused in place floor types. There is no requirement by Revit to have at least one\
@@ -140,5 +140,5 @@ def GetUnusedInPlaceFloorIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceFloorTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_in_place_floor_type_ids)
     return ids

@@ -50,7 +50,7 @@ BUILTIN_FLOOR_TYPE_FAMILY_NAMES = [
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllFloorTypesByCategory(doc):
+def get_all_floor_types_by_category(doc):
     '''
     Gets a filtered element collector of all ceiling types in the model:
 
@@ -71,7 +71,7 @@ def GetAllFloorTypesByCategory(doc):
     collector = rFloorFilter._get_all_ceiling_types_by_category(doc)
     return collector
 
-def GetFloorTypesByClass(doc):
+def get_floor_types_by_class(doc):
     '''
     Gets a filtered element collector of all ceiling types in the model:
 
@@ -94,7 +94,7 @@ def GetFloorTypesByClass(doc):
 
 # -------------------------------- none in place Floor types -------------------------------------------------------
 
-def GetAllFloorInstancesInModelByCategory(doc):
+def get_all_floor_instances_in_model_by_category(doc):
     '''
     Gets all floor elements placed in model...ignores in foundation slabs.
 
@@ -109,7 +109,7 @@ def GetAllFloorInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Floors).WhereElementIsNotElementType()
 
-def GetAllFloorInstancesInModelByClass(doc):
+def get_all_floor_instances_in_model_by_class(doc):
     '''
     Gets all floor elements placed in model...ignores in place families of category floor.
 
@@ -124,7 +124,7 @@ def GetAllFloorInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Floor).WhereElementIsNotElementType()
 
-def GetAllFloorTypeIdsInModelByCategory(doc):
+def get_all_floor_type_ids_in_model_by_category(doc):
     '''
     Returns all Floor element types available in model.
 
@@ -138,11 +138,11 @@ def GetAllFloorTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllFloorTypesByCategory(doc)
+    colCat = get_all_floor_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllFloorTypeIdsInModelByClass(doc):
+def get_all_floor_type_ids_in_model_by_class(doc):
     '''
     Returns all Floor element types available in model.
 
@@ -156,13 +156,13 @@ def GetAllFloorTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetFloorTypesByClass(doc)
+    colClass = get_floor_types_by_class(doc)
     ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 # -------------------------------- In place Floor types -------------------------------------------------------
 
-def GetInPlaceFloorFamilyInstances(doc):
+def get_in_place_floor_family_instances(doc):
     '''
     Gets all instances of in place families of category floor.
 
@@ -176,7 +176,7 @@ def GetInPlaceFloorFamilyInstances(doc):
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Floors)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceFloorTypeIdsInModel(doc):
+def get_all_in_place_floor_type_ids_in_model(doc):
     '''
     Gets type ids off all available in place families symbols (types) of category floor.
 

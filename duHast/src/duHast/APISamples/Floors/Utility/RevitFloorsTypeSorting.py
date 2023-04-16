@@ -28,7 +28,7 @@ This module contains a Revit floor utility functions.
 
 from duHast.APISamples.Floors.Utility import RevitFloorsFilter as rFloorsFilter
 
-def BuildFloorTypeDictionary(collector, dic):
+def build_floor_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in floor family type names.
@@ -49,7 +49,7 @@ def BuildFloorTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def SortFloorTypesByFamilyName(doc):
+def sort_floor_types_by_family_name(doc):
     '''
     Returns a dictionary containing all floor types in the model.
     Key values are as per BUILTIN_FLOOR_TYPE_FAMILY_NAMES.
@@ -65,6 +65,6 @@ def SortFloorTypesByFamilyName(doc):
     # get all floor types including in place floor families
     wts_two = rFloorsFilter._get_all_floor_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildFloorTypeDictionary(wts, usedWts)
-    usedWts = BuildFloorTypeDictionary(wts_two, usedWts)
+    usedWts = build_floor_type_dictionary(wts, usedWts)
+    usedWts = build_floor_type_dictionary(wts_two, usedWts)
     return usedWts

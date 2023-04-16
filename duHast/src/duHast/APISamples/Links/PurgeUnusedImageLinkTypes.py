@@ -27,10 +27,10 @@ This module contains a number of helper functions relating to purging unused ima
 #
 
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Links.RevitImageLinks import GetImageInstancesInModel, GetImageTypeInModel
+from duHast.APISamples.Links.RevitImageLinks import get_image_instances_in_model, get_image_types_in_model
 
 
-def GetAllUnusedImageTypeIdsInModel(doc):
+def get_all_unused_image_type_ids_in_model(doc):
     '''
     Gets all image types with no instances placed in a model.
     :param doc: Current Revit model document.
@@ -39,14 +39,14 @@ def GetAllUnusedImageTypeIdsInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedImages = com.get_not_placed_types(doc, GetImageTypeInModel, GetImageInstancesInModel)
+    unusedImages = com.get_not_placed_types(doc, get_image_types_in_model, get_image_instances_in_model)
     unusedTypeIds = []
     for i in unusedImages:
         unusedTypeIds.append(i.Id)
     return unusedTypeIds
 
 
-def GetAllUnusedImageTypeIdsInModelWithGroupCheck(doc):
+def get_all_unused_image_type_ids_in_model_with_group_check(doc):
     '''
     Gets all image types with no instance placed in a model but includes group definition check.
     This only returns valid data if at least one instance of the group is placed in the model!!
@@ -57,7 +57,7 @@ def GetAllUnusedImageTypeIdsInModelWithGroupCheck(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedTypeIds = GetAllUnusedImageTypeIdsInModel(doc)
+    unusedTypeIds = get_all_unused_image_type_ids_in_model(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
     unusedTypeIds = com.get_unused_type_ids_from_detail_groups(doc, unusedTypeIds)
     return unusedTypeIds

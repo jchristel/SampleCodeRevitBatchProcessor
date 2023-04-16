@@ -133,7 +133,7 @@ def get_category_properties(cat, doc):
     properties.append(dic_material)
 
     # line pattern
-    dic_pattern = rPat.GetLinePatternFromCategory(cat, doc)
+    dic_pattern = rPat.get_line_pattern_from_category(cat, doc)
     properties.append(dic_pattern)
 
     # line weights

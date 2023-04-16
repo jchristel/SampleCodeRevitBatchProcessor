@@ -2,7 +2,7 @@ import glob
 from os import path
 
 
-def GetLinkPath(fileName, possibleLinkLocations, fileExtension):
+def get_link_path(fileName, possibleLinkLocations, fileExtension):
     '''
     Gets a fully qualified file path to a file name match (revit project file extension .rvt) in given directory locations.
     Returns the first file name match it finds! If no match found returns None.

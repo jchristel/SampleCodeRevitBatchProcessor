@@ -29,10 +29,10 @@ This module contains utility function(s) for Revit link reports.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples.Links.RevitLinks import GetAllRevitLinkInstances, GetRevitLinkTypeFromInstance
+from duHast.APISamples.Links.RevitLinks import get_all_revit_link_instances, get_revit_link_type_from_instance
 
 
-def GetRevitLinkTypeData(doc, revitLinkType):
+def get_revit_link_type_data(doc, revitLinkType):
     '''
     Gets Revit Link Type data for reporting.
     :param doc: Current Revit model document.
@@ -67,7 +67,7 @@ def GetRevitLinkTypeData(doc, revitLinkType):
 
     return data
 
-def GetRevitLinkReportData(doc, revitFilePath):
+def get_revit_link_report_data(doc, revitFilePath):
     '''
     Gets link data ready for being printed to file.
     :param doc: Current Revit model document.
@@ -79,7 +79,7 @@ def GetRevitLinkReportData(doc, revitFilePath):
     '''
 
     data = []
-    collector = GetAllRevitLinkInstances(doc)
+    collector = get_all_revit_link_instances(doc)
     for c in collector:
         # get the workset
         wsParameter = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
@@ -96,8 +96,8 @@ def GetRevitLinkReportData(doc, revitFilePath):
             linkLocationName = c.GetLinkDocument().ActiveProjectLocation.Name
         except Exception:
             pass
-        linkType = GetRevitLinkTypeFromInstance(doc, c)
-        linkTypeData = GetRevitLinkTypeData(doc, linkType)
+        linkType = get_revit_link_type_from_instance(doc, c)
+        linkTypeData = get_revit_link_type_data(doc, linkType)
         # add other data
         linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [rParaGet.get_parameter_value (wsParameter)] + [rParaGet.get_parameter_value(doParameter)]
         data.append(linkTypeData)

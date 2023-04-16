@@ -338,7 +338,7 @@ def GetNumberOfLineStyles(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLineStyle.GetAllLineStyleIds(doc))
+        number = len(rLineStyle.get_all_line_style_ids(doc))
     except:
         pass
     return number
@@ -356,7 +356,7 @@ def GetNumberOfLinePatterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rLinePat.GetAllLinePatterns(doc))
+        number = len(rLinePat.get_all_line_patterns(doc))
     except:
         pass
     return number
@@ -374,7 +374,7 @@ def GetNumberOfFillPatterns(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rFill.GetAllFillPattern(doc))
+        number = len(rFill.get_all_fill_pattern(doc))
     except Exception as e:
         pass
     return number
@@ -394,7 +394,7 @@ def GetNumberOfCADImports(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rCadLink.GetCADTypeImportsOnly(doc))
+        number = len(rCadLink.get_cad_type_imports_only(doc))
     except:
         pass
     return number
@@ -412,7 +412,7 @@ def GetNumberOfCADLinksToModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rCadLink.GetAllCADLinkTypeInModelOnly(doc))
+        number = len(rCadLink.get_all_cad_link_type_in_model_only(doc))
     except:
         pass
     return number
@@ -430,7 +430,7 @@ def GetNumberOfCADLinksToView(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rCadLink.GetAllCADLinkTypeByViewOnly(doc))
+        number = len(rCadLink.get_all_cad_link_type_by_view_only(doc))
     except:
         pass
     return number
@@ -450,7 +450,7 @@ def GetNumberOfImageImports(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rImageLink.GetAllImageLinkTypeImportedInModel(doc))
+        number = len(rImageLink.get_all_image_link_type_imported_in_model(doc))
     except:
         pass
     return number
@@ -468,7 +468,7 @@ def GetNumberOfImageLinks(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rImageLink.GetAllImageLinkTypeLinkedInModel(doc))
+        number = len(rImageLink.get_all_image_link_type_linked_in_model(doc))
     except:
         pass
     return number

@@ -35,7 +35,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 
-def DeleteLineStylesStartsWith(doc, startsWith):
+def delete_line_styles_starts_with(doc, startsWith):
     '''
     Deletes all line styles where the name starts with provided string
     :param doc: Current Revit model document.
@@ -55,7 +55,7 @@ def DeleteLineStylesStartsWith(doc, startsWith):
     return result
 
 
-def GetAllLineStyleIds(doc):
+def get_all_line_style_ids(doc):
     '''
     Gets all line styles ids in the model.
     :param doc: Current Revit model document.

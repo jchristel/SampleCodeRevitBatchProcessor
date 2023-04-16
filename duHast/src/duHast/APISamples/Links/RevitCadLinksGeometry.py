@@ -28,10 +28,10 @@ This module contains a number of helper functions relating to CAD link geometry.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Links.RevitCadLinks import GetAllCADLinkInstances
+from duHast.APISamples.Links.RevitCadLinks import get_all_cad_link_instances
 
 
-def GetCADImportInstanceGeometry(importInstance):
+def get_cad_import_instance_geometry(importInstance):
     '''
     Returns a list of geometry elements from an import instance
     :param importInstance: A import instance
@@ -54,7 +54,7 @@ def GetCADImportInstanceGeometry(importInstance):
     return geo
 
 
-def GetAllCADImportInstancesGeometry(doc):
+def get_all_cad_import_instances_geometry(doc):
     '''
     Returns a list of geometry elements from all import instances in the document.
     :param doc: Current Revit model document.
@@ -63,9 +63,9 @@ def GetAllCADImportInstancesGeometry(doc):
     :rtype: [Autodesk.Revit.DB GeometryObject]
     '''
     instancesGeometry = []
-    allImportInstances = GetAllCADLinkInstances(doc)
+    allImportInstances = get_all_cad_link_instances(doc)
     for importInstance in allImportInstances:
-        geometryInstances = GetCADImportInstanceGeometry(importInstance)
+        geometryInstances = get_cad_import_instance_geometry(importInstance)
         if (len(geometryInstances) > 0):
             instancesGeometry += geometryInstances
     return instancesGeometry

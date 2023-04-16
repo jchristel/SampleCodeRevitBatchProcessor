@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetImagesTypesInModel(doc):
+def get_images_types_in_model(doc):
     '''
     Gets all image link types and image link instances in a model.
     :param doc: Current Revit model document.
@@ -44,7 +44,7 @@ def GetImagesTypesInModel(doc):
     return collector
 
 
-def GetImagesTypeIdsInModel(doc):
+def get_images_type_ids_in_model(doc):
     '''
     Gets all image link type Ids and image link instance ids in a model.
     :param doc: Current Revit model document.
@@ -54,12 +54,12 @@ def GetImagesTypeIdsInModel(doc):
     '''
 
     ids = []
-    col = GetImagesTypesInModel(doc)
+    col = get_images_types_in_model(doc)
     ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def SortImageLinkTypesByImportOrLinked(doc):
+def sort_image_link_types_by_import_or_linked(doc):
     '''
     Returns two lists: First one: images linked into model, second one images saved into model from model itself (no external file reference)
     :param doc: Current Revit model document.
@@ -70,7 +70,7 @@ def SortImageLinkTypesByImportOrLinked(doc):
 
     imageLink = []
     imageImport = []
-    collectorImageTypes = GetImagesTypesInModel(doc)
+    collectorImageTypes = get_images_types_in_model(doc)
     for im in collectorImageTypes:
         if(im.IsLoadedFromFile()):
             imageLink.append(im)
@@ -79,7 +79,7 @@ def SortImageLinkTypesByImportOrLinked(doc):
     return imageLink, imageImport
 
 
-def GetAllImageLinkTypeLinkedInModel(doc):
+def get_all_image_link_type_linked_in_model(doc):
     '''
     Gets all image link types which are links (external referenced) in a model.
     :param doc: Current Revit model document.
@@ -88,11 +88,11 @@ def GetAllImageLinkTypeLinkedInModel(doc):
     :rtype: list Autodesk.Revit.DB.ImageType
     '''
 
-    imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
+    imageLinks, imageImport = sort_image_link_types_by_import_or_linked(doc)
     return imageLinks
 
 
-def GetAllImageLinkTypeImportedInModel(doc):
+def get_all_image_link_type_imported_in_model(doc):
     '''
     Gets all image link types which are imported (not an external reference) in a model.
     :param doc: Current Revit model document.
@@ -101,11 +101,11 @@ def GetAllImageLinkTypeImportedInModel(doc):
     :rtype: list Autodesk.Revit.DB.ImageType
     '''
 
-    imageLinks, imageImport = SortImageLinkTypesByImportOrLinked(doc)
+    imageLinks, imageImport = sort_image_link_types_by_import_or_linked(doc)
     return imageImport
 
 
-def GetImageTypeInModel(doc):
+def get_image_types_in_model(doc):
     '''
     Gets all image types in a model.
     Filters by category.
@@ -117,7 +117,7 @@ def GetImageTypeInModel(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RasterImages).WhereElementIsElementType()
 
-def GetImageInstancesInModel(doc):
+def get_image_instances_in_model(doc):
     '''
     Gets all image instances placed in a model.
     Filters by category.

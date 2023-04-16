@@ -28,11 +28,11 @@ This module contains utility function(s) for CAD link reports.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Links.RevitCadLinks import GetAllCADLinkInstances
+from duHast.APISamples.Links.RevitCadLinks import get_all_cad_link_instances
 from duHast.Utilities import FilesIO as util
 
 
-def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
+def get_cad_link_type_data_by_name(cadLinkName, doc, revitFilePath):
     '''
     Extract the file path from CAD link type.
     :param cadLinkName: The cad link name
@@ -61,7 +61,7 @@ def GetCADLinkTypeDataByName(cadLinkName, doc, revitFilePath):
     return modelPath
 
 
-def GetCADReportData(doc, revitFilePath):
+def get_cad_report_data(doc, revitFilePath):
     '''
     Gets CAD link data to be written to report file.
     :param doc: Current Revit model document.
@@ -73,7 +73,7 @@ def GetCADReportData(doc, revitFilePath):
     '''
 
     data = []
-    collector = GetAllCADLinkInstances(doc)
+    collector = get_all_cad_link_instances(doc)
     for c in collector:
         # get the workset
         wsParam = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
@@ -87,7 +87,7 @@ def GetCADReportData(doc, revitFilePath):
         # lSharedParam = cadLink.get_Parameter(BuiltInParameter.GEO_LOCATION)
         isViewSpecific= c.ViewSpecific
         ownerViewId = c.OwnerViewId
-        linkTypeData = GetCADLinkTypeDataByName(lNameParam.AsString(), doc, revitFilePath)
+        linkTypeData = get_cad_link_type_data_by_name(lNameParam.AsString(), doc, revitFilePath)
         data.append([
             revitFilePath,
             str(c.Id),

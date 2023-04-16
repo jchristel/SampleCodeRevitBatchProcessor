@@ -28,7 +28,7 @@ Revit fill patterns helper functions.
 import Autodesk.Revit.DB as rdb
 
 
-def GetAllFillPattern(doc):
+def get_all_fill_pattern(doc):
     '''
     Gets all fill pattern element ids in the model.
     :param doc: Current Revit model document.

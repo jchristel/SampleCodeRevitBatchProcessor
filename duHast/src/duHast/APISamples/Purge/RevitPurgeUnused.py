@@ -192,7 +192,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Nested Detail Group(s)', rGrp
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Family Types', rViewPurge.GetUnusedViewTypeIdsInModel, 'View Family Type(s)', 'View Family Type(s)', rView.GetViewTypeIds))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Templates', rViewTemp.GetAllUnusedViewTemplateIdsInModel, 'View Family Templates(s)', 'View Family Templates(s)', rViewTemp.GetViewsTemplateIdsInInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused View Filters', rViewFilter.GetAllUnUsedViewFilters, 'View Filter(s)', 'View Filter(s)', rViewFilter.GetAllAvailableFilterIdsInModel))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Image Links', rLinkPurge.GetAllUnusedImageTypeIdsInModel, 'Images(s)', 'Images(s)', rImageLink.GetImagesTypeIdsInModel))
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Image Links', rLinkPurge.get_all_unused_image_type_ids_in_model, 'Images(s)', 'Images(s)', rImageLink.get_images_type_ids_in_model))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Stacked Wall Types', rWallPurge.GetUnusedStackedWallTypeIdsToPurge, 'Stacked Wall Type(s)', 'Stacked Wall Type(s)', rStackedWall.GetAllStackedWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused InPlace Wall Types', rWallPurge.GetUnusedInPlaceWallIdsForPurge, 'InPlace Wall Type(s)', 'InPlace Wall Type(s)', rWall.GetAllInPlaceWallTypeIdsInModel))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Curtain Wall Types', rWallPurge.GetUnUsedCurtainWallTypeIdsToPurge, 'Curtain Wall Type(s)', 'Curtain Wall Type(s)', rCurtainWall.GetAllCurtainWallTypeIdsInModel))

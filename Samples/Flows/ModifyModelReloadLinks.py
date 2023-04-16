@@ -146,22 +146,22 @@ LINK_CAD_LOCATIONS = [r'C:\temp']
 output('Modifying Revit File.... start')
 
 # reload Revit links
-RESULT_REVIT_LINKS_RELOAD = rLink.ReloadRevitLinks(
+RESULT_REVIT_LINKS_RELOAD = rLink.reload_revit_links(
     DOC, 
     LINK_REVIT_LOCATIONS, 
     HOST_NAME, 
-    rLink.DefaultLinkName, # this could be replaced by custom function i.e. LinkName(name) provided above
-    rLink.DefaultWorksetConfigForReload
+    rLink.default_link_name, # this could be replaced by custom function i.e. LinkName(name) provided above
+    rLink.default_workset_config_for_reload
 )
 
 output('{} :: [{}]'.format(RESULT_REVIT_LINKS_RELOAD.message ,RESULT_REVIT_LINKS_RELOAD.status))
 
 # reload CAD links
-RESULT_CAD_LINKS_RELOAD = rCadLink.ReloadCADLinks(
+RESULT_CAD_LINKS_RELOAD = rCadLink.reload_cad_links(
     DOC, 
     LINK_CAD_LOCATIONS, 
     HOST_NAME, 
-    rLink.DefaultLinkName # this could be replaced by custom function i.e. LinkName(name) provided above
+    rLink.default_link_name # this could be replaced by custom function i.e. LinkName(name) provided above
 )
 
 output('{} :: [{}]'.format(RESULT_CAD_LINKS_RELOAD.message, RESULT_CAD_LINKS_RELOAD.status))

@@ -32,13 +32,13 @@ import System
 # import common library modules
 from duHast.APISamples.Common import RevitDeleteElements as rDel
 from duHast.Utilities import Result as res
-from duHast.APISamples.Links.Utility.LinkPath import GetLinkPath
+from duHast.APISamples.Links.Utility.LinkPath import get_link_path
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 
-def GetAllRevitLinkInstances(doc):
+def get_all_revit_link_instances(doc):
     '''
     Gets all Revit link instances in a model.
 
@@ -54,7 +54,7 @@ def GetAllRevitLinkInstances(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance)
     return collector
 
-def GetAllRevitLinkTypes(doc):
+def get_all_revit_link_types(doc):
     '''
     Gets all Revit link types in a model.
 
@@ -67,7 +67,7 @@ def GetAllRevitLinkTypes(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType)
     return collector
     
-def GetRevitLinkTypeFromInstance(doc, linkInstance):
+def get_revit_link_type_from_instance(doc, linkInstance):
     '''
     Gets the Revit link type from a given revit link instance.
 
@@ -80,12 +80,12 @@ def GetRevitLinkTypeFromInstance(doc, linkInstance):
     :rtype: Autodesk.Revit.DB.RevitLinkType
     '''
     
-    revitLinkTypes = GetAllRevitLinkTypes(doc)
+    revitLinkTypes = get_all_revit_link_types(doc)
     for lt in revitLinkTypes:
         if(lt.Id == linkInstance.GetTypeId()):
             return lt
 
-def DeleteRevitLinks(doc):
+def delete_revit_links(doc):
     '''
     Deletes all revit links in a file.
 
@@ -108,7 +108,7 @@ def DeleteRevitLinks(doc):
     returnValue = rDel.delete_by_element_ids(doc, ids, 'Deleting Revit links', 'Revit link(s)')
     return returnValue
 
-def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+def reload_revit_links(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
     '''
     Reloads Revit links from a given file location based on the original link type name (starts with comparison)
 
@@ -140,7 +140,7 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
             linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
-                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
+                newLinkPath = get_link_path(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
                     mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     # attempt to reload with worksets set to last viewed
@@ -159,7 +159,7 @@ def ReloadRevitLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
-def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
     '''
     Reloads Revit links from a given file location based on the original link type name (starts with comparison)
 
@@ -193,7 +193,7 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
             linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
-                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.rvt')
+                newLinkPath = get_link_path(linkTypeName, linkLocations, '.rvt')
                 if(newLinkPath != None):
                     mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
                     # attempt to reload with worksets set to last viewed
@@ -212,7 +212,7 @@ def ReloadRevitLinksFromList(doc, linkTypesTobReloaded, linkLocations, hostNameF
         returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
-def DefaultLinkName(name):
+def default_link_name(name):
     '''
     Default 'do something with link name' method. Returns the link name unchanged.
 
@@ -227,7 +227,7 @@ def DefaultLinkName(name):
 
     return name
 
-def DefaultWorksetConfigForReload():
+def default_workset_config_for_reload():
     '''
     Default method returning an 'open previous worksets' configuration. (None)
 

@@ -49,7 +49,7 @@ PROPERTY_PATTERN_NAME_VALUE_DEFAULT = 'Solid'
 #: pattern id
 PROPERTY_PATTERN_ID = 'PatternId'
 
-def GetLinePatternFromCategory(cat, doc):
+def get_line_pattern_from_category(cat, doc):
     '''
     Returns the line pattern properties as a dictionary\
          where keys are pattern name and pattern id.
@@ -80,7 +80,7 @@ def GetLinePatternFromCategory(cat, doc):
                 dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
     return dicPattern
 
-def GetLinePatternFromLevelElement(doc, level):
+def get_line_pattern_from_level_element(doc, level):
     '''
     Returns the line pattern properties as a dictionary\
          where keys are pattern name and pattern id.
@@ -109,7 +109,7 @@ def GetLinePatternFromLevelElement(doc, level):
 
 # ------------------------------------------------ DELETE LINE PATTERNS ----------------------------------------------
 
-def DeleteLinePatternsContains(doc, contains):
+def delete_line_patterns_contains(doc, contains):
     '''
     Deletes all line patterns where the names contains a provided string
 
@@ -132,7 +132,7 @@ def DeleteLinePatternsContains(doc, contains):
     result = rDel.delete_by_element_ids(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
     return result
 
-def DeleteLinePatternStartsWith(doc, startsWith):
+def delete_line_pattern_starts_with(doc, startsWith):
     '''
     Deletes all line patterns where the name starts with provided string.
 
@@ -155,7 +155,7 @@ def DeleteLinePatternStartsWith(doc, startsWith):
     result = rDel.delete_by_element_ids(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
     return result
 
-def DeleteLinePatternsWithout(doc, contains):
+def delete_line_patterns_without(doc, contains):
     '''
     Deletes all line patterns where the name does not contain the provided string.
 
@@ -180,7 +180,7 @@ def DeleteLinePatternsWithout(doc, contains):
     result = rDel.delete_by_element_ids(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
-def GetAllLinePatterns(doc):
+def get_all_line_patterns(doc):
     '''
     Gets all line patterns in the model.
 
@@ -192,7 +192,7 @@ def GetAllLinePatterns(doc):
     '''
     return rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
 
-def BuildPatternsDictionaryByName(doc):
+def build_patterns_dictionary_by_name(doc):
     '''
     Returns a dictionary where line pattern name is key, values are all ids of line patterns with the exact same name.
 
@@ -212,7 +212,7 @@ def BuildPatternsDictionaryByName(doc):
             lpDic[lp.GetLinePattern().Name] = [lp.Id]
     return lpDic
 
-def DeleteDuplicatLinePatterNames(doc):
+def delete_duplicate_line_patter_names(doc):
     '''
     Deletes all but the first line pattern by Id with the exact same name.
 
@@ -232,7 +232,7 @@ def DeleteDuplicatLinePatterNames(doc):
     returnValue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name
     # anything where the value list is greater then 1 means duplicates of the same name...
-    linePatterns = BuildPatternsDictionaryByName(doc)
+    linePatterns = build_patterns_dictionary_by_name(doc)
     for key, value in linePatterns.items():
         if(len(value) > 1):
             # keep the first one (original)

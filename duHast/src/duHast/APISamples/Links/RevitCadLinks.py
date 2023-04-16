@@ -30,10 +30,10 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitTransaction as rTran, RevitDeleteElements as rDel
 from duHast.Utilities import Result as res
-from duHast.APISamples.Links.Utility.LinkPath import GetLinkPath
+from duHast.APISamples.Links.Utility.LinkPath import get_link_path
 
 
-def GetAllCADLinkTypes(doc):
+def get_all_cad_link_types(doc):
     '''
     Gets all CAD link types in a model.
     Filters by class.
@@ -47,7 +47,7 @@ def GetAllCADLinkTypes(doc):
     return collector
 
 
-def GetAllCADLinkInstances(doc):
+def get_all_cad_link_instances(doc):
     '''
     Gets all CAD link instances in a model.
     Filters by class.
@@ -61,7 +61,7 @@ def GetAllCADLinkInstances(doc):
     return collector
 
 
-def GetCADTypeImportsOnly(doc):
+def get_cad_type_imports_only(doc):
     '''
     Gets all CAD imports in a model.
     Filters by class and check whether the element is an external file reference (True its a link, False it is an import)
@@ -79,7 +79,7 @@ def GetCADTypeImportsOnly(doc):
     return cadImports
 
 
-def SortCADLinkTypesByModelOrViewSpecific(doc):
+def sort_cad_link_types_by_model_or_view_specific(doc):
     '''
     Returns two lists: First one: cad links types linked by view (2D) , second one cad link types linked into model (3D).
     :param doc: Current Revit model document.
@@ -90,8 +90,8 @@ def SortCADLinkTypesByModelOrViewSpecific(doc):
 
     cadLinksByView = []
     cadLinksByModel = []
-    collectorCADTypes = GetAllCADLinkTypes(doc)
-    collectorCADInstances = GetAllCADLinkInstances(doc)
+    collectorCADTypes = get_all_cad_link_types(doc)
+    collectorCADInstances = get_all_cad_link_instances(doc)
     idsByView = []
     # work out through the instance which cad link type is by view
     for cInstance in collectorCADInstances:
@@ -106,7 +106,7 @@ def SortCADLinkTypesByModelOrViewSpecific(doc):
     return cadLinksByView, cadLinksByModel
 
 
-def GetAllCADLinkTypeByViewOnly(doc):
+def get_all_cad_link_type_by_view_only(doc):
     '''
     Gets all CAD links by view in a model.
     :param doc: Current Revit model document.
@@ -115,11 +115,11 @@ def GetAllCADLinkTypeByViewOnly(doc):
     :rtype: list Autodesk.Revit.DB.CADLinkType
     '''
 
-    cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
+    cadLinksByView, cadLinksByModel = sort_cad_link_types_by_model_or_view_specific(doc)
     return cadLinksByView
 
 
-def GetAllCADLinkTypeInModelOnly(doc):
+def get_all_cad_link_type_in_model_only(doc):
     '''
     Gets all CAD links by model in a model.
     :param doc: Current Revit model document.
@@ -128,11 +128,11 @@ def GetAllCADLinkTypeInModelOnly(doc):
     :rtype: list Autodesk.Revit.DB.CADLinkType
     '''
 
-    cadLinksByView, cadLinksByModel = SortCADLinkTypesByModelOrViewSpecific(doc)
+    cadLinksByView, cadLinksByModel = sort_cad_link_types_by_model_or_view_specific(doc)
     return cadLinksByModel
 
 
-def DeleteCADLinks(doc):
+def delete_cad_links(doc):
     '''
     Deletes all CAD links in a model.
     :param doc: Current Revit model document.
@@ -153,7 +153,7 @@ def DeleteCADLinks(doc):
     return returnValue
 
 
-def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
+def reload_cad_links(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName):
     '''
     Reloads CAD links from a given file location based on the original link type name (starts with comparison)
     :param doc: Current Revit model document.
@@ -179,7 +179,7 @@ def ReloadCADLinks(doc, linkLocations, hostNameFormatted, doSomethingWithLinkNam
             linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
             newLinkPath = 'unknown'
             try:
-                newLinkPath = GetLinkPath(linkTypeName, linkLocations, '.dwg')
+                newLinkPath = get_link_path(linkTypeName, linkLocations, '.dwg')
                 if(newLinkPath != None):
                     # reloading CAD links requires a transaction
                     def action():

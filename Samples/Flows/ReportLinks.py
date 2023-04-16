@@ -118,7 +118,7 @@ def write_revit_link_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rLinkHeader.REPORT_REVIT_LINKS_HEADER, 
-            rLinkRep.GetRevitLinkReportData(doc, REVIT_FILE_PATH))
+            rLinkRep.get_revit_link_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))
@@ -143,7 +143,7 @@ def write_cad_link_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rLinkCadHeader.REPORT_CAD_LINKS_HEADER, 
-            rLinkCadRep.GetCADReportData(doc, REVIT_FILE_PATH))
+            rLinkCadRep.get_cad_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file {}'.format(file_name))

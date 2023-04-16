@@ -39,7 +39,7 @@ from duHast.APISamples.LinePattern import RevitLinePatternData as rLinePatData
 
 import Autodesk.Revit.DB as rdb
 
-def PurgeUnused(doc, processor):
+def purge_unused(doc, processor):
     '''
     This will delete all line patterns which are not used by any element in the family or nested families.
 

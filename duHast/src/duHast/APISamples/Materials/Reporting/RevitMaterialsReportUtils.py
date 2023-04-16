@@ -30,9 +30,9 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Utility as util, FilesIO as util
-from duHast.APISamples.Materials.RevitMaterials import GetAllMaterials
+from duHast.APISamples.Materials.RevitMaterials import get_all_materials
 
-def GetMaterialReportData(doc, revitFilePath):
+def get_material_report_data(doc, revitFilePath):
     '''
     Gets material data ready for being written to file.
     - HOSTFILE
@@ -48,7 +48,7 @@ def GetMaterialReportData(doc, revitFilePath):
     '''
 
     data = []
-    mats = GetAllMaterials(doc)
+    mats = get_all_materials(doc)
     for mat in mats:
         try:
             paras = mat.GetOrderedParameters()

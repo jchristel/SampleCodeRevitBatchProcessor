@@ -36,7 +36,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllMaterials(doc): 
+def get_all_materials(doc): 
     '''
     Gets all materials in a model.
 
@@ -52,7 +52,7 @@ def GetAllMaterials(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Material)
     return collector
 
-def GetMaterialById(doc, id):
+def get_material_by_id(doc, id):
     '''
     Gets a material element based on a material id.
 
@@ -65,12 +65,12 @@ def GetMaterialById(doc, id):
     :rtype: Autodesk.Revit.DB.Material
     '''
 
-    mats = GetAllMaterials(doc)
+    mats = get_all_materials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
             return m
 
-def GetMaterialNameById(doc, id):
+def get_material_name_by_id(doc, id):
     '''
     Gets a material name based on a material id.
 
@@ -84,7 +84,7 @@ def GetMaterialNameById(doc, id):
     '''
 
     name = '<By Category>'
-    mats = GetAllMaterials(doc)
+    mats = get_all_materials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
             mName = rdb.Element.Name.GetValue(m)

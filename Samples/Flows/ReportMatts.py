@@ -111,7 +111,7 @@ def write_material_data(doc, file_name):
         status = fileCSV.writeReportDataAsCSV(
             file_name, 
             rMatHeader.REPORT_MATERIALS_HEADER, 
-            rMatRep.GetMaterialReportData(doc, REVIT_FILE_PATH))
+            rMatRep.get_material_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(file_name))

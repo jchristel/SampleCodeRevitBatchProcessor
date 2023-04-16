@@ -77,5 +77,5 @@ def get_text_type_arrow_head_ids(doc):
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
-    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_text_types, rArrow.ARROWHEAD_PARAS_TEXT)
-    return usedIds
+    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_text_types, rArrow.ARROWHEAD_PARAS_TEXT)
+    return used_ids

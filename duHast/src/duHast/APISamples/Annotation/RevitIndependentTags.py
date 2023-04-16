@@ -52,12 +52,12 @@ def get_independent_tag_type_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = []
+    used_ids = []
     tags = get_all_independent_tags(doc)
     for t in tags:
-        tTypeId = t.GetTypeId()
-        tTypeElement = doc.GetElement(tTypeId)
-        id = rParaGet.get_built_in_parameter_value(tTypeElement, rdb.BuiltInParameter.LEADER_ARROWHEAD)
-        if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
-            usedIds.append(id)
-    return usedIds
+        t_type_id = t.GetTypeId()
+        t_type_element = doc.GetElement(t_type_id)
+        id = rParaGet.get_built_in_parameter_value(t_type_element, rdb.BuiltInParameter.LEADER_ARROWHEAD)
+        if(id not in used_ids and id != rdb.ElementId.InvalidElementId and id != None):
+            used_ids.append(id)
+    return used_ids

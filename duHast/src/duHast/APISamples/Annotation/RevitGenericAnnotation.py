@@ -67,15 +67,15 @@ def get_all_generic_annotation_type_ids_by_category(doc):
     ids = []
     col = get_all_generic_annotation_types_by_category(doc)
     for c in col:
-        parameterMatch = False
+        parameter_match = False
         # get the family object to check whether it is a shared family
         fam = c.Family
         id =  rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
         if(id != None):
-            parameterMatch = True
+            parameter_match = True
             if(id == 'No' and c.Id not in ids):
                 ids.append(c.Id)
-        if(parameterMatch == False):
+        if(parameter_match == False):
             # family cant be of type shared...
             ids.append(c.Id)
     return ids

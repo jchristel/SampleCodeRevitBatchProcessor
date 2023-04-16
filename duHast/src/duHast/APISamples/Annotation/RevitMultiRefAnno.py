@@ -77,5 +77,5 @@ def get_all_similar_multi_reference_anno_types(doc):
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     '''
 
-    multiReferenceAnnoTypes = com.get_similar_type_families_by_type(doc, get_all_multi_ref_annotation_types)
-    return multiReferenceAnnoTypes
+    multi_reference_anno_types = com.get_similar_type_families_by_type(doc, get_all_multi_ref_annotation_types)
+    return multi_reference_anno_types

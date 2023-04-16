@@ -67,8 +67,8 @@ def get_anno_symbol_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
-    return usedIds
+    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
+    return used_ids
 
 
 

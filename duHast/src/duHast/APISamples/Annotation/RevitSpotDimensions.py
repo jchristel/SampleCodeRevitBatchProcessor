@@ -57,8 +57,8 @@ def get_symbol_ids_from_spot_types(doc):
     '''
 
     ids = []
-    dimTs = get_all_spot_dim_types(doc)
-    for t in dimTs:
+    dim_ts = get_all_spot_dim_types(doc)
+    for t in dim_ts:
         id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.SPOT_ELEV_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
@@ -96,5 +96,5 @@ def get_spot_type_arrow_head_ids(doc):
     '''
     returns all arrow head ids used in text types in a model
     '''
-    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_all_spot_dim_types, rArrow.ARROWHEAD_PARAS_SPOT_DIMS)
-    return usedIds
+    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_spot_dim_types, rArrow.ARROWHEAD_PARAS_SPOT_DIMS)
+    return used_ids

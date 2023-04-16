@@ -70,7 +70,7 @@ ARROWHEAD_PARAS_STAIRS_PATH = [
 ]
 
 
-def get_arrow_head_ids_from_type(doc, typeGetter, parameterList):
+def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
     '''
     Gets all arrow head symbol ids used in dim types in a model.
     :param doc: Current Revit model document.
@@ -83,15 +83,15 @@ def get_arrow_head_ids_from_type(doc, typeGetter, parameterList):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = []
-    types = typeGetter(doc)
+    used_ids = []
+    types = type_getter(doc)
     for t in types:
-        for pInt in parameterList:
-            id = rParaGet.get_built_in_parameter_value(t, pInt)
-            if(id not in usedIds and id != rdb.ElementId.InvalidElementId and id != None):
-                usedIds.append(id)
+        for p_int in parameter_list:
+            id = rParaGet.get_built_in_parameter_value(t, p_int)
+            if(id not in used_ids and id != rdb.ElementId.InvalidElementId and id != None):
+                used_ids.append(id)
             break
-    return usedIds
+    return used_ids
 
 
 def get_arrow_types_in_model(doc):
@@ -105,13 +105,13 @@ def get_arrow_types_in_model(doc):
     '''
 
     types = []
-    similarTypes = []
+    similar_types = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ElementType)
     for c in col:
         if (c.FamilyName == 'Arrowhead'):
-            similarTypes = c.GetSimilarTypes()
+            similar_types = c.GetSimilarTypes()
             # filter out any types not in similar list...not sure what these are...
-            if(c.Id in similarTypes):
+            if(c.Id in similar_types):
                 types.append(c)
     return types
 
@@ -125,9 +125,9 @@ def get_arrow_type_ids_in_model(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    arrowTypes = get_arrow_types_in_model(doc)
+    arrow_types = get_arrow_types_in_model(doc)
     ids = []
-    for at in arrowTypes:
+    for at in arrow_types:
             if(at.Id not in ids):
                 ids.append(at.Id)
     return ids

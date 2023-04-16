@@ -81,8 +81,8 @@ def get_symbol_ids_from_dim_types(doc):
     '''
 
     ids = []
-    dimTs = get_dim_types(doc)
-    for t in dimTs:
+    dim_ts = get_dim_types(doc)
+    for t in dim_ts:
         id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
@@ -98,5 +98,5 @@ def get_dim_type_arrow_head_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    usedIds = rArrow.get_arrow_head_ids_from_type(doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM)
-    return usedIds
+    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM)
+    return used_ids

@@ -64,7 +64,7 @@ def get_used_ceiling_type_ids(doc):
     return ids
 
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -77,8 +77,8 @@ def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match
@@ -104,8 +104,8 @@ def get_unused_non_in_place_ceiling_type_ids_to_purge(doc):
     # get unused type ids
     ids = rPurgeUtils.get_used_unused_type_ids(doc,  rCeiling.get_all_ceiling_type_ids_in_model_by_class, 0)
     # make sure there is at least on ceiling type per system family left in model
-    ceilingTypes = rCeilingTypeSort.sort_ceiling_types_by_family_name(doc)
-    for key, value in ceilingTypes.items():
+    ceiling_types = rCeilingTypeSort.sort_ceiling_types_by_family_name(doc)
+    for key, value in ceiling_types.items():
         if(key in BUILTIN_CEILING_TYPE_FAMILY_NAMES):
             if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list

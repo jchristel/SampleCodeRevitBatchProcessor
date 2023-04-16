@@ -44,7 +44,7 @@ def get_2d_points_from_revit_ceiling(ceiling):
     :rtype: list of :class:`.DataGeometry`
     '''
 
-    allCeilingPoints = []
+    all_ceiling_points = []
     # get geometry from ceiling
     opt = rdb.Options()
     fr1_geom = ceiling.get_Geometry(opt)
@@ -58,11 +58,11 @@ def get_2d_points_from_revit_ceiling(ceiling):
     # process solids to points 
     # in place families may have more then one solid
     for s in solids:
-        pointPerCeilings = rCon.convert_solid_to_flattened_2d_points(s)
-        if(len(pointPerCeilings) > 0):
-            for pLists in pointPerCeilings:
-                allCeilingPoints.append(pLists)
-    return allCeilingPoints
+        point_per_ceilings = rCon.convert_solid_to_flattened_2d_points(s)
+        if(len(point_per_ceilings) > 0):
+            for p_lists in point_per_ceilings:
+                all_ceiling_points.append(p_lists)
+    return all_ceiling_points
 
 
 def get_2d_points_from_revit_ceilings_in_model(doc):
@@ -78,10 +78,10 @@ def get_2d_points_from_revit_ceilings_in_model(doc):
     :rtype: list of :class:`.DataGeometry`
     '''
 
-    ceilingInstances =  rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
-    allCeilingPoints = []
-    for cI in ceilingInstances:
-       ceilingPoints = get_2d_points_from_revit_ceiling(cI)
-       if(len(ceilingPoints) > 0 ):
-           allCeilingPoints.append (ceilingPoints)
-    return allCeilingPoints
+    ceiling_instances =  rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
+    all_ceiling_points = []
+    for c_i in ceiling_instances:
+       ceiling_points = get_2d_points_from_revit_ceiling(c_i)
+       if(len(ceiling_points) > 0 ):
+           all_ceiling_points.append (ceiling_points)
+    return all_ceiling_points

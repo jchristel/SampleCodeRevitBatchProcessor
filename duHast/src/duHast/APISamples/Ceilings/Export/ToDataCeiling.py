@@ -36,7 +36,7 @@ from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion a
 from duHast.APISamples.Common.Geometry import RevitSolids as rSolid
 
 
-def populate_data_ceiling_object(doc, revitCeiling):
+def populate_data_ceiling_object(doc, revit_ceiling):
     '''
     Returns a custom ceiling data objects populated with some data from the revit model ceiling past in.
 
@@ -58,26 +58,26 @@ def populate_data_ceiling_object(doc, revitCeiling):
     '''
 
     # set up data class object
-    dataC = dCeiling.DataCeiling()
+    data_c = dCeiling.DataCeiling()
     # get ceiling geometry (boundary points)
-    revitGeometryPointGroups = rSolid.get_2d_points_from_solid(revitCeiling)
+    revit_geometry_point_groups = rSolid.get_2d_points_from_solid(revit_ceiling)
     #revitGeometryPointGroups = Geometry.Get2DPointsFromRevitCeiling(revitCeiling)
-    if(len(revitGeometryPointGroups) > 0):
-        ceilingPointGroupsAsDoubles = []
-        for allCeilingPointGroups in revitGeometryPointGroups:
-            dataGeoConverted = rCon.convert_xyz_in_data_geometry_polygons(doc, allCeilingPointGroups)
-            ceilingPointGroupsAsDoubles.append(dataGeoConverted)
-        dataC.geometryPolygon = ceilingPointGroupsAsDoubles
+    if(len(revit_geometry_point_groups) > 0):
+        ceiling_point_groups_as_doubles = []
+        for all_ceiling_point_groups in revit_geometry_point_groups:
+            data_geo_converted = rCon.convert_xyz_in_data_geometry_polygons(doc, all_ceiling_point_groups)
+            ceiling_point_groups_as_doubles.append(data_geo_converted)
+        data_c.geometry_polygon = ceiling_point_groups_as_doubles
         # get design set data
-        design_set_data = rDesignO.get_design_set_option_info(doc, revitCeiling)
-        dataC.designSetAndOption.designOptionName = design_set_data['designOptionName']
-        dataC.designSetAndOption.designSetName = design_set_data['designSetName']
-        dataC.designSetAndOption.isPrimary = design_set_data['isPrimary']
+        design_set_data = rDesignO.get_design_set_option_info(doc, revit_ceiling)
+        data_c.designSetAndOption.design_option_name = design_set_data['designOptionName']
+        data_c.designSetAndOption.design_set_name = design_set_data['designSetName']
+        data_c.designSetAndOption.is_primary = design_set_data['isPrimary']
 
         # get type properties
-        dataC.typeProperties.typeId = revitCeiling.GetTypeId().IntegerValue
-        dataC.typeProperties.typeName = rdb.Element.Name.GetValue(revitCeiling).encode('utf-8')
-        ceilingType = doc.GetElement(revitCeiling.GetTypeId())
+        data_c.typeProperties.type_id = revit_ceiling.GetTypeId().IntegerValue
+        data_c.typeProperties.type_name = rdb.Element.Name.GetValue(revit_ceiling).encode('utf-8')
+        ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
 
         # custom parameter value getters
         value_getter = {
@@ -87,28 +87,28 @@ def populate_data_ceiling_object(doc, revitCeiling):
             rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
             str(None) : rParaGet.getter_none
         }
-        dataC.typeProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceilingType, value_getter)
+        data_c.typeProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceiling_type, value_getter)
 
         # get instance properties
-        dataC.instanceProperties.instanceId = revitCeiling.Id.IntegerValue
-        dataC.instanceProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(revitCeiling, value_getter)
+        data_c.instanceProperties.instance_id = revit_ceiling.Id.IntegerValue
+        data_c.instanceProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(revit_ceiling, value_getter)
 
         # get level properties
-        dataC.level.levelName = rdb.Element.Name.GetValue(doc.GetElement(revitCeiling.LevelId)).encode('utf-8')
-        dataC.level.levelId = revitCeiling.LevelId.IntegerValue
-        dataC.level.offsetFromLevel = rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
+        data_c.level.level_name = rdb.Element.Name.GetValue(doc.GetElement(revit_ceiling.LevelId)).encode('utf-8')
+        data_c.level.level_id = revit_ceiling.LevelId.IntegerValue
+        data_c.level.offset_from_level = rParaGet.get_built_in_parameter_value(revit_ceiling, rdb.BuiltInParameter.CEILING_HEIGHTABOVELEVEL_PARAM)   # offset from level
 
         # get the model name
         if(doc.IsDetached):
-            dataC.revitModel.modelName = 'Detached Model'
+            data_c.revitModel.model_name = 'Detached Model'
         else:
-            dataC.revitModel.modelName = doc.Title
+            data_c.revitModel.model_name = doc.Title
 
         # get phasing information
-        dataC.phasing.phaseCreated = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
-        dataC.phasing.phaseDemolished = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revitCeiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        data_c.phasing.phase_created = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revit_ceiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
+        data_c.phasing.phase_demolished = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revit_ceiling, rdb.BuiltInParameter.PHASE_DEMOLISHED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')
 
-        return dataC
+        return data_c
     else:
         return None
 
@@ -123,10 +123,10 @@ def get_all_ceiling_data(doc):
     :rtype: list of :class:`.DataCeiling`
     '''
 
-    allCeilingData = []
+    all_ceiling_data = []
     ceilings = rCeiling.get_all_ceiling_instances_in_model_by_category(doc)
     for ceiling in ceilings:
         cd = populate_data_ceiling_object(doc, ceiling)
         if(cd is not None):
-            allCeilingData.append(cd)
-    return allCeilingData
+            all_ceiling_data.append(cd)
+    return all_ceiling_data

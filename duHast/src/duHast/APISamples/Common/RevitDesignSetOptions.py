@@ -67,17 +67,17 @@ def get_design_sets(doc):
     '''
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
-    designSets = []
-    designSetNames = []
+    design_sets = []
+    design_set_names = []
     for do in collector:
         e = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
         designSetName = rdb.Element.Name.GetValue(e)
-        if(designSetName not in designSetNames):
-            designSets.append(e)
-            designSetNames.append(designSetName)
-    return designSets
+        if(designSetName not in design_set_names):
+            design_sets.append(e)
+            design_set_names.append(designSetName)
+    return design_sets
 
-def is_design_option_primary(doc, designSetName, designOptionName):
+def is_design_option_primary(doc, designSetName, design_option_name):
     '''
     Checks whether a design option is the primary option within a design set.
     
@@ -92,23 +92,23 @@ def is_design_option_primary(doc, designSetName, designOptionName):
     '''
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.DesignOption)
-    isPrimary = False
+    is_primary = False
     # loop over all design options in model, get the set they belong to and check for matches on both, set and option, by name
     for do in collector:
-        designOName = rdb.Element.Name.GetValue(do)
+        design_o_name = rdb.Element.Name.GetValue(do)
         # check if '< 'in name indicating a primary option, if so remove from name
-        index_chevron = designOName.find('<')
+        index_chevron = design_o_name.find('<')
         if (index_chevron > 0):
-            designOName = designOName[:index_chevron-2]
+            design_o_name = design_o_name[:index_chevron-2]
         # design set
         design_set = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
         design_set_name = rdb.Element.Name.GetValue(design_set)
         # check for match on both set and option
-        if(design_set_name == designSetName and designOName == designOptionName):
+        if(design_set_name == designSetName and design_o_name == design_option_name):
             # get isPrimary property on design option
-            isPrimary = do.IsPrimary
+            is_primary = do.IsPrimary
             break
-    return isPrimary
+    return is_primary
 
 def get_design_set_option_info(doc, element):
     '''
@@ -133,13 +133,13 @@ def get_design_set_option_info(doc, element):
     new_value= ['Main Model','-',True]
     dic = dict(zip(new_key,new_value))
     # get design option data from element
-    pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
-    if(pValue != None):
-        designOptionData = pValue.split(':')
+    p_value = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
+    if(p_value != None):
+        design_option_data = p_value.split(':')
         # check if main model ( length is 1! )
-        if(len(designOptionData) > 1):
-            dic['designSetName'] = designOptionData[0].Trim()
-            dic['designOptionName'] = designOptionData[1].Trim()
+        if(len(design_option_data) > 1):
+            dic['designSetName'] = design_option_data[0].Trim()
+            dic['designOptionName'] = design_option_data[1].Trim()
             dic['isPrimary'] = is_design_option_primary(doc, dic['designSetName'], dic['designOptionName'])
         else:
             # use default values

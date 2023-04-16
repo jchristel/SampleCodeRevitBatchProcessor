@@ -125,7 +125,7 @@ def get_nested_detail_group_ids(doc):
     ids = com.get_ids_from_element_collector(col)
     return ids
    
-def get_unplaced_groups(doc, groupCategory):
+def get_unplaced_groups(doc, group_category):
     '''
     Gets a list of unplaced groups from the model.
 
@@ -138,15 +138,15 @@ def get_unplaced_groups(doc, groupCategory):
     :rtype: list
     '''
 
-    def getterTypes(doc):
-        return rdb.FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsElementType()
-    def getterInstances(doc):
-        return rdb.FilteredElementCollector(doc).OfCategory(groupCategory).WhereElementIsNotElementType()
+    def getter_types(doc):
+        return rdb.FilteredElementCollector(doc).OfCategory(group_category).WhereElementIsElementType()
+    def getter_instances(doc):
+        return rdb.FilteredElementCollector(doc).OfCategory(group_category).WhereElementIsNotElementType()
     # get unplaced groups
     return com.get_not_placed_types(
         doc, 
-        getterTypes, 
-        getterInstances)
+        getter_types, 
+        getter_instances)
 
 def get_unplaced_detail_groups(doc):
     '''
@@ -175,9 +175,9 @@ def get_unplaced_detail_group_ids(doc):
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
 
-    unplacedGroups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
+    unplaced_groups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSDetailGroups)
     ids = []
-    for unplaced in unplacedGroups:
+    for unplaced in unplaced_groups:
         ids.append(unplaced.Id)
     return ids
 
@@ -206,9 +206,9 @@ def get_unplaced_nested_detail_group_ids(doc):
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
 
-    unplacedGroups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
+    unplaced_groups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSAttachedDetailGroups)
     ids = []
-    for unplaced in unplacedGroups:
+    for unplaced in unplaced_groups:
         ids.append(unplaced.Id)
     return ids
 
@@ -234,8 +234,8 @@ def get_unplaced_model_group_ids(doc):
     :rtype: List of Autodesk.Revit.DB.ElementId
     '''
 
-    unplacedGroups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
+    unplaced_groups = get_unplaced_groups(doc, rdb.BuiltInCategory.OST_IOSModelGroups)
     ids = []
-    for unplaced in unplacedGroups:
+    for unplaced in unplaced_groups:
         ids.append(unplaced.Id)
     return ids

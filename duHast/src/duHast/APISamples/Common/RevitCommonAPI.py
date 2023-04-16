@@ -64,15 +64,15 @@ def get_element_mark(e):
 
     mark = ''
     try:
-        paraMark = e.get_Parameter(rdb.BuiltInParameter.ALL_MODEL_MARK)
-        mark = '' if paraMark == None else paraMark.AsString()
+        para_mark = e.get_Parameter(rdb.BuiltInParameter.ALL_MODEL_MARK)
+        mark = '' if para_mark == None else para_mark.AsString()
     except Exception as e:
         mark = 'Failed with exception: ' + str(e)
     return mark
 
 #----------------------------------------Legend Components -----------------------------------------------
 
-def get_legend_components_in_model(doc, typeIds):
+def get_legend_components_in_model(doc, type_ids):
     ''' 
     Returns all symbol (type) ids of families which have been placed as legend components and have match in list past in.
     
@@ -91,14 +91,14 @@ def get_legend_components_in_model(doc, typeIds):
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_LegendComponents)
     for c in col:
         id = rParaGet.get_built_in_parameter_value (c, rdb.BuiltInParameter.LEGEND_COMPONENT, rParaGet.get_parameter_value)
-        if (id in typeIds and id not in ids):
+        if (id in type_ids and id not in ids):
             ids.append(id)
             break
     return ids
 
 #----------------------------------------types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-def get_similar_type_families_by_type(doc, typeGetter):
+def get_similar_type_families_by_type(doc, type_getter):
     '''
     Returns a list of unique types its similar family (symbol) types.
     
@@ -112,21 +112,21 @@ def get_similar_type_families_by_type(doc, typeGetter):
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
     '''
 
-    simTypes=[]
-    types = typeGetter(doc)
+    sim_types=[]
+    types = type_getter(doc)
     for t in types:
-        tData = [t]
+        t_data = [t]
         sims = t.GetSimilarTypes()
-        simData = []
+        sim_data = []
         for sim in sims:
-            simData.append(sim)
+            sim_data.append(sim)
         # simData.sort() # not sure a sort is actually doing anything
-        tData.append(simData)
-        if(check_unique_type_data(simTypes, tData)):
-            simTypes.append(tData)
-    return simTypes
+        t_data.append(sim_data)
+        if(check_unique_type_data(sim_types, t_data)):
+            sim_types.append(t_data)
+    return sim_types
 
-def check_unique_type_data(existingTypes, newTypeData):
+def check_unique_type_data(existing_types, new_type_data):
     '''
     Compares two lists of types and their similar types (ids).
 
@@ -145,26 +145,26 @@ def check_unique_type_data(existingTypes, newTypeData):
     '''
 
     result = True
-    for s in existingTypes:
+    for s in existing_types:
         # check for matching family name
-        if (s[0].FamilyName == newTypeData[0].FamilyName):
+        if (s[0].FamilyName == new_type_data[0].FamilyName):
             # check if match has the same amount of similar family types
             # if not it is unique
-            if (len(s[1]) == len(newTypeData[1])):
+            if (len(s[1]) == len(new_type_data[1])):
                 # assume IDs do match
-                matchIDs = True
+                match_i_ds = True
                 for i in range(len(s[1])):
-                    if(s[1][i] != newTypeData[1][i]):
+                    if(s[1][i] != new_type_data[1][i]):
                           # id's dont match, this is unique
-                          matchIDs = False
+                          match_i_ds = False
                           break
-                if(matchIDs):
+                if(match_i_ds):
                     # data is not unique
                     result = False
                     break
     return result
 
-def get_unused_type_ids_in_model(doc, typeGetter, instanceGetter):
+def get_unused_type_ids_in_model(doc, type_getter, instance_getter):
     '''
     Returns ID of unused family types in the model.
 
@@ -182,41 +182,41 @@ def get_unused_type_ids_in_model(doc, typeGetter, instanceGetter):
     '''
     
     # get all  types available and associated family types
-    familyTypesAvailable = get_similar_type_families_by_type(doc, typeGetter)
+    family_types_available = get_similar_type_families_by_type(doc, type_getter)
     # get used type ids
-    usedFamilyTypeIds = instanceGetter(doc)
+    used_family_type_ids = instance_getter(doc)
     # flag indicating that at least one type was removed from list because it is in use
     # this flag used when checking how many items are left...
-    removedAtLeastOne = []
+    removed_at_least_one = []
     # set index to 0, type names might not be unique!!
     counter = 0
     # loop over available types and check which one is used
-    for t in familyTypesAvailable:
+    for t in family_types_available:
         # remove all used family type Id's from the available list...
         # whatever is left can be deleted if not last available item in list for type
         # there should always be just one match
-        for usedFamilyTypeId in usedFamilyTypeIds:
+        for used_family_type_id in used_family_type_ids:
             # get the index of match
-            index = util.IndexOf(t[1],usedFamilyTypeId)
+            index = util.IndexOf(t[1],used_family_type_id)
             # remove used item from list
             if (index > -1):
                 t[1].pop(index)
-                if(t not in removedAtLeastOne):
-                    removedAtLeastOne.append(counter)
+                if(t not in removed_at_least_one):
+                    removed_at_least_one.append(counter)
         counter = counter + 1
     # filter these by family types where is only one left
     # make sure to leave at least one family type behind, since the last type cannot be deleted
-    filteredUnusedTypeIds = []
+    filtered_unused_type_ids = []
     # reset index
     counter = 0
-    for t in familyTypesAvailable:
-        if (counter in removedAtLeastOne):
+    for t in family_types_available:
+        if (counter in removed_at_least_one):
             # at least one item was already removed from list...so all left over ones can be purged
             for id in t[1]:
                 # get the element
-                tFam = doc.GetElement(id)
-                if (tFam.CanBeDeleted):
-                    filteredUnusedTypeIds.append(id)
+                t_fam = doc.GetElement(id)
+                if (t_fam.CanBeDeleted):
+                    filtered_unused_type_ids.append(id)
         else:
             # need to keep at least one item
             if(len(t[1]) > 1):
@@ -225,16 +225,16 @@ def get_unused_type_ids_in_model(doc, typeGetter, instanceGetter):
                 for x in range(1, len(t[1])):
                     id = t[1][x]
                     # get the element
-                    tFam = doc.GetElement(id)
+                    t_fam = doc.GetElement(id)
                     # check whether this can be deleted...
-                    if (tFam.CanBeDeleted):
-                        filteredUnusedTypeIds.append(id)
+                    if (t_fam.CanBeDeleted):
+                        filtered_unused_type_ids.append(id)
         counter = counter + 1 
-    return filteredUnusedTypeIds
+    return filtered_unused_type_ids
 
 #----------------------------------------instances of types - Autodesk.Revit.DB ElementType -----------------------------------------------
 
-def get_not_placed_types(doc, getTypes, getInstances):
+def get_not_placed_types(doc, get_types, get_instances):
     '''
     
     returns a list of unused types foo by comparing type Ids of placed instances with types past in.
@@ -250,29 +250,29 @@ def get_not_placed_types(doc, getTypes, getInstances):
     :rtype: list of type foo
     '''
 
-    availTypes = getTypes(doc)
-    placedInstances = getInstances(doc)
-    notPlaced = []
-    alreadyChecked = []
+    avail_types = get_types(doc)
+    placed_instances = get_instances(doc)
+    not_placed = []
+    already_checked = []
     # loop over all types and check for matching instances
-    for at in availTypes:
+    for at in avail_types:
         match = False
-        for pi in placedInstances:
+        for pi in placed_instances:
             # check if we had this type checked already, if so ignore and move to next
-            if(pi.GetTypeId() not in alreadyChecked):
+            if(pi.GetTypeId() not in already_checked):
                 #  check for type id match
                 if(pi.GetTypeId() == at.Id):
                     # add to already checked and verified as match list
-                    alreadyChecked.append(pi.GetTypeId())
+                    already_checked.append(pi.GetTypeId())
                     match = True
                     break
         if(match == False):
-            notPlaced.append(at)
-    return notPlaced
+            not_placed.append(at)
+    return not_placed
 
 # --------------------------------------------- check whether groups contain certain element types - Autodesk.Revit.DB ElementType  ------------------
 
-def check_group_for_type_ids(doc, groupType, typeIds):
+def check_group_for_type_ids(doc, group_type, type_ids):
     '''
     
     Filters passed in list of type ids by type ids found in group and returns list of unmatched Id's
@@ -290,24 +290,24 @@ def check_group_for_type_ids(doc, groupType, typeIds):
     :rtype: list of Autodesk.Revit.Db.ElementId
     '''
 
-    unusedTypeIds = []
-    usedTypeIds = []
+    unused_type_ids = []
+    used_type_ids = []
     # get the first group from the group type and get its members
-    for g in groupType.Groups:
+    for g in group_type.Groups:
         # get ids of group elements:
-        memberIds = g.GetMemberIds()
+        member_ids = g.GetMemberIds()
         # built list of used type ids
-        for memberId in memberIds:
-            member = doc.GetElement(memberId)
-            usedTypeId = member.GetTypeId()
-            if (usedTypeId not in usedTypeIds):
-                usedTypeIds.append(usedTypeId)
-    for checkId in typeIds:
-        if(checkId not in usedTypeIds):
-            unusedTypeIds.append(checkId)
-    return unusedTypeIds
+        for member_id in member_ids:
+            member = doc.GetElement(member_id)
+            used_type_id = member.GetTypeId()
+            if (used_type_id not in used_type_ids):
+                used_type_ids.append(used_type_id)
+    for check_id in type_ids:
+        if(check_id not in used_type_ids):
+            unused_type_ids.append(check_id)
+    return unused_type_ids
 
-def check_groups_for_matching_type_ids(doc, groupTypes, typeIds):
+def check_groups_for_matching_type_ids(doc, group_types, type_ids):
     '''
     Checks all elements in groups past in whether group includes element of which type Id is matching any type ids past in
     
@@ -322,14 +322,14 @@ def check_groups_for_matching_type_ids(doc, groupTypes, typeIds):
     :rtype: list of Autodesk.Revit.Db.ElementId
     '''
 
-    for groupType in groupTypes:
-        typeIds = check_group_for_type_ids(doc, groupType, typeIds)
+    for group_type in group_types:
+        type_ids = check_group_for_type_ids(doc, group_type, type_ids)
         # check if all type ids where matched up
-        if (len(typeIds) == 0):
+        if (len(type_ids) == 0):
             break
-    return typeIds
+    return type_ids
 
-def get_unused_type_ids_from_detail_groups(doc, typeIds):
+def get_unused_type_ids_from_detail_groups(doc, type_ids):
     '''
     Checks elements in nested detail groups and detail groups whether their type ElementId is in the list past in.
     
@@ -344,12 +344,12 @@ def get_unused_type_ids_from_detail_groups(doc, typeIds):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    unusedTypeIds = []
-    nestedDetailGroups = rGroup.get_nested_detail_groups(doc)
-    detailGroups = rGroup.get_detail_groups(doc)
-    unusedTypeIds = check_groups_for_matching_type_ids(doc, nestedDetailGroups, typeIds)
-    unusedTypeIds = check_groups_for_matching_type_ids(doc, detailGroups, typeIds)
-    return unusedTypeIds
+    unused_type_ids = []
+    nested_detail_groups = rGroup.get_nested_detail_groups(doc)
+    detail_groups = rGroup.get_detail_groups(doc)
+    unused_type_ids = check_groups_for_matching_type_ids(doc, nested_detail_groups, type_ids)
+    unused_type_ids = check_groups_for_matching_type_ids(doc, detail_groups, type_ids)
+    return unused_type_ids
 
 #----------------------------------------elements-----------------------------------------------
 

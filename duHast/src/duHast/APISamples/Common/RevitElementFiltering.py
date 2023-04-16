@@ -31,7 +31,7 @@ Varies Element filter / check functions.
 import Autodesk.Revit.DB as rdb
 
 
-def is_element_of_built_in_category(doc, elId, builtinCategories):
+def is_element_of_built_in_category(doc, el_id, builtin_categories):
     '''
     Checks whether an element is of the built in categories past in.
     :param doc: Current Revit model document.
@@ -45,16 +45,16 @@ def is_element_of_built_in_category(doc, elId, builtinCategories):
     '''
 
     match = False
-    el = doc.GetElement(elId)
-    enumCategoryId = el.Category.Id.IntegerValue.ToString()
-    for bic in builtinCategories:
-        if (enumCategoryId == bic.value__.ToString()):
+    el = doc.GetElement(el_id)
+    enum_category_id = el.Category.Id.IntegerValue.ToString()
+    for bic in builtin_categories:
+        if (enum_category_id == bic.value__.ToString()):
             match = True
             break
     return match
 
 
-def is_element_not_of_built_in_category(doc, elId, builtinCategories):
+def is_element_not_of_built_in_category(doc, el_id, builtin_categories):
     '''
     Checks whether an element is not of the built in categories past in.
     :param doc: Current Revit model document.
@@ -68,10 +68,10 @@ def is_element_not_of_built_in_category(doc, elId, builtinCategories):
     '''
 
     match = True
-    el = doc.GetElement(elId)
-    enumCategoryId = el.Category.Id.IntegerValue.ToString()
-    for bic in builtinCategories:
-        if (enumCategoryId == bic.value__.ToString()):
+    el = doc.GetElement(el_id)
+    enum_category_id = el.Category.Id.IntegerValue.ToString()
+    for bic in builtin_categories:
+        if (enum_category_id == bic.value__.ToString()):
             match = False
             break
     return match
@@ -79,7 +79,7 @@ def is_element_not_of_built_in_category(doc, elId, builtinCategories):
 
 def is_family_name_from_instance(
     doc,
-    familyName, # type: str
+    family_name, # type: str
     elementId
     ):
 
@@ -99,7 +99,7 @@ def is_family_name_from_instance(
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(rdb.Element.Name.GetValue(el.Symbol.Family) != familyName):
+        if(rdb.Element.Name.GetValue(el.Symbol.Family) != family_name):
             flag = False
     except Exception:
         flag = False
@@ -108,7 +108,7 @@ def is_family_name_from_instance(
 
 def is_family_name_from_instance_contains(
     doc,
-    containsValue, # type: str
+    contains_value, # type: str
     elementId
     ):
     # type: (...) -> bool
@@ -128,7 +128,7 @@ def is_family_name_from_instance_contains(
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue not in rdb.Element.Name.GetValue(el.Symbol.Family)):
+        if(contains_value not in rdb.Element.Name.GetValue(el.Symbol.Family)):
             flag = False
     except Exception:
         flag = False
@@ -137,7 +137,7 @@ def is_family_name_from_instance_contains(
 
 def is_family_name_from_instance_does_not_contains(
     doc,
-    containsValue, # type: str
+    contains_value, # type: str
     elementId
     ):
     # type: (...) -> bool
@@ -157,7 +157,7 @@ def is_family_name_from_instance_does_not_contains(
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue in rdb.Element.Name.GetValue(el.Symbol.Family)):
+        if(contains_value in rdb.Element.Name.GetValue(el.Symbol.Family)):
             flag = False
     except Exception:
         flag = False
@@ -166,7 +166,7 @@ def is_family_name_from_instance_does_not_contains(
 
 def is_symbol_name_from_instance_contains(
     doc,
-    containsValue, # type: str
+    contains_value, # type: str
     elementId
     ):
     # type: (...) -> bool
@@ -186,7 +186,7 @@ def is_symbol_name_from_instance_contains(
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue not in rdb.Element.Name.GetValue(el.Symbol)):
+        if(contains_value not in rdb.Element.Name.GetValue(el.Symbol)):
             flag = False
     except Exception:
         flag = False
@@ -195,7 +195,7 @@ def is_symbol_name_from_instance_contains(
 
 def is_symbol_name_from_instance_does_not_contains(
     doc,
-    containsValue, # type: str
+    contains_value, # type: str
     elementId
     ):
     # type: (...) -> bool
@@ -216,7 +216,7 @@ def is_symbol_name_from_instance_does_not_contains(
     el = doc.GetElement(elementId)
     flag = True
     try:
-        if(containsValue in rdb.Element.Name.GetValue(el.Symbol)):
+        if(contains_value in rdb.Element.Name.GetValue(el.Symbol)):
             flag = False
     except Exception:
         flag = False

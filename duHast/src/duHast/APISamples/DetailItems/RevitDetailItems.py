@@ -151,7 +151,7 @@ def get_all_detail_symbol_ids_available(doc):
     else:
         return []
 
-def get_detail_symbols_used_in_repeating_details(doc, idsRepeatDet):
+def get_detail_symbols_used_in_repeating_details(doc, ids_repeat_det):
     '''
     Gets the ids of all symbols used in repeating details.
 
@@ -165,9 +165,9 @@ def get_detail_symbols_used_in_repeating_details(doc, idsRepeatDet):
     '''
 
     ids = []
-    for idR in idsRepeatDet:
-        repeatDetail = doc.GetElement(idR)
-        id = rParaGet.get_built_in_parameter_value(repeatDetail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
+    for id_r in ids_repeat_det:
+        repeat_detail = doc.GetElement(id_r)
+        id = rParaGet.get_built_in_parameter_value(repeat_detail, rdb.BuiltInParameter.REPEATING_DETAIL_ELEMENT)
         if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
             ids.append(id)
     return ids

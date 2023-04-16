@@ -75,9 +75,9 @@ def get_unused_repeating_detail_type_ids_for_purge(doc):
     '''
 
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_repeating_detail_type_ids_available, 0, 1)
-    allIds = rDetail.get_all_repeating_detail_type_ids_available(doc)
+    all_ids = rDetail.get_all_repeating_detail_type_ids_available(doc)
     # need to keep at least one
-    if(len(allIds) == len(ids)):
+    if(len(all_ids) == len(ids)):
         ids.pop(0)
     return ids
 
@@ -96,20 +96,20 @@ def get_all_used_detail_symbol_ids(doc):
     ids = []
     dic = rDetailTypeSort.build_detail_type_ids_dictionary(rDetail.get_all_detail_types_by_category(doc))
     if (dic.has_key(rDetail.ELEMENT_TYPE)):
-        idsUnfiltered = dic[rDetail.FAMILY_SYMBOL]
+        ids_unfiltered = dic[rDetail.FAMILY_SYMBOL]
         # check if used in repeating details
-        idsRepeatDet = rDetail.get_all_repeating_detail_type_ids_available(doc)
+        ids_repeat_det = rDetail.get_all_repeating_detail_type_ids_available(doc)
         #print('ids used in repeating details ' + str(len(idsRepeatDet)))
         # get detail types used in repeating details only
-        idsOfDetailsUsedRepeatDetails = rDetail.get_detail_symbols_used_in_repeating_details(doc, idsRepeatDet)
+        ids_of_details_used_repeat_details = rDetail.get_detail_symbols_used_in_repeating_details(doc, ids_repeat_det)
         # get detail types used in model
-        idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_detail_symbol_ids_available, 1)
-        print('ids used in model ' + str(len(idsUsedInModel)))
+        ids_used_in_model = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_detail_symbol_ids_available, 1)
+        print('ids used in model ' + str(len(ids_used_in_model)))
         # built overall ids list
-        for id in idsOfDetailsUsedRepeatDetails:
+        for id in ids_of_details_used_repeat_details:
             if (id not in ids):
                 ids.append(id)
-        for id in idsUsedInModel:
+        for id in ids_used_in_model:
             if(id not in ids):
                 ids.append(id)
         return ids
@@ -128,10 +128,10 @@ def get_all_unused_detail_symbol_ids(doc):
     '''
 
     ids = []
-    allAvailableIds = rDetail.get_all_detail_symbol_ids_available(doc)
-    allUsedIds = get_all_used_detail_symbol_ids(doc)
-    for id in allAvailableIds:
-        if(id not in allUsedIds):
+    all_available_ids = rDetail.get_all_detail_symbol_ids_available(doc)
+    all_used_ids = get_all_used_detail_symbol_ids(doc)
+    for id in all_available_ids:
+        if(id not in all_used_ids):
             ids.append(id)
     return ids
 
@@ -161,8 +161,8 @@ def get_used_filled_region_type_ids(doc):
     '''
 
     ids = []
-    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
-    for id in idsAll:
+    ids_all = rDetail.get_all_filled_region_type_ids_available(doc)
+    for id in ids_all:
         el = doc.GetElement(id)
         dic = rDetailTypeSort.build_dependent_elements_dictionary(doc, el.GetDependentElements(None))
         if(dic.has_key('Autodesk.Revit.DB.FilledRegion')):
@@ -181,8 +181,8 @@ def get_unused_filled_region_type_ids(doc):
     '''
 
     ids = []
-    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
-    for id in idsAll:
+    ids_all = rDetail.get_all_filled_region_type_ids_available(doc)
+    for id in ids_all:
         el = doc.GetElement(id)
         dic = rDetailTypeSort.build_dependent_elements_dictionary(doc, el.GetDependentElements(None))
         if(dic.has_key('Autodesk.Revit.DB.FilledRegion') == False):
@@ -203,8 +203,8 @@ def get_unused_filled_region_type_ids_for_purge(doc):
     '''
 
     ids = get_unused_filled_region_type_ids(doc)
-    idsAll = rDetail.get_all_filled_region_type_ids_available(doc)
+    ids_all = rDetail.get_all_filled_region_type_ids_available(doc)
     # need to keep at least one
-    if(len(idsAll) == len(ids)):
+    if(len(ids_all) == len(ids)):
         ids.pop(0)
     return ids

@@ -32,7 +32,7 @@ from duHast.Utilities import Base
 
 class IFCSettings(Base.Base):
     
-    supportedIfcVersions = {
+    supported_ifc_versions = {
             'Default' : 'The Autodesk Revit applications default export format. Note that this may change as the defaults change in the Revit user interface.',
             'IFCBCA' : 'IFC BCA file format. This is a certified variant of IFC 2x2 used for submitting files to the Singapore BCA ePlan Check Server.',
             'IFC2x2' : 'IFC 2x2 file format.',
@@ -46,7 +46,7 @@ class IFCSettings(Base.Base):
             'IFC2x3BFM' : 'IFC2x3 Basic FM Handover View'
         }
     
-    sitePlacementOptions = {
+    site_placement_options = {
         'SiteTransformBasis.Shared' :'shared', 
         'SiteTransformBasis.Site' : 'site', 
         'SiteTransformBasis.Project' : 'project',
@@ -58,45 +58,45 @@ class IFCSettings(Base.Base):
     def __init__(
         self, 
         name, 
-        ifcVersion, 
-        spaceBoundaries,
-        activePhaseId,
-        activeViewId,
-        exportBaseQuantities,
-        splitWallsAndColumns,
-        visibleElementsOfCurrentView,
-        use2DRoomBoundaryForVolume,
-        useFamilyAndTypeNameForReference,
-        exportInternalRevitPropertySets,
-        exportIFCCommonPropertySets,
-        export2DElements,
-        exportPartsAsBuildingElements,
-        exportBoundingBox,
-        exportSolidModelRep,
-        exportSchedulesAsPsets,
-        exportUserDefinedPsets,
-        exportUserDefinedPsetsFileName,
-        exportLinkedFiles,
-        includeSiteElevation,
-        useActiveViewGeometry,
-        exportSpecificSchedules,
-        tessellationLevelOfDetail,
-        storeIFCGUID,
-        exportRoomsInView,
-        useOnlyTriangulation,
-        includeSteelElements,
-        cOBieCompanyInfo,
-        cOBieProjectInfo,
-        useTypeNameOnlyForIfcType,
-        useVisibleRevitNameAsEntityName,
-        sitePlacement,
-        selectedSite,
-        geoRefCRSName,
-        geoRefCRSDesc,
-        geoRefEPSGCode,
-        geoRefGeodeticDatum,
-        geoRefMapUnit,
-        excludeFilter
+        ifc_version, 
+        space_boundaries,
+        active_phase_id,
+        active_view_id,
+        export_base_quantities,
+        split_walls_and_columns,
+        visible_elements_of_current_view,
+        use2_d_room_boundary_for_volume,
+        use_family_and_type_name_for_reference,
+        export_internal_revit_property_sets,
+        export_ifc_common_property_sets,
+        export_2d_elements,
+        export_parts_as_building_elements,
+        export_bounding_box,
+        export_solid_model_rep,
+        export_schedules_as_psets,
+        export_user_defined_psets,
+        export_user_defined_psets_file_name,
+        export_linked_files,
+        include_site_elevation,
+        use_active_view_geometry,
+        export_specific_schedules,
+        tessellation_level_of_detail,
+        store_ifc_guid,
+        export_rooms_in_view,
+        use_only_triangulation,
+        include_steel_elements,
+        cobie_company_info,
+        cobie_project_info,
+        use_type_name_only_for_ifc_type,
+        use_visible_revit_name_as_entity_name,
+        site_placement,
+        selected_site,
+        geo_ref_crs_name,
+        geo_ref_crs_desc,
+        geo_ref_epsg_code,
+        geo_ref_geodetic_datum,
+        geo_ref_map_unit,
+        exclude_filter
         ):
 
         '''
@@ -193,52 +193,52 @@ class IFCSettings(Base.Base):
         self.name = name
 
         # check the IFC version
-        if(ifcVersion in self.supportedIfcVersions):
-            self.ifcVersion = ifcVersion
+        if(ifc_version in self.supported_ifc_versions):
+            self.ifc_version = ifc_version
         else:
-            raise Exception('Unsupported IFC version:' + ifcVersion)
+            raise Exception('Unsupported IFC version:' + ifc_version)
 
-        self.spaceBoundaries = spaceBoundaries
-        self.activePhaseId = activePhaseId
-        self.activeViewId = activeViewId
-        self.exportBaseQuantities = exportBaseQuantities
-        self.splitWallsAndColumns = splitWallsAndColumns
-        self.visibleElementsOfCurrentView = visibleElementsOfCurrentView
-        self.use2DRoomBoundaryForVolume = use2DRoomBoundaryForVolume
-        self.useFamilyAndTypeNameForReference = useFamilyAndTypeNameForReference
-        self.exportInternalRevitPropertySets = exportInternalRevitPropertySets
-        self.exportIFCCommonPropertySets = exportIFCCommonPropertySets
-        self.export2DElements = export2DElements
-        self.exportPartsAsBuildingElements = exportPartsAsBuildingElements
-        self.exportBoundingBox = exportBoundingBox
-        self.exportSolidModelRep = exportSolidModelRep
-        self.exportSchedulesAsPsets = exportSchedulesAsPsets
-        self.exportUserDefinedPsets = exportUserDefinedPsets
-        self.exportUserDefinedPsetsFileName = exportUserDefinedPsetsFileName
-        self.exportLinkedFiles = exportLinkedFiles
-        self.includeSiteElevation = includeSiteElevation
-        self.useActiveViewGeometry = useActiveViewGeometry
-        self.exportSpecificSchedules = exportSpecificSchedules
-        self.tessellationLevelOfDetail = tessellationLevelOfDetail
-        self.storeIFCGUID = storeIFCGUID
-        self.exportRoomsInView = exportRoomsInView
-        self.useOnlyTriangulation = useOnlyTriangulation
-        self.includeSteelElements = includeSteelElements
-        self.cOBieCompanyInfo = cOBieCompanyInfo
-        self.cOBieProjectInfo = cOBieProjectInfo
-        self.useTypeNameOnlyForIfcType = useTypeNameOnlyForIfcType,
-        self.useVisibleRevitNameAsEntityName = useVisibleRevitNameAsEntityName
+        self.space_boundaries = space_boundaries
+        self.active_phase_id = active_phase_id
+        self.active_view_id = active_view_id
+        self.export_base_quantities = export_base_quantities
+        self.split_walls_and_columns = split_walls_and_columns
+        self.visible_elements_of_current_view = visible_elements_of_current_view
+        self.use2_d_room_boundary_for_volume = use2_d_room_boundary_for_volume
+        self.use_family_and_type_name_for_reference = use_family_and_type_name_for_reference
+        self.export_internal_revit_property_sets = export_internal_revit_property_sets
+        self.export_ifc_common_property_sets = export_ifc_common_property_sets
+        self.export_2d_elements = export_2d_elements
+        self.export_parts_as_building_elements = export_parts_as_building_elements
+        self.export_bounding_box = export_bounding_box
+        self.export_solid_model_rep = export_solid_model_rep
+        self.export_schedules_as_psets = export_schedules_as_psets
+        self.export_user_defined_psets = export_user_defined_psets
+        self.export_user_defined_psets_file_name = export_user_defined_psets_file_name
+        self.export_linked_files = export_linked_files
+        self.include_site_elevation = include_site_elevation
+        self.use_active_view_geometry = use_active_view_geometry
+        self.export_specific_schedules = export_specific_schedules
+        self.tessellation_level_of_detail = tessellation_level_of_detail
+        self.store_ifc_guid = store_ifc_guid
+        self.export_rooms_in_view = export_rooms_in_view
+        self.use_only_triangulation = use_only_triangulation
+        self.include_steel_elements = include_steel_elements
+        self.cobie_company_info = cobie_company_info
+        self.cobie_project_info = cobie_project_info
+        self.use_type_name_only_for_ifc_type = use_type_name_only_for_ifc_type,
+        self.use_visible_revit_name_as_entity_name = use_visible_revit_name_as_entity_name
         
         # check site placement option
-        if(sitePlacement in self.sitePlacementOptions):
-            self.sitePlacement =  self.sitePlacementOptions[sitePlacement]
+        if(site_placement in self.site_placement_options):
+            self.site_placement =  self.site_placement_options[site_placement]
         else:
-            raise Exception('Unsupported site placement option:' + sitePlacement)
+            raise Exception('Unsupported site placement option:' + site_placement)
         
-        self.selectedSite = selectedSite
-        self.geoRefCRSName = geoRefCRSName
-        self.geoRefCRSDesc = geoRefCRSDesc
-        self.geoRefEPSGCode = geoRefEPSGCode
-        self.geoRefGeodeticDatum = geoRefGeodeticDatum
-        self.geoRefMapUnit = geoRefMapUnit
-        self.excludeFilter = excludeFilter
+        self.selected_site = selected_site
+        self.geo_ref_crs_name = geo_ref_crs_name
+        self.geo_ref_crs_desc = geo_ref_crs_desc
+        self.geo_ref_epsg_code = geo_ref_epsg_code
+        self.geo_ref_geodetic_datum = geo_ref_geodetic_datum
+        self.geo_ref_map_unit = geo_ref_map_unit
+        self.exclude_filter = exclude_filter

@@ -152,6 +152,6 @@ def get_unused_in_place_ceiling_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_unused_in_place_ceiling_type_ids)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_in_place_ceiling_type_ids)
     return ids
 

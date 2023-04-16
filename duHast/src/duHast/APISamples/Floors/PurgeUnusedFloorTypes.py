@@ -140,5 +140,5 @@ def GetUnusedInPlaceFloorIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceFloorTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceFloorTypeIds)
     return ids

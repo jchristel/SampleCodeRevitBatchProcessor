@@ -33,7 +33,7 @@ from duHast.Utilities import Base
 
 class RevitCustomElementFilter(Base.Base):
 
-    def __init__(self, elementFilters = [] , isLogicalANDFilter = True,  **kwargs):
+    def __init__(self, element_filters = [] , is_logical_and_filter = True,  **kwargs):
         '''
         Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)
 
@@ -47,10 +47,10 @@ class RevitCustomElementFilter(Base.Base):
         # ini super class to allow multi inheritance in children!
         super(RevitCustomElementFilter, self).__init__(**kwargs)  
 
-        self.elementFilters = elementFilters
-        self.isLogicalANDFilter = isLogicalANDFilter
+        self.element_filters = element_filters
+        self.is_logical_and_filter = is_logical_and_filter
     
-    def check_element(self, doc, elementId):
+    def check_element(self, doc, element_id):
         '''
         Filter checking whether element meets criteria.
 
@@ -66,21 +66,21 @@ class RevitCustomElementFilter(Base.Base):
         :rtype: bool
         '''
 
-        if(self.isLogicalANDFilter):
-            filterOverAll = True
+        if(self.is_logical_and_filter):
+            filter_over_all = True
         else:
-            filterOverAll = False
+            filter_over_all = False
         
-        for filter in self.elementFilters:
-            filterResult = filter(doc, elementId)
-            if(self.isLogicalANDFilter == False and filterResult == True):
-                filterOverAll = True
+        for filter in self.element_filters:
+            filter_result = filter(doc, element_id)
+            if(self.is_logical_and_filter == False and filter_result == True):
+                filter_over_all = True
                 # can leave the loop at this point since only one of the tests need to result true in OR filter mode
                 break
-            elif(self.isLogicalANDFilter == True and filterResult == False):
-                filterOverAll = False
+            elif(self.is_logical_and_filter == True and filter_result == False):
+                filter_over_all = False
                 # can leave the loop at this point since only one of the tests need to result false in AND filter mode
                 break
             else:
-                filterOverAll = filterOverAll and filterResult
-        return filterOverAll
+                filter_over_all = filter_over_all and filter_result
+        return filter_over_all

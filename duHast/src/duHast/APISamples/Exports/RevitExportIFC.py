@@ -32,12 +32,12 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Exports import RevitExportIFCConfig as ifcCon
-from duHast.APISamples.Exports.RevitExport import BuildExportFileNameFromView
+from duHast.APISamples.Exports.RevitExport import build_export_file_name_from_view
 from duHast.APISamples.Exports.Utility.IFCCoordinates import IFCCoords
 from duHast.APISamples.Exports.Utility.IFCSpaceBoundaries import IFCSpaceBoundaries
 
 
-def IFCGetExportConfigByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noBoundaries):
+def ifc_get_export_config_by_view(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.no_boundaries):
     '''
     Returns an IFC export configuration for the built in IFC exporter.
     :param ifcVersion: The ifc version used for the export.
@@ -56,7 +56,7 @@ def IFCGetExportConfigByView(ifcVersion, ifcSpaceBounds = IFCSpaceBoundaries.noB
     return exIFC
 
 
-def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
+def export_to_ifc(doc, ifcExportOption, directoryPath, fileName):
     '''
     Exports to IFC either the entire model or a view only using 3rd party exporter.
     What gets exported is defined in the ifcExportOption.
@@ -96,7 +96,7 @@ def ExportToIFC(doc, ifcExportOption, directoryPath, fileName):
     return returnValue
 
 
-def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
+def export_3d_views_to_ifc_default(doc, viewFilter, ifcExportOption, directoryPath):
     '''
     Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.
     :param doc: Current Revit model document.
@@ -129,15 +129,15 @@ def Export3DViewsToIFCDefault(doc, viewFilter, ifcExportOption, directoryPath):
         for exportView in viewsToExport:
             returnValueByView = res.Result()
             ifcExportOption.FilterViewId = exportView.Id
-            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc')
-            returnValueByView = ExportToIFC(doc, ifcExportOption, directoryPath, fileName)
+            fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.ifc')
+            returnValueByView = export_to_ifc(doc, ifcExportOption, directoryPath, fileName)
             returnValue.Update(returnValueByView)
     else:
         returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
     return returnValue
 
 
-def SetUpIFCExportOption(exportConfig, viewId = rdb.ElementId.InvalidElementId, coordOption = IFCCoords.SharedCoordinates):
+def setup_ifc_export_option(exportConfig, viewId = rdb.ElementId.InvalidElementId, coordOption = IFCCoords.shared_coordinates):
     '''
     Function assigning a view Id to export ifc config if it is exporting by view.
     By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead.
@@ -165,7 +165,7 @@ def SetUpIFCExportOption(exportConfig, viewId = rdb.ElementId.InvalidElementId, 
     return exIFC
 
 
-def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.SharedCoordinates, doSomethingWithViewName = None):
+def export_3d_views_to_ifc(doc, viewFilter, ifcExportOption, directoryPath, ifcCoordinatesSystem = IFCCoords.shared_coordinates, doSomethingWithViewName = None):
     '''
     Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
     By default the file name of the export will be same as the name of the view exported.
@@ -202,16 +202,16 @@ def Export3DViewsToIFC(doc, viewFilter, ifcExportOption, directoryPath, ifcCoord
     if(len(viewsToExport) > 0):
         for exportView in viewsToExport:
             returnValueByView = res.Result()
-            updatedExportOption = SetUpIFCExportOption(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
-            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.ifc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
-            returnValueByView = ExportToIFC(doc, updatedExportOption, directoryPath, fileName)
+            updatedExportOption = setup_ifc_export_option(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
+            fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.ifc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
+            returnValueByView = export_to_ifc(doc, updatedExportOption, directoryPath, fileName)
             returnValue.Update(returnValueByView)
     else:
         returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
     return returnValue
 
 
-def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption = IFCCoords.SharedCoordinates):
+def export_model_to_ifc(doc, ifcExportOption, directoryPath, fileName, coordOption = IFCCoords.shared_coordinates):
     '''
     Function exporting the entire model to IFC using 3rd party exporter.
     :param doc: Current Revit model document.
@@ -242,12 +242,12 @@ def ExportModelToIFC(doc, ifcExportOption, directoryPath, fileName, coordOption 
 
     # set the coordinate system to use
     exIFC.AddOption('SitePlacement', coordOption)
-    returnValueByModel = ExportToIFC(doc, exIFC, directoryPath, fileName)
+    returnValueByModel = export_to_ifc(doc, exIFC, directoryPath, fileName)
     returnValue.Update(returnValueByModel)
     return returnValue
 
 
-def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion, ifcSettings = None):
+def ifc_get_third_party_export_config_by_model(doc, ifcVersion, ifcSettings = None):
     '''
     Returns the 3rd party ifc config for export by model depending on revit version.
     :param doc: Current Revit model document.
@@ -263,20 +263,20 @@ def IFCGetThirdPartyExportConfigByModel(doc, ifcVersion, ifcSettings = None):
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
     if (revitVersion == '2019'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2019(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_model_2019(ifcVersion, ifcSettings)
     elif (revitVersion == '2020'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2020(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_model_2020(ifcVersion, ifcSettings)
     elif (revitVersion == '2021'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2021(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_model_2021(ifcVersion, ifcSettings)
     elif (revitVersion == '2022'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByModel2022(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_model_2022(ifcVersion, ifcSettings)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')
     return ifcConfig
 
 
-def IFCGetThirdPartyExportConfigByView(doc, ifcVersion, ifcSettings = None):
+def ifc_get_third_party_export_config_by_view(doc, ifcVersion, ifcSettings = None):
     '''
     Returns the 3rd party ifc config for export by view depending on revit version.
     :param doc: Current Revit model document.
@@ -292,13 +292,13 @@ def IFCGetThirdPartyExportConfigByView(doc, ifcVersion, ifcSettings = None):
     revitVersion = doc.Application.VersionNumber
     ifcConfig = None
     if (revitVersion == '2019'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2019(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_view_2019(ifcVersion, ifcSettings)
     elif (revitVersion == '2020'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2020(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_view_2020(ifcVersion, ifcSettings)
     elif (revitVersion == '2021'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2021(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_view_2021(ifcVersion, ifcSettings)
     elif (revitVersion == '2022'):
-        ifcConfig = ifcCon.IFCGetThirdPartyExportConfigByView2022(ifcVersion, ifcSettings)
+        ifcConfig = ifcCon.ifc_get_third_party_export_config_by_view_2022(ifcVersion, ifcSettings)
     else:
         # this is a non supported revit version!
         raise ValueError('Revit version ' + revitVersion + ' is currently not supported by IFC exporter!')

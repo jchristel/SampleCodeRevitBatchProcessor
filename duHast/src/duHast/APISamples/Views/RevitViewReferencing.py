@@ -386,7 +386,7 @@ def GetNestedFamilyMarkerNames(doc, usedIds):
             # open family
             try:
                 famDoc = doc.EditFamily(fam)
-                nestedFamCol = rFamUPurge.GetAllLoadableFamilies(famDoc)
+                nestedFamCol = rFamUPurge.get_all_loadable_families(famDoc)
                 for nFam in nestedFamCol:
                     if(nFam.Name not in names and nFam.Name != ''):
                         names.append(nFam.Name)        

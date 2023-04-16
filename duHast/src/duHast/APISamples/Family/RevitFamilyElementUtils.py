@@ -36,7 +36,7 @@ LINE_NAMES = [
     ]
 
 
-def GetAllGenericFormsInFamily(doc):
+def get_all_generic_forms_in_family(doc):
     '''
     Filters all generic forms (3D extrusions) in family.
     :param doc: Current Revit model document.
@@ -49,7 +49,7 @@ def GetAllGenericFormsInFamily(doc):
     return col
 
 
-def GetAllCurveBasedElementsInFamily(doc):
+def get_all_curve_based_elements_in_family(doc):
     '''
     Filters all curve based elements in family.
     These are:
@@ -69,7 +69,7 @@ def GetAllCurveBasedElementsInFamily(doc):
     return elements
 
 
-def GetAllModelTextElementsInFamily(doc):
+def get_all_model_text_elements_in_family(doc):
     '''
     Filters all model text elements in family.
     :param doc: Current Revit model document.
@@ -82,7 +82,7 @@ def GetAllModelTextElementsInFamily(doc):
     return col
 
 
-def GetAllReferencePlanesInFamily(doc):
+def get_all_reference_planes_in_family(doc):
     '''
     Filters all reference planes in family.
     :param doc: Current Revit model document.

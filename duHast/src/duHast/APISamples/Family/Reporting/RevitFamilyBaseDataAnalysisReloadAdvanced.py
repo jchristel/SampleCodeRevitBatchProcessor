@@ -51,7 +51,7 @@ from duHast.APISamples.Family.Reporting import RevitFamilyReloadAdvancedUtils as
 _TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
 
 
-def _WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
+def _write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
     '''
     Writes task list file to disk. File contains single column of fully qualified file path.
 
@@ -84,7 +84,7 @@ def _WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
     except Exception:
         return False
 
-def _DeleteOldTaskLists(directoryPath):
+def _delete_old_task_lists(directoryPath):
     '''
     Deletes all overall task files in given directory.
 
@@ -103,7 +103,7 @@ def _DeleteOldTaskLists(directoryPath):
                 flag = flag & util.FileDelete(f)
     return flag
 
-def _WriteOutEmptyTaskList(directoryPath, counter = 0):
+def _write_out_empty_task_list(directoryPath, counter = 0):
     '''
     Writes out an empty task list in case nothing is to be reloaded.
 
@@ -128,7 +128,7 @@ def _WriteOutEmptyTaskList(directoryPath, counter = 0):
     except Exception:
         return False
 
-def _removeDuplicates(listOne, listTwo):
+def _remove_duplicates(listOne, listTwo):
     '''
     Removes any item from list one which is present in list two.
 
@@ -150,7 +150,7 @@ def _removeDuplicates(listOne, listTwo):
             duplicatesList.append(lOneItem)
     return newList, duplicatesList
 
-def _getHosts(currentFamilies, overallFamilyBaseNestedData, overallFamilyBaseRootData):
+def _get_hosts(currentFamilies, overallFamilyBaseNestedData, overallFamilyBaseRootData):
     '''
     Returns the direct ( one level up) host families of the current families.
 
@@ -166,12 +166,12 @@ def _getHosts(currentFamilies, overallFamilyBaseNestedData, overallFamilyBaseRoo
     '''
 
     # get current change list host files
-    directHosts = rFamBaseDataUtils.FindRootFamsFromHosts(
-        rFamBaseDataUtils.FindAllDirectHostFamilies(currentFamilies, overallFamilyBaseNestedData), 
+    directHosts = rFamBaseDataUtils.find_root_families_from_hosts(
+        rFamBaseDataUtils.find_all_direct_host_families(currentFamilies, overallFamilyBaseNestedData), 
         overallFamilyBaseRootData)
     return directHosts
 
-def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOutputDirectoryPath):
+def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadListsOutputDirectoryPath):
     '''
     Processes a file change list and a family base data report. From both reports it builds a lists for reloading families bottom up in their nesting hierarchy.
 
@@ -189,12 +189,12 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
     tProcess.start()
 
     returnValue = res.Result()
-    changeList = rFamReloadAdvUtils.ReadChangeList(changeListFilePath)
+    changeList = rFamReloadAdvUtils.read_change_list(changeListFilePath)
     returnValue.AppendMessage(tProcess.stop() + ' Change list of length [' +str(len(changeList)) +'] loaded.')
 
     tProcess.start()
     # read overall family base data from file 
-    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(familyBaseDataReportFilePath)
+    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
     returnValue.AppendMessage(tProcess.stop() + ' Nested base data list of length [' + str(len(overallFamilyBaseNestedData)) + '] loaded.')
     
     if(len(changeList) > 0):
@@ -204,7 +204,7 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
         taskListCounter = 0
 
         tProcess.start()
-        taskCurrentLevel = _getHosts(
+        taskCurrentLevel = _get_hosts(
             changeList, 
             overallFamilyBaseNestedData, 
             overallFamilyBaseRootData
@@ -212,7 +212,7 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
         returnValue.AppendMessage(tProcess.stop() + ' Direct hosts [' + str(len(taskCurrentLevel)) + '] found.')
         
         tProcess.start()
-        taskNextLevel = _getHosts(
+        taskNextLevel = _get_hosts(
             taskCurrentLevel, 
             overallFamilyBaseNestedData, 
             overallFamilyBaseRootData
@@ -223,12 +223,12 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
         while (len(taskCurrentLevel) > 0 ):
             
             # remove next level hosts from direct hosts list to avoid overlap in reload process
-            cleanedCurrentTasks, overLapTasks = _removeDuplicates(taskCurrentLevel, taskNextLevel)
+            cleanedCurrentTasks, overLapTasks = _remove_duplicates(taskCurrentLevel, taskNextLevel)
             
             # write out cleaned up list:
             if(len(cleanedCurrentTasks) > 0):
                 tProcess.start()
-                resultWriteToDisk = _WriteReloadListToFile(
+                resultWriteToDisk = _write_reload_list_to_file(
                     cleanedCurrentTasks, 
                     loadListsOutputDirectoryPath, 
                     taskListCounter
@@ -236,7 +236,7 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
                 returnValue.UpdateSep(resultWriteToDisk, tProcess.stop() +  ' Wrote task list to file with status: ' + str(resultWriteToDisk))
             else:
                 # write out an empty task list!
-                emptyTaskListFlag = _WriteOutEmptyTaskList(loadListsOutputDirectoryPath, taskListCounter)
+                emptyTaskListFlag = _write_out_empty_task_list(loadListsOutputDirectoryPath, taskListCounter)
                 returnValue.UpdateSep(emptyTaskListFlag, 'Wrote empty task list at counter ['+ str(taskListCounter))
 
             # swap lists to get to next level of loading
@@ -245,7 +245,7 @@ def BuildWorkLists(changeListFilePath, familyBaseDataReportFilePath, loadListsOu
 
             tProcess.start()
             # get next level host families (task)
-            taskNextLevel = _getHosts(
+            taskNextLevel = _get_hosts(
                 taskCurrentLevel, 
                 overallFamilyBaseNestedData, 
                 overallFamilyBaseRootData

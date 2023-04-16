@@ -31,7 +31,7 @@ from System.Collections.Generic import List
 
 #: This list contains 3D element categories and is used in obsolete revit family purge function
 #: any revit category commented out with note 'purged else where' can be found in list 'catsLoadableThreeDOther'
-catsLoadableThreeD = List[rdb.BuiltInCategory] ([
+CATEGORIES_LOADABLE_3D = List[rdb.BuiltInCategory] ([
     #rdb.BuiltInCategory.OST_CableTrayFitting,  purged else where
     rdb.BuiltInCategory.OST_Casework,
     rdb.BuiltInCategory.OST_Columns,
@@ -76,7 +76,7 @@ catsLoadableThreeD = List[rdb.BuiltInCategory] ([
 
 #: Contains 3D family categories which needed specific purge code, rather then checking for unplaced family instances.
 #: i.e. built in revit type settings
-catsLoadableThreeDOther = List[rdb.BuiltInCategory] ([
+CATEGORIES_LOADABLE_3D_OTHER = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CableTrayFitting,
     rdb.BuiltInCategory.OST_ConduitFitting,
     rdb.BuiltInCategory.OST_CurtainWallPanels,
@@ -92,7 +92,7 @@ catsLoadableThreeDOther = List[rdb.BuiltInCategory] ([
 
 #: This list contains 2D element categories and is used in obsolete revit family purge function.\
 #: any revit category commented out with note 'purged else where' can be found in list 'catsLoadableTagsOther'
-catsLoadableTags = List[rdb.BuiltInCategory] ([
+CATEGORIES_LOADABLE_TAGS = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CurtainWallPanelTags,
     rdb.BuiltInCategory.OST_AreaTags,
     rdb.BuiltInCategory.OST_CaseworkTags,
@@ -181,7 +181,7 @@ catsLoadableTags = List[rdb.BuiltInCategory] ([
 
 #: Contains 2D family categories which needed specific purge code, rather then checking for unplaced family instances
 #: i.e. built in revit type settings
-catsLoadableTagsOther = List[rdb.BuiltInCategory] ([
+CATEGORIES_LOADABLE_TAGS_OTHER = List[rdb.BuiltInCategory] ([
     rdb.BuiltInCategory.OST_CalloutHeads,
     rdb.BuiltInCategory.OST_ElevationMarks,
     rdb.BuiltInCategory.OST_GenericAnnotation,

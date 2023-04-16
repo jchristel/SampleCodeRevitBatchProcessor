@@ -122,5 +122,5 @@ def GetUnusedICurtainWallSymbolIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedCurtainWallSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedCurtainWallSymbolIds)
     return ids

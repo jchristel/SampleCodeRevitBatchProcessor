@@ -28,7 +28,7 @@ This module contains a number of functions around exporting from Revit to varies
 
 # 
 # doSomethingWithViewName method will accept view name as arg only
-def BuildExportFileNameFromView(viewName, viewFilterRule, fileExtension):
+def build_export_file_name_from_view(viewName, viewFilterRule, fileExtension):
     '''
     Function modifying the past in view name and returns a file name.
 

@@ -53,20 +53,21 @@ from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamB
 renameDirective = namedtuple('renameDirective', 'name filePath category newName')
 
 # row structure of rename directive file
-_RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME = 0
-_RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH = 1
-_RENAME_DIRECTIVE_INDEX_CATEGORY = 2
-_RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME = 3
+
+RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME = 0
+RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH = 1
+RENAME_DIRECTIVE_INDEX_CATEGORY = 2
+RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME = 3
 
 # file name identifiers for rename directives
-_RENAME_DIRECTIVE_FILE_NAME_PREFIX = 'RenameDirective'
-_RENAME_DIRECTIVE_FILE_EXTENSION = '.csv'
+RENAME_DIRECTIVE_FILE_NAME_PREFIX = 'RenameDirective'
+RENAME_DIRECTIVE_FILE_EXTENSION = '.csv'
 
 # exceptions
-_EXCEPTION_NO_RENAME_DIRECTIVE_FILES = 'Rename directive file does not exist.'
-_EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES = 'Empty rename directive file!'
+EXCEPTION_NO_RENAME_DIRECTIVE_FILES = 'Rename directive file does not exist.'
+EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES = 'Empty rename directive file!'
 
-def _readRenameDirectives(files):
+def _read_rename_directives(files):
     '''
     Reads list of rename directives from file into named tuples.
 
@@ -84,14 +85,14 @@ def _readRenameDirectives(files):
             if (len(rows[i]) >= 4):
                 data = renameDirective(
                     rows[i][_RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME], 
-                    rows[i][_RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH], 
-                    rows[i][_RENAME_DIRECTIVE_INDEX_CATEGORY],
-                    rows[i][_RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME]
+                    rows[i][RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH], 
+                    rows[i][RENAME_DIRECTIVE_INDEX_CATEGORY],
+                    rows[i][RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME]
                 )
             renameDirectives.append(data)
     return renameDirectives
 
-def GetRenameDirectives(directoryPath):
+def get_rename_directives(directoryPath):
     '''
     Retrieves file rename  directives from a given folder location.
 
@@ -118,23 +119,23 @@ def GetRenameDirectives(directoryPath):
     # check whether csv files matching file name filter exist in directory path
     renameDirectiveFiles = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
-        _RENAME_DIRECTIVE_FILE_NAME_PREFIX,
+        RENAME_DIRECTIVE_FILE_NAME_PREFIX,
         '',
-        _RENAME_DIRECTIVE_FILE_EXTENSION
+        RENAME_DIRECTIVE_FILE_EXTENSION
     )
 
     # check whether any files where found?
     if(len(renameDirectiveFiles) > 0):
         # attempt to re rename directives from files
-        renameDirectives = _readRenameDirectives(renameDirectiveFiles)
+        renameDirectives = _read_rename_directives(renameDirectiveFiles)
         # check whether any rename directives where found in files
         if(len(renameDirectives) > 0):
             returnValue.UpdateSep(True, 'Found rename directives: ' + str(len(renameDirectives)))
             # attempt to rename files
             returnValue.result = renameDirectives
         else:
-            returnValue.UpdateSep(False, _EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
+            returnValue.UpdateSep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
     else:
-        returnValue.UpdateSep(False, _EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
+        returnValue.UpdateSep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
     
     return returnValue

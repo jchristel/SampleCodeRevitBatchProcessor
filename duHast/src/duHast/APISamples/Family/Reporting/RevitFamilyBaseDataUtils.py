@@ -54,22 +54,22 @@ rootFamily = namedtuple('rootFamily', 'name category filePath parent child')
 nestedFamily = namedtuple('nestedFamily', 'name category filePath rootPath categoryPath hostFamily')
 
 # row structure of family base data file
-_BASE_DATA_LIST_INDEX_FAMILY_NAME = 2
-_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
-_BASE_DATA_LIST_INDEX_CATEGORY = 4
-_BASE_DATA_LIST_INDEX_ROOT_PATH = 0
-_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
+BASE_DATA_LIST_INDEX_FAMILY_NAME = 2
+BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
+BASE_DATA_LIST_INDEX_CATEGORY = 4
+BASE_DATA_LIST_INDEX_ROOT_PATH = 0
+BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
 
 # file name identifiers for family base data
-_FAMILY_BASE_DATA_FILE_NAME_PREFIX = 'FamilyBase'
-_FAMILY_BASE_DATA_FILE_EXTENSION = '.csv'
+FAMILY_BASE_DATA_FILE_NAME_PREFIX = 'FamilyBase'
+FAMILY_BASE_DATA_FILE_EXTENSION = '.csv'
 
 # exceptions
-_EXCEPTION_NO_FAMILY_BASE_DATA_FILES = 'Families base data list files do not exist.'
-_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = 'Empty Families base data list file!'
+EXCEPTION_NO_FAMILY_BASE_DATA_FILES = 'Families base data list files do not exist.'
+EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = 'Empty Families base data list file!'
 
 
-def _getBaseDataFileName(directoryPath):
+def _get_base_data_file_name(directoryPath):
     '''
     Gets the first family base data file in provided directory or any of it's sub directories.
 
@@ -84,16 +84,16 @@ def _getBaseDataFileName(directoryPath):
     # get all base data files in folder
     files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
-        _FAMILY_BASE_DATA_FILE_NAME_PREFIX,
+        FAMILY_BASE_DATA_FILE_NAME_PREFIX,
         '',
-        _FAMILY_BASE_DATA_FILE_EXTENSION
+        FAMILY_BASE_DATA_FILE_EXTENSION
     )
     if( len(files) > 0):
         return files[0]
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
 
-def ReadOverallFamilyDataList(filePath):
+def read_overall_family_data_list(filePath):
     '''
     Reads list of families from family base data report file into named tuples.
 
@@ -109,21 +109,21 @@ def ReadOverallFamilyDataList(filePath):
     if(fileIO.FileExist(filePath)):
         rows = fileCSV.ReadCSVfile(filePath)
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
         pass
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
     returnValueRootFamily = []
     returnValueNestedFamily = []
     for i in range(1, len(rows)):
         # check if root family
-        if( '::' not in rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH]):
+        if( '::' not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]):
             data = rootFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
-                rows[i][_BASE_DATA_LIST_INDEX_CATEGORY], 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
                 [], # set up an empty list for parent families
                 []  # set up an empty list for child families
             )
@@ -131,17 +131,17 @@ def ReadOverallFamilyDataList(filePath):
         else:
             # found a child family
             data = nestedFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
-                rows[i][_BASE_DATA_LIST_INDEX_CATEGORY], 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
                 []
             )
             returnValueNestedFamily.append(data)
     return returnValueRootFamily, returnValueNestedFamily
 
-def ReadOverallFamilyDataListFromDirectory(directoryPath):
+def read_overall_family_data_list_from_directory(directoryPath):
     '''
     Reads the first family base data file it finds in a folder.
     Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
@@ -153,10 +153,10 @@ def ReadOverallFamilyDataListFromDirectory(directoryPath):
     :rtype: [rootFamily], [nestedFamily]
     '''
 
-    fileName = _getBaseDataFileName(directoryPath)
-    return ReadOverallFamilyDataList(fileName)
+    fileName = _get_base_data_file_name(directoryPath)
+    return read_overall_family_data_list(fileName)
 
-def ReadOverallFamilyDataListIntoNested(filePath):
+def read_overall_family_data_list_into_nested(filePath):
     '''
     Reads list of families from family base data report file into named tuples.
 
@@ -172,27 +172,27 @@ def ReadOverallFamilyDataListIntoNested(filePath):
     if(fileIO.FileExist(filePath)):
         rows = fileCSV.ReadCSVfile(filePath)
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
         pass
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
     returnValueNestedFamily = []
     for i in range(1, len(rows)):
         # found a child family
         data = nestedFamily(
-            rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
-            rows[i][_BASE_DATA_LIST_INDEX_CATEGORY], 
-            rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-            rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
-            rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
+            rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+            rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
+            rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+            rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
+            rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
             []
         )
         returnValueNestedFamily.append(data)
     return returnValueNestedFamily
 
-def ReadOverallFamilyDataListIntoNestedFromDirectory(directoryPath):
+def read_overall_family_data_list_into_nested_from_directory(directoryPath):
     '''
     Reads the first family base data file it finds in a folder.
     Note: This method calls ReadOverallFamilyIntoNestedDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
@@ -204,12 +204,12 @@ def ReadOverallFamilyDataListIntoNestedFromDirectory(directoryPath):
     :rtype: [nestedFamily]
     '''
 
-    fileName = _getBaseDataFileName(directoryPath)
-    return ReadOverallFamilyDataListIntoNested(fileName)
+    fileName = _get_base_data_file_name(directoryPath)
+    return read_overall_family_data_list_into_nested(fileName)
 
 # -------------------------------- simplify data set ----------------------------------------------------------------
 
-def _CheckDataBlocksForOverLap(blockOne, blockTwo):
+def _check_data_blocks_for_overlap(blockOne, blockTwo):
     '''
     Checks whether the root path of families in the first block overlaps with the root path of any family in the second block.
     Overlap is checked from the start of the root path. Any families from block one which are not overlapping any family in\
@@ -235,7 +235,7 @@ def _CheckDataBlocksForOverLap(blockOne, blockTwo):
             uniqueTreeNodes.append(fam)
     return uniqueTreeNodes
 
-def _CullDataBlock(familyBaseNestedDataBlock):
+def _cull_data_block(familyBaseNestedDataBlock):
     '''
     Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of '::' in root path string.
 
@@ -265,12 +265,12 @@ def _CullDataBlock(familyBaseNestedDataBlock):
             culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + dataBlocksByLength[i]
         else:
             # check for matches in next one up
-            uniqueNodes = _CheckDataBlocksForOverLap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
+            uniqueNodes = _check_data_blocks_for_overlap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
             # only add non overlapping blocks
             culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + uniqueNodes
     return culledFamilyBaseNestedDataBlocks
 
-def CullNestedBaseDataBlocks(overallFamilyBaseNestedData):
+def cull_nested_base_data_blocks(overallFamilyBaseNestedData):
     '''
     Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.
 
@@ -307,14 +307,14 @@ def CullNestedBaseDataBlocks(overallFamilyBaseNestedData):
     retainedFamilyBaseNestedData = []
     # cull data per block
     for familyBlock in familyBlocks:
-        d = _CullDataBlock(familyBlock)
+        d = _cull_data_block(familyBlock)
         retainedFamilyBaseNestedData = retainedFamilyBaseNestedData + d
         
     return retainedFamilyBaseNestedData
 
 # --------------------------------------------  find families in nesting tree data ------------------------------------
 
-def FindDirectHostFamilies(nestedFam, overallFamilyBaseNestedData):
+def find_direct_host_families(nestedFam, overallFamilyBaseNestedData):
     '''
     Finds the direct hosts of the past in family in the base nested family data set.
 
@@ -346,7 +346,7 @@ def FindDirectHostFamilies(nestedFam, overallFamilyBaseNestedData):
                         hostFamilies[keyNew] = (baseNestedFam.rootPath[indexMatch - 1],baseNestedFam.categoryPath[indexMatch - 1])
     return hostFamilies
 
-def FindAllDirectHostFamilies(families, overallFamilyBaseNestedData):
+def find_all_direct_host_families(families, overallFamilyBaseNestedData):
     '''
     Returns a dictionary of all direct host families of families past in.
 
@@ -361,14 +361,14 @@ def FindAllDirectHostFamilies(families, overallFamilyBaseNestedData):
 
     hostFamilies = {}
     for fam in families:
-        hosts = FindDirectHostFamilies(fam, overallFamilyBaseNestedData)
+        hosts = find_direct_host_families(fam, overallFamilyBaseNestedData)
         # update dictionary with new hosts only
         for h in hosts:
             if( h not in hostFamilies):
                 hostFamilies[h] = hosts[h]
     return hostFamilies
 
-def FindRootFamsFromHosts(hostFamilies, overallFamilyBaseRootData):
+def find_root_families_from_hosts(hostFamilies, overallFamilyBaseRootData):
     '''
     Returns a list of tuples of type rootFamily matching the past in host families. 
 

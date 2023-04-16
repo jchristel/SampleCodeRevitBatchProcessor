@@ -35,7 +35,7 @@ import Autodesk.Revit.DB as rdb
 
 #-------------------------------------------- IFC EXPORT Revit 2019 -------------------------------------
 
-def IFCGetThirdPartyExportConfigByView2019(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_view_2019(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -94,7 +94,7 @@ def IFCGetThirdPartyExportConfigByView2019(ifcVersion, ifcSettings):
     return ifcExportConfig
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByModel2019(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_model_2019(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -156,7 +156,7 @@ def IFCGetThirdPartyExportConfigByModel2019(ifcVersion, ifcSettings):
 #-------------------------------------------- IFC EXPORT Revit 2020 -------------------------------------
 # need to check for new features in revit 2020
 
-def IFCGetThirdPartyExportConfigByView2020(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_view_2020(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -216,7 +216,7 @@ def IFCGetThirdPartyExportConfigByView2020(ifcVersion, ifcSettings):
     return ifcExportConfig
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByModel2020(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_model_2020(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -280,7 +280,7 @@ def IFCGetThirdPartyExportConfigByModel2020(ifcVersion, ifcSettings):
 # need to check for new features in revit 2021
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByView2021(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_view_2021(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -340,7 +340,7 @@ def IFCGetThirdPartyExportConfigByView2021(ifcVersion, ifcSettings):
     return ifcExportConfig
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByModel2021(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_model_2021(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -405,7 +405,7 @@ def IFCGetThirdPartyExportConfigByModel2021(ifcVersion, ifcSettings):
 # need to check for new features in revit 2022
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByView2022(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_view_2022(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -431,14 +431,14 @@ def IFCGetThirdPartyExportConfigByView2022(ifcVersion, ifcSettings):
     ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
 
     if(ifcSettings == None):
-        ifcExportConfig = _setupConfigDefaultValues2022(ifcExportConfig, ifcVersion, True)
+        ifcExportConfig = _setup_config_default_values_2022(ifcExportConfig, ifcVersion, True)
     else:
-        ifcExportConfig = _setupConfigFromSettings2022(ifcExportConfig, ifcSettings)
+        ifcExportConfig = _setup_config_from_settings_2022(ifcExportConfig, ifcSettings)
         
     return ifcExportConfig
 
 # ifcVersion        which ifc version (2x3 etc...)
-def IFCGetThirdPartyExportConfigByModel2022(ifcVersion, ifcSettings):
+def ifc_get_third_party_export_config_by_model_2022(ifcVersion, ifcSettings):
     '''
     Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
     
@@ -464,13 +464,13 @@ def IFCGetThirdPartyExportConfigByModel2022(ifcVersion, ifcSettings):
     # set up configuration
     ifcExportConfig = IFCExportConfiguration.CreateDefaultConfiguration()
     if(ifcSettings == None):
-        ifcExportConfig = _setupConfigDefaultValues2022(ifcExportConfig, ifcVersion, False)
+        ifcExportConfig = _setup_config_default_values_2022(ifcExportConfig, ifcVersion, False)
     else:
-        ifcExportConfig = _setupConfigFromSettings2022(ifcExportConfig, ifcSettings)
+        ifcExportConfig = _setup_config_from_settings_2022(ifcExportConfig, ifcSettings)
         
     return ifcExportConfig
 
-def _setupConfigFromSettings2022(ifcExportConfig, ifcSettings):
+def _setup_config_from_settings_2022(ifcExportConfig, ifcSettings):
     '''
     Sets up an ifc config object for Revit 2022 based on settings passt in.
 
@@ -566,7 +566,7 @@ def _setupConfigFromSettings2022(ifcExportConfig, ifcSettings):
 
     return ifcExportConfig
 
-def _setupConfigDefaultValues2022(ifcExportConfig, ifcVersion, exportByView):
+def _setup_config_default_values_2022(ifcExportConfig, ifcVersion, exportByView):
     '''
     Sets up an default ifc config object for Revit 2022.
 

@@ -488,7 +488,7 @@ def GetNumberOfFamiliesInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rFams.GetAllLoadableFamilies(doc))
+        number = len(rFams.get_all_loadable_families(doc))
     except:
         pass
     return number
@@ -506,7 +506,7 @@ def GetNumberOfInPlaceFamiliesInModel(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rFams.GetAllInPlaceFamilies(doc))
+        number = len(rFams.get_all_in_place_families(doc))
     except:
         pass
     return number

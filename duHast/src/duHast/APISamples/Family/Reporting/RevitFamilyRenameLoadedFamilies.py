@@ -44,7 +44,7 @@ from duHast.Utilities import Result as res
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-def _renameLoadedFamilies(doc, renameDirectives, familyIds):
+def _rename_loaded_families(doc, renameDirectives, familyIds):
     '''
     Loops over nested families and if a match in rename directives is found will rename the family accordingly.
 
@@ -111,7 +111,7 @@ def _renameLoadedFamilies(doc, renameDirectives, familyIds):
     return returnValue
 
 
-def RenameLoadedFamilies(doc, directoryPath):
+def rename_loaded_families(doc, directoryPath):
     '''
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     loaded families accordingly.
@@ -136,15 +136,15 @@ def RenameLoadedFamilies(doc, directoryPath):
 
     returnValue = res.Result()
     # get directives from folder
-    renameDirectivesResult = rFamRenameUtils.GetRenameDirectives(directoryPath)
+    renameDirectivesResult = rFamRenameUtils.get_rename_directives(directoryPath)
     # check if anything came back
     if(renameDirectivesResult.status):
         renameDirectives = renameDirectivesResult.result
         # get all family ids in file
-        familyIds = rFamUtils.GetAllLoadableFamilyIdsThroughTypes(doc)
+        familyIds = rFamUtils.get_all_loadable_family_ids_through_types(doc)
         if(len(familyIds) > 0):
             # rename files as per directives
-            returnValue = _renameLoadedFamilies(doc, renameDirectives, familyIds)
+            returnValue = _rename_loaded_families(doc, renameDirectives, familyIds)
         else:
             returnValue.UpdateSep(True, 'Mo loadable families in file.')
     else:

@@ -55,7 +55,7 @@ from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamB
 from duHast.Utilities.timer import Timer
 from duHast.Utilities import Result as res
 
-def _ExtractParentFamilies(currentParent, treePath):
+def _extract_parent_families(currentParent, treePath):
     '''
     Find the index of the match in the root tree, any entries in the root tree list with a lower index are parents
 
@@ -78,7 +78,7 @@ def _ExtractParentFamilies(currentParent, treePath):
                 currentParent.parent.append(treePath[i])
 
 
-def _ExtractChildFamilies(currentParent, treePath):
+def _extract_child_families(currentParent, treePath):
     '''
     Find the index of the match in the root tree, any entries in the root tree list with a lower index are children
 
@@ -101,7 +101,7 @@ def _ExtractChildFamilies(currentParent, treePath):
                 currentParent.child.append(treePath[i])
 
 
-def _CheckDataBlocksForOverLap(blockOne, blockTwo):
+def _check_data_blocks_for_overLap(blockOne, blockTwo):
     '''
     Checks whether the root path of families in the first block overlaps with the root path of any family in the second block.
     Overlap is checked from the start of the root path. Any families from block one which are not overlapping any family in\
@@ -126,7 +126,7 @@ def _CheckDataBlocksForOverLap(blockOne, blockTwo):
             uniqueTreeNodes.append(fam)
     return uniqueTreeNodes
 
-def _CullDataBlock(familyBaseNestedDataBlock):
+def _cull_data_block(familyBaseNestedDataBlock):
     '''
     Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of '::' in root path string.
 
@@ -155,14 +155,14 @@ def _CullDataBlock(familyBaseNestedDataBlock):
             culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + dataBlocksByLength[i]
         else:
             # check for matches in next one up
-            uniqueNodes = _CheckDataBlocksForOverLap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
+            uniqueNodes = _check_data_blocks_for_overLap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
             # only add non overlapping blocks
             culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + uniqueNodes
     return culledFamilyBaseNestedDataBlocks
 
-def _CullNestedBaseDataBlocks(overallFamilyBaseNestedData):
+def _cull_nested_base_data_blocks(overallFamilyBaseNestedData):
     '''
-    Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.
+    Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longest branch only.
 
     Sample:
     
@@ -197,13 +197,13 @@ def _CullNestedBaseDataBlocks(overallFamilyBaseNestedData):
     retainedFamilyBaseNestedData = []
     # cull data per block
     for familyBlock in familyBlocks:
-        d = _CullDataBlock(familyBlock)
+        d = _cull_data_block(familyBlock)
         retainedFamilyBaseNestedData = retainedFamilyBaseNestedData + d
         
     return retainedFamilyBaseNestedData
 
 
-def FindParentsAndChildren(overallFamilyBaseRootData, overallFamilyBaseNestedData):
+def find_parents_and_children(overallFamilyBaseRootData, overallFamilyBaseNestedData):
     '''
     Loop over all root families and check if they exist in root path of any nested families.
     if so extract families higher up the root path tree as parents and families further down the root path tree as children
@@ -226,16 +226,16 @@ def FindParentsAndChildren(overallFamilyBaseRootData, overallFamilyBaseNestedDat
                 if(indexMatch > 0):
                     
                     #print('found ', overallFamilyBaseRootData[i].name ,' in ', nestedFam.rootPath)
-                    _ExtractParentFamilies(overallFamilyBaseRootData[i], nestedFam.rootPath)
+                    _extract_parent_families(overallFamilyBaseRootData[i], nestedFam.rootPath)
                     
-                    _ExtractChildFamilies(overallFamilyBaseRootData[i], nestedFam.rootPath)
+                    _extract_child_families(overallFamilyBaseRootData[i], nestedFam.rootPath)
 
                     #print('after: ', overallFamilyBaseRootData[i].child)
             except:
                 pass
     return overallFamilyBaseRootData
 
-def FindCircularReferences(overallFamilyBaseRootData):
+def find_circular_references(overallFamilyBaseRootData):
     '''
     Loops over family data and returns any families which appear in circular references.
     (A family appears in their parent and child collection)
@@ -255,7 +255,7 @@ def FindCircularReferences(overallFamilyBaseRootData):
                 circularReferences.append(family)
     return circularReferences
 
-def CheckFamiliesHaveCircularReferences(familyBaseDataReportFilePath):
+def check_families_have_circular_references(familyBaseDataReportFilePath):
     '''
     Processes a family base data report and identifies any families which contain circular reference.
 
@@ -286,14 +286,14 @@ def CheckFamiliesHaveCircularReferences(familyBaseDataReportFilePath):
 
     returnValue = res.Result()
     # read overall family base data and nested data from file 
-    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(familyBaseDataReportFilePath)
+    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
     returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
         + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     tProcess.start()
 
     before = len(overallFamilyBaseNestedData)
     # reduce workload by culling not needed nested family data
-    overallFamilyBaseNestedData = _CullNestedBaseDataBlocks(overallFamilyBaseNestedData)
+    overallFamilyBaseNestedData = _cull_nested_base_data_blocks(overallFamilyBaseNestedData)
     returnValue.AppendMessage(tProcess.stop() +  ' culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
     tProcess.start()
 
@@ -307,7 +307,7 @@ def CheckFamiliesHaveCircularReferences(familyBaseDataReportFilePath):
         threads = []
         # set up threads
         for i in range(coreCount):
-            t = threading.Thread(target=FindParentsAndChildren, args=(overallFamilyBaseRootData[i*chunkSize:(i+1) * chunkSize],overallFamilyBaseNestedData))
+            t = threading.Thread(target=find_parents_and_children, args=(overallFamilyBaseRootData[i*chunkSize:(i+1) * chunkSize],overallFamilyBaseNestedData))
             threads.append(t)
         # start up threads
         for t in threads:
@@ -317,13 +317,13 @@ def CheckFamiliesHaveCircularReferences(familyBaseDataReportFilePath):
             t.join()
     else:
         # find parents and children
-        overallFamilyBaseRootData = FindParentsAndChildren(overallFamilyBaseRootData, overallFamilyBaseNestedData)
+        overallFamilyBaseRootData = find_parents_and_children(overallFamilyBaseRootData, overallFamilyBaseNestedData)
     
     returnValue.AppendMessage(tProcess.stop() +  ' Populated parents and children properties of: ' + str(len(overallFamilyBaseRootData)) +' root families.' )
     tProcess.start()
 
     # identify circular references
-    circularReferences = FindCircularReferences(overallFamilyBaseRootData)
+    circularReferences = find_circular_references(overallFamilyBaseRootData)
     returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(circularReferences)) +' circular references in families.' )
     if(len(circularReferences) > 0):
         returnValue.result = circularReferences

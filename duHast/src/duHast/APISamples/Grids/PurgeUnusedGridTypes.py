@@ -56,4 +56,4 @@ def GetUnusedGridHeadFamilies(doc):
 
 def GetUnusedGridHeadFamiliesForPurge(doc):
     ''' this will return all ids of unused grid head symbols and families to be purged'''
-    return rFamUPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedGridHeadFamilies)
+    return rFamUPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedGridHeadFamilies)

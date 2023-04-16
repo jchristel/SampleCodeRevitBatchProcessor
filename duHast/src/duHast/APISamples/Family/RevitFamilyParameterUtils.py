@@ -38,7 +38,7 @@ from duHast.Utilities import Result as res
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-def SetFamilyParameterValueByStorageType(paramW, manager, value):
+def set_family_parameter_value_by_storage_type(paramW, manager, value):
     returnValue = res.Result()
     try:
         if(paramW.StorageType == rdb.StorageType.Double):
@@ -66,7 +66,7 @@ def SetFamilyParameterValueByStorageType(paramW, manager, value):
         returnValue.UpdateSep(False, 'failed to set parameter value with exception: '+ str(e))
     return returnValue
 
-def SetFamilyParameterValue(doc, manager, famPara, value):
+def set_family_parameter_value(doc, manager, famPara, value):
     #get the parameter
     paramW = manager.get_Parameter(famPara.Definition.Name)
     # set-up action to be executed in transaction
@@ -74,7 +74,7 @@ def SetFamilyParameterValue(doc, manager, famPara, value):
         actionReturnValue = res.Result()
         try:
             # attempt to change parameter value
-            actionReturnValue = SetFamilyParameterValueByStorageType(paramW, manager, value)
+            actionReturnValue = set_family_parameter_value_by_storage_type(paramW, manager, value)
         except Exception as e:
             actionReturnValue.status = False
             actionReturnValue.message = famPara.Definition.Name + ' : Failed to set parameter value: with exception: ' + str(e)
@@ -83,7 +83,7 @@ def SetFamilyParameterValue(doc, manager, famPara, value):
     returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
-def SetParameterFormula(doc, manager, famPara, formula):
+def set_parameter_formula(doc, manager, famPara, formula):
     def action():
         actionReturnValue = res.Result()
         try:

@@ -101,7 +101,7 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
             checkIds.append(aId)
     # check for any instances
     for id in checkIds:
-        instances = rFamUPurge.GetFamilyInstancesBySymbolTypeId(doc, id).ToList()
+        instances = rFamUPurge.get_family_instances_by_symbol_type_id(doc, id).ToList()
         if(len(instances) == 0):
             if(IsNestedFamilySymbol(doc, id, nestedFamilyNames) == False):
                 ids.append(id)
@@ -119,7 +119,7 @@ def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    return rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)
+    return rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)
 
 def GetUnusedViewReferenceTypeIdsForPurge(doc):
     '''

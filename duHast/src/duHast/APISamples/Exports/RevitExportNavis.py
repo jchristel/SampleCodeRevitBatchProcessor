@@ -30,10 +30,10 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.Utilities import Result as res
-from duHast.APISamples.Exports.RevitExport import BuildExportFileNameFromView
+from duHast.APISamples.Exports.RevitExport import build_export_file_name_from_view
 
 
-def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
+def setup_nwc_custom_export_option(usingSharedCoordinates, exportEntireModel, exportLinks, splitModelByLevel, exportParts, exportRoomAsAttributes, exportRoomGeometry, findMissingMaterials):
     '''
     Return an NWC Export Options object as per values past oin.
     :param usingSharedCoordinates: True shared coordinates will be used, otherwise project internal
@@ -70,16 +70,16 @@ def SetUpNWCCustomExportOption(usingSharedCoordinates, exportEntireModel, export
     return exNWC
 
 
-def SetUpNWCDefaultExportOptionSharedByView():
+def setup_nwc_default_export_option_shared_by_view():
     '''
     Return an NWC Export Options object with shared coordinates, export by View.
     :return: A Navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
     '''
 
-    return SetUpNWCCustomExportOption(True, False, False, True, True, False, False, False)
+    return setup_nwc_custom_export_option(True, False, False, True, True, False, False, False)
 
-def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
+def export_to_nwc(doc, nwcExportOption, directoryPath, fileName):
     '''
     Function exporting either entire model or view to NWC
     :param doc: Current Revit model document.
@@ -113,7 +113,7 @@ def ExportToNWC(doc, nwcExportOption, directoryPath, fileName):
     return returnValue
 
 
-def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
+def export_model_to_nwc(doc, nwcExportOption, directoryPath, fileName):
     '''
     Function exporting the entire model to NWC.
     :param doc: Current Revit model document.
@@ -135,12 +135,12 @@ def ExportModelToNWC(doc, nwcExportOption, directoryPath, fileName):
     '''
 
     returnValue = res.Result()
-    returnValueByModel = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+    returnValueByModel = export_to_nwc(doc, nwcExportOption, directoryPath, fileName)
     returnValue.Update(returnValueByModel)
     return returnValue
 
 
-def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
+def export_3d_views_to_nwc(doc, viewFilter, nwcExportOption, directoryPath, doSomethingWithViewName = None):
     '''
     Function exporting 3D views matching a filter (view starts with) to NWC.
     :param doc: Current Revit model document.
@@ -176,8 +176,8 @@ def Export3DViewsToNWC(doc, viewFilter, nwcExportOption, directoryPath, doSometh
             returnValueByView = res.Result()
             # store view ID in export option
             nwcExportOption.ViewId = exportView.Id
-            fileName = BuildExportFileNameFromView(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
-            returnValueByView = ExportToNWC(doc, nwcExportOption, directoryPath, fileName)
+            fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
+            returnValueByView = export_to_nwc(doc, nwcExportOption, directoryPath, fileName)
             returnValue.Update(returnValueByView)
     else:
         returnValue.UpdateSep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')

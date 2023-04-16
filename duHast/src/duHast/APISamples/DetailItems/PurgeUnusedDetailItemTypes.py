@@ -146,7 +146,7 @@ def get_all_unused_detail_symbol_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_all_unused_detail_symbol_ids)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_all_unused_detail_symbol_ids)
     return ids
 
 

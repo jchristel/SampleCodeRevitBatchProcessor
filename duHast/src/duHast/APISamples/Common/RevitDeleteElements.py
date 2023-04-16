@@ -34,7 +34,7 @@ from duHast.Utilities import Result as res
 def delete_by_element_ids(
     doc,
     ids,
-    transactionName, # type: str
+    transaction_name, # type: str
     elementName # type: str
     ):
     '''
@@ -54,24 +54,24 @@ def delete_by_element_ids(
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             doc.Delete(ids.ToList[rdb.ElementId]())
-            actionReturnValue.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
+            action_return_value.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
-        return actionReturnValue
-    transaction = rdb.Transaction(doc,transactionName)
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+            action_return_value.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
+        return action_return_value
+    transaction = rdb.Transaction(doc,transaction_name)
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
 
 
 def delete_by_element_ids_one_by_one(
     doc,
     ids,
-    transactionName, # type: str
+    transaction_name, # type: str
     elementName # type: str
     ):
     '''
@@ -92,18 +92,18 @@ def delete_by_element_ids_one_by_one(
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     for id in ids:
         def action():
-            actionReturnValue = res.Result()
+            action_return_value = res.Result()
             element = doc.GetElement(id)
             n = rdb.Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                actionReturnValue.message = 'Deleted [' + str(id) + '] ' + n
+                action_return_value.message = 'Deleted [' + str(id) + '] ' + n
             except Exception as e:
-                actionReturnValue.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
-            return actionReturnValue
-        transaction = rdb.Transaction(doc,transactionName)
-        returnValue.Update( rTran.in_transaction(transaction, action))
-    return returnValue
+                action_return_value.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
+            return action_return_value
+        transaction = rdb.Transaction(doc,transaction_name)
+        return_value.Update( rTran.in_transaction(transaction, action))
+    return return_value

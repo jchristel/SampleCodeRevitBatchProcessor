@@ -51,11 +51,11 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Family.Utility.LoadableFamilyCategories import catsLoadableThreeD, catsLoadableTags
+from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES_LOADABLE_3D, CATEGORIES_LOADABLE_TAGS
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def LoadFamily(doc, familyFilePath):
+def load_family(doc, familyFilePath):
     '''
     Loads or reloads a single family into a Revit document.
     
@@ -111,7 +111,7 @@ def LoadFamily(doc, familyFilePath):
 
 # ------------------------ filter functions -------------------------------------------------------------------------------------
 
-def GetFamilySymbols(doc, cats):
+def get_family_symbols(doc, cats):
     '''
     Filters all family symbols (Revit family types) of given built in categories from the Revit model.
     
@@ -133,7 +133,7 @@ def GetFamilySymbols(doc, cats):
     except Exception:
         return elements
 
-def GetFamilyInstancesByBuiltInCategories(doc, cats):
+def get_family_instances_by_built_in_categories(doc, cats):
     '''
     Filters all family instances of given built in categories from the Revit model.
     
@@ -155,7 +155,7 @@ def GetFamilyInstancesByBuiltInCategories(doc, cats):
     except Exception:
         return elements
 
-def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
+def get_family_instances_of_built_in_category(doc, builtinCat):
     '''
     Filters all family instances of a single given built in category from the Revit model.
     
@@ -172,7 +172,7 @@ def GetFamilyInstancesOfBuiltInCategory(doc, builtinCat):
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
     return col
 
-def GetAllLoadableFamilies(doc):
+def get_all_loadable_families(doc):
     '''
     Filters all families in revit model by whether it is not an InPlace family.
     
@@ -189,25 +189,25 @@ def GetAllLoadableFamilies(doc):
     families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == False)).ToList()
     return families
 
-def GetAllLoadableFamilyIdsThroughTypes(doc):
-        '''
-        Get all loadable family ids in file.
+def get_all_loadable_family_ids_through_types(doc):
+    '''
+    Get all loadable family ids in file.
 
-        :param doc: Current family document.
-        :type doc: Autodesk.Revit.DB.Document
-        :return: list of family ids
-        :rtype: [Autodesk.Revit.DB.ElementId]
-        '''
+    :param doc: Current family document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: list of family ids
+    :rtype: [Autodesk.Revit.DB.ElementId]
+    '''
 
-        familyIds = []
-        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol) 
-        # get families from symbols and filter out in place families
-        for famSymbol in col:
-            if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
-                familyIds.append(famSymbol.Family.Id)
-        return familyIds
+    familyIds = []
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol) 
+    # get families from symbols and filter out in place families
+    for famSymbol in col:
+        if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
+            familyIds.append(famSymbol.Family.Id)
+    return familyIds
 
-def GetAllInPlaceFamilies(doc):
+def get_all_in_place_families(doc):
     '''
     Filters all families in revit model by whether it is an InPlace family.
     
@@ -224,7 +224,7 @@ def GetAllInPlaceFamilies(doc):
     families = collector.OfClass(rdb.Family).Where(lambda e: (e.IsInPlace == True)).ToList()
     return families
 
-def GetAllFamilyInstances(doc):
+def get_all_family_instances(doc):
     '''
     Returns all family instances in document.
 
@@ -241,7 +241,7 @@ def GetAllFamilyInstances(doc):
 # --------------------------family data ----------------
 
 
-def IsAnyNestedFamilyInstanceLabelDriven(doc):
+def is_any_nested_family_instance_label_driven(doc):
     '''
     Checks whether any family isntance in document is driven by the 'Label' property.
 
@@ -253,7 +253,7 @@ def IsAnyNestedFamilyInstanceLabelDriven(doc):
     '''
 
     flag = False
-    famInstances = GetAllFamilyInstances(doc)
+    famInstances = get_all_family_instances(doc)
     
     for famInstance in famInstances:
         # get the Label parameter value
@@ -269,7 +269,7 @@ def IsAnyNestedFamilyInstanceLabelDriven(doc):
             
     return flag
 
-def GetSymbolsFromType(doc, typeIds):
+def get_symbols_from_type(doc, typeIds):
     '''
     Get all family types belonging to the same family as types past in.
 
@@ -296,7 +296,7 @@ def GetSymbolsFromType(doc, typeIds):
             families[famEl.Id] = sIds
     return families
 
-def GetFamilyInstancesBySymbolTypeId(doc, typeId):
+def get_family_instances_by_symbol_type_id(doc, typeId):
     '''
     Filters all family instances of a single given family symbol (type).
     
@@ -315,29 +315,7 @@ def GetFamilyInstancesBySymbolTypeId(doc, typeId):
     collector = rdb.FilteredElementCollector(doc).WherePasses( elementFilter )
     return collector
 
-def FamilyAllTypesInUse(famTypeIds, usedTypeIds):
-    ''' 
-    Checks if symbols (types) of a family are in use in a model.
-    
-    Check is done by comparing entries of famTypeIds with usedTypeIds.
-    
-    :param famTypeIds: list of symbol(type) ids of a family
-    :type famTypeIds: list Autodesk.Revit.DB.ElementId
-    :param  usedTypeIds: list of symbol(type) ids in use in a project
-    :type usedTypeIds: list Autodesk.Revit.DB.ElementId
-
-    :return: False if a single symbol id contained in list famTypeIds has a match in list usedTypeIds, otherwise True.
-    :rtype: bool
-    '''
-
-    match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in usedTypeIds):
-            match = False
-            break
-    return match
-
-def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
+def get_all_in_place_type_ids_in_model_of_category(doc, famBuiltInCategory):
     ''' 
     Filters family symbol (type) ids off all available in place families of single given built in category.
     
@@ -363,7 +341,7 @@ def GetAllInPlaceTypeIdsInModelOfCategory(doc, famBuiltInCategory):
 
 # --------------------------family purge  ----------------
 
-def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
+def get_family_symbols_ids(doc, cats, excludeSharedFam = True):
     '''
     Filters family symbols belonging to list of built in categories past in.
     
@@ -397,7 +375,7 @@ def GetFamilySymbolsIds(doc, cats, excludeSharedFam = True):
     except Exception:
         return ids
 
-def GetAllNonSharedFamilySymbolIds(doc):
+def get_all_non_shared_family_symbol_ids(doc):
     '''
     Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)
     
@@ -409,7 +387,7 @@ def GetAllNonSharedFamilySymbolIds(doc):
     '''
 
     ids = []
-    allLoadableThreeDTypeIds = GetFamilySymbolsIds(doc, catsLoadableThreeD)
-    allLoadableTagsTypeIds = GetFamilySymbolsIds(doc, catsLoadableTags)
+    allLoadableThreeDTypeIds = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_3D)
+    allLoadableTagsTypeIds = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_TAGS)
     ids = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
     return ids

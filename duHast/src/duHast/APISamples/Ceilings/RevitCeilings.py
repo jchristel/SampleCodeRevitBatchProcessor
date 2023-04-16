@@ -177,5 +177,5 @@ def get_all_in_place_ceiling_type_ids_in_model(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Ceilings)
+    ids = rFam.get_all_in_place_type_ids_in_model_of_category(doc, rdb.BuiltInCategory.OST_Ceilings)
     return ids

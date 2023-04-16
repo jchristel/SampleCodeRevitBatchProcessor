@@ -53,16 +53,16 @@ rootFamily = namedtuple('rootFamily', 'name category filePath')
 nestedFamily = namedtuple('nestedFamily', 'name category filePath rootPath categoryPath')
 
 # row structure of report data file
-_BASE_DATA_LIST_INDEX_ROOT_PATH = 0
-_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
-_BASE_DATA_LIST_INDEX_FAMILY_NAME = 2
-_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
+BASE_DATA_LIST_INDEX_ROOT_PATH = 0
+BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
+BASE_DATA_LIST_INDEX_FAMILY_NAME = 2
+BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
 
 # exceptions
-_EXCEPTION_NO_FAMILY_BASE_DATA_FILES = 'Report data list files do not exist.'
-_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = 'Empty report data list file!'
+EXCEPTION_NO_FAMILY_BASE_DATA_FILES = 'Report data list files do not exist.'
+EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = 'Empty report data list file!'
 
-def ReadUniqueFamiliesFromReport(filePath):
+def read_unique_families_from_report(filePath):
     '''
     Reads list of families from any report file into list of unique named tuples. 
     Reports needs:
@@ -82,43 +82,43 @@ def ReadUniqueFamiliesFromReport(filePath):
     if(util.FileExist(filePath)):
         rows = fileCSV.ReadCSVfile(filePath)
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
         pass
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
     returnValueRootFamily = []
     returnValueNestedFamily = []
     for i in range(1, len(rows)):
         # check if root family
-        if( '::' not in rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH]):
+        if( '::' not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]):
             data = rootFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH]
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH]
             )
             # only add unique occurrences
             if (data not in returnValueRootFamily):
                 returnValueRootFamily.append(data)
         else:
             # the category is the last entry in the category root path
-            categories = rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: ')
+            categories = rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: ')
             category = categories[len(categories) - 1]
             # found a child family
             data = nestedFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
                 category, 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
             )
             # only add unique occurrences
             if (data not in returnValueNestedFamily):
                 returnValueNestedFamily.append(data)
     return returnValueRootFamily, returnValueNestedFamily
 
-def ReadUniqueFamiliesWithRowDataFromReport(filePath):
+def read_unique_families_with_row_data_from_report(filePath):
     '''
     Reads list of families from any report file into dictionaries where key is a named tuple and values are the rows associated with that family
     Reports needs:
@@ -138,21 +138,21 @@ def ReadUniqueFamiliesWithRowDataFromReport(filePath):
     if(util.FileExist(filePath)):
         rows = fileCSV.ReadCSVfile(filePath, True)
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
         pass
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
     returnValueRootFamily = {}
     returnValueNestedFamily = {}
     for i in range(1, len(rows)):
         # check if root family
-        if( '::' not in rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH]):
+        if( '::' not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]):
             data = rootFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH]
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH]
             )
             # add row to dictionary
             if (data not in returnValueRootFamily):
@@ -161,22 +161,22 @@ def ReadUniqueFamiliesWithRowDataFromReport(filePath):
                 returnValueRootFamily[data].append(rows[i])
         else:
             # the category is the last entry in the category root path
-            categories = rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: ')
+            categories = rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH].split(' :: ')
             category = categories[len(categories) - 1]
             # found a child family
             data = nestedFamily(
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_NAME], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
                 category, 
-                rows[i][_BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_PATH], 
-                rows[i][_BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
+                rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH], 
+                rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH], 
             )
             returnValueNestedFamily[data] = [rows[i]]
     return returnValueRootFamily, returnValueNestedFamily
 
 # ------------------------------------- combining reports --------------------------------------------
 
-def _getDataRowsFromDictionary(dic):
+def _get_data_rows_from_dictionary(dic):
     '''
     Builds list of data rows from dictionary past in
 
@@ -201,7 +201,7 @@ def _getDataRowsFromDictionary(dic):
     return dataList
 
 
-def _compareFamilyDictionaries(previousAgData, newAgData):
+def _compare_family_dictionaries(previousAgData, newAgData):
     '''
     Compares two aggregate data dictionaries. Any new root family from newAgData ( root family occurring in newAgData only) will be add to the previousAgData dictionary. 
     Any existing root family (root family occurring in previous and new aggregate data dictionaries) will be updated in the previousAgData dictionary with row data from the newAgData data dictionary.
@@ -245,7 +245,7 @@ def _compareFamilyDictionaries(previousAgData, newAgData):
         returnValue.result.append(previousAgData)
     return returnValue
 
-def _getNestedFamiliesBelongingToRootFamilies(rootFam, nestedFamilies):
+def _get_nested_families_belonging_to_root_families(rootFam, nestedFamilies):
     '''
     Returns a list of all row data of nested families belonging to a given root family.
 
@@ -267,7 +267,7 @@ def _getNestedFamiliesBelongingToRootFamilies(rootFam, nestedFamilies):
             nestedFamiliesBelongingToRootFamRowData.append(nestedFamilies[nf][0])
     return nestedFamiliesBelongingToRootFamRowData
 
-def _aggregateFamilyData(rootFamilies, nestedFamilies):
+def _aggregate_family_data(rootFamilies, nestedFamilies):
     '''
     Returns a dictionary where key are all the root family file path from a report and value is a tuple of two list of strings containing
     the row data read from report file for the root family itself (first list) and the row data read from report file for any nested families (second list).
@@ -284,13 +284,13 @@ def _aggregateFamilyData(rootFamilies, nestedFamilies):
     # key is root family, value is tuple of csv row representing the root family data and list of rows each representing a nested family data
     aggregatedFamilyData = {}
     for rf in rootFamilies:
-        nestedFamiliesOfRootFamilyRowData = _getNestedFamiliesBelongingToRootFamilies(rf, nestedFamilies)
+        nestedFamiliesOfRootFamilyRowData = _get_nested_families_belonging_to_root_families(rf, nestedFamilies)
         # key is the unique family file path of the root family
         # value is a tuple of two lists : root data rows at index 0, nested fam data rows at index 1
         aggregatedFamilyData[rf.filePath] = (rootFamilies[rf], nestedFamiliesOfRootFamilyRowData)
     return aggregatedFamilyData
 
-def _checkFamiliesStillExist(famData):
+def _check_families_still_exist(famData):
     '''
     Checks whether families still exist on file server.
 
@@ -346,7 +346,7 @@ def _checkFamiliesStillExist(famData):
         returnValue.UpdateSep(False, 'Failed to check whether families still exist with exception: ' + str(e))
     return returnValue
 
-def CombineReports (previousReportPath, newReportPath):
+def combine_reports (previousReportPath, newReportPath):
     '''
     This combines two reports by:
 
@@ -380,35 +380,35 @@ def CombineReports (previousReportPath, newReportPath):
 
     # previous report
     try:
-        previousRoot, previousNested = ReadUniqueFamiliesWithRowDataFromReport(previousReportPath)
+        previousRoot, previousNested = read_unique_families_with_row_data_from_report(previousReportPath)
         returnValue.AppendMessage('Previous report: found ' + str(len(previousRoot)) + ' root families.')
         returnValue.AppendMessage('Previous report: found ' + str(len(previousNested)) + ' nested families.')
         # build dictionary containing all family data per root family
-        previousAggregatedFamilies = _aggregateFamilyData(previousRoot, previousNested)
+        previousAggregatedFamilies = _aggregate_family_data(previousRoot, previousNested)
     except Exception as e:
         # check whether empty file exception
-        if (str(e) != _EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):
+        if (str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):
             raise e
     
     # new report
     try:
-        newRoot, newNested = ReadUniqueFamiliesWithRowDataFromReport(newReportPath)
+        newRoot, newNested = read_unique_families_with_row_data_from_report(newReportPath)
         # build dictionary containing all family data per root family
-        newAggregatedFamilies = _aggregateFamilyData(newRoot, newNested)
+        newAggregatedFamilies = _aggregate_family_data(newRoot, newNested)
         returnValue.AppendMessage('New report: found ' + str(len(newRoot)) + ' root families.')
         returnValue.AppendMessage('New report: found ' + str(len(newNested)) + ' nested families.')
     except Exception as e:
         # check whether empty file exception
-        if (str(e) != _EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):
+        if (str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):
             raise e
 
     # compare dictionaries: build unique list of families
-    uniqueFamDataStatus = _compareFamilyDictionaries(previousAggregatedFamilies, newAggregatedFamilies)
+    uniqueFamDataStatus = _compare_family_dictionaries(previousAggregatedFamilies, newAggregatedFamilies)
     returnValue.Update(uniqueFamDataStatus)
     uniqueFamData = uniqueFamDataStatus.result[0]
 
     # check whether families still exist on file server
-    removeNoneExistingFamilies = _checkFamiliesStillExist(uniqueFamData)
+    removeNoneExistingFamilies = _check_families_still_exist(uniqueFamData)
     returnValue.Update(removeNoneExistingFamilies)
     # only update family data if culling occurred without any exceptions
     if(removeNoneExistingFamilies.status):
@@ -419,7 +419,7 @@ def CombineReports (previousReportPath, newReportPath):
     headerRow = header.split(',')
     
     # build list of data rows
-    rowsCurrent = _getDataRowsFromDictionary(uniqueFamData)
+    rowsCurrent = _get_data_rows_from_dictionary(uniqueFamData)
     # sort rows by root ( first entry ) since other code (circ reference checker for instance) expects data sorted
     rowsCurrent.sort()
     # start with header row

@@ -118,7 +118,7 @@ def rename_loaded_families(doc):
     '''
 
     return_value = res.Result()
-    family_ids = rFamU.GetAllLoadableFamilyIdsThroughTypes(doc)
+    family_ids = rFamU.get_all_loadable_family_ids_through_types(doc)
     counter = 0
     for family_id in family_ids:
         # retrieve the family through the id

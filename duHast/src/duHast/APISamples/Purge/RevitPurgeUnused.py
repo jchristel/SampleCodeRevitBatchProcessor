@@ -241,7 +241,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Text Types', rAnnoPurge.get_a
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Arrow Heads', rAnnoPurge.get_all_unused_arrow_type_ids_in_model, 'Arrow Head Type(s)', 'Arrow Head Type(s)', rArrow.get_arrow_type_ids_in_model))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Generic Annotation',  rAnnoPurge.get_unused_generic_annotation_ids_for_purge, 'Generic Anno Type(s)', 'Generic Anno Type(s)',  rGAnno.get_all_generic_annotation_type_ids_by_category))
 PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused SpotElevation Symbols',  rAnnoPurge.get_unused_symbol_ids_from_spot_types_to_purge, 'Spot Elevation Symbol(s)', 'Spot Elevation Symbol(s)',  rAnnoSpot.get_all_spot_elevation_symbol_ids_in_model))
-PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamPurge.GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamUPurge.GetAllNonSharedFamilySymbolIds)) #TODO check its not deleting to much
+PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamPurge.get_unused_non_shared_family_symbols_and_type_ids_to_purge, 'Loadable Non Shared Family Type(s)', 'Loadable Non Shared Family Type(s)', rFamUPurge.get_all_non_shared_family_symbol_ids)) #TODO check its not deleting to much
 
 
 #: indentation for names of items purged

@@ -32,9 +32,9 @@ class IFCSpaceBoundaries(Base.Base):
     '''
     Using enum class for IFC space boundary options.
     '''
-    noBoundaries = 0
-    firstLevel = 1
-    secondLevel = 2
+    no_boundaries = 0
+    first_level = 1
+    second_level = 2
 
     def __init__(self):
         super(IFCSpaceBoundaries, self).__init__()  

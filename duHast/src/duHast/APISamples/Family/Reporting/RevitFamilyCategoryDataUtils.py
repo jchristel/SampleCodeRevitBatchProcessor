@@ -81,55 +81,55 @@ rootFamily = namedtuple('rootFamily', 'name category filePath parent child subca
 nestedFamily = namedtuple('nestedFamily', 'name category filePath rootPath categoryPath hostFamily subcategories')
 
 # row structure of family change category directive file
-_CATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 0
-_CATEGORY_CHANGE_DATA_LIST_INDEX_NEW_FAMILY_CATEGORY = 1
+CATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_FILE_PATH = 0
+CATEGORY_CHANGE_DATA_LIST_INDEX_NEW_FAMILY_CATEGORY = 1
 
 # row structure of family change subcategory directive file
-_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_CATEGORY = 0
-_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_OLD_SUBCATEGORY_NAME = 1
-_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_NEW_SUBCATEGORY_NAME = 2
+SUBCATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_CATEGORY = 0
+SUBCATEGORY_CHANGE_DATA_LIST_INDEX_OLD_SUBCATEGORY_NAME = 1
+SUBCATEGORY_CHANGE_DATA_LIST_INDEX_NEW_SUBCATEGORY_NAME = 2
 
 # row structure of family category data file
-_CATEGORY_DATA_LIST_INDEX_ROOT_PATH = 0
-_CATEGORY_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
-_CATEGORY_DATA_LIST_INDEX_FAMILY_NAME = 2
-_CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
-_CATEGORY_DATA_LIST_INDEX_USAGE_COUNTER = 4
-_CATEGORY_DATA_LIST_INDEX_USED_BY = 5
-_CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME = 6
-_CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_NAME = 7
-_CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_ID = 8
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_3D = 9
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_CUT = 10
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_PROJECTION = 11
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_NAME = 12
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_ID = 13
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_CUT = 14
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_PROJECTION = 15
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_RED = 16
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_GREEN = 17
-_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_BLUE = 18
+CATEGORY_DATA_LIST_INDEX_ROOT_PATH = 0
+CATEGORY_DATA_LIST_INDEX_ROOT_CATEGORY_PATH = 1
+CATEGORY_DATA_LIST_INDEX_FAMILY_NAME = 2
+CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH = 3
+CATEGORY_DATA_LIST_INDEX_USAGE_COUNTER = 4
+CATEGORY_DATA_LIST_INDEX_USED_BY = 5
+CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME = 6
+CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_NAME = 7
+CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_ID = 8
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_3D = 9
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_CUT = 10
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_PROJECTION = 11
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_NAME = 12
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_ID = 13
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_CUT = 14
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_PROJECTION = 15
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_RED = 16
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_GREEN = 17
+CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_BLUE = 18
 
 # file name identifiers for family base data
-_FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX = 'FamilyCategories'
-_FAMILY_CATEGORY_DATA_FILE_EXTENSION = '.csv'
+FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX = 'FamilyCategories'
+FAMILY_CATEGORY_DATA_FILE_EXTENSION = '.csv'
 
 # file name identifiers for category change directives
-_CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX = 'CategoryChangeDirective'
-_CATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION = '.csv'
+CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX = 'CategoryChangeDirective'
+CATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION = '.csv'
 
 # file name identifiers for subcategory change directives
-_SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX = 'SubCategoryChangeDirective'
-_SUBCATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION = '.csv'
+SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX = 'SubCategoryChangeDirective'
+SUBCATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION = '.csv'
 
 # exceptions
-_EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES = 'Families change directive list files do not exist.'
-_EXCEPTION_EMPTY_CHANGE_DIRECTIVE_DATA_FILES = 'Empty Families change directive data file(s)!'
+EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES = 'Families change directive list files do not exist.'
+EXCEPTION_EMPTY_CHANGE_DIRECTIVE_DATA_FILES = 'Empty Families change directive data file(s)!'
 
-_EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES = 'Families category data list files do not exist.'
-_EXCEPTION_EMPTY_FAMILY_CATEGORY_DATA_FILES = 'Empty Families category data list file!'
-_EXCEPTION_NO_FAMILY_SUBCATEGORY_DATA_FILES = 'Families subcategory data list files do not exist.'
-_EXCEPTION_EMPTY_FAMILY_SUBCATEGORY_DATA_FILES = 'Empty Families subcategory data list file!'
+EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES = 'Families category data list files do not exist.'
+EXCEPTION_EMPTY_FAMILY_CATEGORY_DATA_FILES = 'Empty Families category data list file!'
+EXCEPTION_NO_FAMILY_SUBCATEGORY_DATA_FILES = 'Families subcategory data list files do not exist.'
+EXCEPTION_EMPTY_FAMILY_SUBCATEGORY_DATA_FILES = 'Empty Families subcategory data list file!'
 
 
 # -------------------------------- read category data set ----------------------------------------------------------------
@@ -152,7 +152,7 @@ dataNestedFam = nestedFamily('nested family name', 'nested family category', 'fi
 '''
 #end samples
 
-def _createRootFamilyFromData(dataRow):
+def _create_root_family_from_data(dataRow):
     '''
     Sets up a root family tuple from data row past in.
 
@@ -164,16 +164,16 @@ def _createRootFamilyFromData(dataRow):
     '''
     # need to check if this is a category belonging to the current family or a new family??
     fam = rootFamily(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_FAMILY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+        dataRow[CATEGORY_DATA_LIST_INDEX_FAMILY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH],
         [], # set up an empty list for parent families
         [], # set up an empty list for child families
         [] # set up empty list for sub-categories
     )
     return fam
 
-def _createNestedFamilyFromData(dataRow):
+def _create_nested_family_from_data(dataRow):
     '''
     Sets up a nested family tuple from data row past in.
 
@@ -186,17 +186,17 @@ def _createNestedFamilyFromData(dataRow):
 
     # found a child family
     fam =  nestedFamily (
-        dataRow[_CATEGORY_DATA_LIST_INDEX_FAMILY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
-        dataRow[_CATEGORY_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
+        dataRow[CATEGORY_DATA_LIST_INDEX_FAMILY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_FAMILY_FILE_PATH],
+        dataRow[CATEGORY_DATA_LIST_INDEX_ROOT_PATH].split(' :: '), # split root path into list for ease of searching
+        dataRow[CATEGORY_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
         [], # set up an empty list for host families
         [] # set up empty list for sub-categories
     )
     return fam
 
-def _setupFamilyFromData(dataRow):
+def _setup_family_from_data(dataRow):
     '''
     Creates a nested family or root family tuple from data row past in.
 
@@ -208,14 +208,14 @@ def _setupFamilyFromData(dataRow):
     '''
 
     fam = None
-    if( '::' not in dataRow[_CATEGORY_DATA_LIST_INDEX_ROOT_PATH]):
-        fam = _createRootFamilyFromData(dataRow)
+    if( '::' not in dataRow[CATEGORY_DATA_LIST_INDEX_ROOT_PATH]):
+        fam = _create_root_family_from_data(dataRow)
     else:
         # found a child family
-        fam = _createNestedFamilyFromData(dataRow)
+        fam = _create_nested_family_from_data(dataRow)
     return fam
 
-def _buildSubCategoryPropertiesFromData(dataRow):
+def _build_sub_category_properties_from_data(dataRow):
     '''
     Generates a subcategory tuple based on data row past in.
 
@@ -229,25 +229,25 @@ def _buildSubCategoryPropertiesFromData(dataRow):
     # read category data first
     # get colour RGB values
     dataRGB = graphicPropertyRGB(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_RED],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_GREEN],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_BLUE]
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_RED],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_GREEN],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_RGB_BLUE]
     )
     # get line weight values
     dataLineWeight = graphicPropertyLineWeight(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_CUT],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_PROJECTION]
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_CUT],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_LINE_WEIGHT_PROJECTION]
     )
     # get material values
     dataMaterial = graphicPropertyMaterial(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_ID],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_NAME]
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_ID],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_MATERIAL_NAME]
     )
     # get graphic properties
     dataGraphic = graphicPropertyThreeDCutProjection(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_3D],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_CUT],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_PROJECTION]
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_3D],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_CUT],
+        dataRow[CATEGORY_DATA_LIST_INDEX_GRAPHIC_PROPERTY_PROJECTION]
     )
     # put all of the above together
     dataSubPropertiesContainer = subCategoryPropertiesContainer (
@@ -258,16 +258,16 @@ def _buildSubCategoryPropertiesFromData(dataRow):
     )
     # set up the actual sub category ( single row in report )
     dataSubCatSample = subCategory(
-        dataRow[_CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_NAME], 
-        dataRow[_CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_ID],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_USAGE_COUNTER],
-        dataRow[_CATEGORY_DATA_LIST_INDEX_USED_BY],
+        dataRow[CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_NAME], 
+        dataRow[CATEGORY_DATA_LIST_INDEX_SUBCATEGORY_ID],
+        dataRow[CATEGORY_DATA_LIST_INDEX_USAGE_COUNTER],
+        dataRow[CATEGORY_DATA_LIST_INDEX_USED_BY],
         dataSubPropertiesContainer
     )
     return dataSubCatSample
 
-def _getCategoryDataFileName(directoryPath):
+def _get_category_data_file_name(directoryPath):
     '''
     Gets the first family base data file in provided directory or any of it's sub directories.
 
@@ -282,17 +282,17 @@ def _getCategoryDataFileName(directoryPath):
     # get all base data files in folder
     files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
-        _FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX,
+        FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX,
         '',
-        _FAMILY_CATEGORY_DATA_FILE_EXTENSION
+        FAMILY_CATEGORY_DATA_FILE_EXTENSION
     )
 
     if( len(files) > 0):
         return files[0]
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
 
-def ReadOverallFamilyDataList(filePath):
+def read_overall_family_data_list(filePath):
     '''
     Reads list of families from family category data report file into named tuples.
 
@@ -308,11 +308,11 @@ def ReadOverallFamilyDataList(filePath):
     if(util.FileExist(filePath)):
         rows = fileCSV.ReadCSVfile(filePath)
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
     if(len(rows) > 0):
         pass
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_CATEGORY_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_CATEGORY_DATA_FILES)
     
     returnValueRootFamily = []
     returnValueNestedFamily = []
@@ -320,14 +320,14 @@ def ReadOverallFamilyDataList(filePath):
     currentFam = None
     for i in range(1, len(rows)):
         # set up the actual sub category ( single row in report )
-        dataSubCatSample = _buildSubCategoryPropertiesFromData(rows[i])
+        dataSubCatSample = _build_sub_category_properties_from_data(rows[i])
         # get name and category as unique identifier
-        famId = rows[i][_CATEGORY_DATA_LIST_INDEX_FAMILY_NAME] + rows[i][_CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME]
+        famId = rows[i][CATEGORY_DATA_LIST_INDEX_FAMILY_NAME] + rows[i][CATEGORY_DATA_LIST_INDEX_CATEGORY_NAME]
         # check if this is the current family ... 
         # this assumes family category data in report file is ordered by family!!!
         if(currentFam == None):
             # and set up a new one:
-            currentFam = _setupFamilyFromData(rows[i])
+            currentFam = _setup_family_from_data(rows[i])
             # append category data to new family
             currentFam.subcategories.append(dataSubCatSample)
         elif (currentFam.name + currentFam.category == famId):
@@ -341,12 +341,12 @@ def ReadOverallFamilyDataList(filePath):
             else:
                 returnValueNestedFamily.append(currentFam)
             # and set up a new one:
-            currentFam = _setupFamilyFromData(rows[i])
+            currentFam = _setup_family_from_data(rows[i])
             # append category data to new family
             currentFam.subcategories.append(dataSubCatSample)
     return returnValueRootFamily, returnValueNestedFamily
 
-def ReadOverallFamilyCategoryDataFromDirectory(directoryPath):
+def read_overall_family_category_data_from_directory(directoryPath):
     '''
     Reads the first family category data file it finds in a folder.
     Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
@@ -358,12 +358,12 @@ def ReadOverallFamilyCategoryDataFromDirectory(directoryPath):
     :rtype: [rootFamily], [nestedFamily]
     '''
 
-    fileName = _getCategoryDataFileName(directoryPath)
-    return ReadOverallFamilyDataList(fileName)
+    fileName = _get_category_data_file_name(directoryPath)
+    return read_overall_family_data_list(fileName)
 
 # -------------------------------- read family category change directives ----------------------------------------------------------------
 
-def ReadOverallChangeCategoryDirectivesList(filePaths):
+def read_overall_change_category_directives_list(filePaths):
     '''
     Reads list of family change category directives from files into named tuples.
 
@@ -390,7 +390,7 @@ def ReadOverallChangeCategoryDirectivesList(filePaths):
     
     # check if any files found
     if(matchAnyFile == False):
-        raise Exception(_EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
     
     # check if files contained any data
     if(len(rows) > 0):
@@ -398,16 +398,16 @@ def ReadOverallChangeCategoryDirectivesList(filePaths):
         returnValueChangeDirectives = []
         for row in rows:
             changeDirective = changeFamilyCategory(
-            row[_CATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_FILE_PATH], 
-            row[_CATEGORY_CHANGE_DATA_LIST_INDEX_NEW_FAMILY_CATEGORY]
+            row[CATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_FILE_PATH], 
+            row[CATEGORY_CHANGE_DATA_LIST_INDEX_NEW_FAMILY_CATEGORY]
             )
             returnValueChangeDirectives.append(changeDirective)
     else:
-        raise Exception(_EXCEPTION_EMPTY_CHANGE_DIRECTIVE_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_CHANGE_DIRECTIVE_DATA_FILES)
     
     return returnValueChangeDirectives
     
-def _getCategoryChangeDirectiveFileNames(directoryPath):
+def _get_category_change_directive_file_names(directoryPath):
     '''
     Gets change category directive file in provided directory or any of it's sub directories.
 
@@ -422,16 +422,16 @@ def _getCategoryChangeDirectiveFileNames(directoryPath):
     # get all base data files in folder
     files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
-        _CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
+        CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
-        _CATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION
+        CATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION
     )
     if( len(files) > 0):
         return files
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
 
-def ReadOverallFamilyCategoryChangeDirectivesFromDirectory(directoryPath):
+def read_overall_family_category_change_directives_from_directory(directoryPath):
     '''
     Reads all category change directive file it finds in a folder.
     Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
@@ -443,12 +443,12 @@ def ReadOverallFamilyCategoryChangeDirectivesFromDirectory(directoryPath):
     :rtype: [changeFamilyCategory]
     '''
 
-    fileNames = _getCategoryChangeDirectiveFileNames(directoryPath)
-    return ReadOverallChangeCategoryDirectivesList(fileNames)
+    fileNames = _get_category_change_directive_file_names(directoryPath)
+    return read_overall_change_category_directives_list(fileNames)
 
 # -------------------------------- read family subcategory change directives ----------------------------------------------------------------
 
-def ReadOverallFamilySubCategoryChangeDirectivesFromDirectory(directoryPath):
+def read_overall_family_sub_category_change_directives_from_directory(directoryPath):
     '''
     Reads all subcategory change directive file it finds in a folder.
     Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
@@ -460,10 +460,10 @@ def ReadOverallFamilySubCategoryChangeDirectivesFromDirectory(directoryPath):
     :rtype: [changeFamilySubCategory]
     '''
 
-    fileNames = _getSubCategoryChangeDirectiveFileNames(directoryPath)
-    return ReadOverallChangeSubCategoryDirectivesList(fileNames)
+    fileNames = _get_sub_category_change_directive_file_names(directoryPath)
+    return read_overall_change_sub_category_directives_list(fileNames)
 
-def _getSubCategoryChangeDirectiveFileNames(directoryPath):
+def _get_sub_category_change_directive_file_names(directoryPath):
     '''
     Gets change subcategory directive file in provided directory or any of it's sub directories.
 
@@ -478,16 +478,16 @@ def _getSubCategoryChangeDirectiveFileNames(directoryPath):
     # get all base data files in folder
     files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
         directoryPath,
-        _SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
+        SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
-        _SUBCATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION
+        SUBCATEGORY_CHANGE_DIRECTIVE_FILE_EXTENSION
     )
     if( len(files) > 0):
         return files
     else:
-        raise Exception(_EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_CHANGE_DIRECTIVE_DATA_FILES)
 
-def ReadOverallChangeSubCategoryDirectivesList(filePaths):
+def read_overall_change_sub_category_directives_list(filePaths):
     '''
     Reads list of family change subcategory directives from files into named tuples.
 
@@ -514,7 +514,7 @@ def ReadOverallChangeSubCategoryDirectivesList(filePaths):
     
     # check if any files found
     if(matchAnyFile == False):
-        raise Exception(_EXCEPTION_NO_FAMILY_SUBCATEGORY_DATA_FILES)
+        raise Exception(EXCEPTION_NO_FAMILY_SUBCATEGORY_DATA_FILES)
     
     # check if files contained any data
     if(len(rows) > 0):
@@ -522,17 +522,17 @@ def ReadOverallChangeSubCategoryDirectivesList(filePaths):
         returnValueChangeDirectives = []
         for row in rows:
             changeDirective = changeFamilySubCategory(
-            row[_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_CATEGORY], 
-            row[_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_OLD_SUBCATEGORY_NAME],
-            row[_SUBCATEGORY_CHANGE_DATA_LIST_INDEX_NEW_SUBCATEGORY_NAME],
+            row[SUBCATEGORY_CHANGE_DATA_LIST_INDEX_FAMILY_CATEGORY], 
+            row[SUBCATEGORY_CHANGE_DATA_LIST_INDEX_OLD_SUBCATEGORY_NAME],
+            row[SUBCATEGORY_CHANGE_DATA_LIST_INDEX_NEW_SUBCATEGORY_NAME],
             )
             returnValueChangeDirectives.append(changeDirective)
     else:
-        raise Exception(_EXCEPTION_EMPTY_FAMILY_SUBCATEGORY_DATA_FILES)
+        raise Exception(EXCEPTION_EMPTY_FAMILY_SUBCATEGORY_DATA_FILES)
     
     return returnValueChangeDirectives
 
-def GetFamiliesRequiringSubCategoryChange(rootFamilies, subCatChangeDirectives):
+def get_families_requiring_sub_category_change(rootFamilies, subCatChangeDirectives):
     '''
     Returns a list of file path of root families containing subcategories requiring a rename.
 

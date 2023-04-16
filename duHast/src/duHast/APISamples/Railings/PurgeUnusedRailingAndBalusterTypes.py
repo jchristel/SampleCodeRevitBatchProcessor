@@ -138,7 +138,7 @@ def GetUnusedInPlaceRailingIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceRailingTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceRailingTypeIds)
     return ids
 
 
@@ -190,5 +190,5 @@ def GetUnUsedBalusterTypeIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedBalusterTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedBalusterTypeIds)
     return ids

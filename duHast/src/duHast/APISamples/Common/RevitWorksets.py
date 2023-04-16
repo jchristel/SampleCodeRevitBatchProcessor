@@ -47,7 +47,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def get_workset_id_by_name(doc, worksetName):
+def get_workset_id_by_name(doc, workset_name):
     '''
     Returns the element id of a workset identified by its name, otherwise invalid Id (-1) if no such workset exists
 
@@ -62,12 +62,12 @@ def get_workset_id_by_name(doc, worksetName):
 
     id = rdb.ElementId.InvalidElementId
     for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
-        if(p.Name == worksetName):
+        if(p.Name == workset_name):
             id = p.Id
             break
     return id
 
-def get_workset_name_by_id(doc, idInteger):
+def get_workset_name_by_id(doc, id_integer):
     '''
     Returns the name of the workset identified by its Element Id, otherwise 'unknown' if no such workset exists
 
@@ -82,7 +82,7 @@ def get_workset_name_by_id(doc, idInteger):
 
     name = 'unknown'
     for p in rdb.FilteredWorksetCollector(doc).OfKind(rdb.WorksetKind.UserWorkset):
-        if(p.Id.IntegerValue == idInteger):
+        if(p.Id.IntegerValue == id_integer):
             name = p.Name
             break
     return name
@@ -147,16 +147,16 @@ def open_worksets_with_elements_hack(doc):
     '''
 
     # get worksets in model
-    worksetIds = get_workset_ids(doc)
+    workset_ids = get_workset_ids(doc)
     # loop over workset and open if anything is on them
-    for wId in worksetIds:
-        workset = rdb.ElementWorksetFilter(wId)
-        elemIds = rdb.FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
-        if (len(elemIds)>0):
+    for w_id in workset_ids:
+        workset = rdb.ElementWorksetFilter(w_id)
+        elem_ids = rdb.FilteredElementCollector(doc).WherePasses(workset).ToElementIds()
+        if (len(elem_ids)>0):
             # this will force Revit to open the workset containing this element
-           rdb.uidoc.ShowElements(elemIds.First())
+           rdb.uidoc.ShowElements(elem_ids.First())
 
-def modify_element_workset(doc, defaultWorksetName, collector, elementTypeName):
+def modify_element_workset(doc, default_workset_name, collector, element_type_name):
     '''
     Attempts to change the worksets of elements provided through an element collector.
 
@@ -180,40 +180,40 @@ def modify_element_workset(doc, defaultWorksetName, collector, elementTypeName):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    returnValue.message = 'Changing ' + elementTypeName + ' workset to '+ defaultWorksetName
+    return_value = res.Result()
+    return_value.message = 'Changing ' + element_type_name + ' workset to '+ default_workset_name
     # get the ID of the default grids workset
-    defaultId = get_workset_id_by_name(doc, defaultWorksetName)
-    counterSuccess = 0
-    counterFailure = 0
+    default_id = get_workset_id_by_name(doc, default_workset_name)
+    counter_success = 0
+    counter_failure = 0
     # check if invalid id came back..workset no longer exists..
-    if(defaultId != rdb.ElementId.InvalidElementId):
+    if(default_id != rdb.ElementId.InvalidElementId):
         # get all elements in collector and check their workset
         for p in collector:
-            if (p.WorksetId != defaultId):
+            if (p.WorksetId != default_id):
                 # get the element name
-                elementName = 'Unknown Element Name'
+                element_name = 'Unknown Element Name'
                 try:
-                    elementName = rdb.Element.Name.GetValue(p)
+                    element_name = rdb.Element.Name.GetValue(p)
                 except Exception :
                     pass
                 # move element to new workset
-                transaction = rdb.Transaction(doc, "Changing workset: " + elementName)
-                trannyStatus = rTran.in_transaction(transaction, get_action_change_element_workset(p, defaultId))
-                if (trannyStatus.status == True):
-                    counterSuccess += 1
+                transaction = rdb.Transaction(doc, "Changing workset: " + element_name)
+                tranny_status = rTran.in_transaction(transaction, get_action_change_element_workset(p, default_id))
+                if (tranny_status.status == True):
+                    counter_success += 1
                 else:
-                    counterFailure += 1
-                returnValue.status = returnValue.status & trannyStatus.status
+                    counter_failure += 1
+                return_value.status = return_value.status & tranny_status.status
             else:
-                counterSuccess += 1
-                returnValue.status = returnValue.status & True 
+                counter_success += 1
+                return_value.status = return_value.status & True 
     else:
-        returnValue.UpdateSep(False, 'Default workset '+ defaultWorksetName + ' does no longer exists in file!')
-    returnValue.AppendMessage('Moved ' + elementTypeName + ' to workset ' + defaultWorksetName + ' [' + str(counterSuccess) + ' :: ' + str(counterFailure) +']')
-    return returnValue
+        return_value.UpdateSep(False, 'Default workset '+ default_workset_name + ' does no longer exists in file!')
+    return_value.AppendMessage('Moved ' + element_type_name + ' to workset ' + default_workset_name + ' [' + str(counter_success) + ' :: ' + str(counter_failure) +']')
+    return return_value
 
-def get_action_change_element_workset(el, defaultId):
+def get_action_change_element_workset(el, default_id):
     '''
     Contains the required action to change a single elements workset
 
@@ -224,17 +224,17 @@ def get_action_change_element_workset(el, defaultId):
     '''
 
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
-            wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-            wsParam.Set(defaultId.IntegerValue)
-            actionReturnValue.message = 'Changed element workset.'
+            ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+            ws_param.Set(default_id.IntegerValue)
+            action_return_value.message = 'Changed element workset.'
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
-        return actionReturnValue
+            action_return_value.UpdateSep(False, 'Failed with exception: ' + str(e))
+        return action_return_value
     return action
 
-def is_element_on_workset_by_id(doc, el, worksetId):
+def is_element_on_workset_by_id(doc, el, workset_id):
     '''
     Checks whether an element is on a given workset
 
@@ -251,17 +251,17 @@ def is_element_on_workset_by_id(doc, el, worksetId):
 
     flag = True
     try:
-        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = rParaGet.get_parameter_value(wsParam)
-        compareToWorksetName = get_workset_name_by_id(doc, worksetId.IntegerValue)
-        if(compareToWorksetName != currentWorksetName):
+        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        current_workset_name = rParaGet.get_parameter_value(ws_param)
+        compare_to_workset_name = get_workset_name_by_id(doc, workset_id.IntegerValue)
+        if(compare_to_workset_name != current_workset_name):
             flag = False
     except Exception as e:
         print (e)
         flag = False
     return flag
 
-def is_element_on_workset_by_name(el, worksetName):
+def is_element_on_workset_by_name(el, workset_name):
     '''
     Checks whether an element is on a workset identified by name
 
@@ -276,9 +276,9 @@ def is_element_on_workset_by_name(el, worksetName):
 
     flag = True
     try:
-        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        currentWorksetName = rParaGet.get_parameter_value(wsParam)
-        if(worksetName != currentWorksetName):
+        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        current_workset_name = rParaGet.get_parameter_value(ws_param)
+        if(workset_name != current_workset_name):
             flag = False
     except Exception as e:
         print ("IsElementOnWorksetByName: " + str(e))
@@ -295,15 +295,15 @@ def get_element_workset_name(el):
     :rtype: str
     '''
 
-    workSetname = 'invalid workset'
+    work_setname = 'invalid workset'
     try:
-        wsParam = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-        workSetname = rParaGet.get_parameter_value(wsParam)
+        ws_param = el.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        work_setname = rParaGet.get_parameter_value(ws_param)
     except Exception as e:
         print ("GetElementWorksetName: " + str(e))
-    return workSetname
+    return work_setname
 
-def update_workset_default_visibility_from_report(doc, reportPath, revitFilePath):
+def update_workset_default_visibility_from_report(doc, report_path, revit_file_path):
     '''
     Updates the default visibility of worksets based on a workset report file.
 
@@ -336,37 +336,37 @@ def update_workset_default_visibility_from_report(doc, reportPath, revitFilePath
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # read report
-    worksetData = filesTab.ReadTabSeparatedFile(reportPath)
-    fileName = filesIO.GetFileNameWithoutExt(revitFilePath)
-    worksetDataForFile = {}
-    for row in worksetData:
-        if(filesIO.GetFileNameWithoutExt(row[0]).startswith(fileName) and len(row) > 3):
-            worksetDataForFile[row[1]] = util.ParsStringToBool(row[3])
-    if(len(worksetDataForFile) > 0): 
+    workset_data = filesTab.ReadTabSeparatedFile(report_path)
+    file_name = filesIO.GetFileNameWithoutExt(revit_file_path)
+    workset_data_for_file = {}
+    for row in workset_data:
+        if(filesIO.GetFileNameWithoutExt(row[0]).startswith(file_name) and len(row) > 3):
+            workset_data_for_file[row[1]] = util.ParsStringToBool(row[3])
+    if(len(workset_data_for_file) > 0): 
         # updates worksets
         worksets = get_worksets(doc)
         for workset in worksets:
-            if(str(workset.Id) in worksetDataForFile):
-                if (workset.IsVisibleByDefault != worksetDataForFile[str(workset.Id)]):
+            if(str(workset.Id) in workset_data_for_file):
+                if (workset.IsVisibleByDefault != workset_data_for_file[str(workset.Id)]):
                     def action():
-                        actionReturnValue = res.Result()
-                        defaultVisibility  = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
+                        action_return_value = res.Result()
+                        default_visibility  = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
                         try:
-                            defaultVisibility.SetWorksetVisibility(workset.Id, worksetDataForFile[str(workset.Id)])
-                            actionReturnValue.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(worksetDataForFile[str(workset.Id)]) + ']')
+                            default_visibility.SetWorksetVisibility(workset.Id, workset_data_for_file[str(workset.Id)])
+                            action_return_value.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(workset_data_for_file[str(workset.Id)]) + ']')
                         except Exception as e:
-                            actionReturnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
-                        return actionReturnValue
+                            action_return_value.UpdateSep(False, 'Failed with exception: ' + str(e))
+                        return action_return_value
                     # move element to new workset
                     transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
-                    trannyStatus = rTran.in_transaction(transaction, action)
-                    returnValue.Update(trannyStatus)
+                    tranny_status = rTran.in_transaction(transaction, action)
+                    return_value.Update(tranny_status)
                 else:
-                    returnValue.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
+                    return_value.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
             else:
-                returnValue.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
+                return_value.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
     else:
-        returnValue.UpdateSep(True, 'No settings found for file: ' + fileName)
-    return returnValue
+        return_value.UpdateSep(True, 'No settings found for file: ' + file_name)
+    return return_value

@@ -27,10 +27,30 @@ This module contains a number of helper functions relating to purging Revit fami
 #
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Family.RevitFamilyUtils import FamilyAllTypesInUse, GetFamilySymbolsIds, GetSymbolsFromType
-from duHast.APISamples.Family.Utility.LoadableFamilyCategories import catsLoadableTags, catsLoadableThreeD
+from duHast.APISamples.Family.RevitFamilyUtils import get_family_symbols_ids, get_symbols_from_type
+from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES_LOADABLE_TAGS, CATEGORIES_LOADABLE_3D
 
-def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
+
+def family_all_types_in_use(famTypeIds, usedTypeIds):
+    ''' 
+    Checks if symbols (types) of a family are in use in a model.
+    Check is done by comparing entries of famTypeIds with usedTypeIds.
+    :param famTypeIds: list of symbol(type) ids of a family
+    :type famTypeIds: list Autodesk.Revit.DB.ElementId
+    :param  usedTypeIds: list of symbol(type) ids in use in a project
+    :type usedTypeIds: list Autodesk.Revit.DB.ElementId
+    :return: False if a single symbol id contained in list famTypeIds has a match in list usedTypeIds, otherwise True.
+    :rtype: bool
+    '''
+
+    match = True
+    for famTypeId in famTypeIds:
+        if (famTypeId not in usedTypeIds):
+            match = False
+            break
+    return match
+
+def get_unused_in_place_ids_for_purge(doc, unusedTypeGetter):
     '''
     Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
     The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
@@ -51,11 +71,11 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     # get all unused type Ids
     unusedTypeIds = unusedTypeGetter(doc)
     # get family Elements belonging to those type ids
-    families = GetSymbolsFromType(doc, unusedTypeIds)
+    families = get_symbols_from_type(doc, unusedTypeIds)
     # check whether an entire family can be purged and if so remove their symbol(type) ids from 
     # from unusedType ids list since we will be purging the family instead
     for key, value in families.items():
-        if(FamilyAllTypesInUse(value, unusedTypeIds)):
+        if(family_all_types_in_use(value, unusedTypeIds)):
             unusedFamilyIds.append(key)
             unusedTypeIds = util.RemoveItemsFromList(unusedTypeIds, value)
     # check whether entire families can be purged and if so add their ids to list to be returned
@@ -66,7 +86,7 @@ def GetUnusedInPlaceIdsForPurge(doc, unusedTypeGetter):
     return unusedIds
 
 
-def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
+def get_used_unused_type_ids(doc, typeIdGetter, useType = 0, excludeSharedFam = True):
     '''
     Filters types obtained by past in typeIdGetter method and depending on useType past in returns either the used or unused symbols of a family
     :param doc: Current Revit model document.
@@ -84,8 +104,8 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
     '''
 
     # get all types elements available
-    allLoadableThreeDTypeIds = typeIdGetter(doc, catsLoadableThreeD, excludeSharedFam)
-    allLoadableTagsTypeIds = typeIdGetter(doc, catsLoadableTags, excludeSharedFam)
+    allLoadableThreeDTypeIds = typeIdGetter(doc, CATEGORIES_LOADABLE_3D, excludeSharedFam)
+    allLoadableTagsTypeIds = typeIdGetter(doc, CATEGORIES_LOADABLE_TAGS, excludeSharedFam)
     allTypeIds = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
     ids = []
     for typeId in allTypeIds:
@@ -96,7 +116,7 @@ def GetUsedUnusedTypeIds(doc, typeIdGetter, useType = 0, excludeSharedFam = True
     return ids
 
 
-def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
+def get_unused_family_types(doc, excludeSharedFam = True):
     '''
     Filters unused non shared family (symbols) type ids in model.
     :param doc: Current Revit model document.
@@ -107,11 +127,11 @@ def GetUnusedFamilyTypes(doc, excludeSharedFam = True):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUsedUnusedTypeIds(doc, GetFamilySymbolsIds, 0, excludeSharedFam)
+    ids = get_used_unused_type_ids(doc, get_family_symbols_ids, 0, excludeSharedFam)
     return ids
 
 
-def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
+def get_unused_non_shared_family_symbols_and_type_ids_to_purge(doc):
     '''
     Filters unused, non shared and in place family (symbols) type ids in model which can be purged from the model.
     :param doc: Current Revit model document.
@@ -120,5 +140,5 @@ def GetUnusedNonSharedFamilySymbolsAndTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    idsUnused = GetUnusedInPlaceIdsForPurge(doc, GetUnusedFamilyTypes)
+    idsUnused = get_unused_in_place_ids_for_purge(doc, get_unused_family_types)
     return idsUnused

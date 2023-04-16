@@ -81,7 +81,7 @@ class FamilyBaseData(IFamData.IFamilyData):
         else:
             self.category = 'unknown'
 
-    def _saveOut(self, doc, reference_file_path, doc_name, doc_category, family_out_folder_path, session_id):
+    def _save_out(self, doc, reference_file_path, doc_name, doc_category, family_out_folder_path, session_id):
         '''
         Saves a family to file if there is no match for it in the provided reference file. 
         The reference file is a FamilyBaseDataCombinedReport and is read into tuples using RevitFamilyBaseDataUtils.
@@ -106,7 +106,7 @@ class FamilyBaseData(IFamData.IFamilyData):
         # based on file name and category
         if(util.FileExist(reference_file_path)):
             # read overall family base data from file 
-            overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(reference_file_path)
+            overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
             foundMatch = False
             for rootFam in overallFamilyBaseRootData:
                 # check whether name and category are a match
@@ -140,7 +140,7 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # check if a reference file list was provided and if so if family needs to be saved out
         if (reference_file_path != None and family_out_directory_path != None and session_id != None):
-            self._saveOut(
+            self._save_out(
                 doc, 
                 reference_file_path, 
                 self._strip_file_extension(doc.Title), 

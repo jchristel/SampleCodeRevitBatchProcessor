@@ -52,7 +52,7 @@ from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamB
 from duHast.Utilities.timer import Timer
 from duHast.Utilities import Result as res
 
-def _BuildUniqueNestedFamilyDic(overallFamilyBaseNestedData):
+def _build_unique_nested_family_dic(overallFamilyBaseNestedData):
     '''
     Builds a dictionary containing unique nested families only. Key is the family name and category concatenated.
 
@@ -75,7 +75,7 @@ def _BuildUniqueNestedFamilyDic(overallFamilyBaseNestedData):
     
     return uniqueDic
 
-def _checkNestedAgainstRootFamilies(uniqNestedDictionary, overallFamilyBaseRootData):
+def _check_nested_against_root_families(uniqNestedDictionary, overallFamilyBaseRootData):
     '''
     Compared a dictionary containing tuples containing nested family data against list of root family data.
     Any nested family without a match in the root family data list will be returned (missing from list).
@@ -104,7 +104,7 @@ def _checkNestedAgainstRootFamilies(uniqNestedDictionary, overallFamilyBaseRootD
             missingFamilies.append(nestedFam)
     return missingFamilies
 
-def _getUniqueNestedFamilies(overallFamilyBaseNestedData):
+def _get_unique_nested_families(overallFamilyBaseNestedData):
     '''
     Loops over family nested base data and creates a unique list of nested families based on name and category.
     This is done to make search faster (reduce the to be searched data set)
@@ -124,7 +124,7 @@ def _getUniqueNestedFamilies(overallFamilyBaseNestedData):
 
     return uniqueNestedFamilies
 
-def CheckFamiliesMissingFromLibrary(familyBaseDataReportFilePath):
+def check_families_missing_from_library(familyBaseDataReportFilePath):
     '''
     Processes a family base data report and identifies any nested families which have not been processed as a root family\
         and therefore do not exist in the library.
@@ -155,23 +155,23 @@ def CheckFamiliesMissingFromLibrary(familyBaseDataReportFilePath):
 
     
         # read overall family base data from file 
-        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(familyBaseDataReportFilePath)
+        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
         returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     
         tProcess.start()
         # get a list of unique families from the nested family data
-        uniqueFamilyBaseNestedData = _getUniqueNestedFamilies(overallFamilyBaseNestedData)
+        uniqueFamilyBaseNestedData = _get_unique_nested_families(overallFamilyBaseNestedData)
         returnValue.AppendMessage(tProcess.stop() +  ' culled nested family base data from : ' + str(len(overallFamilyBaseNestedData)) +' to: ' + str(len(uniqueFamilyBaseNestedData )) + ' families.' )
 
         tProcess.start()
         # read over nested data and built a list of unique families ( name + category )
-        uniqueDic = _BuildUniqueNestedFamilyDic(uniqueFamilyBaseNestedData)
+        uniqueDic = _build_unique_nested_family_dic(uniqueFamilyBaseNestedData)
         returnValue.AppendMessage(tProcess.stop() + ' found unique nested families ['+ str(len(uniqueDic))+']')
 
         tProcess.start()
         # identify missing families in unique list of nested families
-        missingFamilies = _checkNestedAgainstRootFamilies(uniqueDic, overallFamilyBaseRootData)
+        missingFamilies = _check_nested_against_root_families(uniqueDic, overallFamilyBaseRootData)
         returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(missingFamilies)) +' missing families.' )
         if(len(missingFamilies) > 0):
             returnValue.result = missingFamilies
@@ -181,7 +181,7 @@ def CheckFamiliesMissingFromLibrary(familyBaseDataReportFilePath):
 
 # ----------------------------missing families: direct host files -----------------------------------------
 
-def FindMissingFamiliesDirectHostFamilies (familyBaseDataReportFilePath, missingFamilies):
+def find_missing_families_direct_host_families (familyBaseDataReportFilePath, missingFamilies):
     '''
     Returns a list of root family tuples which represent the direct parents (host families) of the missing families.
 
@@ -225,14 +225,14 @@ def FindMissingFamiliesDirectHostFamilies (familyBaseDataReportFilePath, missing
 
         returnValue = res.Result()
         # read overall family base data from file 
-        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataList(familyBaseDataReportFilePath)
+        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
         returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     
         tProcess.start()
-        hostFamilies = rFamBaseDataUtils.FindAllDirectHostFamilies(missingFamilies, overallFamilyBaseNestedData)
+        hostFamilies = rFamBaseDataUtils.find_all_direct_host_families(missingFamilies, overallFamilyBaseNestedData)
         # get the root families from host family data
-        rootHosts = rFamBaseDataUtils.FindRootFamsFromHosts(hostFamilies, overallFamilyBaseRootData)
+        rootHosts = rFamBaseDataUtils.find_root_families_from_hosts(hostFamilies, overallFamilyBaseRootData)
         returnValue.result = rootHosts
         returnValue.AppendMessage(tProcess.stop() +  ' Found direct host families of missing families: ' + str(len(rootHosts)))
     except  Exception as e:

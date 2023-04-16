@@ -31,10 +31,10 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet, RevitElementParameterSetUtils as rParaSet
 from duHast.Utilities import Result as res
-from duHast.APISamples.Family.RevitFamilyElementUtils import GetAllCurveBasedElementsInFamily
+from duHast.APISamples.Family.RevitFamilyElementUtils import get_all_curve_based_elements_in_family
 
 
-def SetRefPlanesToNotAReference(doc):
+def set_ref_planes_to_not_a_reference(doc):
     ''' 
     This will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
     :param doc: Current Revit model document.
@@ -90,7 +90,7 @@ def SetRefPlanesToNotAReference(doc):
     return result
 
 
-def SetSymbolicAndModelLinesToNotAReference(doc):
+def set_symbolic_and_model_lines_to_not_a_reference(doc):
     ''' 
     This will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
     :param doc: Current Revit model document.
@@ -116,7 +116,7 @@ def SetSymbolicAndModelLinesToNotAReference(doc):
     result = res.Result()
     result.UpdateSep(True, 'Changing reference status of model and symbolic curves...')
     matchAtAll = False
-    curves = GetAllCurveBasedElementsInFamily(doc)
+    curves = get_all_curve_based_elements_in_family(doc)
     for curve in curves:
         # get the current reference type
         valueInt = rParaGet.get_built_in_parameter_value(

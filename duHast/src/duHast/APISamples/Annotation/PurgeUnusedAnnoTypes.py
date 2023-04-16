@@ -253,7 +253,7 @@ def get_unused_symbol_ids_from_spot_types_to_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_unused_symbol_ids_from_spot_types)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_symbol_ids_from_spot_types)
     return ids
 
 
@@ -312,5 +312,5 @@ def get_unused_generic_annotation_ids_for_purge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, get_unused_generic_annotation_type_ids)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_generic_annotation_type_ids)
     return ids

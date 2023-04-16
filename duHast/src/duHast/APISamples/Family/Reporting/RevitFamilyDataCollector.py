@@ -50,7 +50,7 @@ class RevitFamilyDataCollector(Base.Base):
 
         self.dataProcessors = dataProcessors
     
-    def _getFamilyIds(self,doc):
+    def _get_family_ids(self,doc):
         '''
         Get all loadable family ids in file.
 
@@ -96,7 +96,7 @@ class RevitFamilyDataCollector(Base.Base):
         # check if family doc 
         if(doc.IsFamilyDocument):
             # get any nested families
-            familyIds = self._getFamilyIds(doc)
+            familyIds = self._get_family_ids(doc)
             # if there are any nested families open those for processing
             if(len(familyIds) > 0):
                 for familyId in familyIds:
@@ -140,7 +140,7 @@ class RevitFamilyDataCollector(Base.Base):
                         returnValue.UpdateSep(False, message)
         return returnValue
 
-    def processFamily(self, doc, rootName, rootCategory):
+    def process_family(self, doc, rootName, rootCategory):
         '''
         Entry point for recursive family looper.
 

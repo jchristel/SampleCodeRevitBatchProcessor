@@ -46,7 +46,7 @@ from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUt
 from duHast.Utilities import Result as res
 from duHast.Utilities import FilesIO as util
 
-def _renameFiles(renameDirectives):
+def _rename_files(renameDirectives):
     '''
     Renames family files and any associated catalogue files based on rename directives.
     
@@ -107,7 +107,7 @@ def _renameFiles(renameDirectives):
             returnValue.UpdateSep(False, 'Failed to rename files with exception: ' + str(e))
     return returnValue
 
-def RenameFamilyFiles(directoryPath):
+def rename_family_files(directoryPath):
     '''
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     family files and any associated catalogue files accordingly.
@@ -135,12 +135,12 @@ def RenameFamilyFiles(directoryPath):
 
     returnValue = res.Result()
     # get directives from folder
-    renameDirectivesResult = rFamRenameUtils.GetRenameDirectives(directoryPath)
+    renameDirectivesResult = rFamRenameUtils.get_rename_directives(directoryPath)
     # check if anything came back
     if(renameDirectivesResult.status):
         renameDirectives = renameDirectivesResult.result
         # rename files as per directives
-        returnValue = _renameFiles(renameDirectives)
+        returnValue = _rename_files(renameDirectives)
     else:
         returnValue = renameDirectivesResult
 

@@ -56,7 +56,7 @@ from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUt
 #                      find families containing nested families needing to be renamed
 #---------------------------------------------------------------------------------------------------------------
 
-def _FindHostFamilies(overallFamilyBaseNestedData, fileRenameList):
+def _find_host_families(overallFamilyBaseNestedData, fileRenameList):
     '''
     Finds all root family names and categories where the first level nested family is one which needs to be renamed.
 
@@ -75,14 +75,14 @@ def _FindHostFamilies(overallFamilyBaseNestedData, fileRenameList):
 
     hostFamilies = {}
     for fileRenameFamily in fileRenameList:
-        hosts = rFamBaseDataUtils.FindDirectHostFamilies(fileRenameFamily, overallFamilyBaseNestedData)
+        hosts = rFamBaseDataUtils.find_direct_host_families(fileRenameFamily, overallFamilyBaseNestedData)
         # update dictionary with new hosts only
         for h in hosts:
             if( h not in hostFamilies):
                 hostFamilies[h] = hosts[h]
     return hostFamilies
 
-def FindHostFamiliesWithNestedFamsRequiringRename(inputDirectoryPath):
+def find_host_families_with_nested_families_requiring_rename(inputDirectoryPath):
     '''
     Finds all host families in data set containing nested families needing to be renamed.
 
@@ -112,30 +112,30 @@ def FindHostFamiliesWithNestedFamsRequiringRename(inputDirectoryPath):
     returnValue = res.Result()
     # read overall family base data from file
     try:
-        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.ReadOverallFamilyDataListFromDirectory(inputDirectoryPath)
+        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list_from_directory(inputDirectoryPath)
         returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
         # check if input file existed and contained data
         if(len(overallFamilyBaseRootData) > 0):
             tProcess.start()
-            fileRenameListStatus = rFamRenameUtils.GetRenameDirectives(inputDirectoryPath)
+            fileRenameListStatus = rFamRenameUtils.get_rename_directives(inputDirectoryPath)
             returnValue.AppendMessage(tProcess.stop() + ' Read data from file! Rename family entries ['+ str(len(fileRenameListStatus.result)) + ' ] found.')
             # check if any rename directives
             if(len(fileRenameListStatus.result) > 0):
                 before = len(overallFamilyBaseNestedData)
                 tProcess.start()
                 # reduce workload by culling not needed nested family data
-                overallFamilyBaseNestedData =  rFamBaseDataUtils.CullNestedBaseDataBlocks(overallFamilyBaseNestedData)
+                overallFamilyBaseNestedData =  rFamBaseDataUtils.cull_nested_base_data_blocks(overallFamilyBaseNestedData)
                 returnValue.AppendMessage(tProcess.stop() +  ' Culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
 
                 tProcess.start()
                 # get a list of simplified root data families extracted from nested family path data
-                rootFamSimple = rFamBaseDataUtils.FindAllDirectHostFamilies(fileRenameListStatus.result, overallFamilyBaseNestedData)
+                rootFamSimple = rFamBaseDataUtils.find_all_direct_host_families(fileRenameListStatus.result, overallFamilyBaseNestedData)
                 returnValue.AppendMessage(tProcess.stop() +  ' Found simplified root families: ' + str(len(rootFamSimple)))
 
                 tProcess.start()
                 # identify actual root families with nested families at top level which require renaming.
-                rootFamilies = rFamBaseDataUtils.FindRootFamsFromHosts(rootFamSimple, overallFamilyBaseRootData)
+                rootFamilies = rFamBaseDataUtils.find_root_families_from_hosts(rootFamSimple, overallFamilyBaseRootData)
                 returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(rootFamilies)) +' root families.' )
                 returnValue.result = rootFamilies
             else:

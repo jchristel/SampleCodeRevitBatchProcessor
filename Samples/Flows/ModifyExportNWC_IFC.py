@@ -129,9 +129,9 @@ def ifc_export_view(doc):
 
     return_value = res.Result()
     try:
-        ifc_export_option = rExIFC.IFCGetThirdPartyExportConfigByView(doc, rdb.IFCVersion.IFC2x3)
+        ifc_export_option = rExIFC.ifc_get_third_party_export_config_by_view(doc, rdb.IFCVersion.IFC2x3)
         # exports 3D view where name starts with 'NWCP', Origin is project base point
-        return_value = rExIFC.Export3DViewsToIFC(doc, 'NWCP', ifc_export_option, ROOT_PATH, IFCCoordinates.IFCCoords.ProjectBasePoint)
+        return_value = rExIFC.export_3d_views_to_ifc(doc, 'NWCP', ifc_export_option, ROOT_PATH, IFCCoordinates.IFCCoords.project_base_point)
     except Exception as e:
         return_value.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return return_value
@@ -161,8 +161,8 @@ def ifc_export_view_default(doc):
 
     return_value = res.Result()
     try:
-        ifc_export_option_default = rExIFC.IFCGetExportConfigByView(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.noBoundaries)
-        return_value = rExIFC.Export3DViewsToIFCDefault(doc, 'NWCS', ifc_export_option_default, ROOT_PATH)
+        ifc_export_option_default = rExIFC.ifc_get_export_config_by_view(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.no_boundaries)
+        return_value = rExIFC.export_3d_views_to_ifc_default(doc, 'NWCS', ifc_export_option_default, ROOT_PATH)
     except Exception as e:
         return_value.update_sep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return return_value
@@ -192,8 +192,8 @@ def nwc_export_by_view(doc):
 
     return_value = res.Result()
     try:
-        nwc_export_option = rExNavis.SetUpNWCDefaultExportOptionSharedByView()
-        return_value = rExNavis.Export3DViewsToNWC(doc, 'NWCS', nwc_export_option,  ROOT_PATH)
+        nwc_export_option = rExNavis.setup_nwc_default_export_option_shared_by_view()
+        return_value = rExNavis.export_3d_views_to_nwc(doc, 'NWCS', nwc_export_option,  ROOT_PATH)
     except Exception as e:
         return_value.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
     return return_value
@@ -223,8 +223,8 @@ def nwc_export_model(doc):
 
     return_value = res.Result()
     try:
-        nwc_export_option = rExNavis.SetUpNWCCustomExportOption(False, True, False, True, False, False, True, False)
-        return_value = rExNavis.ExportModelToNWC(doc, nwc_export_option, ROOT_PATH, 'test_project Coords.nwc')
+        nwc_export_option = rExNavis.setup_nwc_custom_export_option(False, True, False, True, False, False, True, False)
+        return_value = rExNavis.export_model_to_nwc(doc, nwc_export_option, ROOT_PATH, 'test_project Coords.nwc')
     except Exception as e:
         return_value.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
     return return_value

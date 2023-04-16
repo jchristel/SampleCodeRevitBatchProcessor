@@ -99,10 +99,10 @@ def _sort_all_elements_by_category(doc):
 
     # get all elements in family
     dic = {}
-    el_curve = rFamElementUtils.GetAllCurveBasedElementsInFamily(doc)
-    el_forms = rFamElementUtils.GetAllGenericFormsInFamily(doc)
-    el_m_text = rFamElementUtils.GetAllModelTextElementsInFamily(doc)
-    el_ref_planes = rFamElementUtils.GetAllReferencePlanesInFamily(doc)
+    el_curve = rFamElementUtils.get_all_curve_based_elements_in_family(doc)
+    el_forms = rFamElementUtils.get_all_generic_forms_in_family(doc)
+    el_m_text = rFamElementUtils.get_all_model_text_elements_in_family(doc)
+    el_ref_planes = rFamElementUtils.get_all_reference_planes_in_family(doc)
     # get import Instance elements
     el_import = rCadLinkGeo.GetAllCADImportInstancesGeometry(doc)
     # build dictionary where key is category or graphic style id of  a category

@@ -30,7 +30,7 @@ from duHast.Utilities import Utility as util
 from duHast.APISamples.Common.RevitWorksets import get_worksets_from_collector
 
 
-def get_workset_report_data(doc, revitFilePath):
+def get_workset_report_data(doc, revit_file_path):
     '''
     Gets workset data ready for being written to file.
     - HOSTFILE
@@ -49,7 +49,7 @@ def get_workset_report_data(doc, revitFilePath):
     worksets = get_worksets_from_collector(doc)
     for ws in worksets:
         data.append([
-            revitFilePath,
+            revit_file_path,
             str(ws.Id.IntegerValue),
             util.EncodeAscii(ws.Name),
             str(ws.IsVisibleByDefault)])

@@ -39,14 +39,14 @@ changedFamily = namedtuple('changedFamily', 'name category filePath')
 #baseFamily = namedtuple('baseFamily', 'name category rootPath filePath')
 
 # row structure of family change data file
-_CHANGE_LIST_INDEX_FAMILY_NAME = 0
-_CHANGE_LIST_INDEX_FAMILY_FILE_PATH = 1
-_CHANGE_LIST_INDEX_CATEGORY = 2
+CHANGE_LIST_INDEX_FAMILY_NAME = 0
+CHANGE_LIST_INDEX_FAMILY_FILE_PATH = 1
+CHANGE_LIST_INDEX_CATEGORY = 2
 
-_TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
+TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
 
 
-def WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
+def write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
     '''
     Writes task list file to disk. File contains single column of fully qualified file path.
 
@@ -64,7 +64,7 @@ def WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
     header = []
     # data to be written to file
     overallData = []
-    fileName = directoryPath + '\\' + _TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
+    fileName = directoryPath + '\\' + TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
     # loop over families to get file path
     for r in reloadFamilies:
         # row data
@@ -78,7 +78,7 @@ def WriteReloadListToFile(reloadFamilies, directoryPath, counter = 0):
     except Exception:
         return False
 
-def DeleteOldTaskLists(directoryPath):
+def delete_old_task_lists(directoryPath):
     '''
     Deletes all overall task files in given directory.
 
@@ -93,11 +93,11 @@ def DeleteOldTaskLists(directoryPath):
     files = fileGet.GetFiles(directoryPath, '.txt')
     if (len(files) > 0):
         for f in files:
-            if (util.GetFileNameWithoutExt(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
+            if (util.GetFileNameWithoutExt(f).startswith(TASK_COUNTER_FILE_PREFIX)):
                 flag = flag & util.FileDelete(f)
     return flag
 
-def WriteOutEmptyTaskList(directoryPath, counter = 0):
+def write_out_empty_task_list(directoryPath, counter = 0):
     '''
     Writes out an empty task list in case nothing is to be reloaded.
 
@@ -121,7 +121,7 @@ def WriteOutEmptyTaskList(directoryPath, counter = 0):
     except Exception:
         return False
 
-def _RemoveRFAFromFileName(familyName):
+def _remove_rfa_from_file_name(familyName):
     '''
     Removes any .rfa file extensions from the family name. (not sure why these are sometimes present)
 
@@ -135,7 +135,7 @@ def _RemoveRFAFromFileName(familyName):
         familyName = familyName[:-len('.rfa')]
     return familyName
 
-def ReadChangeList(filePath):
+def read_change_list(filePath):
     '''
     Reads list of changed families from file into named tuples.
 
@@ -161,11 +161,11 @@ def ReadChangeList(filePath):
     # skip header row
     for i in range(1, len(rows)):
         #TODO: do i need any .rfa from end of family name?
-        famName = _RemoveRFAFromFileName(rows[i][_CHANGE_LIST_INDEX_FAMILY_NAME])
+        famName = _remove_rfa_from_file_name(rows[i][CHANGE_LIST_INDEX_FAMILY_NAME])
         data = changedFamily(
             famName, 
-            rows[i][_CHANGE_LIST_INDEX_CATEGORY], 
-            rows[i][_CHANGE_LIST_INDEX_FAMILY_FILE_PATH]
+            rows[i][CHANGE_LIST_INDEX_CATEGORY], 
+            rows[i][CHANGE_LIST_INDEX_FAMILY_FILE_PATH]
             )
         returnValue.append(data)
     return returnValue

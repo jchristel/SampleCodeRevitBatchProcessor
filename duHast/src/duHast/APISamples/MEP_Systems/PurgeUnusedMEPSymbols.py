@@ -99,7 +99,7 @@ def GetUnUsedDuctAndFlexDuctSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
     return ids
 
 
@@ -154,7 +154,7 @@ def GetUnUsedCableTraySymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedCableTraySymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedCableTraySymbolIds)
     return ids
 
 
@@ -209,7 +209,7 @@ def GetUnUsedConduitSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedConduitSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedConduitSymbolIds)
     return ids
 
 
@@ -267,5 +267,5 @@ def GetUnUsedPipeSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnUsedPipeSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedPipeSymbolIds)
     return ids

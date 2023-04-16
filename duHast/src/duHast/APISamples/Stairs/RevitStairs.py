@@ -174,5 +174,5 @@ def GetAllInPlaceStairTypeIdsInModel(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, rdb.BuiltInCategory.OST_Stairs)
+    ids = rFam.get_all_in_place_type_ids_in_model_of_category(doc, rdb.BuiltInCategory.OST_Stairs)
     return ids

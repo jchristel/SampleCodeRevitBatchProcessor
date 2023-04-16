@@ -84,4 +84,4 @@ def GetUnusedLevelHeadFamiliesForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    return rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedLevelHeadFamilies)
+    return rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedLevelHeadFamilies)

@@ -46,7 +46,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
+def reload_all_families(doc, libraryLocation, includeSubFolders):
     '''
     Reloads a number of families with setting: parameter values overwritten: True
 
@@ -79,7 +79,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
         else:
             result.AppendMessage('Found ' + str(len(library)) + ' families in Library!')
         # get all families in file:
-        familyIds = getFamilyIdsFromSymbols(doc)
+        familyIds = get_family_ids_from_symbols(doc)
         if(len(familyIds) > 0):
             result.AppendMessage('Found ' + str(len(familyIds)) + ' loadable families in file.')
             for famId in familyIds:
@@ -93,7 +93,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                         # get all symbols attached to this family by name
                         priorLoadSymbolIds = fam.GetFamilySymbolIds()
                         # reload family
-                        resultLoad = rFamUtil.LoadFamily(doc, library[famName][0])
+                        resultLoad = rFamUtil.load_family(doc, library[famName][0])
                         result.AppendMessage(resultLoad.message)
                         if(resultLoad.status == True):
                             # make sure that if a single reload was successful that this method returns true
@@ -102,7 +102,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
                             if (resultLoad.result != None and len(resultLoad.result) > 0):
                                 famLoaded = resultLoad.result.First()
                                 afterLoadSymbolIds = famLoaded.GetFamilySymbolIds()
-                                newSymbolIds = getNewSymbolIds(priorLoadSymbolIds, afterLoadSymbolIds)
+                                newSymbolIds = get_new_symbol_ids(priorLoadSymbolIds, afterLoadSymbolIds)
                                 if(len(newSymbolIds) > 0):
                                     symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
                     else:
@@ -130,7 +130,7 @@ def ReloadAllFamilies(doc, libraryLocation, includeSubFolders):
         result.UpdateSep(False, message)
     return result
 
-def getFamilyIdsFromSymbols(doc):
+def get_family_ids_from_symbols(doc):
     '''
     Get all loadable family ids in file
 
@@ -143,19 +143,19 @@ def getFamilyIdsFromSymbols(doc):
 
     familyIds = []
     # build list of all categories we want families to be reloaded of
-    famCats = List[rdb.BuiltInCategory] (rFamLoadable.catsLoadableTags)
-    famCats.AddRange(rFamLoadable.catsLoadableTagsOther) 
-    famCats.AddRange(rFamLoadable.catsLoadableThreeD)
-    famCats.AddRange(rFamLoadable.catsLoadableThreeDOther)
+    famCats = List[rdb.BuiltInCategory] (rFamLoadable.CATEGORIES_LOADABLE_TAGS)
+    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_TAGS_OTHER) 
+    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D)
+    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D_OTHER)
     # get all symbols in file
-    famSymbols = rFamUtil.GetFamilySymbols(doc, famCats)
+    famSymbols = rFamUtil.get_family_symbols(doc, famCats)
     # get families from symbols and filter out in place families
     for famSymbol in famSymbols:
         if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
             familyIds.append(famSymbol.Family.Id)
     return familyIds
 
-def getNewSymbolIds(preLoadSymbolIdList, afterLoadSymbolList):
+def get_new_symbol_ids(preLoadSymbolIdList, afterLoadSymbolList):
     '''
     Returns a list of symbol ids not present prior to reload.
 

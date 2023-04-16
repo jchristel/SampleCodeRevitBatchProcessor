@@ -386,7 +386,7 @@ def GetUnusedInPlaceStairIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rFamPurge.GetUnusedInPlaceIdsForPurge(doc, GetUnusedInPlaceStairTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceStairTypeIds)
     return ids
 
 

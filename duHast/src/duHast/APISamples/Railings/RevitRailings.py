@@ -226,7 +226,7 @@ def GetAllInPlaceRailingTypeIdsInModel(doc):
 
     ids = []
     for cat in RAILING_CATEGORY_FILTER: 
-        idsByCat = rFam.GetAllInPlaceTypeIdsInModelOfCategory(doc, cat)
+        idsByCat = rFam.get_all_in_place_type_ids_in_model_of_category(doc, cat)
         if(len(idsByCat) > 0):
             ids = ids + idsByCat
     return ids

@@ -28,7 +28,7 @@ This module contains a number of helper functions around families used in system
 
 import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.MEP_Systems.Utility.MergeLists import MergeIntoUniqueList
+from duHast.APISamples.MEP_Systems.Utility.MergeLists import merge_into_unique_list
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import ROUTING_PREF_RULE_GROUP_TYPES
 
 '''
@@ -44,7 +44,7 @@ Properties of system types which can use symbols: (note: RoutingPreferenceManage
 
 '''
 
-def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
+def get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId):
     '''
     Gets list of unique symbol ids used in a single system type property.
     List can be empty if an exception during processing occurred.
@@ -83,7 +83,7 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId):
     return ids
 
 
-def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
+def get_unique_ids_of_used_symbols_from_system_type_ids(doc, systemTypeIds):
     '''
     Gets a list of unique symbol ids used in these MEP system type properties:
     - Cross
@@ -103,14 +103,14 @@ def GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, systemTypeIds):
 
     ids = []
     for systemTypeId in systemTypeIds:
-        idsUnfiltered = GetUniqueIdsOfUsedSymbolsFromSystemTypeId(doc, systemTypeId)
-        ids = MergeIntoUniqueList(ids, idsUnfiltered)
+        idsUnfiltered = get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId)
+        ids = merge_into_unique_list(ids, idsUnfiltered)
     return ids
 
 
 # --------------------------------------- symbols available in model -------------------------------
 
-def GetSymbolIdsForMEPSystemTypes(doc, categoryList, systemTypeName):
+def get_symbol_ids_of_mep_system_types(doc, categoryList, systemTypeName):
     '''
     Gets list of symbol ids belonging to provided categories loaded in the model.
     :param doc: Current Revit model document.

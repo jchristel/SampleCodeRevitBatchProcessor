@@ -30,7 +30,7 @@ There are build in python function(s) to do this...
 #
 #
 
-def MergeIntoUniqueList(listSource, listMerge):
+def merge_into_unique_list(listSource, listMerge):
     '''
     Merges the second list into the first by adding elements from second list which are not already in first list.
     TODO: Consider more generic code!

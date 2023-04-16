@@ -32,15 +32,15 @@ This module contains a number of helper functions relating to purging unused fam
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 
-from duHast.APISamples.MEP_Systems.RevitPipes import GetSymbolIdsForPipeTypesInModel, GetSymbolIdsUsedInPipeTypes
-from duHast.APISamples.MEP_Systems.RevitConduits import GetSymbolIdsForConduitTypesInModel, GetSymbolIdsUsedInConduitTypes
-from duHast.APISamples.MEP_Systems.RevitCableTrays import GetSymbolIdsForCableTrayTypesInModel, GetSymbolIdsUsedInCableTrayTypes
-from duHast.APISamples.MEP_Systems.RevitDucts import GetSymbolIdsForDuctTypesInModel, GetSymbolIdsUsedInDuctTypes
-from duHast.APISamples.MEP_Systems.RevitFlexDucts import GetSymbolIdsUsedInFlexDuctTypes
-from duHast.APISamples.MEP_Systems.Utility.MergeLists import MergeIntoUniqueList
+from duHast.APISamples.MEP_Systems.RevitPipes import get_symbol_ids_for_pipe_types_in_model, get_symbol_ids_used_in_pipe_types
+from duHast.APISamples.MEP_Systems.RevitConduits import get_symbol_ids_for_conduit_types_in_model, get_symbol_ids_used_in_conduit_types
+from duHast.APISamples.MEP_Systems.RevitCableTrays import get_symbol_ids_for_cable_tray_types_in_model, get_symbol_ids_used_in_cable_tray_types
+from duHast.APISamples.MEP_Systems.RevitDucts import get_symbol_ids_for_duct_types_in_model, get_symbol_ids_used_in_duct_types
+from duHast.APISamples.MEP_Systems.RevitFlexDucts import get_symbol_ids_used_in_flex_duct_types
+from duHast.APISamples.MEP_Systems.Utility.MergeLists import merge_into_unique_list
 
 
-def GetUsedDuctAndFlexDuctSymbolIds(doc):
+def get_used_duct_and_flex_duct_symbol_ids(doc):
     '''
     Gets all used duct and flex duct symbol ids of categories
     - BuiltInCategory.OST_DuctAccessory,
@@ -54,16 +54,16 @@ def GetUsedDuctAndFlexDuctSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForDuctTypesInModel, 1)
-    idsUsedInTypes = GetSymbolIdsUsedInDuctTypes(doc)
-    idsUsedInFlexTypes = GetSymbolIdsUsedInFlexDuctTypes(doc)
-    ids = MergeIntoUniqueList(ids, idsInModel)
-    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
-    ids = MergeIntoUniqueList(ids, idsUsedInFlexTypes)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_duct_types_in_model, 1)
+    idsUsedInTypes = get_symbol_ids_used_in_duct_types(doc)
+    idsUsedInFlexTypes = get_symbol_ids_used_in_flex_duct_types(doc)
+    ids = merge_into_unique_list(ids, idsInModel)
+    ids = merge_into_unique_list(ids, idsUsedInTypes)
+    ids = merge_into_unique_list(ids, idsUsedInFlexTypes)
     return ids
 
 
-def GetUnUsedDuctAndFlexDuctSymbolIds(doc):
+def get_unused_duct_and_flex_duct_symbol_ids(doc):
     '''
     Gets all unused duct and flex duct symbol ids of categories
     - BuiltInCategory.OST_DuctAccessory,
@@ -77,15 +77,15 @@ def GetUnUsedDuctAndFlexDuctSymbolIds(doc):
     '''
 
     ids = []
-    idsUsed = GetUsedDuctAndFlexDuctSymbolIds(doc)
-    idsAvailable = GetSymbolIdsForDuctTypesInModel(doc)
+    idsUsed = get_used_duct_and_flex_duct_symbol_ids(doc)
+    idsAvailable = get_symbol_ids_for_duct_types_in_model(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
             ids.append(id)
     return ids
 
 
-def GetUnUsedDuctAndFlexDuctSymbolIdsForPurge(doc):
+def get_unused_duct_and_flex_duct_symbol_ids_for_purge(doc):
     '''
     Gets all unused duct and flex duct symbol ids of categories
     - BuiltInCategory.OST_DuctAccessory,
@@ -99,11 +99,11 @@ def GetUnUsedDuctAndFlexDuctSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedDuctAndFlexDuctSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_duct_and_flex_duct_symbol_ids)
     return ids
 
 
-def GetUsedCableTraySymbolIds(doc):
+def get_used_cable_tray_symbol_ids(doc):
     '''
     Gets all used cable tray symbol ids of categories
     - BuiltInCategory.OST_CableTrayFitting
@@ -115,14 +115,14 @@ def GetUsedCableTraySymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForCableTrayTypesInModel, 1)
-    idsUsedInTypes = GetSymbolIdsUsedInCableTrayTypes(doc)
-    ids = MergeIntoUniqueList(ids, idsInModel)
-    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_cable_tray_types_in_model, 1)
+    idsUsedInTypes = get_symbol_ids_used_in_cable_tray_types(doc)
+    ids = merge_into_unique_list(ids, idsInModel)
+    ids = merge_into_unique_list(ids, idsUsedInTypes)
     return ids
 
 
-def GetUnUsedCableTraySymbolIds(doc):
+def get_unused_cable_tray_symbol_ids(doc):
     '''
     Gets all unused cable tray symbol ids of categories
     - BuiltInCategory.OST_CableTrayFitting
@@ -134,15 +134,15 @@ def GetUnUsedCableTraySymbolIds(doc):
     '''
 
     ids = []
-    idsUsed = GetUsedCableTraySymbolIds(doc)
-    idsAvailable = GetSymbolIdsForCableTrayTypesInModel(doc)
+    idsUsed = get_used_cable_tray_symbol_ids(doc)
+    idsAvailable = get_symbol_ids_for_cable_tray_types_in_model(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
             ids.append(id)
     return ids
 
 
-def GetUnUsedCableTraySymbolIdsForPurge(doc):
+def get_unused_cable_tray_symbol_ids_for_purge(doc):
     '''
     Gets all unused cable tray symbol ids of categories
     - BuiltInCategory.OST_CableTrayFitting
@@ -154,11 +154,11 @@ def GetUnUsedCableTraySymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedCableTraySymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_cable_tray_symbol_ids)
     return ids
 
 
-def GetUsedConduitSymbolIds(doc):
+def get_used_conduit_symbol_ids(doc):
     '''
     Gets all used conduit symbol ids of categories
     - BuiltInCategory.OST_ConduitFitting
@@ -170,14 +170,14 @@ def GetUsedConduitSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForConduitTypesInModel, 1)
-    idsUsedInTypes = GetSymbolIdsUsedInConduitTypes(doc)
-    ids = MergeIntoUniqueList(ids, idsInModel)
-    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_conduit_types_in_model, 1)
+    idsUsedInTypes = get_symbol_ids_used_in_conduit_types(doc)
+    ids = merge_into_unique_list(ids, idsInModel)
+    ids = merge_into_unique_list(ids, idsUsedInTypes)
     return ids
 
 
-def GetUnUsedConduitSymbolIds(doc):
+def get_unused_conduit_symbol_ids(doc):
     '''
     Gets all unused conduit symbol ids of categories
     - BuiltInCategory.OST_ConduitFitting
@@ -189,15 +189,15 @@ def GetUnUsedConduitSymbolIds(doc):
     '''
 
     ids = []
-    idsUsed = GetUsedConduitSymbolIds(doc)
-    idsAvailable = GetSymbolIdsForConduitTypesInModel(doc)
+    idsUsed = get_used_conduit_symbol_ids(doc)
+    idsAvailable = get_symbol_ids_for_conduit_types_in_model(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
             ids.append(id)
     return ids
 
 
-def GetUnUsedConduitSymbolIdsForPurge(doc):
+def get_unused_conduit_symbol_ids_for_purge(doc):
     '''
     Gets all unused conduit symbol ids of categories
     - BuiltInCategory.OST_ConduitFitting
@@ -209,11 +209,11 @@ def GetUnUsedConduitSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedConduitSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_conduit_symbol_ids)
     return ids
 
 
-def GetUsedPipeSymbolIds(doc):
+def get_used_pipe_symbol_ids(doc):
     '''
     Gets all used pipe symbol ids of categories
     - BuiltInCategory.OST_PipeAccessory,
@@ -226,14 +226,14 @@ def GetUsedPipeSymbolIds(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetSymbolIdsForPipeTypesInModel, 1)
-    idsUsedInTypes = GetSymbolIdsUsedInPipeTypes(doc)
-    ids = MergeIntoUniqueList(ids, idsInModel)
-    ids = MergeIntoUniqueList(ids, idsUsedInTypes)
+    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_pipe_types_in_model, 1)
+    idsUsedInTypes = get_symbol_ids_used_in_pipe_types(doc)
+    ids = merge_into_unique_list(ids, idsInModel)
+    ids = merge_into_unique_list(ids, idsUsedInTypes)
     return ids
 
 
-def GetUnUsedPipeSymbolIds(doc):
+def get_unused_pipe_symbol_ids(doc):
     '''
     Gets all unused pipe symbol ids of categories
     - BuiltInCategory.OST_PipeAccessory,
@@ -246,15 +246,15 @@ def GetUnUsedPipeSymbolIds(doc):
     '''
 
     ids = []
-    idsUsed = GetUsedPipeSymbolIds(doc)
-    idsAvailable = GetSymbolIdsForPipeTypesInModel(doc)
+    idsUsed = get_used_pipe_symbol_ids(doc)
+    idsAvailable = get_symbol_ids_for_pipe_types_in_model(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
             ids.append(id)
     return ids
 
 
-def GetUnUsedPipeSymbolIdsForPurge(doc):
+def get_unused_pipe_symbol_ids_for_purge(doc):
     '''
     Gets all unused pipe symbol ids of categories
     - BuiltInCategory.OST_PipeAccessory,
@@ -267,5 +267,5 @@ def GetUnUsedPipeSymbolIdsForPurge(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedPipeSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_pipe_symbol_ids)
     return ids

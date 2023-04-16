@@ -29,12 +29,12 @@ This module contains a number of helper functions relating to Revit pipes.
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Plumbing as rdbP
 
-from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import GetSymbolIdsForMEPSystemTypes, GetUniqueIdsOfUsedSymbolsFromSystemTypeIds
+from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_PIPES
 from  duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllPipeTypesByCategory(doc):
+def get_all_pipe_types_by_category(doc):
     '''
     Gets a filtered element collector of all pipe types in the model.
     :param doc: Current Revit model document.
@@ -47,7 +47,7 @@ def GetAllPipeTypesByCategory(doc):
     return collector
 
 
-def GetPipeTypesByClass(doc):
+def get_all_pipe_types_by_class(doc):
     '''
     Gets a filtered element collector of all pipe types in the model.
     Will exclude in place families.
@@ -59,7 +59,7 @@ def GetPipeTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbP.PipeType)
 
-def GetAllPipeInstancesByCategory(doc):
+def get_all_pipe_instances_by_category(doc):
     '''
     Gets all pipe elements placed in model.
     TODO: check these actually work...
@@ -73,7 +73,7 @@ def GetAllPipeInstancesByCategory(doc):
     return collector
 
 
-def GetPipeInstancesByClass(doc):
+def get_all_pipe_instances_by_class(doc):
     '''
     Gets all pipe elements placed in model.
     Will exclude in place families.
@@ -86,7 +86,7 @@ def GetPipeInstancesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbP.PipeType).WhereElementIsNotElementType()
 
-def GetAllPipeTypeIdsInModelByCategory(doc):
+def get_all_pipe_type_ids_in_model_by_category(doc):
     '''
     Gets all pipe type ids available in model.
     :param doc: Current Revit model document.
@@ -96,12 +96,12 @@ def GetAllPipeTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllPipeTypesByCategory(doc)
+    colCat = get_all_pipe_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
-def GetAllPipeTypeIdsInModelByClass(doc):
+def get_all_pipe_type_ids_in_model_by_class(doc):
     '''
     Gets all pipe type ids available in model.
     :param doc: Current Revit model document.
@@ -111,12 +111,12 @@ def GetAllPipeTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetPipeTypesByClass(doc)
+    colClass = get_all_pipe_types_by_class(doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 
-def GetSymbolIdsUsedInPipeTypes(doc):
+def get_symbol_ids_used_in_pipe_types(doc):
     '''
     Gets a list of unique symbol ids used in system type properties of pipe types.
     :param doc: Current Revit model document.
@@ -126,12 +126,12 @@ def GetSymbolIdsUsedInPipeTypes(doc):
     '''
 
     ids = []
-    tyeIds = GetAllPipeTypeIdsInModelByCategory(doc)
-    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    tyeIds = get_all_pipe_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
     return ids
 
 
-def GetSymbolIdsForPipeTypesInModel(doc):
+def get_symbol_ids_for_pipe_types_in_model(doc):
     '''
     Gets list of symbol ids of the following categories:
     - BuiltInCategory.OST_PipeAccessory,
@@ -142,5 +142,5 @@ def GetSymbolIdsForPipeTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_PIPES, 'GetSymbolIdsForPipeTypes')
+    ids = get_symbol_ids_of_mep_system_types(doc, CATS_LOADABLE_PIPES, 'GetSymbolIdsForPipeTypes')
     return ids

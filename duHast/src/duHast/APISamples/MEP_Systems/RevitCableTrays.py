@@ -30,12 +30,12 @@ This module contains a number of helper functions relating to Revit cable trays.
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Electrical as rdbE
 
-from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import GetSymbolIdsForMEPSystemTypes, GetUniqueIdsOfUsedSymbolsFromSystemTypeIds
+from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_CABLE_TRAYS
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllCableTrayTypesByCategory(doc):
+def get_all_cable_tray_types_by_category(doc):
     '''
     Gets a filtered element collector of all cable tray types in the model.
     - with fittings
@@ -50,7 +50,7 @@ def GetAllCableTrayTypesByCategory(doc):
     return collector
 
 
-def GetCableTrayTypesByClass(doc):
+def get_cable_tray_types_by_class(doc):
     '''
     Gets a filtered element collector of all cable tray types in the model.
     - with fittings
@@ -64,7 +64,7 @@ def GetCableTrayTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbE.CableTrayType)
 
-def GetAllCableTrayInstancesByCategory(doc):
+def get_all_cable_tray_instances_by_category(doc):
     '''
     Gets all cable tray elements placed in model.
     TODO: check these actually work...
@@ -78,7 +78,7 @@ def GetAllCableTrayInstancesByCategory(doc):
     return collector
 
 
-def GetCableTrayInstancesByClass(doc):
+def get_all_cable_tray_instances_by_class(doc):
     '''
     Gets all cable tray elements placed in model.
     Will exclude in place families.
@@ -91,7 +91,7 @@ def GetCableTrayInstancesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbE.CableTrayType).WhereElementIsNotElementType()
 
-def GetAllCableTrayTypeIdsInModelByCategory(doc):
+def get_all_cable_tray_type_ids_in_model_by_category(doc):
     '''
     Gets all cable tray type ids available in model.
     :param doc: Current Revit model document.
@@ -101,12 +101,12 @@ def GetAllCableTrayTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllCableTrayTypesByCategory(doc)
+    colCat = get_all_cable_tray_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
-def GetAllCableTrayTypeIdsInModelByClass(doc):
+def get_all_cable_tray_type_ids_in_model_by_class(doc):
     '''
     Gets all cable tray type ids available in model.
     :param doc: Current Revit model document.
@@ -116,12 +116,12 @@ def GetAllCableTrayTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetCableTrayTypesByClass(doc)
+    colClass = get_cable_tray_types_by_class(doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 
-def GetSymbolIdsUsedInCableTrayTypes(doc):
+def get_symbol_ids_used_in_cable_tray_types(doc):
     '''
     Gets a list of unique symbol ids used in system type properties of cable tray types.
     :param doc: Current Revit model document.
@@ -131,12 +131,12 @@ def GetSymbolIdsUsedInCableTrayTypes(doc):
     '''
 
     ids = []
-    tyeIds = GetAllCableTrayTypeIdsInModelByCategory(doc)
-    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    tyeIds = get_all_cable_tray_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
     return ids
 
 
-def GetSymbolIdsForCableTrayTypesInModel(doc):
+def get_symbol_ids_for_cable_tray_types_in_model(doc):
     '''
     Gets list of symbol ids of the following categories:
     - BuiltInCategory.OST_CableTrayFitting
@@ -146,5 +146,5 @@ def GetSymbolIdsForCableTrayTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CABLE_TRAYS, 'GetSymbolIdsForCableTrayTypes')
+    ids = get_symbol_ids_of_mep_system_types(doc, CATS_LOADABLE_CABLE_TRAYS, 'GetSymbolIdsForCableTrayTypes')
     return ids

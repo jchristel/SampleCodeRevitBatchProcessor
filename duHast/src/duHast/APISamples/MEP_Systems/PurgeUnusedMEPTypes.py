@@ -27,16 +27,16 @@ This module contains a number of helper functions relating to purging unused mep
 #
 
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
-from duHast.APISamples.MEP_Systems.RevitCableTrays import GetAllCableTrayTypeIdsInModelByCategory, GetAllCableTrayTypesByCategory
-from duHast.APISamples.MEP_Systems.RevitConduits import GetAllConduitTypeIdsInModelByCategory, GetAllConduitTypesByCategory
-from duHast.APISamples.MEP_Systems.RevitDucts import GetAllDuctTypeIdsInModelByCategory, GetAllDuctTypesByCategory
-from duHast.APISamples.MEP_Systems.RevitFlexDucts import GetAllFlexDuctTypeIdsInModelByCategory, GetAllFlexDuctTypesByCategory
-from duHast.APISamples.MEP_Systems.RevitPipes import GetAllPipeTypeIdsInModelByCategory, GetAllPipeTypesByCategory
+from duHast.APISamples.MEP_Systems.RevitCableTrays import get_all_cable_tray_type_ids_in_model_by_category, get_all_cable_tray_types_by_category
+from duHast.APISamples.MEP_Systems.RevitConduits import get_all_conduit_type_ids_in_model_by_category, get_all_conduit_types_by_category
+from duHast.APISamples.MEP_Systems.RevitDucts import get_all_duct_type_ids_in_model_by_category, get_all_duct_types_by_category
+from duHast.APISamples.MEP_Systems.RevitFlexDucts import get_all_flex_duct_type_ids_in_model_by_category, get_all_flex_duct_types_by_category
+from duHast.APISamples.MEP_Systems.RevitPipes import get_all_pipe_type_ids_in_model_by_category, get_all_pipe_types_by_category
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemNames import BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES, BUILTIN_CONDUIT_TYPE_FAMILY_NAMES, BUILTIN_DUCT_TYPE_FAMILY_NAMES, BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES, BUILTIN_PIPE_TYPE_FAMILY_NAMES
-from duHast.APISamples.MEP_Systems.Utility.RevitMEPTypeSorting import SortTypesByFamilyName
+from duHast.APISamples.MEP_Systems.Utility.RevitMEPTypeSorting import sort_types_by_family_name
 
 
-def GetUsedDuctTypeIds(doc):
+def get_used_duct_type_ids(doc):
     '''
     Gets all used duct type ids available in model.
     Unused: at least instance of each of these types is placed in the model.
@@ -46,11 +46,11 @@ def GetUsedDuctTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllDuctTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_duct_type_ids_in_model_by_category, 1)
     return ids
 
 
-def GetUsedFlexDuctTypeIds(doc):
+def get_used_flex_duct_type_ids(doc):
     '''
     Gets all used flex duct type ids available in model.
     Unused: at least instance of each of these types is placed in the model.
@@ -60,11 +60,11 @@ def GetUsedFlexDuctTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllFlexDuctTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_flex_duct_type_ids_in_model_by_category, 1)
     return ids
 
 
-def GetUsedConduitTypeIds(doc):
+def get_used_conduit_type_ids(doc):
     '''
     Gets all used conduit type ids available in model.
     Unused: at least instance of each of these types is placed in the model.
@@ -74,11 +74,11 @@ def GetUsedConduitTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllConduitTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_conduit_type_ids_in_model_by_category, 1)
     return ids
 
 
-def GetUsedCableTrayTypeIds(doc):
+def get_used_cable_tray_type_ids(doc):
     '''
     Gets all used cable tray type ids available in model.
     Unused: at least instance of each of these types is placed in the model.
@@ -88,11 +88,11 @@ def GetUsedCableTrayTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllCableTrayTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_cable_tray_type_ids_in_model_by_category, 1)
     return ids
 
 
-def GetUsedPipeTypeIds(doc):
+def get_used_pipe_type_ids(doc):
     '''
     Gets all used pipe type ids available in model.
     Unused: at least instance of each of these types is placed in the model.
@@ -102,11 +102,11 @@ def GetUsedPipeTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllPipeTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_pipe_type_ids_in_model_by_category, 1)
     return ids
 
 
-def GetUnUsedDuctTypeIds(doc):
+def get_unused_duct_type_ids(doc):
     '''
     Gets all unused duct type ids available in model.
     Unused: not one instance of these types is placed in the model.
@@ -116,11 +116,11 @@ def GetUnUsedDuctTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllDuctTypeIdsInModelByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_duct_type_ids_in_model_by_category, 0)
     return ids
 
 
-def GetUnUsedFlexDuctTypeIds(doc):
+def get_unused_flex_duct_type_ids(doc):
     '''
     Gets all unused flex duct type ids available in model.
     Unused: not one instance of these types is placed in the model.
@@ -130,11 +130,11 @@ def GetUnUsedFlexDuctTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllFlexDuctTypeIdsInModelByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_flex_duct_type_ids_in_model_by_category, 0)
     return ids
 
 
-def GetUnUsedConduitTypeIds(doc):
+def get_unused_conduit_type_ids(doc):
     '''
     Gets all unused conduit type ids available in model.
     Unused: not one instance of these types is placed in the model.
@@ -144,11 +144,11 @@ def GetUnUsedConduitTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllConduitTypeIdsInModelByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_conduit_type_ids_in_model_by_category, 0)
     return ids
 
 
-def GetUnUsedCableTrayTypeIds(doc):
+def get_unused_cable_tray_type_ids(doc):
     '''
     Gets all unused cable tray type ids available in model.
     Unused: not one instance of these types is placed in the model.
@@ -158,11 +158,11 @@ def GetUnUsedCableTrayTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllCableTrayTypeIdsInModelByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_cable_tray_type_ids_in_model_by_category, 0)
     return ids
 
 
-def GetUnUsedPipeTypeIds(doc):
+def get_unused_pipe_type_ids(doc):
     '''
     Gets all unused pipe type ids available in model.
     Unused: not one instance of these types is placed in the model.
@@ -172,11 +172,11 @@ def GetUnUsedPipeTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllPipeTypeIdsInModelByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_pipe_type_ids_in_model_by_category, 0)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
@@ -197,7 +197,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnUsedMEPSystemTypeIdsToPurge(doc, allTypeIDGetter, allTypesGetter, builtInFamilyTypeNames):
+def get_unused_mep_system_type_ids_to_purge(doc, allTypeIDGetter, allTypesGetter, builtInFamilyTypeNames):
     '''
     Gets the ids of unused MEP system types. 
     In the case that no mep system instance using any of the types is placed, this will return all but one type id since\
@@ -216,16 +216,16 @@ def GetUnUsedMEPSystemTypeIdsToPurge(doc, allTypeIDGetter, allTypesGetter, built
 
     ids = rPurgeUtils.get_used_unused_type_ids(doc, allTypeIDGetter, 0)
     # make sure there is at least on Stair type per system family left in model
-    types = SortTypesByFamilyName(doc, allTypesGetter)
+    types = sort_types_by_family_name(doc, allTypesGetter)
     for key, value in types.items():
         if(key in builtInFamilyTypeNames ):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 
-def GetUnUsedDuctTypeIdsToPurge(doc):
+def get_unused_duct_type_ids_to_purge(doc):
     '''
     Gets all unused duct type ids. 
     This method can be used to safely delete unused duct types:
@@ -237,11 +237,11 @@ def GetUnUsedDuctTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc,GetAllDuctTypeIdsInModelByCategory, GetAllDuctTypesByCategory, BUILTIN_DUCT_TYPE_FAMILY_NAMES)
+    ids = get_unused_mep_system_type_ids_to_purge(doc,get_all_duct_type_ids_in_model_by_category, get_all_duct_types_by_category, BUILTIN_DUCT_TYPE_FAMILY_NAMES)
     return ids
 
 
-def GetUnUsedFlexDuctTypeIdsToPurge(doc):
+def get_unused_flex_duct_type_ids_to_purge(doc):
     '''
     Gets all unused flex duct type ids. 
     This method can be used to safely delete unused flex duct types:
@@ -253,11 +253,11 @@ def GetUnUsedFlexDuctTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc,GetAllFlexDuctTypeIdsInModelByCategory, GetAllFlexDuctTypesByCategory, BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES)
+    ids = get_unused_mep_system_type_ids_to_purge(doc,get_all_flex_duct_type_ids_in_model_by_category, get_all_flex_duct_types_by_category, BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES)
     return ids
 
 
-def GetUnUsedConduitTypeIdsToPurge(doc):
+def get_unused_conduit_type_ids_to_purge(doc):
     '''
     Gets all unused conduit type ids. 
     This method can be used to safely delete unused conduit types:
@@ -269,11 +269,11 @@ def GetUnUsedConduitTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllConduitTypeIdsInModelByCategory, GetAllConduitTypesByCategory, BUILTIN_CONDUIT_TYPE_FAMILY_NAMES)
+    ids = get_unused_mep_system_type_ids_to_purge(doc, get_all_conduit_type_ids_in_model_by_category, get_all_conduit_types_by_category, BUILTIN_CONDUIT_TYPE_FAMILY_NAMES)
     return ids
 
 
-def GetUnUsedCableTrayTypeIdsToPurge(doc):
+def get_unused_cable_tray_type_ids_to_purge(doc):
     '''
     Gets all unused cable tray type ids. 
     This method can be used to safely delete unused cable tray types:
@@ -285,11 +285,11 @@ def GetUnUsedCableTrayTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllCableTrayTypeIdsInModelByCategory, GetAllCableTrayTypesByCategory, BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES)
+    ids = get_unused_mep_system_type_ids_to_purge(doc, get_all_cable_tray_type_ids_in_model_by_category, get_all_cable_tray_types_by_category, BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES)
     return ids
 
 
-def GetUnUsedPipeTypeIdsToPurge(doc):
+def get_unused_pipe_type_ids_to_purge(doc):
     '''
     Gets all unused pipe type ids. 
     This method can be used to safely delete unused pipe types:
@@ -301,5 +301,5 @@ def GetUnUsedPipeTypeIdsToPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetUnUsedMEPSystemTypeIdsToPurge(doc, GetAllPipeTypeIdsInModelByCategory, GetAllPipeTypesByCategory, BUILTIN_PIPE_TYPE_FAMILY_NAMES)
+    ids = get_unused_mep_system_type_ids_to_purge(doc, get_all_pipe_type_ids_in_model_by_category, get_all_pipe_types_by_category, BUILTIN_PIPE_TYPE_FAMILY_NAMES)
     return ids

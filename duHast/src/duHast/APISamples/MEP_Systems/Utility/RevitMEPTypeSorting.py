@@ -29,7 +29,7 @@ TODO: similar function exists in Walls module. Consider more generic function.
 #
 #
 
-def BuildTypeDictionary(collector, dic):
+def build_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
@@ -53,7 +53,7 @@ def BuildTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def SortTypesByFamilyName(doc, typeGetter):
+def sort_types_by_family_name(doc, typeGetter):
     '''
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -68,5 +68,5 @@ def SortTypesByFamilyName(doc, typeGetter):
     # get all Wall Type Elements
     wts = typeGetter(doc)
     usedWts = {}
-    usedWts = BuildTypeDictionary(wts, usedWts)
+    usedWts = build_type_dictionary(wts, usedWts)
     return usedWts

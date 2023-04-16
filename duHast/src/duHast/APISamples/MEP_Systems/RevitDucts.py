@@ -30,12 +30,12 @@ This module contains a number of helper functions relating to Revit ducts.
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Mechanical as rdbM
 
-from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import GetSymbolIdsForMEPSystemTypes, GetUniqueIdsOfUsedSymbolsFromSystemTypeIds
+from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_DUCTS
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllDuctTypesByCategory(doc):
+def get_all_duct_types_by_category(doc):
     '''
     Gets a filtered element collector of all duct types in the model.
     - round
@@ -51,7 +51,7 @@ def GetAllDuctTypesByCategory(doc):
     return collector
 
 
-def GetDuctTypesByClass(doc):
+def get_all_duct_types_by_class(doc):
     '''
     Gets a filtered element collector of all duct types in the model.
     - round
@@ -66,7 +66,7 @@ def GetDuctTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbM.DuctType)
 
-def GetAllDuctInstancesInModelByCategory(doc):
+def get_all_duct_instances_in_model_by_category(doc):
     '''
     Gets all duct elements placed in model.
     TODO: check these actually work...
@@ -78,7 +78,7 @@ def GetAllDuctInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_DuctCurves).WhereElementIsNotElementType()
 
-def GetAllDuctInstancesInModelByClass(doc):
+def get_all_duct_instances_in_model_by_class(doc):
     '''
     Gets all duct elements placed in model.
     Will exclude in place families.
@@ -91,7 +91,7 @@ def GetAllDuctInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbM.DuctType).WhereElementIsNotElementType()
 
-def GetAllDuctTypeIdsInModelByCategory(doc):
+def get_all_duct_type_ids_in_model_by_category(doc):
     '''
     Gets all duct type ids available in model.
     :param doc: Current Revit model document.
@@ -101,12 +101,12 @@ def GetAllDuctTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllDuctTypesByCategory(doc)
+    colCat = get_all_duct_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
-def GetAllDuctTypeIdsInModelByClass(doc):
+def get_all_duct_type_ids_in_model_by_class(doc):
     '''
     Gets all duct type ids available in model.
     :param doc: Current Revit model document.
@@ -116,14 +116,14 @@ def GetAllDuctTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetDuctTypesByClass(doc)
+    colClass = get_all_duct_types_by_class(doc)
     ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 
 # --------------------------------------- symbols used in MEP system types -------------------------------
 
-def GetSymbolIdsUsedInDuctTypes(doc):
+def get_symbol_ids_used_in_duct_types(doc):
     '''
     Gets a list of unique symbol ids used in system type properties of duct types.
     :param doc: Current Revit model document.
@@ -133,12 +133,12 @@ def GetSymbolIdsUsedInDuctTypes(doc):
     '''
 
     ids = []
-    tyeIds = GetAllDuctTypeIdsInModelByCategory(doc)
-    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    tyeIds = get_all_duct_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
     return ids
 
 
-def GetSymbolIdsForDuctTypesInModel(doc):
+def get_symbol_ids_for_duct_types_in_model(doc):
     '''
     Gets list of symbol ids of the following categories:
     - BuiltInCategory.OST_DuctAccessory,
@@ -150,5 +150,5 @@ def GetSymbolIdsForDuctTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
+    ids = get_symbol_ids_of_mep_system_types(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
     return ids

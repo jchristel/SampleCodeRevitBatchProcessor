@@ -30,12 +30,12 @@ This module contains a number of helper functions relating to Revit conduits.
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Electrical as rdbE
 
-from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import GetSymbolIdsForMEPSystemTypes, GetUniqueIdsOfUsedSymbolsFromSystemTypeIds
+from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_CONDUITS
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllConduitTypesByCategory(doc):
+def get_all_conduit_types_by_category(doc):
     '''
     Gets a filtered element collector of all conduit types in the model.
     - with fittings
@@ -50,7 +50,7 @@ def GetAllConduitTypesByCategory(doc):
     return collector
 
 
-def GetConduitTypesByClass(doc):
+def get_all_conduit_types_by_class(doc):
     '''
     Gets a filtered element collector of all conduit types in the model.
     - with fittings
@@ -64,7 +64,7 @@ def GetConduitTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbE.ConduitType)
 
-def GetAllConduitInstancesByCategory(doc):
+def get_all_conduit_instances_by_category(doc):
     '''
     Gets all conduit elements placed in model.
     TODO: check these actually work...
@@ -78,7 +78,7 @@ def GetAllConduitInstancesByCategory(doc):
     return collector
 
 
-def GetConduitInstancesByClass(doc):
+def get_all_conduit_instances_by_class(doc):
     '''
     Gets all conduit elements placed in model.
     Will exclude in place families.
@@ -91,7 +91,7 @@ def GetConduitInstancesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbE.ConduitType).WhereElementIsNotElementType()
 
-def GetAllConduitTypeIdsInModelByCategory(doc):
+def get_all_conduit_type_ids_in_model_by_category(doc):
     '''
     Gets all conduit type ids available in model.
     :param doc: Current Revit model document.
@@ -101,12 +101,12 @@ def GetAllConduitTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllConduitTypesByCategory(doc)
+    colCat = get_all_conduit_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
-def GetAllConduitTypeIdsInModelByClass(doc):
+def get_all_conduit_type_ids_in_model_by_class(doc):
     '''
     Gets all conduit type ids available in model.
     :param doc: Current Revit model document.
@@ -116,12 +116,12 @@ def GetAllConduitTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetConduitTypesByClass(doc)
+    colClass = get_all_conduit_types_by_class(doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 
-def GetSymbolIdsUsedInConduitTypes(doc):
+def get_symbol_ids_used_in_conduit_types(doc):
     '''
     Gets a list of unique symbol ids used in system type properties of conduit types.
     :param doc: Current Revit model document.
@@ -131,12 +131,12 @@ def GetSymbolIdsUsedInConduitTypes(doc):
     '''
 
     ids = []
-    tyeIds = GetAllConduitTypeIdsInModelByCategory(doc)
-    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    tyeIds = get_all_conduit_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
     return ids
 
 
-def GetSymbolIdsForConduitTypesInModel(doc):
+def get_symbol_ids_for_conduit_types_in_model(doc):
     '''
     Gets list of symbol ids of the following categories:
     - BuiltInCategory.OST_ConduitFitting
@@ -146,5 +146,5 @@ def GetSymbolIdsForConduitTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_CONDUITS, 'GetSymbolIdsForConduitTypes')
+    ids = get_symbol_ids_of_mep_system_types(doc, CATS_LOADABLE_CONDUITS, 'GetSymbolIdsForConduitTypes')
     return ids

@@ -29,12 +29,12 @@ This module contains a number of helper functions relating to Revit flex ducts.
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Mechanical as rdbM
 
-from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import GetSymbolIdsForMEPSystemTypes, GetUniqueIdsOfUsedSymbolsFromSystemTypeIds
+from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_DUCTS
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
-def GetAllFlexDuctTypesByCategory(doc):
+def get_all_flex_duct_types_by_category(doc):
     '''
     Gets a filtered element collector of all flex duct types in the model.
     - round
@@ -49,7 +49,7 @@ def GetAllFlexDuctTypesByCategory(doc):
     return collector
 
 
-def GetFlexDuctTypesByClass(doc):
+def get_all_flex_duct_types_by_class(doc):
     '''
     Gets a filtered element collector of all flex duct types in the model.
     - round
@@ -63,7 +63,7 @@ def GetFlexDuctTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbM.FlexDuctType)
 
-def GetAllFlexDuctInstancesInModelByCategory(doc):
+def get_all_flex_duct_instances_in_model_by_category(doc):
     '''
     Gets all flex duct elements placed in model.
     TODO: check these actually work...
@@ -75,7 +75,7 @@ def GetAllFlexDuctInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_FlexDuctCurves).WhereElementIsNotElementType()
 
-def GetAllFlexDuctInstancesInModelByClass(doc):
+def get_all_flex_duct_instances_in_model_by_class(doc):
     '''
     Gets all flex duct elements placed in model.
     Will exclude in place families.
@@ -88,7 +88,7 @@ def GetAllFlexDuctInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbM.FlexDuctType).WhereElementIsNotElementType()
 
-def GetAllFlexDuctTypeIdsInModelByCategory(doc):
+def get_all_flex_duct_type_ids_in_model_by_category(doc):
     '''
     Gets all flex duct type ids available in model.
     :param doc: Current Revit model document.
@@ -98,12 +98,12 @@ def GetAllFlexDuctTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllFlexDuctTypesByCategory(doc)
+    colCat = get_all_flex_duct_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
 
-def GetAllFlexDuctTypeIdsInModelByClass(doc):
+def get_all_flex_duct_type_ids_in_model_by_class(doc):
     '''
     Gets all flex duct type ids available in model.
     :param doc: Current Revit model document.
@@ -113,12 +113,12 @@ def GetAllFlexDuctTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetFlexDuctTypesByClass(doc)
+    colClass = get_all_flex_duct_types_by_class(doc)
     ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 
-def GetSymbolIdsUsedInFlexDuctTypes(doc):
+def get_symbol_ids_used_in_flex_duct_types(doc):
     '''
     Gets a list of unique symbol ids used in system type properties of flex duct types.
     :param doc: Current Revit model document.
@@ -128,12 +128,12 @@ def GetSymbolIdsUsedInFlexDuctTypes(doc):
     '''
 
     ids = []
-    tyeIds = GetAllFlexDuctTypeIdsInModelByCategory(doc)
-    ids = GetUniqueIdsOfUsedSymbolsFromSystemTypeIds(doc, tyeIds)
+    tyeIds = get_all_flex_duct_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
     return ids
 
 
-def GetSymbolIdsForFlexDuctTypesInModel(doc):
+def get_symbol_ids_for_flex_duct_types_in_model(doc):
     '''
     Gets list of symbol ids of the following categories:
     - BuiltInCategory.OST_DuctAccessory,
@@ -146,5 +146,5 @@ def GetSymbolIdsForFlexDuctTypesInModel(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    ids = GetSymbolIdsForMEPSystemTypes(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
+    ids = get_symbol_ids_of_mep_system_types(doc, CATS_LOADABLE_DUCTS, 'GetSymbolIdsForDuctTypes')
     return ids

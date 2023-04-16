@@ -48,13 +48,13 @@ def get_bim_360_path(doc):
     '''
 
     # get bim 360 path
-    revitFilePath = ''
+    revit_file_path = ''
     try:
         path = doc.GetCloudModelPath()
-        revitFilePath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+        revit_file_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     except Exception as e:
-        revitFilePath = ''
-    return revitFilePath
+        revit_file_path = ''
+    return revit_file_path
 
 def convert_bim_360_file_path(path):
     '''
@@ -88,13 +88,13 @@ def get_model_bim_360_ids(doc):
     '''
 
     path = doc.GetCloudModelPath()
-    modelGuid = path.GetModelGUID()
-    projectGuid = path.GetProjectGUID()
+    model_guid = path.GetModelGUID()
+    project_guid = path.GetProjectGUID()
     # check whether this is a cloud model
-    isCloudModel = path.CloudPath
+    is_cloud_model = path.CloudPath
     # get human readable path
     human = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
-    return projectGuid,modelGuid,str(human)
+    return project_guid,model_guid,str(human)
 
 def get_model_file_size(doc):
     '''
@@ -107,22 +107,22 @@ def get_model_file_size(doc):
     :rtype: float
     '''
 
-    fileSize = -1
+    file_size = -1
     path = doc.GetCloudModelPath()
-    fullPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
-    if (fullPath.StartsWith("BIM 360")):
+    full_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
+    if (full_path.StartsWith("BIM 360")):
         # get user environment
-        hostName = util.GetLocalAppDataPath()
+        host_name = util.GetLocalAppDataPath()
         # build path to local cache files
-        folder = hostName + '\\Autodesk\\Revit\\Autodesk Revit ' + str(doc.Application.VersionNumber) + '\\CollaborationCache'
+        folder = host_name + '\\Autodesk\\Revit\\Autodesk Revit ' + str(doc.Application.VersionNumber) + '\\CollaborationCache'
         # local cache file name is same as file GUID on BIM360
-        revitFile = doc.WorksharingCentralGUID.ToString()
+        revit_file = doc.WorksharingCentralGUID.ToString()
         # get all files in cache folder matching GUID
-        file_list = fileGet.GetFilesFromDirectoryWalker(folder, revitFile)
+        file_list = fileGet.GetFilesFromDirectoryWalker(folder, revit_file)
         if (len(file_list) > 0):
             for file in file_list:
                 # just select one of the file instance..not to sure why this one?
                 if (file.Contains('CentralCache') == False):
-                    fileSize = util.GetFileSize(file)
+                    file_size = util.GetFileSize(file)
                     break
-    return fileSize
+    return file_size

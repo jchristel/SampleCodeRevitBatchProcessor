@@ -61,7 +61,7 @@ def _purge(doc, dllPath):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2019 -------------------------------------
 
-def _PurgeUnused2019(doc):
+def _purge_unused_2019(doc):
     '''
     Purges the document, revit version 2019, using the purge unused functionality of the eTransmit tool provided by Autodesk
     
@@ -79,7 +79,7 @@ def _PurgeUnused2019(doc):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2020 -------------------------------------
 
-def _PurgeUnused2020(doc):
+def _purge_unused_2020(doc):
     '''
     Purges the document, revit version 2020, using the purge unused functionality of the eTransmit tool provided by Autodesk
     
@@ -97,7 +97,7 @@ def _PurgeUnused2020(doc):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
 
-def _PurgeUnused2021(doc):
+def _purge_unused_2021(doc):
     '''
     Purges the document, revit version 2021, using the purge unused functionality of the eTransmit tool provided by Autodesk
     
@@ -115,7 +115,7 @@ def _PurgeUnused2021(doc):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
 
-def _PurgeUnused2022(doc):
+def _purge_unused_2022(doc):
     '''
     Purges the document, revit version 2022, using the purge unused functionality of the eTransmit tool provided by Autodesk
     
@@ -133,7 +133,7 @@ def _PurgeUnused2022(doc):
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
 
-def PurgeUnusedETransmit(doc):
+def purge_unused_e_transmit(doc):
     '''
     Purges the document using the purge unused functionality of the eTransmit tool provided by Autodesk.
     
@@ -161,13 +161,13 @@ def PurgeUnusedETransmit(doc):
     revitVersion = doc.Application.VersionNumber
     try:
         if (revitVersion == '2019'):
-            resultValue.status = _PurgeUnused2019(doc)
+            resultValue.status = _purge_unused_2019(doc)
         elif (revitVersion == '2020'):
-            resultValue.status = _PurgeUnused2020(doc)
+            resultValue.status = _purge_unused_2020(doc)
         elif (revitVersion == '2021'):
-            resultValue.status = _PurgeUnused2021(doc)
+            resultValue.status = _purge_unused_2021(doc)
         elif (revitVersion == '2022'):
-            resultValue.status = _PurgeUnused2022(doc)
+            resultValue.status = _purge_unused_2022(doc)
         else:
             # this is a non supported revit version!
             raise ValueError('Revit version ' + revitVersion + ' is currently not supported by purge unused!')

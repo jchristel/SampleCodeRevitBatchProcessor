@@ -24,11 +24,11 @@ class TestPurgeAction(unittest.TestCase):
             testIdsGetter
         )
 
-        self.assertEqual(purgeAction.purgeTransactionName, purgeTransactionName)
-        self.assertEqual(purgeAction.purgeIdsGetter, purgeIdsGetter)
-        self.assertEqual(purgeAction.purgeReportHeader, purgeReportHeader)
-        self.assertEqual(purgeAction.testReportHeader, testReportHeader)
-        self.assertEqual(purgeAction.testIdsGetter, testIdsGetter)
+        self.assertEqual(purgeAction.purge_transaction_name, purgeTransactionName)
+        self.assertEqual(purgeAction.purge_ids_getter, purgeIdsGetter)
+        self.assertEqual(purgeAction.purge_report_header, purgeReportHeader)
+        self.assertEqual(purgeAction.test_report_header, testReportHeader)
+        self.assertEqual(purgeAction.test_ids_getter, testIdsGetter)
 
         print(purgeAction)
 

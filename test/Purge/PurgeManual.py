@@ -16,7 +16,7 @@ SPACER = '...'
 
 # set up a timer objects
 t = Timer()
-tOverall = Timer()
+TIMER_OVERALL = Timer()
 
 #: list containing keys to be ignored in comparison code
 #: these keys do not get purged by Revit's native purge unused and would therefore show up as false positives
@@ -136,7 +136,7 @@ def CompareReportData(fileSource, fileTest):
 def ReportAvailableTypeIds(doc, filePath):
     '''calls all available type id getter functions and writes results to file'''
     resultValue = res.Result()
-    tOverall.start()
+    TIMER_OVERALL.start()
     counter = 0 #any counter value greater then 0 means append to report file rather then creating a new file
     for pA in PURGE_ACTIONS:
         try:
@@ -153,5 +153,5 @@ def ReportAvailableTypeIds(doc, filePath):
         except Exception as e:
             resultValue.UpdateSep(False,'Terminated get available type id actions with exception: '+ str(e))
         counter = counter + 1
-    resultValue.AppendMessage('Report available types duration: '+ str(tOverall.stop()))
+    resultValue.AppendMessage('Report available types duration: '+ str(TIMER_OVERALL.stop()))
     return resultValue

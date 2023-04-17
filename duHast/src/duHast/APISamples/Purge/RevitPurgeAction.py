@@ -61,8 +61,8 @@ class PurgeAction(Base.Base):
         # ini super class to allow multi inheritance in children!
         super(PurgeAction, self).__init__() 
 
-        self.purgeTransactionName = purgeTransactionName
-        self.purgeIdsGetter = purgeIdsGetter
-        self.purgeReportHeader = purgeReportHeader
-        self.testReportHeader = testReportHeader
-        self.testIdsGetter = testIdsGetter
+        self.purge_transaction_name = purgeTransactionName
+        self.purge_ids_getter = purgeIdsGetter
+        self.purge_report_header = purgeReportHeader
+        self.test_report_header = testReportHeader
+        self.test_ids_getter = testIdsGetter

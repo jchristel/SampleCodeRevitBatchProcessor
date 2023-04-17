@@ -131,7 +131,7 @@ from System.Collections.Generic import List
 
 # --------------------------------------------- Purge - utility ---------------------------------------------
 
-def PurgeUnplacedElements (doc, 
+def purge_unplaced_elements (doc, 
     getUnusedElementIds, 
     transactionName, 
     unUsedElementNameHeader,
@@ -248,10 +248,10 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamP
 SPACER = '...'
 
 # set up a timer objects
-t = Timer()
-tOverall = Timer()
+TIMER_TASK = Timer()
+TIMER_OVERALL = Timer()
 
-def PurgeUnused(doc, revitFilePath, isDebug):
+def purge_unused(doc, revitFilePath, isDebug):
     '''
     Calls all available purge actions defined in global list.
 
@@ -275,20 +275,20 @@ def PurgeUnused(doc, revitFilePath, isDebug):
     # the current file name
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
-    tOverall.start()
+    TIMER_OVERALL.start()
     for pA in PURGE_ACTIONS:
         try:
-            t.start()
-            purgeFlag = PurgeUnplacedElements(
+            TIMER_TASK.start()
+            purgeFlag = purge_unplaced_elements(
                 doc,
                 pA.purgeIdsGetter,
                 pA.purgeTransactionName,
                 pA.purgeReportHeader,
                 isDebug
             )
-            purgeFlag.AppendMessage(SPACER + str(t.stop()))
+            purgeFlag.AppendMessage(SPACER + str(TIMER_TASK.stop()))
             resultValue.Update(purgeFlag)
         except Exception as e:
             resultValue.UpdateSep(False,'Terminated purge unused actions with exception: '+ str(e))
-    resultValue.AppendMessage('purge duration: '+ str(tOverall.stop()))
+    resultValue.AppendMessage('purge duration: '+ str(TIMER_OVERALL.stop()))
     return resultValue

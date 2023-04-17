@@ -69,7 +69,7 @@ MODEL_HEALTH_TRACKER_FAMILY = 'Symbol_GraphicModelHealth_ANN'
 #: Default value if unable to retrieve a health metric value from model
 FAILED_TO_RETRIEVE_VALUE = -1
 
-def _castParameterValue(pValue):
+def _cast_parameter_value(pValue):
     '''
     Check if parameter is of type string ( currently the date only)
     and only cast to string if not...
@@ -87,7 +87,7 @@ def _castParameterValue(pValue):
         newParaValue = pValue
     return newParaValue
 
-def GetInstancesOfModelHealth(doc):
+def get_instances_of_model_health(doc):
     '''
     Gets all instances of the model health tracker family in a model.
 
@@ -109,7 +109,7 @@ def GetInstancesOfModelHealth(doc):
     filter = rdb.ElementParameterFilter( rule )
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter).ToList()
 
-def GetParametersOfInstance(famInstance, doc):
+def get_parameters_of_instance(famInstance, doc):
     '''
     Updates parameter values of model tracker family instance.
 
@@ -136,7 +136,7 @@ def GetParametersOfInstance(famInstance, doc):
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
                 parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
                 if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
-                    flag = rParaSet.set_parameter_value (p, _castParameterValue(parameterValue), doc)
+                    flag = rParaSet.set_parameter_value (p, _cast_parameter_value(parameterValue), doc)
                     resultValue.Update(flag)
                     flagUpdate = True
                 else:
@@ -152,7 +152,7 @@ def GetParametersOfInstance(famInstance, doc):
 
 # --------------------------------------------- GENERAL ---------------------------------------------
 
-def GetCurrentDate(doc):
+def get_current_date(doc):
     '''
     Get the current date
 
@@ -165,7 +165,7 @@ def GetCurrentDate(doc):
     '''
     return dateStamp.GetFileDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD)
 
-def GetWorksetNumber(doc):
+def get_workset_number(doc):
     '''
     Gets the number of worksets in the model.
 
@@ -178,7 +178,7 @@ def GetWorksetNumber(doc):
 
     return len(rWork.get_worksets(doc))
 
-def GetFileSize(doc):
+def get_file_size(doc):
     '''
     Gets the file size in MB.
 
@@ -205,7 +205,7 @@ def GetFileSize(doc):
         pass
     return size
 
-def GetNumberOfWarnings(doc):
+def get_number_of_warnings(doc):
     '''
     Gets the number of warnings in the model.
 
@@ -223,7 +223,7 @@ def GetNumberOfWarnings(doc):
         pass
     return number
 
-def GetNumberOfDesignSets(doc):
+def get_number_of_design_sets(doc):
     '''
     Gets the number of design sets in the model.
 
@@ -240,7 +240,7 @@ def GetNumberOfDesignSets(doc):
         pass
     return number
 
-def GetNumberOfDesignOptions(doc):
+def get_number_of_design_options(doc):
     '''
     Gets the number of design options in the model.
 
@@ -259,7 +259,7 @@ def GetNumberOfDesignOptions(doc):
 
 # --------------------------------------------- VIEWS ---------------------------------------------
 
-def GetNumberOfSheets(doc):
+def get_number_of_sheets(doc):
     '''
     Gets the number of sheets in the model.
 
@@ -277,7 +277,7 @@ def GetNumberOfSheets(doc):
         pass
     return number
 
-def _ViewFilter(view):
+def _view_filter(view):
     '''
     generic view filter allowing all views to be selected
 
@@ -289,7 +289,7 @@ def _ViewFilter(view):
     '''
     return True
 
-def GetViewsInTheModel(doc):
+def get_number_of_views(doc):
     '''
     Gets the number of views in the model.
 
@@ -301,12 +301,12 @@ def GetViewsInTheModel(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViews.GetViewsInModel(doc, _ViewFilter))
+        number = len(rViews.GetViewsInModel(doc, _view_filter))
     except:
         pass
     return number
 
-def GetUnplacedViews(doc):
+def get_number_of_unplaced_views(doc):
     '''
     Gets the number of unplaced views in the model.
 
@@ -325,7 +325,7 @@ def GetUnplacedViews(doc):
 
 # --------------------------------------------- LINE STYLES / TYPES  ---------------------------------------------
 
-def GetNumberOfLineStyles(doc):
+def get_number_of_line_styles(doc):
     '''
     Gets the number of line styles in the model.
 
@@ -343,7 +343,7 @@ def GetNumberOfLineStyles(doc):
         pass
     return number
 
-def GetNumberOfLinePatterns(doc):
+def get_number_of_line_patterns(doc):
     '''
     Gets the number of line patterns in the model.
 
@@ -361,7 +361,7 @@ def GetNumberOfLinePatterns(doc):
         pass
     return number
 
-def GetNumberOfFillPatterns(doc):
+def get_number_of_fill_patterns(doc):
     '''
     Gets the number of fill pattern in the model.
 
@@ -381,7 +381,7 @@ def GetNumberOfFillPatterns(doc):
 
 # --------------------------------------------- CAD links  ---------------------------------------------
 
-def GetNumberOfCADImports(doc):
+def get_number_of_cad_imports(doc):
     '''
     Gets the number of CAD imports in the model.
 
@@ -399,7 +399,7 @@ def GetNumberOfCADImports(doc):
         pass
     return number
 
-def GetNumberOfCADLinksToModel(doc):
+def get_number_of_cad_links_to_model(doc):
     '''
     Gets the number of CAD links by model in the model.
 
@@ -417,7 +417,7 @@ def GetNumberOfCADLinksToModel(doc):
         pass
     return number
 
-def GetNumberOfCADLinksToView(doc):
+def get_number_of_cad_links_to_view(doc):
     '''
     Gets the number of CAD links by view in the model.
 
@@ -437,7 +437,7 @@ def GetNumberOfCADLinksToView(doc):
 
 # ---------------------------------------------  images  ---------------------------------------------
 
-def GetNumberOfImageImports(doc):
+def get_number_of_image_imports(doc):
     '''
     Gets the number of image imports in the model.
 
@@ -455,7 +455,7 @@ def GetNumberOfImageImports(doc):
         pass
     return number
 
-def GetNumberOfImageLinks(doc):
+def get_number_of_image_links(doc):
     '''
     Gets the number of image links in the model.
 
@@ -475,7 +475,7 @@ def GetNumberOfImageLinks(doc):
 
 # ---------------------------------------------  Families  ---------------------------------------------
 
-def GetNumberOfFamiliesInModel(doc):
+def get_number_of_families(doc):
     '''
     Gets the number of families loaded into the model.
 
@@ -493,7 +493,7 @@ def GetNumberOfFamiliesInModel(doc):
         pass
     return number
 
-def GetNumberOfInPlaceFamiliesInModel(doc):
+def get_number_of_in_place_families(doc):
     '''
     Gets the number of in-place families the model.
 
@@ -513,7 +513,7 @@ def GetNumberOfInPlaceFamiliesInModel(doc):
 
 # ---------------------------------------------  Groups  ---------------------------------------------
 
-def GetNumberOfDetailGroupsInModel(doc):
+def get_number_of_detail_groups(doc):
     '''
     Gets the number of detail group definitions the model.
 
@@ -531,7 +531,7 @@ def GetNumberOfDetailGroupsInModel(doc):
         pass
     return number
 
-def GetNumberOfModelGroupsInModel(doc):
+def get_number_of_model_groups(doc):
     '''
     Gets the number of model group definitions in the model.
 
@@ -549,7 +549,7 @@ def GetNumberOfModelGroupsInModel(doc):
         pass
     return number
 
-def GetNumberOfUnplacedDetailGroupsInModel(doc):
+def get_number_of_unplaced_detail_groups(doc):
     '''
     Gets the number of unplaced detail group definitions in the model.
 
@@ -567,7 +567,7 @@ def GetNumberOfUnplacedDetailGroupsInModel(doc):
         pass
     return number
 
-def GetNumberOfUnplacedModelGroupsInModel(doc):
+def get_number_of_unplaced_model_groups(doc):
     '''
     Gets the number of unplaced model group definitions in the model.
 
@@ -587,7 +587,7 @@ def GetNumberOfUnplacedModelGroupsInModel(doc):
 
 # ---------------------------------------------  Rooms  ---------------------------------------------
 
-def GetNumberOfRoomsInModel(doc):
+def get_number_of_rooms(doc):
     '''
     Gets the number of rooms in the model.
 
@@ -605,7 +605,7 @@ def GetNumberOfRoomsInModel(doc):
         pass
     return number
 
-def GetNumberOfUnplacedRoomsInModel(doc):
+def get_number_of_unplaced_rooms(doc):
     '''
     Gets the number of unplaced rooms in the model.
 
@@ -623,7 +623,7 @@ def GetNumberOfUnplacedRoomsInModel(doc):
         pass
     return number
 
-def GetNumberOfRedundantRoomsInModel(doc):
+def get_number_of_redundant_rooms(doc):
     '''
     Gets the number of redundant rooms in the model.
 
@@ -641,7 +641,7 @@ def GetNumberOfRedundantRoomsInModel(doc):
         pass
     return number
 
-def GetNumberOfNotEnclosedRoomsInModel(doc):
+def get_number_of_not_enclosed_rooms(doc):
     '''
     Gets the not enclosed number of rooms in the model.
 
@@ -661,7 +661,7 @@ def GetNumberOfNotEnclosedRoomsInModel(doc):
 
 # ---------------------------------------------  Detail Items  ---------------------------------------------
 
-def GetNumberOfFilledRegionInModel(doc):
+def get_number_of_filled_regions(doc):
     '''
     Gets the number of filled region instances in the model.
 
@@ -683,41 +683,41 @@ def GetNumberOfFilledRegionInModel(doc):
 # ----------------------------------------------
 
 #set up a named tuple to store data in it
-healthDataAction = namedtuple('healthDataAction', 'getData reportFileName')
+health_data_action = namedtuple('healthDataAction', 'getData reportFileName')
 
 #: List of actions reporting model health metrics and their associated parameter name
 PARAM_ACTIONS = {
-    'ValueWorksets': healthDataAction(GetWorksetNumber, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS),
-    'ValueFileSize': healthDataAction(GetFileSize, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE),
-    'ValueWarnings': healthDataAction(GetNumberOfWarnings, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS),
-    'ValueDesignSets': healthDataAction(GetNumberOfDesignSets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS),
-    'ValueDesignOptions': healthDataAction(GetNumberOfDesignOptions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS),
-    'ValueSheets': healthDataAction(GetNumberOfSheets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS),
-    'ValueViews': healthDataAction(GetViewsInTheModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS),
-    'ValueViewsNotPlaced': healthDataAction(GetUnplacedViews, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED),
-    'ValueLineStyles': healthDataAction(GetNumberOfLineStyles, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES),
-    'ValueLinePatterns': healthDataAction(GetNumberOfLinePatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS),
-    'ValueFillPatterns': healthDataAction(GetNumberOfFillPatterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS),
-    'ValueCADImports': healthDataAction(GetNumberOfCADImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS),
-    'ValueCADLinksToModel': healthDataAction(GetNumberOfCADLinksToModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL),
-    'ValueCADLinksToView': healthDataAction(GetNumberOfCADLinksToView, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW),
-    'ValueImageImports': healthDataAction(GetNumberOfImageImports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS),
-    'ValueImageLinks': healthDataAction(GetNumberOfImageLinks, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS),
-    'ValueFamilies': healthDataAction(GetNumberOfFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES),
-    'ValueFamiliesInPlace': healthDataAction(GetNumberOfInPlaceFamiliesInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE),
-    'ValueModelGroups': healthDataAction(GetNumberOfModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS),
-    'ValueModelGroupsUnplaced': healthDataAction(GetNumberOfUnplacedModelGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED),
-    'ValueDetailGroups': healthDataAction(GetNumberOfDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS),
-    'ValueDetailGroupsUnplaced': healthDataAction(GetNumberOfUnplacedDetailGroupsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED),
-    'ValueRooms': healthDataAction(GetNumberOfRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS),
-    'ValueRoomsUnplaced': healthDataAction(GetNumberOfUnplacedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED),
-    'ValueRoomsNotEnclosed': healthDataAction(GetNumberOfNotEnclosedRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED),
-    'ValueRoomsRedundant': healthDataAction(GetNumberOfRedundantRoomsInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT),
-    'ValueFilledRegions': healthDataAction(GetNumberOfFilledRegionInModel, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS),
-    'ValueDateLastUpdated' : healthDataAction(GetCurrentDate, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED)
+    'ValueWorksets': health_data_action(get_workset_number, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WORKSETS),
+    'ValueFileSize': health_data_action(get_file_size, rFns.PARAM_ACTIONS_FILENAME_FILE_SIZE),
+    'ValueWarnings': health_data_action(get_number_of_warnings, rFns.PARAM_ACTIONS_FILENAME_NO_OF_WARNINGS),
+    'ValueDesignSets': health_data_action(get_number_of_design_sets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_SETS),
+    'ValueDesignOptions': health_data_action(get_number_of_design_options, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DESIGN_OPTIONS),
+    'ValueSheets': health_data_action(get_number_of_sheets, rFns.PARAM_ACTIONS_FILENAME_NO_OF_SHEETS),
+    'ValueViews': health_data_action(get_number_of_views, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS),
+    'ValueViewsNotPlaced': health_data_action(get_number_of_unplaced_views, rFns.PARAM_ACTIONS_FILENAME_NO_OF_VIEWS_NOT_PLACED),
+    'ValueLineStyles': health_data_action(get_number_of_line_styles, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_STYLES),
+    'ValueLinePatterns': health_data_action(get_number_of_line_patterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_LINE_PATTERNS),
+    'ValueFillPatterns': health_data_action(get_number_of_fill_patterns, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILL_PATTERNS),
+    'ValueCADImports': health_data_action(get_number_of_cad_imports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_IMPORTS),
+    'ValueCADLinksToModel': health_data_action(get_number_of_cad_links_to_model, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_MODEL),
+    'ValueCADLinksToView': health_data_action(get_number_of_cad_links_to_view, rFns.PARAM_ACTIONS_FILENAME_NO_OF_CAD_LINKS_VIEW),
+    'ValueImageImports': health_data_action(get_number_of_image_imports, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_IMPORTS),
+    'ValueImageLinks': health_data_action(get_number_of_image_links, rFns.PARAM_ACTIONS_FILENAME_NO_OF_IMAGE_LINKS),
+    'ValueFamilies': health_data_action(get_number_of_families, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES),
+    'ValueFamiliesInPlace': health_data_action(get_number_of_in_place_families, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FAMILIES_IN_PLACE),
+    'ValueModelGroups': health_data_action(get_number_of_model_groups, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS),
+    'ValueModelGroupsUnplaced': health_data_action(get_number_of_unplaced_model_groups, rFns.PARAM_ACTIONS_FILENAME_NO_OF_MODEL_GROUPS_UNPLACED),
+    'ValueDetailGroups': health_data_action(get_number_of_detail_groups, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS),
+    'ValueDetailGroupsUnplaced': health_data_action(get_number_of_unplaced_detail_groups, rFns.PARAM_ACTIONS_FILENAME_NO_OF_DETAIL_GROUPS_UNPLACED),
+    'ValueRooms': health_data_action(get_number_of_rooms, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS),
+    'ValueRoomsUnplaced': health_data_action(get_number_of_unplaced_rooms, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNPLACED),
+    'ValueRoomsNotEnclosed': health_data_action(get_number_of_not_enclosed_rooms, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_UNENCLOSED),
+    'ValueRoomsRedundant': health_data_action(get_number_of_redundant_rooms, rFns.PARAM_ACTIONS_FILENAME_NO_OF_ROOMS_REDUNDANT),
+    'ValueFilledRegions': health_data_action(get_number_of_filled_regions, rFns.PARAM_ACTIONS_FILENAME_NO_OF_FILLED_REGIONS),
+    'ValueDateLastUpdated' : health_data_action(get_current_date, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED)
 }
 
-def UpdateModelHealthTracerFamily(doc, revitFilePath):
+def update_model_health_tracer_family(doc, revitFilePath):
     '''
     Updates instances of model health tracker family in project.
 
@@ -737,10 +737,10 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
 
     revitFileName = util.GetFileNameWithoutExt(revitFilePath)
     resultValue = res.Result()
-    instances = GetInstancesOfModelHealth(doc)
+    instances = get_instances_of_model_health(doc)
     if(len(instances) > 0):
         for instance in instances:
-            updateFlag = GetParametersOfInstance(instance, doc)
+            updateFlag = get_parameters_of_instance(instance, doc)
             resultValue.Update(updateFlag)
     else:
         resultValue.UpdateSep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revitFileName)
@@ -748,7 +748,7 @@ def UpdateModelHealthTracerFamily(doc, revitFilePath):
 
 # doc   current document
 # revitFilePath     path of the current document
-def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
+def write_model_health_report(doc, revitFilePath, outputDirectory):
     '''
     Write out health tracker data to file.
 
@@ -787,7 +787,7 @@ def WriteModelHealthReport(doc, revitFilePath, outputDirectory):
                         key, 
                         dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
                         dateStamp.GetDateStamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
-                        _castParameterValue(parameterValue)
+                        _cast_parameter_value(parameterValue)
                         ]
                     ]
                 )

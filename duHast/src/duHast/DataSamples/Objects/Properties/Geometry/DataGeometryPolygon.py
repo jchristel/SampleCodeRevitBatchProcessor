@@ -30,7 +30,7 @@ import json
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryBase
 
 class DataPolygon(DataGeometryBase.DataGeometryBase):
-    dataType = 'polygons'
+    data_type = 'polygons'
 
     def __init__(self, j = {}):
         '''
@@ -55,16 +55,16 @@ class DataPolygon(DataGeometryBase.DataGeometryBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('outerLoop' in j ):
-                self.outerLoop = j['outerLoop']
+            if('outer_loop' in j ):
+                self.outer_loop = j['outer_loop']
             else:
-                self.outerLoop = []
+                self.outer_loop = []
 
-            if('innerLoops' in j ):
-                self.innerLoops = j['innerLoops']
+            if('inner_loops' in j ):
+                self.inner_loops = j['inner_loops']
             else:
-                self.innerLoops = []
+                self.inner_loops = []
         else:
             # set default values
-            self.outerLoop = []        
-            self.innerLoops = []
+            self.outer_loop = []        
+            self.inner_loops = []

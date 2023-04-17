@@ -205,8 +205,8 @@ def get_shapely_polygons_from_data_instance(data_instance):
 
 #: List of available geometry (from revit to shapely ) converters
 GEOMETRY_CONVERTER = {
-    dr.DataRoom.dataType : get_shapely_polygons_from_data_instance,
-    dc.DataCeiling.dataType: get_shapely_polygons_from_data_instance
+    dr.DataRoom.data_type : get_shapely_polygons_from_data_instance,
+    dc.DataCeiling.data_type: get_shapely_polygons_from_data_instance
 }
  
 def get_shapely_polygons_from_geo_object(geometry_objects, data_type):

@@ -30,7 +30,7 @@ import json
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryBase
 
 class DataTopologyCell(DataGeometryBase.DataGeometryBase):
-    dataType = 'topology cell'
+    data_type = 'topology cell'
 
     def __init__(self, j = {}):
         '''
@@ -41,7 +41,7 @@ class DataTopologyCell(DataGeometryBase.DataGeometryBase):
         '''
 
         # store data type  in base class
-        super(DataTopologyCell, self).__init__(DataTopologyCell.dataType, j)
+        super(DataTopologyCell, self).__init__(DataTopologyCell.data_type, j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):

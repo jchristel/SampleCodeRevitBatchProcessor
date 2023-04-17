@@ -70,13 +70,13 @@ def populate_data_ceiling_object(doc, revit_ceiling):
         data_c.geometry_polygon = ceiling_point_groups_as_doubles
         # get design set data
         design_set_data = rDesignO.get_design_set_option_info(doc, revit_ceiling)
-        data_c.designSetAndOption.design_option_name = design_set_data['designOptionName']
-        data_c.designSetAndOption.design_set_name = design_set_data['designSetName']
-        data_c.designSetAndOption.is_primary = design_set_data['isPrimary']
+        data_c.design_set_and_option.option_name = design_set_data['designOptionName']
+        data_c.design_set_and_option.set_name = design_set_data['designSetName']
+        data_c.design_set_and_option.is_primary = design_set_data['isPrimary']
 
         # get type properties
-        data_c.typeProperties.type_id = revit_ceiling.GetTypeId().IntegerValue
-        data_c.typeProperties.type_name = rdb.Element.Name.GetValue(revit_ceiling).encode('utf-8')
+        data_c.type_properties.type_id = revit_ceiling.GetTypeId().IntegerValue
+        data_c.type_properties.type_name = rdb.Element.Name.GetValue(revit_ceiling).encode('utf-8')
         ceiling_type = doc.GetElement(revit_ceiling.GetTypeId())
 
         # custom parameter value getters
@@ -87,11 +87,11 @@ def populate_data_ceiling_object(doc, revit_ceiling):
             rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
             str(None) : rParaGet.getter_none
         }
-        data_c.typeProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceiling_type, value_getter)
+        data_c.type_properties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(ceiling_type, value_getter)
 
         # get instance properties
-        data_c.instanceProperties.instance_id = revit_ceiling.Id.IntegerValue
-        data_c.instanceProperties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(revit_ceiling, value_getter)
+        data_c.instance_properties.id = revit_ceiling.Id.IntegerValue
+        data_c.instance_properties.properties = rParaGet.get_all_parameters_and_values_wit_custom_getters(revit_ceiling, value_getter)
 
         # get level properties
         data_c.level.level_name = rdb.Element.Name.GetValue(doc.GetElement(revit_ceiling.LevelId)).encode('utf-8')
@@ -100,9 +100,9 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # get the model name
         if(doc.IsDetached):
-            data_c.revitModel.model_name = 'Detached Model'
+            data_c.revit_model.model_name = 'Detached Model'
         else:
-            data_c.revitModel.model_name = doc.Title
+            data_c.revit_model.model_name = doc.Title
 
         # get phasing information
         data_c.phasing.phase_created = rPhase.get_phase_name_by_id(doc, rParaGet.get_built_in_parameter_value(revit_ceiling, rdb.BuiltInParameter.PHASE_CREATED, rParaGet.get_parameter_value_as_element_id)).encode('utf-8')

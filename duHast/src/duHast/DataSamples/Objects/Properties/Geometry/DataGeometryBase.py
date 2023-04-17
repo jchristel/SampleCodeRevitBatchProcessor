@@ -56,18 +56,18 @@ class DataGeometryBase(DataBase.DataBase):
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
             
             # translation as per shared coordinates in revit file
-            if('translationCoord' in j ):
-                self.translationCoord = j['translationCoord']
+            if('translation_coord' in j ):
+                self.translation_coord = j['translation_coord']
             else:
-                self.translationCoord = [0.0, 0.0, 0.0]
+                self.translation_coord = [0.0, 0.0, 0.0]
             
             # rotation as per shared coordinates in revit file
-            if('rotationCoord' in j ):
-                self.rotationCoord = j['rotationCoord']
+            if('rotation_coord' in j ):
+                self.rotation_coord = j['rotation_coord']
             else:
-                self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
+                self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
 
         else:
             # set default values
-            self.translationCoord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
-            self.rotationCoord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file
+            self.translation_coord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
+            self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file

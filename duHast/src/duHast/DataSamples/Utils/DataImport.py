@@ -41,7 +41,7 @@ from duHast.DataSamples.Objects import DataRoom as dr
 
 
 class ReadDataFromFile:
-    def __init__(self, filePath):
+    def __init__(self, file_path):
         '''
         Class constructor.
 
@@ -49,8 +49,8 @@ class ReadDataFromFile:
         :type filePath: str
         '''
 
-        self.dataFilePath = filePath
-        self.dataType = ''
+        self.data_file_path = file_path
+        self.data_type = ''
         self.data = []
 
     def _read_json_file(self, file_path):
@@ -123,18 +123,18 @@ class ReadDataFromFile:
         '''
 
         data_objects = []
-        data_json = self._read_json_file(self.dataFilePath)
+        data_json = self._read_json_file(self.data_file_path)
 
         if(len(data_json) > 0):
             # load rooms {Root}.rooms
-            room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.dataType])
+            room_json = self._get_room_data_from_JSON(data_json[dr.DataRoom.data_type])
 
             # add to global list
             for rj in room_json:
                 data_objects.append(rj)
 
             #load ceiling at {Root}.ceilings
-            ceiling_json = self._get_ceiling_data_from_JSON(data_json[dc.DataCeiling.dataType])
+            ceiling_json = self._get_ceiling_data_from_JSON(data_json[dc.DataCeiling.data_type])
         
             # add to global list
             for cj in ceiling_json:
@@ -153,7 +153,7 @@ class ReadDataFromFile:
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.level.levelName == level_name ) , self.data)))
+        return (list(filter(lambda x: (x.level.name == level_name ) , self.data)))
     
     def get_data_by_type(self, data_type):
         '''
@@ -182,5 +182,5 @@ class ReadDataFromFile:
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.level.levelName == level_name and x.dataType == data_type), self.data)))
+        return (list(filter(lambda x: (x.level.name == level_name and x.dataType == data_type), self.data)))
 

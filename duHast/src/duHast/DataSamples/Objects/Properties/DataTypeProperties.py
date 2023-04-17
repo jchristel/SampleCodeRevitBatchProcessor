@@ -31,7 +31,7 @@ from duHast.DataSamples.Utils import DataBase
 
 class DataTypeProperties(DataBase.DataBase):
 
-    dataType = 'type properties'
+    data_type = 'type properties'
     
     def __init__(self, j = {}):
         '''
@@ -42,7 +42,7 @@ class DataTypeProperties(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataTypeProperties, self).__init__('type properties')
+        super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,15 +56,15 @@ class DataTypeProperties(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('typeName' in j ):
-                self.typeName = j['typeName']
+            if('name' in j ):
+                self.name = j['name']
             else:
-                self.typeName = '-'
+                self.name = '-'
             
-            if('typeId' in j ):
-                self.typeId = j['typeId']
+            if('id' in j ):
+                self.id = j['id']
             else:
-                self.typeId = -1
+                self.id = -1
             
             if('properties' in j ):
                 self.properties = j['properties']
@@ -72,6 +72,6 @@ class DataTypeProperties(DataBase.DataBase):
                 self.properties = {}
 
         else:
-            self.typeName = '-'
-            self.typeId = -1
+            self.name = '-'
+            self.id = -1
             self.properties = {}

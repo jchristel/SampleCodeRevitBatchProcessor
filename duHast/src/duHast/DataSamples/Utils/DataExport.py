@@ -46,7 +46,7 @@ def get_data_from_model(doc):
     - ceilings
 
     :param doc: The current model document.
-    :type doc: Autodeks.Revit.DB.Document
+    :type doc: Autodesk.Revit.DB.Document
 
     :return: A dictionary in format {file name: str, date processed : str, room:[], ceiling:[]}
     :rtype: {}
@@ -59,8 +59,8 @@ def get_data_from_model(doc):
     data_json = {
         "file name": doc.Title,
         "date processed": dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
-        dr.DataRoom.dataType: allRoomData,
-        dc.DataCeiling.dataType: allCeilingData
+        dr.DataRoom.data_type: allRoomData,
+        dc.DataCeiling.data_type: allCeilingData
     }
 
     return data_json

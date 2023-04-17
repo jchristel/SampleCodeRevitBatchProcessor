@@ -55,10 +55,10 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
             pointDouble = rGeo.get_point_as_doubles(xyzPoint)
             innerLoopPoints.append(pointDouble)
         innerLoops.append(innerLoopPoints)
-    dataGeometry.outerLoop = outerLoop
-    dataGeometry.innerLoops = innerLoops
+    dataGeometry.outer_loop = outerLoop
+    dataGeometry.inner_loops = innerLoops
     # add coordinate system translation and rotation data
-    dataGeometry.rotationCoord, dataGeometry.translationCoord = rGeo.get_coordinate_system_translation_and_rotation(doc)
+    dataGeometry.rotation_coord, dataGeometry.translation_coord = rGeo.get_coordinate_system_translation_and_rotation(doc)
     return dataGeometry
 
 def convert_solid_to_flattened_2d_points(solid):
@@ -126,11 +126,11 @@ def convert_solid_to_flattened_2d_points(solid):
                 if x.id == key:
                     keyList = x
                     break
-            dataGeometry.outerLoop = keyList.threeDPoly
+            dataGeometry.outer_loop = keyList.threeDPoly
             if(len(loopDic[key])>0):
                 for hole in loopDic[key]:
-                    dataGeometry.innerLoops.append(hole.threeDPoly)
+                    dataGeometry.inner_loops.append(hole.threeDPoly)
             else:
-                dataGeometry.innerLoops = []
+                dataGeometry.inner_loops = []
             ceilingGeos.append(dataGeometry)
     return ceilingGeos

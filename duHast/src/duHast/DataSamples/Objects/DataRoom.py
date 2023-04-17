@@ -38,7 +38,7 @@ from duHast.DataSamples.Utils import DataBase
 from duHast.DataSamples.Objects.Properties import DataElementGeometry
 
 class DataRoom(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
-    dataType = 'room'
+    data_type = 'room'
     
     def __init__(self, j = {}):
         '''
@@ -49,7 +49,7 @@ class DataRoom(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
         '''
         
         # initialise parent classes with values
-        super(DataRoom, self).__init__(data_type=DataRoom.dataType, j=j)
+        super(DataRoom, self).__init__(data_type=DataRoom.data_type, j=j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -63,40 +63,40 @@ class DataRoom(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
 
-            if ('instanceProperties' in j):
-                self.instanceProperties = DataInstanceProperties.DataInstanceProperties(j['instanceProperties'])
+            if (DataInstanceProperties.DataInstanceProperties.data_type in j):
+                self.instance_properties = DataInstanceProperties.DataInstanceProperties(j[DataInstanceProperties.DataInstanceProperties.data_type])
             else:
-                self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
+                self.instance_properties = DataInstanceProperties.DataInstanceProperties()
 
-            if('designSetAndOption' in j):
-                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption(j['designSetAndOption'])
+            if(DataDesignSetOption.DataDesignSetOption.data_type in j):
+                self.design_set_and_option = DataDesignSetOption.DataDesignSetOption(j[DataDesignSetOption.DataDesignSetOption.data_type])
             else:
-                self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
+                self.design_set_and_option = DataDesignSetOption.DataDesignSetOption()
             
-            if('associatedElements' in j ):
-                self.associatedElements = j['associatedElements']
+            if('associated_elements' in j ):
+                self.associated_elements = j['associated_elements']
             else:
-                self.associatedElements = []
+                self.associated_elements = []
             
-            if('level' in j):
-                self.level = DataLevel.DataLevel(j['level'])
+            if(DataLevel.DataLevel.data_type in j):
+                self.level = DataLevel.DataLevel(j[DataLevel.DataLevel.data_type])
             else:
                 self.level = DataLevel.DataLevel()
 
-            if('revitModel' in j):
-                self.revitModel = DataRevitModel.DataRevitModel(j['revitModel'])
+            if(DataRevitModel.DataRevitModel.data_type in j):
+                self.revit_model = DataRevitModel.DataRevitModel(j[DataRevitModel.DataRevitModel.data_type])
             else:
-                self.revitModel = DataRevitModel.DataRevitModel()  
+                self.revit_model = DataRevitModel.DataRevitModel()  
 
-            if('phasing' in j):
-                self.phasing = DataPhasing.DataPhasing(j['phasing'])
+            if(DataPhasing.DataPhasing.data_type in j):
+                self.phasing = DataPhasing.DataPhasing(j[DataPhasing.DataPhasing.data_type])
             else:
                 self.phasing = DataPhasing.DataPhasing() 
         else:
             # initialise classes with default values
-            self.associatedElements = []
-            self.instanceProperties = DataInstanceProperties.DataInstanceProperties()
+            self.associated_elements = []
+            self.instance_properties = DataInstanceProperties.DataInstanceProperties()
             self.level = DataLevel.DataLevel()
-            self.revitModel = DataRevitModel.DataRevitModel()
+            self.revit_model = DataRevitModel.DataRevitModel()
             self.phasing = DataPhasing.DataPhasing()
-            self.designSetAndOption = DataDesignSetOption.DataDesignSetOption()
+            self.design_set_and_option = DataDesignSetOption.DataDesignSetOption()

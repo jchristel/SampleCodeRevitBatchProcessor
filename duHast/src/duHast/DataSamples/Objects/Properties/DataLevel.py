@@ -31,7 +31,7 @@ from duHast.DataSamples.Utils import DataBase
 
 class DataLevel(DataBase.DataBase):
 
-    dataType = 'level'
+    data_type = 'level'
     
     def __init__(self, j = {}):
         '''
@@ -42,7 +42,7 @@ class DataLevel(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataLevel, self).__init__('level')
+        super(DataLevel, self).__init__(DataLevel.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,21 +56,21 @@ class DataLevel(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('levelName' in j ):
-                self.levelName = j['levelName']
+            if('name' in j ):
+                self.name = j['name']
             else:
-                self.levelName = '-'
+                self.name = '-'
             
-            if('levelId' in j ):
-                self.levelId = j['levelId']
+            if('id' in j ):
+                self.id = j['id']
             else:
-                self.levelId = -1
+                self.id = -1
             
-            if('offsetFromLevel' in j ):
-                self.offsetFromLevel = j['offsetFromLevel']
+            if('offset_from_level' in j ):
+                self.offset_from_level = j['offset_from_level']
             else:
-                self.offsetFromLevel = 0.0
+                self.offset_from_level = 0.0
         else:
-            self.levelName = '-'     
-            self.levelId = -1
-            self.offsetFromLevel = 0.0
+            self.name = '-'     
+            self.id = -1
+            self.offset_from_level = 0.0

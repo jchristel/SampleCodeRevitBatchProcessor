@@ -76,13 +76,13 @@ def get_points_from_room_boundaries(boundaryLoops):
                 p = segment.GetCurve().GetEndPoint(0)
                 loopPoints.append(p)
             if(loopCounter == 0):
-                data_geo_polygon.outerLoop = loopPoints
+                data_geo_polygon.outer_loop = loopPoints
             else:
-                data_geo_polygon.innerLoops.append(loopPoints)
+                data_geo_polygon.inner_loops.append(loopPoints)
                 hasInnerLoops = True
             loopCounter += 1
     if (not hasInnerLoops):
-        data_geo_polygon.innerLoops = []
+        data_geo_polygon.inner_loops = []
     return data_geo_polygon
 
 

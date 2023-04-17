@@ -31,7 +31,7 @@ from duHast.DataSamples.Utils import DataBase
 
 class DataRevitModel(DataBase.DataBase):
     
-    dataType = 'revit model'
+    data_type = 'revit model'
 
     def __init__(self, j = {}):
         '''
@@ -42,7 +42,7 @@ class DataRevitModel(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataRevitModel, self).__init__('revit model')
+        super(DataRevitModel, self).__init__(DataRevitModel.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,9 +56,9 @@ class DataRevitModel(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('modelName' in j ):
-                self.modelName = j['modelName']
+            if('name' in j ):
+                self.name = j['name']
             else:
-                self.modelName = '-'
+                self.name = '-'
         else:
-            self.modelName = '-'     
+            self.name = '-'     

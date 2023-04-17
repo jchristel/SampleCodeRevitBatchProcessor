@@ -31,7 +31,7 @@ from duHast.DataSamples.Utils import DataBase
 
 class DataPhasing(DataBase.DataBase):
     
-    dataType = 'phasing'
+    data_type = 'phasing'
 
     def __init__(self, j = {}):
         '''
@@ -42,7 +42,7 @@ class DataPhasing(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataPhasing, self).__init__('phasing')
+        super(DataPhasing, self).__init__(DataPhasing.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,15 +56,15 @@ class DataPhasing(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('phaseCreated' in j ):
-                self.phaseCreated = j['phaseCreated']
+            if('created' in j ):
+                self.created = j['created']
             else:
-                self.phaseCreated = '-'
+                self.created = '-'
             
-            if('phaseDemolished' in j ):
-                self.phaseDemolished = j['phaseDemolished']
+            if('demolished' in j ):
+                self.demolished = j['demolished']
             else:
-                self.phaseDemolished = '-'
+                self.demolished = '-'
         else:
-            self.phaseCreated = '-'     
-            self.phaseDemolished = '-'
+            self.created = '-'     
+            self.demolished = '-'

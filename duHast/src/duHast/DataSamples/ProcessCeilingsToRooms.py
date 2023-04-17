@@ -139,8 +139,8 @@ def _build_dictionary_by_level_and_data_type(dataReader):
     dic = {}
     for dObject in dataReader.data:
         if(dObject.level.levelName not in dic):
-            roomsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dr.DataRoom.dataType)
-            ceilingsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dc.DataCeiling.dataType)
+            roomsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dr.DataRoom.data_type)
+            ceilingsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dc.DataCeiling.data_type)
             dic[dObject.level.levelName] = (roomsByLevel, ceilingsByLevel)
     return dic
 
@@ -196,7 +196,7 @@ def _convert_object_data_into_report_data(dic_object, room_instance_property_key
             associatedDataRows = []
             for associatedElement in room.associatedElements:
                 # only add ceiling data for now
-                if(associatedElement.dataType == dc.DataCeiling.dataType):
+                if(associatedElement.dataType == dc.DataCeiling.data_type):
                     associatedDataRow = [
                         associatedElement.level.levelName,
                         room.revitModel.modelName,
@@ -397,18 +397,18 @@ def get_ceilings_by_room(data_source_path):
                 if(len(data_objects[level_name][1]) > 0):
                     polygons_by_type = {}
                     # convert geometry data off all rooms and ceilings into dictionaries : key is Revit element id, values are shapely polygons
-                    room_polygons = dToS.get_shapely_polygons_from_geo_object(data_objects[level_name][0], dr.DataRoom.dataType)
-                    ceiling_polygons = dToS.get_shapely_polygons_from_geo_object(data_objects[level_name][1], dc.DataCeiling.dataType)
-                    polygons_by_type[dr.DataRoom.dataType] = room_polygons
-                    polygons_by_type[dc.DataCeiling.dataType] = ceiling_polygons
+                    room_polygons = dToS.get_shapely_polygons_from_geo_object(data_objects[level_name][0], dr.DataRoom.data_type)
+                    ceiling_polygons = dToS.get_shapely_polygons_from_geo_object(data_objects[level_name][1], dc.DataCeiling.data_type)
+                    polygons_by_type[dr.DataRoom.data_type] = room_polygons
+                    polygons_by_type[dc.DataCeiling.data_type] = ceiling_polygons
                     # loop over rooms ids and find intersecting ceilings
-                    for room_poly_id in polygons_by_type[dr.DataRoom.dataType]:
+                    for room_poly_id in polygons_by_type[dr.DataRoom.data_type]:
                         # check if valid room poly ( just in case that is a room in schedule only >> not placed in model , or unbound, or overlapping with other room)
                         if(len(room_polygons[room_poly_id]) > 0):
                             # loop over each room polygon per room...there should only be one...
                             for room_polygon in room_polygons[room_poly_id]:
                                 # find overlapping ceiling polygons
-                                for ceiling_poly_id in polygons_by_type[dc.DataCeiling.dataType]:
+                                for ceiling_poly_id in polygons_by_type[dc.DataCeiling.data_type]:
                                     for ceiling_polygon in ceiling_polygons[ceiling_poly_id]:
                                         return_value.Update(   
                                             _intersect_ceiling_vs_room(

@@ -30,7 +30,7 @@ import json
 from duHast.DataSamples.Utils import DataBase
 
 class DataDesignSetOption(DataBase.DataBase):
-    dataType = 'design set'
+    data_type = 'design set'
 
     def __init__(self, j = {}):
         '''
@@ -41,7 +41,7 @@ class DataDesignSetOption(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataDesignSetOption, self).__init__('design set')
+        super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
 
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,21 +56,21 @@ class DataDesignSetOption(DataBase.DataBase):
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
             if('designSetName' in j ):
-                self.designSetName = j['designSetName']
+                self.set_name = j['designSetName']
             else:
-                self.designSetName = '-'
+                self.set_name = '-'
         
             if('designOptionName' in j ):
-                self.designOptionName = j['designOptionName']
+                self.option_name = j['designOptionName']
             else:
-                self.designOptionName = '-'
+                self.option_name = '-'
 
             if('isPrimary' in j ):
-                self.isPrimary = j['isPrimary']
+                self.is_primary = j['isPrimary']
             else:
-                self.isPrimary = True
+                self.is_primary = True
         else:
             # set default values
-            self.designSetName = '-'
-            self.designOptionName = '-'
-            self.isPrimary = True
+            self.set_name = '-'
+            self.option_name = '-'
+            self.is_primary = True

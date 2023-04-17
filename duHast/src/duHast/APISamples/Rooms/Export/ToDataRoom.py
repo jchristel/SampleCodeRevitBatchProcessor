@@ -60,15 +60,15 @@ def populate_data_room_object(doc, revitRoom):
         for roomPointGroupByPoly in revitGeometryPointGroups:
             dataGeometryConverted = rGeo.convert_xyz_in_data_geometry_polygons(doc, roomPointGroupByPoly)
             roomPointGroupsAsDoubles.append(dataGeometryConverted)
-        dataR.geometryPolygon = roomPointGroupsAsDoubles
+        dataR.polygon = roomPointGroupsAsDoubles
         # get design set data
         design_set_data = rDesignO.get_design_set_option_info(doc, revitRoom)
-        dataR.designSetAndOption.designOptionName = design_set_data['designOptionName']
-        dataR.designSetAndOption.designSetName = design_set_data['designSetName']
-        dataR.designSetAndOption.isPrimary = design_set_data['isPrimary']
+        dataR.design_set_and_option.option_name = design_set_data['designOptionName']
+        dataR.design_set_and_option.set_name = design_set_data['designSetName']
+        dataR.design_set_and_option.is_primary = design_set_data['isPrimary']
 
         # get instance properties
-        dataR.instanceProperties.instanceId=revitRoom.Id.IntegerValue
+        dataR.instance_properties.id=revitRoom.Id.IntegerValue
         # custom parameter value getters
         value_getter = {
             rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter,
@@ -77,28 +77,28 @@ def populate_data_room_object(doc, revitRoom):
             rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
             str(None) : rParaGet.getter_none
         }
-        dataR.instanceProperties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
+        dataR.instance_properties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
 
         # get the model name
         if(doc.IsDetached):
-            dataR.revitModel.modelName = 'Detached Model'
+            dataR.revit_model.name = 'Detached Model'
         else:
-            dataR.revitModel.modelName = doc.Title
+            dataR.revit_model.name = doc.Title
 
         # get phase name
-        dataR.phasing.phaseCreated = rPhase.get_phase_name_by_id(
+        dataR.phasing.created = rPhase.get_phase_name_by_id(
             doc,
             rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)
             ).encode('utf-8')
-        dataR.phasing.phaseDemolished = -1
+        dataR.phasing.demolished = -1
 
         # get level data
         try:
-            dataR.level.levelName = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
-            dataR.level.levelId = revitRoom.Level.Id.IntegerValue
+            dataR.level.name = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
+            dataR.level.id = revitRoom.Level.Id.IntegerValue
         except:
-            dataR.level.levelName = 'no level'
-            dataR.level.levelId = -1
+            dataR.level.name = 'no level'
+            dataR.level.id = -1
         return dataR
 
     else:

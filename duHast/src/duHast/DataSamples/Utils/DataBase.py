@@ -42,7 +42,7 @@ class DataBase(Base.Base):
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
         super(DataBase, self).__init__(**kwargs)  
-        self.dataType = data_type
+        self.data_type = data_type
     
     @property
     def DataType(self):
@@ -53,4 +53,4 @@ class DataBase(Base.Base):
         :rtype: str
         '''
 
-        return self.dataType
+        return self.data_type

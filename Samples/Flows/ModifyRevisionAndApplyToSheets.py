@@ -132,7 +132,7 @@ def get_sheets(doc, sheet_filter_rules):
     revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
     for file_name, sheet_rules in sheet_filter_rules:
         if (revit_file_name.startswith(file_name)):
-            results = rSheetView.GetSheetsByFilters(doc, sheet_rules)
+            results = rSheetView.get_sheets_by_filters(doc, sheet_rules)
             break
     return results
 
@@ -167,7 +167,7 @@ def mark_revisions_as_issued(doc, revIds):
     ids_to_be_marked_issued = set(revIds).intersection(revisions_in_model)
     for id in ids_to_be_marked_issued:
         # set revision status to issued
-        result_set_to_issued = rRev.MarkRevisionAsIssuedByRevisionId(doc, id)
+        result_set_to_issued = rRev.mark_revision_as_issued_by_revision_id(doc, id)
         return_value.Update(result_set_to_issued)
     return return_value
 
@@ -199,7 +199,7 @@ def add_revision_to_document(doc):
     try:
         for rev in REVISIONS_TO_ADD:
             # create new revision
-            new_rev_status = rRev.CreateRevision(doc, rev)
+            new_rev_status = rRev.create_revision(doc, rev)
             if(new_rev_status.status):
                 # append to existing revisions
                 newRev = new_rev_status.result[0]
@@ -250,7 +250,7 @@ def add_revisions_to_sheets_required(doc, sheet_filter_rules):
                 if (revit_file_name.startswith(file_name)):
                     # add revisions to sheets:
                     for sheet in sheets_in_model_filtered:
-                        result_add_revisions_to_sheet = rRev.AddRevisionsToSheet(doc, sheet, revIds)
+                        result_add_revisions_to_sheet = rRev.add_revisions_to_sheet(doc, sheet, revIds)
                         return_value.Update(result_add_revisions_to_sheet)
             # set revisions as issued
             result_mark_as_issued = mark_revisions_as_issued(doc, revIds)

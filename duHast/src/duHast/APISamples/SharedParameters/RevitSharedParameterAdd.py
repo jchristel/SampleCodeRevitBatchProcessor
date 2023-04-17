@@ -15,7 +15,7 @@ from duHast.Utilities import Result as res
 # import InTransaction from common module
 from duHast.APISamples.Common import RevitTransaction as rTran
 
-def LoadSharedParameterFile(doc, path):
+def load_shared_parameter_file(doc, path):
     '''
     Loads a shared parameter file.
 
@@ -32,7 +32,7 @@ def LoadSharedParameterFile(doc, path):
     app.SharedParametersFilename = path
     return app.OpenSharedParameterFile()
 
-def BindSharedParameter(doc, category, parameterName, groupName, parameterType, isVisible, isInstance, parameterGrouping, sharedParameterFilepath):
+def bind_shared_parameter(doc, category, parameterName, groupName, parameterType, isVisible, isInstance, parameterGrouping, sharedParameterFilepath):
     '''
     Binds a shared parameter to a revit category.
 
@@ -133,7 +133,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
 
             # If here, there is no Binding Definition for 
             # it, so make sure Param defined and then bind it!
-            defFile = LoadSharedParameterFile(doc,sharedParameterFilepath)
+            defFile = load_shared_parameter_file(doc,sharedParameterFilepath)
             defGroup = defFile.Groups.get_Item(groupName)
             if defGroup == None:
                 defGroup = defFile.Groups.Create(groupName)
@@ -191,7 +191,7 @@ def BindSharedParameter(doc, category, parameterName, groupName, parameterType, 
         returnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
     return returnValue
 
-def AddSharedParameterToFamily(para, mgr, doc, defFile):
+def add_shared_parameter_to_family(para, mgr, doc, defFile):
     '''
     Adds a shared parameter definition to a family document.
 

@@ -30,7 +30,7 @@ from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Walls import RevitCurtainWallElements as rCurtainWallElem
 
-def GetUsedCurtainWallElementTypeIds(doc):
+def get_used_curtain_wall_element_type_ids(doc):
     '''
     Gets all used Curtain Wall Element element type ids available in model.
     Used: at least one instance of this type is placed in the model.
@@ -43,10 +43,10 @@ def GetUsedCurtainWallElementTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.get_all_curtain_wall_element_type_ids_by_category, 1)
     return ids
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -65,7 +65,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
             break
     return match
 
-def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
+def get_unused_non_symbol_curtain_wall_element_type_ids_to_purge(doc):
     '''
     Gets all unused Curtain Wall Element element type ids which can be safely deleted from the model.
     This method can be used to safely delete unused in curtain wall element types. There is no requirement by Revit to have at least one\
@@ -77,11 +77,11 @@ def GetUnusedNonSymbolCurtainWallElementTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.GetAllCurtainWallElementTypeIdsByCategoryExclSymbols, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.get_all_curtain_wall_element_type_ids_by_category_excl_symbols, 0)
     # unlike other element types, here I do NOT make sure there is at least on curtain wall element type per system family left in model!!
     return ids
 
-def GetUsedCurtainWallSymbolIds(doc):
+def get_used_curtain_wall_symbol_ids(doc):
     '''
     Gets a list of all used loadable, non shared, family symbols (types) in the model of categories:
     - curtain wall panels
@@ -93,10 +93,10 @@ def GetUsedCurtainWallSymbolIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.get_all_curtain_wall_non_shared_symbol_ids_by_category, 1)
     return ids
 
-def GetUnusedCurtainWallSymbolIds(doc):
+def get_unused_curtain_wall_symbol_ids(doc):
     '''
     Gets a list of all used loadable, non shared, family symbols (types) in the model of categories:
     - curtain wall panels
@@ -108,10 +108,10 @@ def GetUnusedCurtainWallSymbolIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.GetAllCurtainWallNonSharedSymbolIdsByCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.get_all_curtain_wall_non_shared_symbol_ids_by_category, 0)
     return ids
 
-def GetUnusedICurtainWallSymbolIdsForPurge(doc):
+def get_unused_curtain_wall_symbol_ids_for_purge(doc):
     '''
     Gets symbol(type) ids and family ids (when no type is in use) of curtain wall element families which can be safely deleted from the model.
     This method can be used to safely delete unused curtain wall element types. There is no requirement by Revit to have at least one\
@@ -122,5 +122,5 @@ def GetUnusedICurtainWallSymbolIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedCurtainWallSymbolIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_curtain_wall_symbol_ids)
     return ids

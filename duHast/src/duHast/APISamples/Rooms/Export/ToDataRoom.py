@@ -31,11 +31,11 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO, RevitElementParameterGetUtils as rParaGet, RevitPhases as rPhase
 from duHast.DataSamples.Objects import DataRoom as dRoom
 from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
-from duHast.APISamples.Rooms.RevitRooms import GetAllRooms
-from duHast.APISamples.Rooms.Geometry.Geometry import Get2DPointsFromRevitRoom
+from duHast.APISamples.Rooms.RevitRooms import get_all_rooms
+from duHast.APISamples.Rooms.Geometry.Geometry import get_2d_points_from_revit_room
 
 
-def PopulateDataRoomObject(doc, revitRoom):
+def populate_data_room_object(doc, revitRoom):
     '''
     Returns a custom room data objects populated with some data from the revit model room past in.
     data points:
@@ -54,7 +54,7 @@ def PopulateDataRoomObject(doc, revitRoom):
     # set up data class object
     dataR = dRoom.DataRoom()
     # get room geometry (boundary points)
-    revitGeometryPointGroups = Get2DPointsFromRevitRoom(revitRoom)
+    revitGeometryPointGroups = get_2d_points_from_revit_room(revitRoom)
     if(len(revitGeometryPointGroups) > 0):
         roomPointGroupsAsDoubles = []
         for roomPointGroupByPoly in revitGeometryPointGroups:
@@ -105,7 +105,7 @@ def PopulateDataRoomObject(doc, revitRoom):
         return None
 
 
-def GetAllRoomData(doc):
+def get_all_room_data(doc):
     '''
     Returns a list of room data objects for each room in the model.
     :param doc: Current Revit model document.
@@ -115,9 +115,9 @@ def GetAllRoomData(doc):
     '''
 
     allRoomData = []
-    rooms = GetAllRooms(doc)
+    rooms = get_all_rooms(doc)
     for room in rooms:
-        rd = PopulateDataRoomObject(doc, room)
+        rd = populate_data_room_object(doc, room)
         if(rd is not None):
             allRoomData.append(rd)
     return allRoomData

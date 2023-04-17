@@ -29,7 +29,7 @@ This module contains a Revit roofs utility functions.
 from duHast.APISamples.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 
 
-def BuildRoofTypeDictionary(collector, dic):
+def build_roof_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -50,7 +50,7 @@ def BuildRoofTypeDictionary(collector, dic):
     return dic
 
 
-def SortRoofTypesByFamilyName(doc):
+def sort_roof_types_by_family_name(doc):
     '''
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -65,6 +65,6 @@ def SortRoofTypesByFamilyName(doc):
     # get all roof types including in place roof families
     rts_two = rRoofFilter._get_all_roof_types_by_category(doc)
     usedRts = {}
-    usedRts = BuildRoofTypeDictionary(rts, usedRts)
-    usedRts = BuildRoofTypeDictionary(rts_two, usedRts)
+    usedRts = build_roof_type_dictionary(rts, usedRts)
+    usedRts = build_roof_type_dictionary(rts_two, usedRts)
     return usedRts

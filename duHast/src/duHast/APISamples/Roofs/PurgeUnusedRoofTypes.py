@@ -28,12 +28,12 @@ This module contains a number of helper functions relating to purging Revit roof
 
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
-from duHast.APISamples.Roofs.RevitRoofs import GetAllInPlaceRoofTypeIdsInModel, GetAllRoofTypeIdsInModelByClass, GetAllRoofTypeIdsInModelByCategory
+from duHast.APISamples.Roofs.RevitRoofs import get_all_in_place_roof_type_ids, get_all_roof_type_ids_by_class, get_all_roof_type_ids_by_category
 from duHast.APISamples.Roofs.Utility.RevitRoofsFamilyNames import BUILTIN_ROOF_TYPE_FAMILY_NAMES
-from duHast.APISamples.Roofs.Utility.RevitRoofsTypeSorting import SortRoofTypesByFamilyName
+from duHast.APISamples.Roofs.Utility.RevitRoofsTypeSorting import sort_roof_types_by_family_name
 
 
-def GetUsedRoofTypeIds(doc):
+def get_used_roof_type_ids(doc):
     '''
     Gets all used in Roof type ids in the model.
     Used: at least one instance of this type is placed in the model.
@@ -43,11 +43,11 @@ def GetUsedRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRoofTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_roof_type_ids_by_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first lists) are in use in a model (second list).
@@ -68,7 +68,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
+def get_unused_non_in_place_roof_type_ids_to_purge(doc):
     '''
     Gets all unused Roof type ids in the model.
     This method can be used to safely delete unused roof types. In the case that no roof\
@@ -86,18 +86,18 @@ def GetUnusedNonInPlaceRoofTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRoofTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_roof_type_ids_by_class, 0)
     # make sure there is at least on Roof type per system family left in model
-    RoofTypes = SortRoofTypesByFamilyName(doc)
+    RoofTypes = sort_roof_types_by_family_name(doc)
     for key, value in RoofTypes.items():
         if(key in BUILTIN_ROOF_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 
-def GetUsedInPlaceRoofTypeIds(doc):
+def get_used_in_place_roof_type_ids(doc):
     '''
     Gets all used in place roof type ids in the model.
     Used: at least one instance of this type is placed in the model.
@@ -107,11 +107,11 @@ def GetUsedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRoofTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_in_place_roof_type_ids, 1)
     return ids
 
 
-def GetUnusedInPlaceRoofTypeIds(doc):
+def get_unused_in_place_roof_type_ids(doc):
     '''
     Gets all unused in place roof type ids in the model.
     Unused: Not one instance of this type is placed in the model.
@@ -121,11 +121,11 @@ def GetUnusedInPlaceRoofTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRoofTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_in_place_roof_type_ids, 0)
     return ids
 
 
-def GetUnusedInPlaceRoofIdsForPurge(doc):
+def get_unused_in_place_roof_type_ids_for_purge(doc):
     '''
     Gets symbol(type) ids and family ids (when no type is in use of a family) of in place Roof families which can be purged.
     This method can be used to safely delete unused in place roof types.
@@ -135,5 +135,5 @@ def GetUnusedInPlaceRoofIdsForPurge(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceRoofTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_in_place_roof_type_ids)
     return ids

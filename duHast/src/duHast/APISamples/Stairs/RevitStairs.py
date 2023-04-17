@@ -38,7 +38,7 @@ import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
 
-def GetAllStairTypesByCategory(doc):
+def get_all_stair_types_by_category(doc):
     '''
     Gets a filtered element collector of all Stair types in the model.
 
@@ -59,7 +59,7 @@ def GetAllStairTypesByCategory(doc):
     collector = rStairsFilter._get_all_stair_types_by_category(doc)
     return collector
 
-def GetStairTypesByClass(doc):
+def get_all_stair_types_by_class(doc):
     '''
     Gets a filtered element collector of all Stair types in the model.
 
@@ -83,7 +83,7 @@ def GetStairTypesByClass(doc):
 
 # -------------------------------- none in place Stair types -------------------------------------------------------
 
-def GetAllStairInstancesInModelByCategory(doc):
+def get_all_stair_instances_by_category(doc):
     '''
     Gets a filtered element collector of all Stair elements placed in model.
 
@@ -98,7 +98,7 @@ def GetAllStairInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsNotElementType()
     
-def GetAllStairInstancesInModelByClass(doc):
+def get_all_stair_instances_by_class(doc):
     '''
     Gets a filtered element collection all Stair elements placed in model...
     
@@ -113,7 +113,7 @@ def GetAllStairInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbA.Stairs).WhereElementIsNotElementType()
 
-def GetAllStairTypeIdsInModelByCategory(doc):
+def get_all_stair_type_ids_by_category(doc):
     '''
     Gets all Stair element type ids available in model.
 
@@ -125,11 +125,11 @@ def GetAllStairTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllStairTypesByCategory(doc)
+    colCat = get_all_stair_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllStairTypeIdsInModelByClass(doc):
+def get_all_stair_type_ids_by_class(doc):
     '''
     Gets all Stair element type ids available in model.
 
@@ -143,13 +143,13 @@ def GetAllStairTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetStairTypesByClass(doc)
+    colClass = get_all_stair_types_by_class(doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------
 
-def GetInPlaceStairFamilyInstances(doc):
+def get_in_place_stair_family_instances(doc):
     '''
     Gets all instances in place families of category stair.
 
@@ -163,7 +163,7 @@ def GetInPlaceStairFamilyInstances(doc):
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Stairs)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceStairTypeIdsInModel(doc):
+def get_all_in_place_stair_type_ids(doc):
     '''
     Gets all type ids off all available in place families of category stair.
 

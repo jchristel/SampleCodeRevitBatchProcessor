@@ -28,7 +28,7 @@ This module contains the hRevit shared parameter report functionality.
 
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.SharedParameters.RevitSharedParameters import GetAllSharedParameters, ParamBindingExists
+from duHast.APISamples.SharedParameters.RevitSharedParameters import get_all_shared_parameters, param_binding_exists
 
 
 def GetSharedParameterReportData(doc, revitFilePath):
@@ -43,13 +43,13 @@ def GetSharedParameterReportData(doc, revitFilePath):
     '''
 
     data = []
-    paras = GetAllSharedParameters(doc)
+    paras = get_all_shared_parameters(doc)
     for p in paras:
         parameterDefinition = p.GetDefinition()
         parameterBindings = []
         # parameter bindings do not exist in a family document
         if(doc.IsFamilyDocument == False):
-            parameterBindings = ParamBindingExists(doc, rdb.Element.Name.GetValue(p), parameterDefinition.ParameterType)
+            parameterBindings = param_binding_exists(doc, rdb.Element.Name.GetValue(p), parameterDefinition.ParameterType)
 
         # just in case parameter name is not unicode
         parameterName = 'unknown'

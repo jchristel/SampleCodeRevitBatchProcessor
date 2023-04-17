@@ -33,7 +33,7 @@ from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
-def GetSheetsByFilters(doc, viewRules = None):
+def get_sheets_by_filters(doc, viewRules = None):
     '''
     Gets sheets matching filters provided
     :param doc: Current Revit model document.
@@ -63,7 +63,7 @@ def GetSheetsByFilters(doc, viewRules = None):
     return views
 
 
-def GetSheetsInModel(doc):
+def get_all_sheets(doc):
     '''
     Gets all sheets in a model
     :param doc: Current Revit model document.
@@ -74,7 +74,7 @@ def GetSheetsInModel(doc):
 
     return _get_view_types(doc, rdb.ViewType.DrawingSheet)
 
-def GetSheetRevByNumber(
+def get_sheet_rev_by_sheet_number(
     doc,
     sheetNumber # type: str
     ):
@@ -102,7 +102,7 @@ def GetSheetRevByNumber(
     return revValue
 
 
-def GetSheetRevByName(
+def get_sheet_rev_by_sheet_name(
     doc,
     sheetName # type: str
     ):

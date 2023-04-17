@@ -120,7 +120,7 @@ def export_3d_views_to_ifc_default(doc, viewFilter, ifcExportOption, directoryPa
     returnValue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsOfType(doc, rdb.ViewType.ThreeD)
+    views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)
@@ -194,7 +194,7 @@ def export_3d_views_to_ifc(doc, viewFilter, ifcExportOption, directoryPath, ifcC
     returnValue = res.Result()
     viewsToExport = []
     # get all 3D views in model and filter out views to be exported
-    views = rView.GetViewsOfType(doc, rdb.ViewType.ThreeD)
+    views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
     for v in views:
         if(v.Name.lower().startswith(viewFilter.lower())):
             viewsToExport.append(v)

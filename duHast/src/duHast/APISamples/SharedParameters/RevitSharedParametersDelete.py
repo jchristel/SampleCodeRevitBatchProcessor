@@ -29,11 +29,11 @@ This module contains a number of helper functions relating to deleting Revit sha
 import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res, Utility as util
-from duHast.APISamples.SharedParameters.RevitSharedParameters import CheckWhetherSharedParametersAreInFile, GetAllSharedParameters
+from duHast.APISamples.SharedParameters.RevitSharedParameters import check_whether_shared_parameters_are_in_file, get_all_shared_parameters
 from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 
-def DeleteSharedParameterByName(doc, sharedParameterName):
+def delete_shared_parameter_by_name(doc, sharedParameterName):
     '''
     Deletes a single shared parameter based on a name provided.
     param doc: Current Revit model document.
@@ -53,7 +53,7 @@ def DeleteSharedParameterByName(doc, sharedParameterName):
     '''
 
     returnValue = res.Result()
-    paras = GetAllSharedParameters(doc)
+    paras = get_all_shared_parameters(doc)
     deleteIds = []
     parameterName = 'Unknown'
     for p in paras:
@@ -69,7 +69,7 @@ def DeleteSharedParameterByName(doc, sharedParameterName):
     return returnValue
 
 
-def DeleteSharedParameterByGUID(doc, guid):
+def delete_shared_parameter_by_guid(doc, guid):
     '''
     Deletes a single shared parameter based on a guid provided.
     :param doc: Current Revit model document.
@@ -89,7 +89,7 @@ def DeleteSharedParameterByGUID(doc, guid):
     '''
 
     returnValue = res.Result()
-    paras = GetAllSharedParameters(doc)
+    paras = get_all_shared_parameters(doc)
     deleteIds = []
     parameterName = 'Unknown'
     for p in paras:
@@ -105,7 +105,7 @@ def DeleteSharedParameterByGUID(doc, guid):
     return returnValue
 
 
-def DeleteSharedParameters(doc, parameterGUIDs):
+def delete_shared_parameters(doc, parameterGUIDs):
     '''
     Deletes shared parameters by GUID from document.
     :param doc: Current Revit model document.
@@ -124,10 +124,10 @@ def DeleteSharedParameters(doc, parameterGUIDs):
 
     returnValue = res.Result()
     oneGotDeleted = False
-    deleteGUIDs = CheckWhetherSharedParametersAreInFile(doc, parameterGUIDs)
+    deleteGUIDs = check_whether_shared_parameters_are_in_file(doc, parameterGUIDs)
     if(len(deleteGUIDs) > 0):
         for deleteGuid in  deleteGUIDs:
-            deleteStatus = DeleteSharedParameterByGUID(doc, deleteGuid)
+            deleteStatus = delete_shared_parameter_by_guid(doc, deleteGuid)
             # preserve TRUE value!
             if(deleteStatus.status == True):
                 oneGotDeleted = True

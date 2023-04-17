@@ -37,7 +37,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllSharedParameters(doc):  
+def get_all_shared_parameters(doc):  
     '''
     Gets all shared parameters in a model
 
@@ -51,7 +51,7 @@ def GetAllSharedParameters(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.SharedParameterElement)
     return collector
 
-def GetFamilySharedParameters(doc):
+def get_family_shared_parameters(doc):
     '''
     Gets all family parameters which are shared parameters.
 
@@ -77,7 +77,7 @@ def GetFamilySharedParameters(doc):
         raise Exception("Document is not a family document.")
     return sharedFamParas
 
-def GetFamilyParameters(doc):
+def get_family_parameters(doc):
     '''
     Gets all family parameters.
 
@@ -100,7 +100,7 @@ def GetFamilyParameters(doc):
 
 # ------------------------------------------------------- parameter utilities --------------------------------------------------------------------
 
-def CheckWhetherSharedParametersAreInFile(doc, parameterGUIDs):
+def check_whether_shared_parameters_are_in_file(doc, parameterGUIDs):
     '''
     Filters the past in list of shared parameter GUIDs by using the shared parameters in the document.
         Only parameter in both will be returned.
@@ -115,13 +115,13 @@ def CheckWhetherSharedParametersAreInFile(doc, parameterGUIDs):
     '''
 
     filteredGUIDs = []
-    paras = GetAllSharedParameters(doc)
+    paras = get_all_shared_parameters(doc)
     for p in paras:
         if(p.GuidValue.ToString() in parameterGUIDs):
             filteredGUIDs.append(p.GuidValue.ToString())
     return filteredGUIDs
 
-def CheckWhetherSharedParameterByNameIsFamilyParameter(doc, parameterName):
+def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameterName):
     '''
     Checks, by name, whether a shared parameter exists as a family parameter in a family.
 
@@ -135,7 +135,7 @@ def CheckWhetherSharedParameterByNameIsFamilyParameter(doc, parameterName):
     '''
 
     para = None
-    paras = GetFamilyParameters(doc)
+    paras = get_family_parameters(doc)
     for famPara in paras:
         if(famPara.Definition.Name == parameterName):
             try:
@@ -147,7 +147,7 @@ def CheckWhetherSharedParameterByNameIsFamilyParameter(doc, parameterName):
                 pass
     return para
 
-def IsSharedParameterDefinitionUsed(doc, sharedPara):
+def is_shared_parameter_definition_used(doc, sharedPara):
     '''
     Tests if a shared parameter GUID is used by a family parameter.
 
@@ -160,7 +160,7 @@ def IsSharedParameterDefinitionUsed(doc, sharedPara):
     :rtype: bool
     '''
 
-    famSharedParas = GetFamilySharedParameters(doc)
+    famSharedParas = get_family_shared_parameters(doc)
     match = False
     for famSharedPara in famSharedParas:
         if(famSharedPara.GUID == sharedPara.GuidValue):
@@ -168,7 +168,7 @@ def IsSharedParameterDefinitionUsed(doc, sharedPara):
             break
     return match
 
-def GetUnusedSharedParameterDefinitions(doc):
+def get_unused_shared_parameter_definitions(doc):
     '''
     Returns all unused shard parameter definitions in a family document.
 
@@ -181,8 +181,8 @@ def GetUnusedSharedParameterDefinitions(doc):
     :rtype: [Autodesk.Revit.DB.SharedParameterElement]
     '''
 
-    famSharedParas = GetFamilySharedParameters(doc)
-    sharedParas = GetAllSharedParameters(doc)
+    famSharedParas = get_family_shared_parameters(doc)
+    sharedParas = get_all_shared_parameters(doc)
     unusedSharedParameterDefinition = []
     for sharedPara in sharedParas:
         match = False
@@ -194,7 +194,7 @@ def GetUnusedSharedParameterDefinitions(doc):
             unusedSharedParameterDefinition.append(sharedPara)
     return unusedSharedParameterDefinition
 
-def GetSharedParameterDefinition(parameterName, defFile):
+def get_shared_parameter_definition(parameterName, defFile):
     '''
     Returns a shared parameter definition from a shared parameter file.
 
@@ -227,7 +227,7 @@ def GetSharedParameterDefinition(parameterName, defFile):
 
 # ------------------------------------------------------- parameter reporting --------------------------------------------------------------------
 
-def ParamBindingExists(doc, paramName, paramType):
+def param_binding_exists(doc, paramName, paramType):
     '''
     Gets all parameter bindings for a given parameter.
 

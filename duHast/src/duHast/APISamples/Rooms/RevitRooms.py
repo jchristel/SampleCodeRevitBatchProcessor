@@ -38,7 +38,7 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllRooms(doc):
+def get_all_rooms(doc):
     '''
     Gets a list of rooms from the model.
 
@@ -51,7 +51,7 @@ def GetAllRooms(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms).ToList()
 
-def GetUnplacedRooms(doc):
+def get_unplaced_rooms(doc):
     '''
     Gets a list of unplaced rooms from the model.
 
@@ -69,7 +69,7 @@ def GetUnplacedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-def GetNotEnclosedRooms(doc):
+def get_not_enclosed_rooms(doc):
     '''
     Gets a list of not enclosed rooms from the model.
 
@@ -89,7 +89,7 @@ def GetNotEnclosedRooms(doc):
             unplaced.append(r)
     return unplaced
 
-def GetRedundantRooms(doc):
+def get_redundant_rooms(doc):
     '''
     Gets a list of redundant rooms from the model.
 

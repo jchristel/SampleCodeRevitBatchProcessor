@@ -72,7 +72,7 @@ def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
 
 # ---------------------- utility -----------------------
 
-def GetAllCallOutHeadsByCategory(doc):
+def get_all_call_out_heads_by_category(doc):
     '''
     Gets a filtered element collector of all callOut Head symbol (types) in the model.
 
@@ -86,7 +86,7 @@ def GetAllCallOutHeadsByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_CalloutHeads).WhereElementIsElementType()
     return collector
 
-def GetAllElevationHeadsByCategory(doc):
+def get_all_elevation_heads_by_category(doc):
     '''
     Gets a filtered element collector of all elevation symbols (types) in the model.
 
@@ -100,7 +100,7 @@ def GetAllElevationHeadsByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ElevationMarks).WhereElementIsElementType()
     return collector
 
-def GetAllSectionHeadsByCategory(doc):
+def get_all_section_heads_by_category(doc):
     '''
     Gets a filtered element collector of all section symbols (types) in the model.
 
@@ -113,7 +113,7 @@ def GetAllSectionHeadsByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_SectionHeads).WhereElementIsElementType()
     return collector
 
-def GetAllViewContinuationMarkersByCategory(doc):
+def get_all_view_continuation_markers_by_category(doc):
     '''
     Gets a filtered element collector of all view continuation symbols (types) in the model.
 
@@ -127,7 +127,7 @@ def GetAllViewContinuationMarkersByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewerSymbol)
     return collector
 
-def GetAllReferenceViewElementsByCategory(doc):
+def get_all_reference_view_elements_by_category(doc):
     '''
     Gets filtered element collector of all reference view elements in the model.
 
@@ -167,7 +167,7 @@ VIEW_REF_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_ReferenceViewerSymbol
     ])
 
-def GetReferenceTypeIdsFromViewType(viewType):
+def get_reference_type_ids_from_view_type(viewType):
     '''
     Gets all reference type ids used in view type.
 
@@ -189,7 +189,7 @@ def GetReferenceTypeIdsFromViewType(viewType):
                 dic[pDef] = [pValue]
     return dic
 
-def GetUsedViewReferenceTypeIdData(doc):
+def get_used_view_reference_type_id_data(doc):
     '''
     Gets all view references types in use in the model in a dictionary.
 
@@ -204,7 +204,7 @@ def GetUsedViewReferenceTypeIdData(doc):
     col = rViewType.GetViewTypes(doc)
     for c in col:
         # get reference types from view types
-        referenceTypeByViewType = GetReferenceTypeIdsFromViewType(c)
+        referenceTypeByViewType = get_reference_type_ids_from_view_type(c)
         # check if already in dictionary , if not append
         for key, value in referenceTypeByViewType.items():
             if(dic.has_key(key)):
@@ -215,7 +215,7 @@ def GetUsedViewReferenceTypeIdData(doc):
               dic[key] = value
     return dic
 
-def GetAllViewReferenceTypeIdData(doc):
+def get_all_view_reference_type_id_data(doc):
     '''
     Gets all view references types available in the model in a dictionary.
     
@@ -230,7 +230,7 @@ def GetAllViewReferenceTypeIdData(doc):
     col = rViewType.GetViewTypes(doc)
     for c in col:
         # get reference types from view types
-        referenceTypeByViewType = GetReferenceTypeIdsFromViewType(c)
+        referenceTypeByViewType = get_reference_type_ids_from_view_type(c)
         # get all similar types
         for key, value in referenceTypeByViewType.items():
             for v in referenceTypeByViewType[key]:
@@ -245,7 +245,7 @@ def GetAllViewReferenceTypeIdData(doc):
                             dic[key] = [simTypeId]
     return dic
 
-def GetAllViewReferenceTypeIdDataAsList(doc):
+def get_all_view_reference_type_id_data_as_list(doc):
     '''
     Gets all view references type ids available in the model.
 
@@ -256,14 +256,14 @@ def GetAllViewReferenceTypeIdDataAsList(doc):
     :rtype: list Autodesk.Revit.DB.ElementIds
     '''
 
-    dic = GetAllViewReferenceTypeIdData(doc)
+    dic = get_all_view_reference_type_id_data(doc)
     ids = []
     for key, value in dic.items():
         if(len(dic[key]) > 0):
             ids = ids + dic[key]
     return ids
 
-def GetAllViewContinuationTypeIds(doc):
+def get_all_view_continuation_type_ids(doc):
     '''
     Gets all view continuation type ids available in the model.
 
@@ -275,7 +275,7 @@ def GetAllViewContinuationTypeIds(doc):
     '''
 
     ids = []
-    syms = GetAllReferenceViewElementsByCategory(doc)
+    syms = get_all_reference_view_elements_by_category(doc)
     for sym in syms:
         simTypeIds = sym.GetValidTypes()
         for simType in simTypeIds:
@@ -283,16 +283,17 @@ def GetAllViewContinuationTypeIds(doc):
                 ids.append (simType)
     return ids
 
-def GetUsedViewContinuationTypeIds(doc):
+def get_used_view_continuation_type_ids(doc):
     '''returns all view continuation types available in the model'''
+
     ids = []
-    syms = GetAllReferenceViewElementsByCategory(doc)
+    syms = get_all_reference_view_elements_by_category(doc)
     for sym in syms:
         if (sym.GetTypeId() not in ids):
                 ids.append (sym.GetTypeId())
     return ids
 
-def GetAllViewReferenceSymbolIds(doc):
+def get_all_view_reference_symbol_ids(doc):
     '''
     Gets the ids of all view reference family symbols(types) in the model.
 
@@ -311,7 +312,7 @@ def GetAllViewReferenceSymbolIds(doc):
 
 # ---------------------- view refs and continuation symbols -----------------------
 
-def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
+def get_symbol_ids_from_type_ids(doc, viewRefTypesIds):
     '''
     'Gets the ids of all view family symbols(types) from given view ref types or continuation types the model.
 
@@ -333,7 +334,7 @@ def GetSymbolIdsFromTypeIds(doc, viewRefTypesIds):
                 ids.append(pValue)
     return ids
 
-def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
+def get_used_view_reference_and_continuation_marker_symbol_ids(doc):
     '''
     Get the ids of all view reference symbols(types) and view continuations symbols (types) used by 
     view reference types and view continuation types in the model.
@@ -346,13 +347,13 @@ def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
     '''
 
     ids = []
-    viewContTypes = GetAllViewContinuationTypeIds(doc)
-    viewRefTypes = GetAllViewReferenceTypeIdData(doc)
+    viewContTypes = get_all_view_continuation_type_ids(doc)
+    viewRefTypes = get_all_view_reference_type_id_data(doc)
     # get ids of symbols used in view ref types
-    idsCont = GetSymbolIdsFromTypeIds(doc, viewContTypes)
+    idsCont = get_symbol_ids_from_type_ids(doc, viewContTypes)
     idsViewRefs = []
     for key,value in viewRefTypes.items():
-        idsViewRefs = idsViewRefs + GetSymbolIdsFromTypeIds(doc, viewRefTypes[key])
+        idsViewRefs = idsViewRefs + get_symbol_ids_from_type_ids(doc, viewRefTypes[key])
     # build unique dictionary
     for idC in idsCont:
         ids.append(idC)
@@ -361,7 +362,7 @@ def GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc):
             ids.append(idV)
     return ids
 
-def GetNestedFamilyMarkerNames(doc, usedIds):
+def get_nested_family_marker_names(doc, usedIds):
     '''
     Gets nested family names from provided symbols.
 

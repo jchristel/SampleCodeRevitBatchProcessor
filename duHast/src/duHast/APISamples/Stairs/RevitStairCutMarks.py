@@ -36,7 +36,7 @@ STAIR_CUT_MARK_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_CUTMARK_TYPE
 ]
 
-def GetStairCutMarkTypesByClass(doc):
+def get_stair_cut_mark_types_by_class(doc):
     '''
     Gets a filtered element collector of all cut mark types in the model.
     :param doc: Current Revit model document.
@@ -47,7 +47,7 @@ def GetStairCutMarkTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbA.CutMarkType)
 
-def GetAllStairCutMarkTypeIdsInModelByClass(doc):
+def get_stair_cut_mark_types_ids_by_class(doc):
     '''
     Get all Stair cut mark element type ids available in model.
     :param doc: Current Revit model document.
@@ -57,6 +57,6 @@ def GetAllStairCutMarkTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetStairCutMarkTypesByClass (doc)
+    colClass = get_stair_cut_mark_types_by_class (doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids

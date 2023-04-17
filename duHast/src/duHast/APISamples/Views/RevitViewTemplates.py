@@ -32,9 +32,10 @@ from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 
 
-def GetViewsTemplatesInInModel(doc):
+def get_view_templates(doc):
     '''
-    Get all view templates in a model
+    Get all view templates in a model.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: All view templates in the model
@@ -50,7 +51,7 @@ def GetViewsTemplatesInInModel(doc):
     return viewTemplates
 
 
-def GetViewsTemplateIdsInInModel(doc):
+def get_view_templates_ids(doc):
     '''
     Get all view template ids in a model
     :param doc: Current Revit model document.
@@ -68,7 +69,7 @@ def GetViewsTemplateIdsInInModel(doc):
     return ids
 
 
-def GetUsedViewTemplateIdsInTheModel(doc):
+def get_used_view_templates_ids(doc):
     '''
     Gets ids of view templates used in views in the model only
     :param doc: Current Revit model document.
@@ -93,7 +94,7 @@ def GetUsedViewTemplateIdsInTheModel(doc):
     return viewTemplateIdsUsed
 
 
-def GetDefaultViewTypeTemplateIds(doc):
+def get_default_view_type_template_ids(doc):
     '''
     Gets view template Id's used as default by view types
     :param doc: Current Revit model document.
@@ -115,29 +116,32 @@ def GetDefaultViewTypeTemplateIds(doc):
     return viewTemplateIdsUsed
 
 
-def GetAllViewTemplateIdsUsedInModel(doc):
+def get_all_used_view_template_ids(doc):
     '''
     Get all used view template Id's.
+
     Templates can either be:
     - used as default by view types
     - used by a view 
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: All view templates Id's which are used in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    vtv = GetUsedViewTemplateIdsInTheModel(doc)
-    viewFamilyTemplates = GetDefaultViewTypeTemplateIds(doc)
+    vtv = get_used_view_templates_ids(doc)
+    viewFamilyTemplates = get_default_view_type_template_ids(doc)
     for id in viewFamilyTemplates:
         if(id not in vtv):
             vtv.append(id)
     return vtv
 
 
-def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
+def get_template_ids_which_can_have_filters(doc, filterByType):
     '''
     Get all templates in a model of given type
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param filterByType: List of view types of which to return view templates from
@@ -158,7 +162,7 @@ def GetTemplateIdsWhichCanHaveFilters(doc, filterByType):
     return viewTemplates
 
 
-def GetAllUnusedViewTemplateIdsInModel(doc):
+def get_all_unused_view_template_ids(doc):
     '''
     Gets all view template Id's not used by view types or by views
     :param doc: Current Revit model document.
@@ -166,8 +170,8 @@ def GetAllUnusedViewTemplateIdsInModel(doc):
     :return: All view templates Id's which are not used in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
-    usedVts = GetAllViewTemplateIdsUsedInModel(doc)
-    vtInModel = GetViewsTemplatesInInModel(doc)
+    usedVts = get_all_used_view_template_ids(doc)
+    vtInModel = get_view_templates(doc)
     unusedVts = []
     for vt in vtInModel:
         if(vt.Id not in usedVts):

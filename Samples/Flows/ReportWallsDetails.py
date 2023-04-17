@@ -119,7 +119,7 @@ def write_wall_type_data(doc, fileName):
         status = fileCSV.writeReportDataAsCSV(
             fileName, 
             rWallHeader.REPORT_WALLS_HEADER, 
-            rWallRep.GetWallReportData(doc, REVIT_FILE_PATH))
+            rWallRep.get_wall_report_data(doc, REVIT_FILE_PATH))
     except Exception as e:
         status = False
         output('Failed to write data file: {}'.format(fileName))

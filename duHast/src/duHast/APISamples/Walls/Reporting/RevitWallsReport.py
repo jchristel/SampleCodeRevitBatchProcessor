@@ -33,7 +33,7 @@ from duHast.Utilities import Utility as util
 
 import Autodesk.Revit.DB as rdb
 
-def GetWallReportData(doc, revitFilePath):
+def get_wall_report_data(doc, revitFilePath):
     '''
     Gets wall data to be written to report file.
     :param doc: Current Revit model document.

@@ -218,7 +218,7 @@ def get_number_of_warnings(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rWarn.GetWarnings(doc))
+        number = len(rWarn.get_warnings(doc))
     except:
         pass
     return number
@@ -272,7 +272,7 @@ def get_number_of_sheets(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViewSheets.GetSheetsInModel(doc))
+        number = len(rViewSheets.get_all_sheets(doc))
     except:
         pass
     return number
@@ -301,7 +301,7 @@ def get_number_of_views(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViews.GetViewsInModel(doc, _view_filter))
+        number = len(rViews.get_views_in_model(doc, _view_filter))
     except:
         pass
     return number
@@ -318,7 +318,7 @@ def get_number_of_unplaced_views(doc):
     '''
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViews.GetViewsNotOnSheet(doc))
+        number = len(rViews.get_views_not_on_sheet(doc))
     except:
         pass
     return number
@@ -600,7 +600,7 @@ def get_number_of_rooms(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rRooms.GetAllRooms(doc))
+        number = len(rRooms.get_all_rooms(doc))
     except:
         pass
     return number
@@ -618,7 +618,7 @@ def get_number_of_unplaced_rooms(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rRooms.GetUnplacedRooms(doc))
+        number = len(rRooms.get_unplaced_rooms(doc))
     except:
         pass
     return number
@@ -636,7 +636,7 @@ def get_number_of_redundant_rooms(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rRooms.GetRedundantRooms(doc))
+        number = len(rRooms.get_redundant_rooms(doc))
     except:
         pass
     return number
@@ -654,7 +654,7 @@ def get_number_of_not_enclosed_rooms(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rRooms.GetNotEnclosedRooms(doc))
+        number = len(rRooms.get_not_enclosed_rooms(doc))
     except:
         pass
     return number

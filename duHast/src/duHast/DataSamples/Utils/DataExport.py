@@ -53,7 +53,7 @@ def get_data_from_model(doc):
     '''
 
     # get data
-    allRoomData = rRoom.GetAllRoomData(doc)
+    allRoomData = rRoom.get_all_room_data(doc)
     allCeilingData = rCeil.get_all_ceiling_data(doc)
 
     data_json = {

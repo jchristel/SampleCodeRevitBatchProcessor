@@ -41,7 +41,7 @@ from duHast.APISamples.Railings.Utility import RevitRailingsFilter as rRailFilte
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllRailingTypesByCategory(doc):
+def get_all_railing_types_by_category(doc):
     '''
     Gets a filtered element collector of all Railing types in the model.
 
@@ -64,7 +64,7 @@ def GetAllRailingTypesByCategory(doc):
     collector = rRailFilter._get_all_railing_types_by_category(doc)
     return collector
 
-def GetAllRailingTypesByCategoryExclInPlace(doc):
+def get_all_railing_types_by_category_excl_in_place(doc):
     '''
     Gets a filtered element collector of all Railing types in the model.
 
@@ -93,7 +93,7 @@ def GetAllRailingTypesByCategoryExclInPlace(doc):
             elements.append(c)
     return elements
 
-def GetRailingTypesByClass(doc):
+def get_railing_types_by_class(doc):
     '''
     Gets a filtered element collector of all Railing types in the model:
     
@@ -114,7 +114,7 @@ def GetRailingTypesByClass(doc):
 
 # -------------------------------- none in place Railing types -------------------------------------------------------
 
-def GetAllRailingInstancesInModelByCategory(doc):
+def get_all_railing_instances_by_category(doc):
     '''
     Gets all Railing elements placed in model.
 
@@ -128,7 +128,7 @@ def GetAllRailingInstancesInModelByCategory(doc):
     multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
-def GetAllRailingInstancesInModelByClass(doc):
+def get_all_railing_instances_by_class(doc):
     '''
     Gets all Railing elements placed in model. Ignores any in place families.
 
@@ -141,7 +141,7 @@ def GetAllRailingInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbA.Railing).WhereElementIsNotElementType()
 
-def GetAllRailingTypeIdsInModelByCategory(doc):
+def get_all_railing_type_ids_by_category(doc):
     '''
     Gets all railing element type ids available in model.
 
@@ -153,11 +153,11 @@ def GetAllRailingTypeIdsInModelByCategory(doc):
     '''
     
     ids = []
-    colCat = GetAllRailingTypesByCategory(doc)
+    colCat = get_all_railing_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllRailingTypeIdsInModelByClass(doc):
+def get_all_railing_type_ids_by_class(doc):
     '''
     Gets all railing element type ids available in model.
 
@@ -169,11 +169,11 @@ def GetAllRailingTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetRailingTypesByClass(doc)
+    colClass = get_railing_types_by_class(doc)
     ids = com.get_ids_from_element_collector(colClass)
     return ids
 
-def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
+def get_all_railing_type_ids_by_class_and_category(doc):
     '''
     Gets all Railing element types available in model excluding in place types.
 
@@ -185,9 +185,9 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
     '''
 
     ids = []
-    colClass = GetRailingTypesByClass(doc)
+    colClass = get_railing_types_by_class(doc)
     idsClass = com.get_ids_from_element_collector(colClass)
-    colCat = GetAllRailingTypesByCategoryExclInPlace(doc)
+    colCat = get_all_railing_types_by_category_excl_in_place(doc)
     idsCat = com.get_ids_from_element_collector(colCat)
     for idClass in idsClass:
         if (idClass not in ids):
@@ -199,7 +199,7 @@ def GetAllRailingTypeIdsInModelByClassAndCategory(doc):
 
 # -------------------------------- In place Railing types -------------------------------------------------------
 
-def GetInPlaceRailingFamilyInstances(doc):
+def get_in_place_railing_family_instances(doc):
     '''
     Gets all instances of in place families of category Railing in the model.
 
@@ -213,7 +213,7 @@ def GetInPlaceRailingFamilyInstances(doc):
     filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceRailingTypeIdsInModel(doc):
+def get_in_place_railing_type_ids_in_model(doc):
     '''
     Gets type ids off all available in place families of category Railing.
 

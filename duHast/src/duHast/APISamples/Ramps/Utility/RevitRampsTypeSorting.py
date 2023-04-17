@@ -26,10 +26,10 @@ This module contains a Revit ramps utility functions.
 #
 #
 
-from duHast.APISamples.Ramps.RevitRamps import GetAllRampTypesByCategory
+from duHast.APISamples.Ramps.RevitRamps import get_all_ramp_types_by_category
 
 
-def BuildRampTypeDictionary(collector, dic):
+def build_ramp_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -50,7 +50,7 @@ def BuildRampTypeDictionary(collector, dic):
     return dic
 
 
-def SortRampTypesByFamilyName(doc):
+def sort_ramp_types_by_family_name(doc):
     '''
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -61,7 +61,7 @@ def SortRampTypesByFamilyName(doc):
     '''
 
     # get all ramp types including in place ramp families
-    wts_two = GetAllRampTypesByCategory(doc)
+    wts_two = get_all_ramp_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildRampTypeDictionary(wts_two, usedWts)
+    usedWts = build_ramp_type_dictionary(wts_two, usedWts)
     return usedWts

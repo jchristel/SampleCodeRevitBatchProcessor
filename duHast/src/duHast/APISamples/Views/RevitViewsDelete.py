@@ -30,9 +30,9 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitDeleteElements as rDel, RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res, Utility as util
-from duHast.APISamples.Views.RevitViews import GetViewsNotOnSheet
+from duHast.APISamples.Views.RevitViews import get_views_not_on_sheet
 
-def DeleteViews(doc, viewRules, collectorViews):
+def delete_views(doc, viewRules, collectorViews):
     '''
     Deletes views based on view rules supplied.
     :param doc: Current Revit model document.
@@ -76,7 +76,7 @@ def DeleteViews(doc, viewRules, collectorViews):
     return result
 
 
-def DeleteViewsNotOnSheets(doc, filter):
+def delete_views_not_on_sheets(doc, filter):
     '''
     Deletes all views not placed on sheets includes schedules and legends matching filter.
     :param doc: Current Revit model document.
@@ -92,7 +92,7 @@ def DeleteViewsNotOnSheets(doc, filter):
 
     ids = []
     returnValue = res.Result()
-    viewsNotOnSheets = GetViewsNotOnSheet(doc)
+    viewsNotOnSheets = get_views_not_on_sheet(doc)
     for viewNotOnSheet in viewsNotOnSheets:
         if(filter(viewNotOnSheet)):
             ids.append(viewNotOnSheet.Id)
@@ -107,7 +107,7 @@ def DeleteViewsNotOnSheets(doc, filter):
     return returnValue
 
 
-def DeleteUnusedElevationViewMarkers(doc):
+def delete_unused_elevation_view_markers(doc):
     '''
     Deletes all unused elevation markers. (no Elevation is created by the marker)
     :param doc: Current Revit model document.
@@ -139,9 +139,10 @@ def DeleteUnusedElevationViewMarkers(doc):
     return returnValue
 
 
-def DeleteSheets(doc, viewRules, collectorViews):
+def delete_sheets(doc, viewRules, collectorViews):
     '''
     Deletes sheets based on rules.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param viewRules: A set of rules. If view matches rule it will be deleted.
@@ -171,9 +172,10 @@ def DeleteSheets(doc, viewRules, collectorViews):
     return result
 
 
-def DeleteAllSheetsInModel(doc):
+def delete_all_sheets(doc):
     '''
     Deletes all sheets in a model
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: 

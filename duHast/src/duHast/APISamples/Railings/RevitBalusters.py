@@ -29,11 +29,11 @@ This module contains a number of helper functions relating to Revit railing balu
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Railings.Utility.MergeLists import MergeIntoUniqueList
-from duHast.APISamples.Railings.RevitRailings import GetAllRailingTypeIdsInModelByClassAndCategory
+from duHast.APISamples.Railings.Utility.MergeLists import merge_into_unique_list
+from duHast.APISamples.Railings.RevitRailings import get_all_railing_type_ids_by_class_and_category
 
 
-def GetBalustersUsedInPattern(bPattern):
+def get_balusters_used_in_pattern(bPattern):
     '''
     Gets list of unique baluster family ids used in a pattern only.
     :param bPattern: A revit baluster pattern.
@@ -53,7 +53,7 @@ def GetBalustersUsedInPattern(bPattern):
     return ids
 
 
-def GetUsedBalusterPostIds(bPostPattern):
+def get_used_baluster_post_ids(bPostPattern):
     '''
     Gets list of unique baluster posts ids only.
     Includes:
@@ -79,7 +79,7 @@ def GetUsedBalusterPostIds(bPostPattern):
     return ids
 
 
-def GetUsedBalusterPerTread(bPlacement):
+def get_used_baluster_per_tread(bPlacement):
     '''
     Gets the id of the baluster per stair tread.
     :param bPlacement: A baluster placement element.
@@ -95,7 +95,7 @@ def GetUsedBalusterPerTread(bPlacement):
     return ids
 
 
-def GetAllBalusterSymbols(doc):
+def get_all_baluster_symbols(doc):
     '''
     Gets all baluster symbols (fam types) in the model.
     :param doc: Current Revit model document.
@@ -108,7 +108,7 @@ def GetAllBalusterSymbols(doc):
     return col
 
 
-def GetAllBalusterSymbolIds(doc):
+def get_all_baluster_symbols_ids(doc):
     '''
     Gets all baluster symbol (fam type) ids in the model.
     :param doc: Current Revit model document.
@@ -118,12 +118,12 @@ def GetAllBalusterSymbolIds(doc):
     '''
 
     ids = []
-    col = GetAllBalusterSymbols(doc)
+    col = get_all_baluster_symbols(doc)
     ids = com.get_ids_from_element_collector (col)
     return ids
 
 
-def GetBalusterTypesFromRailings(doc):
+def get_baluster_types_from_railings(doc):
     '''
     Gets a list of unique baluster symbol (fam type) ids used in railing types in the model.
     Incl:
@@ -139,19 +139,19 @@ def GetBalusterTypesFromRailings(doc):
     '''
 
     ids = []
-    railingTypeIds = GetAllRailingTypeIdsInModelByClassAndCategory(doc)
+    railingTypeIds = get_all_railing_type_ids_by_class_and_category(doc)
     for rtId in railingTypeIds:
         el = doc.GetElement(rtId)
         # put into try catch since some rail types have no balusters ...top rail
         try:
             balusterPlacement = el.BalusterPlacement
-            idsPattern = GetBalustersUsedInPattern(balusterPlacement.BalusterPattern)
-            idsPosts = GetUsedBalusterPostIds(balusterPlacement.PostPattern)
-            idsPerTread = GetUsedBalusterPerTread(balusterPlacement)
+            idsPattern = get_balusters_used_in_pattern(balusterPlacement.BalusterPattern)
+            idsPosts = get_used_baluster_post_ids(balusterPlacement.PostPattern)
+            idsPerTread = get_used_baluster_per_tread(balusterPlacement)
             # build overall ids list
-            ids = MergeIntoUniqueList(ids, idsPattern)
-            ids = MergeIntoUniqueList(ids, idsPosts)
-            ids = MergeIntoUniqueList(ids, idsPerTread)
+            ids = merge_into_unique_list(ids, idsPattern)
+            ids = merge_into_unique_list(ids, idsPosts)
+            ids = merge_into_unique_list(ids, idsPerTread)
         except:
             pass
     return ids

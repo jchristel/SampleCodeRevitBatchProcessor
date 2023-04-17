@@ -38,7 +38,7 @@ from duHast.APISamples.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllRoofTypesByCategory(doc):
+def get_all_roof_types_by_category(doc):
     '''
     Gets a filtered element collector of all roof types in the model.
 
@@ -56,7 +56,7 @@ def GetAllRoofTypesByCategory(doc):
     collector = rRoofFilter._get_all_roof_types_by_category(doc)
     return collector
 
-def GetRoofTypesByClass(doc):
+def get_all_roof_types_by_class(doc):
     '''
     Gets a filtered element collector of all Roof types in the model:
 
@@ -77,7 +77,7 @@ def GetRoofTypesByClass(doc):
 
 # -------------------------------- none in place Roof types -------------------------------------------------------
 
-def GetAllRoofInstancesInModelByCategory(doc):
+def get_all_roof_instances_by_category(doc):
     '''
     Gets all Roof elements placed in model...ignores in place families (to be confirmed!)
 
@@ -90,7 +90,7 @@ def GetAllRoofInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
 
-def GetAllRoofInstancesInModelByClass(doc):
+def get_all_roof_instances_by_class(doc):
     '''
     Gets all Roof elements placed in model...ignores roof soffits(???)
 
@@ -103,7 +103,7 @@ def GetAllRoofInstancesInModelByClass(doc):
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Roof).WhereElementIsNotElementType()
 
-def GetAllRoofTypeIdsInModelByCategory(doc):
+def get_all_roof_type_ids_by_category(doc):
     '''
     Gets all Roof element type ids available in model.
 
@@ -115,11 +115,11 @@ def GetAllRoofTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllRoofTypesByCategory(doc)
+    colCat = get_all_roof_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllRoofTypeIdsInModelByClass(doc):
+def get_all_roof_type_ids_by_class(doc):
     '''
     Gets all Roof element type ids available in model.
 
@@ -131,13 +131,13 @@ def GetAllRoofTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetRoofTypesByClass(doc)
+    colClass = get_all_roof_types_by_class(doc)
     ids = com.get_ids_from_element_collector(colClass)
     return ids
 
 # -------------------------------- In place Roof types -------------------------------------------------------
 
-def GetInPlaceRoofFamilyInstances(doc):
+def get_in_place_roof_family_instances(doc):
     '''
     Gets all instances of in place families of category roof in the model.
 
@@ -151,7 +151,7 @@ def GetInPlaceRoofFamilyInstances(doc):
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Roofs)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceRoofTypeIdsInModel(doc):
+def get_all_in_place_roof_type_ids(doc):
     '''
     Gets type ids off all available in place families of category roof in the model.
 

@@ -56,7 +56,7 @@ BUILTIN_WALL_TYPE_FAMILY_NAMES = [
     BASIC_WALL_FAMILY_NAME
 ]
 
-def GetAllWallTypes(doc): 
+def get_all_wall_types_by_category(doc): 
     '''
     Gets all wall types in a model.
     :param doc: Current Revit model document.
@@ -68,7 +68,7 @@ def GetAllWallTypes(doc):
     collector = rWallFilter._get_all_wall_types_by_category(doc)
     return collector
 
-def GetWallTypesByClass(doc):
+def get_all_wall_types_by_class(doc):
     '''
     This will return a filtered element collector of all wall types by class in the model
     
@@ -84,7 +84,7 @@ def GetWallTypesByClass(doc):
 
 # -------------------------------- in place wall types -------------------------------------------------------
 
-def GetInPlaceWallFamilyInstances(doc):
+def get_in_place_wall_family_instances(doc):
     '''
     Returns all instances in place families of category wall in the model.
 
@@ -98,7 +98,7 @@ def GetInPlaceWallFamilyInstances(doc):
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Walls)
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
 
-def GetAllInPlaceWallTypeIdsInModel(doc):
+def get_all_in_place_wall_type_ids(doc):
     '''
     Gets all type ids off all available in place families of category wall.
 
@@ -117,7 +117,7 @@ def GetAllInPlaceWallTypeIdsInModel(doc):
 
 # -------------------------------- basic wall types -------------------------------------------------------
 
-def GetAllBasicWallTypeIdsInModel(doc):
+def get_all_basic_wall_type_ids(doc):
     '''
     Gets type ids off all available basic wall types in the model.
 
@@ -129,12 +129,12 @@ def GetAllBasicWallTypeIdsInModel(doc):
     '''
 
     ids = []
-    dic = rWallTypeSort.SortWallTypesByFamilyName(doc)
+    dic = rWallTypeSort.sort_wall_types_by_family_name(doc)
     if(dic.has_key(BASIC_WALL_FAMILY_NAME)):
         ids = dic[BASIC_WALL_FAMILY_NAME]
     return ids
 
-def GetAllBasicWallInstancesInModel(doc, availableIds):
+def get_all_basic_wall_instances(doc, availableIds):
     '''
     Gets all basic wall elements placed in model...ignores legend elements.
 
@@ -154,7 +154,7 @@ def GetAllBasicWallInstancesInModel(doc, availableIds):
             instances.append(c)
     return instances
 
-def GetPlacedBasicWallTypeIdsInModel(doc, availableIds):
+def get_used_basic_wall_type_ids(doc, availableIds):
     '''
     Gets all basic wall types used in model.
 

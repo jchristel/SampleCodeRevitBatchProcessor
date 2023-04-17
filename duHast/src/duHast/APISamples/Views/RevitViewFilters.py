@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit view filters
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views.RevitViewTemplates import GetTemplateIdsWhichCanHaveFilters
+from duHast.APISamples.Views.RevitViewTemplates import get_template_ids_which_can_have_filters
 from duHast.APISamples.Common import RevitCommonAPI as com
 
 
@@ -47,9 +47,10 @@ VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [
 ]
 
 
-def GetAllAvailableFiltersInModel(doc):
+def get_all_filters(doc):
     '''
     Gets all filters in document as a collector
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered Element collector containing Autodesk.Revit.DB.ParameterFilterElement
@@ -59,9 +60,10 @@ def GetAllAvailableFiltersInModel(doc):
     return collector
 
 
-def GetAllAvailableFilterIdsInModel(doc):
+def get_all_filter_ids(doc):
     '''
     Gets all view filter ids in document
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: All view filter Id's which are in the model.
@@ -69,14 +71,15 @@ def GetAllAvailableFilterIdsInModel(doc):
     '''
 
     ids = []
-    col = GetAllAvailableFiltersInModel(doc)
+    col = get_all_filters(doc)
     ids = com.get_ids_from_element_collector(col)
     return ids
 
 
-def GetFilterIdsFromViewByFilter(view, uniqueList):
+def get_filter_ids_from_view_by_filter(view, uniqueList):
     '''
     Returns past in list of filter id's plus new unique filter id's from view (if not already in list past in)
+
     :param view: The view of which to get the filters from.
     :type view: Autodesk.Revit.DB.View
     :param uniqueList: List containing view filters
@@ -93,7 +96,7 @@ def GetFilterIdsFromViewByFilter(view, uniqueList):
     return uniqueList
 
 
-def GetFiltersFromTemplates(doc):
+def get_filters_from_templates(doc):
     '''
     Gets all filter id's used in view templates only.
     :param doc: Current Revit model document.
@@ -105,14 +108,14 @@ def GetFiltersFromTemplates(doc):
     filtersInUse = []
     # get view filters used in templates only
     # include templates which do not enforce filters but still may have some set
-    templateWithFilters = GetTemplateIdsWhichCanHaveFilters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    templateWithFilters = get_template_ids_which_can_have_filters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
     for temp in templateWithFilters:
         # get filters and check whether already in list
-        filtersInUse = GetFilterIdsFromViewByFilter(temp, filtersInUse)
+        filtersInUse = get_filter_ids_from_view_by_filter(temp, filtersInUse)
     return filtersInUse
 
 
-def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
+def get_filter_ids_from_views_without_template(doc, filterByType):
     '''
     Gets all filter id's from views which dont have a template applied and match a given view type.
     :param doc: Current Revit model document.
@@ -133,12 +136,12 @@ def GetFilterIdsFromViewsWithoutTemplate(doc, filterByType):
         if(v.IsTemplate == False):
             for filter in filterByType:
                 if (v.ViewType == filter):
-                    GetFilterIdsFromViewByFilter(v, filtersInUse)
+                    get_filter_ids_from_view_by_filter(v, filtersInUse)
                     break
     return filtersInUse
 
 
-def GetAllUnUsedViewFilters(doc):
+def get_all_unused_view_filters(doc):
     '''
     Gets id's of all unused view filters in a model
     :param doc: Current Revit model document.
@@ -148,9 +151,9 @@ def GetAllUnUsedViewFilters(doc):
     '''
 
     unUsedViewFilterIds = []
-    allAvailableFilters = GetAllAvailableFiltersInModel(doc)
-    allFilterIdsByTemplate = GetFiltersFromTemplates(doc)
-    allFilterIdsByView = GetFilterIdsFromViewsWithoutTemplate(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    allAvailableFilters = get_all_filters(doc)
+    allFilterIdsByTemplate = get_filters_from_templates(doc)
+    allFilterIdsByView = get_filter_ids_from_views_without_template(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
     # combine list of used filters into one
     allUsedViewFilters = allFilterIdsByTemplate + allFilterIdsByView
     # loop over all available filters and check for match in used filters

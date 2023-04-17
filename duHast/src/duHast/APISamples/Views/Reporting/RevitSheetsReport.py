@@ -28,12 +28,12 @@ This module contains the Revit view report functionality.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views.Reporting.RevitViewsReportHeader import REPORT_SHEETS_HEADER, GetReportHeaders
+from duHast.APISamples.Views.Reporting.RevitViewsReportHeader import REPORT_SHEETS_HEADER, get_report_headers
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res, FilesTab as filesTab
 
 
-def GetSheetReportData(doc, hostName):
+def get_sheet_report_data(doc, hostName):
     '''
     Gets sheet data to be written to report file.
     The data returned includes all sheet properties available in the file.
@@ -62,7 +62,7 @@ def GetSheetReportData(doc, hostName):
     return views
 
 
-def WriteSheetData(doc, fileName, currentFileName):
+def write_sheet_data(doc, fileName, currentFileName):
     '''
     Writes to file all sheet properties.
     :param doc: Current Revit model document.
@@ -80,8 +80,8 @@ def WriteSheetData(doc, fileName, currentFileName):
 
     returnValue = res.Result()
     try:
-        data = GetSheetReportData(doc, currentFileName)
-        headers = GetReportHeaders(doc)
+        data = get_sheet_report_data(doc, currentFileName)
+        headers = get_report_headers(doc)
         filesTab.writeReportData(
             fileName,
             headers,
@@ -92,7 +92,7 @@ def WriteSheetData(doc, fileName, currentFileName):
     return returnValue
 
 
-def FilterDataByProperties(data, headers, sheetProperties):
+def filter_data_by_properties(data, headers, sheetProperties):
     '''
     Filters sheet data by supplied property names.
     Data gets filtered twice: property needs to exist in headers list as well as in sheet properties list.
@@ -122,7 +122,7 @@ def FilterDataByProperties(data, headers, sheetProperties):
     return newData
 
 
-def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetProperties):
+def write_sheet_data_by_property_names(doc, fileName, currentFileName, sheetProperties):
     '''
     Writes to file sheet properties as nominated in past in list.
     :param doc: Current Revit model document.
@@ -142,9 +142,9 @@ def WriteSheetDataByPropertyNames(doc, fileName, currentFileName, sheetPropertie
 
     returnValue = res.Result()
     try:
-        data = GetSheetReportData(doc, currentFileName)
-        headers = GetReportHeaders(doc)
-        data = FilterDataByProperties(data, headers, sheetProperties)
+        data = get_sheet_report_data(doc, currentFileName)
+        headers = get_report_headers(doc)
+        data = filter_data_by_properties(data, headers, sheetProperties)
         # change headers to filtered + default
         headers = REPORT_SHEETS_HEADER[:]
         headers = headers + sheetProperties

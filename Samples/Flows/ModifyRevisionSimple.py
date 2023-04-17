@@ -136,7 +136,7 @@ def AddRevToDocument(doc):
     try:
         for rev in revisions_to_add_:
             # create new revision
-            new_revision_status = rRev.CreateRevision(doc, rev)
+            new_revision_status = rRev.create_revision(doc, rev)
             if(new_revision_status.status):
                 # append to existing revisions
                 new_revision = new_revision_status.result[0]

@@ -59,7 +59,7 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
     #: guid identifying this specific warning
     GUID = '6e1efefe-c8e0-483d-8482-150b9f1da21a'
     
-    def SolveWarnings(self, doc, warnings):
+    def solve_warnings(self, doc, warnings):
         '''
         Solver setting element mark to nothing, provided it passes the filter.
 

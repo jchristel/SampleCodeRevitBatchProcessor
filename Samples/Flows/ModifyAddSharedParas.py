@@ -123,7 +123,7 @@ def update_parameters (doc, data):
         for parameter_name, group_name, parameter_type, is_visible, element_category, parameter_group, is_instance in data:
             # add parameter to multiple categories if required
             for cat in element_category:
-                statusBind =  paraAdd.BindSharedParameter(
+                statusBind =  paraAdd.bind_shared_parameter(
                     doc, 
                     cat, 
                     parameter_name, 

@@ -36,7 +36,7 @@ REPORT_VIEWS_HEADER = ['HOSTFILE']
 REPORT_SHEETS_HEADER = ['HOSTFILE','Id']
 
 
-def GetReportHeaders(doc):
+def get_report_headers(doc):
     '''
     A list of headers used in report files
     Hardcoded header list is expanded by parameters added to sheet category in model.

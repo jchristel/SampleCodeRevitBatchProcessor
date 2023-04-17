@@ -37,7 +37,7 @@ from duHast.APISamples.Ramps.Utility import RevitRampsFilter as rRampFilter
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllRampTypesByCategory(doc):
+def get_all_ramp_types_by_category(doc):
     '''
     Gets a filtered element collector of all Ramp types in the model.
 
@@ -53,7 +53,7 @@ def GetAllRampTypesByCategory(doc):
 
 # -------------------------------- none in place Ramp types -------------------------------------------------------
 
-def GetAllRampInstancesInModelByCategory(doc):
+def get_all_ramp_instances_by_category(doc):
     '''
     Gets all ramp elements placed in model...ignores in place families (to be confirmed!)
 
@@ -66,7 +66,7 @@ def GetAllRampInstancesInModelByCategory(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ramps).WhereElementIsNotElementType()
 
-def GetAllRampTypeIdsInModelByCategory(doc):
+def get_all_ramp_types_ids_by_category(doc):
     '''
     Gets all ramp element type ids available in model.
 
@@ -78,6 +78,6 @@ def GetAllRampTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllRampTypesByCategory(doc)
+    colCat = get_all_ramp_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids

@@ -35,7 +35,7 @@ STACKED_WALL_FAMILY_NAME = 'Stacked Wall'
 
 # -------------------------------- stacked wall types -------------------------------------------------------
 
-def GetAllStackedWallInstancesInModel(doc):
+def get_all_stacked_wall_instances(doc):
     '''
     Gets all stacked wall elements placed in model...ignores legend elements.
     :param doc: Current Revit model document.
@@ -46,7 +46,7 @@ def GetAllStackedWallInstancesInModel(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsNotElementType()
 
-def GetAllStackedWallTypesInModel(doc):
+def get_all_stacked_wall_types(doc):
     '''
     Gets all stacked wall element types used by instances placed in model.
     :param doc: Current Revit model document.
@@ -57,9 +57,10 @@ def GetAllStackedWallTypesInModel(doc):
 
     return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StackedWalls).WhereElementIsElementType()
 
-def GetAllStackedWallTypeIdsInModel(doc):
+def get_all_stacked_wall_type_ids(doc):
     '''
     Gets all stacked wall element types available in model.
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing stacked wall types.

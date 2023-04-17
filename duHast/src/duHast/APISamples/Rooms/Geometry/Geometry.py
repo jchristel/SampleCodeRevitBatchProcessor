@@ -28,11 +28,11 @@ This module contains a Revit rooms geometry extraction functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Rooms.RevitRooms import GetAllRooms
+from duHast.APISamples.Rooms.RevitRooms import get_all_rooms
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
 
 
-def GetRoomBoundaryLoops(revitRoom):
+def get_room_boundary_loops(revitRoom):
     '''
     Returns all boundary loops for a rooms.
     :param revitRoom: The room.
@@ -52,9 +52,10 @@ def GetRoomBoundaryLoops(revitRoom):
     return allBoundaryLoops
 
 
-def GetPointsFromRoomBoundaries(boundaryLoops):
+def get_points_from_room_boundaries(boundaryLoops):
     '''
     Returns a list of lists of points representing the room boundary loops.
+
     - List of Lists because a room can be made up of multiple loops (holes in rooms!)
     - First nested list represents the outer boundary of a room
     - All loops are implicitly closed ( last point is not the first point again!)
@@ -85,7 +86,7 @@ def GetPointsFromRoomBoundaries(boundaryLoops):
     return data_geo_polygon
 
 
-def Get2DPointsFromRevitRoom(revitRoom):
+def get_2d_points_from_revit_room(revitRoom):
     '''
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
     List should only have one entry.
@@ -96,14 +97,14 @@ def Get2DPointsFromRevitRoom(revitRoom):
     '''
 
     allRoomPoints = []
-    boundaryLoops = GetRoomBoundaryLoops(revitRoom)
+    boundaryLoops = get_room_boundary_loops(revitRoom)
     if(len(boundaryLoops) > 0):
-        roomPoints = GetPointsFromRoomBoundaries(boundaryLoops)
+        roomPoints = get_points_from_room_boundaries(boundaryLoops)
         allRoomPoints.append(roomPoints)
     return allRoomPoints
 
 
-def Get2DPointsFromAllRevitRoomsInModel(doc):
+def get_2d_points_from_all_revit_rooms(doc):
     '''
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of all the rooms in the model.
     :param doc: Current Revit model document.
@@ -113,9 +114,9 @@ def Get2DPointsFromAllRevitRoomsInModel(doc):
     '''
 
     allRoomPointGroups = []
-    rooms = GetAllRooms(doc)
+    rooms = get_all_rooms(doc)
     for room in rooms:
-        roomPoints = Get2DPointsFromRevitRoom(room)
+        roomPoints = get_2d_points_from_revit_room(room)
         if(len(roomPoints) > 0):
             allRoomPointGroups.append(roomPoints)
     return allRoomPointGroups

@@ -31,7 +31,7 @@ import Autodesk.Revit.DB.Architecture as rdbA
 
 from duHast.APISamples.Common import RevitCommonAPI as com
 
-def GetStairPathTypesByClass(doc):
+def get_stair_path_types_by_class(doc):
     '''
     Gets a filtered element collector of all Stair path types in the model.
     :param doc: Current Revit model document.
@@ -43,7 +43,7 @@ def GetStairPathTypesByClass(doc):
     return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
 
 
-def GetAllStairPathTypeIdsInModelByClass(doc):
+def get_stair_path_types_ids_by_class(doc):
     '''
     Gets all Stair path element type ids available in model.
     :param doc: Current Revit model document.
@@ -53,12 +53,12 @@ def GetAllStairPathTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetStairPathTypesByClass(doc)
+    colClass = get_stair_path_types_by_class(doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 
 
-def GetAllStairPathElementsInModel(doc):
+def get_all_stair_path_instances(doc):
     '''
     Gets a filtered element collector of all Stair path elements in the model.
     :param doc: Current Revit model document.

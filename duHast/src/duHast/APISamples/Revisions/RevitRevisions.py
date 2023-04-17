@@ -45,7 +45,7 @@ import Autodesk.Revit.DB as rdb
 revisionData = namedtuple('revisionData', 'description issuedBy issuedTo revisionNumberType revisionDate tagCloudVisibility')
 
 
-def CreateRevision (doc, revData):
+def create_revision (doc, revData):
     '''
     Creates a revision in the document.
 
@@ -89,7 +89,7 @@ def CreateRevision (doc, revData):
     returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
-def MarkRevisionAsIssued(doc, revision):
+def mark_revision_as_issued(doc, revision):
     '''
     Sets a revision status to 'Issued'.
 
@@ -126,7 +126,7 @@ def MarkRevisionAsIssued(doc, revision):
     returnValue = rTran.in_transaction(transaction, action)
     return returnValue
 
-def MarkRevisionAsIssuedByRevisionId(doc, revisionId):
+def mark_revision_as_issued_by_revision_id(doc, revisionId):
     '''
     Sets a revision, identified by its id, status to 'Issued'.
 
@@ -157,12 +157,12 @@ def MarkRevisionAsIssuedByRevisionId(doc, revisionId):
         # get the revision element
         revision = doc.GetElement(revisionId)
         # mark revision as issued
-        returnValue = MarkRevisionAsIssued(doc, revision)
+        returnValue = mark_revision_as_issued(doc, revision)
     else:
         returnValue.UpdateSep(False,'Revision with id provided does not exist in model.')
     return returnValue
 
-def AddRevisionsToSheet(doc, sheet, revIds):
+def add_revisions_to_sheet(doc, sheet, revIds):
     '''
     Adds revisions to single sheet
 

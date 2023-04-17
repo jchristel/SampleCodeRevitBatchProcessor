@@ -40,7 +40,7 @@ from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 import Autodesk.Revit.DB as rdb
 
-def PurgeUnused(doc, processor):
+def purge_unused(doc, processor):
     '''
     This will delete all shared parameter definitions which are not used by any family parameter in the family or nested families.
 

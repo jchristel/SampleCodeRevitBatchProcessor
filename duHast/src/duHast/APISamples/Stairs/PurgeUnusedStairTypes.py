@@ -57,7 +57,7 @@ BUILTIN_STAIR_TYPE_FAMILY_NAMES = [
     CAST_IN_PLACE_STAIR_FAMILY_NAME
 ]
 
-def GetUsedStairTypeIds(doc):
+def get_used_stair_type_ids(doc):
     '''
     Gets all used in Stair type ids.
     Used: at least one instance of this type is placed in the model.
@@ -67,11 +67,11 @@ def GetUsedStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc,  rStair.GetAllStairTypeIdsInModelByCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc,  rStair.get_all_stair_type_ids_by_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
@@ -94,7 +94,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
 
 
 # -------------------------------- none in place Stair types purge -------------------------------------------------------
-def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
+def get_unused_non_in_place_stair_type_ids_to_purge(doc):
     '''
     Gets all unused Stair type ids for.
     Included are:
@@ -109,19 +109,19 @@ def GetUnusedNonInPlaceStairTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllStairTypeIdsInModelByClass, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.get_all_stair_type_ids_by_class, 0)
     # make sure there is at least on Stair type per system family left in model
-    StairTypes =  rStairSort.SortStairTypesByFamilyName(doc)
+    StairTypes =  rStairSort.sort_stair_types_by_family_name(doc)
     for key, value in StairTypes.items():
        if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 #--------------------------------utility functions to get unused sub types ----------------------
 
-def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
+def get_used_sub_type_ids_from_stair_type(doc, stairTypeId, paras):
     '''
     Gets the id of types making up a stair.
     These could be stair landing types, stringer and carriage types etc.
@@ -130,6 +130,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     - STAIR_LANDING_TYPE_PARAS, 
     - STAIR_CUTMARK_TYPE_PARAS, 
     - STAIR_SUPPORT_TYPE_PARAS 
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param stairTypeId: An element id representing a stair type. 
@@ -149,7 +150,7 @@ def GetUsedSubTypeIdsFromStairType(doc, stairTypeId, paras):
     return ids
 
 
-def GetAllSimilarTypeIds(doc, ids):
+def get_all_similar_type_ids(doc, ids):
     '''
     Gets all unique ids of similar types of element ids passed in.
     TODO: check for similar function elsewhere!
@@ -171,7 +172,7 @@ def GetAllSimilarTypeIds(doc, ids):
     return simIds
 
 
-def BuildSystemFamilyDictionary(doc, ids):
+def build_system_family_dictionary(doc, ids):
     '''
     Returns dictionary where key is the system family name and values list of available type ids of that system family.
     :param doc: Current Revit model document.
@@ -192,7 +193,7 @@ def BuildSystemFamilyDictionary(doc, ids):
     return dic
 
 
-def CheckSystemFamilies(doc, ids, leaveOneBehind):
+def check_system_families(doc, ids, leaveOneBehind):
     '''
     Check whether a list of ids of system family is the entire list of types available in the model. If so it will remove one\
     type id per system family to allow safe purging.
@@ -207,9 +208,9 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    dicToCheck = BuildSystemFamilyDictionary(doc, ids)
-    similarIds = GetAllSimilarTypeIds(doc, ids)
-    dicReference = BuildSystemFamilyDictionary(doc, similarIds)
+    dicToCheck = build_system_family_dictionary(doc, ids)
+    similarIds = get_all_similar_type_ids(doc, ids)
+    dicReference = build_system_family_dictionary(doc, similarIds)
     ids = []
     for key,value in dicToCheck.items():
         if (dicReference.has_key(key)):
@@ -225,7 +226,7 @@ def CheckSystemFamilies(doc, ids, leaveOneBehind):
     return ids
 
 
-def GetUsedSubTypes(doc, availableIdsGetter, paras, leaveOneBehind = True):
+def get_used_sub_types(doc, availableIdsGetter, paras, leaveOneBehind = True):
     '''
     Returns a list of type ids which are not used in any stair types. 
     Type ids are provided via an id getter function
@@ -244,10 +245,10 @@ def GetUsedSubTypes(doc, availableIdsGetter, paras, leaveOneBehind = True):
     ids = []
     # get all available type ids and then check against all Stair type ids
     idsAvailable = availableIdsGetter(doc)
-    allUsedStairTypeIds = rStair.GetAllStairTypeIdsInModelByCategory(doc)
+    allUsedStairTypeIds = rStair.get_all_stair_type_ids_by_category(doc)
     idsUsedTypes = []
     for used in allUsedStairTypeIds:
-        idsUsed = GetUsedSubTypeIdsFromStairType(doc, used, paras)
+        idsUsed = get_used_sub_type_ids_from_stair_type(doc, used, paras)
         for id in idsUsed:
             if(id not in idsUsedTypes):
                 idsUsedTypes.append(id)
@@ -255,12 +256,12 @@ def GetUsedSubTypes(doc, availableIdsGetter, paras, leaveOneBehind = True):
         if(idAvailable not in idsUsedTypes):
             ids.append(idAvailable)
     # need to check that we are not trying to delete last type of a system family....
-    ids = CheckSystemFamilies(doc, ids, leaveOneBehind)
+    ids = check_system_families(doc, ids, leaveOneBehind)
     return ids
 
 # --------------------------------- purging subtypes ------------------------------------------------
 
-def GetUnusedStairPathTypeIdsToPurge(doc):
+def get_unused_stair_path_type_ids_to_purge(doc):
     '''
     Gets all unused Stair path ids to purge, will omit on path type id per system family if none are used.
     This method can be used to safely delete unused stair path types. In the case that no stair\
@@ -273,8 +274,8 @@ def GetUnusedStairPathTypeIdsToPurge(doc):
     '''
 
     idsUsed = []
-    availableTypes = rStairPath.GetAllStairPathTypeIdsInModelByClass(doc)
-    col = rStairPath.GetAllStairPathElementsInModel(doc)
+    availableTypes = rStairPath.get_stair_path_types_ids_by_class(doc)
+    col = rStairPath.get_all_stair_path_instances(doc)
     for c in col:
         if (c.GetTypeId() not in idsUsed):
             idsUsed.append(c.GetTypeId())
@@ -282,11 +283,11 @@ def GetUnusedStairPathTypeIdsToPurge(doc):
     for at in availableTypes:
         if(at not in idsUsed):
             ids.append(at)
-    ids = CheckSystemFamilies(doc, ids, True)
+    ids = check_system_families(doc, ids, True)
     return ids
 
 
-def GetUnusedStairLandingTypeIdsToPurge(doc):
+def get_unused_stair_landing_type_ids_to_purge(doc):
     '''
     Gets all unused Stair landing type ids.
     This method can be used to safely delete unused stair landing types. In the case that no stair\
@@ -298,11 +299,11 @@ def GetUnusedStairLandingTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, rStairLanding.GetAllStairLandingTypeIdsInModelByClass, rStairLanding.STAIR_LANDING_TYPE_PARAS)
+    ids = get_used_sub_types(doc, rStairLanding.get_stair_landing_types_ids_by_class, rStairLanding.STAIR_LANDING_TYPE_PARAS)
     return ids
 
 
-def GetUnusedStairRunTypeIdsToPurge(doc):
+def get_unused_stair_run_type_ids_to_purge(doc):
     '''
     Gets all unused Stair run type ids.
     This method can be used to safely delete unused stair run types. In the case that no stair\
@@ -314,11 +315,11 @@ def GetUnusedStairRunTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, rStairRun.GetAllStairRunTypeIdsInModelByClass, rStairRun.STAIR_RUN_TYPE_PARAS)
+    ids = get_used_sub_types(doc, rStairRun.get_stair_run_types_ids_by_class, rStairRun.STAIR_RUN_TYPE_PARAS)
     return ids
 
 
-def GetUnusedStairCutMarkTypeIdsToPurge(doc):
+def get_unused_stair_cut_mark_type_ids_to_purge(doc):
     '''
     Gets all unused Stair cut mark type ids.
     This method can be used to safely delete unused stair cut mark types. In the case that no stair\
@@ -330,11 +331,11 @@ def GetUnusedStairCutMarkTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, rStairCut.GetAllStairCutMarkTypeIdsInModelByClass, rStairCut.STAIR_CUT_MARK_TYPE_PARAS)
+    ids = get_used_sub_types(doc, rStairCut.get_stair_cut_mark_types_ids_by_class, rStairCut.STAIR_CUT_MARK_TYPE_PARAS)
     return ids
 
 
-def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
+def get_unused_stair_stringers_carriage_type_ids_to_purge(doc):
     '''
     Gets all unused Stair stringer / carriage type ids.
     This method can be used to safely delete unused stair stringer / carriage types. In the case that no stair\
@@ -346,12 +347,12 @@ def GetUnusedStairStringersCarriageTypeIdsToPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = GetUsedSubTypes(doc, rStairStringersAndCarriages.GetAllStairStringCarriageTypeIdsInModelByCategory, rStairStringersAndCarriages.STAIR_SUPPORT_TYPE_PARAS)
+    ids = get_used_sub_types(doc, rStairStringersAndCarriages.get_all_stair_stringers_carriage_type_ids_by_category, rStairStringersAndCarriages.STAIR_SUPPORT_TYPE_PARAS)
     return ids
 
 # -------------------------------- In place Stair types -------------------------------------------------------
 
-def GetUsedInPlaceStairTypeIds(doc):
+def get_used_in_place_stair_type_ids(doc):
     '''
     Gets all used in place stair type ids.
     :param doc: Current Revit model document.
@@ -360,11 +361,11 @@ def GetUsedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.get_all_in_place_stair_type_ids, 1)
     return ids
 
 
-def GetUnusedInPlaceStairTypeIds(doc):
+def get_unused_in_place_stair_type_ids(doc):
     '''
     Gets all unused in place stair type ids.
     :param doc: Current Revit model document.
@@ -373,11 +374,11 @@ def GetUnusedInPlaceStairTypeIds(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.GetAllInPlaceStairTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.get_all_in_place_stair_type_ids, 0)
     return ids
 
 
-def GetUnusedInPlaceStairIdsForPurge(doc):
+def get_unused_in_place_stair_type_ids_for_purge(doc):
     '''
     Gets symbol (type) ids and family ids (when no type is in use) of in place Stair families which can be purged.
     :param doc: Current Revit model document.
@@ -386,7 +387,7 @@ def GetUnusedInPlaceStairIdsForPurge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceStairTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_in_place_stair_type_ids)
     return ids
 
 

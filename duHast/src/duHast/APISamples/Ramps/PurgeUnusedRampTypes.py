@@ -28,11 +28,11 @@ This module contains a number of helper functions relating to purging Revit ramp
 
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.Ramps.Utility.RevitRampsFamilyNames import BUILTIN_RAMP_TYPE_FAMILY_NAMES
-from duHast.APISamples.Ramps.Utility.RevitRampsTypeSorting import SortRampTypesByFamilyName
-from duHast.APISamples.Ramps.RevitRamps import GetAllRampTypeIdsInModelByCategory
+from duHast.APISamples.Ramps.Utility.RevitRampsTypeSorting import sort_ramp_types_by_family_name
+from duHast.APISamples.Ramps.RevitRamps import get_all_ramp_types_ids_by_category
 
 
-def GetUsedRampTypeIds(doc):
+def get_used_ramp_type_ids(doc):
     '''
     Gets all used ramp element type ids available in model.
     Used: at least one instance of this type is placed in the model.
@@ -42,11 +42,11 @@ def GetUsedRampTypeIds(doc):
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRampTypeIdsInModelByCategory, 1, 4)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_ramp_types_ids_by_category, 1, 4)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first lists) are in use in a model (second list).
@@ -67,7 +67,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
+def get_unused_non_in_place_ramp_type_ids_to_purge(doc):
     '''
     Gets all unused ramp type ids in the model.
     This method can be used to safely delete unused ramp types. In the case that no ramp\
@@ -83,12 +83,12 @@ def GetUnusedNonInPlaceRampTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRampTypeIdsInModelByCategory, 0, 4)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_ramp_types_ids_by_category, 0, 4)
     # make sure there is at least on Ramp type per system family left in model
-    RampTypes = SortRampTypesByFamilyName(doc)
+    RampTypes = sort_ramp_types_by_family_name(doc)
     for key, value in RampTypes.items():
         if(key in BUILTIN_RAMP_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids

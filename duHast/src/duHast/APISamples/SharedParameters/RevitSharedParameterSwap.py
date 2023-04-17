@@ -65,9 +65,9 @@ from collections import namedtuple
 Tuple containing settings data on how to swap a shared parameter retrieved from a file.
 '''
 
-parameterSettingsData = namedtuple('parameterSettingsData', 'oldParameterName newParameterData sharedParameterPath')
+PARAMETER_SETTINGS_DATA = namedtuple('parameterSettingsData', 'oldParameterName newParameterData sharedParameterPath')
 
-def _loadSharedParameterDataFromFile(filePath):
+def _load_shared_parameter_data_from_file(filePath):
     '''
     _summary_
 
@@ -86,11 +86,11 @@ def _loadSharedParameterDataFromFile(filePath):
             flag = False
             if(row[3].upper() == "TRUE"):
                 flag = True
-            t = rSharedT.parameterData (row[1], flag, rPG.PRAMETER_GROPUING_TO_BUILD_IN_PARAMETER_GROUPS[row[4]])
-            parameterMapper[row[0]] = parameterSettingsData(row[0], t, row[2])
+            t = rSharedT.PARAMETER_DATA (row[1], flag, rPG.PRAMETER_GROPUING_TO_BUILD_IN_PARAMETER_GROUPS[row[4]])
+            parameterMapper[row[0]] = PARAMETER_SETTINGS_DATA(row[0], t, row[2])
     return parameterMapper
 
-def SwapSharedParameters(doc, changeDirectiveFilePath):
+def swap_shared_parameters(doc, changeDirectiveFilePath):
     '''
     Swaps out a shared parameter for another. (refer to module header for details)
 
@@ -117,29 +117,29 @@ def SwapSharedParameters(doc, changeDirectiveFilePath):
     returnValue = res.Result()
     _parameterPrefix_ = "_dummy_"
     # load change directive
-    parameterDirectives = _loadSharedParameterDataFromFile(changeDirectiveFilePath)
+    parameterDirectives = _load_shared_parameter_data_from_file(changeDirectiveFilePath)
     if(len(parameterDirectives) > 0):
         # loop over directive and
         for pDirective in parameterDirectives:
             # load shared para file
-            sharedParaDefFile = rSharedPAdd.LoadSharedParameterFile(doc, parameterDirectives[pDirective].sharedParameterPath)
+            sharedParaDefFile = rSharedPAdd.load_shared_parameter_file(doc, parameterDirectives[pDirective].sharedParameterPath)
             returnValue.AppendMessage('Read shared parameter file: ' + parameterDirectives[pDirective].sharedParameterPath)
             if(sharedParaDefFile != None):
                 #   - swap shared parameter to family parameter
-                statusChangeToFamPara = rSharedTypeChange.ChangeSharedParameterToFamilyParameter(doc, pDirective, _parameterPrefix_)
+                statusChangeToFamPara = rSharedTypeChange.change_shared_parameter_to_family_parameter(doc, pDirective, _parameterPrefix_)
                 returnValue.Update(statusChangeToFamPara)
                 if(statusChangeToFamPara.status):
                     #   - delete all shared parameter definition
-                    statusDeleteOldSharedParaDef = rSharedParaDelete.DeleteSharedParameterByName(doc, pDirective)
+                    statusDeleteOldSharedParaDef = rSharedParaDelete.delete_shared_parameter_by_name(doc, pDirective)
                     returnValue.Update(statusDeleteOldSharedParaDef)
                     if(statusDeleteOldSharedParaDef.status):
                         # get shared parameter definition
-                        sParaDef = rSharedPara.GetSharedParameterDefinition(parameterDirectives[pDirective].newParameterData.name, sharedParaDefFile)
+                        sParaDef = rSharedPara.get_shared_parameter_definition(parameterDirectives[pDirective].newParameterData.name, sharedParaDefFile)
                         #   - add new shared parameter
                         if(sParaDef != None):
                             returnValue.AppendMessage('Retrieved shared parameter definition for: ' + parameterDirectives[pDirective].newParameterData.name) 
                             #   - swap family parameter to shared parameter
-                            statusSwapFamToSharedP = rSharedTypeChange.ChangeFamilyParameterToSharedParameter(
+                            statusSwapFamToSharedP = rSharedTypeChange.change_family_parameter_to_shared_parameter(
                                 doc, 
                                 _parameterPrefix_ + pDirective, # add prefix
                                 parameterDirectives[pDirective].newParameterData, 

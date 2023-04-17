@@ -48,7 +48,7 @@ class RevitWarningsSolverRoomTagToRoom(Base.Base):
     #: guid identifying this specific warning
     GUID = '4f0bba25-e17f-480a-a763-d97d184be18a'
     
-    def SolveWarnings(self, doc, warnings):
+    def solve_warnings(self, doc, warnings):
         '''
         Solver moving room tags to room location point.
 

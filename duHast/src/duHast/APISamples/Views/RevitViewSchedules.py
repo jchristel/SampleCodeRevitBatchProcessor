@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 
 
-def GetScheduleIdsOnSheets(doc):
+def get_schedule_ids_on_sheets(doc):
     '''
     Gets view ids of all schedules with instances placed on a sheet
     :param doc: Current Revit model document.
@@ -48,9 +48,11 @@ def GetScheduleIdsOnSheets(doc):
     return ids
 
 
-def FilterRevisionSchedules(view):
+def filter_revision_schedules(view):
     '''
     Checks whether a view is a revision schedule.
+    (not required...schedules have a property flag!!)
+
     :param view: The view to check.
     :type view: Autodesk.Revit.DB.View
     :return: True if the view name starts with '<', otherwise False
@@ -63,7 +65,7 @@ def FilterRevisionSchedules(view):
         return True
 
 
-def GetSchedulesNotOnSheets(doc):
+def get_schedules_not_on_sheets(doc):
     '''
     Gets all schedules without an instance placed on a sheet.
     :param doc: Current Revit model document.
@@ -74,7 +76,7 @@ def GetSchedulesNotOnSheets(doc):
 
     schedulesNotOnSheets = []
     # get schedules on sheets
-    idsOnSheets = GetScheduleIdsOnSheets(doc)
+    idsOnSheets = get_schedule_ids_on_sheets(doc)
     # get all schedules in model
     schedulesInModel = _get_view_types(doc, rdb.ViewType.Schedule)
     # loop and filter out schedules not on sheets

@@ -76,7 +76,7 @@ CURTAINWALL_ELEMENTS_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
 
 # --------------------------------------------- utility functions ------------------
 
-def GetAllCurtainWallElementTypesByCategory(doc):
+def get_all_curtain_wall_element_types_by_category(doc):
     '''
     Gets a filtered element collector of all curtain wall element types in the model:
 
@@ -98,7 +98,7 @@ def GetAllCurtainWallElementTypesByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
     return collector
 
-def BuildCurtainWallElementTypeDictionary(collector, dic):
+def build_curtain_wall_element_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
@@ -122,7 +122,7 @@ def BuildCurtainWallElementTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def SortCurtainWallElementTypesByFamilyName(doc):
+def sort_curtain_wall_element_types_by_family_name(doc):
     '''
     Returns a dictionary containing all curtain wall element types in the model.
 
@@ -137,14 +137,14 @@ def SortCurtainWallElementTypesByFamilyName(doc):
     '''
 
     # get all CurtainWallElement types including in place wall families
-    wts_two = GetAllCurtainWallElementTypesByCategory(doc)
+    wts_two = get_all_curtain_wall_element_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildCurtainWallElementTypeDictionary(wts_two, usedWts)
+    usedWts = build_curtain_wall_element_type_dictionary(wts_two, usedWts)
     return usedWts
 
 # -------------------------------- none in place or loadable Curtain Wall Element types -------------------------------------------------------
 
-def GetCurtainWallElementInstancesInModelByCategory(doc):
+def get_curtain_wall_element_instances_by_category(doc):
     '''
     Gets all CurtainWallElement elements instances placed in model.
 
@@ -163,7 +163,7 @@ def GetCurtainWallElementInstancesInModelByCategory(doc):
     multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
     return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
 
-def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
+def get_all_curtain_wall_element_type_ids_by_category(doc):
     '''
     Gets all Curtain Wall Element element type ids available in model.
 
@@ -180,11 +180,11 @@ def GetAllCurtainWallElementTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllCurtainWallElementTypesByCategory(doc)
+    colCat = get_all_curtain_wall_element_types_by_category(doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids
 
-def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
+def get_all_curtain_wall_element_types_by_category_excl_in_place(doc):
     '''
     Gets all Curtain Wall Element element type available in model. Excludes in place family symbols.
 
@@ -200,14 +200,14 @@ def GetAllCurtainWallElementTypesByCategoryExclInPlace(doc):
     :rtype: list of Autodesk.Revit.DB.ElementType
     '''
 
-    collector = GetAllCurtainWallElementTypesByCategory(doc)
+    collector = get_all_curtain_wall_element_types_by_category(doc)
     elements=[]
     for c in collector:
         if(c.GetType() != rdb.FamilySymbol):
             elements.append(c)
     return elements
 
-def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
+def get_all_curtain_wall_element_type_ids_by_category_excl_symbols(doc):
     '''
     Gets all Curtain Wall Element element type ids available in model. Excludes in place family symbols.
 
@@ -223,7 +223,7 @@ def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    collector = GetAllCurtainWallElementTypesByCategory(doc)
+    collector = get_all_curtain_wall_element_types_by_category(doc)
     ids=[]
     for c in collector:
         if(c.GetType() != rdb.FamilySymbol):
@@ -232,7 +232,7 @@ def GetAllCurtainWallElementTypeIdsByCategoryExclSymbols(doc):
 
 # -------------------------------- loadable Curtain Wall Element types -------------------------------------------------------
 
-def GetAllCurtainWallNonSharedSymbolIdsByCategory(doc):
+def get_all_curtain_wall_non_shared_symbol_ids_by_category(doc):
     '''
     Gets a list of all loadable, non shared, family symbols (types) in the model of categories:
 

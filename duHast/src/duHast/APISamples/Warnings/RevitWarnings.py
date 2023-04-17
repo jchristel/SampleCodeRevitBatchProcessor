@@ -35,7 +35,7 @@ REPORT_WARNINGS_HEADER = ['HOSTFILE','ID', 'NAME', 'WARNING TYPE', 'NUMBER OF WA
 
 # --------------------------------------------- utility functions ------------------
 
-def GetWarnings(doc):
+def get_warnings(doc):
     '''
     Returns a list of warnings from the model
 
@@ -48,7 +48,7 @@ def GetWarnings(doc):
 
     return doc.GetWarnings()
 
-def GetWarningsByGuid(doc, guid):
+def get_warnings_by_guid(doc, guid):
     '''
     Returns all failure message objects where failure definition has matching GUID
 

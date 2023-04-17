@@ -36,7 +36,7 @@ STAIR_LANDING_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LANDING_TYPE
 ]
 
-def GetStairLandingTypesByClass(doc):
+def get_stair_landing_types_by_class(doc):
     '''
     Gets a filtered element collector of all Stair landing types in the model.
     :param doc: Current Revit model document.
@@ -47,7 +47,7 @@ def GetStairLandingTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsLandingType)
 
-def GetAllStairLandingTypeIdsInModelByClass(doc):
+def get_stair_landing_types_ids_by_class(doc):
     '''
     Gets all Stair landing element type ids available in model.
     :param doc: Current Revit model document.
@@ -57,7 +57,7 @@ def GetAllStairLandingTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetStairLandingTypesByClass (doc)
+    colClass = get_stair_landing_types_by_class (doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids
 

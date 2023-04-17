@@ -28,4 +28,4 @@ This module contains the header row for any Revit railing reports.
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_RailingS_HEADER = ['HOSTFILE', 'RAILINGTYPEID', 'RAILINGTYPENAME']
+REPORT_RAILINGS_HEADER = ['HOSTFILE', 'RAILINGTYPEID', 'RAILINGTYPENAME']

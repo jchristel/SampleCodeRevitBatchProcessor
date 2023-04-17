@@ -46,7 +46,7 @@ class RevitWarningsSolver(Base.Base):
 
     # --------------------------- available filters ---------------------------
 
-    def DefaultFilterReturnAll(self, doc, elementId):
+    def default_filter_return_all(self, doc, elementId):
         '''
         Default filter for elements past into solver...returns True for any element past in.
 
@@ -63,13 +63,13 @@ class RevitWarningsSolver(Base.Base):
     # --------------------------- solvers initialise code ---------------------------
     
     #: default solver classes
-    solveRoomTagToRoom = rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom()
-    solverSameMark = rwsDuplicateMark.RevitWarningsSolverDuplicateMark(DefaultFilterReturnAll)
+    solver_room_tag_to_room = rwsRoomTagToRoom.RevitWarningsSolverRoomTagToRoom()
+    solver_same_mark = rwsDuplicateMark.RevitWarningsSolverDuplicateMark(default_filter_return_all)
     
     #: solver dictionary of available warning solvers by guid 
     AVAILABLE_SOLVERS = {
-        solveRoomTagToRoom.GUID:solveRoomTagToRoom,
-        solverSameMark.GUID:solverSameMark
+        solver_room_tag_to_room.GUID:solver_room_tag_to_room,
+        solver_same_mark.GUID:solver_same_mark
     }
 
     # --------------------------- solvers code ---------------------------
@@ -82,9 +82,9 @@ class RevitWarningsSolver(Base.Base):
         # ini super class to allow multi inheritance in children!
         super(RevitWarningsSolver, self).__init__() 
 
-        self.filterFuncSameMark = self.DefaultFilterReturnAll
+        self.filterFuncSameMark = self.default_filter_return_all
     
-    def SetSameMarkFilterAndFilterSolver(self, sameMarkFilterSolver):
+    def set_same_mark_filter_and_filter_solver(self, sameMarkFilterSolver):
         '''
         Method allowing to override the default filter function
 
@@ -94,9 +94,9 @@ class RevitWarningsSolver(Base.Base):
 
         # replace the old solver
         self.AVAILABLE_SOLVERS[sameMarkFilterSolver.GUID] = sameMarkFilterSolver
-        self.solverSameMark = sameMarkFilterSolver
+        self.solver_same_mark = sameMarkFilterSolver
 
-    def SolveWarnings(self,doc):
+    def solve_warnings(self,doc):
         '''
         Attempts to solve some warning in a revit model using available warnings solver.
 
@@ -116,7 +116,7 @@ class RevitWarningsSolver(Base.Base):
         returnValue = res.Result()
         try:
             for solver in self.AVAILABLE_SOLVERS:
-                warnings =  rWar.GetWarningsByGuid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
+                warnings =  rWar.get_warnings_by_guid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
                 resultSolver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
                 returnValue.Update(resultSolver)
         except Exception as e:

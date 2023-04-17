@@ -31,7 +31,7 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 
 
-def MoveTagToRoom(doc, tagId):
+def move_tag_to_room(doc, tagId):
     '''
     Moves a room tag to the associated rooms location point.
     :param doc: Current Revit model document.

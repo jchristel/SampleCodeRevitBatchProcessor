@@ -65,7 +65,7 @@ class SharedParameterData(IFamData.IFamilyData):
         '''
     
     def process(self, doc):
-        collector = rSharedPara.GetAllSharedParameters(doc)
+        collector = rSharedPara.get_all_shared_parameters(doc)
         for para in collector:
             # just in case parameter name is not unicode
             parameter_name = 'unknown'
@@ -76,7 +76,7 @@ class SharedParameterData(IFamData.IFamilyData):
             # check if used:
             useCounter = 0
             usedByData = {}
-            if(rSharedPara.IsSharedParameterDefinitionUsed(doc, para)):
+            if(rSharedPara.is_shared_parameter_definition_used(doc, para)):
                 useCounter = 1
                 # build used by data as required to be the same as post process update
                 usedByData = { 

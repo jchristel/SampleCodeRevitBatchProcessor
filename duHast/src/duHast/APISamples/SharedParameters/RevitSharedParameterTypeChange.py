@@ -31,12 +31,13 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
-from duHast.APISamples.SharedParameters.RevitSharedParameters import GetFamilyParameters
+from duHast.APISamples.SharedParameters.RevitSharedParameters import get_family_parameters
 
 
-def ChangeSharedParameterToFamilyParameter(doc, parameterName, prefix = '_'):
+def change_shared_parameter_to_family_parameter(doc, parameterName, prefix = '_'):
     '''
     Changes a shared family parameter to a standard family parameter.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param parameterName: The shared parameter name.
@@ -59,7 +60,7 @@ def ChangeSharedParameterToFamilyParameter(doc, parameterName, prefix = '_'):
     # get the family manager
     manager = doc.FamilyManager
     # get family parameters
-    paras = GetFamilyParameters(doc)
+    paras = get_family_parameters(doc)
     # flag
     changedParameter = False
     # check whether any parameter in family requires changing
@@ -91,9 +92,10 @@ def ChangeSharedParameterToFamilyParameter(doc, parameterName, prefix = '_'):
     return returnValue
 
 
-def ChangeFamilyParameterToSharedParameter(doc, parameterName, parameterData, parameterDef):
+def change_family_parameter_to_shared_parameter(doc, parameterName, parameterData, parameterDef):
     '''
     Changes a family parameter to a shared parameter.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param parameterName: The family parameter name.
@@ -118,7 +120,7 @@ def ChangeFamilyParameterToSharedParameter(doc, parameterName, parameterData, pa
     # get the family manager
     manager = doc.FamilyManager
     # get family parameters
-    paras = GetFamilyParameters(doc)
+    paras = get_family_parameters(doc)
     # flag
     changedParameter = False
     # check whether any parameter in family requires changing

@@ -38,7 +38,7 @@ from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 
 # view reference purging
 
-def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
+def get_unused_continuation_marker_type_ids_for_purge(doc):
     '''
     Gets all unused view continuation type ids in model for purge.
     This method can be used to safely delete all unused view continuation marker types.
@@ -49,15 +49,15 @@ def GetUnusedContinuationMarkerTypeIdsForPurge(doc):
     '''
 
     ids = []
-    allAvailableTypeIds = rViewRef.GetAllViewContinuationTypeIds(doc)
-    allUsedTypeIds = rViewRef.GetUsedViewContinuationTypeIds(doc)
+    allAvailableTypeIds = rViewRef.get_all_view_continuation_type_ids(doc)
+    allUsedTypeIds = rViewRef.get_used_view_continuation_type_ids(doc)
     for aId in allAvailableTypeIds:
         if( aId not in allUsedTypeIds):
             ids.append(aId)
     return ids
 
 
-def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
+def is_nested_family_symbol(doc, id, nestedFamilyNames):
     '''
     Returns true if symbol belongs to family in list past in.
     :param doc: Current Revit model document.
@@ -78,7 +78,7 @@ def IsNestedFamilySymbol(doc, id, nestedFamilyNames):
     return flag
 
 
-def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
+def get_unused_view_ref_and_continuation_marker_symbol_ids(doc):
     '''
     Gets the ids of all view reference symbols(types) and view continuation symbols (types) not used in the model.
     Not used: These symbols are not used in any view reference types, or nested in any symbols used in view reference types.
@@ -91,10 +91,10 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
     ids = []
     # compare used vs available in view ref types
     # whatever is marked as unused: check for any instances in the model...placed on legends!
-    availableIds = rViewRef.GetAllViewReferenceSymbolIds(doc) # check: does this really return all continuation marker types??
-    usedIds = rViewRef.GetUsedViewReferenceAndContinuationMarkerSymbolIds(doc)
+    availableIds = rViewRef.get_all_view_reference_symbol_ids(doc) # check: does this really return all continuation marker types??
+    usedIds = rViewRef.get_used_view_reference_and_continuation_marker_symbol_ids(doc)
     # elevation marker families might use nested families...check!
-    nestedFamilyNames = rViewRef.GetNestedFamilyMarkerNames(doc, usedIds)
+    nestedFamilyNames = rViewRef.get_nested_family_marker_names(doc, usedIds)
     checkIds = []
     for aId in availableIds:
         if (aId not in usedIds):
@@ -103,12 +103,12 @@ def GetUnusedViewRefAndContinuationMarkerSymbolIds(doc):
     for id in checkIds:
         instances = rFamUPurge.get_family_instances_by_symbol_type_id(doc, id).ToList()
         if(len(instances) == 0):
-            if(IsNestedFamilySymbol(doc, id, nestedFamilyNames) == False):
+            if(is_nested_family_symbol(doc, id, nestedFamilyNames) == False):
                 ids.append(id)
     return ids
 
 
-def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
+def get_unused_view_ref_and_continuation_marker_families_for_purge(doc):
     '''
     Gets the ids of all view reference symbols(types) ids and or family ids not used in the model for purging.
     This method can be used to safely delete all unused view reference and continuation marker family symbols\
@@ -119,9 +119,9 @@ def GetUnusedViewRefAndContinuationMarkerFamiliesForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    return rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedViewRefAndContinuationMarkerSymbolIds)
+    return rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_view_ref_and_continuation_marker_symbol_ids)
 
-def GetUnusedViewReferenceTypeIdsForPurge(doc):
+def get_unused_view_reference_type_ids_for_purge(doc):
     '''
     Gets all unused view references type ids in model for purge.
     This method can be used to safely delete all unused view reference types.
@@ -132,8 +132,8 @@ def GetUnusedViewReferenceTypeIdsForPurge(doc):
     '''
 
     ids = []
-    allAvailableTypeIds = rViewRef.GetAllViewReferenceTypeIdData(doc)
-    allUsedTypeIds = rViewRef.GetUsedViewReferenceTypeIdData(doc)
+    allAvailableTypeIds = rViewRef.get_all_view_reference_type_id_data(doc)
+    allUsedTypeIds = rViewRef.get_used_view_reference_type_id_data(doc)
     for key,value in allAvailableTypeIds.items():
         if(allUsedTypeIds.has_key(key)):
             for availableTypeId in allAvailableTypeIds[key]:
@@ -148,7 +148,7 @@ def GetUnusedViewReferenceTypeIdsForPurge(doc):
 
 # view types purging
 
-def GetUsedViewTypeIdsInTheModel(doc):
+def get_used_view_type_ids(doc):
     '''
     Returns all view family types in use in the model.
     :param doc: Current Revit model document.
@@ -172,7 +172,7 @@ def GetUsedViewTypeIdsInTheModel(doc):
     return viewTypeIdsUsed
 
 
-def GetUnusedViewTypeIdsInModel(doc):
+def get_unused_view_type_ids(doc):
     '''
     Returns all unused view family types in the model
     :param doc: Current Revit model document.
@@ -181,5 +181,5 @@ def GetUnusedViewTypeIdsInModel(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filteredUnusedViewTypeIds = com.get_unused_type_ids_in_model(doc, _get_view_types, GetUsedViewTypeIdsInTheModel)
+    filteredUnusedViewTypeIds = com.get_unused_type_ids_in_model(doc, _get_view_types, get_used_view_type_ids)
     return filteredUnusedViewTypeIds

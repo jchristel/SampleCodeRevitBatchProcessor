@@ -28,14 +28,14 @@ This module contains a number of helper functions relating to purging Revit rail
 
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
-from duHast.APISamples.Railings.RevitBalusters import GetAllBalusterSymbolIds, GetBalusterTypesFromRailings
-from duHast.APISamples.Railings.RevitRailings import GetAllInPlaceRailingTypeIdsInModel, GetAllRailingTypeIdsInModelByClassAndCategory
+from duHast.APISamples.Railings.RevitBalusters import get_all_baluster_symbols_ids, get_baluster_types_from_railings
+from duHast.APISamples.Railings.RevitRailings import get_in_place_railing_type_ids_in_model, get_all_railing_type_ids_by_class_and_category
 from duHast.APISamples.Railings.Utility.RevitRailingFamilyNames import BUILTIN_RAILING_TYPE_FAMILY_NAMES
-from duHast.APISamples.Railings.Utility.MergeLists import MergeIntoUniqueList
-from duHast.APISamples.Railings.Utility.RevitRailingsTypeSorting import SortRailingTypesByFamilyName
+from duHast.APISamples.Railings.Utility.MergeLists import merge_into_unique_list
+from duHast.APISamples.Railings.Utility.RevitRailingsTypeSorting import sort_railing_types_by_family_name
 
 
-def GetUsedRailingTypeIds(doc):
+def get_used_railing_type_ids(doc):
     '''
     Gets all used Railing element types available in model excluding in place types.
     Used: at least one instance of this type is placed in the model.
@@ -45,11 +45,11 @@ def GetUsedRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_railing_type_ids_by_class_and_category, 1)
     return ids
 
 
-def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(famTypeIds,unUsedTypeIds):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
@@ -70,7 +70,7 @@ def FamilyNoTypesInUse(famTypeIds,unUsedTypeIds):
     return match
 
 
-def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
+def get_unused_non_in_place_railing_type_ids_to_purge(doc):
     '''
     Gets all unused Railing type ids for:
     - Top Rail
@@ -90,18 +90,18 @@ def GetUnusedNonInPlaceRailingTypeIdsToPurge(doc):
     '''
 
     # get unused type ids
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllRailingTypeIdsInModelByClassAndCategory, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_railing_type_ids_by_class_and_category, 0)
     # make sure there is at least on Railing type per system family left in model
-    RailingTypes = SortRailingTypesByFamilyName(doc)
+    RailingTypes = sort_railing_types_by_family_name(doc)
     for key, value in RailingTypes.items():
         if(key in BUILTIN_RAILING_TYPE_FAMILY_NAMES):
-            if(FamilyNoTypesInUse(value,ids) == True):
+            if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
 
 
-def GetUsedInPlaceRailingTypeIds(doc):
+def get_used_in_place_railing_type_ids(doc):
     '''
     Gets all used in place railing type ids.
     Used: at least one instance of this type is placed in the model.
@@ -111,11 +111,11 @@ def GetUsedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRailingTypeIdsInModel, 1)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_in_place_railing_type_ids_in_model, 1)
     return ids
 
 
-def GetUnusedInPlaceRailingTypeIds(doc):
+def get_unused_in_place_railing_type_ids(doc):
     '''
     Gets all unused in place railing type ids.
     :param doc: Current Revit model document.
@@ -124,11 +124,11 @@ def GetUnusedInPlaceRailingTypeIds(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, GetAllInPlaceRailingTypeIdsInModel, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, get_in_place_railing_type_ids_in_model, 0)
     return ids
 
 
-def GetUnusedInPlaceRailingIdsForPurge(doc):
+def get_unused_in_place_railing_ids_for_purge(doc):
     '''
     Gets symbol(type) ids and family ids (when no type is in use) of in place Railing families which can be purged.
     This method can be used to safely delete unused in place railing types and families.
@@ -138,11 +138,11 @@ def GetUnusedInPlaceRailingIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnusedInPlaceRailingTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_in_place_railing_type_ids)
     return ids
 
 
-def GetUsedBalusterTypeIds(doc):
+def get_used_baluster_type_ids(doc):
     '''
     Gets all used baluster type ids in the model.
     Used: at least one instance of this family symbol (type) is placed in the model.
@@ -153,14 +153,14 @@ def GetUsedBalusterTypeIds(doc):
     '''
 
     ids = []
-    idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, GetAllBalusterSymbolIds, 1)
-    idsUsedInRailings = GetBalusterTypesFromRailings(doc)
-    ids = MergeIntoUniqueList(ids, idsUsedInModel)
-    ids = MergeIntoUniqueList(ids, idsUsedInRailings)
+    idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_all_baluster_symbols_ids, 1)
+    idsUsedInRailings = get_baluster_types_from_railings(doc)
+    ids = merge_into_unique_list(ids, idsUsedInModel)
+    ids = merge_into_unique_list(ids, idsUsedInRailings)
     return ids
 
 
-def GetUnUsedBalusterTypeIds(doc):
+def get_unused_baluster_type_ids(doc):
     '''
     Gets all unused baluster type ids in the model.
     Unused: Not one instance of this family symbol (type) is placed in the model.
@@ -171,15 +171,15 @@ def GetUnUsedBalusterTypeIds(doc):
     '''
 
     ids = []
-    idsUsed = GetUsedBalusterTypeIds(doc)
-    idsAvailable = GetAllBalusterSymbolIds(doc)
+    idsUsed = get_used_baluster_type_ids(doc)
+    idsAvailable = get_all_baluster_symbols_ids(doc)
     for id in idsAvailable:
         if (id not in idsUsed):
             ids.append(id)
     return ids
 
 
-def GetUnUsedBalusterTypeIdsForPurge(doc):
+def get_unused_baluster_type_ids_for_purge(doc):
     '''
     Gets all unused baluster type ids in the model.
     Unused: at least one instance of this family symbol (type) is placed in the model.
@@ -190,5 +190,5 @@ def GetUnUsedBalusterTypeIdsForPurge(doc):
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, GetUnUsedBalusterTypeIds)
+    ids = rFamPurge.get_unused_in_place_ids_for_purge(doc, get_unused_baluster_type_ids)
     return ids

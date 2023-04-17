@@ -37,7 +37,7 @@ STAIR_SUPPORT_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
 ]
 
-def GetAllStairStringersCarriageByCategory(doc):
+def get_all_stair_stringers_carriage_by_category(doc):
     '''
     Gets a filtered element collector of all stair stringers and carriage types in the model.
     :param doc: Current Revit model document.
@@ -49,7 +49,7 @@ def GetAllStairStringersCarriageByCategory(doc):
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
     return collector
 
-def GetAllStairStringCarriageTypeIdsInModelByCategory(doc):
+def get_all_stair_stringers_carriage_type_ids_by_category(doc):
     '''
     Get all Stair stringers and carriage element type ids available in model.
     :param doc: Current Revit model document.
@@ -59,6 +59,6 @@ def GetAllStairStringCarriageTypeIdsInModelByCategory(doc):
     '''
 
     ids = []
-    colCat = GetAllStairStringersCarriageByCategory (doc)
+    colCat = get_all_stair_stringers_carriage_by_category (doc)
     ids = com.get_ids_from_element_collector (colCat)
     return ids

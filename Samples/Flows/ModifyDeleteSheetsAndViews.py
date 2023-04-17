@@ -162,7 +162,7 @@ def modify_views(doc, revit_file_path, view_data):
     for file_name, view_rules in view_data:
         if (revit_file_name.startswith(file_name)):
             collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            return_value = rViewDel.DeleteViews(doc, view_rules, collector_views)
+            return_value = rViewDel.delete_views(doc, view_rules, collector_views)
             break
     return return_value
 
@@ -201,7 +201,7 @@ def modify_sheets(doc, sheets_data):
         # check if set of rules applies to this particular project file
         if (revit_file_name.startswith(file_name)):
             collector_sheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            return_value = rViewDel.DeleteSheets(doc, sheet_rules, collector_sheets)
+            return_value = rViewDel.delete_sheets(doc, sheet_rules, collector_sheets)
             break
     return return_value
 
@@ -258,7 +258,7 @@ RESULT_DELETE_VIEWS = modify_views(DOC, REVIT_FILE_PATH, VIEW_RULES)
 output(RESULT_DELETE_VIEWS.message + '.... status: ' + str(RESULT_DELETE_VIEWS.status))
 
 # delete views not on sheets
-RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.DeleteViewsNotOnSheets(DOC, check_name)
+RESULT_DELETE_VIEWS_NOT_ON_SHEETS = rViewDel.delete_views_not_on_sheets(DOC, check_name)
 output(str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.message)+ '.... status: ' + str(RESULT_DELETE_VIEWS_NOT_ON_SHEETS.status))
  
 # sync changes back to central, non workshared files will not be saved!

@@ -26,10 +26,10 @@ This module contains a Revit railings utility functions.
 #
 #
 
-from duHast.APISamples.Railings.RevitRailings import GetAllRailingTypesByCategory, GetRailingTypesByClass
+from duHast.APISamples.Railings.RevitRailings import get_all_railing_types_by_category, get_railing_types_by_class
 
 
-def BuildRailingTypeDictionary(collector, dic):
+def build_railing_type_dictionary(collector, dic):
     '''
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -50,7 +50,7 @@ def BuildRailingTypeDictionary(collector, dic):
     return dic
 
 
-def SortRailingTypesByFamilyName(doc):
+def sort_railing_types_by_family_name(doc):
     '''
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -61,10 +61,10 @@ def SortRailingTypesByFamilyName(doc):
     '''
 
     # get all Railing Type Elements
-    wts = GetRailingTypesByClass(doc)
+    wts = get_railing_types_by_class(doc)
     # get all Railing types including in place railing families
-    wts_two = GetAllRailingTypesByCategory(doc)
+    wts_two = get_all_railing_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildRailingTypeDictionary(wts, usedWts)
-    usedWts = BuildRailingTypeDictionary(wts_two, usedWts)
+    usedWts = build_railing_type_dictionary(wts, usedWts)
+    usedWts = build_railing_type_dictionary(wts_two, usedWts)
     return usedWts

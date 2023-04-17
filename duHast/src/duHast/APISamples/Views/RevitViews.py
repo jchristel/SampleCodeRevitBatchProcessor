@@ -32,15 +32,15 @@ import System
 # import common library modules
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
-from duHast.APISamples.Views.RevitViewSchedules import FilterRevisionSchedules
-from duHast.APISamples.Views.RevitViewSheets import GetSheetsInModel
+from duHast.APISamples.Views.RevitViewSchedules import filter_revision_schedules
+from duHast.APISamples.Views.RevitViewSheets import get_all_sheets
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 
 
-def GetViewTypes(doc):
+def get_view_types(doc):
     '''
     Returns all view family types in a model
     :param doc: Current Revit model document.
@@ -52,7 +52,7 @@ def GetViewTypes(doc):
     collector =  _get_view_types(doc)
     return collector
 
-def GetViewTypeIds(doc):
+def get_view_type_ids(doc):
     '''
     Returns all view family type ids in a model
 
@@ -68,7 +68,7 @@ def GetViewTypeIds(doc):
     ids = com.get_ids_from_element_collector(col)
     return ids
 
-def GetViewsOfType(doc, viewType):
+def get_views_of_type(doc, viewType):
     '''
     Gets all views in a model of a given type. Excludes templates.
 
@@ -90,7 +90,7 @@ def GetViewsOfType(doc, viewType):
 
 # ----------------------------------------------------------------------------------------
 
-def GetViewportOnSheets(doc, sheets):
+def get_viewport_on_sheets(doc, sheets):
     '''
     Get all view ports on sheets provided.
 
@@ -115,7 +115,7 @@ def GetViewportOnSheets(doc, sheets):
             print(str(e))
     return viewPorts
 
-def GetViewsInModel(doc, filter):
+def get_views_in_model(doc, filter):
     '''
     Gets all views in a model which are matching a filter and are:
 
@@ -149,7 +149,7 @@ def GetViewsInModel(doc, filter):
             views.append(v)
     return views
 
-def GetViewsNotOnSheet(doc):
+def get_views_not_on_sheet(doc):
     '''
     Gets all views not placed on a sheet. (Excludes schedules)
 
@@ -162,11 +162,11 @@ def GetViewsNotOnSheet(doc):
 
     viewsNotOnSheet = []
     # get all sheets
-    sheetsInModel = GetSheetsInModel(doc)
+    sheetsInModel = get_all_sheets(doc)
     # get all viewPorts on sheets
-    viewPortsOnSheets = GetViewportOnSheets(doc, sheetsInModel)
+    viewPortsOnSheets = get_viewport_on_sheets(doc, sheetsInModel)
     # get all views in model
-    viewsInModel = GetViewsInModel(doc, FilterRevisionSchedules)
+    viewsInModel = get_views_in_model(doc, filter_revision_schedules)
     # check whether view has a viewport if not ... its not placed on a sheet
     for viewInModel in viewsInModel:
         match = False

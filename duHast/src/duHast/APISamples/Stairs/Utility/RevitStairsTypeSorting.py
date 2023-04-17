@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to sorting Revit stai
 
 from duHast.APISamples.Stairs.Utility import RevitStairsFilter as rStairFilter
 
-def BuildStairTypeDictionary(collector, dic):
+def build_stair_type_dictionary(collector, dic):
     '''
     Amends dictionary past in with keys and or values added retrieved from collector past in.
 
@@ -52,7 +52,7 @@ def BuildStairTypeDictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def SortStairTypesByFamilyName(doc):
+def sort_stair_types_by_family_name(doc):
     '''
     Returns a dictionary containing all stair types in the model.
 
@@ -70,6 +70,6 @@ def SortStairTypesByFamilyName(doc):
     # get all stair types including in place stair families
     wts_two = rStairFilter._get_all_stair_types_by_category(doc)
     usedWts = {}
-    usedWts = BuildStairTypeDictionary(wts, usedWts)
-    usedWts = BuildStairTypeDictionary(wts_two, usedWts)
+    usedWts = build_stair_type_dictionary(wts, usedWts)
+    usedWts = build_stair_type_dictionary(wts_two, usedWts)
     return usedWts

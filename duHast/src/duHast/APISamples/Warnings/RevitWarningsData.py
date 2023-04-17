@@ -65,7 +65,7 @@ class WarningsData(IFamData.IFamilyData):
 
     def process(self, doc):
         # get all warnings in document
-        warnings = rWarn.GetWarnings(doc)
+        warnings = rWarn.get_warnings(doc)
         # loop over warnings and extract data
         for warning in warnings:
             # check for a guid

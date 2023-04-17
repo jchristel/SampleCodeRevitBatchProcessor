@@ -32,7 +32,7 @@ from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting  as rWallTypeS
 #: Built in wall family name for curtain wall
 CURTAIN_WALL_FAMILY_NAME = 'Curtain Wall'
 
-def GetAllCurtainWallTypeIdsInModel(doc):
+def get_all_curtain_wall_type_ids(doc):
     '''
     Gets type ids off all available curtain wall types in model.
     :param doc: Current Revit model document.
@@ -42,12 +42,12 @@ def GetAllCurtainWallTypeIdsInModel(doc):
     '''
 
     ids = []
-    dic = rWallTypeSort.SortWallTypesByFamilyName(doc)
+    dic = rWallTypeSort.sort_wall_types_by_family_name(doc)
     if(dic.has_key(CURTAIN_WALL_FAMILY_NAME)):
         ids = dic[CURTAIN_WALL_FAMILY_NAME]
     return ids
 
-def GetAllCurtainWallInstancesInModel(doc, availableIds):
+def get_all_curtain_wall_instances(doc, availableIds):
     '''
     Gets all curtain wall elements placed in model...ignores legend elements.
     :param doc: Current Revit model document.
@@ -65,7 +65,7 @@ def GetAllCurtainWallInstancesInModel(doc, availableIds):
             instances.append(c)
     return instances
 
-def GetPlacedCurtainWallTypeIdsInModel(doc, availableIds):
+def get_placed_curtain_wall_type_ids(doc, availableIds):
     '''
     Gets all used curtain wall types in model.
     :param doc: Current Revit model document.

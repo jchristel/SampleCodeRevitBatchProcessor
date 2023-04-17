@@ -36,7 +36,7 @@ STAIR_RUN_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE
 ]
 
-def GetStairRunTypesByClass(doc):
+def get_stair_run_types_by_class(doc):
     '''
     Gets a filtered element collector of all Stair run types in the model.
     :param doc: Current Revit model document.
@@ -47,7 +47,7 @@ def GetStairRunTypesByClass(doc):
 
     return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsRunType)
 
-def GetAllStairRunTypeIdsInModelByClass(doc):
+def get_stair_run_types_ids_by_class(doc):
     '''
     Gets all Stair run element type ids available in model.
     :param doc: Current Revit model document.
@@ -57,6 +57,6 @@ def GetAllStairRunTypeIdsInModelByClass(doc):
     '''
 
     ids = []
-    colClass = GetStairRunTypesByClass (doc)
+    colClass = get_stair_run_types_by_class (doc)
     ids = com.get_ids_from_element_collector (colClass)
     return ids

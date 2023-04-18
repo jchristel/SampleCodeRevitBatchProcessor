@@ -112,7 +112,7 @@ def get_viewport_on_sheets(doc, sheets):
                     viewport = doc.GetElement(viewportId)
                     viewPorts.append(viewport)
         except Exception as e:
-            print(str(e))
+            print('Get view ports on sheet: {} threw exception: {}'.format(sheet, e))
     return viewPorts
 
 def get_views_in_model(doc, filter):

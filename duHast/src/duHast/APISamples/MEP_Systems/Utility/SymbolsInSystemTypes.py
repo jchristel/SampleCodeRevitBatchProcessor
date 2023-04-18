@@ -79,7 +79,7 @@ def get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId):
 
 
     except Exception as ex:
-        print('System type get used symbol ids threw exception: '+ str(ex))
+        print('System type id: {} get used symbol ids threw exception: {}'.format(systemTypeId, ex))
     return ids
 
 

@@ -104,7 +104,7 @@ def get_all_used_detail_symbol_ids(doc):
         ids_of_details_used_repeat_details = rDetail.get_detail_symbols_used_in_repeating_details(doc, ids_repeat_det)
         # get detail types used in model
         ids_used_in_model = rPurgeUtils.get_used_unused_type_ids(doc, rDetail.get_all_detail_symbol_ids_available, 1)
-        print('ids used in model ' + str(len(ids_used_in_model)))
+        print('ids used in model: {} '.format(len(ids_used_in_model)))
         # built overall ids list
         for id in ids_of_details_used_repeat_details:
             if (id not in ids):

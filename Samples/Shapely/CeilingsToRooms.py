@@ -83,4 +83,4 @@ if ceilings_by_room.status:
 
     print(data_to_file.message)
 else:
-    print("Did not proceed due to error in reading data file")
+    print("Did not proceed due to error in reading data file: {}".format(ceilings_by_room.message))

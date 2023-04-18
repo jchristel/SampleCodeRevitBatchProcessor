@@ -82,11 +82,11 @@ def _rename_files(renameDirectives):
                     newFullName = os.path.join(os.path.dirname(renameDirective.filePath), renameDirective.newName + '.rfa')
                     if(util.file_exist(renameDirective.filePath)):
                         os.rename(renameDirective.filePath, newFullName)
-                        returnValue.append_message(renameDirective.name + ' -> ' + renameDirective.newName)
+                        returnValue.append_message('{} -> {}'.format(renameDirective.name,renameDirective.newName))
                     else:
-                        returnValue.update_sep(False, 'File not found: '+ renameDirective.name)
+                        returnValue.update_sep(False, 'File not found: '.format(renameDirective.name))
                 except Exception as e:
-                    returnValue.update_sep(False, 'Failed to rename file: ' + renameDirective.name + ' with exception: ' + str(e))
+                    returnValue.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(renameDirective.name,e))
 
                 # take care of catalogue files as well
                 oldFullName = renameDirective.filePath[:-4] + '.txt'
@@ -96,15 +96,15 @@ def _rename_files(renameDirectives):
                 try:
                     if(util.file_exist(oldFullName)):
                         os.rename(oldFullName, newFullName)
-                        returnValue.append_message(oldname + ' -> ' + newname)
+                        returnValue.append_message('{} -> {}'.format(oldname,newname))
                     else:
-                        returnValue.update_sep(True, 'No catalogue file found: ' + oldname) # nothing gone wrong here...just no catalogue file present
+                        returnValue.update_sep(True, 'No catalogue file found: {}'.format(oldname)) # nothing gone wrong here...just no catalogue file present
                 except Exception as e:
-                    returnValue.update_sep(False, 'Failed to rename file: ' + oldFullName + ' with exception: ' + str(e))
+                    returnValue.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(oldFullName,e))
             else:
-                returnValue.update_sep(True, 'No file path found: ' + renameDirective.name) # nothing gone wrong here...just not required to rename a file
+                returnValue.update_sep(True, 'No file path found: {}'.format(renameDirective.name)) # nothing gone wrong here...just not required to rename a file
         except Exception as e:
-            returnValue.update_sep(False, 'Failed to rename files with exception: ' + str(e))
+            returnValue.update_sep(False, 'Failed to rename files with exception: '.format(e))
     return returnValue
 
 def rename_family_files(directoryPath):

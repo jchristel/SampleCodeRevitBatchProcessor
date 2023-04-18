@@ -198,7 +198,7 @@ def get_shapely_polygons_from_data_instance(data_instance):
             poly = build_shapely_polygon(shape_shapely)
             all_polygons.append(poly)
         else:
-            print('Not a polygon data instance!')
+            print('Not a polygon data instance: {}'.format(geometry_object))
     return all_polygons
 
 # --------------- end generics ------------------

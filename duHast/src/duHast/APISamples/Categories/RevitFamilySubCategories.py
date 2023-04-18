@@ -199,7 +199,7 @@ def rename_sub_category(doc, old_sub_cat_name, new_sub_cat_name):
         already_in_family = does_main_sub_category_exists(doc, new_sub_cat_name)
         if(already_in_family):
             # just move elements from old sub category to new one
-            return_value.append_message('Subcategory: ' + new_sub_cat_name + ' already in family.')
+            return_value.append_message('Subcategory: {} already in family.'.format(new_sub_cat_name))
         else:
             # duplicate old sub category
             create_new_status = create_new_category_and_transfer_properties(doc, new_sub_cat_name, old_sub_cat_name)
@@ -212,13 +212,13 @@ def rename_sub_category(doc, old_sub_cat_name, new_sub_cat_name):
             if(move_status.status):
                 deleted_old_sub_category = delete_main_sub_category(doc, old_sub_cat_name)
                 if(deleted_old_sub_category):
-                    return_value.update_sep(True, 'Subcategory: ' + old_sub_cat_name + ' deleted successfully.')
+                    return_value.update_sep(True, 'Subcategory: {} deleted successfully.'.format(old_sub_cat_name))
                 else:
-                    return_value.update_sep(True, 'Subcategory: ' + old_sub_cat_name + ' failed to delete subcategory...Exiting')
+                    return_value.update_sep(True, 'Subcategory: {} failed to delete subcategory...Exiting'.format(old_sub_cat_name ))
             else:
-                return_value.update_sep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to move elements to new subcategory. Exiting...')
+                return_value.update_sep(False, 'Subcategory: {} failed to move elements to new subcategory. Exiting...'.format(new_sub_cat_name))
         else:
-            return_value.update_sep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to create in family. Exiting...')
+            return_value.update_sep(False, 'Subcategory: {} failed to create in family. Exiting...'.format(new_sub_cat_name))
     else:
-        return_value.update_sep(False, 'Base subcategory: ' + old_sub_cat_name + ' does not exist in family. Exiting...')
+        return_value.update_sep(False, 'Base subcategory: {} does not exist in family. Exiting...'.format(old_sub_cat_name))
     return return_value

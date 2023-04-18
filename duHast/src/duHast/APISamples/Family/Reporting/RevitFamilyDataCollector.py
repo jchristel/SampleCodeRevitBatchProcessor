@@ -89,9 +89,9 @@ class RevitFamilyDataCollector(Base.Base):
             for pro in self.dataProcessors:
                 try:
                     pro.process(doc, rootName, rootCategory)
-                    returnValue.append_message('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
+                    returnValue.append_message('Processor [{}] of family: {}  [OK]'.format(pro.dataType,doc.Title))
                 except Exception as e:
-                    returnValue.update_sep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                    returnValue.update_sep(False, 'Processor [{}] of family: {} [EXCEPTION] {}'.format(pro.dataType, doc.Title,e))
         
         # check if family doc 
         if(doc.IsFamilyDocument):
@@ -180,9 +180,9 @@ class RevitFamilyDataCollector(Base.Base):
         for pro in self.dataProcessors:
             try:
                 pro.process(doc, rootName, rootCategory)
-                returnValue.append_message('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
+                returnValue.append_message('Processor [{}] of family: {} [OK]'.format(pro.dataType, doc.Title))
             except Exception as e:
-                returnValue.update_sep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                returnValue.update_sep(False, 'Processor [{}] of family: {} [EXCEPTION] {}'.format(pro.dataType,doc.Title,e))
         
         # check out any nested families
         diveResult = self._dive(doc, rootName, rootCategory, True)
@@ -196,6 +196,6 @@ class RevitFamilyDataCollector(Base.Base):
                 proActionResult =  pro.postProcessActions(doc)
                 returnValue.update(proActionResult)
             except Exception as e:
-                returnValue.update_sep(False, 'PostProcessor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                returnValue.update_sep(False, 'PostProcessor [{}] of family: {} [EXCEPTION] {}'.format(pro.dataTyp,doc.Title,e))
 
         return returnValue

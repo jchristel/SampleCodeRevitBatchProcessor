@@ -194,7 +194,7 @@ def move_elements_to_category(doc, elements, to_category_name, destination_cat_i
                                 return_value.update(updated_para)
                                 break
     else:
-        return_value.update_sep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
+        return_value.update_sep(False, 'Destination category: {} does not exist in file!'.format(to_category_name))
     return return_value
 
 

@@ -238,9 +238,9 @@ def _compare_family_dictionaries(previousAgData, newAgData):
         # other and current have data
         for newData in newAgData:
             if(newData in previousAgData):
-                returnValue.append_message('Substituting family data: ' + newData)
+                returnValue.append_message('Substituting family data: {}'.format(newData))
             else:
-                returnValue.append_message('Adding new family data: ' + newData)
+                returnValue.append_message('Adding new family data: {}'.format(newData))
             previousAgData[newData] = newAgData[newData]
         returnValue.result.append(previousAgData)
     return returnValue
@@ -343,7 +343,7 @@ def _check_families_still_exist(famData):
         returnValue.result.append(famData)
 
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to check whether families still exist with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to check whether families still exist with exception: {}'.format(e))
     return returnValue
 
 def combine_reports (previousReportPath, newReportPath):
@@ -381,8 +381,8 @@ def combine_reports (previousReportPath, newReportPath):
     # previous report
     try:
         previousRoot, previousNested = read_unique_families_with_row_data_from_report(previousReportPath)
-        returnValue.append_message('Previous report: found ' + str(len(previousRoot)) + ' root families.')
-        returnValue.append_message('Previous report: found ' + str(len(previousNested)) + ' nested families.')
+        returnValue.append_message('Previous report: found {} root families.'.format(len(previousRoot)))
+        returnValue.append_message('Previous report: found {} nested families.'.format(len(previousNested)))
         # build dictionary containing all family data per root family
         previousAggregatedFamilies = _aggregate_family_data(previousRoot, previousNested)
     except Exception as e:
@@ -395,8 +395,8 @@ def combine_reports (previousReportPath, newReportPath):
         newRoot, newNested = read_unique_families_with_row_data_from_report(newReportPath)
         # build dictionary containing all family data per root family
         newAggregatedFamilies = _aggregate_family_data(newRoot, newNested)
-        returnValue.append_message('New report: found ' + str(len(newRoot)) + ' root families.')
-        returnValue.append_message('New report: found ' + str(len(newNested)) + ' nested families.')
+        returnValue.append_message('New report: found {} root families.'.format(len(newRoot)) + '')
+        returnValue.append_message('New report: found {} nested families.'.format(len(newNested)) + '')
     except Exception as e:
         # check whether empty file exception
         if (str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):

@@ -53,7 +53,7 @@ def get_wall_report_data(doc, revitFilePath):
             cs = wt.GetCompoundStructure()
             if cs != None:
                 csLayers = cs.GetLayers()
-                print(len(csLayers))
+                #print(len(csLayers))
                 for csLayer in csLayers:
                     layerMat = rMat.GetMaterialById(doc, csLayer.MaterialId)
                     materialMark = com.get_element_mark(layerMat)

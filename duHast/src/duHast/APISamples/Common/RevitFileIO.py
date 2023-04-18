@@ -207,7 +207,7 @@ def save_as(
     for oldName, newName in nameData:
         if (revitFileName.startswith(oldName)):
             match = True
-            returnValue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
+            returnValue.message = ('Found file name match for: {} new name: {}'.format(revitFileName, newName))
             # save file under new name
             newFileName = targetFolderPath + '\\'+ newName + fileExtension
             break
@@ -218,9 +218,9 @@ def save_as(
         returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
     try:
         returnValue.status = saves_as_workshared_file(doc, newFileName).status
-        returnValue.append_message('Saved file: ' + newFileName)
+        returnValue.append_message('Saved file: {}'.format(newFileName))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file to new location; {} with exception: '.format(newFileName, e))
     return returnValue
 
 

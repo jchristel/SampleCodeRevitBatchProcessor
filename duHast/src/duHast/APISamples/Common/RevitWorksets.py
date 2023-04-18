@@ -181,7 +181,7 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
     '''
 
     return_value = res.Result()
-    return_value.message = 'Changing ' + element_type_name + ' workset to '+ default_workset_name
+    return_value.message = 'Changing: {} workset to: {} '.format(element_type_name, default_workset_name)
     # get the ID of the default grids workset
     default_id = get_workset_id_by_name(doc, default_workset_name)
     counter_success = 0
@@ -198,7 +198,7 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
                 except Exception :
                     pass
                 # move element to new workset
-                transaction = rdb.Transaction(doc, "Changing workset: " + element_name)
+                transaction = rdb.Transaction(doc, "Changing workset: ".format(element_name))
                 tranny_status = rTran.in_transaction(transaction, get_action_change_element_workset(p, default_id))
                 if (tranny_status.status == True):
                     counter_success += 1
@@ -209,8 +209,8 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
                 counter_success += 1
                 return_value.status = return_value.status & True 
     else:
-        return_value.update_sep(False, 'Default workset '+ default_workset_name + ' does no longer exists in file!')
-    return_value.append_message('Moved ' + element_type_name + ' to workset ' + default_workset_name + ' [' + str(counter_success) + ' :: ' + str(counter_failure) +']')
+        return_value.update_sep(False, 'Default workset: {} does no longer exists in file!'.format(default_workset_name))
+    return_value.append_message('Moved: {} to workset: {} [ {} :: {}]'.format( element_type_name ,default_workset_name, counter_success, counter_failure))
     return return_value
 
 def get_action_change_element_workset(el, default_id):

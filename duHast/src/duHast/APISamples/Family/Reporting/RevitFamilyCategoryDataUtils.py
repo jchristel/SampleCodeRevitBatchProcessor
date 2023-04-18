@@ -280,7 +280,7 @@ def _get_category_data_file_name(directoryPath):
     '''
 
     # get all base data files in folder
-    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.get_files_from_directory_walker_with_filters(
         directoryPath,
         FAMILY_CATEGORY_DATA_FILE_NAME_PREFIX,
         '',
@@ -305,8 +305,8 @@ def read_overall_family_data_list(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath)
+    if(util.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
     if(len(rows) > 0):
@@ -379,10 +379,10 @@ def read_overall_change_category_directives_list(filePaths):
     rows = []
     matchAnyFile = False
     for filePath in filePaths:
-        if(util.FileExist(filePath)):
+        if(util.file_exist(filePath)):
             # set flag that we at least found one file
             matchAnyFile = True
-            rowsFile = fileCSV.ReadCSVfile(filePath)
+            rowsFile = fileCSV.read_csv_file(filePath)
             result = list(rows)
             result.extend(item for item in rowsFile
               if item not in result)
@@ -420,7 +420,7 @@ def _get_category_change_directive_file_names(directoryPath):
     '''
 
     # get all base data files in folder
-    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.get_files_from_directory_walker_with_filters(
         directoryPath,
         CATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
@@ -476,7 +476,7 @@ def _get_sub_category_change_directive_file_names(directoryPath):
     '''
 
     # get all base data files in folder
-    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.get_files_from_directory_walker_with_filters(
         directoryPath,
         SUBCATEGORY_CHANGE_DIRECTIVE_FILE_NAME_PREFIX,
         '',
@@ -503,10 +503,10 @@ def read_overall_change_sub_category_directives_list(filePaths):
     rows = []
     matchAnyFile = False
     for filePath in filePaths:
-        if(util.FileExist(filePath)):
+        if(util.file_exist(filePath)):
             # set flag that we at least found one file
             matchAnyFile = True
-            rowsFile = fileCSV.ReadCSVfile(filePath)
+            rowsFile = fileCSV.read_csv_file(filePath)
             result = list(rows)
             result.extend(item for item in rowsFile
               if item not in result)

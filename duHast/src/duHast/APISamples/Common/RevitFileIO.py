@@ -67,7 +67,7 @@ def sync_file (
         rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
         returnValue.message = 'Successfully synched file.'
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
 
@@ -107,7 +107,7 @@ def saves_as_workshared_file(
         doc.SaveAs(fullFileName, saveOption)
         returnValue.message = 'Successfully saved file: ' + str(fullFileName)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
 
@@ -142,7 +142,7 @@ def save_as_family(
     '''
 
     returnValue = res.Result()
-    revitFileName = util.GetFileNameWithoutExt(currentFullFileName)
+    revitFileName = util.get_file_name_without_ext(currentFullFileName)
     newFileName= ''
     match = False
     # find new file name in list past in
@@ -165,9 +165,9 @@ def save_as_family(
         so.SetWorksharingOptions(None)
         so.Compact = compactFile
         doc.SaveAs(newFileName, so)
-        returnValue.UpdateSep(True, 'Saved file: ' + newFileName)
+        returnValue.update_sep(True, 'Saved file: ' + newFileName)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnValue
 
 
@@ -201,7 +201,7 @@ def save_as(
     returnValue = res.Result()
     # added str() around this expression to satisfy sphinx auto code documentation
     # it will throw an exception when concatenating the string in the return statement
-    revitFileName = str(util.GetFileNameWithoutExt(currentFullFileName))
+    revitFileName = str(util.get_file_name_without_ext(currentFullFileName))
     newFileName= ''
     match = False
     for oldName, newName in nameData:
@@ -218,9 +218,9 @@ def save_as(
         returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
     try:
         returnValue.status = saves_as_workshared_file(doc, newFileName).status
-        returnValue.AppendMessage('Saved file: ' + newFileName)
+        returnValue.append_message('Saved file: ' + newFileName)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
     return returnValue
 
 
@@ -251,9 +251,9 @@ def save_file(
         so = rdb.SaveOptions()
         so.Compact = compactFile
         doc.Save(so)
-        returnValue.UpdateSep(True, 'Saved revit file!')
+        returnValue.update_sep(True, 'Saved revit file!')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
     return returnValue
 
 
@@ -284,5 +284,5 @@ def enable_worksharing(
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
         returnValue.message = 'Successfully enabled worksharing.'
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue

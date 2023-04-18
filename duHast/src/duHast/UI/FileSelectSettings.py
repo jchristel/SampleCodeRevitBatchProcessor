@@ -27,8 +27,10 @@ A class to store file select UI settings.
 #
 #
 
+from duHast.Utilities import Base
+
 # An item to represent a file name in a row in a grid.
-class FileSelectionSettings:
+class FileSelectionSettings(Base.Base):
     
     def __init__(self, inputDirectory, includeSubDirsInSearch, outputDirectory, outputFileNumber, revitFileExtension):
         '''
@@ -46,8 +48,11 @@ class FileSelectionSettings:
         :type revitFileExtension: str
         '''
 
-        self.inputDir = inputDirectory
-        self.inclSubDirs = includeSubDirsInSearch
-        self.outputDir = outputDirectory
-        self.outputFileNum = outputFileNumber
-        self.revitFileExtension = revitFileExtension
+        self.input_directory = inputDirectory
+        self.incl_sub_dirs = includeSubDirsInSearch
+        self.output_dir = outputDirectory
+        self.output_file_num = outputFileNumber
+        self.revit_file_extension = revitFileExtension
+
+        # ini super class to allow multi inheritance in children!
+        super(FileSelectionSettings, self).__init__() 

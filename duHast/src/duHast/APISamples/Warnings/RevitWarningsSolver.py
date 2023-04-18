@@ -118,7 +118,7 @@ class RevitWarningsSolver(Base.Base):
             for solver in self.AVAILABLE_SOLVERS:
                 warnings =  rWar.get_warnings_by_guid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
                 resultSolver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
-                returnValue.Update(resultSolver)
+                returnValue.update(resultSolver)
         except Exception as e:
             print (str(e))
         return returnValue

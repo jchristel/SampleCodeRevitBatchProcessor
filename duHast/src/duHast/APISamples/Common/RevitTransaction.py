@@ -73,7 +73,7 @@ def in_transaction(
                 return_value = tranny_result
         except Exception as e:
             tranny.RollBack()
-            return_value.UpdateSep(False, 'Failed with exception: {}'.format(e))
+            return_value.update_sep(False, 'Failed with exception: {}'.format(e))
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed with exception: {}'.format(e))
+        return_value.update_sep(False, 'Failed with exception: {}'.format(e))
     return return_value

@@ -42,7 +42,7 @@ clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
 
-def GetLocalAppDataPath():
+def get_local_app_data_path():
     '''
     return directory path to local app data folder
 
@@ -52,7 +52,7 @@ def GetLocalAppDataPath():
 
     return os.environ['LOCALAPPDATA']
 
-def GetCurrentUserName():
+def get_current_user_name():
     '''
     Returns the current user name
 
@@ -63,27 +63,9 @@ def GetCurrentUserName():
     return os.environ['USERNAME']
 
 
-def GetFirstRowInFile(filePath):
-    '''
-    Reads the first line of a text file and returns it as a single string
-
-    :param filePath: The fully qualified file path.
-    :type filePath: str
-
-    :return: The first row of a text file.
-    :rtype: str
-    '''
-
-    row = ''
-    try:
-        with open(filePath) as f:
-            row = f.readline().strip()
-    except Exception:
-        row = None
-    return row
 # ---------------------------------------------------------------------------------------------------------------------------------
 
-def ParsStringToBool(text):
+def parse_string_to_bool(text):
     '''
     Converts a string to lower case and then to bool. Will throw an exception if it fails to do so.
 
@@ -112,7 +94,7 @@ PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 PAD_SINGLE_DIGIT_TO_THREE = '%03d'
 
 
-def PadSingleDigitNumericString(numericString, format = PAD_SINGLE_DIGIT_TO_TWO):
+def pad_single_digit_numeric_string(numericString, format = PAD_SINGLE_DIGIT_TO_TWO):
     '''
     Pads a single digit integer (past in as a string) with a leading zero (default)
 
@@ -133,7 +115,7 @@ def PadSingleDigitNumericString(numericString, format = PAD_SINGLE_DIGIT_TO_TWO)
         #string was not an integer...
         return numericString
 
-def EncodeAscii (string):
+def encode_ascii (string):
     '''
     Encode a string as ascii and replaces all non ascii characters
 
@@ -150,7 +132,7 @@ def EncodeAscii (string):
     else:
         return string
 
-def GetFirst(iterable, default, condition = lambda x: True):
+def get_first(iterable, default, condition = lambda x: True):
     '''
     Returns the first value in a list matching condition. If no value found returns the specified default value.
 
@@ -167,20 +149,7 @@ def GetFirst(iterable, default, condition = lambda x: True):
 
     return next((x for x in iterable if condition(x)),default)
 
-def ConvertImperialToMetricMM(value):
-    '''
-    Converts feet and inches to mm
-
-    :param value: The value in feet to be converted
-    :type value: float
-    
-    :return: The converted value
-    :rtype: float
-    '''
-
-    return value * 304.8
-
-def IndexOf(list, item):
+def index_of(list, item):
     '''
     Gets the index of item in list
 
@@ -197,7 +166,7 @@ def IndexOf(list, item):
     except:
         return -1
 
-def RemoveItemsFromList(sourceList, removeIdsList):
+def remove_items_from_list(sourceList, removeIdsList):
     '''
     helper removes items from a source list
 

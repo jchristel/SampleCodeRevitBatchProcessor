@@ -78,10 +78,10 @@ def change_shared_parameter_to_family_parameter(doc, parameterName, prefix = '_'
                         p.IsInstance
                         )
 
-                    actionReturnValue.UpdateSep(True, paraOldName + ': Successfully changed shared parameter to family parameter: ' + prefix + paraOldName)
+                    actionReturnValue.update_sep(True, paraOldName + ': Successfully changed shared parameter to family parameter: ' + prefix + paraOldName)
                     actionReturnValue.result.append(parameterNew)
                 except Exception as e:
-                    actionReturnValue.UpdateSep(False, paraOldName + ': Failed to change shared parameter to family parameter: ' + str(e))
+                    actionReturnValue.update_sep(False, paraOldName + ': Failed to change shared parameter to family parameter: ' + str(e))
                 return actionReturnValue
             transaction = rdb.Transaction(doc, "change to family parameter")
             returnValue = rTran.in_transaction(transaction, action)
@@ -137,10 +137,10 @@ def change_family_parameter_to_shared_parameter(doc, parameterName, parameterDat
                         parameterData.isInstance
                         )
 
-                    actionReturnValue.UpdateSep(True, parameterName+': Changed family parameter to shared parameter: ' + parameterData.name)
+                    actionReturnValue.update_sep(True, parameterName+': Changed family parameter to shared parameter: ' + parameterData.name)
                     actionReturnValue.result.append(parameterNew)
                 except Exception as e:
-                    actionReturnValue.UpdateSep(False, parameterName+': Failed to change family parameter to shared parameter.')
+                    actionReturnValue.update_sep(False, parameterName+': Failed to change family parameter to shared parameter.')
                 return actionReturnValue
             transaction = rdb.Transaction(doc, "change to shared parameter")
             returnValue = rTran.in_transaction(transaction, action)

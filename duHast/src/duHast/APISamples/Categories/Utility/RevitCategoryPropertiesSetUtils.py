@@ -55,9 +55,9 @@ def set_category_material(doc, cat, material_id):
             action_return_value = res.Result()
             try:
                 cat.Material = mat
-                action_return_value.UpdateSep(True, 'Successfully set material value of subcategory')
+                action_return_value.update_sep(True, 'Successfully set material value of subcategory')
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed to set material value of subcategory with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory material: ' + str(rdb.Element.Name.GetValue(mat)))
         update_mat = rTran.in_transaction(transaction, action)
@@ -90,17 +90,17 @@ def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_styl
             action_return_value = res.Result()
             try:
                 cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Cut)
-                action_return_value.UpdateSep(True, 'Successfully set cut line pattern of subcategory')
+                action_return_value.update_sep(True, 'Successfully set cut line pattern of subcategory')
             except Exception as e:
                 if(ignore_missing_cut_style):
-                    action_return_value.UpdateSep(True, 'Failed to set cut line pattern of subcategory with exception: {}. Exception ignored!'.format(e))
+                    action_return_value.update_sep(True, 'Failed to set cut line pattern of subcategory with exception: {}. Exception ignored!'.format(e))
                 else:
-                    action_return_value.UpdateSep(False, 'Failed to set cut line pattern of subcategory with exception: {}'.format(e))
+                    action_return_value.update_sep(False, 'Failed to set cut line pattern of subcategory with exception: {}'.format(e))
             try:
                 cat.SetLinePatternId(line_pattern_id, rdb.GraphicsStyleType.Projection)
-                action_return_value.UpdateSep(True, 'Successfully set projection line pattern of subcategory')
+                action_return_value.update_sep(True, 'Successfully set projection line pattern of subcategory')
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed to set projection line pattern of subcategory with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory line pattern')
         update_line_pattern = rTran.in_transaction(transaction, action)
@@ -133,17 +133,17 @@ def set_category_line_weights(doc, cat, line_thick_ness_cut, line_thickness_proj
             action_return_value = res.Result()
             try:
                 cat.SetLineWeight(line_thick_ness_cut, rdb.GraphicsStyleType.Cut)
-                action_return_value.UpdateSep(True, 'Successfully set cut line weight of subcategory')
+                action_return_value.update_sep(True, 'Successfully set cut line weight of subcategory')
             except Exception as e:
                 if(ignore_missing_cut_style):
-                    action_return_value.UpdateSep(True, 'Failed to set cut line weight of subcategory with exception: {}. Exception ignored!'.format(e))
+                    action_return_value.update_sep(True, 'Failed to set cut line weight of subcategory with exception: {}. Exception ignored!'.format(e))
                 else:
-                    action_return_value.UpdateSep(False, 'Failed to set cut line weight of subcategory with exception: {}'.format(e))
+                    action_return_value.update_sep(False, 'Failed to set cut line weight of subcategory with exception: {}'.format(e))
             try:
                 cat.SetLineWeight(line_thickness_projection, rdb.GraphicsStyleType.Projection)
-                action_return_value.UpdateSep(True, 'Successfully set projection line weight of subcategory')
+                action_return_value.update_sep(True, 'Successfully set projection line weight of subcategory')
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed to set projection line weight of subcategory with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory line weights')
         update_line_weights = rTran.in_transaction(transaction, action)
@@ -177,9 +177,9 @@ def set_category_colour(doc, cat, red, green, blue):
             try:
                 new_colour = rdb.Color(red, green, blue)
                 cat.LineColor = new_colour
-                action_return_value.UpdateSep(True, 'Successfully set colour value of subcategory')
+                action_return_value.update_sep(True, 'Successfully set colour value of subcategory')
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed to set colour value of subcategory with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,'Updating subcategory colour')
         update_colour = rTran.in_transaction(transaction, action)

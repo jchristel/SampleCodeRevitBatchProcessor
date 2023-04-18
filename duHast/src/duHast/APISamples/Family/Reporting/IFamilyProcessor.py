@@ -144,7 +144,7 @@ class IFamilyProcessor(Base.Base):
         if(self.pre_actions != None):
             for preAction in self.pre_actions:
                 resultAction = preAction(doc)
-                returnValue.Update(resultAction)
+                returnValue.update(resultAction)
         return returnValue
     
     # -------------------------------------- process actions ----------------------
@@ -180,7 +180,7 @@ class IFamilyProcessor(Base.Base):
         if(self.post_actions != None):
             for postAction in self.post_actions:
                 resultAction = postAction(doc)
-                returnValue.Update(resultAction)
+                returnValue.update(resultAction)
         return returnValue
 
     # -------------------------------------- get data ----------------------

@@ -48,7 +48,7 @@ from duHast.Utilities import Result as res
 # my code here:
 # -------------
 
-def getRevitFiles(directory, fileExtension):
+def get_revit_files(directory, fileExtension):
     '''
     Returns files in a given directory and of a given file extension.
 
@@ -68,7 +68,7 @@ def getRevitFiles(directory, fileExtension):
         if(f.lower().endswith(fileExtension.lower())):
             # check if this is a back up file, remove the file extension
             filePath = f[:-len(fileExtension)]
-            if(isBackUpFile(filePath) == False):
+            if(is_back_up_file(filePath) == False):
                 # Use join to get full file path.
                 location = os.path.join(directory, f)
                 # Get size and add to list of files.
@@ -76,7 +76,7 @@ def getRevitFiles(directory, fileExtension):
                 files.append(fi.MyFileItem(location,size))
     return files
 
-def getRevitFilesInclSubDirs(directory, fileExtension):
+def get_revit_files_incl_sub_dirs(directory, fileExtension):
     '''
     Returns files in a given directory and its sub directories of a given file extension.
 
@@ -99,13 +99,13 @@ def getRevitFilesInclSubDirs(directory, fileExtension):
         if(f.lower().endswith(fileExtension.lower())):
             # check if this is a back up file, remove the file extension
             filePath = f[:-len(fileExtension)]
-            if(isBackUpFile(filePath) == False):
+            if(is_back_up_file(filePath) == False):
                 # Get size and add to list of files.
                 size = os.path.getsize(f)
                 files.append(fi.MyFileItem(f,size))
     return files
 
-def isBackUpFile(filePath):
+def is_back_up_file(filePath):
     '''
     Checks whether a file is a Revit back up file.
     
@@ -144,7 +144,7 @@ def isBackUpFile(filePath):
             pass
     return isBackup
 
-def getFileSize(item):
+def get_file_size(item):
     '''
     Helper used to define workload size (same as file size)
 
@@ -157,7 +157,7 @@ def getFileSize(item):
 
     return item.size
 
-def BucketToTaskListFileSystem(item):
+def bucket_to_task_list_file_system(item):
     '''
     Default task list content for files on a file server location.
 
@@ -170,7 +170,7 @@ def BucketToTaskListFileSystem(item):
 
     return item.name
 
-def BucketToTaskListBIM360(item):
+def bucket_to_task_list_bim_360(item):
     '''
     Default task list content for files on a BIM 360 cloud drive.
 
@@ -183,7 +183,7 @@ def BucketToTaskListBIM360(item):
 
     return ' '.join([item.BIM360RevitVersion, item.BIM360ProjectGUID, item.BIM360FileGUID])
 
-def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
+def write_revit_task_file(fileName, bucket, GetData = bucket_to_task_list_file_system):
     '''
     Writes out a task list file.
 
@@ -222,12 +222,12 @@ def writeRevitTaskFile(fileName, bucket, GetData = BucketToTaskListFileSystem):
                 rowCounter += 1
             f.write(data.encode('utf-8'))
         f.close()
-        returnValue.AppendMessage('wrote task list: ' + fileName + ' [TRUE]')
+        returnValue.append_message('wrote task list: ' + fileName + ' [TRUE]')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
+        returnValue.update_sep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
     return returnValue
 
-def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = BucketToTaskListFileSystem):
+def write_file_list(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = bucket_to_task_list_file_system):
     '''
     Writes out all task list(s) to file(s).
 
@@ -263,16 +263,16 @@ def WriteFileList(directoryPath, fileExtension, taskListDirectory, taskFilesNumb
     # get revit files in input dir
     revitFiles = fileGetter(directoryPath, fileExtension)
     # build bucket list
-    buckets = wl.DistributeWorkload(taskFilesNumber, revitFiles, getFileSize)
+    buckets = wl.distribute_workload(taskFilesNumber, revitFiles, get_file_size)
     try:
         # write out file lists
         counter = 0
         for bucket in buckets:
             fileName =  os.path.join(taskListDirectory, 'Tasklist_' + str(counter)+ '.txt')
-            statusWrite = writeRevitTaskFile(fileName, bucket, fileDataProcessor)
-            returnValue.Update(statusWrite)
+            statusWrite = write_revit_task_file(fileName, bucket, fileDataProcessor)
+            returnValue.update(statusWrite)
             counter += 1
-        returnValue.AppendMessage('Finished writing out task files')
+        returnValue.append_message('Finished writing out task files')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to save file list! '  + str(e))
+        returnValue.update_sep(False, 'Failed to save file list! '  + str(e))
     return returnValue

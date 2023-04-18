@@ -38,6 +38,7 @@ import Autodesk.Revit.DB as rdb
 
 # utilities
 from duHast.Utilities import Utility as util
+from duHast.Utilities import UnitConversion as unitConversion
 
 # type checker
 #from typing import List, Callable
@@ -80,7 +81,7 @@ def check_parameter_value(
     is_match = False
     parameter_value = get_parameter_value(para)
     # evaluate parameter value with past in value using past in function
-    compare_outcome = para_condition(util.EncodeAscii(condition_value), util.EncodeAscii(parameter_value))
+    compare_outcome = para_condition(util.encode_ascii(condition_value), util.encode_ascii(parameter_value))
     # check the return value for a bool (True) only. Everything else will return False
     if (compare_outcome == True):
         is_match = True
@@ -130,10 +131,11 @@ def getter_double_as_double(para):
         parameter_value = para.AsDouble()
     return parameter_value
 
-def getter_double_as_double_converted_to_millimeter(para):
+def getter_double_as_double_converted_to_metric(para):
     '''
-    Returns a parameter value of type double as a double converted to mm (if required).
-    Revit uses feet internally for any length value!
+    Returns a parameter value of type double to metric if required.
+    Revit uses feet internally for any length value.
+    Revit uses square feet for areas
 
     :param para: The parameter.
     :type para: Autodesk.Revit.DB.Parameter
@@ -145,7 +147,9 @@ def getter_double_as_double_converted_to_millimeter(para):
     parameter_value = None
     if(para.AsValueString() != None and para.AsValueString() != ''):
         if(para.Definition.ParameterType == rdb.ParameterType.Length):
-            parameter_value = para.AsDouble() * 304.8
+            parameter_value =  unitConversion.convert_imperial_feet_to_metric_mm( para.AsDouble() )
+        elif (para.Definition.ParameterType == rdb.ParameterType.Area):
+            parameter_value =  unitConversion.convert_imperial_square_feet_to_metric_square_metre( para.AsDouble() )
         else:
             parameter_value = para.AsDouble()
     return parameter_value

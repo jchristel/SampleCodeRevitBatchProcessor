@@ -113,35 +113,35 @@ def find_host_families_with_nested_families_requiring_rename(inputDirectoryPath)
     # read overall family base data from file
     try:
         overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list_from_directory(inputDirectoryPath)
-        returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
+        returnValue.append_message(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
         # check if input file existed and contained data
         if(len(overallFamilyBaseRootData) > 0):
             tProcess.start()
             fileRenameListStatus = rFamRenameUtils.get_rename_directives(inputDirectoryPath)
-            returnValue.AppendMessage(tProcess.stop() + ' Read data from file! Rename family entries ['+ str(len(fileRenameListStatus.result)) + ' ] found.')
+            returnValue.append_message(tProcess.stop() + ' Read data from file! Rename family entries ['+ str(len(fileRenameListStatus.result)) + ' ] found.')
             # check if any rename directives
             if(len(fileRenameListStatus.result) > 0):
                 before = len(overallFamilyBaseNestedData)
                 tProcess.start()
                 # reduce workload by culling not needed nested family data
                 overallFamilyBaseNestedData =  rFamBaseDataUtils.cull_nested_base_data_blocks(overallFamilyBaseNestedData)
-                returnValue.AppendMessage(tProcess.stop() +  ' Culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
+                returnValue.append_message(tProcess.stop() +  ' Culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
 
                 tProcess.start()
                 # get a list of simplified root data families extracted from nested family path data
                 rootFamSimple = rFamBaseDataUtils.find_all_direct_host_families(fileRenameListStatus.result, overallFamilyBaseNestedData)
-                returnValue.AppendMessage(tProcess.stop() +  ' Found simplified root families: ' + str(len(rootFamSimple)))
+                returnValue.append_message(tProcess.stop() +  ' Found simplified root families: ' + str(len(rootFamSimple)))
 
                 tProcess.start()
                 # identify actual root families with nested families at top level which require renaming.
                 rootFamilies = rFamBaseDataUtils.find_root_families_from_hosts(rootFamSimple, overallFamilyBaseRootData)
-                returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(rootFamilies)) +' root families.' )
+                returnValue.append_message(tProcess.stop() +  ' Found ' + str(len(rootFamilies)) +' root families.' )
                 returnValue.result = rootFamilies
             else:
-                returnValue.UpdateSep(False, 'No rename directives found. Aborted operation!')
+                returnValue.update_sep(False, 'No rename directives found. Aborted operation!')
         else:
-            returnValue.UpdateSep(False, 'No base family data found. Aborted operation!')
+            returnValue.update_sep(False, 'No base family data found. Aborted operation!')
     except Exception as e:
-        returnValue.UpdateSep(False, str(e))
+        returnValue.update_sep(False, str(e))
     return returnValue

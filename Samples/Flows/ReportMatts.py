@@ -108,7 +108,7 @@ def write_material_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rMatHeader.REPORT_MATERIALS_HEADER, 
             rMatRep.get_material_report_data(doc, REVIT_FILE_PATH))
@@ -125,7 +125,7 @@ def write_material_data(doc, file_name):
 ROOT_PATH = r'C:\temp'
 
 # build output file name
-FILE_NAME_MAT_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_Materials')
+FILE_NAME_MAT_REPORT =  ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_Materials')
 
 output('Writing Material Data.... start')
 RESULT = write_material_data(DOC, FILE_NAME_MAT_REPORT)

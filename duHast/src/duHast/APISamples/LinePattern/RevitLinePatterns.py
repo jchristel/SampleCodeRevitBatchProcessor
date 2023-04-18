@@ -229,7 +229,7 @@ def delete_duplicate_line_patter_names(doc):
     '''
 
     returnValue = res.Result()
-    returnValue.AppendMessage('Deletes all but the first line pattern by Id with the exact same name...start')
+    returnValue.append_message('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name
     # anything where the value list is greater then 1 means duplicates of the same name...
     linePatterns = build_patterns_dictionary_by_name(doc)
@@ -238,5 +238,5 @@ def delete_duplicate_line_patter_names(doc):
             # keep the first one (original)
             value.remove(value[0])
             flagDelete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
-            returnValue.Update (flagDelete)
+            returnValue.update (flagDelete)
     return returnValue

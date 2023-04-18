@@ -34,7 +34,7 @@ import shutil
 from System.IO import Path
 
 
-def FileExist(fullFilePath):
+def file_exist(fullFilePath):
     '''
     Checks whether a file exists
     :param fullFilePath: Fully qualified file path
@@ -50,7 +50,7 @@ def FileExist(fullFilePath):
     return value
 
 
-def FileDelete(fullFilePath):
+def file_delete(fullFilePath):
     try:
         os.remove(fullFilePath)
         value = True
@@ -59,7 +59,7 @@ def FileDelete(fullFilePath):
     return value
 
 
-def GetFolderPathFromFile(filePath):
+def get_directory_path_from_file_path(filePath):
     '''
     Extracts directory from file path.
     :param filePath: A fully qualified file path.
@@ -74,7 +74,7 @@ def GetFolderPathFromFile(filePath):
     return value
 
 
-def RenameFile(oldName, newName):
+def rename_file(oldName, newName):
     '''
     Renames a file.
     :param oldName: Fully qualified file path to file to be renamed.
@@ -93,7 +93,7 @@ def RenameFile(oldName, newName):
     return value
 
 
-def CopyFile(oldName, newName):
+def copy_file(oldName, newName):
     '''
     Copies a file
     :param oldName: Fully qualified file path to file to be copied.
@@ -118,7 +118,7 @@ FILE_SIZE_IN_MB = 1024*1024
 #: file size in GB conversion
 FILE_SIZE_IN_GB = 1024*1024*1024
 
-def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
+def get_file_size(filePath, unit = FILE_SIZE_IN_MB):
     '''
     Get the file size in given units (default is MB)
     :param filePath: Fully qualified file path
@@ -140,7 +140,7 @@ def GetFileSize(filePath, unit = FILE_SIZE_IN_MB):
     return size
 
 
-def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
+def convert_relative_path_to_full_path(relativeFilePath, fullFilePath):
     '''
     removes '../..' or '../' from relative file path string and replaces it with full path derived path past in sample path.
     - relative path sample: 'C:/temp/../myfile.ext'
@@ -164,7 +164,7 @@ def ConvertRelativePathToFullPath(relativeFilePath, fullFilePath):
         return relativeFilePath
 
 
-def GetFileNameWithoutExt(filePath):
+def get_file_name_without_ext(filePath):
     '''
     Returns the file name without the file extension.
     :param filePath: Fully qualified file path to file
@@ -175,3 +175,21 @@ def GetFileNameWithoutExt(filePath):
 
     name = Path.GetFileNameWithoutExtension(filePath)
     return name
+
+
+def get_first_row_in_file(filePath):
+    '''
+    Reads the first line of a text file and returns it as a single string
+    :param filePath: The fully qualified file path.
+    :type filePath: str
+    :return: The first row of a text file.
+    :rtype: str
+    '''
+
+    row = ''
+    try:
+        with open(filePath) as f:
+            row = f.readline().strip()
+    except Exception:
+        row = None
+    return row

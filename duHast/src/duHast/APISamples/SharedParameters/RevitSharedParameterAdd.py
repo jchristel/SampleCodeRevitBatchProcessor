@@ -124,7 +124,7 @@ def bind_shared_parameter(doc, category, parameterName, groupName, parameterType
                                 returnValue.message = parameterName + ': Parameter already bound to category: ' + str(cat.Name)
                                 return returnValue
                         except Exception as e:
-                            returnValue.AppendMessage(parameterName + ' : Failed to check parameter binding with exception: ' + str(e))
+                            returnValue.append_message(parameterName + ' : Failed to check parameter binding with exception: ' + str(e))
                         # If here, no category match, hence must 
                         # store "other" cats for re-inserting
                         else:
@@ -183,7 +183,7 @@ def bind_shared_parameter(doc, category, parameterName, groupName, parameterType
             transaction = rdb.Transaction(doc,'Binding parameter')
             returnValue = rTran.in_transaction(transaction, action)
         else:
-            returnValue.UpdateSep(False, 'Failed to get category object for ' + str(category)) 
+            returnValue.update_sep(False, 'Failed to get category object for ' + str(category)) 
         return returnValue
 
     except Exception as e:

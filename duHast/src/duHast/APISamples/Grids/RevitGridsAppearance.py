@@ -64,11 +64,11 @@ def change_grids_2D (doc, grids, view):
             try:
                 g.SetDatumExtentType(rdb.DatumEnds.End1, view, rdb.DatumExtentType.ViewSpecific)
                 g.SetDatumExtentType(rdb.DatumEnds.End0, view, rdb.DatumExtentType.ViewSpecific)
-                action_return_value.UpdateSep(True, 'Changed grid {} to 2D.'.format(g.Name))
+                action_return_value.update_sep(True, 'Changed grid {} to 2D.'.format(g.Name))
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to change grid {} to 2D with exception: {}'.format(g.Name, e))
+                action_return_value.update_sep(False, 'Failed to change grid {} to 2D with exception: {}'.format(g.Name, e))
         if(grid_counter == 0):
-            action_return_value.UpdateSep(True, 'No grids visible in view {}'.format(view.Name))
+            action_return_value.update_sep(True, 'No grids visible in view {}'.format(view.Name))
         return action_return_value
     transaction = rdb.Transaction(doc, "Grids to 2D")
     return_value = rTran.in_transaction(transaction, action)
@@ -105,12 +105,12 @@ def show_bubble_end (doc, grid, view, end_identifier, show_bubble):
         try:
             if(show_bubble):
                 grid.ShowBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set grid {} bubble to visible at end: {}'.format(grid.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set grid {} bubble to visible at end: {}'.format(grid.Name, end_identifier))
             else:
                 grid.HideBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set grid {} bubble to invisible at end: {}'.format(grid.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set grid {} bubble to invisible at end: {}'.format(grid.Name, end_identifier))
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to change grid {} bubble visibility at end {} with exception: {}'.format(grid.Name, end_identifier, e))
+            action_return_value.update_sep(False, 'Failed to change grid {} bubble visibility at end {} with exception: {}'.format(grid.Name, end_identifier, e))
         return action_return_value
 
     transaction = rdb.Transaction(doc, "Toggle Bubble. {}".format((show_bubble)))
@@ -141,8 +141,8 @@ def hide_both_bubbles (doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
-        return_value.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
+        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End1, False))
+        return_value.update( show_bubble_end(doc, g, view, rdb.DatumEnds.End0, False))
 
     return return_value
 
@@ -169,7 +169,7 @@ def show_bubble_zero_end (doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.Update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
+        return_value.update(show_bubble_end(doc, g, view, rdb.DatumEnds.End0, True))
 
     return return_value
 
@@ -196,7 +196,7 @@ def show_bubble_one_end (doc, grids, view):
 
     return_value = res.Result()
     for g in grids:
-        return_value.Update( show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
+        return_value.update( show_bubble_end(doc, g, view, rdb.DatumEnds.End1, True))
 
     return return_value
 
@@ -230,12 +230,12 @@ def toggle_bubble_end (doc, grid, view, end_identifier):
             endBubbleOne = grid.IsBubbleVisibleInView(end_identifier,view)
             if(endBubbleOne == False):
                 grid.ShowBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set grid {} bubble to visible at end: {}.'.format(grid.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set grid {} bubble to visible at end: {}.'.format(grid.Name, end_identifier))
             else:
                 grid.HideBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set grid {} bubble to not visible at end: {}.'.format(grid.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set grid {} bubble to not visible at end: {}.'.format(grid.Name, end_identifier))
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to change grid {} bubble visibility at end: {} with exception: {}'.format(grid.Name, end_identifier, e))
+            action_return_value.update_sep(False, 'Failed to change grid {} bubble visibility at end: {} with exception: {}'.format(grid.Name, end_identifier, e))
         return action_return_value
     transaction = rdb.Transaction(doc, "Toggle Bubble.")
     return_value = rTran.in_transaction(transaction, action)
@@ -265,7 +265,7 @@ def toggle_bubble_one_end (doc, grids, view ):
 
     return_value = res.Result()
     for g in grids:
-        return_value.Update( toggle_bubble_end(doc, g, view, rdb.DatumEnds.End1))
+        return_value.update( toggle_bubble_end(doc, g, view, rdb.DatumEnds.End1))
     return return_value
 
 
@@ -292,5 +292,5 @@ def toggle_bubble_zero_end (doc, grids, view ):
 
     return_value = res.Result()
     for g in grids:
-        return_value.Update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End0))
+        return_value.update(toggle_bubble_end(doc, g, view, rdb.DatumEnds.End0))
     return return_value

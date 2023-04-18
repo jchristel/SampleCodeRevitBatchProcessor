@@ -118,11 +118,11 @@ def get_model_file_size(doc):
         # local cache file name is same as file GUID on BIM360
         revit_file = doc.WorksharingCentralGUID.ToString()
         # get all files in cache folder matching GUID
-        file_list = fileGet.GetFilesFromDirectoryWalker(folder, revit_file)
+        file_list = fileGet.get_files_from_directory_walker(folder, revit_file)
         if (len(file_list) > 0):
             for file in file_list:
                 # just select one of the file instance..not to sure why this one?
                 if (file.Contains('CentralCache') == False):
-                    file_size = util.GetFileSize(file)
+                    file_size = util.get_file_size(file)
                     break
     return file_size

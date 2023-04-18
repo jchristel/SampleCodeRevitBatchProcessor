@@ -105,11 +105,11 @@ def export_to_nwc(doc, nwcExportOption, directoryPath, fileName):
     try:
         # export to NWC
         doc.Export(directoryPath, fileName, nwcExportOption)
-        returnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
+        returnValue.update_sep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
         # needs to be a list in a list to stay together when combined with previous results in the update status result code
         returnValue.result = [[directoryPath, fileName]]
     except Exception as e:
-        returnValue.UpdateSep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
+        returnValue.update_sep(False, 'Script Exception: Failed to export to NWC with exception: ' + str(e))
     return returnValue
 
 
@@ -136,7 +136,7 @@ def export_model_to_nwc(doc, nwcExportOption, directoryPath, fileName):
 
     returnValue = res.Result()
     returnValueByModel = export_to_nwc(doc, nwcExportOption, directoryPath, fileName)
-    returnValue.Update(returnValueByModel)
+    returnValue.update(returnValueByModel)
     return returnValue
 
 
@@ -178,7 +178,7 @@ def export_3d_views_to_nwc(doc, viewFilter, nwcExportOption, directoryPath, doSo
             nwcExportOption.ViewId = exportView.Id
             fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.nwc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
             returnValueByView = export_to_nwc(doc, nwcExportOption, directoryPath, fileName)
-            returnValue.Update(returnValueByView)
+            returnValue.update(returnValueByView)
     else:
-        returnValue.UpdateSep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
+        returnValue.update_sep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
     return returnValue

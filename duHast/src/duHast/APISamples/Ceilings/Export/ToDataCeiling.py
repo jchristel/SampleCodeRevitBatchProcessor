@@ -81,7 +81,7 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
         # custom parameter value getters
         value_getter = {
-            rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_millimeter,
+            rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_metric,
             rdb.StorageType.Integer : rParaGet.getter_int_as_int,
             rdb.StorageType.String : rParaGet.getter_string_as_UTF8_string, # encode ass utf 8 just in case
             rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding

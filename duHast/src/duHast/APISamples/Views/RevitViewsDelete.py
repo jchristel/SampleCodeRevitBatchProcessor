@@ -52,7 +52,7 @@ def delete_views(doc, viewRules, collectorViews):
     viewCounter = 0
     for v in collectorViews:
         # filter out revision schedules '<', sheets and other view types which can not be deleted
-        if(util.EncodeAscii(v.Name)[0] != '<' and
+        if(util.encode_ascii(v.Name)[0] != '<' and
         v.ViewType != rdb.ViewType.Internal and
         v.ViewType != rdb.ViewType.Undefined and
         v.ViewType != rdb.ViewType.ProjectBrowser and
@@ -103,7 +103,7 @@ def delete_views_not_on_sheets(doc, filter):
     if(len(ids) > 0):
         returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting '+ str(len(viewsNotOnSheets)) +' views not on sheets', 'views')
     else:
-        returnValue.UpdateSep(True, 'No views not placed on sheets found.')
+        returnValue.update_sep(True, 'No views not placed on sheets found.')
     return returnValue
 
 
@@ -135,7 +135,7 @@ def delete_unused_elevation_view_markers(doc):
     if(len(ids) > 0):
         returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting unused view markers: ' + str(counter),'view marker')
     else:
-        returnValue.UpdateSep(True, 'No unused elevation markers in model')
+        returnValue.update_sep(True, 'No unused elevation markers in model')
     return returnValue
 
 
@@ -175,7 +175,7 @@ def delete_sheets(doc, viewRules, collectorViews):
 def delete_all_sheets(doc):
     '''
     Deletes all sheets in a model
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: 
@@ -194,5 +194,5 @@ def delete_all_sheets(doc):
     if (len(ids)>0):
         returnValue = rDel.delete_by_element_ids(doc,ids, 'deleting all sheets', 'sheets')
     else:
-        returnValue.UpdateSep(True, 'No sheets in the model')
+        returnValue.update_sep(True, 'No sheets in the model')
     return returnValue

@@ -138,24 +138,24 @@ def modify(doc, revit_file_path, grid_data):
             flag = True
             collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
             grids = rWork.modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
-            return_value.Update(grids)
+            return_value.update(grids)
 
             collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
             levels = rWork.modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
-            return_value.Update(levels)
+            return_value.update(levels)
 
             collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
             scope_boxes = rWork.modify_element_workset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
-            return_value.Update(scope_boxes)
+            return_value.update(scope_boxes)
             
             # fix up ref planes
             collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
             ref_planes = rWork.modify_element_workset(doc, default_workset_name, collector_ref_planes,  'reference planes')
-            return_value.Update(ref_planes)
+            return_value.update(ref_planes)
             
             break
     if (flag == False):
-        return_value.UpdateSep(False, 'No grid data provided for current Revit file: {}'.format(revit_file_name))
+        return_value.update_sep(False, 'No grid data provided for current Revit file: {}'.format(revit_file_name))
     return return_value
 
 

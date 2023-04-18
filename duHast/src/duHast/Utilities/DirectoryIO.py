@@ -32,7 +32,7 @@ import os.path
 import shutil
 
 
-def DirectoryEmptyDelete(fullDirectoryPath):
+def directory_empty_delete(fullDirectoryPath):
     '''
     Deletes an empty directory
     :param fullDirectoryPath: Path to directory
@@ -49,7 +49,7 @@ def DirectoryEmptyDelete(fullDirectoryPath):
     return value
 
 
-def DirectoryDelete(fullDirectoryPath):
+def directory_delete(fullDirectoryPath):
     '''
     Deletes a directory (even if it contains files)
     :param fullDirectoryPath: Path to directory
@@ -62,12 +62,12 @@ def DirectoryDelete(fullDirectoryPath):
         shutil.rmtree(fullDirectoryPath)
         value = True
     except Exception as e:
-        print('An exception occurred when attempting to delete a directory: ' + str(e))
+        print('When attempting to delete: {} an exception occurred: {}'.format(fullDirectoryPath, e))
         value = False
     return value
 
 
-def GetChildDirectories(fullDirectoryPath):
+def get_child_directories(fullDirectoryPath):
     '''
     Returns the immediate subdirectories of directory
     :param fullDirectoryPath: Path to directory
@@ -84,7 +84,7 @@ def GetChildDirectories(fullDirectoryPath):
     return subFoldersWithPaths
 
 
-def GetParentDirectory(fullDirectoryPath):
+def get_parent_directory(fullDirectoryPath):
     '''
     Returns the parent directory of directory, or empty string if invalid directory
     :param fullDirectoryPath: Path to directory
@@ -101,7 +101,7 @@ def GetParentDirectory(fullDirectoryPath):
     return parentDir
 
 
-def CreateFolder(root, folderName):
+def create_directory(root, folderName):
     '''
     Create a folder.
     :param root: Directory path in which the new folder is to be created
@@ -123,10 +123,11 @@ def CreateFolder(root, folderName):
     return flag
 
 
-def CreateTargetFolder(rootPath, folderName):
+def create_target_directory(rootPath, folderName):
     '''
     Create a folder.
     Checks whether folder exists and if not attempts to create it.
+
     :param root: Directory path in which the new folder is to be created
     :type root: str
     :param folderName: New folder name.
@@ -139,11 +140,11 @@ def CreateTargetFolder(rootPath, folderName):
     flag = True
     if(path.exists(rootPath + '\\' + folderName) == False):
         #create new folder
-        flag = CreateFolder(rootPath, folderName)
+        flag = create_directory(rootPath, folderName)
     return flag
 
 
-def DirectoryExists(directoryPath):
+def directory_exists(directoryPath):
     '''
     Check if a given directory exists
     :param directoryPath: Fully qualified directory path

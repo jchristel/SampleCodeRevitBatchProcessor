@@ -46,7 +46,7 @@ def get_grid_report_data(doc, revitFilePath):
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
         data.append([
-            util.GetFileNameWithoutExt(revitFilePath),
+            util.get_file_name_without_ext(revitFilePath),
             str(p.Id.IntegerValue),
             util.EncodeAscii(p.Name),
             rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),

@@ -73,13 +73,13 @@ def purge_unused(doc, processor):
     # get all root line pattern entries where usage counter == 0.
     for rootFam in rootFamData:
         if (rootFam[IFamData.USAGE_COUNTER] == 0 ):
-            returnValue.AppendMessage('Found unused line patterns: ' + rootFam[rLinePatData.PATTERN_NAME] + ' ['+str(rootFam[rLinePatData.PATTERN_ID])+']')
+            returnValue.append_message('Found unused line patterns: ' + rootFam[rLinePatData.PATTERN_NAME] + ' ['+str(rootFam[rLinePatData.PATTERN_ID])+']')
             idsToDelete.append(rdb.ElementId(rootFam[rLinePatData.PATTERN_ID]))
     # delete any subcategories found
     if(len(idsToDelete) > 0):
         resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
-        returnValue.Update(resultDelete)
+        returnValue.update(resultDelete)
     else:
-        returnValue.UpdateSep(True, 'No unused line patterns found. Nothing was deleted.')
+        returnValue.update_sep(True, 'No unused line patterns found. Nothing was deleted.')
     return returnValue
     

@@ -28,16 +28,18 @@ Helper functions relating to tab separated text files.
 
 import codecs
 import csv
-from duHast.Utilities.Utility import GetFirstRowInFile
-from duHast.Utilities.FilesIO import GetFileNameWithoutExt
+from duHast.Utilities.FilesIO import get_first_row_in_file
+from duHast.Utilities.FilesIO import get_file_name_without_ext
 
 
-def GetUniqueHeaders(files):
+def get_unique_headers(files):
     '''
     Gets a list of alphabetically sorted headers retrieved from text files.
     Assumes:
+
     - first row in each file is the header row
     - headers are separated by <tab> character
+
     :param files: List of file path from which the headers are to be returned.
     :type files: list of str
     :return: List of headers.
@@ -46,10 +48,10 @@ def GetUniqueHeaders(files):
 
     headersInAllFiles = {}
     for f in files:
-        data = GetFirstRowInFile(f)
+        data = get_first_row_in_file(f)
         if (data is not None):
             rowSplit = data.split('\t')
-            headersInAllFiles[GetFileNameWithoutExt(f)] = rowSplit
+            headersInAllFiles[get_file_name_without_ext(f)] = rowSplit
     headersUnique = []
     for headerByFile in headersInAllFiles:
         emptyHeaderCounter = 0
@@ -63,9 +65,10 @@ def GetUniqueHeaders(files):
     return sorted(headersUnique)
 
 
-def writeReportData(fileName, header, data, writeType = 'w'):
+def write_report_data(fileName, header, data, writeType = 'w'):
     '''
     Function writing out report information.
+
     :param fileName: The reports fully qualified file path.
     :type fileName: str
     :param header: list of column headers
@@ -90,7 +93,7 @@ def writeReportData(fileName, header, data, writeType = 'w'):
         f.close()
 
 
-def ReadTabSeparatedFile(filePath, increaseMaxFieldSizeLimit = False):
+def read_tab_separated_file(filePath, increaseMaxFieldSizeLimit = False):
     '''
     Read a tab separated text file into a list of rows, where each row is another list.
     :param filePath: The fully qualified file path to the tab separated text file.

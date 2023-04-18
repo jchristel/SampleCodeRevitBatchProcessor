@@ -64,7 +64,7 @@ def set_ref_planes_to_not_a_reference(doc):
     '''
 
     result = res.Result()
-    result.UpdateSep(True, 'Changing reference status of reference planes...')
+    result.update_sep(True, 'Changing reference status of reference planes...')
     matchAtAll = False
     collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     for refP in collectorRefPlanes:
@@ -83,7 +83,7 @@ def set_ref_planes_to_not_a_reference(doc):
             # set overall flag to indicate that at least one element was changed
             if(resultChange.status == True and matchAtAll == False):
                 matchAtAll = True
-            result.Update(resultChange)
+            result.update(resultChange)
     if(matchAtAll == False):
         result.status = False
         result.message = 'No reference planes found requiring reference type update'
@@ -114,7 +114,7 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
     '''
 
     result = res.Result()
-    result.UpdateSep(True, 'Changing reference status of model and symbolic curves...')
+    result.update_sep(True, 'Changing reference status of model and symbolic curves...')
     matchAtAll = False
     curves = get_all_curve_based_elements_in_family(doc)
     for curve in curves:
@@ -134,7 +134,7 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
             # set overall flag to indicate that at least one element was changed
             if(resultChange.status == True and matchAtAll == False):
                 matchAtAll = True
-            result.Update(resultChange)
+            result.update(resultChange)
     if(matchAtAll == False):
         result.status = False
         result.message = 'No curve elements found requiring reference type update'

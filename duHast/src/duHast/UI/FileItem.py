@@ -28,7 +28,10 @@ A class to store file information.
 #
 
 # An item to represent a file name in a row in a grid.
-class MyFileItem:
+
+from duHast.Utilities import Base
+
+class MyFileItem(Base.Base):
     
     def __init__(self, name, size,  BIM360ProjectGuid = None , BIM360FileGuid = None, BIM360RevitVersion = '-'):
         '''
@@ -46,8 +49,11 @@ class MyFileItem:
         :type BIM360RevitVersion: str, optional
         '''
 
+        # ini super class to allow multi inheritance in children!
+        super(MyFileItem, self).__init__() 
+        
         self.name = name
         self.size = size
-        self.BIM360ProjectGUID =  BIM360ProjectGuid
-        self.BIM360FileGUID = BIM360FileGuid
-        self.BIM360RevitVersion = BIM360RevitVersion
+        self.bim_360_project_guid =  BIM360ProjectGuid
+        self.bim_360_file_guid = BIM360FileGuid
+        self.bim_360_revit_version = BIM360RevitVersion

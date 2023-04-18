@@ -54,7 +54,7 @@ def create_new_sub_category_to_family_category(doc, new_sub_category_name):
         if(does_main_sub_category_exists(doc, new_sub_category_name)):
             # just return the already existing subcategory
             main_sub_categories = get_main_sub_categories(doc)
-            return_value.UpdateSep(True, 'Subcategory already in family.')
+            return_value.update_sep(True, 'Subcategory already in family.')
             return_value.result = main_sub_categories[new_sub_category_name]
         else:
             # create a new subcategory
@@ -71,17 +71,17 @@ def create_new_sub_category_to_family_category(doc, new_sub_category_name):
                     action_return_value = res.Result()
                     try:
                         new_sub_category = doc.Settings.Categories.NewSubcategory(parent_category, new_sub_category_name)
-                        action_return_value.UpdateSep(True, 'Created subcategory ' + str(new_sub_category_name))
+                        action_return_value.update_sep(True, 'Created subcategory ' + str(new_sub_category_name))
                         action_return_value.result = new_sub_category
                     except Exception as e:
-                        action_return_value.UpdateSep(False, 'Failed to create ' + str(new_sub_category_name) + ' with exception: ' + str(e))
+                        action_return_value.update_sep(False, 'Failed to create ' + str(new_sub_category_name) + ' with exception: ' + str(e))
                     return action_return_value
                 transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(new_sub_category_name))
                 return_value = rTran.in_transaction(transaction, action)
             else:
-                return_value.UpdateSep(False, 'Cant create subcategory with the same name as the family category!')
+                return_value.update_sep(False, 'Cant create subcategory with the same name as the family category!')
     else:
-        return_value.UpdateSep(False, 'This is not a family document!')
+        return_value.update_sep(False, 'This is not a family document!')
     return return_value
 
 
@@ -114,12 +114,12 @@ def create_new_category_from_saved_properties(doc, new_cat_name, saved_cat_props
         new_sub_cat = result_new_sub_cat.result
         flag = set_category_properties(doc, new_sub_cat, saved_cat_props, ignore_missing_cut_style)
         if(flag):
-            return_value.UpdateSep(True, 'Successfully created category: '+ str(new_cat_name))
+            return_value.update_sep(True, 'Successfully created category: '+ str(new_cat_name))
             return_value.result = new_sub_cat
         else:
-            return_value.UpdateSep(False, 'Failed to apply properties to new category: '+ str(new_cat_name))
+            return_value.update_sep(False, 'Failed to apply properties to new category: '+ str(new_cat_name))
     else:
-        return_value.UpdateSep(False, 'Failed to create new subcategory: '+ str(new_cat_name))
+        return_value.update_sep(False, 'Failed to create new subcategory: '+ str(new_cat_name))
     return return_value
 
 
@@ -153,12 +153,12 @@ def create_new_category_and_transfer_properties(doc, new_cat_name, existing_cat_
             copy_from_cat = cats[existing_cat_name]
             cat_props = get_category_properties(copy_from_cat, doc)
             result_new_sub_cat = create_new_category_from_saved_properties(doc, new_cat_name, cat_props)
-            return_value.Update(result_new_sub_cat)
+            return_value.update(result_new_sub_cat)
         else:
-            return_value.UpdateSep(True, 'Category already in file:'+ str(new_cat_name))
+            return_value.update_sep(True, 'Category already in file:'+ str(new_cat_name))
             return_value.result = cats[new_cat_name]
     else:
-        return_value.UpdateSep(False, 'Template category: '+ str(existing_cat_name) + ' does not exist in file!')
+        return_value.update_sep(False, 'Template category: '+ str(existing_cat_name) + ' does not exist in file!')
     return return_value
 
 
@@ -199,26 +199,26 @@ def rename_sub_category(doc, old_sub_cat_name, new_sub_cat_name):
         already_in_family = does_main_sub_category_exists(doc, new_sub_cat_name)
         if(already_in_family):
             # just move elements from old sub category to new one
-            return_value.AppendMessage('Subcategory: ' + new_sub_cat_name + ' already in family.')
+            return_value.append_message('Subcategory: ' + new_sub_cat_name + ' already in family.')
         else:
             # duplicate old sub category
             create_new_status = create_new_category_and_transfer_properties(doc, new_sub_cat_name, old_sub_cat_name)
-            return_value.Update(create_new_status)
+            return_value.update(create_new_status)
         # check if we have a subcategory to move elements to
         if(return_value.status):
             # move elements
             move_status = move_elements_from_sub_category_to_sub_category(doc, old_sub_cat_name, new_sub_cat_name)
-            return_value.Update(move_status)
+            return_value.update(move_status)
             if(move_status.status):
                 deleted_old_sub_category = delete_main_sub_category(doc, old_sub_cat_name)
                 if(deleted_old_sub_category):
-                    return_value.UpdateSep(True, 'Subcategory: ' + old_sub_cat_name + ' deleted successfully.')
+                    return_value.update_sep(True, 'Subcategory: ' + old_sub_cat_name + ' deleted successfully.')
                 else:
-                    return_value.UpdateSep(True, 'Subcategory: ' + old_sub_cat_name + ' failed to delete subcategory...Exiting')
+                    return_value.update_sep(True, 'Subcategory: ' + old_sub_cat_name + ' failed to delete subcategory...Exiting')
             else:
-                return_value.UpdateSep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to move elements to new subcategory. Exiting...')
+                return_value.update_sep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to move elements to new subcategory. Exiting...')
         else:
-            return_value.UpdateSep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to create in family. Exiting...')
+            return_value.update_sep(False, 'Subcategory: ' + new_sub_cat_name + ' failed to create in family. Exiting...')
     else:
-        return_value.UpdateSep(False, 'Base subcategory: ' + old_sub_cat_name + ' does not exist in family. Exiting...')
+        return_value.update_sep(False, 'Base subcategory: ' + old_sub_cat_name + ' does not exist in family. Exiting...')
     return return_value

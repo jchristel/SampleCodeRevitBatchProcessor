@@ -283,13 +283,13 @@ def set_family_category(doc, new_category_name):
             transaction = rdb.Transaction(doc,'Changing family category to:' + str(new_category_name))
             change_cat = rTran.in_transaction(transaction, action)
             if(change_cat.status):
-                return_value.UpdateSep(True, 'Successfully changed family category to: '+str(new_category_name))
+                return_value.update_sep(True, 'Successfully changed family category to: '+str(new_category_name))
             else:
-                return_value.Update(change_cat)
+                return_value.update(change_cat)
         else:
-            return_value.UpdateSep(False, 'Invalid Category name supplied: ' + str(new_category_name))
+            return_value.update_sep(False, 'Invalid Category name supplied: ' + str(new_category_name))
     else:
-        return_value.UpdateSep(False, 'Family is already of category: '+str(new_category_name))
+        return_value.update_sep(False, 'Family is already of category: '+str(new_category_name))
     return return_value
    
 # --------------------------------------- family category  --------------------------------------------------------------
@@ -343,7 +343,7 @@ def change_family_category(doc, new_category_name):
     
     # change family category
     change_fam = set_family_category(doc, new_category_name)
-    return_value.Update(change_fam)
+    return_value.update(change_fam)
 
     if(change_fam.status):
         # re-create custom sub categories
@@ -352,15 +352,15 @@ def change_family_category(doc, new_category_name):
             if(sub_cats[sub_cat].Id.IntegerValue > 0):
                 # create new sub categories with flag: ignore if cut graphic style is missing set to true!
                 create_cat = create_new_category_from_saved_properties(doc, sub_cat, props[sub_cat], True)
-                return_value.Update(create_cat)
+                return_value.update(create_cat)
                 if(create_cat.status):
                     # get the graphic style ids of the new subcategory for elements to use
                     destination_cat_ids = get_category_graphic_style_ids(create_cat.result)
                     # move elements back onto custom subcategories
                     move_el = move_elements_to_category(doc, elements[sub_cat], sub_cat, destination_cat_ids)
-                    return_value.Update(move_el)
+                    return_value.update(move_el)
                 else:
-                    return_value.Update(create_cat)
+                    return_value.update(create_cat)
     else:
-        return_value.UpdateSep(False, 'Failed to change family category:' + change_fam.message)
+        return_value.update_sep(False, 'Failed to change family category:' + change_fam.message)
     return return_value

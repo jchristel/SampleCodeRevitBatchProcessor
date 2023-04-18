@@ -54,7 +54,7 @@ def get_cad_link_type_data_by_name(cadLinkName, doc, revitFilePath):
                 exFileRef = p.GetExternalFileReference()
                 if(exFileRef.IsValidExternalFileReference(exFileRef)):
                     modelPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
-                    modelPath = util.ConvertRelativePathToFullPath(modelPath, revitFilePath)
+                    modelPath = util.convert_relative_path_to_full_path(modelPath, revitFilePath)
                 break
             except Exception as e:
                 modelPath = str(e)

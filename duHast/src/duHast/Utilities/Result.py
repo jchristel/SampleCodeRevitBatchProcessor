@@ -49,7 +49,7 @@ class Result (Base.Base):
         self.status = True
         self.result = []
     
-    def AppendMessage(self, message):
+    def append_message(self, message):
         '''
         Appends a new line and new message string to the existing message.
 
@@ -67,7 +67,7 @@ class Result (Base.Base):
             print (str(e))
             pass
 
-    def Update(self, otherResult):
+    def update(self, otherResult):
         '''
         Will use the past in result instance to update the instance.
 
@@ -81,7 +81,7 @@ class Result (Base.Base):
         try:
             # check if default message string, if so do not update
             if(otherResult.message != '-'):
-                self.AppendMessage(otherResult.message)
+                self.append_message(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
             if(otherResult.result is not None and len(otherResult.result)>0):
@@ -91,7 +91,7 @@ class Result (Base.Base):
             print (str(e))
             pass
     
-    def UpdateSep (self, status, message):
+    def update_sep (self, status, message):
         '''
         Updates the .status and .message property only.
         
@@ -105,14 +105,14 @@ class Result (Base.Base):
         '''
         
         try:
-            self.AppendMessage(message)
+            self.append_message(message)
             # self.message = self.message + '\n' + message
             self.status = self.status & status
         except Exception as e:
             print (str(e))
             pass
 
-    def UpdateStatus(self, status):
+    def update_status(self, status):
         '''
         Update .status only.
 

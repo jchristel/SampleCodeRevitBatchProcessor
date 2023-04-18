@@ -54,7 +54,7 @@ def modify_grid_worksets_default (doc, worksetRules):
     for rule in worksetRules:
         for defaultWorksetName in rule:
             grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
-            gridsResults.Update(grids)
+            gridsResults.update(grids)
     return gridsResults
 
 
@@ -87,7 +87,7 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
         typeId = rGrid.get_grid_type_id_by_name(doc, typeName)
         collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
         grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
-        gridsResults.Update(grids)
+        gridsResults.update(grids)
     return gridsResults
 
 
@@ -117,7 +117,7 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
         collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: rGrid.grid_check_parameter_value(e, paraName, paraCondition, conditionValue))
         grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
-        gridsResults.Update(grids)
+        gridsResults.update(grids)
     return gridsResults
 
 
@@ -151,8 +151,8 @@ def modify_grids_worksets(doc, revitFileName, worksetRules):
             foundMatch = True
             for worksetModifier, rules in worksetModifierList:
                 grids = worksetModifier(doc, rules)
-                gridsResults.Update(grids)
+                gridsResults.update(grids)
             break
     if foundMatch == False:
-        gridsResults.UpdateSep(False, 'No grid rules found for file: ' + revitFileName)
+        gridsResults.update_sep(False, 'No grid rules found for file: ' + revitFileName)
     return gridsResults

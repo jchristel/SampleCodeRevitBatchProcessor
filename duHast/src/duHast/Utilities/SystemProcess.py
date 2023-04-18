@@ -31,7 +31,7 @@ import os, signal
 from duHast.Utilities import DateStamps as dateStamp
 
 
-def GetAllRunningProcesses():
+def get_all_running_processes():
     '''
     Retrieves a list of all currently running processes.
 
@@ -73,7 +73,7 @@ def GetAllRunningProcesses():
         print ('Got all running processes')
     return processFiltered
 
-def FilterByProcessName (processNames, processList, returnMatch = True):
+def filter_by_process_name (processNames, processList, returnMatch = True):
     '''
     Filters a provided list of processes by process name
 
@@ -101,7 +101,7 @@ def FilterByProcessName (processNames, processList, returnMatch = True):
             processFilteredByName.append(process)
     return processFilteredByName
 
-def FilterByProcessIds (processIds, processList, returnMatch = True):
+def filter_by_process_ids (processIds, processList, returnMatch = True):
     '''
     Filters a provided list of processes by process ids
 
@@ -128,7 +128,7 @@ def FilterByProcessIds (processIds, processList, returnMatch = True):
             processFilteredByName.append(process)
     return processFilteredByName
 
-def KillProcesses(processList):
+def kill_processes(processList):
     '''
     Kills all processes in list provided
 
@@ -149,7 +149,7 @@ def KillProcesses(processList):
             print (e)
     return status
 
-def WriteOutProcessData(directoryPath, processList, fileName, fileExtension):
+def write_out_process_data(directoryPath, processList, fileName, fileExtension):
     '''
     Writes out process data to file
 
@@ -168,7 +168,7 @@ def WriteOutProcessData(directoryPath, processList, fileName, fileExtension):
 
     status = True
     # setup file name
-    filePath = directoryPath + '\\' + dateStamp.GetFileDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension
+    filePath = directoryPath + '\\' + dateStamp.get_file_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension
     try:
         f = open(filePath, "w")
         for p in processList:

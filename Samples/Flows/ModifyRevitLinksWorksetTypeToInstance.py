@@ -170,7 +170,7 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
         typeWorksetName = rWork.get_workset_name_by_id(doc, typeWorksetId)
         #revit will return a -1 if link is not loaded...
         if(typeWorksetId != rdb.ElementId.InvalidElementId):
-            linkInstanceNameEncoded = util.EncodeAscii(lN[0:-1])
+            linkInstanceNameEncoded = util.encode_ascii(lN[0:-1])
             if(instanceWorksetId != typeWorksetId):
                 output('Moving '+ str(linkInstanceNameEncoded) + ' from ' + str(instanceWorksetName) + ' to ' + str(typeWorksetName))
                 transaction = rdb.Transaction(doc, "Changing workset of " + linkInstanceNameEncoded)
@@ -179,9 +179,9 @@ def _modifyRevitLinkInstanceData(revitLink, doc):
             else:
                returnValue.message = str(linkInstanceNameEncoded + ' is already on default workset ' + str(typeWorksetName))
         else:
-          returnValue.message = str('Link is not loaded' + str(util.EncodeAscii(lN[0:-1])))
+          returnValue.message = str('Link is not loaded' + str(util.encode_ascii(lN[0:-1])))
     else:
-        returnValue.UpdateSep(False, 'Failed to split link name into 3 parts')
+        returnValue.update_sep(False, 'Failed to split link name into 3 parts')
     return returnValue
 
 def modifyRevitLinkInstance(doc):
@@ -210,9 +210,9 @@ def modifyRevitLinkInstance(doc):
     try:
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkInstance):
             changeLink = _modifyRevitLinkInstanceData(p, doc)
-            returnValue.Update(changeLink)
+            returnValue.update(changeLink)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to modify revit link instances with exception: ' + str(e))
     return returnValue
 
 # -------------

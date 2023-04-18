@@ -71,30 +71,30 @@ def reload_all_families(doc, libraryLocation, includeSubFolders):
     symbolIdsToBeDeleted = []   
     try:
         # build library
-        library = fileGet.FilesAsDictionary(libraryLocation,'','','.rfa',includeSubFolders)
+        library = fileGet.files_as_dictionary(libraryLocation,'','','.rfa',includeSubFolders)
         if(len(library) == 0):
-            result.UpdateSep(False, 'Library is empty!')
+            result.update_sep(False, 'Library is empty!')
             # get out...
             raise UserWarning('Empty Library')
         else:
-            result.AppendMessage('Found ' + str(len(library)) + ' families in Library!')
+            result.append_message('Found ' + str(len(library)) + ' families in Library!')
         # get all families in file:
         familyIds = get_family_ids_from_symbols(doc)
         if(len(familyIds) > 0):
-            result.AppendMessage('Found ' + str(len(familyIds)) + ' loadable families in file.')
+            result.append_message('Found ' + str(len(familyIds)) + ' loadable families in file.')
             for famId in familyIds:
                 fam = doc.GetElement(famId)
                 famName = rdb.Element.Name.GetValue(fam)
                 if(famName in library):
-                    result.AppendMessage('Found match for: ' + famName)
+                    result.append_message('Found match for: ' + famName)
                     if(len(library[famName]) == 1 ):
                         # found single match for family by name
-                        result.UpdateSep(True, 'Found single match: ' + library[famName][0])
+                        result.update_sep(True, 'Found single match: ' + library[famName][0])
                         # get all symbols attached to this family by name
                         priorLoadSymbolIds = fam.GetFamilySymbolIds()
                         # reload family
                         resultLoad = rFamUtil.load_family(doc, library[famName][0])
-                        result.AppendMessage(resultLoad.message)
+                        result.append_message(resultLoad.message)
                         if(resultLoad.status == True):
                             # make sure that if a single reload was successful that this method returns true
                             result.status = True
@@ -112,22 +112,22 @@ def reload_all_families(doc, libraryLocation, includeSubFolders):
                         matchesMessage = 'Found multiple matches for ' + famName + '\n' + matchesMessage
                         matchesMessage = matchesMessage.strip()
                         # found multiple matches for family by name only...aborting reload
-                        result.AppendMessage(matchesMessage)
+                        result.append_message(matchesMessage)
                 else:
-                    result.UpdateSep(result.status,'Found no match for ' + famName)
+                    result.update_sep(result.status,'Found no match for ' + famName)
             # delete any new symbols introduced during the reload
             if(len(symbolIdsToBeDeleted)>0):
                 resultDelete = rDel.delete_by_element_ids(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
-                result.AppendMessage (resultDelete.message)
+                result.append_message (resultDelete.message)
             else:
                 message = 'No need to delete any new family types since no new types where created.'
-                result.AppendMessage(message) # make sure not to change the status
+                result.append_message(message) # make sure not to change the status
         else:
             message = 'Found no loadable families in file!'
-            result.UpdateSep(False, message)
+            result.update_sep(False, message)
     except Exception as e:
         message = 'Failed to load families with exception: '+ str(e)
-        result.UpdateSep(False, message)
+        result.update_sep(False, message)
     return result
 
 def get_family_ids_from_symbols(doc):

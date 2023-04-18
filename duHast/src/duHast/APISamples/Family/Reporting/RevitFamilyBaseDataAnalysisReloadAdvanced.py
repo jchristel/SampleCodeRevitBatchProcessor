@@ -79,7 +79,7 @@ def _write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
         overallData.append(data)
     try:
         # write data
-        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -96,11 +96,11 @@ def _delete_old_task_lists(directoryPath):
 
     flag = True
     # find all files in folder starting with and delete them
-    files = fileGet.GetFiles(directoryPath, '.txt')
+    files = fileGet.get_files(directoryPath, '.txt')
     if (len(files) > 0):
         for f in files:
-            if (util.GetFileNameWithoutExt(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
-                flag = flag & util.FileDelete(f)
+            if (util.get_file_name_without_ext(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
+                flag = flag & util.file_delete(f)
     return flag
 
 def _write_out_empty_task_list(directoryPath, counter = 0):
@@ -123,7 +123,7 @@ def _write_out_empty_task_list(directoryPath, counter = 0):
     overallData = []
     try:
         # write data
-        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -190,12 +190,12 @@ def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadLists
 
     returnValue = res.Result()
     changeList = rFamReloadAdvUtils.read_change_list(changeListFilePath)
-    returnValue.AppendMessage(tProcess.stop() + ' Change list of length [' +str(len(changeList)) +'] loaded.')
+    returnValue.append_message(tProcess.stop() + ' Change list of length [' +str(len(changeList)) +'] loaded.')
 
     tProcess.start()
     # read overall family base data from file 
     overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-    returnValue.AppendMessage(tProcess.stop() + ' Nested base data list of length [' + str(len(overallFamilyBaseNestedData)) + '] loaded.')
+    returnValue.append_message(tProcess.stop() + ' Nested base data list of length [' + str(len(overallFamilyBaseNestedData)) + '] loaded.')
     
     if(len(changeList) > 0):
         # list containing the hosts of the host families
@@ -209,7 +209,7 @@ def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadLists
             overallFamilyBaseNestedData, 
             overallFamilyBaseRootData
             )
-        returnValue.AppendMessage(tProcess.stop() + ' Direct hosts [' + str(len(taskCurrentLevel)) + '] found.')
+        returnValue.append_message(tProcess.stop() + ' Direct hosts [' + str(len(taskCurrentLevel)) + '] found.')
         
         tProcess.start()
         taskNextLevel = _get_hosts(
@@ -217,7 +217,7 @@ def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadLists
             overallFamilyBaseNestedData, 
             overallFamilyBaseRootData
             )
-        returnValue.AppendMessage(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
+        returnValue.append_message(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
 
         # loop until no more entries in current level tasks
         while (len(taskCurrentLevel) > 0 ):
@@ -233,15 +233,15 @@ def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadLists
                     loadListsOutputDirectoryPath, 
                     taskListCounter
                     )
-                returnValue.UpdateSep(resultWriteToDisk, tProcess.stop() +  ' Wrote task list to file with status: ' + str(resultWriteToDisk))
+                returnValue.update_sep(resultWriteToDisk, tProcess.stop() +  ' Wrote task list to file with status: ' + str(resultWriteToDisk))
             else:
                 # write out an empty task list!
                 emptyTaskListFlag = _write_out_empty_task_list(loadListsOutputDirectoryPath, taskListCounter)
-                returnValue.UpdateSep(emptyTaskListFlag, 'Wrote empty task list at counter ['+ str(taskListCounter))
+                returnValue.update_sep(emptyTaskListFlag, 'Wrote empty task list at counter ['+ str(taskListCounter))
 
             # swap lists to get to next level of loading
             taskCurrentLevel = list(taskNextLevel)
-            returnValue.AppendMessage('Swapping next level hosts to direct hosts [' + str(len(taskCurrentLevel)) + ']')
+            returnValue.append_message('Swapping next level hosts to direct hosts [' + str(len(taskCurrentLevel)) + ']')
 
             tProcess.start()
             # get next level host families (task)
@@ -250,14 +250,14 @@ def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadLists
                 overallFamilyBaseNestedData, 
                 overallFamilyBaseRootData
                 )
-            returnValue.AppendMessage(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
+            returnValue.append_message(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
             
             # increase task list counter to be used in file name
             taskListCounter = taskListCounter + 1
             if(taskListCounter > 20):
                 # trigger fail save
-                returnValue.UpdateSep(False, ' Exceeded maximum number of task list files! (20)')
+                returnValue.update_sep(False, ' Exceeded maximum number of task list files! (20)')
                 raise Exception("Infinite loop.")
     else:
-        returnValue.UpdateSep(True, 'Empty change list found. No families require processing.')
+        returnValue.update_sep(True, 'Empty change list found. No families require processing.')
     return returnValue

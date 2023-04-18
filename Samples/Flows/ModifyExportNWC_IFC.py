@@ -133,7 +133,7 @@ def ifc_export_view(doc):
         # exports 3D view where name starts with 'NWCP', Origin is project base point
         return_value = rExIFC.export_3d_views_to_ifc(doc, 'NWCP', ifc_export_option, ROOT_PATH, IFCCoordinates.IFCCoords.project_base_point)
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to export view to IFC with exception{}'.format(e))
+        return_value.update_sep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return return_value
 
 
@@ -195,7 +195,7 @@ def nwc_export_by_view(doc):
         nwc_export_option = rExNavis.setup_nwc_default_export_option_shared_by_view()
         return_value = rExNavis.export_3d_views_to_nwc(doc, 'NWCS', nwc_export_option,  ROOT_PATH)
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to export view to NWC with exception{}'.format(e))
+        return_value.update_sep(False, 'Failed to export view to NWC with exception{}'.format(e))
     return return_value
 
 
@@ -226,7 +226,7 @@ def nwc_export_model(doc):
         nwc_export_option = rExNavis.setup_nwc_custom_export_option(False, True, False, True, False, False, True, False)
         return_value = rExNavis.export_model_to_nwc(doc, nwc_export_option, ROOT_PATH, 'test_project Coords.nwc')
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to export model to NWC with exception{}'.format(e))
+        return_value.update_sep(False, 'Failed to export model to NWC with exception{}'.format(e))
     return return_value
 
 
@@ -243,15 +243,15 @@ output('Exporting.... start')
 STATUS_EXPORT_VIEW = ifc_export_view(DOC)
 # export to IFC file format - view but use default out of the box ifc exporter
 STATUS_EXPORT_IFC_DEFAULT = ifc_export_view_default(DOC)
-STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_IFC_DEFAULT)
+STATUS_EXPORT_VIEW.update(STATUS_EXPORT_IFC_DEFAULT)
 
 # nwc by model
 STATUS_EXPORT_NWC_MODEL = nwc_export_model(DOC)
-STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_NWC_MODEL)
+STATUS_EXPORT_VIEW.update(STATUS_EXPORT_NWC_MODEL)
 
 # nwc by view
 STATUS_EXPORT_NWC_3D_VIEWS = nwc_export_by_view(DOC)
-STATUS_EXPORT_VIEW.Update(STATUS_EXPORT_NWC_3D_VIEWS)
+STATUS_EXPORT_VIEW.update(STATUS_EXPORT_NWC_3D_VIEWS)
 
 output('{} :: [{}]'.format(STATUS_EXPORT_VIEW.message, STATUS_EXPORT_VIEW.status))
 

@@ -82,13 +82,13 @@ def write_sheet_data(doc, fileName, currentFileName):
     try:
         data = get_sheet_report_data(doc, currentFileName)
         headers = get_report_headers(doc)
-        filesTab.writeReportData(
+        filesTab.write_report_data(
             fileName,
             headers,
             data)
-        returnValue.UpdateSep(True, 'Successfully wrote data file')
+        returnValue.update_sep(True, 'Successfully wrote data file')
     except Exception as e:
-        returnValue.UpdateSep(False, str(e))
+        returnValue.update_sep(False, str(e))
     return returnValue
 
 
@@ -149,11 +149,11 @@ def write_sheet_data_by_property_names(doc, fileName, currentFileName, sheetProp
         headers = REPORT_SHEETS_HEADER[:]
         headers = headers + sheetProperties
         # write data out to file
-        filesTab.writeReportData(
+        filesTab.write_report_data(
             fileName,
             headers,
             data)
-        returnValue.UpdateSep(True, 'Successfully wrote data file')
+        returnValue.update_sep(True, 'Successfully wrote data file')
     except Exception as e:
-        returnValue.UpdateSep(False, str(e))
+        returnValue.update_sep(False, str(e))
     return returnValue

@@ -95,17 +95,17 @@ def load_family(doc, familyFilePath):
                     familyFilePath, 
                     famLoadOpt.FamilyLoadOption(), # overwrite parameter values etc
                     returnFamily)
-                actionReturnValue.UpdateSep(reloadStatus,'Loaded family: ' + familyFilePath + ' :: ' + str(reloadStatus))
+                actionReturnValue.update_sep(reloadStatus,'Loaded family: ' + familyFilePath + ' :: ' + str(reloadStatus))
                 if(reloadStatus):
                     actionReturnValue.result.append(returnFamily.Value)
             except Exception as e:
-                actionReturnValue.UpdateSep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
+                actionReturnValue.update_sep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
             return actionReturnValue
-        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.GetFileNameWithoutExt(familyFilePath)))
+        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.get_file_name_without_ext(familyFilePath)))
         dummy = rTran.in_transaction(transaction, action)
-        result.Update(dummy)
+        result.update(dummy)
     except Exception as e:
-        result.UpdateSep(False,'Failed to load families with exception: '+ str(e))
+        result.update_sep(False,'Failed to load families with exception: '+ str(e))
     return result
 
 

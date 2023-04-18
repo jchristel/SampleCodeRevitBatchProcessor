@@ -61,7 +61,7 @@ def delete_by_element_ids(
             doc.Delete(ids.ToList[rdb.ElementId]())
             action_return_value.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
+            action_return_value.update_sep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
         return action_return_value
     transaction = rdb.Transaction(doc,transaction_name)
     return_value = rTran.in_transaction(transaction, action)
@@ -102,8 +102,8 @@ def delete_by_element_ids_one_by_one(
                 doc.Delete(id)
                 action_return_value.message = 'Deleted [' + str(id) + '] ' + n
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
+                action_return_value.update_sep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
-        return_value.Update( rTran.in_transaction(transaction, action))
+        return_value.update( rTran.in_transaction(transaction, action))
     return return_value

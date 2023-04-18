@@ -89,11 +89,11 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
                             pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
                             if (pValue != None):
                                 result = rParaSet.set_built_in_parameter_value(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
-                                returnValue.Update(result)
+                                returnValue.update(result)
                         except Exception as e:
-                            returnValue.UpdateSep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
+                            returnValue.update_sep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
                     else:
-                        returnValue.UpdateSep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
+                        returnValue.update_sep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
         else:
-            returnValue.UpdateSep(True,'No warnings of type: duplicate mark in model.')
+            returnValue.update_sep(True,'No warnings of type: duplicate mark in model.')
         return returnValue

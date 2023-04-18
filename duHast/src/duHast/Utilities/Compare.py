@@ -30,7 +30,7 @@ Helper functions relating to comparing:.
 #
 #
 
-def ConDoesNotEqual (valueOne, valueTwo):
+def does_not_equal (valueOne, valueTwo):
     '''
     Returns True if valueOne does not match valueTwo.
     :param valueOne: a value
@@ -47,7 +47,7 @@ def ConDoesNotEqual (valueOne, valueTwo):
         return False
 
 
-def ConDoesEqual (valueOne, valueTwo):
+def does_equal (valueOne, valueTwo):
     '''
     Returns True if valueOne does match valueTwo.
     :param valueOne: a value
@@ -64,7 +64,7 @@ def ConDoesEqual (valueOne, valueTwo):
         return False
 
 
-def ConOneStartWithTwo (valueOne, valueTwo):
+def one_start_with_two (valueOne, valueTwo):
     '''
     Returns True if valueOne starts with valueTwo.
     :param valueOne: a value
@@ -81,24 +81,7 @@ def ConOneStartWithTwo (valueOne, valueTwo):
         return False
 
 
-def ConTwoStartWithOne (valueOne, valueTwo):
-    '''
-    Returns True if valueTwo starts with valueOne.
-    :param valueOne: a value
-    :type valueOne: str
-    :param valueTwo: another value
-    :type valueTwo: str
-    :return: True if valueTwo starts with valueOne, otherwise False
-    :rtype: bool
-    '''
-
-    if (valueTwo.startswith(valueOne)):
-        return True
-    else:
-        return False
-
-
-def ConTwoDoesNotStartWithOne (valueOne, valueTwo):
+def two_does_not_start_with_one (valueOne, valueTwo):
     '''
     Returns True if valueTwo does not starts with valueOne.
     :param valueOne: a value

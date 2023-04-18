@@ -48,7 +48,7 @@ def get_level_report_data(doc, revitFilePath):
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
         data.append([
-            util.GetFileNameWithoutExt(revitFilePath),
+            util.get_file_name_without_ext(revitFilePath),
             str(p.Id.IntegerValue),
             util.EncodeAscii(p.Name),
             util.EncodeAscii(rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)),

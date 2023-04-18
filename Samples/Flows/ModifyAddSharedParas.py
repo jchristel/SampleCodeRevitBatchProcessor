@@ -134,9 +134,9 @@ def update_parameters (doc, data):
                     parameter_group, 
                     SHARED_PARAMETER_FILE_PATH
                 )
-                status.Update(statusBind)
+                status.update(statusBind)
     except Exception as e:
-        status.UpdateSep(False, 'Terminated with exception: '+ str(e))
+        status.update_sep(False, 'Terminated with exception: '+ str(e))
     return status
 
 # -------------

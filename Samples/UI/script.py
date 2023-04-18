@@ -60,9 +60,9 @@ def main(argv):
         # check whether this is a BIM360 project or file system and assign
         # data retriever method accordingly
         if(isBIM360File(revitFiles)):
-            getData = fl.BucketToTaskListBIM360
+            getData = fl.bucket_to_task_list_bim_360
         else:
-            getData = fl.BucketToTaskListFileSystem
+            getData = fl.bucket_to_task_list_file_system
         # check if anything came back
         if(len(revitFiles) > 0):
             # lets show the window
@@ -70,12 +70,12 @@ def main(argv):
             uiResult = ui.ShowDialog()
             if(uiResult):
                 # build bucket list
-                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, fl.getFileSize)
+                buckets = wl.distribute_workload(settings.output_file_num, ui.selectedFiles, fl.get_file_size)
                 # write out file lists
                 counter = 0
                 for bucket in buckets:
-                    fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
-                    statusWrite = fl.writeRevitTaskFile(fileName, bucket, getData)
+                    fileName =  os.path.join(settings.output_dir, 'Tasklist_' + str(counter)+ '.txt')
+                    statusWrite = fl.write_revit_task_file(fileName, bucket, getData)
                     print (statusWrite.message)
                     counter += 1
                 print('Finished writing out task files')
@@ -220,15 +220,15 @@ def GetFileData(settings):
             revitFilesUnfiltered = []
             if(settings.inclSubDirs):
                 # get revit files in input dir and subdirs
-                revitFilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files_incl_sub_dirs(settings.inputDir, settings.revitFileExtension)
             else:
                 # get revit files in input dir
-                revitFilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files(settings.inputDir, settings.revitFileExtension)
             # check for max path violations!
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revitFile in revitFilesUnfiltered:
                 # remove any back up files from selection
-                if(fl.isBackUpFile(os.path.basename(revitFile.name)) == False):
+                if(fl.is_back_up_file(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
                         revitFiles.append(revitFile)
                     else:

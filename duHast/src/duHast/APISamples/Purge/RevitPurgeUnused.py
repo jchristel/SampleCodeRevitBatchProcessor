@@ -177,9 +177,9 @@ def purge_unplaced_elements (doc,
             #pass
             print('second debug run')
             purgeResult = rDel.delete_by_element_ids_one_by_one(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
-        resultValue.Update(purgeResult)
+        resultValue.update(purgeResult)
     except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
+        resultValue.update_sep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
     return resultValue
 
 # --------------------------------------------- Main ---------------------------------------------
@@ -273,7 +273,7 @@ def purge_unused(doc, revitFilePath, isDebug):
     '''
 
     # the current file name
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
+    revitFileName = util.get_file_name_without_ext(revitFilePath)
     resultValue = res.Result()
     TIMER_OVERALL.start()
     for pA in PURGE_ACTIONS:
@@ -286,9 +286,9 @@ def purge_unused(doc, revitFilePath, isDebug):
                 pA.purgeReportHeader,
                 isDebug
             )
-            purgeFlag.AppendMessage(SPACER + str(TIMER_TASK.stop()))
-            resultValue.Update(purgeFlag)
+            purgeFlag.append_message(SPACER + str(TIMER_TASK.stop()))
+            resultValue.update(purgeFlag)
         except Exception as e:
-            resultValue.UpdateSep(False,'Terminated purge unused actions with exception: '+ str(e))
-    resultValue.AppendMessage('purge duration: '+ str(TIMER_OVERALL.stop()))
+            resultValue.update_sep(False,'Terminated purge unused actions with exception: '+ str(e))
+    resultValue.append_message('purge duration: '+ str(TIMER_OVERALL.stop()))
     return resultValue

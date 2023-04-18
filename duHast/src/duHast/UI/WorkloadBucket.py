@@ -30,9 +30,10 @@ Workload buckets are used to distribute file processing evenly between parallel 
 #
 #
 
+from duHast.Utilities import Base
 
 # a class used to store work load items
-class WorkloadBucket: 
+class WorkloadBucket(Base.Base): 
     def __init__(self): 
         '''
         Class constructor.
@@ -44,10 +45,13 @@ class WorkloadBucket:
 
         '''
         
-        self.workLoadValue = 0
+        # ini super class to allow multi inheritance in children!
+        super(WorkloadBucket, self).__init__() 
+
+        self.workload_value = 0
         self.items = []
     
-    def SetWorkLoadValue(self, value):
+    def set_workload_value(self, value):
         '''
         Sets the buckets overall workload value.
 
@@ -56,12 +60,12 @@ class WorkloadBucket:
         '''
 
         try:
-            self.workLoadValue = value
+            self.workload_value = value
         except Exception as e:
-            print (str(e))
+            print ('Failed to set workload value: {} with exception: {}'.format(value, e))
             pass
     
-    def AddItem(self, value):
+    def add_item(self, value):
         '''
         Adds an item to the workload list.
 
@@ -71,5 +75,5 @@ class WorkloadBucket:
         try:
             self.items.append(value)
         except Exception as e:
-            print (str(e))
+            print ('Failed to add item: {} to workload bucket with exception: {}'.format(value, e))
             pass

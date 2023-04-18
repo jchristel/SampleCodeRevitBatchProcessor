@@ -42,18 +42,18 @@ PROCESS_MARKER_FILE_EXTENSION = '.plist'
 
 # --------------------------------- worksharing monitor specific ---------------------------------------
 
-def GetWorkSharingMonitorProcesses():
+def get_work_sharing_monitor_processes():
     '''
     Get all currently running worksharing monitor processes
 
     :return: _description_
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
-    allProcesses = sp.GetAllRunningProcesses()
-    wsmProcesses = sp.FilterByProcessName([PROCESS_NAME_WSM], allProcesses)
+    allProcesses = sp.get_all_running_processes()
+    wsmProcesses = sp.filter_by_process_name([PROCESS_NAME_WSM], allProcesses)
     return wsmProcesses
 
-def WriteOutWSMDataToFile(directoryPath):
+def write_out_wsm_data_to_file(directoryPath):
     '''
     Writes out all running worksharing monitor processes data to file
 
@@ -75,15 +75,15 @@ def WriteOutWSMDataToFile(directoryPath):
     '''
 
     status = res.Result()
-    processList = GetWorkSharingMonitorProcesses()
-    statusWriteOut = sp.WriteOutProcessData(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILE_EXTENSION)
+    processList = get_work_sharing_monitor_processes()
+    statusWriteOut = sp.write_out_process_data(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILE_EXTENSION)
     if(statusWriteOut):
-        status.UpdateSep(True, 'Successfully wrote WSM process marker file to: ' + str(directoryPath))
+        status.update_sep(True, 'Successfully wrote WSM process marker file to: ' + str(directoryPath))
     else:
-        status.UpdateSep(False, 'Failed to write WSM process marker file to: ' + str(directoryPath))
+        status.update_sep(False, 'Failed to write WSM process marker file to: ' + str(directoryPath))
     return status
 
-def DeleteWSMDataFiles(directoryPath):
+def delete_wsm_data_files(directoryPath):
     '''
     Deletes all WSM marker files in a directory.
 
@@ -98,14 +98,14 @@ def DeleteWSMDataFiles(directoryPath):
 
     status = True
     # get files in directory
-    filesToDelete = fileGet.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
+    filesToDelete = fileGet.get_files_with_filter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(filesToDelete) > 0):
         statusDelete = True
         for file in filesToDelete:
-            statusDelete = statusDelete and util.FileDelete(file)
+            statusDelete = statusDelete and util.file_delete(file)
     return status
 
-def ReadWSMDataFromFile(directoryPath):
+def read_wsm_data_from_file(directoryPath):
     '''
     Reads all worksharing monitor processes data from marker file(s) in a given directory
     
@@ -119,15 +119,15 @@ def ReadWSMDataFromFile(directoryPath):
     '''
     
     processData = []
-    files = fileGet.GetFilesWithFilter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
+    files = fileGet.get_files_with_filter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
     if(len(files) > 0):
         for file in files:
-            rows = filesCSV.ReadCSVfile(file)
+            rows = filesCSV.read_csv_file(file)
             if(len(rows)>0):
                 processData = processData + rows
     return processData
 
-def GetWSMSessionsToDelete(WSMsToKeep):
+def get_wsm_sessions_to_delete(WSMsToKeep):
     '''
     Returns Worksharing monitor process sessions filtered by provided list (not in list)
 
@@ -138,18 +138,18 @@ def GetWSMSessionsToDelete(WSMsToKeep):
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
 
-    allRunningWSMProcesses = GetWorkSharingMonitorProcesses()
+    allRunningWSMProcesses = get_work_sharing_monitor_processes()
     if(len(WSMsToKeep) > 0):
         # get ids from list
         ids= []
         for wsmP in WSMsToKeep:
             ids.append(wsmP[3])
-        filteredProcesses = sp.FilterByProcessIds(ids, WSMsToKeep, False)
+        filteredProcesses = sp.filter_by_process_ids(ids, WSMsToKeep, False)
         return filteredProcesses
     else:
         return allRunningWSMProcesses
 
-def CleanUpWSMDataFiles(directoryPath):
+def clean_up_wsm_data_files(directoryPath):
     '''
     Removes all wsm data marker files in a given directory.
 
@@ -174,14 +174,14 @@ def CleanUpWSMDataFiles(directoryPath):
 
     status = res.Result()
     # attempt to delete old marker files
-    statusDelete = DeleteWSMDataFiles(directoryPath)
+    statusDelete = delete_wsm_data_files(directoryPath)
     if(statusDelete):
-        status.UpdateSep(True,'Successfully deleted WSM marker file(s)!')
+        status.update_sep(True,'Successfully deleted WSM marker file(s)!')
     else:
-        status.UpdateSep(False,'Failed to delete WSM marker file(s)!')
+        status.update_sep(False,'Failed to delete WSM marker file(s)!')
     return status
 
-def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
+def die_wsm_die(directoryPath, ignoreMarkerFiles = False):
     '''
     Kills all worksharing monitor processes currently active.
 
@@ -211,13 +211,13 @@ def DieWSMDie(directoryPath, ignoreMarkerFiles = False):
         wsmRunningPrior = []
         if(ignoreMarkerFiles == False):
             # read out worksharing monitor sessions running before script started
-            wsmRunningPrior = ReadWSMDataFromFile(directoryPath)
-        wsmToDelete = GetWSMSessionsToDelete(wsmRunningPrior)
-        statusKill = sp.KillProcesses(wsmToDelete)
+            wsmRunningPrior = read_wsm_data_from_file(directoryPath)
+        wsmToDelete = get_wsm_sessions_to_delete(wsmRunningPrior)
+        statusKill = sp.kill_processes(wsmToDelete)
         if(statusKill):
-            status.UpdateSep(True, 'All WSM sessions where killed.')
+            status.update_sep(True, 'All WSM sessions where killed.')
         else:
-            status.UpdateSep(False, 'Failed to kill all WSM sessions.')
+            status.update_sep(False, 'Failed to kill all WSM sessions.')
     except Exception as e:
-        status.UpdateSep(False,'Failed to kill wsm sessions with exceptions: ' + str(e))
+        status.update_sep(False,'Failed to kill wsm sessions with exceptions: ' + str(e))
     return status

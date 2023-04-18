@@ -77,7 +77,7 @@ def get_unused_in_place_ids_for_purge(doc, unusedTypeGetter):
     for key, value in families.items():
         if(family_all_types_in_use(value, unusedTypeIds)):
             unusedFamilyIds.append(key)
-            unusedTypeIds = util.RemoveItemsFromList(unusedTypeIds, value)
+            unusedTypeIds = util.remove_items_from_list(unusedTypeIds, value)
     # check whether entire families can be purged and if so add their ids to list to be returned
     if(len(unusedFamilyIds)>0):
         unusedIds = unusedFamilyIds + unusedTypeIds

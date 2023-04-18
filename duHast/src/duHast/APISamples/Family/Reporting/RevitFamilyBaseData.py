@@ -104,7 +104,7 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # process reference file list and look for a match:
         # based on file name and category
-        if(util.FileExist(reference_file_path)):
+        if(util.file_exist(reference_file_path)):
             # read overall family base data from file 
             overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
             foundMatch = False
@@ -116,9 +116,9 @@ class FamilyBaseData(IFamData.IFamilyData):
             # check if family needs saving out
             if(foundMatch == False):
                 # check session id folder exists
-                if(dirIO.CreateTargetFolder(family_out_folder_path, session_id)):
+                if(dirIO.create_target_directory(family_out_folder_path, session_id)):
                     # check category folder exists
-                    if(dirIO.CreateTargetFolder(family_out_folder_path + '\\' + session_id, doc_category)):
+                    if(dirIO.create_target_directory(family_out_folder_path + '\\' + session_id, doc_category)):
                         # save family out
                         rFile.save_as_family(
                             doc,

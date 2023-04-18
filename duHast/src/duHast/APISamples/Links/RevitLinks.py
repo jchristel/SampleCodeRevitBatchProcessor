@@ -150,13 +150,13 @@ def reload_revit_links(doc, linkLocations, hostNameFormatted, doSomethingWithLin
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.append_message(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.update_sep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
 def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
@@ -203,13 +203,13 @@ def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostN
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.AppendMessage(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.append_message(linkTypeName + ' :: ' + str(result.LoadResult))
                 else:
-                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.update_sep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue
 
 def default_link_name(name):

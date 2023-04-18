@@ -158,7 +158,7 @@ def modify_views(doc, revit_file_path, view_data):
     return_value.status = False
     return_value.message = 'No view data provided for current Revit file'
 
-    revit_file_name =  fileIO.GetFileNameWithoutExt(revit_file_path)
+    revit_file_name =  fileIO.get_file_name_without_ext(revit_file_path)
     for file_name, view_rules in view_data:
         if (revit_file_name.startswith(file_name)):
             collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
@@ -193,9 +193,9 @@ def modify_sheets(doc, sheets_data):
 
     # set default values
     return_value = res.Result()
-    return_value.UpdateSep(False,'No sheet data provided for current Revit file')
+    return_value.update_sep(False,'No sheet data provided for current Revit file')
     
-    revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
+    revit_file_name = fileIO.get_file_name_without_ext(REVIT_FILE_PATH)
     # Output(sheets)
     for file_name, sheet_rules in sheets_data:
         # check if set of rules applies to this particular project file
@@ -216,13 +216,13 @@ ROOT_PATH = r'C:\temp'
 SHEET_RULES = [
     ['FileOne', # project file name start (would apply to files FileOneOne and FileOneTwo)
         [
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # sheet condition rule
         ]
     ],
     ['FileTwo', # project file name start
         [
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # sheet condition rule
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # sheet condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # sheet condition rule
         ]
     ]
 ]
@@ -235,9 +235,9 @@ List containing the sheet rules by project file
 VIEW_RULES = [
     ['File', # project file name start
         [
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'], # view condition rule
-            ['Parameter Name', compare.ConDoesNotEqual, 'Parameter Value'] # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'], # view condition rule
+            ['Parameter Name', compare.does_not_equal, 'Parameter Value'] # view condition rule
         ]
     ]
 ]

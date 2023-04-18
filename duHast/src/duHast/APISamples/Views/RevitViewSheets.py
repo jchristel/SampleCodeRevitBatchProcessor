@@ -127,5 +127,5 @@ def get_sheet_rev_by_sheet_name(
     if (len(results)>0):
         sheet = results[0]
         revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
-        revValue = util.PadSingleDigitNumericString(revP.AsString())
+        revValue = util.pad_single_digit_numeric_string(revP.AsString())
     return revValue

@@ -197,7 +197,7 @@ def get_unused_type_ids_in_model(doc, type_getter, instance_getter):
         # there should always be just one match
         for used_family_type_id in used_family_type_ids:
             # get the index of match
-            index = util.IndexOf(t[1],used_family_type_id)
+            index = util.index_of(t[1],used_family_type_id)
             # remove used item from list
             if (index > -1):
                 t[1].pop(index)

@@ -156,27 +156,27 @@ def check_families_missing_from_library(familyBaseDataReportFilePath):
     
         # read overall family base data from file 
         overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-        returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
+        returnValue.append_message(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     
         tProcess.start()
         # get a list of unique families from the nested family data
         uniqueFamilyBaseNestedData = _get_unique_nested_families(overallFamilyBaseNestedData)
-        returnValue.AppendMessage(tProcess.stop() +  ' culled nested family base data from : ' + str(len(overallFamilyBaseNestedData)) +' to: ' + str(len(uniqueFamilyBaseNestedData )) + ' families.' )
+        returnValue.append_message(tProcess.stop() +  ' culled nested family base data from : ' + str(len(overallFamilyBaseNestedData)) +' to: ' + str(len(uniqueFamilyBaseNestedData )) + ' families.' )
 
         tProcess.start()
         # read over nested data and built a list of unique families ( name + category )
         uniqueDic = _build_unique_nested_family_dic(uniqueFamilyBaseNestedData)
-        returnValue.AppendMessage(tProcess.stop() + ' found unique nested families ['+ str(len(uniqueDic))+']')
+        returnValue.append_message(tProcess.stop() + ' found unique nested families ['+ str(len(uniqueDic))+']')
 
         tProcess.start()
         # identify missing families in unique list of nested families
         missingFamilies = _check_nested_against_root_families(uniqueDic, overallFamilyBaseRootData)
-        returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(missingFamilies)) +' missing families.' )
+        returnValue.append_message(tProcess.stop() +  ' Found ' + str(len(missingFamilies)) +' missing families.' )
         if(len(missingFamilies) > 0):
             returnValue.result = missingFamilies
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to retrieve missing families with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to retrieve missing families with exception: ' + str(e))
     return returnValue
 
 # ----------------------------missing families: direct host files -----------------------------------------
@@ -226,7 +226,7 @@ def find_missing_families_direct_host_families (familyBaseDataReportFilePath, mi
         returnValue = res.Result()
         # read overall family base data from file 
         overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-        returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
+        returnValue.append_message(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
             + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     
         tProcess.start()
@@ -234,7 +234,7 @@ def find_missing_families_direct_host_families (familyBaseDataReportFilePath, mi
         # get the root families from host family data
         rootHosts = rFamBaseDataUtils.find_root_families_from_hosts(hostFamilies, overallFamilyBaseRootData)
         returnValue.result = rootHosts
-        returnValue.AppendMessage(tProcess.stop() +  ' Found direct host families of missing families: ' + str(len(rootHosts)))
+        returnValue.append_message(tProcess.stop() +  ' Found direct host families of missing families: ' + str(len(rootHosts)))
     except  Exception as e:
-        returnValue.UpdateSep(False, 'Failed to retrieve host families of missing families with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to retrieve host families of missing families with exception: ' + str(e))
     return returnValue

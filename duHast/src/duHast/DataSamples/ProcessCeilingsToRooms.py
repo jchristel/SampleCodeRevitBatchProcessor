@@ -113,9 +113,9 @@ def _write_report_data(file_name, header, data,):
                     # write a row to the csv file
                     writer.writerow(d)
             f.close()
-        return_value.UpdateSep(True, 'Successfully wrote data to: {}'.format(file_name))
+        return_value.update_sep(True, 'Successfully wrote data to: {}'.format(file_name))
     except  Exception as e:
-        return_value.UpdateSep(False, 'Failed to write data to: {}'.format(file_name))
+        return_value.update_sep(False, 'Failed to write data to: {}'.format(file_name))
     return return_value
 
 # --------------- data processing ------------------
@@ -262,7 +262,7 @@ def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, r
             # check what percentage the overlap area is...if less then 0.1 percent ignore!
             if(area_intersection_percentage_of_ceiling_vs_room < 0.1):
                 # ceiling overlap area is to small...not in room
-                return_value.AppendMessage('Ceiling {} has an overlap of {} % with  room {}. Ignored!'.format(ceiling_poly_id, area_intersection_percentage_of_ceiling_vs_room, room_poly_id, ))
+                return_value.append_message('Ceiling {} has an overlap of {} % with  room {}. Ignored!'.format(ceiling_poly_id, area_intersection_percentage_of_ceiling_vs_room, room_poly_id, ))
             else:
                 # ceiling is within the room: add to room data object
                 # get the room object by its Revit ID
@@ -271,12 +271,12 @@ def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, r
                 data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
                 # add ceiling object to associated elements list of room object 
                 data_object_room.associatedElements.append(data_object_Ceiling)
-                return_value.AppendMessage('Added ceiling {} to room {}'.format(room_poly_id, ceiling_poly_id))
+                return_value.append_message('Added ceiling {} to room {}'.format(room_poly_id, ceiling_poly_id))
     except Exception as e:
         # get the offending elements:
         data_object_room =  list(filter(lambda x: (x.instanceProperties.instanceId == room_poly_id ) , data_objects[level_name][0]))[0]
         data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
-        return_value.AppendMessage(
+        return_value.append_message(
             'Exception: {} \n' +
             'offending room: room name: {} , room number: {} , room id: {} , is valid polygon: {}\n' +
             'offending ceiling id: {} , is valid polygon: {}').format(
@@ -346,10 +346,10 @@ def write_data_to_file(data, output_file_path, room_instance_property_keys= ['Nu
         # ceilings custom data next
         data_header = data_header + ceiling_type_property_keys + ceiling_instance_property_keys
         # write data to file
-        return_value.Update(_write_report_data(output_file_path, data_header, converted_data))
+        return_value.update(_write_report_data(output_file_path, data_header, converted_data))
 
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to write report with exception {}'.format(e))
+        return_value.update_sep(False, 'Failed to write report with exception {}'.format(e))
     return return_value
 
 def get_ceilings_by_room(data_source_path):
@@ -410,7 +410,7 @@ def get_ceilings_by_room(data_source_path):
                                 # find overlapping ceiling polygons
                                 for ceiling_poly_id in polygons_by_type[dc.DataCeiling.data_type]:
                                     for ceiling_polygon in ceiling_polygons[ceiling_poly_id]:
-                                        return_value.Update(   
+                                        return_value.update(   
                                             _intersect_ceiling_vs_room(
                                                 ceiling_poly_id, 
                                                 ceiling_polygon, 
@@ -421,12 +421,12 @@ def get_ceilings_by_room(data_source_path):
                                                 )
                                             )
                         else:
-                            return_value.AppendMessage('Room with id {} has no valid room poly lines.'.format(room_poly_id))
+                            return_value.append_message('Room with id {} has no valid room poly lines.'.format(room_poly_id))
                 else:
-                    return_value.AppendMessage('No ceilings found for level: {}'.format(data_objects[level_name][0][0].level.levelName))
+                    return_value.append_message('No ceilings found for level: {}'.format(data_objects[level_name][0][0].level.levelName))
             else:
-                return_value.AppendMessage('No rooms found for level: {}'.format(data_objects[level_name]))
+                return_value.append_message('No rooms found for level: {}'.format(data_objects[level_name]))
         return_value.result = data_objects
     else:
-        return_value.UpdateSep(False, 'File: {} did not contain any valid data.'.format(data_source_path))
+        return_value.update_sep(False, 'File: {} did not contain any valid data.'.format(data_source_path))
     return return_value

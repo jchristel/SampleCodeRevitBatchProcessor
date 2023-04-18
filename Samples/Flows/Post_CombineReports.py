@@ -106,10 +106,10 @@ ROOT_PATH = r'C:\temp'
 output('Writing summary Data.... start')
 
 # get the current date stamp to be used as a file prefix for the combined report
-DATE_STAMP = dateStamp.GetFileDateStamp()
+DATE_STAMP = dateStamp.get_file_date_stamp()
 
 # combine report files based on:
-fileCombine.CombineFiles(
+fileCombine.combine_files(
     ROOT_PATH,  # - part report location
     DATE_STAMP, # - part report prefix ( same date stamp as current)
     '_CAD',     # - part report file name suffix
@@ -120,7 +120,7 @@ fileCombine.CombineFiles(
 output('Writing summary Data.... finished: {}_CAD_Links_summary.txt'.format(DATE_STAMP))
 
 # combine report files based on:
-fileCombine.CombineFiles(
+fileCombine.combine_files(
     ROOT_PATH,      # - part report location
     DATE_STAMP,     # - part report prefix ( same date stamp as current)
     '_RVT',         # - part report file name suffix

@@ -58,7 +58,7 @@ def get_data_from_model(doc):
 
     data_json = {
         "file name": doc.Title,
-        "date processed": dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
+        "date processed": dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
         dr.DataRoom.data_type: allRoomData,
         dc.DataCeiling.data_type: allCeilingData
     }
@@ -100,7 +100,7 @@ def write_json_to_file (json_data, dataOutPutFileName):
             f.write(json_object)
             f.close()
 
-        result.UpdateSep(True, 'Data written to file: ' + dataOutPutFileName)
+        result.update_sep(True, 'Data written to file: ' + dataOutPutFileName)
     except  Exception as e:
-        result.UpdateSep(False, 'Failed to write data to file with exception: ' + str(e))
+        result.update_sep(False, 'Failed to write data to file with exception: ' + str(e))
     return result

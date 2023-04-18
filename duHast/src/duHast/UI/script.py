@@ -53,29 +53,29 @@ def main(argv):
     '''
 
     # get arguments
-    gotArgs, settings = processArgs(argv)
+    gotArgs, settings = process_args(argv)
     if(gotArgs):
         # retrieve revit file data
-        revitFiles = GetFileData(settings)
+        revitFiles = get_file_data(settings)
         # check whether this is a BIM360 project or file system and assign
         # data retriever method accordingly
-        if(isBIM360File(revitFiles)):
-            getData = fl.BucketToTaskListBIM360
+        if(is_bim_360_file(revitFiles)):
+            getData = fl.bucket_to_task_list_bim_360
         else:
-            getData = fl.BucketToTaskListFileSystem
+            getData = fl.bucket_to_task_list_file_system
         # check if anything came back
         if(len(revitFiles) > 0):
             # lets show the window
-            ui = UIFs.MyWindow(xamlFullFileName_, revitFiles, settings)
+            ui = UIFs.MyWindow(XAML_FULL_FILE_NAME, revitFiles, settings)
             uiResult = ui.ShowDialog()
             if(uiResult):
                 # build bucket list
-                buckets = wl.DistributeWorkload(settings.outputFileNum, ui.selectedFiles, fl.getFileSize)
+                buckets = wl.distribute_workload(settings.output_file_num, ui.selectedFiles, fl.get_file_size)
                 # write out file lists
                 counter = 0
                 for bucket in buckets:
-                    fileName =  os.path.join(settings.outputDir, 'Tasklist_' + str(counter)+ '.txt')
-                    statusWrite = fl.writeRevitTaskFile(fileName, bucket, getData)
+                    fileName =  os.path.join(settings.output_dir, 'Tasklist_' + str(counter)+ '.txt')
+                    statusWrite = fl.write_revit_task_file(fileName, bucket, getData)
                     print (statusWrite.message)
                     counter += 1
                 print('Finished writing out task files')
@@ -92,7 +92,7 @@ def main(argv):
         # invalid or no args provided... get out
         sys.exit(1)
 
-def processArgs(argv):
+def process_args(argv):
     '''
     Processes past in arguments and checks whether inputs are valid.
 
@@ -142,10 +142,10 @@ def processArgs(argv):
     if (outputFileNumber < 0 or outputFileNumber > 100):
         gotArgs = False
         print ('The number of output files must be bigger then 0 and smaller then 100')
-    if(not FileExist(inputDirFile)):
+    if(not file_exist(inputDirFile)):
         gotArgs = False
         print ('Invalid input directory or file path: ' + str(inputDirFile))
-    if(not FileExist(outputDirectory)):
+    if(not file_exist(outputDirectory)):
         gotArgs = False
         print ('Invalid output directory: ' + str(outputDirectory))
     if(revitFileExtension != '.rvt' and revitFileExtension != '.rfa'):
@@ -154,7 +154,7 @@ def processArgs(argv):
 
     return gotArgs, set.FileSelectionSettings(inputDirFile, includeSubDirsInSearch, outputDirectory, outputFileNumber, revitFileExtension)
 
-def GetFolderPathFromFile(filePath):
+def get_directory_from_file_path(filePath):
     '''
     Returns the directory from a fully qualified file path.
 
@@ -172,7 +172,7 @@ def GetFolderPathFromFile(filePath):
         value = ''
     return value
 
-def FileExist(path):
+def file_exist(path):
     '''
     Checks whether a file exists.
 
@@ -190,7 +190,7 @@ def FileExist(path):
     return value
 
 
-def GetFileData(settings):
+def get_file_data(settings):
     '''
     Retrieves Revit file data from either:
         
@@ -220,15 +220,15 @@ def GetFileData(settings):
             revitFilesUnfiltered = []
             if(settings.inclSubDirs):
                 # get revit files in input dir and subdirs
-                revitFilesUnfiltered = fl.getRevitFilesInclSubDirs(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files_incl_sub_dirs(settings.inputDir, settings.revitFileExtension)
             else:
                 # get revit files in input dir
-                revitFilesUnfiltered = fl.getRevitFiles(settings.inputDir, settings.revitFileExtension)
+                revitFilesUnfiltered = fl.get_revit_files(settings.inputDir, settings.revitFileExtension)
             # check for max path violations!
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revitFile in revitFilesUnfiltered:
                 # remove any back up files from selection
-                if(fl.isBackUpFile(os.path.basename(revitFile.name)) == False):
+                if(fl.is_back_up_file(os.path.basename(revitFile.name)) == False):
                     if(len(os.path.dirname(os.path.abspath(revitFile.name))) < 248  and len(revitFile.name) < 260 ):
                         revitFiles.append(revitFile)
                     else:
@@ -240,7 +240,7 @@ def GetFileData(settings):
         revitFiles = []
     return revitFiles
 
-def isBIM360File(revitFiles):
+def is_bim_360_file(revitFiles):
     '''
     Checks whether the first item in a file item list belongs to a BIM 360 project.
 
@@ -259,13 +259,13 @@ def isBIM360File(revitFiles):
     return BIM360File
 
 #: the directory this script lives in
-currentScriptDir_ = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])
+CURRENT_SCRIPT_DIRECTORY = os.path.dirname(__file__) #GetFolderPathFromFile(sys.path[0])
 
 #: xaml file name of file select UI
-xamlFile_ = 'ui.xaml'
+XAML_FILE = 'ui.xaml'
 
 #: xaml full path
-xamlFullFileName_ =  os.path.join(currentScriptDir_, xamlFile_)
+XAML_FULL_FILE_NAME =  os.path.join(CURRENT_SCRIPT_DIRECTORY, XAML_FILE)
 
 #: module entry
 if __name__ == "__main__":

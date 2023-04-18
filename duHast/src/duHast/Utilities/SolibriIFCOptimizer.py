@@ -42,7 +42,7 @@ from duHast.Utilities import Result as res, FilesGet as fileGet, FilesIO as util
 #: The default install path for solibri ifc optimizer.
 solibriInstallPath_ = r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe'
 
-def OptimizeAllIFCFilesinFolder(directoryPath):
+def optimize_all_ifc_files_in_directory(directoryPath):
     '''
     Function applying third party IFC optimizer to all ifc files in a given folder.
 
@@ -66,19 +66,19 @@ def OptimizeAllIFCFilesinFolder(directoryPath):
 
     returnValue = res.Result()
     # check if ifc optimizer is installed:
-    if(util.FileExist(solibriInstallPath_)):
+    if(util.file_exist(solibriInstallPath_)):
         returnValue.message = 'Solibri IFC optimizer is installed.'
-        ifcFiles = fileGet.GetFiles(directoryPath, '.ifc')
+        ifcFiles = fileGet.get_files(directoryPath, '.ifc')
         if(len(ifcFiles) > 0):
-            processFilesResult = ProcessIFCFiles(ifcFiles, directoryPath)
-            returnValue.Update(processFilesResult)
+            processFilesResult = process_ifc_files(ifcFiles, directoryPath)
+            returnValue.update(processFilesResult)
         else:
-            returnValue.AppendMessage('No IFC files found in directory: '+ str(directoryPath))
+            returnValue.append_message('No IFC files found in directory: '+ str(directoryPath))
     else:
-        returnValue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
+        returnValue.update_sep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
     return returnValue
 
-def OptimizeIFCFilesInList(ifcFiles, directoryPath):
+def optimize_ifc_files_in_list(ifcFiles, directoryPath):
     '''
     This function will optimize all IFC files in a given list of fully qualified file path to ifc files.
 
@@ -105,18 +105,18 @@ def OptimizeIFCFilesInList(ifcFiles, directoryPath):
 
     returnValue = res.Result()
     # check if ifc optimizer is installed:
-    if(util.FileExist(solibriInstallPath_)):
+    if(util.file_exist(solibriInstallPath_)):
         returnValue.message = 'Solibri IFC optimizer is installed.'
         if(len(ifcFiles) > 0):
-            processFilesResult = ProcessIFCFiles(ifcFiles, directoryPath)
-            returnValue.Update(processFilesResult)
+            processFilesResult = process_ifc_files(ifcFiles, directoryPath)
+            returnValue.update(processFilesResult)
         else:
-            returnValue.AppendMessage('IFC file list is empty.')
+            returnValue.append_message('IFC file list is empty.')
     else:
-        returnValue.UpdateSep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
+        returnValue.update_sep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
     return returnValue
 
-def ProcessIFCFiles(ifcFiles, directoryPath):
+def process_ifc_files(ifcFiles, directoryPath):
     '''
     This function will optimize all IFC files in a given list of fully qualified file path to ifc files.
 
@@ -145,18 +145,18 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
     filesToDelete = []
     filesToRename = []
     if(len(ifcFiles) > 0):
-        returnValue.AppendMessage('found ifc files: ' + str(len(ifcFiles)))
+        returnValue.append_message('found ifc files: ' + str(len(ifcFiles)))
         for ifcFile in ifcFiles:
             s = subprocess.check_call([r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe', '-in=' + ifcFile, '-out=' + directoryPath, '-ifc', '-force'])
             # check what came back
             if (s == 0):
                 # all went ok:
-                returnValue.AppendMessage('Optimized file: '+str(ifcFile))
+                returnValue.append_message('Optimized file: '+str(ifcFile))
                 filesToDelete.append(ifcFile) # full file path
                 # get the rename information
                 # contains old and new file name
                 rename = []
-                p = util.GetFolderPathFromFile(ifcFile)
+                p = util.get_directory_path_from_file_path(ifcFile)
                 if(p != ''):
                     newFilePath = str(p)+'\\'+ str(Path.GetFileNameWithoutExtension(ifcFile))+'_optimized.ifc'
                     rename.append(newFilePath)
@@ -164,20 +164,20 @@ def ProcessIFCFiles(ifcFiles, directoryPath):
                     filesToRename.append(rename)
             else:
                     # something went wrong
-                    returnValue.UpdateSep(False, 'Failed to optimize file: '+ str(ifcFile))
+                    returnValue.update_sep(False, 'Failed to optimize file: '+ str(ifcFile))
         # clean up
         for fileToDelete in filesToDelete:
-            statusDelete = util.FileDelete(fileToDelete)
+            statusDelete = util.file_delete(fileToDelete)
             if(statusDelete):
-                returnValue.AppendMessage('Deleted original file: ' + str(fileToDelete))
+                returnValue.append_message('Deleted original file: ' + str(fileToDelete))
             else:
-                returnValue.UpdateSep(False,'Failed to delete original file: '+ str(fileToDelete))
+                returnValue.update_sep(False,'Failed to delete original file: '+ str(fileToDelete))
         for fileToRename in filesToRename:
-            statusRename = util.RenameFile(fileToRename[0], fileToRename[1])
+            statusRename = util.rename_file(fileToRename[0], fileToRename[1])
             if(statusRename):
-                returnValue.AppendMessage('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
+                returnValue.append_message('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
             else:
-                returnValue.UpdateSep(False,'Failed to rename original file: '+ str(fileToRename[0]))
+                returnValue.update_sep(False,'Failed to rename original file: '+ str(fileToRename[0]))
     else:
-        returnValue.AppendMessage('No IFC files found')
+        returnValue.append_message('No IFC files found')
     return returnValue

@@ -209,8 +209,8 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
                 counter_success += 1
                 return_value.status = return_value.status & True 
     else:
-        return_value.UpdateSep(False, 'Default workset '+ default_workset_name + ' does no longer exists in file!')
-    return_value.AppendMessage('Moved ' + element_type_name + ' to workset ' + default_workset_name + ' [' + str(counter_success) + ' :: ' + str(counter_failure) +']')
+        return_value.update_sep(False, 'Default workset '+ default_workset_name + ' does no longer exists in file!')
+    return_value.append_message('Moved ' + element_type_name + ' to workset ' + default_workset_name + ' [' + str(counter_success) + ' :: ' + str(counter_failure) +']')
     return return_value
 
 def get_action_change_element_workset(el, default_id):
@@ -230,7 +230,7 @@ def get_action_change_element_workset(el, default_id):
             ws_param.Set(default_id.IntegerValue)
             action_return_value.message = 'Changed element workset.'
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed with exception: ' + str(e))
+            action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
         return action_return_value
     return action
 
@@ -338,12 +338,12 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
 
     return_value = res.Result()
     # read report
-    workset_data = filesTab.ReadTabSeparatedFile(report_path)
-    file_name = filesIO.GetFileNameWithoutExt(revit_file_path)
+    workset_data = filesTab.read_tab_separated_file(report_path)
+    file_name = filesIO.get_file_name_without_ext(revit_file_path)
     workset_data_for_file = {}
     for row in workset_data:
-        if(filesIO.GetFileNameWithoutExt(row[0]).startswith(file_name) and len(row) > 3):
-            workset_data_for_file[row[1]] = util.ParsStringToBool(row[3])
+        if(filesIO.get_file_name_without_ext(row[0]).startswith(file_name) and len(row) > 3):
+            workset_data_for_file[row[1]] = util.parse_string_to_bool(row[3])
     if(len(workset_data_for_file) > 0): 
         # updates worksets
         worksets = get_worksets(doc)
@@ -355,18 +355,18 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
                         default_visibility  = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
                         try:
                             default_visibility.SetWorksetVisibility(workset.Id, workset_data_for_file[str(workset.Id)])
-                            action_return_value.UpdateSep(True, workset.Name + ': default visibility settings changed to: \t[' + str(workset_data_for_file[str(workset.Id)]) + ']')
+                            action_return_value.update_sep(True, workset.Name + ': default visibility settings changed to: \t[' + str(workset_data_for_file[str(workset.Id)]) + ']')
                         except Exception as e:
-                            action_return_value.UpdateSep(False, 'Failed with exception: ' + str(e))
+                            action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
                         return action_return_value
                     # move element to new workset
                     transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
                     tranny_status = rTran.in_transaction(transaction, action)
-                    return_value.Update(tranny_status)
+                    return_value.update(tranny_status)
                 else:
-                    return_value.UpdateSep(True, util.EncodeAscii(workset.Name) + ': default visibility settings unchanged.')
+                    return_value.update_sep(True, util.encode_ascii(workset.Name) + ': default visibility settings unchanged.')
             else:
-                return_value.UpdateSep(False, util.EncodeAscii(workset.Name) + ': has no corresponding setting in settings file.')
+                return_value.update_sep(False, util.encode_ascii(workset.Name) + ': has no corresponding setting in settings file.')
     else:
-        return_value.UpdateSep(True, 'No settings found for file: ' + file_name)
+        return_value.update_sep(True, 'No settings found for file: ' + file_name)
     return return_value

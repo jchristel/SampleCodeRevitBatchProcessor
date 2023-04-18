@@ -30,7 +30,7 @@ import codecs
 import csv
 
 
-def ReadCSVfile(filepathCSV, increaseMaxFieldSizeLimit = False):
+def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit = False):
     '''
     Read a csv file into a list of rows, where each row is another list.
     :param filepathCSV: The fully qualified file path to the csv file.
@@ -56,7 +56,7 @@ def ReadCSVfile(filepathCSV, increaseMaxFieldSizeLimit = False):
     return rowList
 
 
-def GetFirstRowInCSVFile(filePath):
+def get_first_row_in_csv_file(filePath):
     '''
     Reads the first line of a csv text file and returns it as a list of strings
     :param filePath: The fully qualified file path.
@@ -76,7 +76,7 @@ def GetFirstRowInCSVFile(filePath):
     return row
 
 
-def writeReportDataAsCSV (fileName, header, data, writeType = 'w'):
+def write_report_data_as_csv (fileName, header, data, writeType = 'w'):
     '''
     Function writing out report information as CSV file.
     :param fileName: The reports fully qualified file path.

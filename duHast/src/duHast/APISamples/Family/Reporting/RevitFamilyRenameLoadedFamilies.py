@@ -89,11 +89,11 @@ def _rename_loaded_families(doc, renameDirectives, familyIds):
                         actionReturnValue = res.Result()
                         try:
                             family.Name = renameDirective.newName
-                            actionReturnValue.UpdateSep(
+                            actionReturnValue.update_sep(
                                 True, 
                                 'Renamed family of category [' + familyCategoryName + '] vs directive category [' + renameDirective.category + '] from: ' + renameDirective.name + ' to: ' + renameDirective.newName)
                         except Exception as e:
-                            actionReturnValue.UpdateSep(
+                            actionReturnValue.update_sep(
                                 False, 
                                 'Failed to rename family of category [' + familyCategoryName + '] vs directive category [' + renameDirective.category + '] from: ' + renameDirective.name + ' to: ' + renameDirective.newName)
                         return actionReturnValue
@@ -103,11 +103,11 @@ def _rename_loaded_families(doc, renameDirectives, familyIds):
                         # make sure that this returns true as soon as one family renamed successfully
                         returnValue.status = True
                     # update messages
-                    returnValue.AppendMessage(renameResult.message)
+                    returnValue.append_message(renameResult.message)
                     break
     # check if anything got renamed at all
     if(renameMatchCounter == 0):
-        returnValue.AppendMessage('No match for rename directives found. Nothing was renamed.')
+        returnValue.append_message('No match for rename directives found. Nothing was renamed.')
     return returnValue
 
 
@@ -146,7 +146,7 @@ def rename_loaded_families(doc, directoryPath):
             # rename files as per directives
             returnValue = _rename_loaded_families(doc, renameDirectives, familyIds)
         else:
-            returnValue.UpdateSep(True, 'Mo loadable families in file.')
+            returnValue.update_sep(True, 'Mo loadable families in file.')
     else:
         returnValue = renameDirectivesResult
 

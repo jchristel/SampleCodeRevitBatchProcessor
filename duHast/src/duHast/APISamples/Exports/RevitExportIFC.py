@@ -85,11 +85,11 @@ def export_to_ifc(doc, ifcExportOption, directoryPath, fileName):
         try:
             # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
-            actionReturnValue.UpdateSep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
+            actionReturnValue.update_sep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
             # needs to be a list in a list to stay together when combined with previous results in the update status result code
             actionReturnValue.result = [[directoryPath, fileName]]
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
+            actionReturnValue.update_sep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,'Export to IFC')
     returnValue = rTran.in_transaction(transaction, action)
@@ -131,9 +131,9 @@ def export_3d_views_to_ifc_default(doc, viewFilter, ifcExportOption, directoryPa
             ifcExportOption.FilterViewId = exportView.Id
             fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.ifc')
             returnValueByView = export_to_ifc(doc, ifcExportOption, directoryPath, fileName)
-            returnValue.Update(returnValueByView)
+            returnValue.update(returnValueByView)
     else:
-        returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnValue.update_sep(True, 'No 3D views found matching filter...nothing was exported')
     return returnValue
 
 
@@ -205,9 +205,9 @@ def export_3d_views_to_ifc(doc, viewFilter, ifcExportOption, directoryPath, ifcC
             updatedExportOption = setup_ifc_export_option(ifcExportOption, exportView.Id, ifcCoordinatesSystem)
             fileName = build_export_file_name_from_view(exportView.Name, viewFilter, '.ifc') if doSomethingWithViewName == None else doSomethingWithViewName(exportView.Name)
             returnValueByView = export_to_ifc(doc, updatedExportOption, directoryPath, fileName)
-            returnValue.Update(returnValueByView)
+            returnValue.update(returnValueByView)
     else:
-        returnValue.UpdateSep(True, 'No 3D views found matching filter...nothing was exported')
+        returnValue.update_sep(True, 'No 3D views found matching filter...nothing was exported')
     return returnValue
 
 
@@ -243,7 +243,7 @@ def export_model_to_ifc(doc, ifcExportOption, directoryPath, fileName, coordOpti
     # set the coordinate system to use
     exIFC.AddOption('SitePlacement', coordOption)
     returnValueByModel = export_to_ifc(doc, exIFC, directoryPath, fileName)
-    returnValue.Update(returnValueByModel)
+    returnValue.update(returnValueByModel)
     return returnValue
 
 

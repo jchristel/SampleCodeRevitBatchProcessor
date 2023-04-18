@@ -63,11 +63,11 @@ def change_levels_2D (doc, levels, view):
             try:
                 g.SetDatumExtentType(rdb.DatumEnds.End1, view, rdb.DatumExtentType.ViewSpecific)
                 g.SetDatumExtentType(rdb.DatumEnds.End0, view, rdb.DatumExtentType.ViewSpecific)
-                action_return_value.UpdateSep(True, 'Changed level {} to 2D.'.format(g.Name))
+                action_return_value.update_sep(True, 'Changed level {} to 2D.'.format(g.Name))
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to change level {} to 2D with exception: {}'.format(g.Name, e))
+                action_return_value.update_sep(False, 'Failed to change level {} to 2D with exception: {}'.format(g.Name, e))
         if(level_counter == 0):
-            action_return_value.UpdateSep(True, 'No levels visible in view {}'.format(view.Name))
+            action_return_value.update_sep(True, 'No levels visible in view {}'.format(view.Name))
         return action_return_value
     transaction = rdb.Transaction(doc, "levels to 2D")
     return_value = rTran.in_transaction(transaction, action)
@@ -104,12 +104,12 @@ def show_head_end (doc, level, view, end_identifier, show_head):
         try:
             if (show_head):
                 level.ShowBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set level {} head to visible at end: {}'.format(level.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set level {} head to visible at end: {}'.format(level.Name, end_identifier))
             else:
                 level.HideBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set level {} head to invisible at end: {}'.format(level.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set level {} head to invisible at end: {}'.format(level.Name, end_identifier))
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to change level {} head visibility at end {} with exception: {}'.format(level.Name, end_identifier, e))
+            action_return_value.update_sep(False, 'Failed to change level {} head visibility at end {} with exception: {}'.format(level.Name, end_identifier, e))
         return action_return_value
 
     transaction = rdb.Transaction(doc, "Toggle head. {}".format(show_head))
@@ -140,8 +140,8 @@ def hide_both_heads (doc, levels, view):
 
     return_value = res.Result()
     for l in levels:
-        return_value.Update(show_head_end(doc, l, view, rdb.DatumEnds.End1, False))
-        return_value.Update( show_head_end(doc, l, view, rdb.DatumEnds.End0, False))
+        return_value.update(show_head_end(doc, l, view, rdb.DatumEnds.End1, False))
+        return_value.update( show_head_end(doc, l, view, rdb.DatumEnds.End0, False))
 
     return return_value
 
@@ -168,7 +168,7 @@ def show_head_zero_end (doc, levels, view):
 
     return_value = res.Result()
     for l in levels:
-        return_value.Update(show_head_end(doc, l, view, rdb.DatumEnds.End0, True))
+        return_value.update(show_head_end(doc, l, view, rdb.DatumEnds.End0, True))
 
     return return_value
 
@@ -195,7 +195,7 @@ def show_head_one_end (doc, levels, view):
 
     return_value = res.Result()
     for l in levels:
-        return_value.Update( show_head_end(doc, l, view, rdb.DatumEnds.End1, True))
+        return_value.update( show_head_end(doc, l, view, rdb.DatumEnds.End1, True))
 
     return return_value
 
@@ -229,12 +229,12 @@ def toggle_head_end (doc, level, view, end_identifier):
             end_head_one = level.IsBubbleVisibleInView(end_identifier,view)
             if(end_head_one == False):
                 level.ShowBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set level {} head to visible at end: {}.'.format(level.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set level {} head to visible at end: {}.'.format(level.Name, end_identifier))
             else:
                 level.HideBubbleInView(end_identifier, view)
-                action_return_value.UpdateSep(True, 'Set level {} head to not visible at end: {}.'.format(level.Name, end_identifier))
+                action_return_value.update_sep(True, 'Set level {} head to not visible at end: {}.'.format(level.Name, end_identifier))
         except Exception as e:
-            action_return_value.UpdateSep(False, 'Failed to change level {} head visibility at end: {} with exception: {}'.format(level.Name, end_identifier, e))
+            action_return_value.update_sep(False, 'Failed to change level {} head visibility at end: {} with exception: {}'.format(level.Name, end_identifier, e))
         return action_return_value
     transaction = rdb.Transaction(doc, "Toggle head.")
     return_value = rTran.in_transaction(transaction, action)
@@ -264,7 +264,7 @@ def toggle_head_one_end (doc, levels, view ):
 
     return_value = res.Result()
     for l in levels:
-        return_value.Update( toggle_head_end(doc, l, view, rdb.DatumEnds.End1))
+        return_value.update( toggle_head_end(doc, l, view, rdb.DatumEnds.End1))
     return return_value
 
 
@@ -291,5 +291,5 @@ def toggle_head_zero_end (doc, levels, view ):
 
     return_value = res.Result()
     for l in levels:
-        return_value.Update(toggle_head_end(doc, l, view, rdb.DatumEnds.End0))
+        return_value.update(toggle_head_end(doc, l, view, rdb.DatumEnds.End0))
     return return_value

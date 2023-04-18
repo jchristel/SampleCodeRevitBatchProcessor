@@ -79,7 +79,7 @@ def _load_shared_parameter_data_from_file(filePath):
     '''
 
     parameterMapper = {}
-    fileData = fileCSV.ReadCSVfile(filePath)
+    fileData = fileCSV.read_csv_file(filePath)
     for i in range (1, len(fileData)):
         row = fileData[i]
         if(len(row) == 5):
@@ -123,21 +123,21 @@ def swap_shared_parameters(doc, changeDirectiveFilePath):
         for pDirective in parameterDirectives:
             # load shared para file
             sharedParaDefFile = rSharedPAdd.load_shared_parameter_file(doc, parameterDirectives[pDirective].sharedParameterPath)
-            returnValue.AppendMessage('Read shared parameter file: ' + parameterDirectives[pDirective].sharedParameterPath)
+            returnValue.append_message('Read shared parameter file: ' + parameterDirectives[pDirective].sharedParameterPath)
             if(sharedParaDefFile != None):
                 #   - swap shared parameter to family parameter
                 statusChangeToFamPara = rSharedTypeChange.change_shared_parameter_to_family_parameter(doc, pDirective, _parameterPrefix_)
-                returnValue.Update(statusChangeToFamPara)
+                returnValue.update(statusChangeToFamPara)
                 if(statusChangeToFamPara.status):
                     #   - delete all shared parameter definition
                     statusDeleteOldSharedParaDef = rSharedParaDelete.delete_shared_parameter_by_name(doc, pDirective)
-                    returnValue.Update(statusDeleteOldSharedParaDef)
+                    returnValue.update(statusDeleteOldSharedParaDef)
                     if(statusDeleteOldSharedParaDef.status):
                         # get shared parameter definition
                         sParaDef = rSharedPara.get_shared_parameter_definition(parameterDirectives[pDirective].newParameterData.name, sharedParaDefFile)
                         #   - add new shared parameter
                         if(sParaDef != None):
-                            returnValue.AppendMessage('Retrieved shared parameter definition for: ' + parameterDirectives[pDirective].newParameterData.name) 
+                            returnValue.append_message('Retrieved shared parameter definition for: ' + parameterDirectives[pDirective].newParameterData.name) 
                             #   - swap family parameter to shared parameter
                             statusSwapFamToSharedP = rSharedTypeChange.change_family_parameter_to_shared_parameter(
                                 doc, 
@@ -145,15 +145,15 @@ def swap_shared_parameters(doc, changeDirectiveFilePath):
                                 parameterDirectives[pDirective].newParameterData, 
                                 sParaDef
                                 )
-                            returnValue.Update(statusSwapFamToSharedP)
+                            returnValue.update(statusSwapFamToSharedP)
                         else:
-                            returnValue.UpdateSep(False, 'Failed to get shared parameter definition from file.')
+                            returnValue.update_sep(False, 'Failed to get shared parameter definition from file.')
                     else:
-                        returnValue.Update(statusDeleteOldSharedParaDef)
+                        returnValue.update(statusDeleteOldSharedParaDef)
                 else:
-                    returnValue.Update(statusChangeToFamPara)
+                    returnValue.update(statusChangeToFamPara)
             else:
-                returnValue.UpdateSep(False, 'Failed to load shared parameter def file from: ' + parameterDirectives[pDirective].sharedParameterPath)
+                returnValue.update_sep(False, 'Failed to load shared parameter def file from: ' + parameterDirectives[pDirective].sharedParameterPath)
     else:
         returnValue.status = False
         returnValue.message = 'No change directives in file.'

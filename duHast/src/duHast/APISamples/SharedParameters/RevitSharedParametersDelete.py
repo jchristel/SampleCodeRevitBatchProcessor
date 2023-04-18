@@ -60,12 +60,12 @@ def delete_shared_parameter_by_name(doc, sharedParameterName):
         if(p.Name == sharedParameterName):
             deleteIds.append(p.Id)
             # there should just be one match
-            parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
+            parameterName = util.encode_ascii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
         returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
     else:
-        returnValue.UpdateSep(False, 'parameter with guid: ' + sharedParameterName + ' does not exist in file.')
+        returnValue.update_sep(False, 'parameter with guid: ' + sharedParameterName + ' does not exist in file.')
     return returnValue
 
 
@@ -96,12 +96,12 @@ def delete_shared_parameter_by_guid(doc, guid):
         if(p.GuidValue.ToString() == guid):
             deleteIds.append(p.Id)
             # there should just be one match
-            parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
+            parameterName = util.encode_ascii(rdb.Element.Name.GetValue(p))
             break
     if(len(deleteIds) > 0):
         returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
     else:
-        returnValue.UpdateSep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
+        returnValue.update_sep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
     return returnValue
 
 
@@ -131,9 +131,9 @@ def delete_shared_parameters(doc, parameterGUIDs):
             # preserve TRUE value!
             if(deleteStatus.status == True):
                 oneGotDeleted = True
-            returnValue.Update(deleteStatus)
-        returnValue.UpdateSep(oneGotDeleted, 'Finished deleting parameters!')
+            returnValue.update(deleteStatus)
+        returnValue.update_sep(oneGotDeleted, 'Finished deleting parameters!')
     else:
-        returnValue.UpdateSep(True, 'No matching shared parameters in file!')
+        returnValue.update_sep(True, 'No matching shared parameters in file!')
 
     return returnValue

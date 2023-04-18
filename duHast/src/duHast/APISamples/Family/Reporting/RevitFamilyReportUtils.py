@@ -79,8 +79,8 @@ def read_unique_families_from_report(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath)
+    if(util.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -135,8 +135,8 @@ def read_unique_families_with_row_data_from_report(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath, True)
+    if(util.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath, True)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -224,23 +224,23 @@ def _compare_family_dictionaries(previousAgData, newAgData):
     # check corner cases:
     if(len(newAgData) == 0 and len(previousAgData) > 0):
         # new is empty, but previous has data
-        returnValue.UpdateSep(True, 'New report data is empty, using previous report data only')
+        returnValue.update_sep(True, 'New report data is empty, using previous report data only')
         returnValue.result.append(previousAgData)
     elif(len(newAgData) > 0 and len(previousAgData) == 0):
         # new has data, but previous is empty
-        returnValue.UpdateSep(True, 'Previous report data is empty, using new report data only')
+        returnValue.update_sep(True, 'Previous report data is empty, using new report data only')
         returnValue.result.append(newAgData)
     elif(len(newAgData) == 0 and len (previousAgData) == 0):
         # new is empty, previous is empty
-        returnValue.UpdateSep(True, 'Previous report data and new report data are empty!')
+        returnValue.update_sep(True, 'Previous report data and new report data are empty!')
         returnValue.result.append({})
     else:
         # other and current have data
         for newData in newAgData:
             if(newData in previousAgData):
-                returnValue.AppendMessage('Substituting family data: ' + newData)
+                returnValue.append_message('Substituting family data: ' + newData)
             else:
-                returnValue.AppendMessage('Adding new family data: ' + newData)
+                returnValue.append_message('Adding new family data: ' + newData)
             previousAgData[newData] = newAgData[newData]
         returnValue.result.append(previousAgData)
     return returnValue
@@ -323,7 +323,7 @@ def _check_families_still_exist(famData):
         # get keys from dic as a list
         # check which ones do not exist anymore
         for filePath in famData.keys():
-            if (util.FileExist(filePath) == False):
+            if (util.file_exist(filePath) == False):
                 removeKeys.append(filePath)
         
         # check if any family requires to be removed from the data set
@@ -332,18 +332,18 @@ def _check_families_still_exist(famData):
             for dKey in removeKeys:
                 removeSingleKey = famData.pop(dKey, None)
                 if (removeSingleKey != None):
-                    returnValue.AppendMessage('Removed family from data: {}'.format(dKey))
+                    returnValue.append_message('Removed family from data: {}'.format(dKey))
                 else:
-                    returnValue.AppendMessage('Failed to removed family from data: {}'.format(dKey))
+                    returnValue.append_message('Failed to removed family from data: {}'.format(dKey))
         else:
-            returnValue.AppendMessage('No family required removing from data.')
+            returnValue.append_message('No family required removing from data.')
 
         # update return data
-        returnValue.UpdateSep(True, 'Successfully updated family data.')
+        returnValue.update_sep(True, 'Successfully updated family data.')
         returnValue.result.append(famData)
 
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to check whether families still exist with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to check whether families still exist with exception: ' + str(e))
     return returnValue
 
 def combine_reports (previousReportPath, newReportPath):
@@ -381,8 +381,8 @@ def combine_reports (previousReportPath, newReportPath):
     # previous report
     try:
         previousRoot, previousNested = read_unique_families_with_row_data_from_report(previousReportPath)
-        returnValue.AppendMessage('Previous report: found ' + str(len(previousRoot)) + ' root families.')
-        returnValue.AppendMessage('Previous report: found ' + str(len(previousNested)) + ' nested families.')
+        returnValue.append_message('Previous report: found ' + str(len(previousRoot)) + ' root families.')
+        returnValue.append_message('Previous report: found ' + str(len(previousNested)) + ' nested families.')
         # build dictionary containing all family data per root family
         previousAggregatedFamilies = _aggregate_family_data(previousRoot, previousNested)
     except Exception as e:
@@ -395,8 +395,8 @@ def combine_reports (previousReportPath, newReportPath):
         newRoot, newNested = read_unique_families_with_row_data_from_report(newReportPath)
         # build dictionary containing all family data per root family
         newAggregatedFamilies = _aggregate_family_data(newRoot, newNested)
-        returnValue.AppendMessage('New report: found ' + str(len(newRoot)) + ' root families.')
-        returnValue.AppendMessage('New report: found ' + str(len(newNested)) + ' nested families.')
+        returnValue.append_message('New report: found ' + str(len(newRoot)) + ' root families.')
+        returnValue.append_message('New report: found ' + str(len(newNested)) + ' nested families.')
     except Exception as e:
         # check whether empty file exception
         if (str(e) != EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES):
@@ -404,18 +404,18 @@ def combine_reports (previousReportPath, newReportPath):
 
     # compare dictionaries: build unique list of families
     uniqueFamDataStatus = _compare_family_dictionaries(previousAggregatedFamilies, newAggregatedFamilies)
-    returnValue.Update(uniqueFamDataStatus)
+    returnValue.update(uniqueFamDataStatus)
     uniqueFamData = uniqueFamDataStatus.result[0]
 
     # check whether families still exist on file server
     removeNoneExistingFamilies = _check_families_still_exist(uniqueFamData)
-    returnValue.Update(removeNoneExistingFamilies)
+    returnValue.update(removeNoneExistingFamilies)
     # only update family data if culling occurred without any exceptions
     if(removeNoneExistingFamilies.status):
         uniqueFamData = removeNoneExistingFamilies.result[0]
 
     # get report header row (there should be a previous report file...otherwise this will write an empty header row)
-    header = fileCSV.GetFirstRowInCSVFile(previousReportPath)
+    header = fileCSV.get_first_row_in_csv_file(previousReportPath)
     headerRow = header.split(',')
     
     # build list of data rows

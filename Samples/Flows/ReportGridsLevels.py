@@ -112,7 +112,7 @@ def write_grid_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rGridHeader.REPORT_GRIDS_HEADER, 
             rGridRep.get_grid_report_data(doc, REVIT_FILE_PATH))
@@ -137,7 +137,7 @@ def write_level_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rLevelHeader.REPORT_LEVELS_HEADER, 
             rLevelRep.get_level_report_data(doc, REVIT_FILE_PATH))
@@ -155,8 +155,8 @@ def write_level_data(doc, file_name):
 ROOT_PATH = r'C:\temp'
 
 # build output file names
-FILE_NAME_GRID_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_grids')
-FILE_NAME_LEVEL_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_levels')
+FILE_NAME_GRID_REPORT = ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_grids')
+FILE_NAME_LEVEL_REPORT = ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_levels')
 
 #write out grid data
 output('Writing Grid Data.... start')

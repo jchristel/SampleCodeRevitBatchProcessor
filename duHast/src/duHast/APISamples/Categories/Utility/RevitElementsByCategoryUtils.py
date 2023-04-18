@@ -189,12 +189,12 @@ def move_elements_to_category(doc, elements, to_category_name, destination_cat_i
                                 # not sure how this works in none - english versions of Revit...
                                 if(key == 'Cut' and target_id == rdb.ElementId.InvalidElementId):
                                     target_id = destination_cat_ids['Projection']
-                                    return_value.AppendMessage('No cut style present in family, using projection style instead')
+                                    return_value.append_message('No cut style present in family, using projection style instead')
                                 updated_para = rParaSet.set_parameter_value(p, str(target_id), doc)
-                                return_value.Update(updated_para)
+                                return_value.update(updated_para)
                                 break
     else:
-        return_value.UpdateSep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
+        return_value.update_sep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
     return return_value
 
 
@@ -231,9 +231,9 @@ def move_elements_from_sub_category_to_sub_category(doc, from_category_name, to_
             # move elements
             return_value = move_elements_to_category(doc, dic, to_category_name, destination_cat_ids)
         else:
-            return_value.UpdateSep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
+            return_value.update_sep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
     else:
-       return_value.UpdateSep(False, 'Source category: '+ str(from_category_name) + ' does not exist in file!')
+       return_value.update_sep(False, 'Source category: '+ str(from_category_name) + ' does not exist in file!')
     return return_value
 
 

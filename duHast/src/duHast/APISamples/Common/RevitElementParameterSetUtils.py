@@ -94,7 +94,7 @@ def set_parameter_value(
                 para.Set(new_id)
                 action_return_value.message = 'Changed parameter value of type Id.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed with exception: ' + str(e))
+                action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
         return_value = in_transaction(transaction, action)
@@ -111,7 +111,7 @@ def set_parameter_value(
                 para.SetValueString(value_as_string)
                 action_return_value.message = 'Changed parameter value of type double.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
         return_value = in_transaction(transaction, action)
@@ -122,7 +122,7 @@ def set_parameter_value(
                 para.Set(int(value_as_string))
                 action_return_value.message = 'Changed parameter value of type integer.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
         return_value = in_transaction(transaction, action)
@@ -133,13 +133,13 @@ def set_parameter_value(
                 para.Set(value_as_string)
                 action_return_value.message = 'Changed parameter value of type string.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
         return_value = in_transaction(transaction, action, doc)
     else:  
         # dead end
-        return_value.UpdateSep(False, 'Dont know what to do with this storage type: {}'.format(para.StorageType))
+        return_value.update_sep(False, 'Dont know what to do with this storage type: {}'.format(para.StorageType))
     return return_value
 
 def set_built_in_parameter_value(
@@ -185,7 +185,7 @@ def set_built_in_parameter_value(
     '''
     
     return_value = res.Result()
-    return_value.UpdateSep(False, 'Parameter not found')
+    return_value.update_sep(False, 'Parameter not found')
     paras = element.GetOrderedParameters()
     for para in paras:
         if(para.Definition.BuiltInParameter == built_in_parameter_def):

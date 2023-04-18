@@ -82,7 +82,7 @@ def _get_base_data_file_name(directoryPath):
     '''
 
     # get all base data files in folder
-    files = fileGet.GetFilesFromDirectoryWalkerWithFilters(
+    files = fileGet.get_files_from_directory_walker_with_filters(
         directoryPath,
         FAMILY_BASE_DATA_FILE_NAME_PREFIX,
         '',
@@ -106,8 +106,8 @@ def read_overall_family_data_list(filePath):
     '''
 
     rows = []
-    if(fileIO.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath)
+    if(fileIO.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -169,8 +169,8 @@ def read_overall_family_data_list_into_nested(filePath):
     '''
 
     rows = []
-    if(fileIO.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath)
+    if(fileIO.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -335,7 +335,7 @@ def find_direct_host_families(nestedFam, overallFamilyBaseNestedData):
     # check each base family data whether it contains the missing family in its nesting tree
     for baseNestedFam in overallFamilyBaseNestedData:
         if nestedFam.name in baseNestedFam.rootPath:
-            indexMatch = util.IndexOf(baseNestedFam.rootPath, nestedFam.name)
+            indexMatch = util.index_of(baseNestedFam.rootPath, nestedFam.name)
             # make sure we have a match and it is not the first entry in list (does not have a parent...)
             if indexMatch > 0:
                 # confirm category is the same

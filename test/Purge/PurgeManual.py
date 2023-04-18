@@ -46,14 +46,14 @@ def WriteAvailableTypeIds(doc, typeIdGetter, reportHeader, outputFilePath, count
             typeIdsAsString.append(str(tId))
         data.append(typeIdsAsString)
         # writer data to file
-        filesTab.writeReportData(
+        filesTab.write_report_data(
             outputFilePath,
             '',
             data,
             writeType)
-        resultValue.UpdateSep(True,'Added type group ' + reportHeader + ' with ' + str(len(typeIds)) + ' entries ' +  writeType)
+        resultValue.update_sep(True,'Added type group ' + reportHeader + ' with ' + str(len(typeIds)) + ' entries ' +  writeType)
     except Exception as e:
-        resultValue.UpdateSep(False,'Terminated purge unused ' + reportHeader + ' with exception: '+ str(e))
+        resultValue.update_sep(False,'Terminated purge unused ' + reportHeader + ' with exception: '+ str(e))
     return resultValue
 
 # first     base line dictionary
@@ -71,18 +71,18 @@ def CompareReportDictionaries(first,second):
                         notInList.append(d)
                 if(len(notInList) > 0):
                     resultValue.status = False
-                    resultValue.AppendMessage(key + ' has different ids!')
+                    resultValue.append_message(key + ' has different ids!')
                     data = [key] + notInList
                     resultValue.result.append(data)
             else:
                 # entire key is missing!
-                resultValue.AppendMessage(key + ' is missing!')
+                resultValue.append_message(key + ' is missing!')
                 resultValue.status = False
                 data = [key] + first[key]
                 resultValue.result.append(data)
     # check whether any dif was found
     if(len(resultValue.result) == 0):
-        resultValue.UpdateSep(True, "All elements from first dictionary are in second dictionary")
+        resultValue.update_sep(True, "All elements from first dictionary are in second dictionary")
     return resultValue
 
 # data      list of list of strings
@@ -102,31 +102,31 @@ def CompareReportData(fileSource, fileTest):
     resultValue = res.Result()
     '''used to compare a bench mark results file containing type ids against a new results file
     will report missing or additional ids in results file'''
-    sourceRows = filesTab.ReadTabSeparatedFile(fileSource)
-    testRows = filesTab.ReadTabSeparatedFile(fileTest)
+    sourceRows = filesTab.read_tab_separated_file(fileSource)
+    testRows = filesTab.read_tab_separated_file(fileTest)
     sourceDic = ConvertReportDataIntoDictionary(sourceRows)
     testDic = ConvertReportDataIntoDictionary(testRows)
     # check benchmark against test
     statusSource = CompareReportDictionaries(sourceDic, testDic)
     # update overall status
-    resultValue.UpdateStatus(statusSource.status)
+    resultValue.update_status(statusSource.status)
     if(statusSource.status == True):
         resultValue.message ='Benchmark contains no additional ids'
     else:
         resultValue.message ='Benchmark contains additional ids'
-        resultValue.AppendMessage(statusSource.message)
+        resultValue.append_message(statusSource.message)
         resultValue.result.append({'Benchmark':statusSource.result})
     
     # check test against benchmark
     statusTest = CompareReportDictionaries(testDic, sourceDic)
 
-    resultValue.UpdateStatus(statusTest.status)
+    resultValue.update_status(statusTest.status)
     # update overall message with data from test benchmark comparison
     if(statusTest.status == True):
-        resultValue.AppendMessage('\n' + 'Test contains no additional ids')
+        resultValue.append_message('\n' + 'Test contains no additional ids')
     else:
-        resultValue.AppendMessage('\n' + 'Test contains additional ids')
-        resultValue.AppendMessage(statusTest.message)
+        resultValue.append_message('\n' + 'Test contains additional ids')
+        resultValue.append_message(statusTest.message)
         resultValue.result.append({'Test':statusTest.result})
 
     return resultValue
@@ -148,10 +148,10 @@ def ReportAvailableTypeIds(doc, filePath):
                 filePath,
                 counter
             )
-            reportFlag.AppendMessage(SPACER + str(t.stop()))
-            resultValue.Update(reportFlag)
+            reportFlag.append_message(SPACER + str(t.stop()))
+            resultValue.update(reportFlag)
         except Exception as e:
-            resultValue.UpdateSep(False,'Terminated get available type id actions with exception: '+ str(e))
+            resultValue.update_sep(False,'Terminated get available type id actions with exception: '+ str(e))
         counter = counter + 1
-    resultValue.AppendMessage('Report available types duration: '+ str(TIMER_OVERALL.stop()))
+    resultValue.append_message('Report available types duration: '+ str(TIMER_OVERALL.stop()))
     return resultValue

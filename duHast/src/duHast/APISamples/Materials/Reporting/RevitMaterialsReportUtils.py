@@ -64,7 +64,7 @@ def get_material_report_data(doc, revitFilePath):
                 )
         except Exception:
             data.append([
-                util.GetFileNameWithoutExt(revitFilePath),
+                util.get_file_name_without_ext(revitFilePath),
                 str(mat.Id),
                 util.EncodeAscii(rdb.Element.Name.GetValue(mat))
             ])

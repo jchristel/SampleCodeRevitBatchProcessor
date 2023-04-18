@@ -177,6 +177,6 @@ def purge_unused_e_transmit(doc):
         else:
             resultValue.message = 'Failed to purge model!'
     except Exception as e:
-            resultValue.UpdateSep(False,'Terminated purge unused actions with exception: '+ str(e))
-    resultValue.AppendMessage('purge duration: '+ str(tOverall.stop()))
+            resultValue.update_sep(False,'Terminated purge unused actions with exception: '+ str(e))
+    resultValue.append_message('purge duration: '+ str(tOverall.stop()))
     return resultValue

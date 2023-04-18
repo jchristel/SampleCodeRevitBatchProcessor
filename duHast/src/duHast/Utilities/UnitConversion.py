@@ -1,8 +1,8 @@
-
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A function used to output messages to a console.
+This module contains a number of unit conversion functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 '''
 #
 #License:
@@ -27,34 +27,25 @@ A function used to output messages to a console.
 #
 #
 
-from duHast.Utilities import DateStamps as dateStamp
 
-def output(message = ''):
+def convert_imperial_feet_to_metric_mm(value):
     '''
-    Print message to console. 
-
-    Note:
-
-    - The message will be prefixed with a date stamp in format '2022-08-09 19:09:19 :'
-    - If message is not a string it will convert it to a string.
-    - Multiline strings will pe printed line by line
-
-    :param message: The message, defaults to ''
-    :type message: str, optional
+    Converts feet and inches to mm
+    :param value: The value in feet to be converted
+    :type value: float
+    :return: The converted value
+    :rtype: float
     '''
 
-    # make sure message is a string:
-    if(type(message) != str):
-        message = str(message)
+    return value * 304.8
 
-    # get the current time string
-    # 2022-08-09 19:09:19 :
-    timestamp = dateStamp.get_date_stamp('%y-%m-%d %H_%M_%S : ')
+def convert_imperial_square_feet_to_metric_square_metre(value):
+    '''
+    Converts square feet and inches to square m
+    :param value: The value in feet to be converted
+    :type value: float
+    :return: The converted value
+    :rtype: float
+    '''
 
-    # check for multi row messages
-    if('/n' in message):
-        message_chunks = message.split('\n')
-        for message_chunk in message_chunks:
-            print ('{} {}'.format(timestamp, message_chunk))
-    else:
-        print ('{} {}'.format(timestamp,message))
+    return value * 0.092903

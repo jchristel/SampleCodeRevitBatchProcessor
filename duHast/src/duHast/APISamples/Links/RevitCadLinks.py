@@ -188,15 +188,15 @@ def reload_cad_links(doc, linkLocations, hostNameFormatted, doSomethingWithLinkN
                             result = p.LoadFrom(newLinkPath)
                             actionReturnValue.message = linkTypeName + ' :: ' + str(result.LoadResult)
                         except Exception as e:
-                            actionReturnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                            actionReturnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
                         return actionReturnValue
                     transaction = rdb.Transaction(doc, 'Reloading: ' + linkTypeName)
                     reloadResult = rTran.in_transaction(transaction, action)
-                    returnValue.Update(reloadResult)
+                    returnValue.update(reloadResult)
                 else:
-                    returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.update_sep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
             except Exception as e:
-                returnValue.UpdateSep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
     return returnValue

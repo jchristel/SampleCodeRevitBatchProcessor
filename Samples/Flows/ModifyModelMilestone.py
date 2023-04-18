@@ -122,14 +122,14 @@ MODEL_OUT_FOLDER_SUFFIX = '_Milestone'
 # list containing the default file name:
 # which in case of this back up is the same as the current file name
 # [[revit host file name before save, revit host file name after save]]
-DEFAULT_FILE_NAMES = [[fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH), fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)]]
+DEFAULT_FILE_NAMES = [[fileIO.get_file_name_without_ext(REVIT_FILE_PATH), fileIO.get_file_name_without_ext(REVIT_FILE_PATH)]]
 
 #save revit file to new location
 output('Modifying Revit File.... start')
 
 # get mile stone folder
-MILESTONE_PATH = ROOT_PATH + '\\' + dStamp.GetFolderDateStamp() + MODEL_OUT_FOLDER_SUFFIX
-GOT_DIRECTORY = dirIO.CreateTargetFolder(ROOT_PATH, dStamp.GetFolderDateStamp() + MODEL_OUT_FOLDER_SUFFIX)
+MILESTONE_PATH = ROOT_PATH + '\\' + dStamp.get_folder_date_stamp() + MODEL_OUT_FOLDER_SUFFIX
+GOT_DIRECTORY = dirIO.create_target_directory(ROOT_PATH, dStamp.get_folder_date_stamp() + MODEL_OUT_FOLDER_SUFFIX)
 # do we have a valid folder?
 if GOT_DIRECTORY:
     # save new central file to back up folder

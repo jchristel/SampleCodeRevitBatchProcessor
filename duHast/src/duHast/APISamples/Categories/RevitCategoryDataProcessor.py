@@ -185,7 +185,7 @@ class CategoryProcessor(IFamilyProcessor):
             root_family_data = self._find_root_family_data()
             # update root processor data as required
             self._update_root_family_data(root_family_data, nested_family_used_sub_categories)
-            return_value.UpdateSep(True, 'Post Action Update subcategories data successful completed.')
+            return_value.update_sep(True, 'Post Action Update subcategories data successful completed.')
         except Exception as e:
-            return_value.UpdateSep(False, 'Post Action Update subcategories data failed with exception: ' + str(e))
+            return_value.update_sep(False, 'Post Action Update subcategories data failed with exception: ' + str(e))
         return return_value

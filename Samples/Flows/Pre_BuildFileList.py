@@ -108,7 +108,7 @@ TASK_FILES_NUMBER = 1
 # get file data
 output('Writing file Data.... start')
 try:
-    RESULT = fl.WriteFileList(ROOT_PATH ,'.rvt', ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.getRevitFiles)
+    RESULT = fl.write_file_list(ROOT_PATH ,'.rvt', ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.get_revit_files)
     output (RESULT.message)
     output('Writing file Data.... status: [{}]'.format(RESULT.status))
 except Exception as e:

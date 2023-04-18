@@ -173,7 +173,7 @@ class LinePatternData(IFamData.IFamilyData):
 
         elementName = 'unknown_notUnicode'
         try:   
-            elementName = util.EncodeAscii(rdb.Element.Name.GetValue(element))
+            elementName = util.encode_ascii(rdb.Element.Name.GetValue(element))
         except Exception as ex:
             elementName = elementName + ' Exception: ' + str(ex)
         return elementName

@@ -37,7 +37,7 @@ clr.ImportExtensions(Linq)
 
 from duHast.UI import WorkloadBucket as wb
 
-def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
+def distribute_workload (numberOfBuckets, items, getWorkloadSize):
     '''
     Distributes a given number of items evenly by workload size into workload buckets.
 
@@ -64,7 +64,7 @@ def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
             itemToWorkLoadValues.append([item, getWorkloadSize(item)])
         
         # sort list by workload size in descending order (biggest item first)
-        itemToWorkLoadValues = Sort(itemToWorkLoadValues)
+        itemToWorkLoadValues = sort(itemToWorkLoadValues)
         
         # load up with buckets
         for bucket in itemToWorkLoadValues:
@@ -81,7 +81,7 @@ def DistributeWorkload (numberOfBuckets, items, getWorkloadSize):
     # send loaded buckets back
     return workloadBuckets
 
-def Sort(sub_li): 
+def sort(sub_li): 
     '''
     Python code to sort the tuples using second element of sublist. Inplace way to sort using sort().
 

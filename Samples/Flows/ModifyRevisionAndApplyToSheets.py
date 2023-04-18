@@ -129,7 +129,7 @@ def get_sheets(doc, sheet_filter_rules):
 
     results = []
     # get sheets where revisions need to be applied to:
-    revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
+    revit_file_name = fileIO.get_file_name_without_ext(REVIT_FILE_PATH)
     for file_name, sheet_rules in sheet_filter_rules:
         if (revit_file_name.startswith(file_name)):
             results = rSheetView.get_sheets_by_filters(doc, sheet_rules)
@@ -168,7 +168,7 @@ def mark_revisions_as_issued(doc, revIds):
     for id in ids_to_be_marked_issued:
         # set revision status to issued
         result_set_to_issued = rRev.mark_revision_as_issued_by_revision_id(doc, id)
-        return_value.Update(result_set_to_issued)
+        return_value.update(result_set_to_issued)
     return return_value
 
 def add_revision_to_document(doc):
@@ -206,7 +206,7 @@ def add_revision_to_document(doc):
                 ids.Add(newRev.Id)
         return_value.result = ids
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to create revisions: {}'.format(e))
+        return_value.update_sep(False, 'Failed to create revisions: {}'.format(e))
     return return_value
 
 # main function of this sample
@@ -240,23 +240,23 @@ def add_revisions_to_sheets_required(doc, sheet_filter_rules):
     if(len(sheets_in_model_filtered) > 0 ):
         # set up revision
         revision_id_result = add_revision_to_document(doc)
-        return_value.Update(revision_id_result)
+        return_value.update(revision_id_result)
         # check what came back
         if(revision_id_result.status):
             revIds = revision_id_result.result
             # get sheets where revisions need to be applied to:
-            revit_file_name = fileIO.GetFileNameWithoutExt(REVIT_FILE_PATH)
+            revit_file_name = fileIO.get_file_name_without_ext(REVIT_FILE_PATH)
             for file_name, sheet_rules in sheet_filter_rules:
                 if (revit_file_name.startswith(file_name)):
                     # add revisions to sheets:
                     for sheet in sheets_in_model_filtered:
                         result_add_revisions_to_sheet = rRev.add_revisions_to_sheet(doc, sheet, revIds)
-                        return_value.Update(result_add_revisions_to_sheet)
+                        return_value.update(result_add_revisions_to_sheet)
             # set revisions as issued
             result_mark_as_issued = mark_revisions_as_issued(doc, revIds)
-            return_value.Update(result_mark_as_issued)
+            return_value.update(result_mark_as_issued)
     else:
-        return_value.UpdateSep(False, 'No sheet(s) matching filter(s) found')
+        return_value.update_sep(False, 'No sheet(s) matching filter(s) found')
     # wipe result list since it contains a mix of ids no longer required
     return_value.result = []
     return return_value
@@ -284,13 +284,13 @@ REVISIONS_TO_ADD = [
 SHEET_RULES = [
     [
         'FileOne',[
-            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value']
+            ['Parameter Name', comp.does_not_equal, 'Parameter Value']
         ]
     ],# applies to files FileOneOneBeforeName and FileOneTwoBeforeName
     [
         'FileTwo', [
-            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value'],
-            ['Parameter Name', comp.ConDoesNotEqual, 'Parameter Value']
+            ['Parameter Name', comp.does_not_equal, 'Parameter Value'],
+            ['Parameter Name', comp.does_not_equal, 'Parameter Value']
         ]
     ]# applies to file FileTwoBeforeName
 ]

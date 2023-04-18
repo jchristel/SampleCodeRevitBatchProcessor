@@ -73,7 +73,7 @@ def write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
         overallData.append(data)
     try:
         # write data
-        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -90,11 +90,11 @@ def delete_old_task_lists(directoryPath):
 
     flag = True
     # find all files in folder starting with and delete them
-    files = fileGet.GetFiles(directoryPath, '.txt')
+    files = fileGet.get_files(directoryPath, '.txt')
     if (len(files) > 0):
         for f in files:
-            if (util.GetFileNameWithoutExt(f).startswith(TASK_COUNTER_FILE_PREFIX)):
-                flag = flag & util.FileDelete(f)
+            if (util.get_file_name_without_ext(f).startswith(TASK_COUNTER_FILE_PREFIX)):
+                flag = flag & util.file_delete(f)
     return flag
 
 def write_out_empty_task_list(directoryPath, counter = 0):
@@ -116,7 +116,7 @@ def write_out_empty_task_list(directoryPath, counter = 0):
     overallData = []
     try:
         # write data
-        fileTab.writeReportData(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
         return True
     except Exception:
         return False
@@ -148,8 +148,8 @@ def read_change_list(filePath):
     '''
 
     rows = []
-    if(util.FileExist(filePath)):
-        rows = fileCSV.ReadCSVfile(filePath)
+    if(util.file_exist(filePath)):
+        rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception("Changed families list files does not exist.")
     if(len(rows) > 0):

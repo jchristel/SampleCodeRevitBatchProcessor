@@ -58,7 +58,7 @@ FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC = '%Y_%m_%d_%H_%M_%S'
 TIME_STAMP_HHMMSEC_COLON = '%H:%M:%S'
 
 
-def GetFileDateStamp(format = FILE_DATE_STAMP_YY_MM_DD):
+def get_file_date_stamp(format = FILE_DATE_STAMP_YY_MM_DD):
     '''
     Returns a date stamp formatted suitable for a file name.
     :param format: The date stamp format, defaults to FILE_DATE_STAMP_YY_MM_DD
@@ -83,7 +83,7 @@ FOLDER_DATE_STAMP_YYYYMMDD = '%Y%m%d'
 FOLDER_DATE_STAMP_YYYY = '%Y'
 
 
-def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
+def get_folder_date_stamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
     '''
     Returns a date stamp formatted suitable for a folder name.
     :param format: The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD
@@ -97,7 +97,7 @@ def GetFolderDateStamp(format = FOLDER_DATE_STAMP_YYYYMMDD):
 
 
 # get the date stamp in provided format
-def GetDateStamp(format):
+def get_date_stamp(format):
     '''
     Returns a date stamp formatted using past in format string.
     :param format: The date stamp format
@@ -110,7 +110,7 @@ def GetDateStamp(format):
     return d.strftime(format)
 
 
-def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
+def get_date_stamped_file_name(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     '''
     Returns a time stamped output file name based on the past in file name and file extension.
     :param revitFilePath: Fully qualified file path to file
@@ -124,7 +124,7 @@ def GetOutPutFileName(revitFilePath, fileExtension = '.txt', fileSuffix = ''):
     '''
 
     # get date prefix for file name
-    filePrefix = GetFileDateStamp()
+    filePrefix = get_file_date_stamp()
     # added str() around this expression to satisfy sphinx auto code documentation
     # it will throw an exception when concatenating the string in the return statement
     name = str(Path.GetFileNameWithoutExtension(revitFilePath))

@@ -28,11 +28,11 @@ Helper functions relating to retrieving file information.
 
 import glob
 
-from duHast.Utilities.FilesIO import GetFileNameWithoutExt
+from duHast.Utilities.FilesIO import get_file_name_without_ext
 import os
 
 
-def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
+def get_files_single_directory(folderPath, filePrefix, fileSuffix, fileExtension):
     '''
     Get files from a folder filtered by file prefix, file suffix, file extension
     :param folderPath: Folder path from which to get files.
@@ -51,7 +51,7 @@ def GetFilesSingleFolder(folderPath, filePrefix, fileSuffix, fileExtension):
     return fileList
 
 
-def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, fileExtension):
+def get_files_from_directory_walker_with_filters(folderPath, filePrefix, fileSuffix, fileExtension):
     '''
     Returns a list of all files in directory and nested sub directories where file name matches filters value.
     :param folderPath: Root folder path from which to get files.
@@ -69,13 +69,13 @@ def GetFilesFromDirectoryWalkerWithFilters(folderPath, filePrefix, fileSuffix, f
     filesFound = []
     for root, dirs, files in os.walk(folderPath):
         for name in files:
-            fileName = GetFileNameWithoutExt(name)
+            fileName = get_file_name_without_ext(name)
             if (name.endswith(fileExtension) and fileName.startswith(filePrefix) and fileName.endswith(fileSuffix)):
                 filesFound.append(root + '\\' + name)
     return filesFound
 
 
-def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
+def get_files_from_directory_walker_with_filters_simple(folderPath, fileExtension):
     '''
     Returns a list of all files in directory and nested subdirectories where file name matches file extension filter value
     :param folderPath: Root folder path from which to get files.
@@ -87,11 +87,11 @@ def GetFilesFromDirectoryWalkerWithFiltersSimple(folderPath, fileExtension):
     '''
 
     filesFound = []
-    filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', fileExtension)
+    filesFound = get_files_from_directory_walker_with_filters(folderPath, '', '', fileExtension)
     return filesFound
 
 
-def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
+def files_as_dictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
     '''
     Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value. 
     - key file name without extension
@@ -118,15 +118,15 @@ def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, include
     fileDic = {}
     try:
         if(includeSubDirs):
-            filesFound = GetFilesFromDirectoryWalkerWithFilters(folderPath, '', '', '.rfa')
+            filesFound = get_files_from_directory_walker_with_filters(folderPath, '', '', '.rfa')
         else:
-            filesFound = GetFilesSingleFolder(folderPath, '', '', '.rfa')
+            filesFound = get_files_single_directory(folderPath, '', '', '.rfa')
     except Exception:
         return fileDic
 
     # populate dictionary
     for filePath in filesFound:
-        fileName = GetFileNameWithoutExt(filePath)
+        fileName = get_file_name_without_ext(filePath)
         if(fileName in fileDic):
             fileDic[fileName].append(filePath)
         else:
@@ -134,7 +134,7 @@ def FilesAsDictionary(folderPath, filePrefix, fileSuffix, fileExtension, include
     return fileDic
 
 
-def GetFiles(folderPath, fileExtension='.rvt'):
+def get_files(folderPath, fileExtension='.rvt'):
     '''
     Gets a list of files from a given folder with a given file extension
     :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
@@ -149,9 +149,10 @@ def GetFiles(folderPath, fileExtension='.rvt'):
     return file_list
 
 
-def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
+def get_files_with_filter(folderPath, fileExtension='.rvt', filter = '*'):
     '''
     Gets a list of files from a given folder with a given file extension and a matching a file name filter.
+
     :param folderPath: Folder path from which to get files.
     :type folderPath: str
     :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
@@ -166,9 +167,10 @@ def GetFilesWithFilter(folderPath, fileExtension='.rvt', filter = '*'):
     return file_list
 
 
-def GetFilesFromDirectoryWalker(path, filter):
+def get_files_from_directory_walker(path, filter):
     '''
     Gets all files in directory and nested subdirectories where file name contains filter value.
+
     :param path: Folder path from which to get files.
     :type path: str
     :param filter: File name filter ('something*')

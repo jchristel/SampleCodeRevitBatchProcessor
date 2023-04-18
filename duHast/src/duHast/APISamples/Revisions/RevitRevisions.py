@@ -81,9 +81,9 @@ def create_revision (doc, revData):
             newRevision.RevisionDate = revData.revisionDate
             newRevision.Visibility = revData.tagCloudVisibility #rdb.RevisionVisibility.Hidden
             actionReturnValue.result.append(newRevision)
-            actionReturnValue.UpdateSep(True, 'Created new revision in document.')
+            actionReturnValue.update_sep(True, 'Created new revision in document.')
         except Exception as e:
-            actionReturnValue.UpdateSep(False, 'Failed to create new revision in document with exception: ' + str(e))
+            actionReturnValue.update_sep(False, 'Failed to create new revision in document with exception: ' + str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to file")
     returnValue = rTran.in_transaction(transaction, action)
@@ -118,9 +118,9 @@ def mark_revision_as_issued(doc, revision):
         actionReturnValue = res.Result()
         try:
             revision.Issued = True
-            actionReturnValue.UpdateSep(True, 'Marked revision as issued.')
+            actionReturnValue.update_sep(True, 'Marked revision as issued.')
         except Exception as e:
-            actionReturnValue.UpdateSep(False,'Failed to mark revision as issued with exception: '+ str(e))
+            actionReturnValue.update_sep(False,'Failed to mark revision as issued with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "Setting revision to issued")
     returnValue = rTran.in_transaction(transaction, action)
@@ -159,7 +159,7 @@ def mark_revision_as_issued_by_revision_id(doc, revisionId):
         # mark revision as issued
         returnValue = mark_revision_as_issued(doc, revision)
     else:
-        returnValue.UpdateSep(False,'Revision with id provided does not exist in model.')
+        returnValue.update_sep(False,'Revision with id provided does not exist in model.')
     return returnValue
 
 def add_revisions_to_sheet(doc, sheet, revIds):
@@ -200,9 +200,9 @@ def add_revisions_to_sheet(doc, sheet, revIds):
         actionReturnValue = res.Result()
         try:
             sheet.SetAdditionalRevisionIds(ids)
-            actionReturnValue.UpdateSep(True, 'Added revision(s) to sheet.')
+            actionReturnValue.update_sep(True, 'Added revision(s) to sheet.')
         except Exception as e:
-            actionReturnValue.UpdateSep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
+            actionReturnValue.update_sep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc, "adding revision to sheet")
     returnValue = rTran.in_transaction(transaction, action)
@@ -267,13 +267,13 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
             if (ruleMatch == True):
                 # delete view
                 to_delete.append(rev.Id)
-                return_value.AppendMessage('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
+                return_value.append_message('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
             else:
                 filtered_at_least_one = True
-                return_value.AppendMessage('Revision: {} {} will not be deleted.'.format(rev.Description, rev.RevisionDate))
+                return_value.append_message('Revision: {} {} will not be deleted.'.format(rev.Description, rev.RevisionDate))
         else:
             to_delete.append(rev.Id)
-            return_value.AppendMessage('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
+            return_value.append_message('Revision: {} {} will be deleted.'.format(rev.Description, rev.RevisionDate))
        
     # check if any revisions to delete
     if(len(to_delete) > 0 ): 
@@ -282,19 +282,19 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
         if(filtered_at_least_one == False):
             # one revision need to stay in file...
             to_delete.pop()
-            return_value.AppendMessage('Removing at one revision from selection since Revit requires at least one revision in the model.')
+            return_value.append_message('Removing at one revision from selection since Revit requires at least one revision in the model.')
         # delete them 
         def action():
             action_return_value = res.Result()
-            action_return_value.AppendMessage ('Attempting to delete revisions: {}'.format(len(to_delete)))
+            action_return_value.append_message ('Attempting to delete revisions: {}'.format(len(to_delete)))
             try:
                 doc.Delete(to_delete.ToList[rdb.ElementId]())
-                action_return_value.AppendMessage('Deleted {} revisions.'.format(len(to_delete)))              
+                action_return_value.append_message('Deleted {} revisions.'.format(len(to_delete)))              
             except Exception as e:
-                action_return_value.UpdateSep(False, 'Failed to delete revisions with exception: {}'.format(e))
+                action_return_value.update_sep(False, 'Failed to delete revisions with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc, 'Deleting Revisions')
-        return_value.Update(rTran.in_transaction(transaction, action))
+        return_value.update(rTran.in_transaction(transaction, action))
     else:
-        return_value.UpdateSep(False, 'Only one revision in file which can not be deleted!')
+        return_value.update_sep(False, 'Only one revision in file which can not be deleted!')
     return return_value

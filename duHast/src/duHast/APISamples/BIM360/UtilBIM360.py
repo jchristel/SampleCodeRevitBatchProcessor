@@ -63,7 +63,7 @@ def get_bim_360_file_data(filepathCSV):
     revitFiles = []
     try:
         # read the CSV into rows
-        rows = filesCSV.ReadCSVfile(filepathCSV)
+        rows = filesCSV.read_csv_file(filepathCSV)
         # check whether anything came back
         if(len(rows)>0):
             # process rows

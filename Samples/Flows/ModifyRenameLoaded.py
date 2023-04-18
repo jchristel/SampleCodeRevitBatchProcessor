@@ -139,12 +139,12 @@ def rename_loaded_families(doc):
                     output ('Attempting to rename family: {}'.format(old_name))
                     try:
                         family.Name = new_name
-                        action_return_value.UpdateSep(True, 'Renamed old: {} to new: {}'.format(old_name, new_name))
+                        action_return_value.update_sep(True, 'Renamed old: {} to new: {}'.format(old_name, new_name))
                     except Exception as e:
-                        action_return_value.UpdateSep(False, 'Failed to rename family: {} with exception: {}'.format(old_name,e))
+                        action_return_value.update_sep(False, 'Failed to rename family: {} with exception: {}'.format(old_name,e))
                     return action_return_value
                 transaction = rdb.Transaction(doc, 'Renaming: {}'.format(new_name))
-                return_value.Update( rTran.in_transaction(transaction, action) )
+                return_value.update( rTran.in_transaction(transaction, action) )
     output(return_value.message)
 
 def read_family_names():

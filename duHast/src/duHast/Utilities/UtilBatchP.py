@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to batch processor.
 #
 #
 
-def AdjustSessionIdForFileName(id):
+def adjust_session_id_for_file_name(id):
     '''
     Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it\
         can be used in a file name.
@@ -44,7 +44,7 @@ def AdjustSessionIdForFileName(id):
     sessionIdChanged = sessionIdChanged[1:-1]
     return sessionIdChanged
 
-def AdjustSessionIdFileNameBack(fileNameId):
+def adjust_session_id_file_name_back(fileNameId):
     '''
     Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a\
         file name using a batch processor supplied id.
@@ -62,7 +62,7 @@ def AdjustSessionIdFileNameBack(fileNameId):
     sessionIdChanged = '<' + sessionIdChanged + '>'
     return sessionIdChanged
 
-def AdjustSessionIdForFolderName(id):
+def adjust_session_id_for_directory_name(id):
     '''
     Removes chevrons and replace colons, full stops, dashes with underscores in session id supplied by revit batch processor so it\
         can be used in a folder name.

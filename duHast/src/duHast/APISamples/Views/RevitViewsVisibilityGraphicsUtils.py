@@ -75,15 +75,15 @@ def remove_filter_from_view(doc, filter, view):
                 action_return_value = res.Result()
                 try:
                     view.RemoveFilter(filter.Id)
-                    action_return_value.UpdateSep(True, 'Remove filter: {} from template: {}'.format(filter.Name, view.Name))
+                    action_return_value.update_sep(True, 'Remove filter: {} from template: {}'.format(filter.Name, view.Name))
                 except Exception as e:
-                    action_return_value.UpdateSep(False, 'Failed to remove filter: {} from template: {} with exception: {}'.format(filter.Name, view.Name, e))
+                    action_return_value.update_sep(False, 'Failed to remove filter: {} from template: {} with exception: {}'.format(filter.Name, view.Name, e))
                 return action_return_value
             transaction = rdb.Transaction(doc,'Removing filter: {}'.format(filter.Name))
 		    # execute the transaction
             return_value = rTran.in_transaction(transaction, action)
         else:
-            return_value.UpdateSep(True, 'Filter: {} is not applied to view template: {}'.format(filter.Name, view.Name))
+            return_value.update_sep(True, 'Filter: {} is not applied to view template: {}'.format(filter.Name, view.Name))
     else:
-        return_value.UpdateSep(True, 'View template: {} if of type: {} which does not support filters.'.format(view.Name, view.ViewType))
+        return_value.update_sep(True, 'View template: {} if of type: {} which does not support filters.'.format(view.Name, view.ViewType))
     return return_value

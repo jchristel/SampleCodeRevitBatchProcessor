@@ -79,7 +79,7 @@ def _read_rename_directives(files):
 
     renameDirectives = []
     for file in files:
-        rows = fileCSV.ReadCSVfile(file)
+        rows = fileCSV.read_csv_file(file)
         # read rows in tuples ignoring the header row
         for i in range (1, len(rows)):
             if (len(rows[i]) >= 4):
@@ -117,7 +117,7 @@ def get_rename_directives(directoryPath):
 
     returnValue = res.Result()
     # check whether csv files matching file name filter exist in directory path
-    renameDirectiveFiles = fileGet.GetFilesFromDirectoryWalkerWithFilters(
+    renameDirectiveFiles = fileGet.get_files_from_directory_walker_with_filters(
         directoryPath,
         RENAME_DIRECTIVE_FILE_NAME_PREFIX,
         '',
@@ -130,12 +130,12 @@ def get_rename_directives(directoryPath):
         renameDirectives = _read_rename_directives(renameDirectiveFiles)
         # check whether any rename directives where found in files
         if(len(renameDirectives) > 0):
-            returnValue.UpdateSep(True, 'Found rename directives: ' + str(len(renameDirectives)))
+            returnValue.update_sep(True, 'Found rename directives: ' + str(len(renameDirectives)))
             # attempt to rename files
             returnValue.result = renameDirectives
         else:
-            returnValue.UpdateSep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
+            returnValue.update_sep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
     else:
-        returnValue.UpdateSep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
+        returnValue.update_sep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
     
     return returnValue

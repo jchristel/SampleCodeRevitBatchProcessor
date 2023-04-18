@@ -137,10 +137,10 @@ def get_parameters_of_instance(famInstance, doc):
                 parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
                 if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
                     flag = rParaSet.set_parameter_value (p, _cast_parameter_value(parameterValue), doc)
-                    resultValue.Update(flag)
+                    resultValue.update(flag)
                     flagUpdate = True
                 else:
-                    resultValue.UpdateSep(False, 'Failed to get value for ' + p.Definition.Name)
+                    resultValue.update_sep(False, 'Failed to get value for ' + p.Definition.Name)
     if(flagUpdate == False):
         resultValue.message = 'No family parameters where updated'
         resultValue.status = True
@@ -163,7 +163,7 @@ def get_current_date(doc):
     :rtype: str
 
     '''
-    return dateStamp.GetFileDateStamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD)
+    return dateStamp.get_file_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD)
 
 def get_workset_number(doc):
     '''
@@ -198,9 +198,9 @@ def get_file_size(doc):
         if (revitFilePath.StartsWith('BIM 360')):
             size = b360.get_model_file_size(doc)
         else:
-            if(util.FileExist(revitFilePath)):
+            if(util.file_exist(revitFilePath)):
                 # get file size in MB
-                size = util.GetFileSize(revitFilePath)
+                size = util.get_file_size(revitFilePath)
     except:
         pass
     return size
@@ -735,15 +735,15 @@ def update_model_health_tracer_family(doc, revitFilePath):
     :rtype: :class:`.Result`
     '''
 
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
+    revitFileName = util.get_file_name_without_ext(revitFilePath)
     resultValue = res.Result()
     instances = get_instances_of_model_health(doc)
     if(len(instances) > 0):
         for instance in instances:
             updateFlag = get_parameters_of_instance(instance, doc)
-            resultValue.Update(updateFlag)
+            resultValue.update(updateFlag)
     else:
-        resultValue.UpdateSep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revitFileName)
+        resultValue.update_sep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revitFileName)
     return resultValue
 
 # doc   current document
@@ -770,30 +770,30 @@ def write_model_health_report(doc, revitFilePath, outputDirectory):
     :rtype: :class:`.Result`
     '''
     
-    revitFileName = util.GetFileNameWithoutExt(revitFilePath)
+    revitFileName = util.get_file_name_without_ext(revitFilePath)
     resultValue = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
         parameterValue = PARAM_ACTIONS[key].getData(doc)
-        fileName = dateStamp.GetFileDateStamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
+        fileName = dateStamp.get_file_date_stamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
         resExport = res.Result()
         try:
-            fileTab.writeReportData(
+            fileTab.write_report_data(
                 outputDirectory + '\\' + fileName,
                 '',
                 [
                     [
                         revitFileName, 
                         key, 
-                        dateStamp.GetDateStamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
-                        dateStamp.GetDateStamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
+                        dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
+                        dateStamp.get_date_stamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
                         _cast_parameter_value(parameterValue)
                         ]
                     ]
                 )
                 
-            resExport.UpdateSep(True, 'Exported: ' + str(key))
+            resExport.update_sep(True, 'Exported: ' + str(key))
         except Exception as e:
-                resExport.UpdateSep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
-        resultValue.Update(resExport)
+                resExport.update_sep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
+        resultValue.update(resExport)
     return resultValue

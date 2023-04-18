@@ -211,9 +211,9 @@ def modifyRevitLinkTypes(doc):
     try:
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
             changeLink = _modifyRevitLinkTypeData(p, doc)
-            returnValue.Update(changeLink)
+            returnValue.update(changeLink)
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to modify revit link instances with exception: ' + str(e))
     return returnValue
 
 # -------------

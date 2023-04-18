@@ -138,7 +138,7 @@ class SharedParameterProcessor(IFamilyProcessor):
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
             self._update_root_family_data(rootFamilyData, nestedFamilySharedParameters)
-            returnValue.UpdateSep(True, 'Post Action Update shared parameters data successful completed.')
+            returnValue.update_sep(True, 'Post Action Update shared parameters data successful completed.')
         except Exception as e:
-            returnValue.UpdateSep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))
+            returnValue.update_sep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))
         return returnValue

@@ -132,7 +132,7 @@ def link_name(name):
 # store output here:
 ROOT_PATH = r'C:\temp'
 
-HOST_NAME = dStamp.GetOutPutFileName(REVIT_FILE_PATH)
+HOST_NAME = dStamp.get_date_stamped_file_name(REVIT_FILE_PATH)
 
 # list containing directories where Revit links are located:
 # ['Directory path 1', 'Directory path 2']

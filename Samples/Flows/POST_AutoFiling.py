@@ -148,7 +148,7 @@ def _copy_nwc_files():
     file_filter = '*.nwc'
     # check whether any files match the filter
     for nwc_file_name_start, nwc_target_folder in DEFAULT_NWC_LOCATIONS:
-        files =  fileGet.GetFilesWithFilter (SOURCE_PATH, file_filter, nwc_file_name_start + '*')
+        files =  fileGet.get_files_with_filter (SOURCE_PATH, file_filter, nwc_file_name_start + '*')
         if(files != None and len(files) > 0):
             output('Copying nwc Files...' + str(len(files)))
             for file in files:
@@ -158,7 +158,7 @@ def _copy_nwc_files():
                     src = SOURCE_PATH + '\\' + file_name
                     destination_file_name = _get_nwc_file_name(file_name)
                     dst = nwc_target_folder + '\\' + destination_file_name
-                    copy_status = fileIO.CopyFile(src,dst)
+                    copy_status = fileIO.copy_file(src,dst)
                     status = status & copy_status
                     output('Copied file from:  {} to: {}'.format(src, dst))
                 except Exception:
@@ -183,13 +183,13 @@ def create_target_directory(target_location, directory_name):
     return_directory_name = directory_name
     # check if folder exists
     flag = False
-    if(dirIO.DirectoryExists(target_location + '\\' + directory_name) == False):
+    if(dirIO.directory_exists(target_location + '\\' + directory_name) == False):
         got_folder = False
         n = 1
         # create new folder (stop at 10 attempts)
         while (got_folder == False and n < 10):
-            if (dirIO.DirectoryExists(target_location + '\\' + directory_name + '(' + str(n) + ')') == False):
-                flag = dirIO.CreateFolder(target_location, directory_name + '(' + str(n) + ')')
+            if (dirIO.directory_exists(target_location + '\\' + directory_name + '(' + str(n) + ')') == False):
+                flag = dirIO.create_directory(target_location, directory_name + '(' + str(n) + ')')
                 return_directory_name = directory_name + '(' + str(n) + ')'
                 # ignore the flag coming back in to avoid infinite loops
                 got_folder = True
@@ -208,17 +208,17 @@ def move_files(file_data):
 
     status = True
     # get the date stamp
-    directory_name = dateStamp.GetFolderDateStamp() + str('_Models')
+    directory_name = dateStamp.get_folder_date_stamp() + str('_Models')
     for file_filter, target_location in file_data:
         # check if target root path still exists
         if(path.exists(target_location)):
             # check whether any files match the filter
-            files = fileGet.GetFilesWithFilter(SOURCE_PATH, '.*', file_filter + '*')
+            files = fileGet.get_files_with_filter(SOURCE_PATH, '.*', file_filter + '*')
             # copy any *.nwc files into the right folders first
             _copy_nwc_files()
             # move files into file in location
             if(files != None and len(files) > 0):
-                flag_got_directory = dirIO.CreateTargetFolder(target_location, directory_name)
+                flag_got_directory = dirIO.create_target_directory(target_location, directory_name)
                 if flag_got_directory:
                     output('Moving Files... {}'.format(len(files)))
                     # move files
@@ -353,10 +353,10 @@ def _get_file_match(file_extension, name_filter):
     revision = '-'
     # check whether valid name filter otherwise return '-'
     if(name_filter is not ''):
-        files = fileGet.GetFilesWithFilter(SOURCE_PATH, file_extension, name_filter + '*')
+        files = fileGet.get_files_with_filter(SOURCE_PATH, file_extension, name_filter + '*')
         if (files is not None and len(files) > 0):
             # got a match
-            return_value = dateStamp.GetFolderDateStamp()
+            return_value = dateStamp.get_folder_date_stamp()
             # get the revision
             revision = _get_file_revision(files[0])
     return return_value, revision
@@ -440,7 +440,7 @@ def _read_current_file_received():
 
     reference_list = []
     try:
-        reference_list = fileCSV.ReadCSVfile(CURRENT_ISSUE_DATA_FILE_NAME)
+        reference_list = fileCSV.read_csv_file(CURRENT_ISSUE_DATA_FILE_NAME)
     except Exception as e:
         output('Failed to open current model issue list with exception: {}'.format(e))
     return reference_list
@@ -457,7 +457,7 @@ def _write_new_file_received_data(data):
 
     status = True
     try:
-        fileCSV.writeReportDataAsCSV(CURRENT_ISSUE_DATA_FILE_NAME,[],data)
+        fileCSV.write_report_data_as_csv(CURRENT_ISSUE_DATA_FILE_NAME,[],data)
     except Exception as e:
         status = False
         output('Failed to write data file: {} with exception: {}'.format(CURRENT_ISSUE_DATA_FILE_NAME, e))

@@ -30,6 +30,7 @@ from duHast.APISamples import RevitMaterials as rMat
 from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting as rWallTypeSort
 from duHast.Utilities import Utility as util
+import duHast.Utilities.UnitConversion
 
 import Autodesk.Revit.DB as rdb
 
@@ -58,21 +59,21 @@ def get_wall_report_data(doc, revitFilePath):
                     materialMark = com.get_element_mark(layerMat)
                     materialName = rMat.GetMaterialNameById(doc, csLayer.MaterialId)
                     layerFunction = str(csLayer.Function)
-                    layerWidth = str(util.ConvertImperialToMetricMM(csLayer.Width)) # conversion from imperial to metric
+                    layerWidth = str(duHast.Utilities.UnitConversion.convert_imperial_feet_to_metric_mm(csLayer.Width)) # conversion from imperial to metric
                     data.append([
                         revitFilePath,
                         str(wt.Id),
-                        util.EncodeAscii(wallTypeName),
+                        util.encode_ascii(wallTypeName),
                         layerFunction,
                         layerWidth,
-                        util.EncodeAscii(materialName),
-                        util.EncodeAscii(materialMark)
+                        util.encode_ascii(materialName),
+                        util.encode_ascii(materialMark)
                         ])
             else:
                 data.append([
                     revitFilePath,
                     str(wt.Id),
-                    util.EncodeAscii(wallTypeName),
+                    util.encode_ascii(wallTypeName),
                     'no layers - in place family or curtain wall',
                     str(0.0),
                     'NA',

@@ -192,7 +192,7 @@ def _ModifyRevitLinkTypeWorksetName(doc, link_name, workset_name):
                     return_value.message = 'Type {} is already on default workset {}.'.format(link_type_name, workset_name)
                 break
     else:
-        return_value.UpdateSep(False, 'Workset {} does no longer exist in file!'.format(workset_name ))
+        return_value.update_sep(False, 'Workset {} does no longer exist in file!'.format(workset_name ))
     return return_value
 
 def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
@@ -236,7 +236,7 @@ def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
             link_type_name_parts = p.Name.split(':')
             if(len(link_type_name_parts) == 3):
                 link_name = link_type_name_parts[0][0:-1]
-                link_instance_name_encoded = util.EncodeAscii(link_name[0:-1])
+                link_instance_name_encoded = util.encode_ascii(link_name[0:-1])
                 if (link_name.startswith(link_name)):
                     if (instance_workset_name != workset_name):
                         # change the workset of the link instance
@@ -245,9 +245,9 @@ def _ModifyRevitLinkInstanceWorkset(doc, link_name, workset_name):
                         # no need to do anything
                         return_value.message = 'Instance {} is already on default workset: '.format(link_instance_name_encoded ,workset_name)
             else:
-                return_value.UpdateSep(False, 'Failed to split link name into 3 parts')
+                return_value.update_sep(False, 'Failed to split link name into 3 parts')
     else:
-        return_value.UpdateSep(False, 'Workset: {} does no longer exist in file!'.format(workset_name ))
+        return_value.update_sep(False, 'Workset: {} does no longer exist in file!'.format(workset_name ))
     return return_value
 
 # 
@@ -287,14 +287,14 @@ def ModifyRevitLinkData(doc, revitFilePath, linkData):
                 # loop over link data and change link worksets as required
                 for linkName, newWorksetName in worksetData:
                     changeLinkInstance = _ModifyRevitLinkInstanceWorkset(doc, linkName, newWorksetName)
-                    returnValue.Update(changeLinkInstance)
+                    returnValue.update(changeLinkInstance)
                     changeLinkType = _ModifyRevitLinkTypeWorksetName(doc, linkName, newWorksetName)
-                    returnValue.Update(changeLinkType)
+                    returnValue.update(changeLinkType)
                 break
         if (match == False):
             output('Failed to find current Revit file link workset data!')
     except Exception as e:
-        returnValue.UpdateSep(False, 'Failed to modify revit link instances with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to modify revit link instances with exception: ' + str(e))
     return returnValue
 
 # -------------

@@ -287,20 +287,20 @@ def check_families_have_circular_references(familyBaseDataReportFilePath):
     returnValue = res.Result()
     # read overall family base data and nested data from file 
     overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-    returnValue.AppendMessage(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
+    returnValue.append_message(tProcess.stop() +  ' Read overall family base data report. ' + str(len(overallFamilyBaseRootData)) + ' root entries found and '\
         + str(len(overallFamilyBaseNestedData)) + ' nested entries found.')
     tProcess.start()
 
     before = len(overallFamilyBaseNestedData)
     # reduce workload by culling not needed nested family data
     overallFamilyBaseNestedData = _cull_nested_base_data_blocks(overallFamilyBaseNestedData)
-    returnValue.AppendMessage(tProcess.stop() +  ' culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
+    returnValue.append_message(tProcess.stop() +  ' culled nested family base data from : ' + str(before) +' to: ' + str(len(overallFamilyBaseNestedData)) + ' families.' )
     tProcess.start()
 
     # set up some multithreading
     coreCount = int(os.environ['NUMBER_OF_PROCESSORS'])
     if (coreCount > 2):
-        returnValue.AppendMessage('cores: '  + str(coreCount))
+        returnValue.append_message('cores: '  + str(coreCount))
         # leave some room for other processes
         coreCount = coreCount - 1
         chunkSize = len(overallFamilyBaseRootData)/coreCount
@@ -319,12 +319,12 @@ def check_families_have_circular_references(familyBaseDataReportFilePath):
         # find parents and children
         overallFamilyBaseRootData = find_parents_and_children(overallFamilyBaseRootData, overallFamilyBaseNestedData)
     
-    returnValue.AppendMessage(tProcess.stop() +  ' Populated parents and children properties of: ' + str(len(overallFamilyBaseRootData)) +' root families.' )
+    returnValue.append_message(tProcess.stop() +  ' Populated parents and children properties of: ' + str(len(overallFamilyBaseRootData)) +' root families.' )
     tProcess.start()
 
     # identify circular references
     circularReferences = find_circular_references(overallFamilyBaseRootData)
-    returnValue.AppendMessage(tProcess.stop() +  ' Found ' + str(len(circularReferences)) +' circular references in families.' )
+    returnValue.append_message(tProcess.stop() +  ' Found ' + str(len(circularReferences)) +' circular references in families.' )
     if(len(circularReferences) > 0):
         returnValue.result = circularReferences
     return returnValue

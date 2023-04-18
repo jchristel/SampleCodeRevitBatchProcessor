@@ -143,7 +143,7 @@ def AddRevToDocument(doc):
                 ids.Add(new_revision.Id)
         return_value.result = ids
     except Exception as e:
-        return_value.UpdateSep(False, 'Failed to create revisions: {}'.format(e))
+        return_value.update_sep(False, 'Failed to create revisions: {}'.format(e))
     return return_value
 
 # -------------

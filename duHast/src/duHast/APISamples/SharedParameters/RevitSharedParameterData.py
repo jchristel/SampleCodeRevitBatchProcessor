@@ -70,7 +70,7 @@ class SharedParameterData(IFamData.IFamilyData):
             # just in case parameter name is not unicode
             parameter_name = 'unknown'
             try:   
-                parameter_name = util.EncodeAscii(rdb.Element.Name.GetValue(para))
+                parameter_name = util.encode_ascii(rdb.Element.Name.GetValue(para))
             except Exception as ex:
                 parameter_name = 'Exception: ' + str(ex)
             # check if used:

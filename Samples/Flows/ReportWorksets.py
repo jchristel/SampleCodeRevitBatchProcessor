@@ -114,7 +114,7 @@ def write_workset_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rWksReportHeader.REPORT_WORKSETS_HEADER, 
             rWksReportUtils.get_workset_report_data(doc, REVIT_FILE_PATH))
@@ -132,7 +132,7 @@ def write_workset_data(doc, file_name):
 ROOT_PATH = r'C:\temp'
 
 # build output file name
-FILE_NAME_WORKSET_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_Worksets')
+FILE_NAME_WORKSET_REPORT =  ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_Worksets')
 
 output('Writing Workset Data.... start')
 

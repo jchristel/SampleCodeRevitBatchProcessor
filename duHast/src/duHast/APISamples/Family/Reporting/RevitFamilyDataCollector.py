@@ -89,9 +89,9 @@ class RevitFamilyDataCollector(Base.Base):
             for pro in self.dataProcessors:
                 try:
                     pro.process(doc, rootName, rootCategory)
-                    returnValue.AppendMessage('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
+                    returnValue.append_message('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
                 except Exception as e:
-                    returnValue.UpdateSep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                    returnValue.update_sep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
         
         # check if family doc 
         if(doc.IsFamilyDocument):
@@ -116,14 +116,14 @@ class RevitFamilyDataCollector(Base.Base):
                                 rootName + ' :: ' + famName,
                                 rootCategory + ' :: ' + famCategoryName
                             )
-                            returnValue.Update(diveResult)
+                            returnValue.update(diveResult)
                     except Exception as e:
                         message = ''
                         if(family != None):
                             message = 'An exception occurred when opening family ' + rdb.Element.Name.GetValue(family) + '. Exception: ' + str(e)
                         else:
                             message = 'An exception occurred when attempting the get family element by id:' + str(familyId) + '. Exception: ' + str(e)
-                        returnValue.UpdateSep(False, message)
+                        returnValue.update_sep(False, message)
             else:
                 # only close any nested family document...not the root one
                 # since that is closed by batch processor!
@@ -137,7 +137,7 @@ class RevitFamilyDataCollector(Base.Base):
                             message = 'An exception occurred when closing document: ' + doc.Title + '. Exception: ' + str(e)
                         else:
                             message = 'An exception occurred when closing document: ' + str(e)
-                        returnValue.UpdateSep(False, message)
+                        returnValue.update_sep(False, message)
         return returnValue
 
     def process_family(self, doc, rootName, rootCategory):
@@ -172,21 +172,21 @@ class RevitFamilyDataCollector(Base.Base):
         for pro in self.dataProcessors:
             try:
                 preActionResult =  pro.preProcessActions(doc)
-                returnValue.Update(preActionResult)
+                returnValue.update(preActionResult)
             except Exception as e:
-                returnValue.UpdateSep(False, 'PreProcessor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                returnValue.update_sep(False, 'PreProcessor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
 
         # loop over fam processor instances and process family with each of them
         for pro in self.dataProcessors:
             try:
                 pro.process(doc, rootName, rootCategory)
-                returnValue.AppendMessage('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
+                returnValue.append_message('Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [OK]')
             except Exception as e:
-                returnValue.UpdateSep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                returnValue.update_sep(False, 'Processor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
         
         # check out any nested families
         diveResult = self._dive(doc, rootName, rootCategory, True)
-        returnValue.Update(diveResult)
+        returnValue.update(diveResult)
         
         #TODO:
         # action any post processing actions
@@ -194,8 +194,8 @@ class RevitFamilyDataCollector(Base.Base):
         for pro in self.dataProcessors:
             try:
                 proActionResult =  pro.postProcessActions(doc)
-                returnValue.Update(proActionResult)
+                returnValue.update(proActionResult)
             except Exception as e:
-                returnValue.UpdateSep(False, 'PostProcessor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
+                returnValue.update_sep(False, 'PostProcessor [' + pro.dataType + '] of family: ' + str(doc.Title) + ' [EXCEPTION] ' + str(e))
 
         return returnValue

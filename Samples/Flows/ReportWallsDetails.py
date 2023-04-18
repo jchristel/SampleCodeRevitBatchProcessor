@@ -116,7 +116,7 @@ def write_wall_type_data(doc, fileName):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             fileName, 
             rWallHeader.REPORT_WALLS_HEADER, 
             rWallRep.get_wall_report_data(doc, REVIT_FILE_PATH))
@@ -134,7 +134,7 @@ def write_wall_type_data(doc, fileName):
 ROOT_PATH = r'C:\temp'
 
 # build output file name
-FILE_NAME_WALL_TYPE_REPORT =  ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_WallTypes')
+FILE_NAME_WALL_TYPE_REPORT =  ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_WallTypes')
 
 output('Writing Wall Type Data.... start')
 #write out wall type data

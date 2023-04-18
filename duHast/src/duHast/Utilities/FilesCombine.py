@@ -29,12 +29,12 @@ Helper functions relating to combining text files.
 
 import codecs
 import glob
-from duHast.Utilities.FilesIO import GetFileNameWithoutExt
-from duHast.Utilities.FilesGet import GetFilesSingleFolder
-from duHast.Utilities.FilesTab import GetUniqueHeaders
+from duHast.Utilities.FilesIO import get_file_name_without_ext
+from duHast.Utilities.FilesGet import get_files_single_directory
+from duHast.Utilities.FilesTab import get_unique_headers
 
 
-def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = GetFilesSingleFolder):
+def combine_files(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt', fileGetter = get_files_single_directory):
     '''
     Combines multiple text files into a single new file. Assumes same number of headers (columns) in each files.
     The new file will be saved into the same folder as the original files.
@@ -68,7 +68,7 @@ def CombineFiles(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.t
 
             fileCounter += 1
 
-def AppendToSingleFiles(sourceFile, appendFile):
+def append_to_file(sourceFile, appendFile):
     '''
     Appends one text file to another. Assumes same number of headers (columns) in both files.
     :param sourceFile: The fully qualified file path of the file to which the other file will be appended.
@@ -93,7 +93,7 @@ def AppendToSingleFiles(sourceFile, appendFile):
     return flag
 
 
-def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
+def combine_files_header_independent(folderPath, filePrefix = '', fileSuffix = '', fileExtension='.txt', outPutFileName = 'result.txt'):
     '''
     Used to combine report files into one file, files may have different number / named columns.
     Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
@@ -111,7 +111,7 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
 
     file_list = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
     # build list of unique headers
-    headers = GetUniqueHeaders(file_list)
+    headers = get_unique_headers(file_list)
     # open output file
     with open(folderPath + '\\' + outPutFileName, 'w' ) as result:
         fileCounter = 0
@@ -124,7 +124,7 @@ def CombineFilesHeaderIndependent(folderPath, filePrefix = '', fileSuffix = '', 
                 if (lineCounter == 0):
                     headersInFile = line.split('\t')
                     # replace any empty strings in header
-                    fileName = GetFileNameWithoutExt(file_)
+                    fileName = get_file_name_without_ext(file_)
                     emptyHeaderCounter = 0
                     for i in range(len(headersInFile)):
                         # reformat any empty headers to be unique

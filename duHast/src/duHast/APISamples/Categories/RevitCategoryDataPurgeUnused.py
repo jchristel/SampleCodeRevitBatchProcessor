@@ -73,13 +73,13 @@ def purge_unused_sub_categories(doc, processor):
     # get all root category entries where usage counter == 0 and subCategoryId > 0 (pointing to a custom sub category and not a built in one).
     for root_fam in root_fam_data:
         if (root_fam[IFamData.USAGE_COUNTER] == 0 and root_fam[rCatData.SUB_CATEGORY_ID] > 0):
-            return_value.AppendMessage('Found unused sub category: ' + root_fam[rCatData.CATEGORY_NAME] + ':' + root_fam[rCatData.SUB_CATEGORY_NAME] +' ['+str(root_fam[rCatData.SUB_CATEGORY_ID])+']')
+            return_value.append_message('Found unused sub category: ' + root_fam[rCatData.CATEGORY_NAME] + ':' + root_fam[rCatData.SUB_CATEGORY_NAME] +' ['+str(root_fam[rCatData.SUB_CATEGORY_ID])+']')
             ids_to_delete.append(rdb.ElementId(root_fam[rCatData.SUB_CATEGORY_ID]))
     # delete any subcategories found
     if(len(ids_to_delete) > 0):
         result_delete = rDel.delete_by_element_ids(doc, ids_to_delete, 'Deleting unused sub categories.', 'Subcategories')
-        return_value.Update(result_delete)
+        return_value.update(result_delete)
     else:
-        return_value.UpdateSep(True, 'No unused categories found. Nothing was deleted.')
+        return_value.update_sep(True, 'No unused categories found. Nothing was deleted.')
     return return_value
     

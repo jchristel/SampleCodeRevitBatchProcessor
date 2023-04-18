@@ -115,7 +115,7 @@ def write_revit_link_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rLinkHeader.REPORT_REVIT_LINKS_HEADER, 
             rLinkRep.get_revit_link_report_data(doc, REVIT_FILE_PATH))
@@ -140,7 +140,7 @@ def write_cad_link_data(doc, file_name):
 
     status = True
     try:
-        status = fileCSV.writeReportDataAsCSV(
+        status = fileCSV.write_report_data_as_csv(
             file_name, 
             rLinkCadHeader.REPORT_CAD_LINKS_HEADER, 
             rLinkCadRep.get_cad_report_data(doc, REVIT_FILE_PATH))
@@ -158,8 +158,8 @@ def write_cad_link_data(doc, file_name):
 ROOT_PATH = r'C:\temp'
 
 # build output file names
-FILE_NAME_LINK_REVIT_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_RVT')
-FILE_NAME_LINK_CAD_REPORT = ROOT_PATH + '\\'+ dStamp.GetOutPutFileName(REVIT_FILE_PATH,'.txt', '_CAD')
+FILE_NAME_LINK_REVIT_REPORT = ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_RVT')
+FILE_NAME_LINK_CAD_REPORT = ROOT_PATH + '\\'+ dStamp.get_date_stamped_file_name(REVIT_FILE_PATH,'.txt', '_CAD')
 
 # write out revit link data
 output('Writing Revit Link Data.... start')

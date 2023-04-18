@@ -66,7 +66,7 @@ class FamilyBaseProcessor(IFamilyProcessor):
         self.reference_file_path = reference_file_path
         self.family_out_directory_path = family_out_directory_path
         if(session_id != None):
-            self.session_id = uBP.AdjustSessionIdForFolderName(session_id)
+            self.session_id = uBP.adjust_session_id_for_directory_name(session_id)
         else:
             self.session_id = session_id
 

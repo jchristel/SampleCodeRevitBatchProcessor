@@ -37,7 +37,6 @@ import ctypes
 
 # import settings class
 #from duHast.UI import FileSelectSettings as set
-
 def Mbox(title, text, style):
     '''
     A simple win forms message box.
@@ -55,7 +54,7 @@ def Mbox(title, text, style):
     '''
 
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
-
+    
 # UI class
 class MyWindow (Windows.Window):
     def __init__(self, xamlFullFileName, revitFiles, settings):

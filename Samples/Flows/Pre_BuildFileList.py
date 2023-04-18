@@ -1,4 +1,4 @@
-﻿'''
+﻿"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Write files to task lists.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -23,11 +23,11 @@ This script can be used when:
     - started as a pre - process script in the first session of Revit Batch Processor 
 
 
-'''
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -56,21 +56,22 @@ This script can be used when:
 # default path locations
 # ---------------------------------
 # path to library modules
-COMMON_LIBRARY_LOCATION = r'C:\temp'
+COMMON_LIBRARY_LOCATION = r"C:\temp"
 # path to directory containing this script (in case there are any other modules to be loaded from here)
-SCRIPT_LOCATION = r'C:\temp'
+SCRIPT_LOCATION = r"C:\temp"
 
 import clr
 import System
 
 # set path to library and this script
 import sys
+
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.UI import FileList as fl
 
-# flag whether this runs in debug or not 
+# flag whether this runs in debug or not
 DEBUG = False
 
 # Add batch processor scripting references
@@ -81,35 +82,39 @@ if not DEBUG:
 # my code here:
 # -------------
 
+
 # output messages either to batch processor (debug = False) or console (debug = True)
-def output(message = ''):
-    '''
+def output(message=""):
+    """
     Output messages either to batch processor (debug = False) or console (debug = True)
 
     :param message: the message, defaults to ''
     :type message: str, optional
-    '''
+    """
     if not DEBUG:
         script_util.Output(str(message))
     else:
-        print (message)
+        print(message)
+
 
 # -------------
 # main:
 # -------------
 
 # directory containing files
-ROOT_PATH = r''
+ROOT_PATH = r""
 # store task files lists here
-ROOT_PATH_EXPORT = r''
+ROOT_PATH_EXPORT = r""
 # number of task list files to be written out
 TASK_FILES_NUMBER = 1
 
 # get file data
-output('Writing file Data.... start')
+output("Writing file Data.... start")
 try:
-    RESULT = fl.write_file_list(ROOT_PATH ,'.rvt', ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.get_revit_files)
-    output (RESULT.message)
-    output('Writing file Data.... status: [{}]'.format(RESULT.status))
+    RESULT = fl.write_file_list(
+        ROOT_PATH, ".rvt", ROOT_PATH_EXPORT, TASK_FILES_NUMBER, fl.get_revit_files
+    )
+    output(RESULT.message)
+    output("Writing file Data.... status: [{}]".format(RESULT.status))
 except Exception as e:
-    output ('Failed to write file list with exception: {}'.format(e))
+    output("Failed to write file list with exception: {}".format(e))

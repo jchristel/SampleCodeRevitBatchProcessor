@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Find all ceilings intersecting with rooms in a file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -11,12 +11,12 @@ This flow demonstrates how to use DataSamples name space to find all ceilings in
     - shapely and numpy installed
     - An export of room and ceiling data from the model
 
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -44,7 +44,10 @@ This flow demonstrates how to use DataSamples name space to find all ceilings in
 
 # add library to du hast( if not on path )
 import sys
-DU_HAST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src'
+
+DU_HAST_PATH = (
+    r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
+)
 sys.path += [DU_HAST_PATH]
 
 # import module processing ceilings and rooms in a model
@@ -53,24 +56,31 @@ from duHast.DataSamples import ProcessCeilingsToRooms as magic
 # files required
 # data previously exported from a given model
 # refer to flow ....
-data_in = r'path\to\your\jsonFromModel.json'
+data_in = r"path\to\your\jsonFromModel.json"
 
 # location of out put file
-report_out = r'path\to\your\ceilingsByRoom.csv'
+report_out = r"path\to\your\ceilingsByRoom.csv"
 
 # read data from file
-print('Getting data from {}'.format(data_in))
+print("Getting data from {}".format(data_in))
 ceilings_by_room = magic.get_ceilings_by_room(data_in)
 print(ceilings_by_room.message)
 
-if(ceilings_by_room.status):
-    print('Writing data to file...')
+if ceilings_by_room.status:
+    print("Writing data to file...")
     data_to_file = magic.write_data_to_file(
-        ceilings_by_room.result, 
-        report_out, room_instance_property_keys= ['Number', 'Name'], # export the following room instance properties: name and number
-        ceiling_type_property_keys = ['Type Mark'],  # export the following ceiling type properties: Type Mark
-        ceiling_instance_property_keys =['Height Offset From Level'] ) # export the following ceiling instance properties: Height Offset From Level
-    
+        ceilings_by_room.result,
+        report_out,
+        room_instance_property_keys=[
+            "Number",
+            "Name",
+        ],  # export the following room instance properties: name and number
+        ceiling_type_property_keys=[
+            "Type Mark"
+        ],  # export the following ceiling type properties: Type Mark
+        ceiling_instance_property_keys=["Height Offset From Level"],
+    )  # export the following ceiling instance properties: Height Offset From Level
+
     print(data_to_file.message)
 else:
-    print('Did not proceed due to error in reading data file')
+    print("Did not proceed due to error in reading data file")

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Delete elements from model.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,13 +31,14 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 
+
 def delete_by_element_ids(
     doc,
     ids,
-    transaction_name, # type: str
-    elementName # type: str
-    ):
-    '''
+    transaction_name,  # type: str
+    elementName,  # type: str
+):
+    """
     Deleting elements in list all at once.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -47,23 +48,27 @@ def delete_by_element_ids(
     :type transactionName: str
     :param elementName: The element name added to deletion status message.
     :type elementName: str
-    :return: 
+    :return:
         Result class instance.
         - .result = True if successfully deleted all elements. Otherwise False.
         - .message will contain deletion status
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
+
     def action():
         action_return_value = res.Result()
         try:
             doc.Delete(ids.ToList[rdb.ElementId]())
-            action_return_value.message = 'Deleted ' + str(len(ids)) + ' ' + elementName
+            action_return_value.message = "Deleted " + str(len(ids)) + " " + elementName
         except Exception as e:
-            action_return_value.update_sep(False, 'Failed to delete ' + elementName + ' with exception: ' + str(e))
+            action_return_value.update_sep(
+                False, "Failed to delete " + elementName + " with exception: " + str(e)
+            )
         return action_return_value
-    transaction = rdb.Transaction(doc,transaction_name)
+
+    transaction = rdb.Transaction(doc, transaction_name)
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
@@ -71,10 +76,10 @@ def delete_by_element_ids(
 def delete_by_element_ids_one_by_one(
     doc,
     ids,
-    transaction_name, # type: str
-    elementName # type: str
-    ):
-    '''
+    transaction_name,  # type: str
+    elementName,  # type: str
+):
+    """
     Deleting elements in list one at the time.
     Each element gets deleted in its own transaction. If the deletion fails the transaction is rolled back.
     :param doc: Current Revit model document.
@@ -85,25 +90,35 @@ def delete_by_element_ids_one_by_one(
     :type transactionName: str
     :param elementName: The name of the element (?) Not used!!
     :type elementName: str
-    :return: 
+    :return:
         Result class instance.
         - .result = True if successfully deleted all elements. Otherwise False.
         - .message will contain each id and its deletion status
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     for id in ids:
+
         def action():
             action_return_value = res.Result()
             element = doc.GetElement(id)
             n = rdb.Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                action_return_value.message = 'Deleted [' + str(id) + '] ' + n
+                action_return_value.message = "Deleted [" + str(id) + "] " + n
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed to delete ' + n + '[' +str(id) + '] with exception: ' + str(e))
+                action_return_value.update_sep(
+                    False,
+                    "Failed to delete "
+                    + n
+                    + "["
+                    + str(id)
+                    + "] with exception: "
+                    + str(e),
+                )
             return action_return_value
-        transaction = rdb.Transaction(doc,transaction_name)
-        return_value.update( rTran.in_transaction(transaction, action))
+
+        transaction = rdb.Transaction(doc, transaction_name)
+        return_value.update(rTran.in_transaction(transaction, action))
     return return_value

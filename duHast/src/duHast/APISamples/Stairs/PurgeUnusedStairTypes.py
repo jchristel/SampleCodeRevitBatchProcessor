@@ -71,21 +71,21 @@ def get_used_stair_type_ids(doc):
     return ids
 
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
-    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+    Compares two lists of ids. True if any id is not in un_used_type_ids.
     TODO: check for more generic list comparison and remove this function.
-    :param famTypeIds: List of family type ids to check.
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: Reference list of ids.
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
-    :return: True if any id from amTypeIds is not in unUsedTypeIds.
+    :param fam_type_ids: List of family type ids to check.
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: Reference list of ids.
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+    :return: True if any id from amTypeIds is not in un_used_type_ids.
     :rtype: bool
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match
@@ -111,8 +111,8 @@ def get_unused_non_in_place_stair_type_ids_to_purge(doc):
     # get unused type ids
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rStair.get_all_stair_type_ids_by_class, 0)
     # make sure there is at least on Stair type per system family left in model
-    StairTypes =  rStairSort.sort_stair_types_by_family_name(doc)
-    for key, value in StairTypes.items():
+    stair_types =  rStairSort.sort_stair_types_by_family_name(doc)
+    for key, value in stair_types.items():
        if(key in BUILTIN_STAIR_TYPE_FAMILY_NAMES):
             if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
@@ -121,7 +121,7 @@ def get_unused_non_in_place_stair_type_ids_to_purge(doc):
 
 #--------------------------------utility functions to get unused sub types ----------------------
 
-def get_used_sub_type_ids_from_stair_type(doc, stairTypeId, paras):
+def get_used_sub_type_ids_from_stair_type(doc, stair_type_id, paras):
     '''
     Gets the id of types making up a stair.
     These could be stair landing types, stringer and carriage types etc.
@@ -133,8 +133,8 @@ def get_used_sub_type_ids_from_stair_type(doc, stairTypeId, paras):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param stairTypeId: An element id representing a stair type. 
-    :type stairTypeId: Autodesk.Revit.DB.ElementId
+    :param stair_type_id: An element id representing a stair type. 
+    :type stair_type_id: Autodesk.Revit.DB.ElementId
     :param paras: Parameters containing a type making up a stair.
     :type paras: list Autodesk.Revit.DB.BuiltInParameterDefinition
     :return: List of element ids representing stair types.
@@ -142,11 +142,11 @@ def get_used_sub_type_ids_from_stair_type(doc, stairTypeId, paras):
     '''
 
     ids = []
-    stairType = doc.GetElement(stairTypeId)
-    for pDef in paras:
-        pValue = rParaGet.get_built_in_parameter_value(stairType, pDef)
-        if(pValue !=None and pValue not in ids):
-            ids.append(pValue)
+    stair_type = doc.GetElement(stair_type_id)
+    for p_def in paras:
+        p_value = rParaGet.get_built_in_parameter_value(stair_type, p_def)
+        if(p_value !=None and p_value not in ids):
+            ids.append(p_value)
     return ids
 
 
@@ -162,14 +162,14 @@ def get_all_similar_type_ids(doc, ids):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    simIds = []
+    sim_ids = []
     for id in ids:
          el = doc.GetElement(id)
-         simTypes = el.GetSimilarTypes()
-         for st in simTypes:
-            if (st not in simIds):
-                simIds.append(st)
-    return simIds
+         sim_types = el.GetSimilarTypes()
+         for st in sim_types:
+            if (st not in sim_ids):
+                sim_ids.append(st)
+    return sim_ids
 
 
 def build_system_family_dictionary(doc, ids):
@@ -193,7 +193,7 @@ def build_system_family_dictionary(doc, ids):
     return dic
 
 
-def check_system_families(doc, ids, leaveOneBehind):
+def check_system_families(doc, ids, leave_one_behind):
     '''
     Check whether a list of ids of system family is the entire list of types available in the model. If so it will remove one\
     type id per system family to allow safe purging.
@@ -202,61 +202,61 @@ def check_system_families(doc, ids, leaveOneBehind):
     :type doc: Autodesk.Revit.DB.Document
     :param ids: List of ids to check
     :type ids: list of Autodesk.Revit.ElementIds
-    :param leaveOneBehind: True: at least one type will be omitted from list.
-    :type leaveOneBehind: bool
+    :param leave_one_behind: True: at least one type will be omitted from list.
+    :type leave_one_behind: bool
     :return: List of unique ids of similar types.
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    dicToCheck = build_system_family_dictionary(doc, ids)
-    similarIds = get_all_similar_type_ids(doc, ids)
-    dicReference = build_system_family_dictionary(doc, similarIds)
+    dic_to_check = build_system_family_dictionary(doc, ids)
+    similar_ids = get_all_similar_type_ids(doc, ids)
+    dic_reference = build_system_family_dictionary(doc, similar_ids)
     ids = []
-    for key,value in dicToCheck.items():
-        if (dicReference.has_key(key)):
-            if(len(dicReference[key]) == len(dicToCheck[key]) and leaveOneBehind):
+    for key,value in dic_to_check.items():
+        if (dic_reference.has_key(key)):
+            if(len(dic_reference[key]) == len(dic_to_check[key]) and leave_one_behind):
                 # need to leave one behind...
-                if(len(dicToCheck[key])>0):
-                    dicToCheck[key].pop(0)
-                    ids = ids + dicToCheck[key]
+                if(len(dic_to_check[key])>0):
+                    dic_to_check[key].pop(0)
+                    ids = ids + dic_to_check[key]
             else:
-                 ids = ids + dicToCheck[key]
+                 ids = ids + dic_to_check[key]
         else:
-            ids = ids + dicToCheck[key]
+            ids = ids + dic_to_check[key]
     return ids
 
 
-def get_used_sub_types(doc, availableIdsGetter, paras, leaveOneBehind = True):
+def get_used_sub_types(doc, available_ids_getter, paras, leave_one_behind = True):
     '''
     Returns a list of type ids which are not used in any stair types. 
     Type ids are provided via an id getter function
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availableIdsGetter: function returning available type ids
-    :type availableIdsGetter: func(doc)
+    :param available_ids_getter: function returning available type ids
+    :type available_ids_getter: func(doc)
     :param paras: list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
     :type paras: list of Autodesk.Revit.DB.BuiltInParameter
-    :param leaveOneBehind: _description_, defaults to True
-    :type leaveOneBehind: bool, optional
+    :param leave_one_behind: _description_, defaults to True
+    :type leave_one_behind: bool, optional
     :return: List of element ids 
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
     ids = []
     # get all available type ids and then check against all Stair type ids
-    idsAvailable = availableIdsGetter(doc)
-    allUsedStairTypeIds = rStair.get_all_stair_type_ids_by_category(doc)
-    idsUsedTypes = []
-    for used in allUsedStairTypeIds:
-        idsUsed = get_used_sub_type_ids_from_stair_type(doc, used, paras)
-        for id in idsUsed:
-            if(id not in idsUsedTypes):
-                idsUsedTypes.append(id)
-    for idAvailable in idsAvailable:
-        if(idAvailable not in idsUsedTypes):
-            ids.append(idAvailable)
+    ids_available = available_ids_getter(doc)
+    all_used_stair_type_ids = rStair.get_all_stair_type_ids_by_category(doc)
+    ids_used_types = []
+    for used in all_used_stair_type_ids:
+        ids_used = get_used_sub_type_ids_from_stair_type(doc, used, paras)
+        for id in ids_used:
+            if(id not in ids_used_types):
+                ids_used_types.append(id)
+    for id_available in ids_available:
+        if(id_available not in ids_used_types):
+            ids.append(id_available)
     # need to check that we are not trying to delete last type of a system family....
-    ids = check_system_families(doc, ids, leaveOneBehind)
+    ids = check_system_families(doc, ids, leave_one_behind)
     return ids
 
 # --------------------------------- purging subtypes ------------------------------------------------
@@ -273,15 +273,15 @@ def get_unused_stair_path_type_ids_to_purge(doc):
     :rtype: list of Autodesk.Revit.ElementIds
     '''
 
-    idsUsed = []
-    availableTypes = rStairPath.get_stair_path_types_ids_by_class(doc)
+    ids_used = []
+    available_types = rStairPath.get_stair_path_types_ids_by_class(doc)
     col = rStairPath.get_all_stair_path_instances(doc)
     for c in col:
-        if (c.GetTypeId() not in idsUsed):
-            idsUsed.append(c.GetTypeId())
+        if (c.GetTypeId() not in ids_used):
+            ids_used.append(c.GetTypeId())
     ids = []
-    for at in availableTypes:
-        if(at not in idsUsed):
+    for at in available_types:
+        if(at not in ids_used):
             ids.append(at)
     ids = check_system_families(doc, ids, True)
     return ids

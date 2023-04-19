@@ -69,7 +69,7 @@ def sort_stair_types_by_family_name(doc):
     wts = rStairFilter._get_stair_types_by_class(doc)
     # get all stair types including in place stair families
     wts_two = rStairFilter._get_all_stair_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_stair_type_dictionary(wts, usedWts)
-    usedWts = build_stair_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_stair_type_dictionary(wts, used_wts)
+    used_wts = build_stair_type_dictionary(wts_two, used_wts)
+    return used_wts

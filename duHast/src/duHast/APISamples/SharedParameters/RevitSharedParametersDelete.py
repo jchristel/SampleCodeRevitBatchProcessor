@@ -33,13 +33,13 @@ from duHast.APISamples.SharedParameters.RevitSharedParameters import check_wheth
 from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 
-def delete_shared_parameter_by_name(doc, sharedParameterName):
+def delete_shared_parameter_by_name(doc, shared_parameter_name):
     '''
     Deletes a single shared parameter based on a name provided.
     param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sharedParameterName: The name of the shared parameter.
-    :type sharedParameterName: str
+    :param shared_parameter_name: The name of the shared parameter.
+    :type shared_parameter_name: str
     :return: 
         Result class instance.
         - Parameter delete status returned in result.status. False if an exception occurred, otherwise True.
@@ -52,21 +52,21 @@ def delete_shared_parameter_by_name(doc, sharedParameterName):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     paras = get_all_shared_parameters(doc)
-    deleteIds = []
-    parameterName = 'Unknown'
+    delete_ids = []
+    parameter_name = 'Unknown'
     for p in paras:
-        if(p.Name == sharedParameterName):
-            deleteIds.append(p.Id)
+        if(p.Name == shared_parameter_name):
+            delete_ids.append(p.Id)
             # there should just be one match
-            parameterName = util.encode_ascii(rdb.Element.Name.GetValue(p))
+            parameter_name = util.encode_ascii(rdb.Element.Name.GetValue(p))
             break
-    if(len(deleteIds) > 0):
-        returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+    if(len(delete_ids) > 0):
+        return_value = rDel.delete_by_element_ids(doc, delete_ids, 'Delete Shared Parameter' , parameter_name)
     else:
-        returnValue.update_sep(False, 'parameter with guid: ' + sharedParameterName + ' does not exist in file.')
-    return returnValue
+        return_value.update_sep(False, 'parameter with guid: ' + shared_parameter_name + ' does not exist in file.')
+    return return_value
 
 
 def delete_shared_parameter_by_guid(doc, guid):
@@ -88,30 +88,30 @@ def delete_shared_parameter_by_guid(doc, guid):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     paras = get_all_shared_parameters(doc)
-    deleteIds = []
-    parameterName = 'Unknown'
+    delete_ids = []
+    parameter_name = 'Unknown'
     for p in paras:
         if(p.GuidValue.ToString() == guid):
-            deleteIds.append(p.Id)
+            delete_ids.append(p.Id)
             # there should just be one match
-            parameterName = util.encode_ascii(rdb.Element.Name.GetValue(p))
+            parameter_name = util.encode_ascii(rdb.Element.Name.GetValue(p))
             break
-    if(len(deleteIds) > 0):
-        returnValue = rDel.delete_by_element_ids(doc, deleteIds, 'Delete Shared Parameter' , parameterName)
+    if(len(delete_ids) > 0):
+        return_value = rDel.delete_by_element_ids(doc, delete_ids, 'Delete Shared Parameter' , parameter_name)
     else:
-        returnValue.update_sep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
-    return returnValue
+        return_value.update_sep(False, 'parameter with guid: ' + guid + ' does not exist in file.')
+    return return_value
 
 
-def delete_shared_parameters(doc, parameterGUIDs):
+def delete_shared_parameters(doc, parameter_gui_ds):
     '''
     Deletes shared parameters by GUID from document.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param parameterGUIDs: List of shared parameter GUIDs as string.
-    :type parameterGUIDs: list str
+    :param parameter_gui_ds: List of shared parameter GUIDs as string.
+    :type parameter_gui_ds: list str
     :return: 
         Result class instance.
         - Parameter deletion status returned in result.status. False if an exception occurred, otherwise True.
@@ -122,18 +122,18 @@ def delete_shared_parameters(doc, parameterGUIDs):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    oneGotDeleted = False
-    deleteGUIDs = check_whether_shared_parameters_are_in_file(doc, parameterGUIDs)
-    if(len(deleteGUIDs) > 0):
-        for deleteGuid in  deleteGUIDs:
-            deleteStatus = delete_shared_parameter_by_guid(doc, deleteGuid)
+    return_value = res.Result()
+    one_got_deleted = False
+    delete_gui_ds = check_whether_shared_parameters_are_in_file(doc, parameter_gui_ds)
+    if(len(delete_gui_ds) > 0):
+        for delete_guid in  delete_gui_ds:
+            delete_status = delete_shared_parameter_by_guid(doc, delete_guid)
             # preserve TRUE value!
-            if(deleteStatus.status == True):
-                oneGotDeleted = True
-            returnValue.update(deleteStatus)
-        returnValue.update_sep(oneGotDeleted, 'Finished deleting parameters!')
+            if(delete_status.status == True):
+                one_got_deleted = True
+            return_value.update(delete_status)
+        return_value.update_sep(one_got_deleted, 'Finished deleting parameters!')
     else:
-        returnValue.update_sep(True, 'No matching shared parameters in file!')
+        return_value.update_sep(True, 'No matching shared parameters in file!')
 
-    return returnValue
+    return return_value

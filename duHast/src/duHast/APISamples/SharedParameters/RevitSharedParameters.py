@@ -64,18 +64,18 @@ def get_family_shared_parameters(doc):
     '''
 
     if(doc.IsFamilyDocument):
-        famManager = doc.FamilyManager
-        sharedFamParas = []
-        for famPara in  famManager.GetParameters():
+        fam_manager = doc.FamilyManager
+        shared_fam_paras = []
+        for fam_para in  fam_manager.GetParameters():
             try:
                 # only shared parameters hav .GUID property...
-                if(str(famPara.GUID) != ''):
-                    sharedFamParas.append(famPara)
+                if(str(fam_para.GUID) != ''):
+                    shared_fam_paras.append(fam_para)
             except Exception as e:
                 pass
     else:
         raise Exception("Document is not a family document.")
-    return sharedFamParas
+    return shared_fam_paras
 
 def get_family_parameters(doc):
     '''
@@ -90,45 +90,45 @@ def get_family_parameters(doc):
     '''
 
     if(doc.IsFamilyDocument):
-        famManager = doc.FamilyManager
-        sharedFamParas = []
-        for famPara in  famManager.GetParameters():
-            sharedFamParas.append(famPara)
+        fam_manager = doc.FamilyManager
+        shared_fam_paras = []
+        for fam_para in  fam_manager.GetParameters():
+            shared_fam_paras.append(fam_para)
     else:
         raise Exception("Document is not a family document.")
-    return sharedFamParas
+    return shared_fam_paras
 
 # ------------------------------------------------------- parameter utilities --------------------------------------------------------------------
 
-def check_whether_shared_parameters_are_in_file(doc, parameterGUIDs):
+def check_whether_shared_parameters_are_in_file(doc, parameter_gui_ds):
     '''
     Filters the past in list of shared parameter GUIDs by using the shared parameters in the document.
         Only parameter in both will be returned.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param parameterGUIDs: list of shared parameter GUIDs as string values
-    :type parameterGUIDs: list str
+    :param parameter_gui_ds: list of shared parameter GUIDs as string values
+    :type parameter_gui_ds: list str
     
     :return: list of shared parameter GUIDs as string values
     :rtype: list str
     '''
 
-    filteredGUIDs = []
+    filtered_gui_ds = []
     paras = get_all_shared_parameters(doc)
     for p in paras:
-        if(p.GuidValue.ToString() in parameterGUIDs):
-            filteredGUIDs.append(p.GuidValue.ToString())
-    return filteredGUIDs
+        if(p.GuidValue.ToString() in parameter_gui_ds):
+            filtered_gui_ds.append(p.GuidValue.ToString())
+    return filtered_gui_ds
 
-def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameterName):
+def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameter_name):
     '''
     Checks, by name, whether a shared parameter exists as a family parameter in a family.
 
     param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param parameterName: The name of the parameter.
-    :type parameterName: str
+    :param parameter_name: The name of the parameter.
+    :type parameter_name: str
 
     :return: A family parameter if match was found, otherwise None
     :rtype: Autodesk.Revit.DB.FamilyParameter
@@ -136,34 +136,34 @@ def check_whether_shared_parameters_by_name_is_family_parameter(doc, parameterNa
 
     para = None
     paras = get_family_parameters(doc)
-    for famPara in paras:
-        if(famPara.Definition.Name == parameterName):
+    for fam_para in paras:
+        if(fam_para.Definition.Name == parameter_name):
             try:
                 # only shared parameters hav .GUID property...
-                if(str(famPara.GUID) != ''):
-                    para = famPara
+                if(str(fam_para.GUID) != ''):
+                    para = fam_para
                     break
             except Exception as e:
                 pass
     return para
 
-def is_shared_parameter_definition_used(doc, sharedPara):
+def is_shared_parameter_definition_used(doc, shared_para):
     '''
     Tests if a shared parameter GUID is used by a family parameter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sharedPara: A shared parameter
-    :type sharedPara: Autodesk.Revit.DB.SharedParameterElement
+    :param shared_para: A shared parameter
+    :type shared_para: Autodesk.Revit.DB.SharedParameterElement
 
     :return: True is match is found, otherwise False
     :rtype: bool
     '''
 
-    famSharedParas = get_family_shared_parameters(doc)
+    fam_shared_paras = get_family_shared_parameters(doc)
     match = False
-    for famSharedPara in famSharedParas:
-        if(famSharedPara.GUID == sharedPara.GuidValue):
+    for fam_shared_para in fam_shared_paras:
+        if(fam_shared_para.GUID == shared_para.GuidValue):
             match = True
             break
     return match
@@ -181,62 +181,62 @@ def get_unused_shared_parameter_definitions(doc):
     :rtype: [Autodesk.Revit.DB.SharedParameterElement]
     '''
 
-    famSharedParas = get_family_shared_parameters(doc)
-    sharedParas = get_all_shared_parameters(doc)
-    unusedSharedParameterDefinition = []
-    for sharedPara in sharedParas:
+    fam_shared_paras = get_family_shared_parameters(doc)
+    shared_paras = get_all_shared_parameters(doc)
+    unused_shared_parameter_definition = []
+    for shared_para in shared_paras:
         match = False
-        for famSharedPara in famSharedParas:
-            if(famSharedPara.GUID == sharedPara.GuidValue):
+        for fam_shared_para in fam_shared_paras:
+            if(fam_shared_para.GUID == shared_para.GuidValue):
                 match = True
                 break
         if(match == False):
-            unusedSharedParameterDefinition.append(sharedPara)
-    return unusedSharedParameterDefinition
+            unused_shared_parameter_definition.append(shared_para)
+    return unused_shared_parameter_definition
 
-def get_shared_parameter_definition(parameterName, defFile):
+def get_shared_parameter_definition(parameter_name, def_file):
     '''
     Returns a shared parameter definition from a shared parameter file.
 
-    :param parameterName: The shared parameter name.
-    :type parameterName: str
-    :param defFile: The shared parameter file definition.
-    :type defFile: Autodesk.Revit.DB.DefinitionFile
+    :param parameter_name: The shared parameter name.
+    :type parameter_name: str
+    :param def_file: The shared parameter file definition.
+    :type def_file: Autodesk.Revit.DB.DefinitionFile
 
     :return: The shared parameter definition. None if no parameter with a matching name was found.
     :rtype: Autodesk.Revit.DB.ExternalDefinition
     '''
 
-    parameterDefinition = None
+    parameter_definition = None
     try:
         # loop through parameters and try to find matching one 
         # loop through all definition groups
-        for group in defFile.Groups:
+        for group in def_file.Groups:
             # loop through para's within definition group
-            for defPara in group.Definitions:
+            for def_para in group.Definitions:
                 # check whether this is the parameter we are after
-                if (defPara.Name == parameterName):
+                if (def_para.Name == parameter_name):
                     # match and out
-                    parameterDefinition = defPara
+                    parameter_definition = def_para
                     break
-            if(parameterDefinition != None):
+            if(parameter_definition != None):
                 break
     except Exception as e:
         pass
-    return parameterDefinition
+    return parameter_definition
 
 # ------------------------------------------------------- parameter reporting --------------------------------------------------------------------
 
-def param_binding_exists(doc, paramName, paramType):
+def param_binding_exists(doc, param_name, param_type):
     '''
     Gets all parameter bindings for a given parameter.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param paramName: The name of the parameter.
-    :type paramName: str
-    :param paramType: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
-    :type paramType: Autodesk.Revit.DB.ParameterType
+    :param param_name: The name of the parameter.
+    :type param_name: str
+    :param param_type: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
+    :type param_type: Autodesk.Revit.DB.ParameterType
 
     :return: List of categories a parameter is attached to.
     :rtype: list of str
@@ -247,9 +247,9 @@ def param_binding_exists(doc, paramName, paramType):
     iterator = map.ForwardIterator()
     iterator.Reset()
     while iterator.MoveNext():
-        if iterator.Key != None and iterator.Key.Name == paramName and iterator.Key.ParameterType == paramType:
-            elemBind = iterator.Current
-            for cat in elemBind.Categories:
+        if iterator.Key != None and iterator.Key.Name == param_name and iterator.Key.ParameterType == param_type:
+            elem_bind = iterator.Current
+            for cat in elem_bind.Categories:
                 categories.append(cat.Name)
             break
     return categories

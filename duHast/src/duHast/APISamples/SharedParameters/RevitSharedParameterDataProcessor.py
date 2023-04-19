@@ -91,54 +91,54 @@ class SharedParameterProcessor(IFamilyProcessor):
 
     def _is_shared_parameter_present(self,root_family_data, nested_family_line_pattern):
         match = None
-        for rootFam in root_family_data:
-            if (rootFam[rSharedData.PARAMETER_GUID] == nested_family_line_pattern[rSharedData.PARAMETER_GUID]):
-                match = rootFam
+        for root_fam in root_family_data:
+            if (root_fam[rSharedData.PARAMETER_GUID] == nested_family_line_pattern[rSharedData.PARAMETER_GUID]):
+                match = root_fam
                 break
         return match
 
     def _update_root_family_data(self, root_family_data, nested_families_data):
         # loop over nested family data
-        for nestedItem in nested_families_data:
+        for nested_item in nested_families_data:
             # check if item is already in root family
-            matchingRootFamPattern = self._is_shared_parameter_present(root_family_data, nestedItem)
-            if(matchingRootFamPattern != None):
+            matching_root_fam_pattern = self._is_shared_parameter_present(root_family_data, nested_item)
+            if(matching_root_fam_pattern != None):
                 # update used by list
                 # TODO: this check looks odd!! ( guid vs a dictionary?)
-                if(nestedItem[rSharedData.PARAMETER_GUID] not in matchingRootFamPattern[IFamData.USED_BY]):
+                if(nested_item[rSharedData.PARAMETER_GUID] not in matching_root_fam_pattern[IFamData.USED_BY]):
                     # add the root path to the used by list for ease of identification of the origin of this shared parameter
-                    matchingRootFamPattern[IFamData.USED_BY].append(
+                    matching_root_fam_pattern[IFamData.USED_BY].append(
                         { 
-                            rSharedData.PARAMETER_GUID : nestedItem[rSharedData.PARAMETER_GUID],
-                            rSharedData.PARAMETER_NAME : nestedItem[rSharedData.PARAMETER_NAME],
-                            IFamData.ROOT : nestedItem[IFamData.ROOT]
+                            rSharedData.PARAMETER_GUID : nested_item[rSharedData.PARAMETER_GUID],
+                            rSharedData.PARAMETER_NAME : nested_item[rSharedData.PARAMETER_NAME],
+                            IFamData.ROOT : nested_item[IFamData.ROOT]
                         }
                     )
                     # update used by counter
-                    matchingRootFamPattern[IFamData.USAGE_COUNTER] = matchingRootFamPattern[IFamData.USAGE_COUNTER] + 1
+                    matching_root_fam_pattern[IFamData.USAGE_COUNTER] = matching_root_fam_pattern[IFamData.USAGE_COUNTER] + 1
             else:
                 pass
                 # nothing to do if that shared parameter has not been reported to start off with 
 
     def _get_used_shared_parameters(self, data):
-        usedSharedParas = []
+        used_shared_paras = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
-                usedSharedParas.append(d)
-        return usedSharedParas
+                used_shared_paras.append(d)
+        return used_shared_paras
 
     def _post_action_update_used_shared_parameters(self, doc):
-        returnValue = res.Result()
+        return_value = res.Result()
         try:
             # find all shared parameters of nested families
-            nestedFamilyData = self._find_nested_families_data()
+            nested_family_data = self._find_nested_families_data()
             # get used shared parameters from nested data
-            nestedFamilySharedParameters = self._get_used_shared_parameters(nestedFamilyData)
+            nested_family_shared_parameters = self._get_used_shared_parameters(nested_family_data)
             # update root family data only
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._update_root_family_data(rootFamilyData, nestedFamilySharedParameters)
-            returnValue.update_sep(True, 'Post Action Update shared parameters data successful completed.')
+            self._update_root_family_data(rootFamilyData, nested_family_shared_parameters)
+            return_value.update_sep(True, 'Post Action Update shared parameters data successful completed.')
         except Exception as e:
-            returnValue.update_sep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))
-        return returnValue
+            return_value.update_sep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))
+        return return_value

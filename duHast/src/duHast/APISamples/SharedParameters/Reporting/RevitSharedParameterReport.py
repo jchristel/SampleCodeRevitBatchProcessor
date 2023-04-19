@@ -31,13 +31,13 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.SharedParameters.RevitSharedParameters import get_all_shared_parameters, param_binding_exists
 
 
-def GetSharedParameterReportData(doc, revitFilePath):
+def get_shared_parameter_report_data(doc, revit_file_path):
     '''
     Gets shared parameter data ready for being printed to file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The file hostname, which is added to data returned.
-    :type revitFilePath: str
+    :param revit_file_path: The file hostname, which is added to data returned.
+    :type revit_file_path: str
     :return: list of list of parameter properties.
     :rtype: list of list of str
     '''
@@ -45,24 +45,24 @@ def GetSharedParameterReportData(doc, revitFilePath):
     data = []
     paras = get_all_shared_parameters(doc)
     for p in paras:
-        parameterDefinition = p.GetDefinition()
-        parameterBindings = []
+        parameter_definition = p.GetDefinition()
+        parameter_bindings = []
         # parameter bindings do not exist in a family document
         if(doc.IsFamilyDocument == False):
-            parameterBindings = param_binding_exists(doc, rdb.Element.Name.GetValue(p), parameterDefinition.ParameterType)
+            parameter_bindings = param_binding_exists(doc, rdb.Element.Name.GetValue(p), parameter_definition.ParameterType)
 
         # just in case parameter name is not unicode
-        parameterName = 'unknown'
+        parameter_name = 'unknown'
         try:
-            parameterName = util.EncodeAscii(rdb.Element.Name.GetValue(p))
+            parameter_name = util.EncodeAscii(rdb.Element.Name.GetValue(p))
         except Exception as ex:
-            parameterName = 'Exception: ' + str(ex)
+            parameter_name = 'Exception: ' + str(ex)
         # build data
         data.append([
-            revitFilePath,
+            revit_file_path,
             p.GuidValue.ToString(),
             str(p.Id.IntegerValue),
-            parameterName,
-            str(parameterBindings)
+            parameter_name,
+            str(parameter_bindings)
             ])
     return data

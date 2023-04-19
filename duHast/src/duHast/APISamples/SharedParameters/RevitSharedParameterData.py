@@ -74,12 +74,12 @@ class SharedParameterData(IFamData.IFamilyData):
             except Exception as ex:
                 parameter_name = 'Exception: ' + str(ex)
             # check if used:
-            useCounter = 0
-            usedByData = {}
+            use_counter = 0
+            used_by_data = {}
             if(rSharedPara.is_shared_parameter_definition_used(doc, para)):
-                useCounter = 1
+                use_counter = 1
                 # build used by data as required to be the same as post process update
-                usedByData = { 
+                used_by_data = { 
                     PARAMETER_GUID : para.GuidValue.ToString(),
                     PARAMETER_NAME : parameter_name,
                     IFamData.ROOT : self.root_path
@@ -94,8 +94,8 @@ class SharedParameterData(IFamData.IFamilyData):
                 PARAMETER_GUID : para.GuidValue.ToString(),
                 PARAMETER_NAME : parameter_name,
                 PARAMETER_ID : para.Id.IntegerValue,
-                IFamData.USAGE_COUNTER : useCounter,
-                IFamData.USED_BY : [usedByData]
+                IFamData.USAGE_COUNTER : use_counter,
+                IFamData.USED_BY : [used_by_data]
                 }
             )
         

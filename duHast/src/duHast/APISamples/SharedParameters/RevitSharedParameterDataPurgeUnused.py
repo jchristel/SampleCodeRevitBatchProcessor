@@ -66,33 +66,33 @@ def purge_unused(doc, processor):
     # from processor instance get all root line pattern entries where usage counter == 0.
     # delete those line patterns by id
 
-    returnValue = res.Result()
+    return_value = res.Result()
 
     # check the category of the family first:
     # Tags and generic annotations (may) contain labels which in turn use shared parameters to drive them
     # there is currently no way in the api (Revit 2022) to find out what parameter is driving the label...
 
     # get the family category name:
-    famCatName = list(rCat.get_family_category(doc))[0]
-    if(famCatName != 'Generic Annotations' and famCatName.endswith( 'Tags') == False):
-        idsToDelete = []
+    fam_cat_name = list(rCat.get_family_category(doc))[0]
+    if(fam_cat_name != 'Generic Annotations' and fam_cat_name.endswith( 'Tags') == False):
+        ids_to_delete = []
         # get categories found in root processor data only
-        rootFamData = processor._findRootFamilyData()
+        root_fam_data = processor._findRootFamilyData()
         # get all root line pattern entries where usage counter == 0.
-        for rootFam in rootFamData:
-            if (rootFam[IFamData.USAGE_COUNTER] == 0 ):
-                returnValue.append_message('Found unused shared parameter: {} [{}]'.format(rootFam[rSharedParaData.PARAMETER_NAME],rootFam[rSharedParaData.PARAMETER_GUID]))
-                idsToDelete.append(rdb.ElementId(rootFam[rSharedParaData.PARAMETER_ID]))
+        for root_fam in root_fam_data:
+            if (root_fam[IFamData.USAGE_COUNTER] == 0 ):
+                return_value.append_message('Found unused shared parameter: {} [{}]'.format(root_fam[rSharedParaData.PARAMETER_NAME],root_fam[rSharedParaData.PARAMETER_GUID]))
+                ids_to_delete.append(rdb.ElementId(root_fam[rSharedParaData.PARAMETER_ID]))
         # delete any subcategories found
-        if(len(idsToDelete) > 0):
-            resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused shared parameters.', 'Shared Parameters')
-            returnValue.update(resultDelete)
+        if(len(ids_to_delete) > 0):
+            result_delete = rDel.delete_by_element_ids(doc, ids_to_delete, 'Deleting unused shared parameters.', 'Shared Parameters')
+            return_value.update(result_delete)
             # may need to delete shared parameters one by one if one or more cant be deleted
-            if (resultDelete.status == False):
-                resultDeleteOneByOne = rDel.delete_by_element_ids_one_by_one(doc, idsToDelete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
-                returnValue.update(resultDeleteOneByOne)
+            if (result_delete.status == False):
+                result_delete_one_by_one = rDel.delete_by_element_ids_one_by_one(doc, ids_to_delete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
+                return_value.update(result_delete_one_by_one)
         else:
-            returnValue.update_sep(True, 'No unused shared parameters found. Nothing was deleted.')
+            return_value.update_sep(True, 'No unused shared parameters found. Nothing was deleted.')
     else:
-        returnValue.update_sep(True, 'This is an annotation family (tag or generic annotation). Due to limitations in the Revit API no shared parameter was purged.')
-    return returnValue
+        return_value.update_sep(True, 'This is an annotation family (tag or generic annotation). Due to limitations in the Revit API no shared parameter was purged.')
+    return return_value

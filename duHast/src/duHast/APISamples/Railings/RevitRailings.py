@@ -85,8 +85,8 @@ def get_all_railing_types_by_category_excl_in_place(doc):
     :rtype: list of types
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
     elements=[]
     for c in collector:
         if(c.GetType() != rdb.FamilySymbol):
@@ -125,8 +125,8 @@ def get_all_railing_instances_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
-    return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
+    return rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsNotElementType()
 
 def get_all_railing_instances_by_class(doc):
     '''
@@ -153,8 +153,8 @@ def get_all_railing_type_ids_by_category(doc):
     '''
     
     ids = []
-    colCat = get_all_railing_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (colCat)
+    col_cat = get_all_railing_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (col_cat)
     return ids
 
 def get_all_railing_type_ids_by_class(doc):
@@ -169,8 +169,8 @@ def get_all_railing_type_ids_by_class(doc):
     '''
 
     ids = []
-    colClass = get_railing_types_by_class(doc)
-    ids = com.get_ids_from_element_collector(colClass)
+    col_class = get_railing_types_by_class(doc)
+    ids = com.get_ids_from_element_collector(col_class)
     return ids
 
 def get_all_railing_type_ids_by_class_and_category(doc):
@@ -185,16 +185,16 @@ def get_all_railing_type_ids_by_class_and_category(doc):
     '''
 
     ids = []
-    colClass = get_railing_types_by_class(doc)
-    idsClass = com.get_ids_from_element_collector(colClass)
-    colCat = get_all_railing_types_by_category_excl_in_place(doc)
-    idsCat = com.get_ids_from_element_collector(colCat)
-    for idClass in idsClass:
-        if (idClass not in ids):
-            ids.append (idClass)
-    for idCat in idsCat:
-        if( idCat not in ids):
-            ids.append(idCat)
+    col_class = get_railing_types_by_class(doc)
+    ids_class = com.get_ids_from_element_collector(col_class)
+    col_cat = get_all_railing_types_by_category_excl_in_place(doc)
+    ids_cat = com.get_ids_from_element_collector(col_cat)
+    for id_class in ids_class:
+        if (id_class not in ids):
+            ids.append (id_class)
+    for id_cat in ids_cat:
+        if( id_cat not in ids):
+            ids.append(id_cat)
     return ids
 
 # -------------------------------- In place Railing types -------------------------------------------------------
@@ -226,7 +226,7 @@ def get_in_place_railing_type_ids_in_model(doc):
 
     ids = []
     for cat in RAILING_CATEGORY_FILTER: 
-        idsByCat = rFam.get_all_in_place_type_ids_in_model_of_category(doc, cat)
-        if(len(idsByCat) > 0):
-            ids = ids + idsByCat
+        ids_by_cat = rFam.get_all_in_place_type_ids_in_model_of_category(doc, cat)
+        if(len(ids_by_cat) > 0):
+            ids = ids + ids_by_cat
     return ids

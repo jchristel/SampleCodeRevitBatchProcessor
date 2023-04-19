@@ -49,22 +49,22 @@ def get_used_railing_type_ids(doc):
     return ids
 
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
     TODO: repetitive code...Consider generic function!
-    :param famTypeIds: List of family symbols (types).
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: List of unused family symbols (types)
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param fam_type_ids: List of family symbols (types).
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: List of unused family symbols (types)
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
     :return: True if all ids in first list are also in second list, otherwise False.
     :rtype: bool
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match
@@ -92,8 +92,8 @@ def get_unused_non_in_place_railing_type_ids_to_purge(doc):
     # get unused type ids
     ids = rPurgeUtils.get_used_unused_type_ids(doc, get_all_railing_type_ids_by_class_and_category, 0)
     # make sure there is at least on Railing type per system family left in model
-    RailingTypes = sort_railing_types_by_family_name(doc)
-    for key, value in RailingTypes.items():
+    railing_types = sort_railing_types_by_family_name(doc)
+    for key, value in railing_types.items():
         if(key in BUILTIN_RAILING_TYPE_FAMILY_NAMES):
             if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
@@ -153,10 +153,10 @@ def get_used_baluster_type_ids(doc):
     '''
 
     ids = []
-    idsUsedInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_all_baluster_symbols_ids, 1)
-    idsUsedInRailings = get_baluster_types_from_railings(doc)
-    ids = merge_into_unique_list(ids, idsUsedInModel)
-    ids = merge_into_unique_list(ids, idsUsedInRailings)
+    ids_used_in_model = rPurgeUtils.get_used_unused_type_ids(doc, get_all_baluster_symbols_ids, 1)
+    ids_used_in_railings = get_baluster_types_from_railings(doc)
+    ids = merge_into_unique_list(ids, ids_used_in_model)
+    ids = merge_into_unique_list(ids, ids_used_in_railings)
     return ids
 
 
@@ -171,10 +171,10 @@ def get_unused_baluster_type_ids(doc):
     '''
 
     ids = []
-    idsUsed = get_used_baluster_type_ids(doc)
-    idsAvailable = get_all_baluster_symbols_ids(doc)
-    for id in idsAvailable:
-        if (id not in idsUsed):
+    ids_used = get_used_baluster_type_ids(doc)
+    ids_available = get_all_baluster_symbols_ids(doc)
+    for id in ids_available:
+        if (id not in ids_used):
             ids.append(id)
     return ids
 

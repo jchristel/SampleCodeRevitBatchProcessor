@@ -78,8 +78,8 @@ def _get_all_railing_types_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
     return collector
 
 def _get_railing_types_by_class(doc):

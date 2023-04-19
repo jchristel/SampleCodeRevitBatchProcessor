@@ -64,7 +64,7 @@ def sort_railing_types_by_family_name(doc):
     wts = get_railing_types_by_class(doc)
     # get all Railing types including in place railing families
     wts_two = get_all_railing_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_railing_type_dictionary(wts, usedWts)
-    usedWts = build_railing_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_railing_type_dictionary(wts, used_wts)
+    used_wts = build_railing_type_dictionary(wts_two, used_wts)
+    return used_wts

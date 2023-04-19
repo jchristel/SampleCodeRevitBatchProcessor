@@ -134,14 +134,14 @@ def get_all_basic_wall_type_ids(doc):
         ids = dic[BASIC_WALL_FAMILY_NAME]
     return ids
 
-def get_all_basic_wall_instances(doc, availableIds):
+def get_all_basic_wall_instances(doc, available_ids):
     '''
     Gets all basic wall elements placed in model...ignores legend elements.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availableIds:  Filter: curtain wall type ids to check wall instances for.
-    :type availableIds: list of Autodesk.Revit.DB.ElementId
+    :param available_ids:  Filter: curtain wall type ids to check wall instances for.
+    :type available_ids: list of Autodesk.Revit.DB.ElementId
 
     :return: List of element ids representing all basic wall instances.
     :rtype: list of Autodesk.Revit.DB.ElementId
@@ -150,11 +150,11 @@ def get_all_basic_wall_instances(doc, availableIds):
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
-        if(c.GetTypeId() in availableIds):
+        if(c.GetTypeId() in available_ids):
             instances.append(c)
     return instances
 
-def get_used_basic_wall_type_ids(doc, availableIds):
+def get_used_basic_wall_type_ids(doc, available_ids):
     '''
     Gets all basic wall types used in model.
 
@@ -162,8 +162,8 @@ def get_used_basic_wall_type_ids(doc, availableIds):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availableIds:  Filter: basic wall type ids to check wall instances for.
-    :type availableIds: list of Autodesk.Revit.DB.ElementId
+    :param available_ids:  Filter: basic wall type ids to check wall instances for.
+    :type available_ids: list of Autodesk.Revit.DB.ElementId
 
     :return: List of element ids representing all basic wall types in use.
     :rtype: list of Autodesk.Revit.DB.ElementId
@@ -172,6 +172,6 @@ def get_used_basic_wall_type_ids(doc, availableIds):
     ids = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
-        if(c.GetTypeId() in availableIds):
+        if(c.GetTypeId() in available_ids):
             ids.append(c.GetTypeId())
     return ids

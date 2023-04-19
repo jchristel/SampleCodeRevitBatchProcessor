@@ -137,11 +137,11 @@ def _build_dictionary_by_level_and_data_type(dataReader):
     '''
 
     dic = {}
-    for dObject in dataReader.data:
-        if(dObject.level.levelName not in dic):
-            roomsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dr.DataRoom.data_type)
-            ceilingsByLevel = dataReader.get_data_by_level_and_data_type(dObject.level.levelName, dc.DataCeiling.data_type)
-            dic[dObject.level.levelName] = (roomsByLevel, ceilingsByLevel)
+    for d_object in dataReader.data:
+        if(d_object.level.levelName not in dic):
+            rooms_by_level = dataReader.get_data_by_level_and_data_type(d_object.level.levelName, dr.DataRoom.data_type)
+            ceilings_by_level = dataReader.get_data_by_level_and_data_type(d_object.level.levelName, dc.DataCeiling.data_type)
+            dic[d_object.level.levelName] = (rooms_by_level, ceilings_by_level)
     return dic
 
 def _get_property_values_as_list(properties, property_keys):
@@ -180,7 +180,7 @@ def _convert_object_data_into_report_data(dic_object, room_instance_property_key
     for levelName in dic_object:
         for room in dic_object[levelName][0]:
             # put fixed (always exported ) values first
-            dataRow = [
+            data_row = [
                 room.level.levelName,
                 room.revitModel.modelName,
                 str(room.instanceProperties.instanceId),
@@ -189,28 +189,28 @@ def _convert_object_data_into_report_data(dic_object, room_instance_property_key
                 str(room.designSetAndOption.isPrimary)
             ]
             # get custom values
-            dataRow = dataRow + _get_property_values_as_list(room.instanceProperties.properties, room_instance_property_keys)
+            data_row = data_row + _get_property_values_as_list(room.instanceProperties.properties, room_instance_property_keys)
             
-            #data.append (dataRow)
+            #data.append (data_row)
 
-            associatedDataRows = []
-            for associatedElement in room.associatedElements:
+            associated_data_rows = []
+            for associated_element in room.associatedElements:
                 # only add ceiling data for now
-                if(associatedElement.dataType == dc.DataCeiling.data_type):
-                    associatedDataRow = [
-                        associatedElement.level.levelName,
+                if(associated_element.dataType == dc.DataCeiling.data_type):
+                    associated_data_row = [
+                        associated_element.level.levelName,
                         room.revitModel.modelName,
-                        str(associatedElement.instanceProperties.instanceId),
-                        associatedElement.designSetAndOption.designSetName,
-                        associatedElement.designSetAndOption.designOptionName,
-                        str(associatedElement.designSetAndOption.isPrimary)
+                        str(associated_element.instanceProperties.instanceId),
+                        associated_element.designSetAndOption.designSetName,
+                        associated_element.designSetAndOption.designOptionName,
+                        str(associated_element.designSetAndOption.isPrimary)
                     ]
                     
-                    associatedDataRow = associatedDataRow + _get_property_values_as_list(associatedElement.typeProperties.properties, ceiling_type_property_keys)
-                    associatedDataRow = associatedDataRow + _get_property_values_as_list(associatedElement.instanceProperties.properties, ceiling_instance_property_keys)
-                    associatedDataRows.append(associatedDataRow)
+                    associated_data_row = associated_data_row + _get_property_values_as_list(associated_element.typeProperties.properties, ceiling_type_property_keys)
+                    associated_data_row = associated_data_row + _get_property_values_as_list(associated_element.instanceProperties.properties, ceiling_instance_property_keys)
+                    associated_data_rows.append(associated_data_row)
             
-                    data.append( dataRow + associatedDataRow )
+                    data.append( data_row + associated_data_row )
     return data
 
 def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, room_polygon, data_objects, level_name):
@@ -268,14 +268,14 @@ def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, r
                 # get the room object by its Revit ID
                 data_object_room =  list(filter(lambda x: (x.instanceProperties.instanceId == room_poly_id ) , data_objects[level_name][0]))[0]
                 # get the ceiling object by its Revit id
-                data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
+                data_object__ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
                 # add ceiling object to associated elements list of room object 
-                data_object_room.associatedElements.append(data_object_Ceiling)
+                data_object_room.associatedElements.append(data_object__ceiling)
                 return_value.append_message('Added ceiling {} to room {}'.format(room_poly_id, ceiling_poly_id))
     except Exception as e:
         # get the offending elements:
         data_object_room =  list(filter(lambda x: (x.instanceProperties.instanceId == room_poly_id ) , data_objects[level_name][0]))[0]
-        data_object_Ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
+        data_object__ceiling =  list(filter(lambda x: (x.instanceProperties.instanceId == ceiling_poly_id ) , data_objects[level_name][1]))[0]
         return_value.append_message(
             'Exception: {} \n' +
             'offending room: room name: {} , room number: {} , room id: {} , is valid polygon: {}\n' +
@@ -285,7 +285,7 @@ def _intersect_ceiling_vs_room(ceiling_poly_id, ceiling_polygon, room_poly_id, r
                 data_object_room.instanceProperties.properties['Number'],
                 data_object_room.instanceProperties.instanceId,
                 room_polygon.is_valid,
-                data_object_Ceiling.instanceProperties.instanceId,
+                data_object__ceiling.instanceProperties.instanceId,
                 ceiling_polygon.is_valid
                 )
     return return_value

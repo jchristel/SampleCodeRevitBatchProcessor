@@ -38,21 +38,21 @@ from duHast.Utilities import Base
 
 class RevitWarningsSolverDuplicateMark(Base.Base):
 
-    def __init__(self, filterFunc, filterValues = []):
+    def __init__(self, filter_func, filter_values = []):
         '''
         Constructor: this solver takes two arguments: a filter function and a list of values to filter by
 
-        :param filterFunc: A function to filter elements in warnings by
-        :type filterFunc: func(document, elementId, list of filter values)
-        :param filterValues: A list of filter values, defaults to []
-        :type filterValues: list, optional
+        :param filter_func: A function to filter elements in warnings by
+        :type filter_func: func(document, elementId, list of filter values)
+        :param filter_values: A list of filter values, defaults to []
+        :type filter_values: list, optional
         '''
 
         # ini super class to allow multi inheritance in children!
         super(RevitWarningsSolverDuplicateMark, self).__init__() 
 
-        self.filter = filterFunc
-        self.filterValues = filterValues
+        self.filter = filter_func
+        self.filterValues = filter_values
         self.filterName = 'Duplicate mark value.'
 
     # --------------------------- duplicate mark guid ---------------------------
@@ -77,23 +77,23 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
         :rtype: :class:`.Result`
         '''
 
-        returnValue = res.Result()
+        return_value = res.Result()
         if(len(warnings) > 0):
             for warning in warnings:
-                elementIds = warning.GetFailingElements()
-                for elId in elementIds:
-                    element = doc.GetElement(elId)
+                element_ids = warning.GetFailingElements()
+                for el_id in element_ids:
+                    element = doc.GetElement(el_id)
                     # check whether element passes filter
-                    if(self.filter(doc, elId, self.filterValues)):
+                    if(self.filter(doc, el_id, self.filterValues)):
                         try:
-                            pValue = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
-                            if (pValue != None):
+                            p_value = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
+                            if (p_value != None):
                                 result = rParaSet.set_built_in_parameter_value(doc, element, rdb.BuiltInParameter.ALL_MODEL_MARK, '')
-                                returnValue.update(result)
+                                return_value.update(result)
                         except Exception as e:
-                            returnValue.update_sep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
+                            return_value.update_sep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
                     else:
-                        returnValue.update_sep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
+                        return_value.update_sep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
         else:
-            returnValue.update_sep(True,'No warnings of type: duplicate mark in model.')
-        return returnValue
+            return_value.update_sep(True,'No warnings of type: duplicate mark in model.')
+        return return_value

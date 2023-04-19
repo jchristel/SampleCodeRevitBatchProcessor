@@ -94,8 +94,8 @@ def get_all_curtain_wall_element_types_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
     return collector
 
 def build_curtain_wall_element_type_dictionary(collector, dic):
@@ -138,9 +138,9 @@ def sort_curtain_wall_element_types_by_family_name(doc):
 
     # get all CurtainWallElement types including in place wall families
     wts_two = get_all_curtain_wall_element_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_curtain_wall_element_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_curtain_wall_element_type_dictionary(wts_two, used_wts)
+    return used_wts
 
 # -------------------------------- none in place or loadable Curtain Wall Element types -------------------------------------------------------
 
@@ -160,8 +160,8 @@ def get_curtain_wall_element_instances_by_category(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
     
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
-    return rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsNotElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
+    return rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsNotElementType()
 
 def get_all_curtain_wall_element_type_ids_by_category(doc):
     '''
@@ -180,8 +180,8 @@ def get_all_curtain_wall_element_type_ids_by_category(doc):
     '''
 
     ids = []
-    colCat = get_all_curtain_wall_element_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (colCat)
+    col_cat = get_all_curtain_wall_element_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (col_cat)
     return ids
 
 def get_all_curtain_wall_element_types_by_category_excl_in_place(doc):
@@ -247,12 +247,12 @@ def get_all_curtain_wall_non_shared_symbol_ids_by_category(doc):
     '''
 
     ids = []
-    multiCatFilter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(CURTAINWALL_ELEMENTS_CATEGORY_FILTER )
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
     for c in collector:
         if(c.GetType() == rdb.FamilySymbol):
             fam = c.Family
-            pValue = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
-            if(pValue != None and  pValue == 'No' and c.Id not in ids):
+            p_value = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
+            if(p_value != None and  p_value == 'No' and c.Id not in ids):
                 ids.append(c.Id)
     return ids

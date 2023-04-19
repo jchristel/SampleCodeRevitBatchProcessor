@@ -66,14 +66,14 @@ class RevitWarningsSolverRoomTagToRoom(Base.Base):
         :rtype: :class:`.Result`
         '''
 
-        returnValue = res.Result()
+        return_value = res.Result()
         if(len(warnings) > 0 ):
             for warning in warnings:
-                elementIds = warning.GetFailingElements()
-                for elId in elementIds:
-                    result = rRoom.MoveTagToRoom(doc, elId)
-                    returnValue.update(result)
+                element_ids = warning.GetFailingElements()
+                for el_id in element_ids:
+                    result = rRoom.MoveTagToRoom(doc, el_id)
+                    return_value.update(result)
         else:
-            returnValue.update_sep(True,'No warnings of type: room tag outside of room in model.')
-        return  returnValue 
+            return_value.update_sep(True,'No warnings of type: room tag outside of room in model.')
+        return  return_value 
     

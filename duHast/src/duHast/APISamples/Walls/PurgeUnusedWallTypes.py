@@ -112,8 +112,8 @@ def get_unused_basic_wall_type_ids_to_purge(doc):
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rWall.get_all_basic_wall_type_ids, 0)
     # looks like a separate check is required whether any basic wall type is used in stacked wall type in model at this point
     # DOH! GetStackedWallMemberIds() is only available on wall element but not wallType. Why?
-    availableTypeCount = len(rWall.get_all_basic_wall_type_ids(doc).ToList())
-    if len(ids) == availableTypeCount:
+    available_type_count = len(rWall.get_all_basic_wall_type_ids(doc).ToList())
+    if len(ids) == available_type_count:
         ids.pop(0)
     return ids
 
@@ -132,8 +132,8 @@ def get_unused_curtain_wall_type_ids_to_purge(doc):
     '''
 
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWall.get_all_curtain_wall_type_ids, 0)
-    availableTypeCount = len(rCurtainWall.get_all_curtain_wall_type_ids(doc).ToList())
-    if len(ids) == availableTypeCount:
+    available_type_count = len(rCurtainWall.get_all_curtain_wall_type_ids(doc).ToList())
+    if len(ids) == available_type_count:
         ids.pop(0)
     return ids
 
@@ -183,7 +183,7 @@ def get_unused_stacked_wall_type_ids_to_purge(doc):
     '''
 
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rStackWall.get_all_stacked_wall_type_ids, 0)
-    availableTypeCount = len(rStackWall.get_all_stacked_wall_type_ids(doc).ToList())
-    if len(ids) == availableTypeCount:
+    available_type_count = len(rStackWall.get_all_stacked_wall_type_ids(doc).ToList())
+    if len(ids) == available_type_count:
         ids.pop(0)
     return ids

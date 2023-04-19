@@ -57,19 +57,19 @@ def Mbox(title, text, style):
     
 # UI class
 class MyWindow (Windows.Window):
-    def __init__(self, xamlFullFileName, revitFiles, settings):
+    def __init__(self, xaml_full_file_name, revitFiles, settings):
         '''
         Class constructor
 
-        :param xamlFullFileName: Fully qualified file path to wpf XAML file.
-        :type xamlFullFileName: str
+        :param xaml_full_file_name: Fully qualified file path to wpf XAML file.
+        :type xaml_full_file_name: str
         :param revitFiles: List containing path to files.
         :type revitFiles: [str]
         :param settings: A settings object.
         :type settings: :class:`.FileSelectionSettings`
         '''
         
-        wpf.LoadComponent(self,xamlFullFileName)
+        wpf.LoadComponent(self,xaml_full_file_name)
 
         # populate fields
         self.selectedFiles = []
@@ -100,9 +100,9 @@ class MyWindow (Windows.Window):
             self.selectedFiles = []
             for row in rows:
                 # get the original file element
-                for oRev in self.revitfiles:
-                    if(oRev.name == row.name):
-                        self.selectedFiles.append(oRev)
+                for o_rev in self.revitfiles:
+                    if(o_rev.name == row.name):
+                        self.selectedFiles.append(o_rev)
                         break
             # Mbox('ok',str(len(self.selectedFiles)), 1)
             self.DialogResult = True

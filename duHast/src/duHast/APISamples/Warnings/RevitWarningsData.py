@@ -69,29 +69,29 @@ class WarningsData(IFamData.IFamilyData):
         # loop over warnings and extract data
         for warning in warnings:
             # check for a guid
-            warGUID = ''
+            war_guid = ''
             try:
-                warGUID = warning.GetFailureDefinitionId().Guid
+                war_guid = warning.GetFailureDefinitionId().Guid
             except Exception as e:
                 pass
             # warning text
-            warText = ''
+            war_text = ''
             try:
-                warText = warning.GetDescriptionText()
+                war_text = warning.GetDescriptionText()
             except Exception as e:
                 pass
             # affected element ids
-            warElementIdsAsInteger = []
+            war_element_ids_as_integer = []
             try:
                 for el in warning.GetFailingElements():
-                    warElementIdsAsInteger.append(el.IntegerValue)
+                    war_element_ids_as_integer.append(el.IntegerValue)
             except Exception as e:
                 pass
             # other element ids
-            warOtherElementIdsAsInteger = []
+            war_other_element_ids_as_integer = []
             try:
                 for el in warning.GetAdditionalElements():
-                    warOtherElementIdsAsInteger.append(el.IntegerValue)
+                    war_other_element_ids_as_integer.append(el.IntegerValue)
             except Exception as e:
                 pass
 
@@ -101,10 +101,10 @@ class WarningsData(IFamData.IFamilyData):
                 IFamData.ROOT_CATEGORY : self.rootCategoryPath,
                 IFamData.FAMILY_NAME : doc.Title,
                 IFamData.FAMILY_FILE_PATH : doc.PathName,
-                WARNING_TEXT : warText,
-                WARNING_GUID : warGUID,
-                WARNING_RELATED_IDS : warElementIdsAsInteger,
-                WARNING_OTHER_IDS: warOtherElementIdsAsInteger
+                WARNING_TEXT : war_text,
+                WARNING_GUID : war_guid,
+                WARNING_RELATED_IDS : war_element_ids_as_integer,
+                WARNING_OTHER_IDS: war_other_element_ids_as_integer
                 }
             )
         

@@ -47,13 +47,13 @@ def get_all_curtain_wall_type_ids(doc):
         ids = dic[CURTAIN_WALL_FAMILY_NAME]
     return ids
 
-def get_all_curtain_wall_instances(doc, availableIds):
+def get_all_curtain_wall_instances(doc, available_ids):
     '''
     Gets all curtain wall elements placed in model...ignores legend elements.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availableIds: Filter: curtain wall type ids to check wall instances for.
-    :type availableIds: list of Autodesk.Revit.DB.ElementId
+    :param available_ids: Filter: curtain wall type ids to check wall instances for.
+    :type available_ids: list of Autodesk.Revit.DB.ElementId
     :return: List of wall instances
     :rtype: List of Autodesk.Revit.DB.Wall
     '''
@@ -61,17 +61,17 @@ def get_all_curtain_wall_instances(doc, availableIds):
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
-        if(c.GetTypeId() in availableIds):
+        if(c.GetTypeId() in available_ids):
             instances.append(c)
     return instances
 
-def get_placed_curtain_wall_type_ids(doc, availableIds):
+def get_placed_curtain_wall_type_ids(doc, available_ids):
     '''
     Gets all used curtain wall types in model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param availableIds: Filter: curtain wall type ids to check wall types for.
-    :type availableIds: list of Autodesk.Revit.DB.ElementId
+    :param available_ids: Filter: curtain wall type ids to check wall types for.
+    :type available_ids: list of Autodesk.Revit.DB.ElementId
     :return: List of wall instances
     :rtype: List of Autodesk.Revit.DB.Wall
     '''
@@ -79,6 +79,6 @@ def get_placed_curtain_wall_type_ids(doc, availableIds):
     instances = []
     col = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsNotElementType()
     for c in col:
-        if(c.GetTypeId() in availableIds):
+        if(c.GetTypeId() in available_ids):
             instances.append(c.GetTypeId())
     return instances

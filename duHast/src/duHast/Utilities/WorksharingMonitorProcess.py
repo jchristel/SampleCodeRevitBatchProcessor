@@ -49,16 +49,16 @@ def get_work_sharing_monitor_processes():
     :return: _description_
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
-    allProcesses = sp.get_all_running_processes()
-    wsmProcesses = sp.filter_by_process_name([PROCESS_NAME_WSM], allProcesses)
-    return wsmProcesses
+    all_processes = sp.get_all_running_processes()
+    wsm_processes = sp.filter_by_process_name([PROCESS_NAME_WSM], all_processes)
+    return wsm_processes
 
-def write_out_wsm_data_to_file(directoryPath):
+def write_out_wsm_data_to_file(directory_path):
     '''
     Writes out all running worksharing monitor processes data to file
 
-    :param directoryPath: The directory path to where the marker file is to be saved.
-    :type directoryPath: str
+    :param directory_path: The directory path to where the marker file is to be saved.
+    :type directory_path: str
     
     :return:  
         Result class instance.
@@ -75,22 +75,22 @@ def write_out_wsm_data_to_file(directoryPath):
     '''
 
     status = res.Result()
-    processList = get_work_sharing_monitor_processes()
-    statusWriteOut = sp.write_out_process_data(directoryPath, processList, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILE_EXTENSION)
-    if(statusWriteOut):
-        status.update_sep(True, 'Successfully wrote WSM process marker file to: ' + str(directoryPath))
+    process_list = get_work_sharing_monitor_processes()
+    status_write_out = sp.write_out_process_data(directory_path, process_list, PROCESS_MARKER_FILENAME, PROCESS_MARKER_FILE_EXTENSION)
+    if(status_write_out):
+        status.update_sep(True, 'Successfully wrote WSM process marker file to: ' + str(directory_path))
     else:
-        status.update_sep(False, 'Failed to write WSM process marker file to: ' + str(directoryPath))
+        status.update_sep(False, 'Failed to write WSM process marker file to: ' + str(directory_path))
     return status
 
-def delete_wsm_data_files(directoryPath):
+def delete_wsm_data_files(directory_path):
     '''
     Deletes all WSM marker files in a directory.
 
     WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION 
 
-    :param directoryPath: The directory path containing marker files to be deleted.
-    :type directoryPath: str
+    :param directory_path: The directory path containing marker files to be deleted.
+    :type directory_path: str
 
     :return: True if all files where deleted successfully, otherwise False.
     :rtype: bool
@@ -98,65 +98,65 @@ def delete_wsm_data_files(directoryPath):
 
     status = True
     # get files in directory
-    filesToDelete = fileGet.get_files_with_filter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
-    if(len(filesToDelete) > 0):
-        statusDelete = True
-        for file in filesToDelete:
-            statusDelete = statusDelete and util.file_delete(file)
+    files_to_delete = fileGet.get_files_with_filter(directory_path, PROCESS_MARKER_FILE_EXTENSION)
+    if(len(files_to_delete) > 0):
+        status_delete = True
+        for file in files_to_delete:
+            status_delete = status_delete and util.file_delete(file)
     return status
 
-def read_wsm_data_from_file(directoryPath):
+def read_wsm_data_from_file(directory_path):
     '''
     Reads all worksharing monitor processes data from marker file(s) in a given directory
     
     WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION 
 
-    :param directoryPath: The directory path to where marker files are to be read from.
-    :type directoryPath: str
+    :param directory_path: The directory path to where marker files are to be read from.
+    :type directory_path: str
     
     :return: list of list of str
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
     
-    processData = []
-    files = fileGet.get_files_with_filter(directoryPath, PROCESS_MARKER_FILE_EXTENSION)
+    process_data = []
+    files = fileGet.get_files_with_filter(directory_path, PROCESS_MARKER_FILE_EXTENSION)
     if(len(files) > 0):
         for file in files:
             rows = filesCSV.read_csv_file(file)
             if(len(rows)>0):
-                processData = processData + rows
-    return processData
+                process_data = process_data + rows
+    return process_data
 
-def get_wsm_sessions_to_delete(WSMsToKeep):
+def get_wsm_sessions_to_delete(ws_ms_to_keep):
     '''
     Returns Worksharing monitor process sessions filtered by provided list (not in list)
 
-    :param WSMsToKeep: List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.
-    :type WSMsToKeep: List of list of str in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
+    :param ws_ms_to_keep: List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.
+    :type ws_ms_to_keep: List of list of str in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     
     :return: Filtered list of list of str of worksharing monitor sessions 
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     '''
 
-    allRunningWSMProcesses = get_work_sharing_monitor_processes()
-    if(len(WSMsToKeep) > 0):
+    all_running_wsm_processes = get_work_sharing_monitor_processes()
+    if(len(ws_ms_to_keep) > 0):
         # get ids from list
         ids= []
-        for wsmP in WSMsToKeep:
-            ids.append(wsmP[3])
-        filteredProcesses = sp.filter_by_process_ids(ids, WSMsToKeep, False)
-        return filteredProcesses
+        for wsm_p in ws_ms_to_keep:
+            ids.append(wsm_p[3])
+        filtered_processes = sp.filter_by_process_ids(ids, ws_ms_to_keep, False)
+        return filtered_processes
     else:
-        return allRunningWSMProcesses
+        return all_running_wsm_processes
 
-def clean_up_wsm_data_files(directoryPath):
+def clean_up_wsm_data_files(directory_path):
     '''
     Removes all wsm data marker files in a given directory.
 
     WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION.
 
-    :param directoryPath: The directory path containing the marker files to be deleted.
-    :type directoryPath: str
+    :param directory_path: The directory path containing the marker files to be deleted.
+    :type directory_path: str
     
     :return:  
         Result class instance.
@@ -174,23 +174,23 @@ def clean_up_wsm_data_files(directoryPath):
 
     status = res.Result()
     # attempt to delete old marker files
-    statusDelete = delete_wsm_data_files(directoryPath)
-    if(statusDelete):
+    status_delete = delete_wsm_data_files(directory_path)
+    if(status_delete):
         status.update_sep(True,'Successfully deleted WSM marker file(s)!')
     else:
         status.update_sep(False,'Failed to delete WSM marker file(s)!')
     return status
 
-def die_wsm_die(directoryPath, ignoreMarkerFiles = False):
+def die_wsm_die(directory_path, ignore_marker_files = False):
     '''
     Kills all worksharing monitor processes currently active.
 
     Unless marker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.
 
-    :param directoryPath: The directory path to where marker files are to be read from.
-    :type directoryPath: str
-    :param ignoreMarkerFiles: True no marker file data will be read and all WSM sessions running will be killed., defaults to False
-    :type ignoreMarkerFiles: bool, optional
+    :param directory_path: The directory path to where marker files are to be read from.
+    :type directory_path: str
+    :param ignore_marker_files: True no marker file data will be read and all WSM sessions running will be killed., defaults to False
+    :type ignore_marker_files: bool, optional
     
     :return:  
         Result class instance.
@@ -208,13 +208,13 @@ def die_wsm_die(directoryPath, ignoreMarkerFiles = False):
 
     status = res.Result()
     try:
-        wsmRunningPrior = []
-        if(ignoreMarkerFiles == False):
+        wsm_running_prior = []
+        if(ignore_marker_files == False):
             # read out worksharing monitor sessions running before script started
-            wsmRunningPrior = read_wsm_data_from_file(directoryPath)
-        wsmToDelete = get_wsm_sessions_to_delete(wsmRunningPrior)
-        statusKill = sp.kill_processes(wsmToDelete)
-        if(statusKill):
+            wsm_running_prior = read_wsm_data_from_file(directory_path)
+        wsm_to_delete = get_wsm_sessions_to_delete(wsm_running_prior)
+        status_kill = sp.kill_processes(wsm_to_delete)
+        if(status_kill):
             status.update_sep(True, 'All WSM sessions where killed.')
         else:
             status.update_sep(False, 'Failed to kill all WSM sessions.')

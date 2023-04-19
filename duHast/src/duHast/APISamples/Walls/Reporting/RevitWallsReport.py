@@ -34,46 +34,46 @@ import duHast.Utilities.UnitConversion
 
 import Autodesk.Revit.DB as rdb
 
-def get_wall_report_data(doc, revitFilePath):
+def get_wall_report_data(doc, revit_file_path):
     '''
     Gets wall data to be written to report file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The file hostname, which is added to data returned.
-    :type revitFilePath: str
+    :param revit_file_path: The file hostname, which is added to data returned.
+    :type revit_file_path: str
     :return: list of list of sheet properties.
     :rtype: list of list of str
     '''
 
     data = []
-    wallTypes = rWallTypeSort.GetAllWallTypes(doc)
-    for wt in wallTypes:
+    wall_types = rWallTypeSort.GetAllWallTypes(doc)
+    for wt in wall_types:
         try:
-            wallTypeName = str(rdb.Element.Name.GetValue(wt))
+            wall_type_name = str(rdb.Element.Name.GetValue(wt))
             cs = wt.GetCompoundStructure()
             if cs != None:
-                csLayers = cs.GetLayers()
-                #print(len(csLayers))
-                for csLayer in csLayers:
-                    layerMat = rMat.GetMaterialById(doc, csLayer.MaterialId)
-                    materialMark = com.get_element_mark(layerMat)
-                    materialName = rMat.GetMaterialNameById(doc, csLayer.MaterialId)
-                    layerFunction = str(csLayer.Function)
-                    layerWidth = str(duHast.Utilities.UnitConversion.convert_imperial_feet_to_metric_mm(csLayer.Width)) # conversion from imperial to metric
+                cs_layers = cs.GetLayers()
+                #print(len(cs_layers))
+                for cs_layer in cs_layers:
+                    layer_mat = rMat.GetMaterialById(doc, cs_layer.MaterialId)
+                    material_mark = com.get_element_mark(layer_mat)
+                    material_name = rMat.GetMaterialNameById(doc, cs_layer.MaterialId)
+                    layer_function = str(cs_layer.Function)
+                    layer_width = str(duHast.Utilities.UnitConversion.convert_imperial_feet_to_metric_mm(cs_layer.Width)) # conversion from imperial to metric
                     data.append([
-                        revitFilePath,
+                        revit_file_path,
                         str(wt.Id),
-                        util.encode_ascii(wallTypeName),
-                        layerFunction,
-                        layerWidth,
-                        util.encode_ascii(materialName),
-                        util.encode_ascii(materialMark)
+                        util.encode_ascii(wall_type_name),
+                        layer_function,
+                        layer_width,
+                        util.encode_ascii(material_name),
+                        util.encode_ascii(material_mark)
                         ])
             else:
                 data.append([
-                    revitFilePath,
+                    revit_file_path,
                     str(wt.Id),
-                    util.encode_ascii(wallTypeName),
+                    util.encode_ascii(wall_type_name),
                     'no layers - in place family or curtain wall',
                     str(0.0),
                     'NA',
@@ -81,7 +81,7 @@ def get_wall_report_data(doc, revitFilePath):
                 ])
         except:
             data.append([
-                revitFilePath,
+                revit_file_path,
                 str(wt.Id)
             ])
     return data

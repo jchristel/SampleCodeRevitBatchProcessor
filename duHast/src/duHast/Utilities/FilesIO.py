@@ -34,79 +34,79 @@ import shutil
 from System.IO import Path
 
 
-def file_exist(fullFilePath):
+def file_exist(full_file_path):
     '''
     Checks whether a file exists
-    :param fullFilePath: Fully qualified file path
-    :type fullFilePath: str
+    :param full_file_path: Fully qualified file path
+    :type full_file_path: str
     :return: True file exists, otherwise False
     :rtype: bool
     '''
 
     try:
-        value = os.path.exists(fullFilePath)
+        value = os.path.exists(full_file_path)
     except Exception:
         value = False
     return value
 
 
-def file_delete(fullFilePath):
+def file_delete(full_file_path):
     try:
-        os.remove(fullFilePath)
+        os.remove(full_file_path)
         value = True
     except Exception:
         value = False
     return value
 
 
-def get_directory_path_from_file_path(filePath):
+def get_directory_path_from_file_path(file_path):
     '''
     Extracts directory from file path.
-    :param filePath: A fully qualified file path.
-    :type filePath: str
+    :param file_path: A fully qualified file path.
+    :type file_path: str
     :return: If no exception occurs : A fully qualified directory path,else an empty string.
     :rtype: str
     '''
     try:
-        value = os.path.dirname(filePath)
+        value = os.path.dirname(file_path)
     except Exception:
         value = ''
     return value
 
 
-def rename_file(oldName, newName):
+def rename_file(old_name, new_name):
     '''
     Renames a file.
-    :param oldName: Fully qualified file path to file to be renamed.
-    :type oldName: str
-    :param newName: Fully qualified new file name.
-    :type newName: str
+    :param old_name: Fully qualified file path to file to be renamed.
+    :type old_name: str
+    :param new_name: Fully qualified new file name.
+    :type new_name: str
     :return: True file renamed, otherwise False
     :rtype: bool
     '''
 
     try:
-        os.rename(oldName, newName)
+        os.rename(old_name, new_name)
         value = True
     except Exception:
         value = False
     return value
 
 
-def copy_file(oldName, newName):
+def copy_file(old_name, new_name):
     '''
     Copies a file
-    :param oldName: Fully qualified file path to file to be copied.
-    :type oldName: str
-    :param newName: Fully qualified path to new file location and name.
-    :type newName: str
+    :param old_name: Fully qualified file path to file to be copied.
+    :type old_name: str
+    :param new_name: Fully qualified path to new file location and name.
+    :type new_name: str
     :return: True file copied, otherwise False
     :rtype: bool
     '''
 
     value = True
     try:
-        shutil.copy(oldName, newName)
+        shutil.copy(old_name, new_name)
     except Exception:
         value = False
     return value
@@ -118,11 +118,11 @@ FILE_SIZE_IN_MB = 1024*1024
 #: file size in GB conversion
 FILE_SIZE_IN_GB = 1024*1024*1024
 
-def get_file_size(filePath, unit = FILE_SIZE_IN_MB):
+def get_file_size(file_path, unit = FILE_SIZE_IN_MB):
     '''
     Get the file size in given units (default is MB)
-    :param filePath: Fully qualified file path
-    :type filePath: str
+    :param file_path: Fully qualified file path
+    :type file_path: str
     :param unit: the file size unit, defaults to FILE_SIZE_IN_MB
     :type unit: int
     :return: The file size.
@@ -132,7 +132,7 @@ def get_file_size(filePath, unit = FILE_SIZE_IN_MB):
     # default value if anything goes wrong
     size = -1
     try:
-        size = os.path.getsize(filePath)
+        size = os.path.getsize(file_path)
         # convert units
         size = size / unit
     except:
@@ -140,55 +140,55 @@ def get_file_size(filePath, unit = FILE_SIZE_IN_MB):
     return size
 
 
-def convert_relative_path_to_full_path(relativeFilePath, fullFilePath):
+def convert_relative_path_to_full_path(relative_file_path, full_file_path):
     '''
     removes '../..' or '../' from relative file path string and replaces it with full path derived path past in sample path.
     - relative path sample: 'C:/temp/../myfile.ext'
     - full file path sample: 'C:/temp/Sample/someOtherFile.ext'
     - returns: 'C:/temp/Sample/myfile.ext'
-    :param relativeFilePath: String containing relative file path annotation.
-    :type relativeFilePath: str
-    :param fullFilePath: A fully qualified file path of which the relative file path is a sub set.
-    :type fullFilePath: str
+    :param relative_file_path: String containing relative file path annotation.
+    :type relative_file_path: str
+    :param full_file_path: A fully qualified file path of which the relative file path is a sub set.
+    :type full_file_path: str
     :return: A fully qualified file path.
     :rtype: str
     '''
 
-    if( r'..\..' in relativeFilePath):
-        two_up = path.abspath(path.join(fullFilePath ,r'..\..'))
-        return two_up + relativeFilePath[5:]
-    elif('..' in relativeFilePath):
-        one_up = path.abspath(path.join(fullFilePath ,'..'))
-        return one_up + relativeFilePath[2:]
+    if( r'..\..' in relative_file_path):
+        two_up = path.abspath(path.join(full_file_path ,r'..\..'))
+        return two_up + relative_file_path[5:]
+    elif('..' in relative_file_path):
+        one_up = path.abspath(path.join(full_file_path ,'..'))
+        return one_up + relative_file_path[2:]
     else:
-        return relativeFilePath
+        return relative_file_path
 
 
-def get_file_name_without_ext(filePath):
+def get_file_name_without_ext(file_path):
     '''
     Returns the file name without the file extension.
-    :param filePath: Fully qualified file path to file
-    :type filePath: str
+    :param file_path: Fully qualified file path to file
+    :type file_path: str
     :return: The file name.
     :rtype: str
     '''
 
-    name = Path.GetFileNameWithoutExtension(filePath)
+    name = Path.GetFileNameWithoutExtension(file_path)
     return name
 
 
-def get_first_row_in_file(filePath):
+def get_first_row_in_file(file_path):
     '''
     Reads the first line of a text file and returns it as a single string
-    :param filePath: The fully qualified file path.
-    :type filePath: str
+    :param file_path: The fully qualified file path.
+    :type file_path: str
     :return: The first row of a text file.
     :rtype: str
     '''
 
     row = ''
     try:
-        with open(filePath) as f:
+        with open(file_path) as f:
             row = f.readline().strip()
     except Exception:
         row = None

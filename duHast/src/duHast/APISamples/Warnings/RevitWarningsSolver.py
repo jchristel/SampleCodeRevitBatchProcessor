@@ -46,14 +46,14 @@ class RevitWarningsSolver(Base.Base):
 
     # --------------------------- available filters ---------------------------
 
-    def default_filter_return_all(self, doc, elementId):
+    def default_filter_return_all(self, doc, element_id):
         '''
         Default filter for elements past into solver...returns True for any element past in.
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :param elementId: The id of the element to be checked.
-        :type elementId: Autodesk.Revit.DB.ElementId
+        :param element_id: The id of the element to be checked.
+        :type element_id: Autodesk.Revit.DB.ElementId
         
         :return: True always.
         :rtype: bool
@@ -84,17 +84,17 @@ class RevitWarningsSolver(Base.Base):
 
         self.filterFuncSameMark = self.default_filter_return_all
     
-    def set_same_mark_filter_and_filter_solver(self, sameMarkFilterSolver):
+    def set_same_mark_filter_and_filter_solver(self, same_mark_filter_solver):
         '''
         Method allowing to override the default filter function
 
-        :param sameMarkFilterSolver: A function to filter elements in warnings by
-        :type sameMarkFilterSolver: func(document, elementId, list of filter values)
+        :param same_mark_filter_solver: A function to filter elements in warnings by
+        :type same_mark_filter_solver: func(document, elementId, list of filter values)
         '''
 
         # replace the old solver
-        self.AVAILABLE_SOLVERS[sameMarkFilterSolver.GUID] = sameMarkFilterSolver
-        self.solver_same_mark = sameMarkFilterSolver
+        self.AVAILABLE_SOLVERS[same_mark_filter_solver.GUID] = same_mark_filter_solver
+        self.solver_same_mark = same_mark_filter_solver
 
     def solve_warnings(self,doc):
         '''
@@ -113,14 +113,14 @@ class RevitWarningsSolver(Base.Base):
         :rtype: :class:`.Result`
         '''
 
-        returnValue = res.Result()
+        return_value = res.Result()
         try:
             for solver in self.AVAILABLE_SOLVERS:
                 warnings =  rWar.get_warnings_by_guid(doc, self.AVAILABLE_SOLVERS[solver].GUID)
-                resultSolver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
-                returnValue.update(resultSolver)
+                result_solver = self.AVAILABLE_SOLVERS[solver].SolveWarnings(doc, warnings)
+                return_value.update(result_solver)
         except Exception as e:
             print (str(e))
-        return returnValue
+        return return_value
 
     

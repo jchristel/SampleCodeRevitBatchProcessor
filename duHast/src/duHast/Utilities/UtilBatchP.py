@@ -39,28 +39,28 @@ def adjust_session_id_for_file_name(id):
     '''
 
     # remove colons
-    sessionIdChanged = id.replace(':','_')
+    session_id_changed = id.replace(':','_')
     # remove chevrons
-    sessionIdChanged = sessionIdChanged[1:-1]
-    return sessionIdChanged
+    session_id_changed = session_id_changed[1:-1]
+    return session_id_changed
 
-def adjust_session_id_file_name_back(fileNameId):
+def adjust_session_id_file_name_back(file_name_id):
     '''
     Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a\
         file name using a batch processor supplied id.
 
-    :param fileNameId: A file name containing a session id with all illegal characters replaced.
-    :type fileNameId: str
+    :param file_name_id: A file name containing a session id with all illegal characters replaced.
+    :type file_name_id: str
 
     :return: A session id.
     :rtype: str
     '''
 
     # re-instate colons
-    sessionIdChanged = fileNameId.replace('_',':')
+    session_id_changed = file_name_id.replace('_',':')
     # remove chevrons
-    sessionIdChanged = '<' + sessionIdChanged + '>'
-    return sessionIdChanged
+    session_id_changed = '<' + session_id_changed + '>'
+    return session_id_changed
 
 def adjust_session_id_for_directory_name(id):
     '''
@@ -75,14 +75,14 @@ def adjust_session_id_for_directory_name(id):
     '''
 
     # remove colons
-    sessionIdChanged = id.replace(':','_')
+    session_id_changed = id.replace(':','_')
     # remove spaces
-    sessionIdChanged = sessionIdChanged.replace(' ','_')
+    session_id_changed = session_id_changed.replace(' ','_')
     # remove full stops
-    sessionIdChanged = sessionIdChanged.replace('.','_')
+    session_id_changed = session_id_changed.replace('.','_')
     # remove dashes
-    sessionIdChanged = sessionIdChanged.replace('-','_')
+    session_id_changed = session_id_changed.replace('-','_')
     # remove chevrons
-    sessionIdChanged = sessionIdChanged.replace('<','')
-    sessionIdChanged = sessionIdChanged.replace('>','')
-    return sessionIdChanged
+    session_id_changed = session_id_changed.replace('<','')
+    session_id_changed = session_id_changed.replace('>','')
+    return session_id_changed

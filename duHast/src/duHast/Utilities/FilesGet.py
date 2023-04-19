@@ -32,138 +32,138 @@ from duHast.Utilities.FilesIO import get_file_name_without_ext
 import os
 
 
-def get_files_single_directory(folderPath, filePrefix, fileSuffix, fileExtension):
+def get_files_single_directory(folder_path, file_prefix, file_suffix, file_extension):
     '''
     Get files from a folder filtered by file prefix, file suffix, file extension
-    :param folderPath: Folder path from which to get files.
-    :type folderPath: str
-    :param filePrefix: Filter: File name starts with this value.
-    :type filePrefix: str
-    :param fileSuffix: Filter: File name ends with this value.
-    :type fileSuffix: str
-    :param fileExtension: Filter: File needs to have this file extension
-    :type fileExtension: str, format '.extension'
+    :param folder_path: Folder path from which to get files.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value.
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
     :return: A list of all the files matching the supplied filters.
     :rtype: list str
     '''
 
-    fileList = glob.glob(folderPath + '\\' + filePrefix + '*' + fileSuffix + fileExtension)
+    fileList = glob.glob(folder_path + '\\' + file_prefix + '*' + file_suffix + file_extension)
     return fileList
 
 
-def get_files_from_directory_walker_with_filters(folderPath, filePrefix, fileSuffix, fileExtension):
+def get_files_from_directory_walker_with_filters(folder_path, file_prefix, file_suffix, file_extension):
     '''
     Returns a list of all files in directory and nested sub directories where file name matches filters value.
-    :param folderPath: Root folder path from which to get files.
-    :type folderPath: str
-    :param filePrefix: Filter: File name starts with this value
-    :type filePrefix: str
-    :param fileSuffix: Filter: File name ends with this value.
-    :type fileSuffix: str
-    :param fileExtension: Filter: File needs to have this file extension
-    :type fileExtension: str, format '.extension'
+    :param folder_path: Root folder path from which to get files.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
     :return: A list of all the files matching the supplied filters.
     :rtype: list str
     '''
 
-    filesFound = []
-    for root, dirs, files in os.walk(folderPath):
+    files_found = []
+    for root, dirs, files in os.walk(folder_path):
         for name in files:
-            fileName = get_file_name_without_ext(name)
-            if (name.endswith(fileExtension) and fileName.startswith(filePrefix) and fileName.endswith(fileSuffix)):
-                filesFound.append(root + '\\' + name)
-    return filesFound
+            file_name = get_file_name_without_ext(name)
+            if (name.endswith(file_extension) and file_name.startswith(file_prefix) and file_name.endswith(file_suffix)):
+                files_found.append(root + '\\' + name)
+    return files_found
 
 
-def get_files_from_directory_walker_with_filters_simple(folderPath, fileExtension):
+def get_files_from_directory_walker_with_filters_simple(folder_path, file_extension):
     '''
     Returns a list of all files in directory and nested subdirectories where file name matches file extension filter value
-    :param folderPath: Root folder path from which to get files.
-    :type folderPath: str
-    :param fileExtension: Filter: File needs to have this file extension
-    :type fileExtension: str, format '.extension'
+    :param folder_path: Root folder path from which to get files.
+    :type folder_path: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
     :return: A list of all the files matching the supplied filters.
     :rtype: list str
     '''
 
-    filesFound = []
-    filesFound = get_files_from_directory_walker_with_filters(folderPath, '', '', fileExtension)
-    return filesFound
+    files_found = []
+    files_found = get_files_from_directory_walker_with_filters(folder_path, '', '', file_extension)
+    return files_found
 
 
-def files_as_dictionary(folderPath, filePrefix, fileSuffix, fileExtension, includeSubDirs = False):
+def files_as_dictionary(folder_path, file_prefix, file_suffix, file_extension, include_sub_dirs = False):
     '''
     Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value. 
     - key file name without extension
     - values: list of directories where this file occurs (based on file name only!)
     Use case: check for duplicates by file name only
-    :param folderPath: Root folder path from which to get files.
-    :type folderPath: str
-    :param filePrefix: Filter: File name starts with this value
-    :type filePrefix: str
-    :param fileSuffix: Filter: File name ends with this value.
-    :type fileSuffix: str
-    :param fileExtension: Filter: File needs to have this file extension
-    :type fileExtension: str, format '.extension'
-    :param includeSubDirs: If True subdirectories will be included in search for files, defaults to False
-    :type includeSubDirs: bool, optional
+    :param folder_path: Root folder path from which to get files.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
+    :param include_sub_dirs: If True subdirectories will be included in search for files, defaults to False
+    :type include_sub_dirs: bool, optional
     :return: A dictionary where the key is the file name without the file extension. Value is a list of fully qualified file path to instances of that file.
     :rtype: dictionary
         key: str
         value: lit of str
     '''
 
-    filesFound = []
+    files_found = []
     # set up a dictionary
-    fileDic = {}
+    file_dic = {}
     try:
-        if(includeSubDirs):
-            filesFound = get_files_from_directory_walker_with_filters(folderPath, '', '', '.rfa')
+        if(include_sub_dirs):
+            files_found = get_files_from_directory_walker_with_filters(folder_path, '', '', '.rfa')
         else:
-            filesFound = get_files_single_directory(folderPath, '', '', '.rfa')
+            files_found = get_files_single_directory(folder_path, '', '', '.rfa')
     except Exception:
-        return fileDic
+        return file_dic
 
     # populate dictionary
-    for filePath in filesFound:
-        fileName = get_file_name_without_ext(filePath)
-        if(fileName in fileDic):
-            fileDic[fileName].append(filePath)
+    for file_path in files_found:
+        file_name = get_file_name_without_ext(file_path)
+        if(file_name in file_dic):
+            file_dic[file_name].append(file_path)
         else:
-            fileDic[fileName] = [filePath]
-    return fileDic
+            file_dic[file_name] = [file_path]
+    return file_dic
 
 
-def get_files(folderPath, fileExtension='.rvt'):
+def get_files(folder_path, file_extension='.rvt'):
     '''
     Gets a list of files from a given folder with a given file extension
-    :param folderPath: Folder path from which to get files to be combined and to which the combined file will be saved.
-    :type folderPath: str
-    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
-    :type fileExtension: str, optional
+    :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folder_path: str
+    :param file_extension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type file_extension: str, optional
     :return: List of file path
     :rtype: list of str
     '''
 
-    file_list = glob.glob(folderPath + '\\*' + fileExtension)
+    file_list = glob.glob(folder_path + '\\*' + file_extension)
     return file_list
 
 
-def get_files_with_filter(folderPath, fileExtension='.rvt', filter = '*'):
+def get_files_with_filter(folder_path, file_extension='.rvt', filter = '*'):
     '''
     Gets a list of files from a given folder with a given file extension and a matching a file name filter.
 
-    :param folderPath: Folder path from which to get files.
-    :type folderPath: str
-    :param fileExtension: Filter: File needs to have this file extension, defaults to '.rvt'
-    :type fileExtension: str, optional
+    :param folder_path: Folder path from which to get files.
+    :type folder_path: str
+    :param file_extension: Filter: File needs to have this file extension, defaults to '.rvt'
+    :type file_extension: str, optional
     :param filter: File name filter ('something*'), defaults to '*'
     :type filter: str, optional
     :return: List of file path
     :rtype: list of str
     '''
 
-    file_list = glob.glob(folderPath + '\\' + filter + fileExtension)
+    file_list = glob.glob(folder_path + '\\' + filter + file_extension)
     return file_list
 
 
@@ -179,9 +179,9 @@ def get_files_from_directory_walker(path, filter):
     :rtype: list of str
     '''
 
-    filesFound = []
+    files_found = []
     for root, dirs, files in os.walk(path):
         for name in files:
             if (name.Contains(filter)) :
-                filesFound.append(root + '\\' + name)
-    return filesFound
+                files_found.append(root + '\\' + name)
+    return files_found

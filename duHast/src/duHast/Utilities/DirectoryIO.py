@@ -32,90 +32,90 @@ import os.path
 import shutil
 
 
-def directory_empty_delete(fullDirectoryPath):
+def directory_empty_delete(full_directory_path):
     '''
     Deletes an empty directory
-    :param fullDirectoryPath: Path to directory
-    :type fullDirectoryPath: str
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
     :return: True directory deleted, otherwise False
     :rtype: bool
     '''
 
     try:
-        os.rmdir(fullDirectoryPath)
+        os.rmdir(full_directory_path)
         value = True
     except Exception:
         value = False
     return value
 
 
-def directory_delete(fullDirectoryPath):
+def directory_delete(full_directory_path):
     '''
     Deletes a directory (even if it contains files)
-    :param fullDirectoryPath: Path to directory
-    :type fullDirectoryPath: str
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
     :return: True directory deleted, otherwise False
     :rtype: bool
     '''
 
     try:
-        shutil.rmtree(fullDirectoryPath)
+        shutil.rmtree(full_directory_path)
         value = True
     except Exception as e:
-        print('When attempting to delete: {} an exception occurred: {}'.format(fullDirectoryPath, e))
+        print('When attempting to delete: {} an exception occurred: {}'.format(full_directory_path, e))
         value = False
     return value
 
 
-def get_child_directories(fullDirectoryPath):
+def get_child_directories(full_directory_path):
     '''
     Returns the immediate subdirectories of directory
-    :param fullDirectoryPath: Path to directory
-    :type fullDirectoryPath: str
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
     :return: any sub directories, empty list if none exist
     :rtype: list of str
     '''
 
-    subFoldersWithPaths = []
-    for root, dirs, files in os.walk(fullDirectoryPath):
+    sub_folders_with_paths = []
+    for root, dirs, files in os.walk(full_directory_path):
         for dir in dirs:
-            subFoldersWithPaths.append( os.path.join(root, dir) )
+            sub_folders_with_paths.append( os.path.join(root, dir) )
         break
-    return subFoldersWithPaths
+    return sub_folders_with_paths
 
 
-def get_parent_directory(fullDirectoryPath):
+def get_parent_directory(full_directory_path):
     '''
     Returns the parent directory of directory, or empty string if invalid directory
-    :param fullDirectoryPath: Path to directory
-    :type fullDirectoryPath: str
+    :param full_directory_path: Path to directory
+    :type full_directory_path: str
     :return: parent directory, or empty string
     :rtype: str
     '''
 
-    parentDir = ''
+    parent_dir = ''
     try:
-        parentDir = os.path.dirname(fullDirectoryPath)
+        parent_dir = os.path.dirname(full_directory_path)
     except Exception:
         pass
-    return parentDir
+    return parent_dir
 
 
-def create_directory(root, folderName):
+def create_directory(root, folder_name):
     '''
     Create a folder.
     :param root: Directory path in which the new folder is to be created
     :type root: str
-    :param folderName: New folder name.
-    :type folderName: str
+    :param folder_name: New folder name.
+    :type folder_name: str
     :return: True if folder is created, otherwise False
     :rtype: bool
     '''
 
-    dirName = path.join(root,folderName)
+    dir_name = path.join(root,folder_name)
     flag = True
     try:
-        os.mkdir(dirName)
+        os.mkdir(dir_name)
     except Exception as e:
         # just in case the folder does exist (created by another instance at almost the same time)
         if('[Errno 17]' not in str(e)):
@@ -123,36 +123,36 @@ def create_directory(root, folderName):
     return flag
 
 
-def create_target_directory(rootPath, folderName):
+def create_target_directory(root_path, folder_name):
     '''
     Create a folder.
     Checks whether folder exists and if not attempts to create it.
 
     :param root: Directory path in which the new folder is to be created
     :type root: str
-    :param folderName: New folder name.
-    :type folderName: str
+    :param folder_name: New folder name.
+    :type folder_name: str
     :return: True if folder is created, otherwise False
     :rtype: bool
     '''
 
     #check if folder exists
     flag = True
-    if(path.exists(rootPath + '\\' + folderName) == False):
+    if(path.exists(root_path + '\\' + folder_name) == False):
         #create new folder
-        flag = create_directory(rootPath, folderName)
+        flag = create_directory(root_path, folder_name)
     return flag
 
 
-def directory_exists(directoryPath):
+def directory_exists(directory_path):
     '''
     Check if a given directory exists
-    :param directoryPath: Fully qualified directory path
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path
+    :type directory_path: str
     :return: True if directory exists, otherwise False
     :rtype: bool
     '''
-    if(path.exists(directoryPath)):
+    if(path.exists(directory_path)):
         return True
     else:
         return False

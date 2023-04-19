@@ -46,21 +46,21 @@ def get_used_curtain_wall_element_type_ids(doc):
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rCurtainWallElem.get_all_curtain_wall_element_type_ids_by_category, 1)
     return ids
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
-    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+    Compares two lists of ids. True if any id is not in un_used_type_ids.
     TODO: check for more generic list comparison and remove this function.
-    :param famTypeIds: List of family type ids to check.
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: Reference list of ids.
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
-    :return: True if any id from famTypeIds is not in unUsedTypeIds.
+    :param fam_type_ids: List of family type ids to check.
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: Reference list of ids.
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+    :return: True if any id from fam_type_ids is not in un_used_type_ids.
     :rtype: bool
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match

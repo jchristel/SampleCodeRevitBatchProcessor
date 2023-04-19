@@ -63,7 +63,7 @@ def sort_wall_types_by_family_name(doc):
     wts = rWallFilter._get_all_wall_types_by_class(doc)
     # get all wall types including in place wall families
     wts_two = rWallFilter._get_all_wall_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_wall_type_dictionary(wts, usedWts)
-    usedWts = build_wall_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_wall_type_dictionary(wts, used_wts)
+    used_wts = build_wall_type_dictionary(wts_two, used_wts)
+    return used_wts

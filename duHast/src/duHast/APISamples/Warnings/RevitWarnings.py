@@ -61,10 +61,10 @@ def get_warnings_by_guid(doc, guid):
     :rtype: list of Autodesk.Revit.DB.FailureMessage
     '''
 
-    filteredWarnings = []
+    filtered_warnings = []
     warnings = doc.GetWarnings()
     for warning in warnings:
         if(str(warning.GetFailureDefinitionId().Guid) == guid):
-            filteredWarnings.append(warning)
-    return filteredWarnings
+            filtered_warnings.append(warning)
+    return filtered_warnings
 

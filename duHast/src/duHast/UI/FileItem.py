@@ -33,7 +33,7 @@ from duHast.Utilities import Base
 
 class MyFileItem(Base.Base):
     
-    def __init__(self, name, size,  BIM360ProjectGuid = None , BIM360FileGuid = None, BIM360RevitVersion = '-'):
+    def __init__(self, name, size,  bim360_project_guid = None , bim360_file_guid = None, bim360_revit_version = '-'):
         '''
         Class constructor.
 
@@ -41,12 +41,12 @@ class MyFileItem(Base.Base):
         :type name: str
         :param size: The file size.
         :type size: int
-        :param  BIM360ProjectGuid: The BIM360 project GUID, defaults to None
-        :type  BIM360ProjectGuid: str, optional
-        :param BIM360FileGuid: The BIM360 file GUID, defaults to None
-        :type BIM360FileGuid: str, optional
-        :param BIM360RevitVersion: The revit file version (year only), defaults to '-'
-        :type BIM360RevitVersion: str, optional
+        :param  bim360_project_guid: The BIM360 project GUID, defaults to None
+        :type  bim360_project_guid: str, optional
+        :param bim360_file_guid: The BIM360 file GUID, defaults to None
+        :type bim360_file_guid: str, optional
+        :param bim360_revit_version: The revit file version (year only), defaults to '-'
+        :type bim360_revit_version: str, optional
         '''
 
         # ini super class to allow multi inheritance in children!
@@ -54,6 +54,6 @@ class MyFileItem(Base.Base):
         
         self.name = name
         self.size = size
-        self.bim_360_project_guid =  BIM360ProjectGuid
-        self.bim_360_file_guid = BIM360FileGuid
-        self.bim_360_revit_version = BIM360RevitVersion
+        self.bim_360_project_guid =  bim360_project_guid
+        self.bim_360_file_guid = bim360_file_guid
+        self.bim_360_revit_version = bim360_revit_version

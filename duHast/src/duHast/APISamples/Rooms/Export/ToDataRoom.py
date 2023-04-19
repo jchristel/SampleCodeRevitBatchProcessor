@@ -35,7 +35,7 @@ from duHast.APISamples.Rooms.RevitRooms import get_all_rooms
 from duHast.APISamples.Rooms.Geometry.Geometry import get_2d_points_from_revit_room
 
 
-def populate_data_room_object(doc, revitRoom):
+def populate_data_room_object(doc, revit_room):
     '''
     Returns a custom room data objects populated with some data from the revit model room past in.
     data points:
@@ -45,30 +45,30 @@ def populate_data_room_object(doc, revitRoom):
     - Design set and option
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitRoom: The room.
-    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+    :param revit_room: The room.
+    :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: A room data instance.
     :rtype: :class:`.DataRoom`
     '''
 
     # set up data class object
-    dataR = dRoom.DataRoom()
+    data_r = dRoom.DataRoom()
     # get room geometry (boundary points)
-    revitGeometryPointGroups = get_2d_points_from_revit_room(revitRoom)
-    if(len(revitGeometryPointGroups) > 0):
-        roomPointGroupsAsDoubles = []
-        for roomPointGroupByPoly in revitGeometryPointGroups:
-            dataGeometryConverted = rGeo.convert_xyz_in_data_geometry_polygons(doc, roomPointGroupByPoly)
-            roomPointGroupsAsDoubles.append(dataGeometryConverted)
-        dataR.polygon = roomPointGroupsAsDoubles
+    revit_geometry_point_groups = get_2d_points_from_revit_room(revit_room)
+    if(len(revit_geometry_point_groups) > 0):
+        room_point_groups_as_doubles = []
+        for room_point_group_by_poly in revit_geometry_point_groups:
+            data_geometry_converted = rGeo.convert_xyz_in_data_geometry_polygons(doc, room_point_group_by_poly)
+            room_point_groups_as_doubles.append(data_geometry_converted)
+        data_r.polygon = room_point_groups_as_doubles
         # get design set data
-        design_set_data = rDesignO.get_design_set_option_info(doc, revitRoom)
-        dataR.design_set_and_option.option_name = design_set_data['designOptionName']
-        dataR.design_set_and_option.set_name = design_set_data['designSetName']
-        dataR.design_set_and_option.is_primary = design_set_data['isPrimary']
+        design_set_data = rDesignO.get_design_set_option_info(doc, revit_room)
+        data_r.design_set_and_option.option_name = design_set_data['designOptionName']
+        data_r.design_set_and_option.set_name = design_set_data['designSetName']
+        data_r.design_set_and_option.is_primary = design_set_data['isPrimary']
 
         # get instance properties
-        dataR.instance_properties.id=revitRoom.Id.IntegerValue
+        data_r.instance_properties.id=revit_room.Id.IntegerValue
         # custom parameter value getters
         value_getter = {
             rdb.StorageType.Double : rParaGet.getter_double_as_double_converted_to_metric,
@@ -77,29 +77,29 @@ def populate_data_room_object(doc, revitRoom):
             rdb.StorageType.ElementId : rParaGet.getter_element_id_as_element_int, # needs to be an integer for JSON encoding
             str(None) : rParaGet.getter_none
         }
-        dataR.instance_properties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revitRoom, value_getter)
+        data_r.instance_properties.properties=rParaGet.get_all_parameters_and_values_wit_custom_getters(revit_room, value_getter)
 
         # get the model name
         if(doc.IsDetached):
-            dataR.revit_model.name = 'Detached Model'
+            data_r.revit_model.name = 'Detached Model'
         else:
-            dataR.revit_model.name = doc.Title
+            data_r.revit_model.name = doc.Title
 
         # get phase name
-        dataR.phasing.created = rPhase.get_phase_name_by_id(
+        data_r.phasing.created = rPhase.get_phase_name_by_id(
             doc,
-            rParaGet.get_built_in_parameter_value(revitRoom, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)
+            rParaGet.get_built_in_parameter_value(revit_room, rdb.BuiltInParameter.ROOM_PHASE, rParaGet.get_parameter_value_as_element_id)
             ).encode('utf-8')
-        dataR.phasing.demolished = -1
+        data_r.phasing.demolished = -1
 
         # get level data
         try:
-            dataR.level.name = rdb.Element.Name.GetValue(revitRoom.Level).encode('utf-8')
-            dataR.level.id = revitRoom.Level.Id.IntegerValue
+            data_r.level.name = rdb.Element.Name.GetValue(revit_room.Level).encode('utf-8')
+            data_r.level.id = revit_room.Level.Id.IntegerValue
         except:
-            dataR.level.name = 'no level'
-            dataR.level.id = -1
-        return dataR
+            data_r.level.name = 'no level'
+            data_r.level.id = -1
+        return data_r
 
     else:
         return None
@@ -114,10 +114,10 @@ def get_all_room_data(doc):
     :rtype: list of  :class:`.DataRoom`
     '''
 
-    allRoomData = []
+    all_room_data = []
     rooms = get_all_rooms(doc)
     for room in rooms:
         rd = populate_data_room_object(doc, room)
         if(rd is not None):
-            allRoomData.append(rd)
-    return allRoomData
+            all_room_data.append(rd)
+    return all_room_data

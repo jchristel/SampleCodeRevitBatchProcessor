@@ -32,76 +32,76 @@ from duHast.APISamples.Rooms.RevitRooms import get_all_rooms
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
 
 
-def get_room_boundary_loops(revitRoom):
+def get_room_boundary_loops(revit_room):
     '''
     Returns all boundary loops for a rooms.
-    :param revitRoom: The room.
-    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+    :param revit_room: The room.
+    :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: List of boundary loops defining the room.
     :rtype: List of lists of Autodesk.Revit.DB.BoundarySegment 
     '''
 
-    allBoundaryLoops = []
+    all_boundary_loops = []
     # set up spatial boundary option
-    spatialBoundaryOption = rdb.SpatialElementBoundaryOptions()
-    spatialBoundaryOption.StoreFreeBoundaryFaces = True
-    spatialBoundaryOption.SpatialElementBoundaryLocation = rdb.SpatialElementBoundaryLocation.Center
+    spatial_boundary_option = rdb.SpatialElementBoundaryOptions()
+    spatial_boundary_option.StoreFreeBoundaryFaces = True
+    spatial_boundary_option.SpatialElementBoundaryLocation = rdb.SpatialElementBoundaryLocation.Center
     # get loops
-    loops = revitRoom.GetBoundarySegments(spatialBoundaryOption)
-    allBoundaryLoops.append(loops)
-    return allBoundaryLoops
+    loops = revit_room.GetBoundarySegments(spatial_boundary_option)
+    all_boundary_loops.append(loops)
+    return all_boundary_loops
 
 
-def get_points_from_room_boundaries(boundaryLoops):
+def get_points_from_room_boundaries(boundary_loops):
     '''
     Returns a list of lists of points representing the room boundary loops.
 
     - List of Lists because a room can be made up of multiple loops (holes in rooms!)
     - First nested list represents the outer boundary of a room
     - All loops are implicitly closed ( last point is not the first point again!)
-    :param boundaryLoops: List of boundary loops defining the room.
-    :type boundaryLoops: List of lists of Autodesk.Revit.DB.BoundarySegment 
+    :param boundary_loops: List of boundary loops defining the room.
+    :type boundary_loops: List of lists of Autodesk.Revit.DB.BoundarySegment 
     :return: A data geometry instance containing the points defining the boundary loop.
     :rtype: :class:`.DataGeometry`
     '''
 
-    loopCounter = 0
-    hasInnerLoops = False
+    loop_counter = 0
+    has_inner_loops = False
     data_geo_polygon = dGeometryPoly.DataPolygon()
-    for boundaryLoop in boundaryLoops:
-        for roomLoop in boundaryLoop:
+    for boundary_loop in boundary_loops:
+        for room_loop in boundary_loop:
             p = None # segment start point
-            loopPoints = []
-            for segment in roomLoop:
+            loop_points = []
+            for segment in room_loop:
                 p = segment.GetCurve().GetEndPoint(0)
-                loopPoints.append(p)
-            if(loopCounter == 0):
-                data_geo_polygon.outer_loop = loopPoints
+                loop_points.append(p)
+            if(loop_counter == 0):
+                data_geo_polygon.outer_loop = loop_points
             else:
-                data_geo_polygon.inner_loops.append(loopPoints)
-                hasInnerLoops = True
-            loopCounter += 1
-    if (not hasInnerLoops):
+                data_geo_polygon.inner_loops.append(loop_points)
+                has_inner_loops = True
+            loop_counter += 1
+    if (not has_inner_loops):
         data_geo_polygon.inner_loops = []
     return data_geo_polygon
 
 
-def get_2d_points_from_revit_room(revitRoom):
+def get_2d_points_from_revit_room(revit_room):
     '''
     Returns a list of dataGeometry object containing points representing the flattened(2D geometry) of a room in the model.
     List should only have one entry.
-    :param revitRoom: The room.
-    :type revitRoom: Autodesk.Revit.DB.Architecture.Room
+    :param revit_room: The room.
+    :type revit_room: Autodesk.Revit.DB.Architecture.Room
     :return: A list of data geometry instance containing the points defining the boundary loop.
     :rtype: list of  :class:`.DataGeometry`
     '''
 
-    allRoomPoints = []
-    boundaryLoops = get_room_boundary_loops(revitRoom)
-    if(len(boundaryLoops) > 0):
-        roomPoints = get_points_from_room_boundaries(boundaryLoops)
-        allRoomPoints.append(roomPoints)
-    return allRoomPoints
+    all_room_points = []
+    boundary_loops = get_room_boundary_loops(revit_room)
+    if(len(boundary_loops) > 0):
+        room_points = get_points_from_room_boundaries(boundary_loops)
+        all_room_points.append(room_points)
+    return all_room_points
 
 
 def get_2d_points_from_all_revit_rooms(doc):
@@ -113,10 +113,10 @@ def get_2d_points_from_all_revit_rooms(doc):
     :rtype: list of  :class:`.DataGeometry`
     '''
 
-    allRoomPointGroups = []
+    all_room_point_groups = []
     rooms = get_all_rooms(doc)
     for room in rooms:
-        roomPoints = get_2d_points_from_revit_room(room)
-        if(len(roomPoints) > 0):
-            allRoomPointGroups.append(roomPoints)
-    return allRoomPointGroups
+        room_points = get_2d_points_from_revit_room(room)
+        if(len(room_points) > 0):
+            all_room_point_groups.append(room_points)
+    return all_room_point_groups

@@ -31,13 +31,13 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
 
 
-def move_tag_to_room(doc, tagId):
+def move_tag_to_room(doc, tag_id):
     '''
     Moves a room tag to the associated rooms location point.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param tagId: The element id of the tag to be moved to the room.
-    :type tagId: Autodesk.Revit.DB.ElementId
+    :param tag_id: The element id of the tag to be moved to the room.
+    :type tag_id: Autodesk.Revit.DB.ElementId
     :return: 
         Result class instance.
         - Tag moving status returned in result.status. False if an exception occurred, otherwise True.
@@ -48,20 +48,20 @@ def move_tag_to_room(doc, tagId):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    rt = doc.GetElement(tagId)
-    roomTagPoint = rt.Location.Point
-    roomLocationPoint = rt.Room.Location.Point
-    roomData = str(rt.Room.Number) + ' ' + str(rdb.Element.Name.GetValue(rt.Room))
-    translation =  roomLocationPoint - roomTagPoint
+    return_value = res.Result()
+    rt = doc.GetElement(tag_id)
+    room_tag_point = rt.Location.Point
+    room_location_point = rt.Room.Location.Point
+    room_data = str(rt.Room.Number) + ' ' + str(rdb.Element.Name.GetValue(rt.Room))
+    translation =  room_location_point - room_tag_point
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             rt.Location.Move(translation)
-            actionReturnValue.message = 'Moved tag to room ' + roomData
+            action_return_value.message = 'Moved tag to room ' + room_data
         except Exception as e:
-            actionReturnValue.update_sep(False, 'Failed to move tag to room ' + roomData + ' with exception: ' + str(e))
-        return actionReturnValue
-    transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + roomData)
-    returnValue.update(rTran.in_transaction(transaction, action))
-    return returnValue
+            action_return_value.update_sep(False, 'Failed to move tag to room ' + room_data + ' with exception: ' + str(e))
+        return action_return_value
+    transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + room_data)
+    return_value.update(rTran.in_transaction(transaction, action))
+    return return_value

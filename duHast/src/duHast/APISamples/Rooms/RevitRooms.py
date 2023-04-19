@@ -82,10 +82,10 @@ def get_not_enclosed_rooms(doc):
 
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
-    boundaryOption = rdb.SpatialElementBoundaryOptions()
+    boundary_option = rdb.SpatialElementBoundaryOptions()
     for r in coll:
-        boundarySegments = r.GetBoundarySegments(boundaryOption)
-        if(r.Area == 0.0 and r.Location != None and (boundarySegments == None or len(boundarySegments)) == 0):
+        boundary_segments = r.GetBoundarySegments(boundary_option)
+        if(r.Area == 0.0 and r.Location != None and (boundary_segments == None or len(boundary_segments)) == 0):
             unplaced.append(r)
     return unplaced
 
@@ -102,9 +102,9 @@ def get_redundant_rooms(doc):
 
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
-    boundaryOption = rdb.SpatialElementBoundaryOptions()
+    boundary_option = rdb.SpatialElementBoundaryOptions()
     for r in coll:
-        boundarySegments = r.GetBoundarySegments(boundaryOption)
-        if(r.Area == 0.0 and(boundarySegments != None and len(boundarySegments) > 0)):
+        boundary_segments = r.GetBoundarySegments(boundary_option)
+        if(r.Area == 0.0 and(boundary_segments != None and len(boundary_segments) > 0)):
             unplaced.append(r)
     return unplaced

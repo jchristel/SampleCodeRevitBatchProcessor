@@ -64,7 +64,7 @@ def sort_roof_types_by_family_name(doc):
     rts = rRoofFilter._get_roof_types_by_class(doc)
     # get all roof types including in place roof families
     rts_two = rRoofFilter._get_all_roof_types_by_category(doc)
-    usedRts = {}
-    usedRts = build_roof_type_dictionary(rts, usedRts)
-    usedRts = build_roof_type_dictionary(rts_two, usedRts)
-    return usedRts
+    used_rts = {}
+    used_rts = build_roof_type_dictionary(rts, used_rts)
+    used_rts = build_roof_type_dictionary(rts_two, used_rts)
+    return used_rts

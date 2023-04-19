@@ -49,31 +49,31 @@ def get_unused_continuation_marker_type_ids_for_purge(doc):
     '''
 
     ids = []
-    allAvailableTypeIds = rViewRef.get_all_view_continuation_type_ids(doc)
-    allUsedTypeIds = rViewRef.get_used_view_continuation_type_ids(doc)
-    for aId in allAvailableTypeIds:
-        if( aId not in allUsedTypeIds):
-            ids.append(aId)
+    all_available_type_ids = rViewRef.get_all_view_continuation_type_ids(doc)
+    all_used_type_ids = rViewRef.get_used_view_continuation_type_ids(doc)
+    for a_id in all_available_type_ids:
+        if( a_id not in all_used_type_ids):
+            ids.append(a_id)
     return ids
 
 
-def is_nested_family_symbol(doc, id, nestedFamilyNames):
+def is_nested_family_symbol(doc, id, nested_family_names):
     '''
     Returns true if symbol belongs to family in list past in.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param id: The element id of a symbol.
     :type id: Autodesk.Revit.DB.ElementId
-    :param nestedFamilyNames: list of family names know to be nested families.
-    :type nestedFamilyNames: list str
+    :param nested_family_names: list of family names know to be nested families.
+    :type nested_family_names: list str
     :return: True if family name derived from symbol is in list past in, otherwise False.
     :rtype: bool
     '''
 
     flag = False
-    famSymbol = doc.GetElement(id)
-    fam = famSymbol.Family
-    if(fam.Name in nestedFamilyNames):
+    fam_symbol = doc.GetElement(id)
+    fam = fam_symbol.Family
+    if(fam.Name in nested_family_names):
         flag = True
     return flag
 
@@ -91,19 +91,19 @@ def get_unused_view_ref_and_continuation_marker_symbol_ids(doc):
     ids = []
     # compare used vs available in view ref types
     # whatever is marked as unused: check for any instances in the model...placed on legends!
-    availableIds = rViewRef.get_all_view_reference_symbol_ids(doc) # check: does this really return all continuation marker types??
-    usedIds = rViewRef.get_used_view_reference_and_continuation_marker_symbol_ids(doc)
+    available_ids = rViewRef.get_all_view_reference_symbol_ids(doc) # check: does this really return all continuation marker types??
+    used_ids = rViewRef.get_used_view_reference_and_continuation_marker_symbol_ids(doc)
     # elevation marker families might use nested families...check!
-    nestedFamilyNames = rViewRef.get_nested_family_marker_names(doc, usedIds)
-    checkIds = []
-    for aId in availableIds:
-        if (aId not in usedIds):
-            checkIds.append(aId)
+    nested_family_names = rViewRef.get_nested_family_marker_names(doc, used_ids)
+    check_ids = []
+    for a_id in available_ids:
+        if (a_id not in used_ids):
+            check_ids.append(a_id)
     # check for any instances
-    for id in checkIds:
+    for id in check_ids:
         instances = rFamUPurge.get_family_instances_by_symbol_type_id(doc, id).ToList()
         if(len(instances) == 0):
-            if(is_nested_family_symbol(doc, id, nestedFamilyNames) == False):
+            if(is_nested_family_symbol(doc, id, nested_family_names) == False):
                 ids.append(id)
     return ids
 
@@ -132,17 +132,17 @@ def get_unused_view_reference_type_ids_for_purge(doc):
     '''
 
     ids = []
-    allAvailableTypeIds = rViewRef.get_all_view_reference_type_id_data(doc)
-    allUsedTypeIds = rViewRef.get_used_view_reference_type_id_data(doc)
-    for key,value in allAvailableTypeIds.items():
-        if(allUsedTypeIds.has_key(key)):
-            for availableTypeId in allAvailableTypeIds[key]:
-                if(availableTypeId not in allUsedTypeIds[key]):
-                    ids.append(availableTypeId)
+    all_available_type_ids = rViewRef.get_all_view_reference_type_id_data(doc)
+    all_used_type_ids = rViewRef.get_used_view_reference_type_id_data(doc)
+    for key,value in all_available_type_ids.items():
+        if(all_used_type_ids.has_key(key)):
+            for available_type_id in all_available_type_ids[key]:
+                if(available_type_id not in all_used_type_ids[key]):
+                    ids.append(available_type_id)
         else:
             # add all types under this key to be purge list...might need to check whether I need to leave one behind...
-            if(len(allAvailableTypeIds[key])>0):
-                ids = ids + allAvailableTypeIds[key]
+            if(len(all_available_type_ids[key])>0):
+                ids = ids + all_available_type_ids[key]
     return ids
 
 
@@ -157,7 +157,7 @@ def get_used_view_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    viewTypeIdsUsed = []
+    view_type_ids_used = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out browser organization and other views which cant be deleted
@@ -167,9 +167,9 @@ def get_used_view_type_ids(doc):
         v.ViewType != rdb.ViewType.Undefined and
         v.ViewType != rdb.ViewType.Internal and
         v.ViewType != rdb.ViewType.DrawingSheet):
-            if(v.GetTypeId() not in viewTypeIdsUsed):
-                viewTypeIdsUsed.append(v.GetTypeId())
-    return viewTypeIdsUsed
+            if(v.GetTypeId() not in view_type_ids_used):
+                view_type_ids_used.append(v.GetTypeId())
+    return view_type_ids_used
 
 
 def get_unused_view_type_ids(doc):
@@ -181,5 +181,5 @@ def get_unused_view_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filteredUnusedViewTypeIds = com.get_unused_type_ids_in_model(doc, _get_view_types, get_used_view_type_ids)
-    return filteredUnusedViewTypeIds
+    filtered_unused_view_type_ids = com.get_unused_type_ids_in_model(doc, _get_view_types, get_used_view_type_ids)
+    return filtered_unused_view_type_ids

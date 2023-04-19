@@ -76,14 +76,14 @@ def get_all_filter_ids(doc):
     return ids
 
 
-def get_filter_ids_from_view_by_filter(view, uniqueList):
+def get_filter_ids_from_view_by_filter(view, unique_list):
     '''
     Returns past in list of filter id's plus new unique filter id's from view (if not already in list past in)
 
     :param view: The view of which to get the filters from.
     :type view: Autodesk.Revit.DB.View
-    :param uniqueList: List containing view filters
-    :type uniqueList: list of Autodesk.Revit.DB.ElementId
+    :param unique_list: List containing view filters
+    :type unique_list: list of Autodesk.Revit.DB.ElementId
     :return: List containing past in view filters and new view filters.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
@@ -91,9 +91,9 @@ def get_filter_ids_from_view_by_filter(view, uniqueList):
     filters = view.GetFilters()
     if len(filters) != 0:
         for j in filters:
-            if (j not in uniqueList):
-                uniqueList.append(j)
-    return uniqueList
+            if (j not in unique_list):
+                unique_list.append(j)
+    return unique_list
 
 
 def get_filters_from_templates(doc):
@@ -105,28 +105,28 @@ def get_filters_from_templates(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filtersInUse = []
+    filters_in_use = []
     # get view filters used in templates only
     # include templates which do not enforce filters but still may have some set
-    templateWithFilters = get_template_ids_which_can_have_filters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
-    for temp in templateWithFilters:
+    template_with_filters = get_template_ids_which_can_have_filters(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    for temp in template_with_filters:
         # get filters and check whether already in list
-        filtersInUse = get_filter_ids_from_view_by_filter(temp, filtersInUse)
-    return filtersInUse
+        filters_in_use = get_filter_ids_from_view_by_filter(temp, filters_in_use)
+    return filters_in_use
 
 
-def get_filter_ids_from_views_without_template(doc, filterByType):
+def get_filter_ids_from_views_without_template(doc, filter_by_type):
     '''
     Gets all filter id's from views which dont have a template applied and match a given view type.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param filterByType: list of view types of which the filters are to be returned.
-    :type filterByType: list of Autodesk.Revit.DB.ViewType
+    :param filter_by_type: list of view types of which the filters are to be returned.
+    :type filter_by_type: list of Autodesk.Revit.DB.ViewType
     :return: List containing filter Id's.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filtersInUse = []
+    filters_in_use = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # cant filter out templates or templates which do not control filters to be more precise
@@ -134,11 +134,11 @@ def get_filter_ids_from_views_without_template(doc, filterByType):
         # BuiltInParameter.VIS_GRAPHICS_FILTERS
         # which is attached to views is of storage type None...not much use...
         if(v.IsTemplate == False):
-            for filter in filterByType:
+            for filter in filter_by_type:
                 if (v.ViewType == filter):
-                    get_filter_ids_from_view_by_filter(v, filtersInUse)
+                    get_filter_ids_from_view_by_filter(v, filters_in_use)
                     break
-    return filtersInUse
+    return filters_in_use
 
 
 def get_all_unused_view_filters(doc):
@@ -150,14 +150,14 @@ def get_all_unused_view_filters(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    unUsedViewFilterIds = []
-    allAvailableFilters = get_all_filters(doc)
-    allFilterIdsByTemplate = get_filters_from_templates(doc)
-    allFilterIdsByView = get_filter_ids_from_views_without_template(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
+    un_used_view_filter_ids = []
+    all_available_filters = get_all_filters(doc)
+    all_filter_ids_by_template = get_filters_from_templates(doc)
+    all_filter_ids_by_view = get_filter_ids_from_views_without_template(doc, VIEW_TYPE_WHICH_CAN_HAVE_FILTERS)
     # combine list of used filters into one
-    allUsedViewFilters = allFilterIdsByTemplate + allFilterIdsByView
+    all_used_view_filters = all_filter_ids_by_template + all_filter_ids_by_view
     # loop over all available filters and check for match in used filters
-    for availableF in allAvailableFilters:
-        if(availableF.Id not in allUsedViewFilters):
-            unUsedViewFilterIds.append(availableF.Id)
-    return unUsedViewFilterIds
+    for available_f in all_available_filters:
+        if(available_f.Id not in all_used_view_filters):
+            un_used_view_filter_ids.append(available_f.Id)
+    return un_used_view_filter_ids

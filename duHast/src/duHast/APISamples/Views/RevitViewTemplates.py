@@ -42,13 +42,13 @@ def get_view_templates(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    viewTemplates = []
+    view_templates = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out templates
         if(v.IsTemplate):
-            viewTemplates.append(v)
-    return viewTemplates
+            view_templates.append(v)
+    return view_templates
 
 
 def get_view_templates_ids(doc):
@@ -78,7 +78,7 @@ def get_used_view_templates_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    viewTemplateIdsUsed = []
+    view_template_ids_used = []
     # get all view templates assigned to views
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
@@ -89,9 +89,9 @@ def get_used_view_templates_ids(doc):
         v.ViewType != rdb.ViewType.Undefined and
         v.ViewType != rdb.ViewType.Internal and
         v.ViewType != rdb.ViewType.DrawingSheet):
-            if(v.ViewTemplateId not in viewTemplateIdsUsed and v.ViewTemplateId != rdb.ElementId.InvalidElementId):
-                viewTemplateIdsUsed.append(v.ViewTemplateId)
-    return viewTemplateIdsUsed
+            if(v.ViewTemplateId not in view_template_ids_used and v.ViewTemplateId != rdb.ElementId.InvalidElementId):
+                view_template_ids_used.append(v.ViewTemplateId)
+    return view_template_ids_used
 
 
 def get_default_view_type_template_ids(doc):
@@ -103,17 +103,17 @@ def get_default_view_type_template_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    viewTemplateIdsUsed = []
+    view_template_ids_used = []
     # get all templates assigned to view family types:
-    viewFamilyTemplates = com.get_similar_type_families_by_type(doc, _get_view_types)
-    for vt in viewFamilyTemplates:
+    view_family_templates = com.get_similar_type_families_by_type(doc, _get_view_types)
+    for vt in view_family_templates:
         for id in vt[1]:
             # get the element
-            vtFam = doc.GetElement(id)
-            if(vtFam.DefaultTemplateId not in viewTemplateIdsUsed and
-            vtFam.DefaultTemplateId != rdb.ElementId.InvalidElementId):
-                viewTemplateIdsUsed.append(vtFam.DefaultTemplateId)
-    return viewTemplateIdsUsed
+            vt_fam = doc.GetElement(id)
+            if(vt_fam.DefaultTemplateId not in view_template_ids_used and
+            vt_fam.DefaultTemplateId != rdb.ElementId.InvalidElementId):
+                view_template_ids_used.append(vt_fam.DefaultTemplateId)
+    return view_template_ids_used
 
 
 def get_all_used_view_template_ids(doc):
@@ -131,35 +131,35 @@ def get_all_used_view_template_ids(doc):
     '''
 
     vtv = get_used_view_templates_ids(doc)
-    viewFamilyTemplates = get_default_view_type_template_ids(doc)
-    for id in viewFamilyTemplates:
+    view_family_templates = get_default_view_type_template_ids(doc)
+    for id in view_family_templates:
         if(id not in vtv):
             vtv.append(id)
     return vtv
 
 
-def get_template_ids_which_can_have_filters(doc, filterByType):
+def get_template_ids_which_can_have_filters(doc, filter_by_type):
     '''
     Get all templates in a model of given type
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param filterByType: List of view types of which to return view templates from
-    :type filterByType: list of Autodesk.Revit.DB.ViewType
+    :param filter_by_type: List of view types of which to return view templates from
+    :type filter_by_type: list of Autodesk.Revit.DB.ViewType
     :return: All view templates in the model
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    viewTemplates = []
+    view_templates = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
         # filter out templates
         if(v.IsTemplate):
-            for filter in filterByType:
+            for filter in filter_by_type:
                 if (v.ViewType == filter):
-                    viewTemplates.append(v)
+                    view_templates.append(v)
                     break
-    return viewTemplates
+    return view_templates
 
 
 def get_all_unused_view_template_ids(doc):
@@ -170,10 +170,10 @@ def get_all_unused_view_template_ids(doc):
     :return: All view templates Id's which are not used in the model.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
-    usedVts = get_all_used_view_template_ids(doc)
-    vtInModel = get_view_templates(doc)
-    unusedVts = []
-    for vt in vtInModel:
-        if(vt.Id not in usedVts):
-            unusedVts.append(vt.Id)
-    return unusedVts
+    used_vts = get_all_used_view_template_ids(doc)
+    vt_in_model = get_view_templates(doc)
+    unused_vts = []
+    for vt in vt_in_model:
+        if(vt.Id not in used_vts):
+            unused_vts.append(vt.Id)
+    return unused_vts

@@ -45,28 +45,28 @@ import Autodesk.Revit.DB as rdb
 # the following element collectors dont seem to return any types ...
 
 # doc:   current model document
-def Deprecated_GetAllCallOutTypesByCategory(doc):
+def deprecated__get_all_call_out_types_by_category(doc):
     ''' this will return an EMPTY filtered element collector of all call out types in the model in Revit 2019'''
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Callouts).WhereElementIsElementType()
     return collector
 
 # doc:   current model document
-def Deprecated_GetAllReferenceViewTypesByCategory(doc):
+def deprecated__get_all_reference_view_types_by_category(doc):
     '''this will return an EMPTY filtered element collector of all reference view types in the model in Revit 2019'''
     collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_ReferenceViewer).WhereElementIsElementType()
     return collector
  
 # doc:   current model document
-def Deprecated_GetAllCallOutTypeIdsByCategory(doc):
+def deprecated__get_all_call_out_type_ids_by_category(doc):
     ''' this will return an EMPTY filtered element collector of all call out type ids in the model'''
-    collector = Deprecated_GetAllCallOutTypesByCategory(doc)
+    collector = deprecated__get_all_call_out_types_by_category(doc)
     ids = com.get_ids_from_element_collector(collector)
     return ids
 
 # doc:   current model document
-def Deprecated_GetAllReferenceViewTypeIdsByCategory(doc):
+def deprecated__get_all_reference_view_type_ids_by_category(doc):
     ''' this will return an EMPTY filtered element collector of all reference view types in the model'''
-    collector = Deprecated_GetAllReferenceViewTypesByCategory(doc)
+    collector = deprecated__get_all_reference_view_types_by_category(doc)
     ids = com.get_ids_from_element_collector(collector)
     return ids
 
@@ -167,26 +167,26 @@ VIEW_REF_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_ReferenceViewerSymbol
     ])
 
-def get_reference_type_ids_from_view_type(viewType):
+def get_reference_type_ids_from_view_type(view_type):
     '''
     Gets all reference type ids used in view type.
 
-    :param viewType: The view type.
-    :type viewType: Autodesk.Revit.DB.ViewType
+    :param view_type: The view type.
+    :type view_type: Autodesk.Revit.DB.ViewType
 
     :return: dictionary, key: BuiltinParameterDefinition, value: id of a tag
     :rtype: dic{Autodesk.Revit.DB.BuiltinParameterDefinition:[Autodesk.Revit.DB.ElementId]}
     '''
 
     dic = {}
-    for pDef in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
-        pValue = rParaGet.get_built_in_parameter_value(viewType, pDef)
-        if(pValue != None):
+    for p_def in VIEW_REFERENCE_PARAMETER_DEF_NAMES:
+        p_value = rParaGet.get_built_in_parameter_value(view_type, p_def)
+        if(p_value != None):
             # there should only ever be one value per key!
-            if(dic.has_key(pDef)):
-                dic[pDef].append(pValue)
+            if(dic.has_key(p_def)):
+                dic[p_def].append(p_value)
             else:
-                dic[pDef] = [pValue]
+                dic[p_def] = [p_value]
     return dic
 
 def get_used_view_reference_type_id_data(doc):
@@ -204,9 +204,9 @@ def get_used_view_reference_type_id_data(doc):
     col = rViewType.GetViewTypes(doc)
     for c in col:
         # get reference types from view types
-        referenceTypeByViewType = get_reference_type_ids_from_view_type(c)
+        reference_type_by_view_type = get_reference_type_ids_from_view_type(c)
         # check if already in dictionary , if not append
-        for key, value in referenceTypeByViewType.items():
+        for key, value in reference_type_by_view_type.items():
             if(dic.has_key(key)):
                 for v in value:
                     if(v not in dic[key]):
@@ -230,19 +230,19 @@ def get_all_view_reference_type_id_data(doc):
     col = rViewType.GetViewTypes(doc)
     for c in col:
         # get reference types from view types
-        referenceTypeByViewType = get_reference_type_ids_from_view_type(c)
+        reference_type_by_view_type = get_reference_type_ids_from_view_type(c)
         # get all similar types
-        for key, value in referenceTypeByViewType.items():
-            for v in referenceTypeByViewType[key]:
+        for key, value in reference_type_by_view_type.items():
+            for v in reference_type_by_view_type[key]:
                 type = doc.GetElement(v)
                 if(type !=None):
-                    allSimTypeIds = type.GetSimilarTypes()
-                    for simTypeId in allSimTypeIds:
+                    all_sim_type_ids = type.GetSimilarTypes()
+                    for sim_type_id in all_sim_type_ids:
                         if(dic.has_key(key)):
-                            if(simTypeId not in dic[key]):
-                                dic[key].append(simTypeId)
+                            if(sim_type_id not in dic[key]):
+                                dic[key].append(sim_type_id)
                         else:
-                            dic[key] = [simTypeId]
+                            dic[key] = [sim_type_id]
     return dic
 
 def get_all_view_reference_type_id_data_as_list(doc):
@@ -277,10 +277,10 @@ def get_all_view_continuation_type_ids(doc):
     ids = []
     syms = get_all_reference_view_elements_by_category(doc)
     for sym in syms:
-        simTypeIds = sym.GetValidTypes()
-        for simType in simTypeIds:
-            if (simType not in ids):
-                ids.append (simType)
+        sim_type_ids = sym.GetValidTypes()
+        for sim_type in sim_type_ids:
+            if (sim_type not in ids):
+                ids.append (sim_type)
     return ids
 
 def get_used_view_continuation_type_ids(doc):
@@ -305,33 +305,33 @@ def get_all_view_reference_symbol_ids(doc):
     '''
 
     ids = []
-    multiCatFilter = rdb.ElementMulticategoryFilter(VIEW_REF_CATEGORY_FILTER)
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multiCatFilter).WhereElementIsElementType()
+    multi_cat_filter = rdb.ElementMulticategoryFilter(VIEW_REF_CATEGORY_FILTER)
+    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
     ids = com.get_ids_from_element_collector(collector)
     return ids
 
 # ---------------------- view refs and continuation symbols -----------------------
 
-def get_symbol_ids_from_type_ids(doc, viewRefTypesIds):
+def get_symbol_ids_from_type_ids(doc, view_ref_types_ids):
     '''
     'Gets the ids of all view family symbols(types) from given view ref types or continuation types the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param viewRefTypesIds: list of ids representing view reference types or continuation types
-    :type viewRefTypesIds: list Autodesk.Revit.DB.ElementId
+    :param view_ref_types_ids: list of ids representing view reference types or continuation types
+    :type view_ref_types_ids: list Autodesk.Revit.DB.ElementId
 
     :return: List of ids of all view family symbols(types).
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
-    for vrtId in viewRefTypesIds:
-        el = doc.GetElement(vrtId)
-        for pDef in VIEW_TAG_SYMBOL_PARAMETER_DEF:
-            pValue = rParaGet.get_built_in_parameter_value(el, pDef)
-            if (pValue != None and pValue not in ids):
-                ids.append(pValue)
+    for vrt_id in view_ref_types_ids:
+        el = doc.GetElement(vrt_id)
+        for p_def in VIEW_TAG_SYMBOL_PARAMETER_DEF:
+            p_value = rParaGet.get_built_in_parameter_value(el, p_def)
+            if (p_value != None and p_value not in ids):
+                ids.append(p_value)
     return ids
 
 def get_used_view_reference_and_continuation_marker_symbol_ids(doc):
@@ -347,22 +347,22 @@ def get_used_view_reference_and_continuation_marker_symbol_ids(doc):
     '''
 
     ids = []
-    viewContTypes = get_all_view_continuation_type_ids(doc)
-    viewRefTypes = get_all_view_reference_type_id_data(doc)
+    view_cont_types = get_all_view_continuation_type_ids(doc)
+    view_ref_types = get_all_view_reference_type_id_data(doc)
     # get ids of symbols used in view ref types
-    idsCont = get_symbol_ids_from_type_ids(doc, viewContTypes)
-    idsViewRefs = []
-    for key,value in viewRefTypes.items():
-        idsViewRefs = idsViewRefs + get_symbol_ids_from_type_ids(doc, viewRefTypes[key])
+    ids_cont = get_symbol_ids_from_type_ids(doc, view_cont_types)
+    ids_view_refs = []
+    for key,value in view_ref_types.items():
+        ids_view_refs = ids_view_refs + get_symbol_ids_from_type_ids(doc, view_ref_types[key])
     # build unique dictionary
-    for idC in idsCont:
-        ids.append(idC)
-    for idV in idsViewRefs:
-        if(idV not in ids):
-            ids.append(idV)
+    for id_c in ids_cont:
+        ids.append(id_c)
+    for id_v in ids_view_refs:
+        if(id_v not in ids):
+            ids.append(id_v)
     return ids
 
-def get_nested_family_marker_names(doc, usedIds):
+def get_nested_family_marker_names(doc, used_ids):
     '''
     Gets nested family names from provided symbols.
 
@@ -371,27 +371,27 @@ def get_nested_family_marker_names(doc, usedIds):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param usedIds: List of symbol ids.
-    :type usedIds: list of Autodesk.Revit.DB.ElementId
+    :param used_ids: List of symbol ids.
+    :type used_ids: list of Autodesk.Revit.DB.ElementId
 
     :return: List of all unique nested family names.
     :rtype: list str
     '''
 
     names = []
-    for usedSymbolId in usedIds:
-        if(usedSymbolId != rdb.ElementId.InvalidElementId):
+    for used_symbol_id in used_ids:
+        if(used_symbol_id != rdb.ElementId.InvalidElementId):
             # get the family
-            elSymbol = doc.GetElement(usedSymbolId)
-            fam = elSymbol.Family
+            el_symbol = doc.GetElement(used_symbol_id)
+            fam = el_symbol.Family
             # open family
             try:
-                famDoc = doc.EditFamily(fam)
-                nestedFamCol = rFamUPurge.get_all_loadable_families(famDoc)
-                for nFam in nestedFamCol:
-                    if(nFam.Name not in names and nFam.Name != ''):
-                        names.append(nFam.Name)        
-                famDoc.Close(False)
+                fam_doc = doc.EditFamily(fam)
+                nested_fam_col = rFamUPurge.get_all_loadable_families(fam_doc)
+                for n_fam in nested_fam_col:
+                    if(n_fam.Name not in names and n_fam.Name != ''):
+                        names.append(n_fam.Name)        
+                fam_doc.Close(False)
             except Exception as e:
                 print (e)
     #print (names)

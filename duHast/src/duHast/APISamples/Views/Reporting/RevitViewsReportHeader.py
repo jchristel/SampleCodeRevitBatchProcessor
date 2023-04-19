@@ -46,10 +46,10 @@ def get_report_headers(doc):
     :rtype: list str
     '''
 
-    collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
     # copy headers list
     headers = REPORT_SHEETS_HEADER[:]
-    for v in collectorViews:
+    for v in collector_views:
         # get all parameters attached to sheet
         paras = v.GetOrderedParameters()
         for para in paras:

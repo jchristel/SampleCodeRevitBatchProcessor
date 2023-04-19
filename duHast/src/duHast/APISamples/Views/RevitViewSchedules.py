@@ -74,13 +74,13 @@ def get_schedules_not_on_sheets(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    schedulesNotOnSheets = []
+    schedules_not_on_sheets = []
     # get schedules on sheets
-    idsOnSheets = get_schedule_ids_on_sheets(doc)
+    ids_on_sheets = get_schedule_ids_on_sheets(doc)
     # get all schedules in model
-    schedulesInModel = _get_view_types(doc, rdb.ViewType.Schedule)
+    schedules_in_model = _get_view_types(doc, rdb.ViewType.Schedule)
     # loop and filter out schedules not on sheets
-    for schedule in schedulesInModel:
-        if(schedule.Id not in idsOnSheets):
-            schedulesNotOnSheets.append(schedule)
-    return schedulesNotOnSheets
+    for schedule in schedules_in_model:
+        if(schedule.Id not in ids_on_sheets):
+            schedules_not_on_sheets.append(schedule)
+    return schedules_not_on_sheets

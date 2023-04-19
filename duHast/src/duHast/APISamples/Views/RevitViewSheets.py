@@ -33,29 +33,29 @@ from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
 
-def get_sheets_by_filters(doc, viewRules = None):
+def get_sheets_by_filters(doc, view_rules = None):
     '''
     Gets sheets matching filters provided
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param viewRules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
-    :type viewRules: array in format [parameter name, condition test method, value to test against], optional
+    :param view_rules: A set of rules. If sheet matches rule it will be returned. Defaults to None which will return all sheets.
+    :type view_rules: array in format [parameter name, condition test method, value to test against], optional
     :return: Views matching filter
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    collectorViews = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
     views = []
-    for v in collectorViews:
+    for v in collector_views:
         # if no filter rules applied return al sheets
-        if(viewRules is not None):
+        if(view_rules is not None):
             paras = v.GetOrderedParameters()
-            ruleMatch = True
-            for paraName, paraCondition, conditionValue in viewRules:
+            rule_match = True
+            for para_name, paraCondition, conditionValue in view_rules:
                 for p in paras:
-                    if(p.Definition.Name == paraName):
-                        ruleMatch = ruleMatch and rParaGet.check_parameter_value(p, paraCondition, conditionValue)
-            if (ruleMatch == True):
+                    if(p.Definition.Name == para_name):
+                        rule_match = rule_match and rParaGet.check_parameter_value(p, paraCondition, conditionValue)
+            if (rule_match == True):
                 # delete view
                 views.append(v)
         else:
@@ -76,15 +76,15 @@ def get_all_sheets(doc):
 
 def get_sheet_rev_by_sheet_number(
     doc,
-    sheetNumber # type: str
+    sheet_number # type # type: str
     ):
 
     '''
     Returns the revision of a sheet identified by its number. Default value is '-'.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param sheetNumber: The number of the sheet of which the revision is to be returned.
-    :type sheetNumber: str
+    :param sheet_number # type: The number of the sheet of which the revision is to be returned.
+    :type sheet_number # type: str
     :raise: Any exception will need to be managed by the function caller.
     :return:
         The sheets current revision value.  
@@ -92,19 +92,19 @@ def get_sheet_rev_by_sheet_number(
     :rtype: str
     '''
 
-    revValue = '-'
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.SheetNumber == sheetNumber)
+    rev_value = '-'
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.SheetNumber == sheet_number) # type
     results = collector.ToList()
     if (len(results)>0):
         sheet = results[0]
-        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
-        revValue = revP.AsString()
-    return revValue
+        rev_p = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        rev_value = rev_p.AsString()
+    return rev_value
 
 
 def get_sheet_rev_by_sheet_name(
     doc,
-    sheetName # type: str
+    sheet_name # type # type: str
     ):
 
     '''
@@ -112,8 +112,8 @@ def get_sheet_rev_by_sheet_name(
     Since multiple sheets can have the same name it will return the revision of the first sheet matching the name.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document 
-    :param sheetName: The name of the sheet of which the revision is to be returned.
-    :type sheetName: str
+    :param sheet_name # type: The name of the sheet of which the revision is to be returned.
+    :type sheet_name # type: str
     :raise: Any exception will need to be managed by the function caller.
     :return:
         The sheets current revision value.  
@@ -121,11 +121,11 @@ def get_sheet_rev_by_sheet_name(
     :rtype: str
     '''
 
-    revValue = '-'
-    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.Name == sheetName)
+    rev_value = '-'
+    collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet).Where(lambda e: e.Name == sheet_name) # type
     results = collector.ToList()
     if (len(results)>0):
         sheet = results[0]
-        revP = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
-        revValue = util.pad_single_digit_numeric_string(revP.AsString())
-    return revValue
+        rev_p = sheet.get_Parameter(rdb.BuiltInParameter.SHEET_CURRENT_REVISION)
+        rev_value = util.pad_single_digit_numeric_string(rev_p.AsString())
+    return rev_value

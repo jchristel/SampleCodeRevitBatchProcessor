@@ -68,14 +68,14 @@ def get_view_type_ids(doc):
     ids = com.get_ids_from_element_collector(col)
     return ids
 
-def get_views_of_type(doc, viewType):
+def get_views_of_type(doc, view_type):
     '''
     Gets all views in a model of a given type. Excludes templates.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param viewType: Filter: the view type
-    :type viewType: Autodesk.Revit.DB.ViewType
+    :param view_type: Filter: the view type
+    :type view_type: Autodesk.Revit.DB.ViewType
 
     :return: list of views
     :rtype: list of Autodesk.Revit.DB.View
@@ -84,7 +84,7 @@ def get_views_of_type(doc, viewType):
     views=[]
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
-        if(v.ViewType == viewType and v.IsTemplate == False):
+        if(v.ViewType == view_type and v.IsTemplate == False):
             views.append(v)
     return views
 
@@ -103,17 +103,17 @@ def get_viewport_on_sheets(doc, sheets):
     :rtype: list of Autodesk.Revit.DB.Viewport
     '''
 
-    viewPorts = []
+    view_ports = []
     for sheet in sheets:
         try:
-            viewportIds = sheet.GetAllViewports()
-            if(viewportIds != None):
-                for viewportId in viewportIds:
-                    viewport = doc.GetElement(viewportId)
-                    viewPorts.append(viewport)
+            viewport_ids = sheet.GetAllViewports()
+            if(viewport_ids != None):
+                for viewport_id in viewport_ids:
+                    viewport = doc.GetElement(viewport_id)
+                    view_ports.append(viewport)
         except Exception as e:
             print('Get view ports on sheet: {} threw exception: {}'.format(sheet, e))
-    return viewPorts
+    return view_ports
 
 def get_views_in_model(doc, filter):
     '''
@@ -160,20 +160,20 @@ def get_views_not_on_sheet(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    viewsNotOnSheet = []
+    views_not_on_sheet = []
     # get all sheets
-    sheetsInModel = get_all_sheets(doc)
+    sheets_in_model = get_all_sheets(doc)
     # get all viewPorts on sheets
-    viewPortsOnSheets = get_viewport_on_sheets(doc, sheetsInModel)
+    view_ports_on_sheets = get_viewport_on_sheets(doc, sheets_in_model)
     # get all views in model
-    viewsInModel = get_views_in_model(doc, filter_revision_schedules)
+    views_in_model = get_views_in_model(doc, filter_revision_schedules)
     # check whether view has a viewport if not ... its not placed on a sheet
-    for viewInModel in viewsInModel:
+    for view_in_model in views_in_model:
         match = False
-        for viewPortsOnSheet in viewPortsOnSheets:
-            if(viewPortsOnSheet.ViewId == viewInModel.Id):
+        for view_ports_on_sheet in view_ports_on_sheets:
+            if(view_ports_on_sheet.ViewId == view_in_model.Id):
                 match = True
                 break
         if(match == False):
-            viewsNotOnSheet.append(viewInModel)
-    return viewsNotOnSheet
+            views_not_on_sheet.append(view_in_model)
+    return views_not_on_sheet

@@ -71,12 +71,12 @@ def create_new_sub_category_to_family_category(doc, new_sub_category_name):
                     action_return_value = res.Result()
                     try:
                         new_sub_category = doc.Settings.Categories.NewSubcategory(parent_category, new_sub_category_name)
-                        action_return_value.update_sep(True, 'Created subcategory ' + str(new_sub_category_name))
+                        action_return_value.update_sep(True, 'Created subcategory: {}'.format(new_sub_category_name))
                         action_return_value.result = new_sub_category
                     except Exception as e:
-                        action_return_value.update_sep(False, 'Failed to create ' + str(new_sub_category_name) + ' with exception: ' + str(e))
+                        action_return_value.update_sep(False, 'Failed to create: {} with exception: {}'.format(new_sub_category_name,e))
                     return action_return_value
-                transaction = rdb.Transaction(doc,'Creating subcategory: ' + str(new_sub_category_name))
+                transaction = rdb.Transaction(doc,'Creating subcategory: {}'.format(new_sub_category_name))
                 return_value = rTran.in_transaction(transaction, action)
             else:
                 return_value.update_sep(False, 'Cant create subcategory with the same name as the family category!')
@@ -114,12 +114,12 @@ def create_new_category_from_saved_properties(doc, new_cat_name, saved_cat_props
         new_sub_cat = result_new_sub_cat.result
         flag = set_category_properties(doc, new_sub_cat, saved_cat_props, ignore_missing_cut_style)
         if(flag):
-            return_value.update_sep(True, 'Successfully created category: '+ str(new_cat_name))
+            return_value.update_sep(True, 'Successfully created category: {}'.format(new_cat_name))
             return_value.result = new_sub_cat
         else:
-            return_value.update_sep(False, 'Failed to apply properties to new category: '+ str(new_cat_name))
+            return_value.update_sep(False, 'Failed to apply properties to new category: {}'.format(new_cat_name))
     else:
-        return_value.update_sep(False, 'Failed to create new subcategory: '+ str(new_cat_name))
+        return_value.update_sep(False, 'Failed to create new subcategory: {}'.format(new_cat_name))
     return return_value
 
 
@@ -155,10 +155,10 @@ def create_new_category_and_transfer_properties(doc, new_cat_name, existing_cat_
             result_new_sub_cat = create_new_category_from_saved_properties(doc, new_cat_name, cat_props)
             return_value.update(result_new_sub_cat)
         else:
-            return_value.update_sep(True, 'Category already in file:'+ str(new_cat_name))
+            return_value.update_sep(True, 'Category already in file: {}'.format(new_cat_name))
             return_value.result = cats[new_cat_name]
     else:
-        return_value.update_sep(False, 'Template category: '+ str(existing_cat_name) + ' does not exist in file!')
+        return_value.update_sep(False, 'Template category: {} does not exist in file!'.format(existing_cat_name))
     return return_value
 
 

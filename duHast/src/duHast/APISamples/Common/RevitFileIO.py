@@ -67,7 +67,7 @@ def sync_file (
         rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
         returnValue.message = 'Successfully synched file.'
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
     return returnValue
 
 
@@ -107,7 +107,7 @@ def saves_as_workshared_file(
         doc.SaveAs(fullFileName, saveOption)
         returnValue.message = 'Successfully saved file: ' + str(fullFileName)
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
     return returnValue
 
 
@@ -149,14 +149,14 @@ def save_as_family(
     for oldName, newName in nameData:
         if (revitFileName.startswith(oldName)):
             match = True
-            returnValue.message = ('Found file name match for: ' + revitFileName + ' new name: ' + newName)
+            returnValue.message = ('Found file name match for: {} new name: {}'.format(revitFileName ,newName))
             # save file under new name
             newFileName = targetFolderPath + '\\'+ newName + fileExtension
             break
     if(match == False):
         # save under same file name
         newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
-        returnValue.message = 'Found no file name match for: ' + currentFullFileName
+        returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
     try:
         # setup save as option
         so = rdb.SaveAsOptions()
@@ -165,9 +165,9 @@ def save_as_family(
         so.SetWorksharingOptions(None)
         so.Compact = compactFile
         doc.SaveAs(newFileName, so)
-        returnValue.update_sep(True, 'Saved file: ' + newFileName)
+        returnValue.update_sep(True, 'Saved file: {}'.format(newFileName))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file to new location!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file to new location with exception: {}'.format(e))
     return returnValue
 
 
@@ -253,7 +253,7 @@ def save_file(
         doc.Save(so)
         returnValue.update_sep(True, 'Saved revit file!')
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file!' + ' exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed to save revit file with exception: {}'.format(e))
     return returnValue
 
 
@@ -284,5 +284,5 @@ def enable_worksharing(
         doc.EnableWorksharing('Shared Levels and Grids','Workset1')
         returnValue.message = 'Successfully enabled worksharing.'
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
     return returnValue

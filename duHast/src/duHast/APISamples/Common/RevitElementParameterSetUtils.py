@@ -94,7 +94,7 @@ def set_parameter_value(
                 para.Set(new_id)
                 action_return_value.message = 'Changed parameter value of type Id.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
+                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
             return action_return_value
         transaction = rdb.Transaction(doc,transaction_name)
         return_value = in_transaction(transaction, action)

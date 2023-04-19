@@ -73,9 +73,9 @@ def optimize_all_ifc_files_in_directory(directoryPath):
             processFilesResult = process_ifc_files(ifcFiles, directoryPath)
             returnValue.update(processFilesResult)
         else:
-            returnValue.append_message('No IFC files found in directory: '+ str(directoryPath))
+            returnValue.append_message('No IFC files found in directory: {}'.format(directoryPath))
     else:
-        returnValue.update_sep(False, 'No IFC optimizer installed at: '+ str(solibriInstallPath_))
+        returnValue.update_sep(False, 'No IFC optimizer installed at: {}'.format(solibriInstallPath_))
     return returnValue
 
 def optimize_ifc_files_in_list(ifcFiles, directoryPath):
@@ -145,13 +145,13 @@ def process_ifc_files(ifcFiles, directoryPath):
     filesToDelete = []
     filesToRename = []
     if(len(ifcFiles) > 0):
-        returnValue.append_message('found ifc files: ' + str(len(ifcFiles)))
+        returnValue.append_message('found ifc files: {}'.format(len(ifcFiles)))
         for ifcFile in ifcFiles:
             s = subprocess.check_call([r'C:\Program Files\Solibri\IFCOptimizer\Solibri IFC Optimizer.exe', '-in=' + ifcFile, '-out=' + directoryPath, '-ifc', '-force'])
             # check what came back
             if (s == 0):
                 # all went ok:
-                returnValue.append_message('Optimized file: '+str(ifcFile))
+                returnValue.append_message('Optimized file: {}'.format(ifcFile))
                 filesToDelete.append(ifcFile) # full file path
                 # get the rename information
                 # contains old and new file name
@@ -164,20 +164,20 @@ def process_ifc_files(ifcFiles, directoryPath):
                     filesToRename.append(rename)
             else:
                     # something went wrong
-                    returnValue.update_sep(False, 'Failed to optimize file: '+ str(ifcFile))
+                    returnValue.update_sep(False, 'Failed to optimize file: {}'.format(ifcFile))
         # clean up
         for fileToDelete in filesToDelete:
             statusDelete = util.file_delete(fileToDelete)
             if(statusDelete):
-                returnValue.append_message('Deleted original file: ' + str(fileToDelete))
+                returnValue.append_message('Deleted original file: {}'.format(fileToDelete))
             else:
-                returnValue.update_sep(False,'Failed to delete original file: '+ str(fileToDelete))
+                returnValue.update_sep(False,'Failed to delete original file: {}'.format(fileToDelete))
         for fileToRename in filesToRename:
             statusRename = util.rename_file(fileToRename[0], fileToRename[1])
             if(statusRename):
-                returnValue.append_message('Renamed original file: ' + str(fileToRename[0]) + ' to: ' + str(fileToRename[1]))
+                returnValue.append_message('Renamed original file: {} to: {}'.format(fileToRename[0],fileToRename[1]))
             else:
-                returnValue.update_sep(False,'Failed to rename original file: '+ str(fileToRename[0]))
+                returnValue.update_sep(False,'Failed to rename original file: {}'.format(fileToRename[0]))
     else:
-        returnValue.append_message('No IFC files found')
+        returnValue.append_message('No IFC files found at: {}'.format(directoryPath))
     return returnValue

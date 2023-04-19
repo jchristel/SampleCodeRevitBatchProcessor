@@ -222,9 +222,9 @@ def write_revit_task_file(fileName, bucket, GetData = bucket_to_task_list_file_s
                 rowCounter += 1
             f.write(data.encode('utf-8'))
         f.close()
-        returnValue.append_message('wrote task list: ' + fileName + ' [TRUE]')
+        returnValue.append_message('wrote task list: {} [TRUE]'.format(fileName))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to write task list: ' + fileName + ' with exception ' + str(e))
+        returnValue.update_sep(False, 'Failed to write task list: {} with exception {}'.format(fileName ,e))
     return returnValue
 
 def write_file_list(directoryPath, fileExtension, taskListDirectory, taskFilesNumber, fileGetter, fileDataProcessor = bucket_to_task_list_file_system):

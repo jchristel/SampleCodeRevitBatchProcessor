@@ -231,9 +231,9 @@ def move_elements_from_sub_category_to_sub_category(doc, from_category_name, to_
             # move elements
             return_value = move_elements_to_category(doc, dic, to_category_name, destination_cat_ids)
         else:
-            return_value.update_sep(False, 'Destination category: '+ str(to_category_name) + ' does not exist in file!')
+            return_value.update_sep(False, 'Destination category: {} does not exist in file!'.format(to_category_name))
     else:
-       return_value.update_sep(False, 'Source category: '+ str(from_category_name) + ' does not exist in file!')
+       return_value.update_sep(False, 'Source category: {} does not exist in file!'.format(from_category_name))
     return return_value
 
 

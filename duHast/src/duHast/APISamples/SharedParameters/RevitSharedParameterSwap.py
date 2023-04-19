@@ -123,7 +123,7 @@ def swap_shared_parameters(doc, changeDirectiveFilePath):
         for pDirective in parameterDirectives:
             # load shared para file
             sharedParaDefFile = rSharedPAdd.load_shared_parameter_file(doc, parameterDirectives[pDirective].sharedParameterPath)
-            returnValue.append_message('Read shared parameter file: ' + parameterDirectives[pDirective].sharedParameterPath)
+            returnValue.append_message('Read shared parameter file: {}'.format(parameterDirectives[pDirective].sharedParameterPath))
             if(sharedParaDefFile != None):
                 #   - swap shared parameter to family parameter
                 statusChangeToFamPara = rSharedTypeChange.change_shared_parameter_to_family_parameter(doc, pDirective, _parameterPrefix_)
@@ -137,7 +137,7 @@ def swap_shared_parameters(doc, changeDirectiveFilePath):
                         sParaDef = rSharedPara.get_shared_parameter_definition(parameterDirectives[pDirective].newParameterData.name, sharedParaDefFile)
                         #   - add new shared parameter
                         if(sParaDef != None):
-                            returnValue.append_message('Retrieved shared parameter definition for: ' + parameterDirectives[pDirective].newParameterData.name) 
+                            returnValue.append_message('Retrieved shared parameter definition for: {}'.format(parameterDirectives[pDirective].newParameterData.name))
                             #   - swap family parameter to shared parameter
                             statusSwapFamToSharedP = rSharedTypeChange.change_family_parameter_to_shared_parameter(
                                 doc, 

@@ -150,13 +150,13 @@ def reload_revit_links(doc, linkLocations, hostNameFormatted, doSomethingWithLin
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.append_message(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.append_message('{} :: {}'.format(linkTypeName ,result.LoadResult))
                 else:
-                    returnValue.update_sep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.update_sep(False, '{} :: No link path or multiple path found in provided locations'.format(linkTypeName))
             except Exception as e:
-                returnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.update_sep(False, '{} :: Failed with exception: {}'.format(linkTypeName ,e))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Failed with exception: '.format(e))
     return returnValue
 
 def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
@@ -203,13 +203,13 @@ def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostN
                     wc = worksetConfig()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.append_message(linkTypeName + ' :: ' + str(result.LoadResult))
+                    returnValue.append_message('{} :: {}'.format(linkTypeName,result.LoadResult))
                 else:
-                    returnValue.update_sep(False, linkTypeName + ' :: ' + 'No link path or multiple path found in provided locations')
+                    returnValue.update_sep(False,'{} :: No link path or multiple path found in provided locations'.format(linkTypeName))
             except Exception as e:
-                returnValue.update_sep(False, linkTypeName + ' :: ' + 'Failed with exception: ' + str(e))
+                returnValue.update_sep(False, '{} :: Failed with exception: '.format(linkTypeName ,e))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: ' + str(e))
+        returnValue.update_sep(False, 'Reload Revit links Failed with exception: '.format(e))
     return returnValue
 
 def default_link_name(name):

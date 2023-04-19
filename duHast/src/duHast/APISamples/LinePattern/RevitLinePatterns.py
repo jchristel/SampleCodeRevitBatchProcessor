@@ -237,6 +237,6 @@ def delete_duplicate_line_patter_names(doc):
         if(len(value) > 1):
             # keep the first one (original)
             value.remove(value[0])
-            flagDelete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: ' + str(key),'line patterns duplicates: ' + str(key))
+            flagDelete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: {}'.format(key),'line patterns duplicates: {}'.format(key))
             returnValue.update (flagDelete)
     return returnValue

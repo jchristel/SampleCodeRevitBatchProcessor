@@ -81,7 +81,7 @@ def purge_unused(doc, processor):
         # get all root line pattern entries where usage counter == 0.
         for rootFam in rootFamData:
             if (rootFam[IFamData.USAGE_COUNTER] == 0 ):
-                returnValue.append_message('Found unused shared parameter: ' + rootFam[rSharedParaData.PARAMETER_NAME] + ' [' +str(rootFam[rSharedParaData.PARAMETER_GUID])+']')
+                returnValue.append_message('Found unused shared parameter: {} [{}]'.format(rootFam[rSharedParaData.PARAMETER_NAME],rootFam[rSharedParaData.PARAMETER_GUID]))
                 idsToDelete.append(rdb.ElementId(rootFam[rSharedParaData.PARAMETER_ID]))
         # delete any subcategories found
         if(len(idsToDelete) > 0):

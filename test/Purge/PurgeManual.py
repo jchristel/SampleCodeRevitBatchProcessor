@@ -71,12 +71,12 @@ def CompareReportDictionaries(first,second):
                         notInList.append(d)
                 if(len(notInList) > 0):
                     resultValue.status = False
-                    resultValue.append_message(key + ' has different ids!')
+                    resultValue.append_message('{} has different ids!'.format(key))
                     data = [key] + notInList
                     resultValue.result.append(data)
             else:
                 # entire key is missing!
-                resultValue.append_message(key + ' is missing!')
+                resultValue.append_message('{} is missing!'.format(key))
                 resultValue.status = False
                 data = [key] + first[key]
                 resultValue.result.append(data)
@@ -148,10 +148,10 @@ def ReportAvailableTypeIds(doc, filePath):
                 filePath,
                 counter
             )
-            reportFlag.append_message(SPACER + str(t.stop()))
+            reportFlag.append_message('{}{}'.format(SPACER,t.stop()))
             resultValue.update(reportFlag)
         except Exception as e:
-            resultValue.update_sep(False,'Terminated get available type id actions with exception: '+ str(e))
+            resultValue.update_sep(False,'Terminated get available type id actions with exception: {}'.format(e))
         counter = counter + 1
-    resultValue.append_message('Report available types duration: '+ str(TIMER_OVERALL.stop()))
+    resultValue.append_message('Report available types duration: {}'.format(TIMER_OVERALL.stop()))
     return resultValue

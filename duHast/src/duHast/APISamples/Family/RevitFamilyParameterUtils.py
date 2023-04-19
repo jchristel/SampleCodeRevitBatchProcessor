@@ -49,21 +49,21 @@ def set_family_parameter_value_by_storage_type(paramW, manager, value):
             #
             # So SetValueString is basically how the Revit GUI works.
             manager.SetValueString(paramW, value)
-            returnValue.update_sep(True, 'Updated '+ paramW.Definition.Name + ' to value: ' + str(value))
+            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
         elif(paramW.StorageType == rdb.StorageType.ElementId):
             manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated '+ paramW.Definition.Name + ' to value: ' + str(value))
+            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name, value))
         elif(paramW.StorageType == rdb.StorageType.Integer):
             manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated '+ paramW.Definition.Name + ' to value: ' + str(value))
+            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
         elif(paramW.StorageType == rdb.StorageType.String):
             manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated '+ paramW.Definition.Name + ' to value: ' + value)
+            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
         else:
             returnValue.update_sep(False, 'Parameter storage type is not supported!')
         
     except Exception as e:
-        returnValue.update_sep(False, 'failed to set parameter value with exception: '+ str(e))
+        returnValue.update_sep(False, 'failed to set parameter value with exception: {}'.format(e))
     return returnValue
 
 def set_family_parameter_value(doc, manager, famPara, value):

@@ -104,27 +104,27 @@ def bind_shared_parameter(doc, category, parameterName, groupName, parameterType
                                 # check parameter type
                                 if(definition.ParameterType != parameterType):
                                     returnValue.status = False
-                                    returnValue.message = parameterName + ': wrong parameter type: '+ str(definition.ParameterType)
+                                    returnValue.message = '{}: wrong parameter type: {}'.format(parameterName ,definition.ParameterType)
                                     return returnValue
                                 #check binding type
                                 if(isInstance):
                                     if(elemBind.GetType() != rdb.InstanceBinding):
                                         returnValue.status = False
-                                        returnValue.message = parameterName + ': wrong binding type (looking for instance but got type)'
+                                        returnValue.message = '{}: wrong binding type (looking for instance but got type)'.format(parameterName)
                                         return returnValue
                                 else:
                                     if(elemBind.GetType() != rdb.TypeBinding):
                                         returnValue.status = False
-                                        returnValue.message = parameterName + ': wrong binding type (looking for type but got instance)'
+                                        returnValue.message ='{}: wrong binding type (looking for type but got instance)'.format(parameterName)
                                         return returnValue
                     
                                 # Check Visibility - cannot (not exposed)
                                 # If here, everything is fine, 
                                 # ie already defined correctly
-                                returnValue.message = parameterName + ': Parameter already bound to category: ' + str(cat.Name)
+                                returnValue.message = '{}: Parameter already bound to category: {}'.format(parameterName,cat.Name)
                                 return returnValue
                         except Exception as e:
-                            returnValue.append_message(parameterName + ' : Failed to check parameter binding with exception: ' + str(e))
+                            returnValue.append_message('{} : Failed to check parameter binding with exception: {}'.format(parameterName, e))
                         # If here, no category match, hence must 
                         # store "other" cats for re-inserting
                         else:
@@ -167,28 +167,28 @@ def bind_shared_parameter(doc, category, parameterName, groupName, parameterType
                 actionReturnValue = res.Result()
                 try:
                     if(doc.ParameterBindings.Insert(definition, bind, parameterGrouping)):
-                        actionReturnValue.message =  parameterName + ' : parameter successfully bound to: ' + catObject.Name
+                        actionReturnValue.message =  '{} : parameter successfully bound to: {}'.format(parameterName,catObject.Name)
                         return actionReturnValue
                     else:
                         if(doc.ParameterBindings.ReInsert(definition, bind, parameterGrouping)):
-                            actionReturnValue.message = parameterName + ' : parameter successfully bound to: ' + catObject.Name
+                            actionReturnValue.message = '{} : parameter successfully bound to: {}'.format(parameterName,catObject.Name)
                             return actionReturnValue
                         else:
                             actionReturnValue.status = False
-                            actionReturnValue.message = parameterName + ' : failed to bind parameter to: ' + catObject.Name
+                            actionReturnValue.message = '{} : failed to bind parameter to: {}'.format(parameterName, catObject.Name)
                 except Exception as e:
                     actionReturnValue.status = False
-                    actionReturnValue.message = parameterName + ' : Failed to bind parameter to: ' + catObject.Name + ' with exception: ' + str(e)
+                    actionReturnValue.message = '{} : Failed to bind parameter to: {} with exception: {}'.format(parameterName, catObject.Name, e)
                 return actionReturnValue
             transaction = rdb.Transaction(doc,'Binding parameter')
             returnValue = rTran.in_transaction(transaction, action)
         else:
-            returnValue.update_sep(False, 'Failed to get category object for ' + str(category)) 
+            returnValue.update_sep(False, 'Failed to get category object for: {}'.format(category)) 
         return returnValue
 
     except Exception as e:
         returnValue.status = False
-        returnValue.message = parameterName + ' : Failed to bind parameter with exception: ' + str(e)
+        returnValue.message = '{} : Failed to bind parameter with exception: {}'.format(parameterName, e)
     return returnValue
 
 def add_shared_parameter_to_family(para, mgr, doc, defFile):

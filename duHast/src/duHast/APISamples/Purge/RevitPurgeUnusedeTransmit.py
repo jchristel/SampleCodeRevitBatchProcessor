@@ -170,13 +170,13 @@ def purge_unused_e_transmit(doc):
             resultValue.status = _purge_unused_2022(doc)
         else:
             # this is a non supported revit version!
-            raise ValueError('Revit version ' + revitVersion + ' is currently not supported by purge unused!')
+            raise ValueError('Revit version: {} is currently not supported by purge unused!'.format(revitVersion))
         # update messaging
         if( resultValue.status == True):
             resultValue.message = 'Successfully purged model!'
         else:
             resultValue.message = 'Failed to purge model!'
     except Exception as e:
-            resultValue.update_sep(False,'Terminated purge unused actions with exception: '+ str(e))
-    resultValue.append_message('purge duration: '+ str(tOverall.stop()))
+            resultValue.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
+    resultValue.append_message('purge duration: {}'.formatOverall.stop())
     return resultValue

@@ -230,7 +230,7 @@ def get_action_change_element_workset(el, default_id):
             ws_param.Set(default_id.IntegerValue)
             action_return_value.message = 'Changed element workset.'
         except Exception as e:
-            action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
+            action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
         return action_return_value
     return action
 
@@ -355,18 +355,18 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
                         default_visibility  = rdb.WorksetDefaultVisibilitySettings.GetWorksetDefaultVisibilitySettings(doc)
                         try:
                             default_visibility.SetWorksetVisibility(workset.Id, workset_data_for_file[str(workset.Id)])
-                            action_return_value.update_sep(True, workset.Name + ': default visibility settings changed to: \t[' + str(workset_data_for_file[str(workset.Id)]) + ']')
+                            action_return_value.update_sep(True, '{}: default visibility settings changed to: \t[{}]'.format(workset.Name, workset_data_for_file[str(workset.Id)]))
                         except Exception as e:
-                            action_return_value.update_sep(False, 'Failed with exception: ' + str(e))
+                            action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
                         return action_return_value
                     # move element to new workset
-                    transaction = rdb.Transaction(doc, workset.Name + ": Changing default workset visibility")
+                    transaction = rdb.Transaction(doc, "{}: Changing default workset visibility".format(workset.Name))
                     tranny_status = rTran.in_transaction(transaction, action)
                     return_value.update(tranny_status)
                 else:
-                    return_value.update_sep(True, util.encode_ascii(workset.Name) + ': default visibility settings unchanged.')
+                    return_value.update_sep(True, '{}: default visibility settings unchanged.'.format(util.encode_ascii(workset.Name)))
             else:
-                return_value.update_sep(False, util.encode_ascii(workset.Name) + ': has no corresponding setting in settings file.')
+                return_value.update_sep(False, '{}: has no corresponding setting in settings file.'.format(util.encode_ascii(workset.Name)))
     else:
-        return_value.update_sep(True, 'No settings found for file: ' + file_name)
+        return_value.update_sep(True, 'No settings found for file: {}'.format(file_name))
     return return_value

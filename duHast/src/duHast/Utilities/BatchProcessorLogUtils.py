@@ -606,27 +606,27 @@ def process_log_files(folderPath, debug = False):
         # get all marker files
         markerFileIds = get_current_session_ids(folderPath)
         if(debugMode_):
-            returnValue.append_message('Found marker file(s): ' + str(len(markerFileIds)))
+            returnValue.append_message('Found marker file(s): {}'.format(len(markerFileIds)))
         if(len(markerFileIds) > 0):
             # find log files matching markers
             logFiles = get_log_files(markerFileIds)
             if(debugMode_):
-                returnValue.append_message('Found log file(s): ' + str(len(logFiles)))
+                returnValue.append_message('Found log file(s): {}'.format(len(logFiles)))
             if(len(logFiles) == len(markerFileIds)):
                 data = []
                 for lf in logFiles:
                     # debug output
-                    message = 'Processing log file(s): ' + lf
+                    message = 'Processing log file(s): {}'.format(lf)
                     #returnValue.AppendMessage('Processing log files: ' + lf)
                     try:
                         data = process_log_file(lf)
                         if (len(data) > 0):
-                            message = message + ' [Got processed Revit file(s) data: ' + str(len(data)) +']'
+                            message ='{} [Got processed Revit file(s) data: {}]'.format( message, len(data))
                         else:
                             # dummy run no files processed!
-                            message = message + ' [No Revit file(s) processed!]'
+                            message = '{} [No Revit file(s) processed!]'.format(message)
                     except Exception as e:
-                        message = message + ' [An exception occurred: ' + str(e) + ']'
+                        message = '{} [An exception occurred: {}]'.format(message, e)
                     if(debugMode_):
                         returnValue.append_message(message)
                     for d in data:
@@ -639,9 +639,9 @@ def process_log_files(folderPath, debug = False):
                     returnValue.append_message(listToStr)
                 returnValue.status = True
             else:
-                returnValue.update_sep(False,'Number of log files [' + str(len(logFiles)) + '] does not match required number: ' + str(len(markerFileIds))) 
+                returnValue.update_sep(False,'Number of log files [{}] does not match required number: {}'.format(len(logFiles),len(markerFileIds))) 
         else:
-            returnValue.update_sep(False,'No marker files found in location: ' + str(folderPath))
+            returnValue.update_sep(False,'No marker files found in location: {}'.format(folderPath))
     except Exception as e:
-        returnValue.update_sep(False, 'Terminated with Exception '+ str(e))    
+        returnValue.update_sep(False, 'Terminated with Exception: {}'.format(e))    
     return returnValue

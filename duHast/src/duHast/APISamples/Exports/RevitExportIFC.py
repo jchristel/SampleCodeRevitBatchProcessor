@@ -85,11 +85,11 @@ def export_to_ifc(doc, ifcExportOption, directoryPath, fileName):
         try:
             # export to IFC
             doc.Export(directoryPath, fileName, ifcExportOption)
-            actionReturnValue.update_sep(True, 'Exported: ' + str(directoryPath) + '\\' + str(fileName))
+            actionReturnValue.update_sep(True, 'Exported: {}'.format(directoryPath + '\\' + str(fileName)))
             # needs to be a list in a list to stay together when combined with previous results in the update status result code
             actionReturnValue.result = [[directoryPath, fileName]]
         except Exception as e:
-            actionReturnValue.update_sep(False, 'Script Exception: Failed to export to IFC with exception: ' + str(e))
+            actionReturnValue.update_sep(False, 'Script Exception: Failed to export to IFC with exception: {}'.format(e))
         return actionReturnValue
     transaction = rdb.Transaction(doc,'Export to IFC')
     returnValue = rTran.in_transaction(transaction, action)

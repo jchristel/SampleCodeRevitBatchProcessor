@@ -286,9 +286,9 @@ def purge_unused(doc, revitFilePath, isDebug):
                 pA.purgeReportHeader,
                 isDebug
             )
-            purgeFlag.append_message(SPACER + str(TIMER_TASK.stop()))
+            purgeFlag.append_message('{}{}'.format(SPACER,TIMER_TASK.stop()))
             resultValue.update(purgeFlag)
         except Exception as e:
-            resultValue.update_sep(False,'Terminated purge unused actions with exception: '+ str(e))
-    resultValue.append_message('purge duration: '+ str(TIMER_OVERALL.stop()))
+            resultValue.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
+    resultValue.append_message('purge duration: {}'.formatTIMER_OVERALL.stop())
     return resultValue

@@ -61,10 +61,10 @@ def delete_by_element_ids(
         action_return_value = res.Result()
         try:
             doc.Delete(ids.ToList[rdb.ElementId]())
-            action_return_value.message = "Deleted " + str(len(ids)) + " " + elementName
+            action_return_value.message = "Deleted {} {}".format(len(ids), elementName)
         except Exception as e:
             action_return_value.update_sep(
-                False, "Failed to delete " + elementName + " with exception: " + str(e)
+                False, "Failed to delete {} with exception: {}".format(elementName,e)
             )
         return action_return_value
 
@@ -106,16 +106,11 @@ def delete_by_element_ids_one_by_one(
             n = rdb.Element.Name.GetValue(element)
             try:
                 doc.Delete(id)
-                action_return_value.message = "Deleted [" + str(id) + "] " + n
+                action_return_value.message = "Deleted [{}] {}".format(id, n)
             except Exception as e:
                 action_return_value.update_sep(
                     False,
-                    "Failed to delete "
-                    + n
-                    + "["
-                    + str(id)
-                    + "] with exception: "
-                    + str(e),
+                    "Failed to delete {} [{}] with exception: {}".format(n,id, e)
                 )
             return action_return_value
 

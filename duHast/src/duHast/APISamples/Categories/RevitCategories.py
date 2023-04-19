@@ -283,13 +283,13 @@ def set_family_category(doc, new_category_name):
             transaction = rdb.Transaction(doc,'Changing family category to:' + str(new_category_name))
             change_cat = rTran.in_transaction(transaction, action)
             if(change_cat.status):
-                return_value.update_sep(True, 'Successfully changed family category to: '+str(new_category_name))
+                return_value.update_sep(True, 'Successfully changed family category to: {}'.format(new_category_name))
             else:
                 return_value.update(change_cat)
         else:
-            return_value.update_sep(False, 'Invalid Category name supplied: ' + str(new_category_name))
+            return_value.update_sep(False, 'Invalid Category name supplied: {}'.format(new_category_name))
     else:
-        return_value.update_sep(False, 'Family is already of category: '+str(new_category_name))
+        return_value.update_sep(False, 'Family is already of category: {}'.format(new_category_name))
     return return_value
    
 # --------------------------------------- family category  --------------------------------------------------------------
@@ -362,5 +362,5 @@ def change_family_category(doc, new_category_name):
                 else:
                     return_value.update(create_cat)
     else:
-        return_value.update_sep(False, 'Failed to change family category:' + change_fam.message)
+        return_value.update_sep(False, 'Failed to change family category: {}'.format(change_fam.message))
     return return_value

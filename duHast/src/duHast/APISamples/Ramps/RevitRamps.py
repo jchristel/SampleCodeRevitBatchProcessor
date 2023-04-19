@@ -78,6 +78,6 @@ def get_all_ramp_types_ids_by_category(doc):
     '''
 
     ids = []
-    colCat = get_all_ramp_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (colCat)
+    col_cat = get_all_ramp_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (col_cat)
     return ids

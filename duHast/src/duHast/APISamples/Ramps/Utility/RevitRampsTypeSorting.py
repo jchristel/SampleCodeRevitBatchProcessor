@@ -62,6 +62,6 @@ def sort_ramp_types_by_family_name(doc):
 
     # get all ramp types including in place ramp families
     wts_two = get_all_ramp_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_ramp_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_ramp_type_dictionary(wts_two, used_wts)
+    return used_wts

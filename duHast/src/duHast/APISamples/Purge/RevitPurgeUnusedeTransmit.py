@@ -37,26 +37,26 @@ import clr
 from duHast.Utilities import Result as res
 from duHast.Utilities.timer import Timer
 
-def _purge(doc, dllPath):
+def _purge(doc, dll_path):
     '''
     Purges the document using the purge unused functionality of the eTransmit tool provided by Autodesk.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param dllPath: Fully qualified file path to the revit version specific eTransmitForRevitDB.dll installed by eTransmit
-    :type dllPath: str
+    :param dll_path: Fully qualified file path to the revit version specific eTransmitForRevitDB.dll installed by eTransmit
+    :type dll_path: str
 
     :return: True purge was successful, otherwise False.
     :rtype: bool
     '''
     
-    clr.AddReferenceToFileAndPath(dllPath)
+    clr.AddReferenceToFileAndPath(dll_path)
     # import the eTransmit name space which includes 
     # purge unused functionality
     from eTransmitForRevitDB import eTransmitUpgradeOMatic, UpgradeFailureType
     # purge the document
-    eTransmitUpgradeOMaticThing = eTransmitUpgradeOMatic(doc.Application)
-    result = eTransmitUpgradeOMaticThing.purgeUnused(doc)
+    e_transmit_upgrade_o_matic_thing = eTransmitUpgradeOMatic(doc.Application)
+    result = e_transmit_upgrade_o_matic_thing.purgeUnused(doc)
     return (result == UpgradeFailureType.UpgradeSucceeded)
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2019 -------------------------------------
@@ -73,8 +73,8 @@ def _purge_unused_2019(doc):
     '''
 
     # path to e-Transmit dll for Revit 2019
-    eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2019\eTransmitForRevitDB.dll'
-    value = _purge(doc, eTransmitFilePath)
+    e_transmit_file_path = r'C:\Program Files\Autodesk\eTransmit for Revit 2019\eTransmitForRevitDB.dll'
+    value = _purge(doc, e_transmit_file_path)
     return value
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2020 -------------------------------------
@@ -91,8 +91,8 @@ def _purge_unused_2020(doc):
     '''
 
     # path to e-Transmit dll for Revit 2019
-    eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2020\eTransmitForRevitDB.dll'
-    value = _purge(doc, eTransmitFilePath)
+    e_transmit_file_path = r'C:\Program Files\Autodesk\eTransmit for Revit 2020\eTransmitForRevitDB.dll'
+    value = _purge(doc, e_transmit_file_path)
     return value
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
@@ -109,8 +109,8 @@ def _purge_unused_2021(doc):
     '''
 
     # path to e-Transmit dll for Revit 2019
-    eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2021\eTransmitForRevitDB.dll'
-    value = _purge(doc, eTransmitFilePath)
+    e_transmit_file_path = r'C:\Program Files\Autodesk\eTransmit for Revit 2021\eTransmitForRevitDB.dll'
+    value = _purge(doc, e_transmit_file_path)
     return value
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
@@ -127,8 +127,8 @@ def _purge_unused_2022(doc):
     '''
 
     # path to e-Transmit dll for Revit 2019
-    eTransmitFilePath = r'C:\Program Files\Autodesk\eTransmit for Revit 2022\eTransmitForRevitDB.dll'
-    value = _purge(doc, eTransmitFilePath)
+    e_transmit_file_path = r'C:\Program Files\Autodesk\eTransmit for Revit 2022\eTransmitForRevitDB.dll'
+    value = _purge(doc, e_transmit_file_path)
     return value
 
 #-------------------------------------------- Purge Unused using eTransmit for Revit 2021 -------------------------------------
@@ -154,29 +154,29 @@ def purge_unused_e_transmit(doc):
     :rtype: :class:`.Result`
     '''
 
-    resultValue = res.Result()
-    tOverall = Timer()
-    tOverall.start()
+    result_value = res.Result()
+    t_overall = Timer()
+    t_overall.start()
     # get the revit version:
-    revitVersion = doc.Application.VersionNumber
+    revit_version = doc.Application.VersionNumber
     try:
-        if (revitVersion == '2019'):
-            resultValue.status = _purge_unused_2019(doc)
-        elif (revitVersion == '2020'):
-            resultValue.status = _purge_unused_2020(doc)
-        elif (revitVersion == '2021'):
-            resultValue.status = _purge_unused_2021(doc)
-        elif (revitVersion == '2022'):
-            resultValue.status = _purge_unused_2022(doc)
+        if (revit_version == '2019'):
+            result_value.status = _purge_unused_2019(doc)
+        elif (revit_version == '2020'):
+            result_value.status = _purge_unused_2020(doc)
+        elif (revit_version == '2021'):
+            result_value.status = _purge_unused_2021(doc)
+        elif (revit_version == '2022'):
+            result_value.status = _purge_unused_2022(doc)
         else:
             # this is a non supported revit version!
-            raise ValueError('Revit version: {} is currently not supported by purge unused!'.format(revitVersion))
+            raise ValueError('Revit version: {} is currently not supported by purge unused!'.format(revit_version))
         # update messaging
-        if( resultValue.status == True):
-            resultValue.message = 'Successfully purged model!'
+        if( result_value.status == True):
+            result_value.message = 'Successfully purged model!'
         else:
-            resultValue.message = 'Failed to purge model!'
+            result_value.message = 'Failed to purge model!'
     except Exception as e:
-            resultValue.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
-    resultValue.append_message('purge duration: {}'.formatOverall.stop())
-    return resultValue
+            result_value.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
+    result_value.append_message('purge duration: {}'.formatOverall.stop())
+    return result_value

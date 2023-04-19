@@ -40,7 +40,7 @@ class TimerError(Exception):
 
 class Timer:
     def __init__(self):
-        self._stopWatch = None
+        self._stop_watch = None
 
     def start(self):
         '''
@@ -49,11 +49,11 @@ class Timer:
         :raises TimerError: When timer is running already.
         '''
 
-        if self._stopWatch is not None:
+        if self._stop_watch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
 
-        self._stopWatch = Stopwatch()
-        self._stopWatch.Start()
+        self._stop_watch = Stopwatch()
+        self._stop_watch.Start()
 
     def stop(self):
         '''
@@ -65,9 +65,9 @@ class Timer:
         :rtype: str
         '''
 
-        if self._stopWatch is None:
+        if self._stop_watch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
-        self._stopWatch.Stop()
-        timeSpan = self._stopWatch.Elapsed
-        self._stopWatch = None
-        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%timeSpan.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%timeSpan.Milliseconds) + 'ms')
+        self._stop_watch.Stop()
+        time_span = self._stop_watch.Elapsed
+        self._stop_watch = None
+        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%time_span.Milliseconds) + 'ms')

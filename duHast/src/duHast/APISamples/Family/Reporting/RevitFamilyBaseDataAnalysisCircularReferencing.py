@@ -55,112 +55,112 @@ from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamB
 from duHast.Utilities.timer import Timer
 from duHast.Utilities import Result as res
 
-def _extract_parent_families(currentParent, treePath):
+def _extract_parent_families(current_parent, tree_path):
     '''
     Find the index of the match in the root tree, any entries in the root tree list with a lower index are parents
 
-    Note: Changes currentParent.parent property of the currentParent variable!
+    Note: Changes current_parent.parent property of the current_parent variable!
 
-    :param currentParent: A tuple containing family root data
-    :type currentParent: named tuple rootFamily
-    :param treePath: list of family names describing the nesting tree of a family
-    :type treePath: [str]
+    :param current_parent: A tuple containing family root data
+    :type current_parent: named tuple rootFamily
+    :param tree_path: list of family names describing the nesting tree of a family
+    :type tree_path: [str]
     :return: Nothing
     :rtype: None
     '''
    
-    indexMatch = treePath.index(currentParent.name)
+    index_match = tree_path.index(current_parent.name)
     # double check...it exists and it is not root itself
-    if(indexMatch > 0):
+    if(index_match > 0):
         # add all parents
-        for i in range (indexMatch):
-            if(treePath[i] not in currentParent.parent):
-                currentParent.parent.append(treePath[i])
+        for i in range (index_match):
+            if(tree_path[i] not in current_parent.parent):
+                current_parent.parent.append(tree_path[i])
 
 
-def _extract_child_families(currentParent, treePath):
+def _extract_child_families(current_parent, tree_path):
     '''
     Find the index of the match in the root tree, any entries in the root tree list with a lower index are children
 
-    Note: Changes currentParent.child property of the currentParent variable!
+    Note: Changes current_parent.child property of the current_parent variable!
 
-    :param currentParent: A tuple containing family root data
-    :type currentParent: named tuple rootFamily
-    :param treePath: list of family names describing the nesting tree of a family
-    :type treePath: [str]
+    :param current_parent: A tuple containing family root data
+    :type current_parent: named tuple rootFamily
+    :param tree_path: list of family names describing the nesting tree of a family
+    :type tree_path: [str]
     :return: Nothing
     :rtype: None
     '''
 
-    indexMatch = treePath.index(currentParent.name)
+    index_match = tree_path.index(current_parent.name)
     # double check...it exists and it is not root itself and its not the last item in tree path
-    if(indexMatch > 0 and indexMatch != len(treePath)):
+    if(index_match > 0 and index_match != len(tree_path)):
         # add all children
-        for i in range (indexMatch + 1, len(treePath)):
-            if(treePath[i] not in currentParent.child):
-                currentParent.child.append(treePath[i])
+        for i in range (index_match + 1, len(tree_path)):
+            if(tree_path[i] not in current_parent.child):
+                current_parent.child.append(tree_path[i])
 
 
-def _check_data_blocks_for_overLap(blockOne, blockTwo):
+def _check_data_blocks_for_over_lap(block_one, block_two):
     '''
     Checks whether the root path of families in the first block overlaps with the root path of any family in the second block.
     Overlap is checked from the start of the root path. Any families from block one which are not overlapping any family in\
         block two are returned.
 
-    :param blockOne: List of family tuples of type nestedFamily
-    :type blockOne: [nestedFamily]
-    :param blockTwo: List of family tuples of type nestedFamily
-    :type blockTwo: [nestedFamily]
+    :param block_one: List of family tuples of type nestedFamily
+    :type block_one: [nestedFamily]
+    :param block_two: List of family tuples of type nestedFamily
+    :type block_two: [nestedFamily]
     :return: List of family tuples of type nestedFamily
     :rtype: [nestedFamily]
     '''
 
-    uniqueTreeNodes = []
-    for fam in blockOne:
+    unique_tree_nodes = []
+    for fam in block_one:
         match = False
-        for famUp in blockTwo:
-            if(' :: '.join(famUp.rootPath).startswith(' :: '.join(fam.rootPath))):
+        for fam_up in block_two:
+            if(' :: '.join(fam_up.rootPath).startswith(' :: '.join(fam.rootPath))):
                 match = True
                 break
         if(match == False):
-            uniqueTreeNodes.append(fam)
-    return uniqueTreeNodes
+            unique_tree_nodes.append(fam)
+    return unique_tree_nodes
 
-def _cull_data_block(familyBaseNestedDataBlock):
+def _cull_data_block(family_base_nested_data_block):
     '''
     Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of '::' in root path string.
 
     After sorting it compares adjacent blocks in the dictionary (key and key + 1) for overlaps in the root path string. Only unique families will be returned.
 
-    :param familyBaseNestedDataBlock: A list containing all nested families belonging to a single root host family.
-    :type familyBaseNestedDataBlock: [nestedFamily]
+    :param family_base_nested_data_block: A list containing all nested families belonging to a single root host family.
+    :type family_base_nested_data_block: [nestedFamily]
     :return: A list of unique families in terms of root path.
     :rtype: [nestedFamily]
     '''
 
-    culledFamilyBaseNestedDataBlocks = []
-    dataBlocksByLength = {}
+    culled_family_base_nested_data_blocks = []
+    data_blocks_by_length = {}
     # build dic by root path length
     # start at 1 because for nesting level ( 1 based rather then 0 based )
-    for family in familyBaseNestedDataBlock:
-        if(len(family.rootPath) -1 in dataBlocksByLength):
-            dataBlocksByLength[len(family.rootPath) -1 ].append(family)
+    for family in family_base_nested_data_block:
+        if(len(family.rootPath) -1 in data_blocks_by_length):
+            data_blocks_by_length[len(family.rootPath) -1 ].append(family)
         else:
-            dataBlocksByLength[len(family.rootPath)- 1 ] = [family]
+            data_blocks_by_length[len(family.rootPath)- 1 ] = [family]
     
     # loop over dictionary and check block entries against next entry up blocks
-    for i in range(1, len(dataBlocksByLength) + 1):
+    for i in range(1, len(data_blocks_by_length) + 1):
         # last block get automatically added
-        if(i == len(dataBlocksByLength)):
-            culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + dataBlocksByLength[i]
+        if(i == len(data_blocks_by_length)):
+            culled_family_base_nested_data_blocks = culled_family_base_nested_data_blocks + data_blocks_by_length[i]
         else:
             # check for matches in next one up
-            uniqueNodes = _check_data_blocks_for_overLap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
+            unique_nodes = _check_data_blocks_for_over_lap(data_blocks_by_length[i], data_blocks_by_length[i + 1])
             # only add non overlapping blocks
-            culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + uniqueNodes
-    return culledFamilyBaseNestedDataBlocks
+            culled_family_base_nested_data_blocks = culled_family_base_nested_data_blocks + unique_nodes
+    return culled_family_base_nested_data_blocks
 
-def _cull_nested_base_data_blocks(overallFamilyBaseNestedData):
+def _cull_nested_base_data_blocks(overall_family_base_nested_data):
     '''
     Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longest branch only.
 
@@ -171,98 +171,98 @@ def _cull_nested_base_data_blocks(overallFamilyBaseNestedData):
 
     The second of the above examples can be culled since the first contains the same information.
 
-    :param overallFamilyBaseNestedData: A list containing all nested families with the longest nesting levels per branch per host family.
-    :type overallFamilyBaseNestedData: [nestedFamily]
+    :param overall_family_base_nested_data: A list containing all nested families with the longest nesting levels per branch per host family.
+    :type overall_family_base_nested_data: [nestedFamily]
     '''
 
-    currentRootFamName = ''
-    familyBlocks = []
+    current_root_fam_name = ''
+    family_blocks = []
     block = []
     # read families into blocks
-    for nested in overallFamilyBaseNestedData:
-        if(nested.rootPath[0] != currentRootFamName):
+    for nested in overall_family_base_nested_data:
+        if(nested.rootPath[0] != current_root_fam_name):
             # read family block
             if(len(block) > 0):
-                familyBlocks.append(block)
+                family_blocks.append(block)
                 # reset block
                 block = []
                 block.append(nested)
-                currentRootFamName = nested.rootPath[0]
+                current_root_fam_name = nested.rootPath[0]
             else:
                 block.append(nested)
-                currentRootFamName = nested.rootPath[0]
+                current_root_fam_name = nested.rootPath[0]
         else:
             block.append(nested)
     
-    retainedFamilyBaseNestedData = []
+    retained_family_base_nested_data = []
     # cull data per block
-    for familyBlock in familyBlocks:
-        d = _cull_data_block(familyBlock)
-        retainedFamilyBaseNestedData = retainedFamilyBaseNestedData + d
+    for family_block in family_blocks:
+        d = _cull_data_block(family_block)
+        retained_family_base_nested_data = retained_family_base_nested_data + d
         
-    return retainedFamilyBaseNestedData
+    return retained_family_base_nested_data
 
 
-def find_parents_and_children(overallFamilyBaseRootData, overallFamilyBaseNestedData):
+def find_parents_and_children(overall_family_base_root_data, overall_family_base_nested_data):
     '''
     Loop over all root families and check if they exist in root path of any nested families.
     if so extract families higher up the root path tree as parents and families further down the root path tree as children
 
-    :param overallFamilyBaseRootData: List of tuples containing root family data.
-    :type overallFamilyBaseRootData: [rootFamily]
-    :param overallFamilyBaseNestedData: List of tuples containing nested family data.
-    :type overallFamilyBaseNestedData: [nestedFamily]
+    :param overall_family_base_root_data: List of tuples containing root family data.
+    :type overall_family_base_root_data: [rootFamily]
+    :param overall_family_base_nested_data: List of tuples containing nested family data.
+    :type overall_family_base_nested_data: [nestedFamily]
 
     :return: List of tuples containing root family data.
     :rtype: [rootFamily]
     '''
     
-    for i in range(len(overallFamilyBaseRootData)):
-        #print ('checking family :' , i, ' ', overallFamilyBaseRootData[i].name)
-        for nestedFam in overallFamilyBaseNestedData:
+    for i in range(len(overall_family_base_root_data)):
+        #print ('checking family :' , i, ' ', overall_family_base_root_data[i].name)
+        for nested_fam in overall_family_base_nested_data:
             try:
                 # get the index of the match
-                indexMatch = nestedFam.rootPath.index(overallFamilyBaseRootData[i].name)
-                if(indexMatch > 0):
+                index_match = nested_fam.rootPath.index(overall_family_base_root_data[i].name)
+                if(index_match > 0):
                     
-                    #print('found ', overallFamilyBaseRootData[i].name ,' in ', nestedFam.rootPath)
-                    _extract_parent_families(overallFamilyBaseRootData[i], nestedFam.rootPath)
+                    #print('found ', overall_family_base_root_data[i].name ,' in ', nested_fam.rootPath)
+                    _extract_parent_families(overall_family_base_root_data[i], nested_fam.rootPath)
                     
-                    _extract_child_families(overallFamilyBaseRootData[i], nestedFam.rootPath)
+                    _extract_child_families(overall_family_base_root_data[i], nested_fam.rootPath)
 
-                    #print('after: ', overallFamilyBaseRootData[i].child)
+                    #print('after: ', overall_family_base_root_data[i].child)
             except:
                 pass
-    return overallFamilyBaseRootData
+    return overall_family_base_root_data
 
-def find_circular_references(overallFamilyBaseRootData):
+def find_circular_references(overall_family_base_root_data):
     '''
     Loops over family data and returns any families which appear in circular references.
     (A family appears in their parent and child collection)
 
-    :param overallFamilyBaseRootData: List of tuples containing root family data.
-    :type overallFamilyBaseRootData: [rootFamily]
+    :param overall_family_base_root_data: List of tuples containing root family data.
+    :type overall_family_base_root_data: [rootFamily]
     
     :return: List of tuples containing root family data.
     :rtype: [rootFamily]
     '''
 
-    circularReferences = []
+    circular_references = []
     # loop over all families and check whether there are any families in both the parent as well as child collection
-    for family in overallFamilyBaseRootData:
-        for parentFamily in family.parent:
-            if (parentFamily in family.child):
-                circularReferences.append(family)
-    return circularReferences
+    for family in overall_family_base_root_data:
+        for parent_family in family.parent:
+            if (parent_family in family.child):
+                circular_references.append(family)
+    return circular_references
 
-def check_families_have_circular_references(familyBaseDataReportFilePath):
+def check_families_have_circular_references(family_base_data_report_file_path):
     '''
     Processes a family base data report and identifies any families which contain circular reference.
 
     Makes use of multithreading when more then 2 cores are present.
 
-    :param familyBaseDataReportFilePath: Fully qualified file path to family base data report file. 
-    :type familyBaseDataReportFilePath: str
+    :param family_base_data_report_file_path: Fully qualified file path to family base data report file. 
+    :type family_base_data_report_file_path: str
 
     :return: 
         Result class instance.
@@ -281,32 +281,32 @@ def check_families_have_circular_references(familyBaseDataReportFilePath):
     '''
 
     # set up a timer
-    tProcess = Timer()
-    tProcess.start()
+    t_process = Timer()
+    t_process.start()
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # read overall family base data and nested data from file 
-    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-    returnValue.append_message('{} Read overall family base data report. {} root entries found and {} nested entries found.'.format(tProcess.stop(),len(overallFamilyBaseRootData,len(overallFamilyBaseNestedData))))
-    tProcess.start()
+    overall_family_base_root_data, overall_family_base_nested_data = rFamBaseDataUtils.read_overall_family_data_list(family_base_data_report_file_path)
+    return_value.append_message('{} Read overall family base data report. {} root entries found and {} nested entries found.'.format(t_process.stop(),len(overall_family_base_root_data,len(overall_family_base_nested_data))))
+    t_process.start()
 
-    before = len(overallFamilyBaseNestedData)
+    before = len(overall_family_base_nested_data)
     # reduce workload by culling not needed nested family data
-    overallFamilyBaseNestedData = _cull_nested_base_data_blocks(overallFamilyBaseNestedData)
-    returnValue.append_message(' {} culled nested family base data from : {} to: {} families.'.format(tProcess.stop(), before),len(overallFamilyBaseNestedData))
-    tProcess.start()
+    overall_family_base_nested_data = _cull_nested_base_data_blocks(overall_family_base_nested_data)
+    return_value.append_message(' {} culled nested family base data from : {} to: {} families.'.format(t_process.stop(), before),len(overall_family_base_nested_data))
+    t_process.start()
 
     # set up some multithreading
-    coreCount = int(os.environ['NUMBER_OF_PROCESSORS'])
-    if (coreCount > 2):
-        returnValue.append_message('cores: '.format(coreCount))
+    core_count = int(os.environ['NUMBER_OF_PROCESSORS'])
+    if (core_count > 2):
+        return_value.append_message('cores: '.format(core_count))
         # leave some room for other processes
-        coreCount = coreCount - 1
-        chunkSize = len(overallFamilyBaseRootData)/coreCount
+        core_count = core_count - 1
+        chunk_size = len(overall_family_base_root_data)/core_count
         threads = []
         # set up threads
-        for i in range(coreCount):
-            t = threading.Thread(target=find_parents_and_children, args=(overallFamilyBaseRootData[i*chunkSize:(i+1) * chunkSize],overallFamilyBaseNestedData))
+        for i in range(core_count):
+            t = threading.Thread(target=find_parents_and_children, args=(overall_family_base_root_data[i*chunk_size:(i+1) * chunk_size],overall_family_base_nested_data))
             threads.append(t)
         # start up threads
         for t in threads:
@@ -316,14 +316,14 @@ def check_families_have_circular_references(familyBaseDataReportFilePath):
             t.join()
     else:
         # find parents and children
-        overallFamilyBaseRootData = find_parents_and_children(overallFamilyBaseRootData, overallFamilyBaseNestedData)
+        overall_family_base_root_data = find_parents_and_children(overall_family_base_root_data, overall_family_base_nested_data)
     
-    returnValue.append_message('{} Populated parents and children properties of: {} root families'.format(tProcess.stop(), len(overallFamilyBaseRootData)))
-    tProcess.start()
+    return_value.append_message('{} Populated parents and children properties of: {} root families'.format(t_process.stop(), len(overall_family_base_root_data)))
+    t_process.start()
 
     # identify circular references
-    circularReferences = find_circular_references(overallFamilyBaseRootData)
-    returnValue.append_message('{} Found: {} circular references in families.'.format(tProcess.stop(), len(circularReferences)))
-    if(len(circularReferences) > 0):
-        returnValue.result = circularReferences
-    return returnValue
+    circular_references = find_circular_references(overall_family_base_root_data)
+    return_value.append_message('{} Found: {} circular references in families.'.format(t_process.stop(), len(circular_references)))
+    if(len(circular_references) > 0):
+        return_value.result = circular_references
+    return return_value

@@ -65,26 +65,26 @@ def set_ref_planes_to_not_a_reference(doc):
 
     result = res.Result()
     result.update_sep(True, 'Changing reference status of reference planes...')
-    matchAtAll = False
-    collectorRefPlanes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-    for refP in collectorRefPlanes:
-        valueInt = rParaGet.get_built_in_parameter_value(
-            refP,
+    match_at_all = False
+    collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
+    for ref_p in collector_ref_planes:
+        value_int = rParaGet.get_built_in_parameter_value(
+            ref_p,
             rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
             rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id is greater then 12)
-        if (valueInt > 13):
-            resultChange = rParaSet.set_built_in_parameter_value(
+        if (value_int > 13):
+            result_change = rParaSet.set_built_in_parameter_value(
                 doc,
-                refP,
+                ref_p,
                 rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
                 '12'
                 )
             # set overall flag to indicate that at least one element was changed
-            if(resultChange.status == True and matchAtAll == False):
-                matchAtAll = True
-            result.update(resultChange)
-    if(matchAtAll == False):
+            if(result_change.status == True and match_at_all == False):
+                match_at_all = True
+            result.update(result_change)
+    if(match_at_all == False):
         result.status = False
         result.message = 'No reference planes found requiring reference type update'
     return result
@@ -115,27 +115,27 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
 
     result = res.Result()
     result.update_sep(True, 'Changing reference status of model and symbolic curves...')
-    matchAtAll = False
+    match_at_all = False
     curves = get_all_curve_based_elements_in_family(doc)
     for curve in curves:
         # get the current reference type
-        valueInt = rParaGet.get_built_in_parameter_value(
+        value_int = rParaGet.get_built_in_parameter_value(
             curve,
             rdb.BuiltInParameter.ELEM_IS_REFERENCE,
             rParaGet.get_parameter_value_as_integer)
         # check if an update is required (id equals 1)
-        if (valueInt == 1):
-            resultChange = rParaSet.set_built_in_parameter_value(
+        if (value_int == 1):
+            result_change = rParaSet.set_built_in_parameter_value(
                 doc,
                 curve,
                 rdb.BuiltInParameter.ELEM_IS_REFERENCE,
                 '0'
                 )
             # set overall flag to indicate that at least one element was changed
-            if(resultChange.status == True and matchAtAll == False):
-                matchAtAll = True
-            result.update(resultChange)
-    if(matchAtAll == False):
+            if(result_change.status == True and match_at_all == False):
+                match_at_all = True
+            result.update(result_change)
+    if(match_at_all == False):
         result.status = False
         result.message = 'No curve elements found requiring reference type update'
     return result

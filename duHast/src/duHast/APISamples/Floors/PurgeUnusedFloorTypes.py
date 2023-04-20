@@ -48,22 +48,22 @@ def get_used_floor_type_ids(doc):
     return ids
 
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
-    Compares two lists of ids. True if any id is not in unUsedTypeIds.
+    Compares two lists of ids. True if any id is not in un_used_type_ids.
     TODO: check for more generic list comparison and remove this function.
 
-    :param famTypeIds: List of family type ids to check.
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: Reference list of ids.
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
-    :return: True if any id from famTypeIds is not in unUsedTypeIds.
+    :param fam_type_ids: List of family type ids to check.
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: Reference list of ids.
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+    :return: True if any id from fam_type_ids is not in un_used_type_ids.
     :rtype: bool
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match
@@ -89,8 +89,8 @@ def get_unused_non_in_place_floor_type_ids_to_purge(doc):
     # get unused type ids
     ids = rPurgeUtils.get_used_unused_type_ids(doc, rFloor.get_all_floor_type_ids_in_model_by_class, 0)
     # make sure there is at least on Floor type per system family left in model
-    floorTypes = rFloorTypeSort.sort_floor_types_by_family_name(doc)
-    for key, value in floorTypes.items():
+    floor_types = rFloorTypeSort.sort_floor_types_by_family_name(doc)
+    for key, value in floor_types.items():
         if(key in rFloor.BUILTIN_FLOOR_TYPE_FAMILY_NAMES):
             if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list

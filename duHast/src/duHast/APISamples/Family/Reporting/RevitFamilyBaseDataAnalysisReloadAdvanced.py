@@ -51,14 +51,14 @@ from duHast.APISamples.Family.Reporting import RevitFamilyReloadAdvancedUtils as
 _TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
 
 
-def _write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
+def _write_reload_list_to_file(reload_families, directory_path, counter = 0):
     '''
     Writes task list file to disk. File contains single column of fully qualified file path.
 
-    :param reloadFamilies: List of tuples representing families requiring their nested families to be re-loaded.
-    :type reloadFamilies: [rootFamily]
-    :param directoryPath: Fully qualified directory path to which the task files will be written.
-    :type directoryPath: str
+    :param reload_families: List of tuples representing families requiring their nested families to be re-loaded.
+    :type reload_families: [rootFamily]
+    :param directory_path: Fully qualified directory path to which the task files will be written.
+    :type directory_path: str
     :param counter: Task file name suffix, defaults to 0
     :type counter: int, optional
     
@@ -69,46 +69,46 @@ def _write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
     # write out file list without header
     header = []
     # data to be written to file
-    overallData = []
-    fileName = directoryPath + '\\' + _TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
+    overall_data = []
+    file_name = directory_path + '\\' + _TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
     # loop over families to get file path
-    for r in reloadFamilies:
+    for r in reload_families:
         # row data
         data = []
         data.append(r.filePath)
-        overallData.append(data)
+        overall_data.append(data)
     try:
         # write data
-        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(file_name, header, overall_data, writeType = 'w')
         return True
     except Exception:
         return False
 
-def _delete_old_task_lists(directoryPath):
+def _delete_old_task_lists(directory_path):
     '''
     Deletes all overall task files in given directory.
 
-    :param directoryPath: Fully qualified directory path containing the task files to be deleted.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path containing the task files to be deleted.
+    :type directory_path: str
     :return: True if all files got deleted successfully, otherwise False.
     :rtype: bool
     '''
 
     flag = True
     # find all files in folder starting with and delete them
-    files = fileGet.get_files(directoryPath, '.txt')
+    files = fileGet.get_files(directory_path, '.txt')
     if (len(files) > 0):
         for f in files:
             if (util.get_file_name_without_ext(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
                 flag = flag & util.file_delete(f)
     return flag
 
-def _write_out_empty_task_list(directoryPath, counter = 0):
+def _write_out_empty_task_list(directory_path, counter = 0):
     '''
     Writes out an empty task list in case nothing is to be reloaded.
 
-    :param directoryPath: Fully qualified directory path to which the task files will be written.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path to which the task files will be written.
+    :type directory_path: str
     :param counter: Task file name suffix, defaults to 0
     :type counter: int, optional
     
@@ -116,148 +116,148 @@ def _write_out_empty_task_list(directoryPath, counter = 0):
     :rtype: bool
     '''
 
-    fileName = directoryPath + '\\' + 'TaskOutput' + str(counter)+ ".txt"
+    file_name = directory_path + '\\' + 'TaskOutput' + str(counter)+ ".txt"
     # write out file list without header
     header = []
     # write out empty data
-    overallData = []
+    overall_data = []
     try:
         # write data
-        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(file_name, header, overall_data, writeType = 'w')
         return True
     except Exception:
         return False
 
-def _remove_duplicates(listOne, listTwo):
+def _remove_duplicates(list_one, list_two):
     '''
     Removes any item from list one which is present in list two.
 
-    :param listOne: List of tuples containing root family data.
-    :type listOne: [rFamBaseDataUtils.rootFamily]
-    :param listTwo: List of tuples containing root family data.
-    :type listTwo: [rFamBaseDataUtils.rootFamily]
+    :param list_one: List of tuples containing root family data.
+    :type list_one: [rFamBaseDataUtils.rootFamily]
+    :param list_two: List of tuples containing root family data.
+    :type list_two: [rFamBaseDataUtils.rootFamily]
 
     :return: _description_
     :rtype: _type_
     '''
 
-    newList = []
-    duplicatesList = []
-    for lOneItem in listOne:
-        if lOneItem not in listTwo:
-            newList.append(lOneItem)
+    new_list = []
+    duplicates_list = []
+    for l_one_item in list_one:
+        if l_one_item not in list_two:
+            new_list.append(l_one_item)
         else:
-            duplicatesList.append(lOneItem)
-    return newList, duplicatesList
+            duplicates_list.append(l_one_item)
+    return new_list, duplicates_list
 
-def _get_hosts(currentFamilies, overallFamilyBaseNestedData, overallFamilyBaseRootData):
+def _get_hosts(current_families, overall_family_base_nested_data, overall_family_base_root_data):
     '''
     Returns the direct ( one level up) host families of the current families.
 
-    :param currentFamilies: A list of current families represented as tuples (tuple need to have properties 'name' and 'category').
-    :type currentFamilies: [rFamBaseDataUtils.rootFamily] or [rFamBaseDataUtils.nestedFamily] or [rFamReloadAdvUtils.changedFamily]
-    :param overallFamilyBaseNestedData: List of tuples containing nested family data.
-    :type overallFamilyBaseNestedData: [rFamBaseDataUtils.nestedFamily]
-    :param overallFamilyBaseRootData: List of tuples containing root family data.
-    :type overallFamilyBaseRootData: [rFamBaseDataUtils.rootFamily]
+    :param current_families: A list of current families represented as tuples (tuple need to have properties 'name' and 'category').
+    :type current_families: [rFamBaseDataUtils.rootFamily] or [rFamBaseDataUtils.nestedFamily] or [rFamReloadAdvUtils.changedFamily]
+    :param overall_family_base_nested_data: List of tuples containing nested family data.
+    :type overall_family_base_nested_data: [rFamBaseDataUtils.nestedFamily]
+    :param overall_family_base_root_data: List of tuples containing root family data.
+    :type overall_family_base_root_data: [rFamBaseDataUtils.rootFamily]
     
     :return: A list of root families.
     :rtype: [rFamBaseDataUtils.rootFamily]
     '''
 
     # get current change list host files
-    directHosts = rFamBaseDataUtils.find_root_families_from_hosts(
-        rFamBaseDataUtils.find_all_direct_host_families(currentFamilies, overallFamilyBaseNestedData), 
-        overallFamilyBaseRootData)
-    return directHosts
+    direct_hosts = rFamBaseDataUtils.find_root_families_from_hosts(
+        rFamBaseDataUtils.find_all_direct_host_families(current_families, overall_family_base_nested_data), 
+        overall_family_base_root_data)
+    return direct_hosts
 
-def build_work_lists(changeListFilePath, familyBaseDataReportFilePath, loadListsOutputDirectoryPath):
+def build_work_lists(change_list_file_path, family_base_data_report_file_path, load_lists_output_directory_path):
     '''
     Processes a file change list and a family base data report. From both reports it builds a lists for reloading families bottom up in their nesting hierarchy.
 
-    :param changeListFilePath: Fully qualified file path to family change list report file. 
-    :type changeListFilePath: str
-    :param familyBaseDataReportFilePath: Fully qualified file path to family base data report file. 
-    :type familyBaseDataReportFilePath: str
-    :param loadListsOutputDirectoryPath: Fully qualified directory path to which the task output files will be written
-    :type loadListsOutputDirectoryPath: str
+    :param change_list_file_path: Fully qualified file path to family change list report file. 
+    :type change_list_file_path: str
+    :param family_base_data_report_file_path: Fully qualified file path to family base data report file. 
+    :type family_base_data_report_file_path: str
+    :param load_lists_output_directory_path: Fully qualified directory path to which the task output files will be written
+    :type load_lists_output_directory_path: str
     :raises Exception: "Infinite loop." Will be raised if more then 20 task output files are written (representing a family nesting level of 20 deep...unlikely)
     '''
 
     # set up a timer
-    tProcess = Timer()
-    tProcess.start()
+    t_process = Timer()
+    t_process.start()
 
-    returnValue = res.Result()
-    changeList = rFamReloadAdvUtils.read_change_list(changeListFilePath)
-    returnValue.append_message(tProcess.stop() + ' Change list of length [' +str(len(changeList)) +'] loaded.')
+    return_value = res.Result()
+    change_list = rFamReloadAdvUtils.read_change_list(change_list_file_path)
+    return_value.append_message(t_process.stop() + ' Change list of length [' +str(len(change_list)) +'] loaded.')
 
-    tProcess.start()
+    t_process.start()
     # read overall family base data from file 
-    overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(familyBaseDataReportFilePath)
-    returnValue.append_message(tProcess.stop() + ' Nested base data list of length [' + str(len(overallFamilyBaseNestedData)) + '] loaded.')
+    overall_family_base_root_data, overall_family_base_nested_data = rFamBaseDataUtils.read_overall_family_data_list(family_base_data_report_file_path)
+    return_value.append_message(t_process.stop() + ' Nested base data list of length [' + str(len(overall_family_base_nested_data)) + '] loaded.')
     
-    if(len(changeList) > 0):
+    if(len(change_list) > 0):
         # list containing the hosts of the host families
-        taskNextLevel = []
+        task_next_level = []
         # safety switch in case of infinite loop
-        taskListCounter = 0
+        task_list_counter = 0
 
-        tProcess.start()
-        taskCurrentLevel = _get_hosts(
-            changeList, 
-            overallFamilyBaseNestedData, 
-            overallFamilyBaseRootData
+        t_process.start()
+        task_current_level = _get_hosts(
+            change_list, 
+            overall_family_base_nested_data, 
+            overall_family_base_root_data
             )
-        returnValue.append_message(tProcess.stop() + ' Direct hosts [' + str(len(taskCurrentLevel)) + '] found.')
+        return_value.append_message(t_process.stop() + ' Direct hosts [' + str(len(task_current_level)) + '] found.')
         
-        tProcess.start()
-        taskNextLevel = _get_hosts(
-            taskCurrentLevel, 
-            overallFamilyBaseNestedData, 
-            overallFamilyBaseRootData
+        t_process.start()
+        task_next_level = _get_hosts(
+            task_current_level, 
+            overall_family_base_nested_data, 
+            overall_family_base_root_data
             )
-        returnValue.append_message(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
+        return_value.append_message(t_process.stop() + ' Next level hosts [' + str(len(task_next_level)) + '] found.')
 
         # loop until no more entries in current level tasks
-        while (len(taskCurrentLevel) > 0 ):
+        while (len(task_current_level) > 0 ):
             
             # remove next level hosts from direct hosts list to avoid overlap in reload process
-            cleanedCurrentTasks, overLapTasks = _remove_duplicates(taskCurrentLevel, taskNextLevel)
+            cleaned_current_tasks, over_lap_tasks = _remove_duplicates(task_current_level, task_next_level)
             
             # write out cleaned up list:
-            if(len(cleanedCurrentTasks) > 0):
-                tProcess.start()
-                resultWriteToDisk = _write_reload_list_to_file(
-                    cleanedCurrentTasks, 
-                    loadListsOutputDirectoryPath, 
-                    taskListCounter
+            if(len(cleaned_current_tasks) > 0):
+                t_process.start()
+                result_write_to_disk = _write_reload_list_to_file(
+                    cleaned_current_tasks, 
+                    load_lists_output_directory_path, 
+                    task_list_counter
                     )
-                returnValue.update_sep(resultWriteToDisk, tProcess.stop() +  ' Wrote task list to file with status: ' + str(resultWriteToDisk))
+                return_value.update_sep(result_write_to_disk, t_process.stop() +  ' Wrote task list to file with status: ' + str(result_write_to_disk))
             else:
                 # write out an empty task list!
-                emptyTaskListFlag = _write_out_empty_task_list(loadListsOutputDirectoryPath, taskListCounter)
-                returnValue.update_sep(emptyTaskListFlag, 'Wrote empty task list at counter ['+ str(taskListCounter))
+                empty_task_list_flag = _write_out_empty_task_list(load_lists_output_directory_path, task_list_counter)
+                return_value.update_sep(empty_task_list_flag, 'Wrote empty task list at counter ['+ str(task_list_counter))
 
             # swap lists to get to next level of loading
-            taskCurrentLevel = list(taskNextLevel)
-            returnValue.append_message('Swapping next level hosts to direct hosts [' + str(len(taskCurrentLevel)) + ']')
+            task_current_level = list(task_next_level)
+            return_value.append_message('Swapping next level hosts to direct hosts [' + str(len(task_current_level)) + ']')
 
-            tProcess.start()
+            t_process.start()
             # get next level host families (task)
-            taskNextLevel = _get_hosts(
-                taskCurrentLevel, 
-                overallFamilyBaseNestedData, 
-                overallFamilyBaseRootData
+            task_next_level = _get_hosts(
+                task_current_level, 
+                overall_family_base_nested_data, 
+                overall_family_base_root_data
                 )
-            returnValue.append_message(tProcess.stop() + ' Next level hosts [' + str(len(taskNextLevel)) + '] found.')
+            return_value.append_message(t_process.stop() + ' Next level hosts [' + str(len(task_next_level)) + '] found.')
             
             # increase task list counter to be used in file name
-            taskListCounter = taskListCounter + 1
-            if(taskListCounter > 20):
+            task_list_counter = task_list_counter + 1
+            if(task_list_counter > 20):
                 # trigger fail save
-                returnValue.update_sep(False, ' Exceeded maximum number of task list files! (20)')
+                return_value.update_sep(False, ' Exceeded maximum number of task list files! (20)')
                 raise Exception("Infinite loop.")
     else:
-        returnValue.update_sep(True, 'Empty change list found. No families require processing.')
-    return returnValue
+        return_value.update_sep(True, 'Empty change list found. No families require processing.')
+    return return_value

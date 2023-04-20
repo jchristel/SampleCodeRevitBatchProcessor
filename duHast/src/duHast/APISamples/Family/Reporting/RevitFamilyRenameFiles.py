@@ -46,12 +46,12 @@ from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUt
 from duHast.Utilities import Result as res
 from duHast.Utilities import FilesIO as util
 
-def _rename_files(renameDirectives):
+def _rename_files(rename_directives):
     '''
     Renames family files and any associated catalogue files based on rename directives.
     
-    :param renameDirectives: List of tuples representing rename directives.
-    :type renameDirectives: [renameDirective]
+    :param rename_directives: List of tuples representing rename directives.
+    :type rename_directives: [rename_directive]
 
     :return: 
         Result class instance.
@@ -69,45 +69,45 @@ def _rename_files(renameDirectives):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    returnValue.update_sep(True, 'Renaming families:')
+    return_value = res.Result()
+    return_value.update_sep(True, 'Renaming families:')
 
-    for renameDirective in renameDirectives:
+    for rename_directive in rename_directives:
         try:
             # check if rename directive includes a file path ( might be empty if nested families only are to be renamed)
-            if(renameDirective.filePath != ''):
+            if(rename_directive.filePath != ''):
                 # attempt to rename family file
                 try:
                     # build the new file name
-                    newFullName = os.path.join(os.path.dirname(renameDirective.filePath), renameDirective.newName + '.rfa')
-                    if(util.file_exist(renameDirective.filePath)):
-                        os.rename(renameDirective.filePath, newFullName)
-                        returnValue.append_message('{} -> {}'.format(renameDirective.name,renameDirective.newName))
+                    new_full_name = os.path.join(os.path.dirname(rename_directive.filePath), rename_directive.newName + '.rfa')
+                    if(util.file_exist(rename_directive.filePath)):
+                        os.rename(rename_directive.filePath, new_full_name)
+                        return_value.append_message('{} -> {}'.format(rename_directive.name,rename_directive.newName))
                     else:
-                        returnValue.update_sep(False, 'File not found: '.format(renameDirective.name))
+                        return_value.update_sep(False, 'File not found: '.format(rename_directive.name))
                 except Exception as e:
-                    returnValue.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(renameDirective.name,e))
+                    return_value.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(rename_directive.name,e))
 
                 # take care of catalogue files as well
-                oldFullName = renameDirective.filePath[:-4] + '.txt'
-                newFullName = os.path.join(os.path.dirname(renameDirective.filePath), renameDirective.newName + '.txt')
-                oldname = renameDirective.name + '.txt'
-                newname = renameDirective.newName + '.txt'
+                old_full_name = rename_directive.filePath[:-4] + '.txt'
+                new_full_name = os.path.join(os.path.dirname(rename_directive.filePath), rename_directive.newName + '.txt')
+                oldname = rename_directive.name + '.txt'
+                newname = rename_directive.newName + '.txt'
                 try:
-                    if(util.file_exist(oldFullName)):
-                        os.rename(oldFullName, newFullName)
-                        returnValue.append_message('{} -> {}'.format(oldname,newname))
+                    if(util.file_exist(old_full_name)):
+                        os.rename(old_full_name, new_full_name)
+                        return_value.append_message('{} -> {}'.format(oldname,newname))
                     else:
-                        returnValue.update_sep(True, 'No catalogue file found: {}'.format(oldname)) # nothing gone wrong here...just no catalogue file present
+                        return_value.update_sep(True, 'No catalogue file found: {}'.format(oldname)) # nothing gone wrong here...just no catalogue file present
                 except Exception as e:
-                    returnValue.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(oldFullName,e))
+                    return_value.update_sep(False, 'Failed to rename file: {} with exception: {}'.format(old_full_name,e))
             else:
-                returnValue.update_sep(True, 'No file path found: {}'.format(renameDirective.name)) # nothing gone wrong here...just not required to rename a file
+                return_value.update_sep(True, 'No file path found: {}'.format(rename_directive.name)) # nothing gone wrong here...just not required to rename a file
         except Exception as e:
-            returnValue.update_sep(False, 'Failed to rename files with exception: '.format(e))
-    return returnValue
+            return_value.update_sep(False, 'Failed to rename files with exception: '.format(e))
+    return return_value
 
-def rename_family_files(directoryPath):
+def rename_family_files(directory_path):
     '''
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     family files and any associated catalogue files accordingly.
@@ -115,8 +115,8 @@ def rename_family_files(directoryPath):
     Note: Rename directive may not include a file path in situations where a loaded family only is to be renamed. This \
         will still return True in such a case.
 
-    :param directoryPath: Fully qualified directory path to where rename directive files are located.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path to where rename directive files are located.
+    :type directory_path: str
     :return: 
         Result class instance.
 
@@ -133,15 +133,15 @@ def rename_family_files(directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get directives from folder
-    renameDirectivesResult = rFamRenameUtils.get_rename_directives(directoryPath)
+    rename_directives_result = rFamRenameUtils.get_rename_directives(directory_path)
     # check if anything came back
-    if(renameDirectivesResult.status):
-        renameDirectives = renameDirectivesResult.result
+    if(rename_directives_result.status):
+        rename_directives = rename_directives_result.result
         # rename files as per directives
-        returnValue = _rename_files(renameDirectives)
+        return_value = _rename_files(rename_directives)
     else:
-        returnValue = renameDirectivesResult
+        return_value = rename_directives_result
 
-    return returnValue
+    return return_value

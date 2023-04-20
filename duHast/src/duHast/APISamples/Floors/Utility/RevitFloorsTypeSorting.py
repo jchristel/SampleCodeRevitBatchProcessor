@@ -64,7 +64,7 @@ def sort_floor_types_by_family_name(doc):
     wts = rFloorsFilter._get_floor_types_by_class(doc)
     # get all floor types including in place floor families
     wts_two = rFloorsFilter._get_all_floor_types_by_category(doc)
-    usedWts = {}
-    usedWts = build_floor_type_dictionary(wts, usedWts)
-    usedWts = build_floor_type_dictionary(wts_two, usedWts)
-    return usedWts
+    used_wts = {}
+    used_wts = build_floor_type_dictionary(wts, used_wts)
+    used_wts = build_floor_type_dictionary(wts_two, used_wts)
+    return used_wts

@@ -44,16 +44,16 @@ from duHast.Utilities import Result as res
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-def _rename_loaded_families(doc, renameDirectives, familyIds):
+def _rename_loaded_families(doc, rename_directives, family_ids):
     '''
     Loops over nested families and if a match in rename directives is found will rename the family accordingly.
 
     :param doc: The current family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param renameDirectives: List of rename directives.
-    :type renameDirectives: [renameDirective]
-    :param familyIds: List of all nested family ids.
-    :type familyIds: [Autodesk.Revit.DB.ElementId]
+    :param rename_directives: List of rename directives.
+    :type rename_directives: [rename_directive]
+    :param family_ids: List of all nested family ids.
+    :type family_ids: [Autodesk.Revit.DB.ElementId]
 
     :return: 
         Result class instance.
@@ -71,53 +71,53 @@ def _rename_loaded_families(doc, renameDirectives, familyIds):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    returnValue.status = False
-    renameMatchCounter = 0
+    return_value = res.Result()
+    return_value.status = False
+    rename_match_counter = 0
     # loop over families and check for match in rename directives
-    for famId in familyIds:
-        family = doc.GetElement(famId)
-        familyName = family.Name
+    for fam_id in family_ids:
+        family = doc.GetElement(fam_id)
+        family_name = family.Name
         if(family.IsEditable and family.IsValidObject):
-            familyCategoryName = family.FamilyCategory.Name
+            family_category_name = family.FamilyCategory.Name
             # loop over rename directives and look for match in family name and category
-            for renameDirective in renameDirectives:
-                if(renameDirective.name == familyName and renameDirective.category == familyCategoryName):
-                    renameMatchCounter = renameMatchCounter + 1
+            for rename_directive in rename_directives:
+                if(rename_directive.name == family_name and rename_directive.category == family_category_name):
+                    rename_match_counter = rename_match_counter + 1
                     # rename this family
                     def action():
-                        actionReturnValue = res.Result()
+                        action_return_value = res.Result()
                         try:
-                            family.Name = renameDirective.newName
-                            actionReturnValue.update_sep(
+                            family.Name = rename_directive.newName
+                            action_return_value.update_sep(
                                 True, 
-                                'Renamed family of category [' + familyCategoryName + '] vs directive category [' + renameDirective.category + '] from: ' + renameDirective.name + ' to: ' + renameDirective.newName)
+                                'Renamed family of category [' + family_category_name + '] vs directive category [' + rename_directive.category + '] from: ' + rename_directive.name + ' to: ' + rename_directive.newName)
                         except Exception as e:
-                            actionReturnValue.update_sep(
+                            action_return_value.update_sep(
                                 False, 
-                                'Failed to rename family of category [' + familyCategoryName + '] vs directive category [' + renameDirective.category + '] from: ' + renameDirective.name + ' to: ' + renameDirective.newName)
-                        return actionReturnValue
-                    transaction = rdb.Transaction(doc, 'Renaming: ' + renameDirective.name)
-                    renameResult = rTran.in_transaction(transaction, action)
-                    if(renameResult.status):
+                                'Failed to rename family of category [' + family_category_name + '] vs directive category [' + rename_directive.category + '] from: ' + rename_directive.name + ' to: ' + rename_directive.newName)
+                        return action_return_value
+                    transaction = rdb.Transaction(doc, 'Renaming: ' + rename_directive.name)
+                    rename_result = rTran.in_transaction(transaction, action)
+                    if(rename_result.status):
                         # make sure that this returns true as soon as one family renamed successfully
-                        returnValue.status = True
+                        return_value.status = True
                     # update messages
-                    returnValue.append_message(renameResult.message)
+                    return_value.append_message(rename_result.message)
                     break
     # check if anything got renamed at all
-    if(renameMatchCounter == 0):
-        returnValue.append_message('No match for rename directives found. Nothing was renamed.')
-    return returnValue
+    if(rename_match_counter == 0):
+        return_value.append_message('No match for rename directives found. Nothing was renamed.')
+    return return_value
 
 
-def rename_loaded_families(doc, directoryPath):
+def rename_loaded_families(doc, directory_path):
     '''
     Entry point for this module. Will read rename directives files in given directory and attempt to rename
     loaded families accordingly.
 
-    :param directoryPath: Fully qualified directory path to where rename directive files are located.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path to where rename directive files are located.
+    :type directory_path: str
     :return: 
         Result class instance.
 
@@ -134,20 +134,20 @@ def rename_loaded_families(doc, directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get directives from folder
-    renameDirectivesResult = rFamRenameUtils.get_rename_directives(directoryPath)
+    rename_directives_result = rFamRenameUtils.get_rename_directives(directory_path)
     # check if anything came back
-    if(renameDirectivesResult.status):
-        renameDirectives = renameDirectivesResult.result
+    if(rename_directives_result.status):
+        rename_directives = rename_directives_result.result
         # get all family ids in file
-        familyIds = rFamUtils.get_all_loadable_family_ids_through_types(doc)
-        if(len(familyIds) > 0):
+        family_ids = rFamUtils.get_all_loadable_family_ids_through_types(doc)
+        if(len(family_ids) > 0):
             # rename files as per directives
-            returnValue = _rename_loaded_families(doc, renameDirectives, familyIds)
+            return_value = _rename_loaded_families(doc, rename_directives, family_ids)
         else:
-            returnValue.update_sep(True, 'Mo loadable families in file.')
+            return_value.update_sep(True, 'Mo loadable families in file.')
     else:
-        returnValue = renameDirectivesResult
+        return_value = rename_directives_result
 
-    return returnValue
+    return return_value

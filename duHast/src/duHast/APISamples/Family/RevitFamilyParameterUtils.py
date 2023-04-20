@@ -38,63 +38,63 @@ from duHast.Utilities import Result as res
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-def set_family_parameter_value_by_storage_type(paramW, manager, value):
-    returnValue = res.Result()
+def set_family_parameter_value_by_storage_type(param_w, manager, value):
+    return_value = res.Result()
     try:
-        if(paramW.StorageType == rdb.StorageType.Double):
+        if(param_w.StorageType == rdb.StorageType.Double):
             # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
             # whatever internal units of measure Revit uses. SetValueString expects your value to 
             # be in whatever the current DisplayUnitType (units of measure) the document is set to 
             # for the UnitType associated with the parameter.
             #
             # So SetValueString is basically how the Revit GUI works.
-            manager.SetValueString(paramW, value)
-            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
-        elif(paramW.StorageType == rdb.StorageType.ElementId):
-            manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name, value))
-        elif(paramW.StorageType == rdb.StorageType.Integer):
-            manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
-        elif(paramW.StorageType == rdb.StorageType.String):
-            manager.Set(paramW, value)
-            returnValue.update_sep(True, 'Updated {} to value: {}'.format(paramW.Definition.Name ,value))
+            manager.SetValueString(param_w, value)
+            return_value.update_sep(True, 'Updated {} to value: {}'.format(param_w.Definition.Name ,value))
+        elif(param_w.StorageType == rdb.StorageType.ElementId):
+            manager.Set(param_w, value)
+            return_value.update_sep(True, 'Updated {} to value: {}'.format(param_w.Definition.Name, value))
+        elif(param_w.StorageType == rdb.StorageType.Integer):
+            manager.Set(param_w, value)
+            return_value.update_sep(True, 'Updated {} to value: {}'.format(param_w.Definition.Name ,value))
+        elif(param_w.StorageType == rdb.StorageType.String):
+            manager.Set(param_w, value)
+            return_value.update_sep(True, 'Updated {} to value: {}'.format(param_w.Definition.Name ,value))
         else:
-            returnValue.update_sep(False, 'Parameter storage type is not supported!')
+            return_value.update_sep(False, 'Parameter storage type is not supported!')
         
     except Exception as e:
-        returnValue.update_sep(False, 'failed to set parameter value with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'failed to set parameter value with exception: {}'.format(e))
+    return return_value
 
-def set_family_parameter_value(doc, manager, famPara, value):
+def set_family_parameter_value(doc, manager, fam_para, value):
     #get the parameter
-    paramW = manager.get_Parameter(famPara.Definition.Name)
+    param_w = manager.get_Parameter(fam_para.Definition.Name)
     # set-up action to be executed in transaction
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             # attempt to change parameter value
-            actionReturnValue = set_family_parameter_value_by_storage_type(paramW, manager, value)
+            action_return_value = set_family_parameter_value_by_storage_type(param_w, manager, value)
         except Exception as e:
-            actionReturnValue.status = False
-            actionReturnValue.message = famPara.Definition.Name + ' : Failed to set parameter value: with exception: ' + str(e)
-        return actionReturnValue
+            action_return_value.status = False
+            action_return_value.message = fam_para.Definition.Name + ' : Failed to set parameter value: with exception: ' + str(e)
+        return action_return_value
     transaction = rdb.Transaction(doc, "Setting parameter value")
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
 
-def set_parameter_formula(doc, manager, famPara, formula):
+def set_parameter_formula(doc, manager, fam_para, formula):
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             # set parameter formula
-            manager.SetFormula(famPara, formula)
-            actionReturnValue.message = famPara.Definition.Name + ' : parameter formulas successfully set.'
-            actionReturnValue.result.append(famPara)
+            manager.SetFormula(fam_para, formula)
+            action_return_value.message = fam_para.Definition.Name + ' : parameter formulas successfully set.'
+            action_return_value.result.append(fam_para)
         except Exception as e:
-            actionReturnValue.status = False
-            actionReturnValue.message = famPara.Definition.Name + ' : Failed to set parameter formula: with exception: ' + str(e)
-        return actionReturnValue
+            action_return_value.status = False
+            action_return_value.message = fam_para.Definition.Name + ' : Failed to set parameter formula: with exception: ' + str(e)
+        return action_return_value
     transaction = rdb.Transaction(doc, "Setting parameter formula")
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value

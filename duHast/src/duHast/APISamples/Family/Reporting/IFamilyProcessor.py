@@ -52,9 +52,9 @@ class IFamilyProcessor(Base.Base):
 
     # -------------------------------------- utility ----------------------
 
-    def _update_Data(self, processor, identifyByThisPropertyName, identifyByThisPropertyValue, updateByPropertyName, updatedToThisPropertyValue):
-        updateStatus = processor.update_Data(identifyByThisPropertyName, identifyByThisPropertyValue, updateByPropertyName, updatedToThisPropertyValue)
-        return updateStatus
+    def _update_Data(self, processor, identify_by_this_property_name, identify_by_this_property_value, update_by_property_name, updated_to_this_property_value):
+        update_status = processor.update_Data(identify_by_this_property_name, identify_by_this_property_value, update_by_property_name, updated_to_this_property_value)
+        return update_status
 
 
     def _find_root_family_processor(self):
@@ -81,12 +81,12 @@ class IFamilyProcessor(Base.Base):
         :rtype: [{}]
         '''
 
-        familyData = []
+        family_data = []
         for processor in self.data:
             for d in processor.get_Data():
                 if ' :: ' not in d[IFamData.ROOT]:
-                    familyData.append (d)
-        return familyData
+                    family_data.append (d)
+        return family_data
     
     def _find_nested_families_data(self):
         '''
@@ -99,32 +99,32 @@ class IFamilyProcessor(Base.Base):
         :rtype: [{}]
         '''
 
-        nestedFamilyData = []
+        nested_family_data = []
         for processor in self.data:
             for d in processor.get_Data():
                 if ' :: ' in d[IFamData.ROOT]:
-                    nestedFamilyData.append (d)
-        return nestedFamilyData
+                    nested_family_data.append (d)
+        return nested_family_data
 
-    def _fix_data_types(self, flattenedDic):
+    def _fix_data_types(self, flattened_dic):
         '''
         Replace any ElementId and Byte values with int or string respectively to have JSON working ok.
         Any other type of values are not changed.
 
-        :param flattenedDic: Dictionary of which values are to be converted.
-        :type flattenedDic: {}
+        :param flattened_dic: Dictionary of which values are to be converted.
+        :type flattened_dic: {}
         :return: Dictionary with converted values.
         :rtype: {}
         '''
         
         dic= {}
-        for key in flattenedDic:
-            if(type(flattenedDic[key]) is rdb.ElementId):
-                dic[key] = flattenedDic[key].IntegerValue
-            elif (type(flattenedDic[key]) is System.Byte):
-                dic[key] = str(flattenedDic[key])
+        for key in flattened_dic:
+            if(type(flattened_dic[key]) is rdb.ElementId):
+                dic[key] = flattened_dic[key].IntegerValue
+            elif (type(flattened_dic[key]) is System.Byte):
+                dic[key] = str(flattened_dic[key])
             else:
-                dic[key] = flattenedDic[key]
+                dic[key] = flattened_dic[key]
         return dic
     
     # -------------------------------------- pre process actions ----------------------
@@ -140,28 +140,28 @@ class IFamilyProcessor(Base.Base):
         :rtype: _type_
         '''
 
-        returnValue = res.Result()
+        return_value = res.Result()
         if(self.pre_actions != None):
-            for preAction in self.pre_actions:
-                resultAction = preAction(doc)
-                returnValue.update(resultAction)
-        return returnValue
+            for pre_action in self.pre_actions:
+                result_action = pre_action(doc)
+                return_value.update(result_action)
+        return return_value
     
     # -------------------------------------- process actions ----------------------
 
-    def process(self, doc, rootPath, rootCategoryPath):
+    def process(self, doc, root_path, root_category_path):
         '''
         Gather data on the root family and any nested families
 
         :param doc: The family document. 
         :type doc: Autodesk.Revit.DB.Document
 
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
-        :type rootPath: str
-        :param rootCategoryPath: The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :type root_path: str
+        :param root_category_path: The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
-        :type rootCategoryPath: str
+        :type root_category_path: str
         '''
 
         pass
@@ -176,12 +176,12 @@ class IFamilyProcessor(Base.Base):
         :type doc: Autodesk.Revit.DB.Document
         '''
 
-        returnValue = res.Result()
+        return_value = res.Result()
         if(self.post_actions != None):
-            for postAction in self.post_actions:
-                resultAction = postAction(doc)
-                returnValue.update(resultAction)
-        return returnValue
+            for post_action in self.post_actions:
+                result_action = post_action(doc)
+                return_value.update(result_action)
+        return return_value
 
     # -------------------------------------- get data ----------------------
 
@@ -193,11 +193,11 @@ class IFamilyProcessor(Base.Base):
         :rtype: [{}]
         '''
 
-        dataOut = []
+        data_out = []
         for data in self.data:
             for d in data.get_Data():
-                dataOut.append(d)
-        return dataOut
+                data_out.append(d)
+        return data_out
 
     def get_data_json(self):
         '''
@@ -207,13 +207,13 @@ class IFamilyProcessor(Base.Base):
         :rtype: str
         '''
 
-        outValue = ''
-        flattenedData = self.get_data()
-        for d in flattenedData:
-            dFixedTypes = self._fix_data_types(d)
-            json_object = json.dumps(dict(dFixedTypes))
-            outValue = outValue + '\n' + json_object
-        return outValue
+        out_value = ''
+        flattened_data = self.get_data()
+        for d in flattened_data:
+            d_fixed_types = self._fix_data_types(d)
+            json_object = json.dumps(dict(d_fixed_types))
+            out_value = out_value + '\n' + json_object
+        return out_value
 
     def get_data_string_list(self):
         '''
@@ -225,20 +225,20 @@ class IFamilyProcessor(Base.Base):
         :return: list of string.
         :rtype: [str]
         '''
-        outValue = []
-        flattenedData = self.get_data()
-        for d in flattenedData:
+        out_value = []
+        flattened_data = self.get_data()
+        for d in flattened_data:
             row = []
-            for headerKey in self.string_report_headers:
-                if(headerKey in d):
+            for header_key in self.string_report_headers:
+                if(header_key in d):
                     value = None
-                    if(type(d[headerKey]) == str):
+                    if(type(d[header_key]) == str):
                         # make sure string is utf-8 encoded
-                        value = d[headerKey].encode('utf-8', 'ignore')
+                        value = d[header_key].encode('utf-8', 'ignore')
                     else:
-                        value = str(d[headerKey])
+                        value = str(d[header_key])
                     row.append(value)
                 else:
                     row.append('null')
-            outValue.append(row)
-        return outValue
+            out_value.append(row)
+        return out_value

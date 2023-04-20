@@ -35,7 +35,7 @@ from collections import namedtuple
 from duHast.Utilities import FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as util, FilesTab as fileTab
 
 # tuples containing base family data and changed family data read from files
-changedFamily = namedtuple('changedFamily', 'name category filePath')
+changed_family = namedtuple('changed_family', 'name category filePath')
 #baseFamily = namedtuple('baseFamily', 'name category rootPath filePath')
 
 # row structure of family change data file
@@ -46,14 +46,14 @@ CHANGE_LIST_INDEX_CATEGORY = 2
 TASK_COUNTER_FILE_PREFIX = 'TaskOutput'
 
 
-def write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
+def write_reload_list_to_file(reload_families, directory_path, counter = 0):
     '''
     Writes task list file to disk. File contains single column of fully qualified file path.
 
-    :param reloadFamilies: List of tuples representing families requiring their nested families to be re-loaded.
-    :type reloadFamilies: [baseFamily]
-    :param directoryPath: Fully qualified directory path to which the task files will be written.
-    :type directoryPath: str
+    :param reload_families: List of tuples representing families requiring their nested families to be re-loaded.
+    :type reload_families: [baseFamily]
+    :param directory_path: Fully qualified directory path to which the task files will be written.
+    :type directory_path: str
     :param counter: Task file name suffix, defaults to 0
     :type counter: int, optional
     :return: True if file was written successfully, otherwise False.
@@ -63,93 +63,93 @@ def write_reload_list_to_file(reloadFamilies, directoryPath, counter = 0):
     # write out file list without header
     header = []
     # data to be written to file
-    overallData = []
-    fileName = directoryPath + '\\' + TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
+    overall_data = []
+    file_name = directory_path + '\\' + TASK_COUNTER_FILE_PREFIX + str(counter)+ ".txt"
     # loop over families to get file path
-    for r in reloadFamilies:
+    for r in reload_families:
         # row data
         data = []
         data.append(r.filePath)
-        overallData.append(data)
+        overall_data.append(data)
     try:
         # write data
-        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(file_name, header, overall_data, writeType = 'w')
         return True
     except Exception:
         return False
 
-def delete_old_task_lists(directoryPath):
+def delete_old_task_lists(directory_path):
     '''
     Deletes all overall task files in given directory.
 
-    :param directoryPath: Fully qualified directory path containing the task files to be deleted.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path containing the task files to be deleted.
+    :type directory_path: str
     :return: True if all files got deleted successfully, otherwise False.
     :rtype: bool
     '''
 
     flag = True
     # find all files in folder starting with and delete them
-    files = fileGet.get_files(directoryPath, '.txt')
+    files = fileGet.get_files(directory_path, '.txt')
     if (len(files) > 0):
         for f in files:
             if (util.get_file_name_without_ext(f).startswith(TASK_COUNTER_FILE_PREFIX)):
                 flag = flag & util.file_delete(f)
     return flag
 
-def write_out_empty_task_list(directoryPath, counter = 0):
+def write_out_empty_task_list(directory_path, counter = 0):
     '''
     Writes out an empty task list in case nothing is to be reloaded.
 
-    :param directoryPath: Fully qualified directory path to which the task files will be written.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path to which the task files will be written.
+    :type directory_path: str
     :param counter: Task file name suffix, defaults to 0
     :type counter: int, optional
     :return: True if file was written successfully, otherwise False.
     :rtype: bool
     '''
 
-    fileName = directoryPath + '\\' + 'TaskOutput' + str(counter)+ ".txt"
+    file_name = directory_path + '\\' + 'TaskOutput' + str(counter)+ ".txt"
     # write out file list without header
     header = []
     # write out empty data
-    overallData = []
+    overall_data = []
     try:
         # write data
-        fileTab.write_report_data(fileName, header, overallData, writeType = 'w')
+        fileTab.write_report_data(file_name, header, overall_data, writeType = 'w')
         return True
     except Exception:
         return False
 
-def _remove_rfa_from_file_name(familyName):
+def _remove_rfa_from_file_name(family_name):
     '''
     Removes any .rfa file extensions from the family name. (not sure why these are sometimes present)
 
-    :param familyName: the family name
-    :type familyName: str
+    :param family_name: the family name
+    :type family_name: str
     :return: the family name with out .rfa (if present in the first place.)
     :rtype: str
     '''
 
-    if(familyName.lower().endswith('.rfa')):
-        familyName = familyName[:-len('.rfa')]
-    return familyName
+    if(family_name.lower().endswith('.rfa')):
+        family_name = family_name[:-len('.rfa')]
+    return family_name
 
-def read_change_list(filePath):
+def read_change_list(file_path):
     '''
     Reads list of changed families from file into named tuples.
 
-    :param filePath: Fully qualified file path to change list  file.
-    :type filePath: str
+    :param file_path: Fully qualified file path to change list  file.
+    :type file_path: str
     :raises Exception: "Changed families list files does not exist."
     :raises Exception: "Empty families list file!"
     :return: list of named tuples
-    :rtype: [changedFamily]
+    :rtype: [changed_family]
     '''
 
     rows = []
-    if(util.file_exist(filePath)):
-        rows = fileCSV.read_csv_file(filePath)
+    if(util.file_exist(file_path)):
+        rows = fileCSV.read_csv_file(file_path)
     else:
         raise Exception("Changed families list files does not exist.")
     if(len(rows) > 0):
@@ -157,15 +157,15 @@ def read_change_list(filePath):
     else:
         raise Exception("Empty families list file!")
     
-    returnValue = []
+    return_value = []
     # skip header row
     for i in range(1, len(rows)):
         #TODO: do i need any .rfa from end of family name?
-        famName = _remove_rfa_from_file_name(rows[i][CHANGE_LIST_INDEX_FAMILY_NAME])
-        data = changedFamily(
-            famName, 
+        fam_name = _remove_rfa_from_file_name(rows[i][CHANGE_LIST_INDEX_FAMILY_NAME])
+        data = changed_family(
+            fam_name, 
             rows[i][CHANGE_LIST_INDEX_CATEGORY], 
             rows[i][CHANGE_LIST_INDEX_FAMILY_FILE_PATH]
             )
-        returnValue.append(data)
-    return returnValue
+        return_value.append(data)
+    return return_value

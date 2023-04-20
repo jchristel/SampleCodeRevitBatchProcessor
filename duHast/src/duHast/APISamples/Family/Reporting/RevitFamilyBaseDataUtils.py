@@ -5,7 +5,7 @@ Family Base data utility module containing functions to read the data from file.
 
 Reads family base data into two list of named tuples.
 
-rootFamily:
+root_family:
 
 - name 
 - category 
@@ -13,7 +13,7 @@ rootFamily:
 - parent 
 - child
 
-nestedFamily:
+nested_family:
 
 - name 
 - category 
@@ -50,8 +50,8 @@ from collections import namedtuple
 from duHast.Utilities import Utility as util, FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as fileIO
 
 # tuples containing base family data read from file
-rootFamily = namedtuple('rootFamily', 'name category filePath parent child')
-nestedFamily = namedtuple('nestedFamily', 'name category filePath rootPath categoryPath hostFamily')
+root_family = namedtuple('root_family', 'name category filePath parent child')
+nested_family = namedtuple('nested_family', 'name category filePath rootPath categoryPath hostFamily')
 
 # row structure of family base data file
 BASE_DATA_LIST_INDEX_FAMILY_NAME = 2
@@ -69,12 +69,12 @@ EXCEPTION_NO_FAMILY_BASE_DATA_FILES = 'Families base data list files do not exis
 EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES = 'Empty Families base data list file!'
 
 
-def _get_base_data_file_name(directoryPath):
+def _get_base_data_file_name(directory_path):
     '''
     Gets the first family base data file in provided directory or any of it's sub directories.
 
-    :param directoryPath: Fully qualified directory path.
-    :type directoryPath: str
+    :param directory_path: Fully qualified directory path.
+    :type directory_path: str
     :raises Exception: EXCEPTION_NO_FAMILY_BASE_DATA_FILES
 
     :return: Fully qualified file path to family base data file.
@@ -83,7 +83,7 @@ def _get_base_data_file_name(directoryPath):
 
     # get all base data files in folder
     files = fileGet.get_files_from_directory_walker_with_filters(
-        directoryPath,
+        directory_path,
         FAMILY_BASE_DATA_FILE_NAME_PREFIX,
         '',
         FAMILY_BASE_DATA_FILE_EXTENSION
@@ -93,21 +93,21 @@ def _get_base_data_file_name(directoryPath):
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
 
-def read_overall_family_data_list(filePath):
+def read_overall_family_data_list(file_path):
     '''
     Reads list of families from family base data report file into named tuples.
 
-    :param filePath: Fully qualified file path to family base data report file.
-    :type filePath: str
+    :param file_path: Fully qualified file path to family base data report file.
+    :type file_path: str
     :raises Exception: "Families base data list files does not exist."
     :raises Exception: "Empty Families base data list file!"
     :return: Two lists: first list of named tuples contain family root data, second list contains family nested data.
-    :rtype: [rootFamily], [nestedFamily]
+    :rtype: [root_family], [nested_family]
     '''
 
     rows = []
-    if(fileIO.file_exist(filePath)):
-        rows = fileCSV.read_csv_file(filePath)
+    if(fileIO.file_exist(file_path)):
+        rows = fileCSV.read_csv_file(file_path)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -115,22 +115,22 @@ def read_overall_family_data_list(filePath):
     else:
         raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
-    returnValueRootFamily = []
-    returnValueNestedFamily = []
+    return_value_root_family = []
+    return_value_nested_family = []
     for i in range(1, len(rows)):
         # check if root family
         if( '::' not in rows[i][BASE_DATA_LIST_INDEX_ROOT_PATH]):
-            data = rootFamily(
+            data = root_family(
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
                 rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
                 [], # set up an empty list for parent families
                 []  # set up an empty list for child families
             )
-            returnValueRootFamily.append(data)
+            return_value_root_family.append(data)
         else:
             # found a child family
-            data = nestedFamily(
+            data = nested_family(
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
                 rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
                 rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
@@ -138,39 +138,39 @@ def read_overall_family_data_list(filePath):
                 rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
                 []
             )
-            returnValueNestedFamily.append(data)
-    return returnValueRootFamily, returnValueNestedFamily
+            return_value_nested_family.append(data)
+    return return_value_root_family, return_value_nested_family
 
-def read_overall_family_data_list_from_directory(directoryPath):
+def read_overall_family_data_list_from_directory(directory_path):
     '''
     Reads the first family base data file it finds in a folder.
     Note: This method calls ReadOverallFamilyDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
 
-    :param directoryPath: A fully qualified directory path containing family base data file(s)
-    :type directoryPath: _str
+    :param directory_path: A fully qualified directory path containing family base data file(s)
+    :type directory_path: _str
 
     :return: Two lists: first list of named tuples contain family root data, second list contains family nested data.
-    :rtype: [rootFamily], [nestedFamily]
+    :rtype: [root_family], [nested_family]
     '''
 
-    fileName = _get_base_data_file_name(directoryPath)
-    return read_overall_family_data_list(fileName)
+    file_name = _get_base_data_file_name(directory_path)
+    return read_overall_family_data_list(file_name)
 
-def read_overall_family_data_list_into_nested(filePath):
+def read_overall_family_data_list_into_nested(file_path):
     '''
     Reads list of families from family base data report file into named tuples.
 
-    :param filePath: Fully qualified file path to family base data report file.
-    :type filePath: str
+    :param file_path: Fully qualified file path to family base data report file.
+    :type file_path: str
     :raises Exception: "Families base data list files does not exist."
     :raises Exception: "Empty Families base data list file!"
     :return: A list contains family nested data.
-    :rtype: [nestedFamily]
+    :rtype: [nested_family]
     '''
 
     rows = []
-    if(fileIO.file_exist(filePath)):
-        rows = fileCSV.read_csv_file(filePath)
+    if(fileIO.file_exist(file_path)):
+        rows = fileCSV.read_csv_file(file_path)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
     if(len(rows) > 0):
@@ -178,10 +178,10 @@ def read_overall_family_data_list_into_nested(filePath):
     else:
         raise Exception(EXCEPTION_EMPTY_FAMILY_BASE_DATA_FILES)
     
-    returnValueNestedFamily = []
+    return_value_nested_family = []
     for i in range(1, len(rows)):
         # found a child family
-        data = nestedFamily(
+        data = nested_family(
             rows[i][BASE_DATA_LIST_INDEX_FAMILY_NAME], 
             rows[i][BASE_DATA_LIST_INDEX_CATEGORY], 
             rows[i][BASE_DATA_LIST_INDEX_FAMILY_FILE_PATH],
@@ -189,88 +189,88 @@ def read_overall_family_data_list_into_nested(filePath):
             rows[i][BASE_DATA_LIST_INDEX_ROOT_CATEGORY_PATH].split(' :: '), # split category path into list for ease of searching
             []
         )
-        returnValueNestedFamily.append(data)
-    return returnValueNestedFamily
+        return_value_nested_family.append(data)
+    return return_value_nested_family
 
-def read_overall_family_data_list_into_nested_from_directory(directoryPath):
+def read_overall_family_data_list_into_nested_from_directory(directory_path):
     '''
     Reads the first family base data file it finds in a folder.
     Note: This method calls ReadOverallFamilyIntoNestedDataList(filePath) which will raise exceptions if files are empty or dont exist in specified folder.
 
-    :param directoryPath: A fully qualified directory path containing family base data file(s)
-    :type directoryPath: _str
+    :param directory_path: A fully qualified directory path containing family base data file(s)
+    :type directory_path: _str
 
     :return: A list contains family nested data.
-    :rtype: [nestedFamily]
+    :rtype: [nested_family]
     '''
 
-    fileName = _get_base_data_file_name(directoryPath)
-    return read_overall_family_data_list_into_nested(fileName)
+    file_name = _get_base_data_file_name(directory_path)
+    return read_overall_family_data_list_into_nested(file_name)
 
 # -------------------------------- simplify data set ----------------------------------------------------------------
 
-def _check_data_blocks_for_overlap(blockOne, blockTwo):
+def _check_data_blocks_for_overlap(block_one, block_two):
     '''
     Checks whether the root path of families in the first block overlaps with the root path of any family in the second block.
     Overlap is checked from the start of the root path. Any families from block one which are not overlapping any family in\
         block two are returned.
 
-    :param blockOne: List of family tuples of type nestedFamily
-    :type blockOne: [nestedFamily]
-    :param blockTwo: List of family tuples of type nestedFamily
-    :type blockTwo: [nestedFamily]
+    :param block_one: List of family tuples of type nested_family
+    :type block_one: [nested_family]
+    :param block_two: List of family tuples of type nested_family
+    :type block_two: [nested_family]
     
-    :return: List of family tuples of type nestedFamily
-    :rtype: [nestedFamily]
+    :return: List of family tuples of type nested_family
+    :rtype: [nested_family]
     '''
 
-    uniqueTreeNodes = []
-    for fam in blockOne:
+    unique_tree_nodes = []
+    for fam in block_one:
         match = False
-        for famUp in blockTwo:
-            if(' :: '.join(famUp.rootPath).startswith(' :: '.join(fam.rootPath))):
+        for fam_up in block_two:
+            if(' :: '.join(fam_up.rootPath).startswith(' :: '.join(fam.rootPath))):
                 match = True
                 break
         if(match == False):
-            uniqueTreeNodes.append(fam)
-    return uniqueTreeNodes
+            unique_tree_nodes.append(fam)
+    return unique_tree_nodes
 
-def _cull_data_block(familyBaseNestedDataBlock):
+def _cull_data_block(family_base_nested_data_block):
     '''
     Sorts family data blocks into a dictionary where key, from 1 onwards, is the level of nesting indicated by number of '::' in root path string.
 
     After sorting it compares adjacent blocks in the dictionary (key and key + 1) for overlaps in the root path string. Only unique families will be returned.
 
-    :param familyBaseNestedDataBlock: A list containing all nested families belonging to a single root host family.
-    :type familyBaseNestedDataBlock: [nestedFamily]
+    :param family_base_nested_data_block: A list containing all nested families belonging to a single root host family.
+    :type family_base_nested_data_block: [nested_family]
     
     :return: A list of unique families in terms of root path.
-    :rtype: [nestedFamily]
+    :rtype: [nested_family]
     '''
 
-    culledFamilyBaseNestedDataBlocks = []
-    dataBlocksByLength = {}
+    culled_family_base_nested_data_blocks = []
+    data_blocks_by_length = {}
     # build dic by root path length
     # start at 1 because for nesting level ( 1 based rather then 0 based )
-    for family in familyBaseNestedDataBlock:
-        if(len(family.rootPath) -1 in dataBlocksByLength):
-            dataBlocksByLength[len(family.rootPath) -1 ].append(family)
+    for family in family_base_nested_data_block:
+        if(len(family.rootPath) -1 in data_blocks_by_length):
+            data_blocks_by_length[len(family.rootPath) -1 ].append(family)
         else:
-            dataBlocksByLength[len(family.rootPath)- 1 ] = [family]
+            data_blocks_by_length[len(family.rootPath)- 1 ] = [family]
     
     # loop over dictionary and check block entries against next entry up blocks
-    for i in range(1, len(dataBlocksByLength) + 1):
+    for i in range(1, len(data_blocks_by_length) + 1):
         # last block get automatically added
-        if(i == len(dataBlocksByLength)):
-            culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + dataBlocksByLength[i]
+        if(i == len(data_blocks_by_length)):
+            culled_family_base_nested_data_blocks = culled_family_base_nested_data_blocks + data_blocks_by_length[i]
         else:
             # check for matches in next one up
-            uniqueNodes = _check_data_blocks_for_overlap(dataBlocksByLength[i], dataBlocksByLength[i + 1])
+            unique_nodes = _check_data_blocks_for_overlap(data_blocks_by_length[i], data_blocks_by_length[i + 1])
             # only add non overlapping blocks
-            culledFamilyBaseNestedDataBlocks = culledFamilyBaseNestedDataBlocks + uniqueNodes
-    return culledFamilyBaseNestedDataBlocks
+            culled_family_base_nested_data_blocks = culled_family_base_nested_data_blocks + unique_nodes
+    return culled_family_base_nested_data_blocks
 
-def cull_nested_base_data_blocks(overallFamilyBaseNestedData):
+def cull_nested_base_data_blocks(overall_family_base_nested_data):
     '''
     Reduce base data families for parent / child finding purposes. Keep the nodes with the root path longes branch only.
 
@@ -281,47 +281,47 @@ def cull_nested_base_data_blocks(overallFamilyBaseNestedData):
 
     The second of the above examples can be culled since the first contains the same information.
 
-    :param overallFamilyBaseNestedData: _description_
-    :type overallFamilyBaseNestedData: _type_
+    :param overall_family_base_nested_data: _description_
+    :type overall_family_base_nested_data: _type_
     '''
 
-    currentRootFamName = ''
-    familyBlocks = []
+    current_root_fam_name = ''
+    family_blocks = []
     block = []
     # read families into blocks
-    for nested in overallFamilyBaseNestedData:
-        if(nested.rootPath[0] != currentRootFamName):
+    for nested in overall_family_base_nested_data:
+        if(nested.rootPath[0] != current_root_fam_name):
             # read family block
             if(len(block) > 0):
-                familyBlocks.append(block)
+                family_blocks.append(block)
                 # reset block
                 block = []
                 block.append(nested)
-                currentRootFamName = nested.rootPath[0]
+                current_root_fam_name = nested.rootPath[0]
             else:
                 block.append(nested)
-                currentRootFamName = nested.rootPath[0]
+                current_root_fam_name = nested.rootPath[0]
         else:
             block.append(nested)
     
-    retainedFamilyBaseNestedData = []
+    retained_family_base_nested_data = []
     # cull data per block
-    for familyBlock in familyBlocks:
-        d = _cull_data_block(familyBlock)
-        retainedFamilyBaseNestedData = retainedFamilyBaseNestedData + d
+    for family_block in family_blocks:
+        d = _cull_data_block(family_block)
+        retained_family_base_nested_data = retained_family_base_nested_data + d
         
-    return retainedFamilyBaseNestedData
+    return retained_family_base_nested_data
 
 # --------------------------------------------  find families in nesting tree data ------------------------------------
 
-def find_direct_host_families(nestedFam, overallFamilyBaseNestedData):
+def find_direct_host_families(nested_fam, overall_family_base_nested_data):
     '''
     Finds the direct hosts of the past in family in the base nested family data set.
 
-    :param nestedFam: A tuple containing nested family data.
-    :type nestedFam: nestedFamily
-    :param overallFamilyBaseNestedData: List of tuples containing nested family data.
-    :type overallFamilyBaseNestedData: [nestedFamily]
+    :param nested_fam: A tuple containing nested family data.
+    :type nested_fam: nested_family
+    :param overall_family_base_nested_data: List of tuples containing nested family data.
+    :type overall_family_base_nested_data: [nested_family]
     
     :return: A dictionary where:
         
@@ -331,63 +331,63 @@ def find_direct_host_families(nestedFam, overallFamilyBaseNestedData):
     :rtype: {str: (str,str)}
     '''
     
-    hostFamilies = {}
+    host_families = {}
     # check each base family data whether it contains the missing family in its nesting tree
-    for baseNestedFam in overallFamilyBaseNestedData:
-        if nestedFam.name in baseNestedFam.rootPath:
-            indexMatch = util.index_of(baseNestedFam.rootPath, nestedFam.name)
+    for base_nested_fam in overall_family_base_nested_data:
+        if nested_fam.name in base_nested_fam.rootPath:
+            index_match = util.index_of(base_nested_fam.rootPath, nested_fam.name)
             # make sure we have a match and it is not the first entry in list (does not have a parent...)
-            if indexMatch > 0:
+            if index_match > 0:
                 # confirm category is the same
-                if(baseNestedFam.categoryPath[indexMatch] == nestedFam.category):
+                if(base_nested_fam.categoryPath[index_match] == nested_fam.category):
                     # got a direct parent! (index - 1)
-                     keyNew = baseNestedFam.rootPath[indexMatch - 1] + baseNestedFam.categoryPath[indexMatch - 1]
-                     if(keyNew not in hostFamilies):
-                        hostFamilies[keyNew] = (baseNestedFam.rootPath[indexMatch - 1],baseNestedFam.categoryPath[indexMatch - 1])
-    return hostFamilies
+                     key_new = base_nested_fam.rootPath[index_match - 1] + base_nested_fam.categoryPath[index_match - 1]
+                     if(key_new not in host_families):
+                        host_families[key_new] = (base_nested_fam.rootPath[index_match - 1],base_nested_fam.categoryPath[index_match - 1])
+    return host_families
 
-def find_all_direct_host_families(families, overallFamilyBaseNestedData):
+def find_all_direct_host_families(families, overall_family_base_nested_data):
     '''
     Returns a dictionary of all direct host families of families past in.
 
     :param families: A list of tuples containing nested family data.
-    :type families: [nestedFamily]
-    :param overallFamilyBaseNestedData: List of tuples containing nested family data.
-    :type overallFamilyBaseNestedData: [nestedFamily]
+    :type families: [nested_family]
+    :param overall_family_base_nested_data: List of tuples containing nested family data.
+    :type overall_family_base_nested_data: [nested_family]
     
     :return: A dictionary.
     :rtype: {str: (str,str)}
     '''
 
-    hostFamilies = {}
+    host_families = {}
     for fam in families:
-        hosts = find_direct_host_families(fam, overallFamilyBaseNestedData)
+        hosts = find_direct_host_families(fam, overall_family_base_nested_data)
         # update dictionary with new hosts only
         for h in hosts:
-            if( h not in hostFamilies):
-                hostFamilies[h] = hosts[h]
-    return hostFamilies
+            if( h not in host_families):
+                host_families[h] = hosts[h]
+    return host_families
 
-def find_root_families_from_hosts(hostFamilies, overallFamilyBaseRootData):
+def find_root_families_from_hosts(host_families, overall_family_base_root_data):
     '''
-    Returns a list of tuples of type rootFamily matching the past in host families. 
+    Returns a list of tuples of type root_family matching the past in host families. 
 
-    :param hostFamilies: A dictionary where:
+    :param host_families: A dictionary where:
         
         - key is the family name and category concatenated and 
         - value is a tuple in format 0: family name, 1: family category
 
-    :type hostFamilies: {str: (str,str)}
-    :param overallFamilyBaseRootData: List of tuples containing root family data.
-    :type overallFamilyBaseRootData: [rootFamily]
+    :type host_families: {str: (str,str)}
+    :param overall_family_base_root_data: List of tuples containing root family data.
+    :type overall_family_base_root_data: [root_family]
     
     :return: List of root family tuples.
-    :rtype: [rootFamily]
+    :rtype: [root_family]
     '''
 
-    baseHostFamilies = []
-    for nestedId, nestedFam in hostFamilies.items():
-        for baseRootFam in overallFamilyBaseRootData:
-            if (nestedFam[0] == baseRootFam.name and nestedFam[1] == baseRootFam.category):
-                baseHostFamilies.append(baseRootFam)
-    return baseHostFamilies
+    base_host_families = []
+    for nested_id, nestedFam in host_families.items():
+        for base_root_fam in overall_family_base_root_data:
+            if (nestedFam[0] == base_root_fam.name and nestedFam[1] == base_root_fam.category):
+                base_host_families.append(base_root_fam)
+    return base_host_families

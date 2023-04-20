@@ -46,17 +46,17 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def reload_all_families(doc, libraryLocation, includeSubFolders):
+def reload_all_families(doc, library_location, include_sub_folders):
     '''
     Reloads a number of families with setting: parameter values overwritten: True
 
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param libraryLocation: _description_
-    :type libraryLocation: str
-    :param includeSubFolders: _description_
-    :type includeSubFolders: bool
+    :param library_location: _description_
+    :type library_location: str
+    :param include_sub_folders: _description_
+    :type include_sub_folders: bool
     
     :raises UserWarning: _description_
     
@@ -68,10 +68,10 @@ def reload_all_families(doc, libraryLocation, includeSubFolders):
     # if a family is reloaded it may bring in new types not present in the model at reload
     # this list contains the ids of those types (symbols)
     # so they can be deleted if so desired
-    symbolIdsToBeDeleted = []   
+    symbol_ids_to_be_deleted = []   
     try:
         # build library
-        library = fileGet.files_as_dictionary(libraryLocation,'','','.rfa',includeSubFolders)
+        library = fileGet.files_as_dictionary(library_location,'','','.rfa',include_sub_folders)
         if(len(library) == 0):
             result.update_sep(False, 'Library is empty!')
             # get out...
@@ -79,46 +79,46 @@ def reload_all_families(doc, libraryLocation, includeSubFolders):
         else:
             result.append_message('Found: {} families in Library!'.format(len(library)))
         # get all families in file:
-        familyIds = get_family_ids_from_symbols(doc)
-        if(len(familyIds) > 0):
-            result.append_message('Found:  {} loadable families in file.'.format(len(familyIds)))
-            for famId in familyIds:
-                fam = doc.GetElement(famId)
-                famName = rdb.Element.Name.GetValue(fam)
-                if(famName in library):
-                    result.append_message('Found match for: {}'.format(famName))
-                    if(len(library[famName]) == 1 ):
+        family_ids = get_family_ids_from_symbols(doc)
+        if(len(family_ids) > 0):
+            result.append_message('Found:  {} loadable families in file.'.format(len(family_ids)))
+            for fam_id in family_ids:
+                fam = doc.GetElement(fam_id)
+                fam_name = rdb.Element.Name.GetValue(fam)
+                if(fam_name in library):
+                    result.append_message('Found match for: {}'.format(fam_name))
+                    if(len(library[fam_name]) == 1 ):
                         # found single match for family by name
-                        result.update_sep(True, 'Found single match: {}'.format(library[famName][0]))
+                        result.update_sep(True, 'Found single match: {}'.format(library[fam_name][0]))
                         # get all symbols attached to this family by name
-                        priorLoadSymbolIds = fam.GetFamilySymbolIds()
+                        prior_load_symbol_ids = fam.GetFamilySymbolIds()
                         # reload family
-                        resultLoad = rFamUtil.load_family(doc, library[famName][0])
-                        result.append_message(resultLoad.message)
-                        if(resultLoad.status == True):
+                        result_load = rFamUtil.load_family(doc, library[fam_name][0])
+                        result.append_message(result_load.message)
+                        if(result_load.status == True):
                             # make sure that if a single reload was successful that this method returns true
                             result.status = True
                             # remove symbols (family types) added through reload process
-                            if (resultLoad.result != None and len(resultLoad.result) > 0):
-                                famLoaded = resultLoad.result.First()
-                                afterLoadSymbolIds = famLoaded.GetFamilySymbolIds()
-                                newSymbolIds = get_new_symbol_ids(priorLoadSymbolIds, afterLoadSymbolIds)
-                                if(len(newSymbolIds) > 0):
-                                    symbolIdsToBeDeleted = symbolIdsToBeDeleted + newSymbolIds
+                            if (result_load.result != None and len(result_load.result) > 0):
+                                fam_loaded = result_load.result.First()
+                                after_load_symbol_ids = fam_loaded.GetFamilySymbolIds()
+                                new_symbol_ids = get_new_symbol_ids(prior_load_symbol_ids, after_load_symbol_ids)
+                                if(len(new_symbol_ids) > 0):
+                                    symbol_ids_to_be_deleted = symbol_ids_to_be_deleted + new_symbol_ids
                     else:
-                        matchesMessage = ''
-                        for path in library[famName]:
-                            matchesMessage = matchesMessage + '...' + path + '\n'
-                        matchesMessage = 'Found multiple matches for {} \n {}'.format(famName, matchesMessage)
-                        matchesMessage = matchesMessage.strip()
+                        matches_message = ''
+                        for path in library[fam_name]:
+                            matches_message = matches_message + '...' + path + '\n'
+                        matches_message = 'Found multiple matches for {} \n {}'.format(fam_name, matches_message)
+                        matches_message = matches_message.strip()
                         # found multiple matches for family by name only...aborting reload
-                        result.append_message(matchesMessage)
+                        result.append_message(matches_message)
                 else:
-                    result.update_sep(result.status,'Found no match for: {}'.format(famName))
+                    result.update_sep(result.status,'Found no match for: {}'.format(fam_name))
             # delete any new symbols introduced during the reload
-            if(len(symbolIdsToBeDeleted)>0):
-                resultDelete = rDel.delete_by_element_ids(doc, symbolIdsToBeDeleted, 'Delete new family types', 'Family types')
-                result.append_message (resultDelete.message)
+            if(len(symbol_ids_to_be_deleted)>0):
+                result_delete = rDel.delete_by_element_ids(doc, symbol_ids_to_be_deleted, 'Delete new family types', 'Family types')
+                result.append_message (result_delete.message)
             else:
                 message = 'No need to delete any new family types since no new types where created.'
                 result.append_message(message) # make sure not to change the status
@@ -141,37 +141,37 @@ def get_family_ids_from_symbols(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    familyIds = []
+    family_ids = []
     # build list of all categories we want families to be reloaded of
-    famCats = List[rdb.BuiltInCategory] (rFamLoadable.CATEGORIES_LOADABLE_TAGS)
-    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_TAGS_OTHER) 
-    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D)
-    famCats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D_OTHER)
+    fam_cats = List[rdb.BuiltInCategory] (rFamLoadable.CATEGORIES_LOADABLE_TAGS)
+    fam_cats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_TAGS_OTHER) 
+    fam_cats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D)
+    fam_cats.AddRange(rFamLoadable.CATEGORIES_LOADABLE_3D_OTHER)
     # get all symbols in file
-    famSymbols = rFamUtil.get_family_symbols(doc, famCats)
+    fam_symbols = rFamUtil.get_family_symbols(doc, fam_cats)
     # get families from symbols and filter out in place families
-    for famSymbol in famSymbols:
-        if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
-            familyIds.append(famSymbol.Family.Id)
-    return familyIds
+    for fam_symbol in fam_symbols:
+        if (fam_symbol.Family.Id not in family_ids and fam_symbol.Family.IsInPlace == False):
+            family_ids.append(fam_symbol.Family.Id)
+    return family_ids
 
-def get_new_symbol_ids(preLoadSymbolIdList, afterLoadSymbolList):
+def get_new_symbol_ids(pre_load_symbol_id_list, after_load_symbol_list):
     '''
     Returns a list of symbol ids not present prior to reload.
 
     Compares past in list of id's and returns ids not in preloadSymbolIdList
 
-    :param preLoadSymbolIdList: List of Ids of symbols prior the reload.
-    :type preLoadSymbolIdList: list of Autodesk.Revit.DB.ElementId
-    :param afterLoadSymbolList: List of ids of symbols after the reload.
-    :type afterLoadSymbolList: list of Autodesk.Revit.DB.ElementId
+    :param pre_load_symbol_id_list: List of Ids of symbols prior the reload.
+    :type pre_load_symbol_id_list: list of Autodesk.Revit.DB.ElementId
+    :param after_load_symbol_list: List of ids of symbols after the reload.
+    :type after_load_symbol_list: list of Autodesk.Revit.DB.ElementId
     
     :return: List of element ids representing Family Symbols.
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
-    for id in afterLoadSymbolList:
-        if (id not in preLoadSymbolIdList):
+    for id in after_load_symbol_list:
+        if (id not in pre_load_symbol_id_list):
             ids.append(id)
     return ids

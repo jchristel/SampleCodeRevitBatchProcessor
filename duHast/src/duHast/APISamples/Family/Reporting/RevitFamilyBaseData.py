@@ -106,15 +106,15 @@ class FamilyBaseData(IFamData.IFamilyData):
         # based on file name and category
         if(util.file_exist(reference_file_path)):
             # read overall family base data from file 
-            overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
-            foundMatch = False
-            for rootFam in overallFamilyBaseRootData:
+            overall_family_base_root_data, overall_family_base_nested_data = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
+            found_match = False
+            for root_fam in overall_family_base_root_data:
                 # check whether name and category are a match
-                if(rootFam.name == doc_name and rootFam.category == doc_category):
-                    foundMatch = True
+                if(root_fam.name == doc_name and root_fam.category == doc_category):
+                    found_match = True
                     break
             # check if family needs saving out
-            if(foundMatch == False):
+            if(found_match == False):
                 # check session id folder exists
                 if(dirIO.create_target_directory(family_out_folder_path, session_id)):
                     # check category folder exists

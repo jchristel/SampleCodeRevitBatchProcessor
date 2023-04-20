@@ -71,22 +71,22 @@ class IFamilyData(Base.Base):
     
     def update_data(self, identify_by_this_property_name, identify_by_this_property_value, update_dic):
         match = False
-        matchUpdate = True
+        match_update = True
         for d in self.data:
             #print(identifyByThisPropertyName, d)
             if(identify_by_this_property_name in d):
                 #print('identify by property found')
                 if (d[identify_by_this_property_name] == identify_by_this_property_value):
                     #print ('dic', updateDic)
-                    for updateProp in update_dic:
-                        if(updateProp in d):
-                            oldValue = d[updateProp]
-                            d[updateProp] = update_dic[updateProp]
-                            #print ('updated:', updateProp, ' from value ', oldValue, ' to value ', d[updateProp])
-                            matchUpdate = matchUpdate and True
+                    for update_prop in update_dic:
+                        if(update_prop in d):
+                            old_value = d[update_prop]
+                            d[update_prop] = update_dic[update_prop]
+                            #print ('updated:', update_prop, ' from value ', old_value, ' to value ', d[update_prop])
+                            match_update = match_update and True
                             
-        if(matchUpdate):
-            return matchUpdate
+        if(match_update):
+            return match_update
         else:
             return match
 

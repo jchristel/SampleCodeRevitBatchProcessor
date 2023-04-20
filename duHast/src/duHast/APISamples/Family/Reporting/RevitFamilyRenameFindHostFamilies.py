@@ -56,14 +56,14 @@ from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUt
 #                      find families containing nested families needing to be renamed
 #---------------------------------------------------------------------------------------------------------------
 
-def _find_host_families(overallFamilyBaseNestedData, fileRenameList):
+def _find_host_families(overall_family_base_nested_data, file_rename_list):
     '''
     Finds all root family names and categories where the first level nested family is one which needs to be renamed.
 
-    :param overallFamilyBaseNestedData: A list containing all root families.
-    :type overallFamilyBaseNestedData: [rootFamily]
-    :param fileRenameList: A list containing all families needing to be renamed.
-    :type fileRenameList: [renameFamily]
+    :param overall_family_base_nested_data: A list containing all root families.
+    :type overall_family_base_nested_data: [rootFamily]
+    :param file_rename_list: A list containing all families needing to be renamed.
+    :type file_rename_list: [renameFamily]
     
     :return: A dictionary where:
         
@@ -73,21 +73,21 @@ def _find_host_families(overallFamilyBaseNestedData, fileRenameList):
     :rtype: {str: (str,str)}
     '''
 
-    hostFamilies = {}
-    for fileRenameFamily in fileRenameList:
-        hosts = rFamBaseDataUtils.find_direct_host_families(fileRenameFamily, overallFamilyBaseNestedData)
+    host_families = {}
+    for file_rename_family in file_rename_list:
+        hosts = rFamBaseDataUtils.find_direct_host_families(file_rename_family, overall_family_base_nested_data)
         # update dictionary with new hosts only
         for h in hosts:
-            if( h not in hostFamilies):
-                hostFamilies[h] = hosts[h]
-    return hostFamilies
+            if( h not in host_families):
+                host_families[h] = hosts[h]
+    return host_families
 
-def find_host_families_with_nested_families_requiring_rename(inputDirectoryPath):
+def find_host_families_with_nested_families_requiring_rename(input_directory_path):
     '''
     Finds all host families in data set containing nested families needing to be renamed.
 
-    :param inputDirectoryPath: Fully qualified directory path containing rename directives and family base data report.
-    :type inputDirectoryPath: str
+    :param input_directory_path: Fully qualified directory path containing rename directives and family base data report.
+    :type input_directory_path: str
 
     :return: 
         Result class instance.
@@ -106,41 +106,41 @@ def find_host_families_with_nested_families_requiring_rename(inputDirectoryPath)
     '''
 
     # set up a timer
-    tProcess = Timer()
-    tProcess.start()
+    t_process = Timer()
+    t_process.start()
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # read overall family base data from file
     try:
-        overallFamilyBaseRootData, overallFamilyBaseNestedData = rFamBaseDataUtils.read_overall_family_data_list_from_directory(inputDirectoryPath)
-        returnValue.append_message('{} Read overall family base data report. {} root entries found and {} nested entries found.'.format(tProcess.stop(),len(overallFamilyBaseRootData), len(overallFamilyBaseNestedData)))
+        overall_family_base_root_data, overall_family_base_nested_data = rFamBaseDataUtils.read_overall_family_data_list_from_directory(input_directory_path)
+        return_value.append_message('{} Read overall family base data report. {} root entries found and {} nested entries found.'.format(t_process.stop(),len(overall_family_base_root_data), len(overall_family_base_nested_data)))
         # check if input file existed and contained data
-        if(len(overallFamilyBaseRootData) > 0):
-            tProcess.start()
-            fileRenameListStatus = rFamRenameUtils.get_rename_directives(inputDirectoryPath)
-            returnValue.append_message('{} Read data from file! Rename family entries [{} ] found.'.format(tProcess.stop(),len(fileRenameListStatus.result)))
+        if(len(overall_family_base_root_data) > 0):
+            t_process.start()
+            file_rename_list_status = rFamRenameUtils.get_rename_directives(input_directory_path)
+            return_value.append_message('{} Read data from file! Rename family entries [{} ] found.'.format(t_process.stop(),len(file_rename_list_status.result)))
             # check if any rename directives
-            if(len(fileRenameListStatus.result) > 0):
-                before = len(overallFamilyBaseNestedData)
-                tProcess.start()
+            if(len(file_rename_list_status.result) > 0):
+                before = len(overall_family_base_nested_data)
+                t_process.start()
                 # reduce workload by culling not needed nested family data
-                overallFamilyBaseNestedData =  rFamBaseDataUtils.cull_nested_base_data_blocks(overallFamilyBaseNestedData)
-                returnValue.append_message('{} Culled nested family base data from : {} to: {} families.'.format(tProcess.stop(),before),len(overallFamilyBaseNestedData))
+                overall_family_base_nested_data =  rFamBaseDataUtils.cull_nested_base_data_blocks(overall_family_base_nested_data)
+                return_value.append_message('{} Culled nested family base data from : {} to: {} families.'.format(t_process.stop(),before),len(overall_family_base_nested_data))
 
-                tProcess.start()
+                t_process.start()
                 # get a list of simplified root data families extracted from nested family path data
-                rootFamSimple = rFamBaseDataUtils.find_all_direct_host_families(fileRenameListStatus.result, overallFamilyBaseNestedData)
-                returnValue.append_message('{} Found simplified root families: {}'.format(tProcess.stop(),len(rootFamSimple)))
+                root_fam_simple = rFamBaseDataUtils.find_all_direct_host_families(file_rename_list_status.result, overall_family_base_nested_data)
+                return_value.append_message('{} Found simplified root families: {}'.format(t_process.stop(),len(root_fam_simple)))
 
-                tProcess.start()
+                t_process.start()
                 # identify actual root families with nested families at top level which require renaming.
-                rootFamilies = rFamBaseDataUtils.find_root_families_from_hosts(rootFamSimple, overallFamilyBaseRootData)
-                returnValue.append_message('{} Found {} root families.'.format(tProcess.stop(),len(rootFamilies)))
-                returnValue.result = rootFamilies
+                root_families = rFamBaseDataUtils.find_root_families_from_hosts(root_fam_simple, overall_family_base_root_data)
+                return_value.append_message('{} Found {} root families.'.format(t_process.stop(),len(root_families)))
+                return_value.result = root_families
             else:
-                returnValue.update_sep(False, 'No rename directives found. Aborted operation!')
+                return_value.update_sep(False, 'No rename directives found. Aborted operation!')
         else:
-            returnValue.update_sep(False, 'No base family data found. Aborted operation!')
+            return_value.update_sep(False, 'No base family data found. Aborted operation!')
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to find host families with exception: '.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed to find host families with exception: '.format(e))
+    return return_value

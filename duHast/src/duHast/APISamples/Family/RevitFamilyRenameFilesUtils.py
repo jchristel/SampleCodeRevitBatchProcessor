@@ -50,7 +50,7 @@ from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamB
 
 
 # tuples containing rename directive read from file
-renameDirective = namedtuple('renameDirective', 'name filePath category newName')
+rename_directive = namedtuple('rename_directive', 'name filePath category newName')
 
 # row structure of rename directive file
 
@@ -74,30 +74,30 @@ def _read_rename_directives(files):
     :param filePath: Fully qualified file path to rename directives file.
     :type filePath: str
     :return: List of named tuples containing rename directives.
-    :rtype: [renameDirective]
+    :rtype: [rename_directive]
     '''
 
-    renameDirectives = []
+    rename_directives = []
     for file in files:
         rows = fileCSV.read_csv_file(file)
         # read rows in tuples ignoring the header row
         for i in range (1, len(rows)):
             if (len(rows[i]) >= 4):
-                data = renameDirective(
+                data = rename_directive(
                     rows[i][_RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME], 
                     rows[i][RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH], 
                     rows[i][RENAME_DIRECTIVE_INDEX_CATEGORY],
                     rows[i][RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME]
                 )
-            renameDirectives.append(data)
-    return renameDirectives
+            rename_directives.append(data)
+    return rename_directives
 
-def get_rename_directives(directoryPath):
+def get_rename_directives(directory_path):
     '''
     Retrieves file rename  directives from a given folder location.
 
-    :param directoryPath: Fully qualified folder path to folder containing directives.
-    :type directoryPath: str
+    :param directory_path: Fully qualified folder path to folder containing directives.
+    :type directory_path: str
     
     :return: 
         Result class instance.
@@ -115,27 +115,27 @@ def get_rename_directives(directoryPath):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # check whether csv files matching file name filter exist in directory path
-    renameDirectiveFiles = fileGet.get_files_from_directory_walker_with_filters(
-        directoryPath,
+    rename_directive_files = fileGet.get_files_from_directory_walker_with_filters(
+        directory_path,
         RENAME_DIRECTIVE_FILE_NAME_PREFIX,
         '',
         RENAME_DIRECTIVE_FILE_EXTENSION
     )
 
     # check whether any files where found?
-    if(len(renameDirectiveFiles) > 0):
+    if(len(rename_directive_files) > 0):
         # attempt to re rename directives from files
-        renameDirectives = _read_rename_directives(renameDirectiveFiles)
+        rename_directives = _read_rename_directives(rename_directive_files)
         # check whether any rename directives where found in files
-        if(len(renameDirectives) > 0):
-            returnValue.update_sep(True, 'Found rename directives: ' + str(len(renameDirectives)))
+        if(len(rename_directives) > 0):
+            return_value.update_sep(True, 'Found rename directives: ' + str(len(rename_directives)))
             # attempt to rename files
-            returnValue.result = renameDirectives
+            return_value.result = rename_directives
         else:
-            returnValue.update_sep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
+            return_value.update_sep(False, EXCEPTION_EMPTY_RENAME_DIRECTIVE_FILES)
     else:
-        returnValue.update_sep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
+        return_value.update_sep(False, EXCEPTION_NO_RENAME_DIRECTIVE_FILES)
     
-    return returnValue
+    return return_value

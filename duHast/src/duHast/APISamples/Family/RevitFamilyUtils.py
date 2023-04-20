@@ -55,7 +55,7 @@ from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 
-def load_family(doc, familyFilePath):
+def load_family(doc, family_file_path):
     '''
     Loads or reloads a single family into a Revit document.
     
@@ -64,8 +64,8 @@ def load_family(doc, familyFilePath):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param familyFilePath: The fully qualified file path of the family to be loaded.
-    :type familyFilePath: str
+    :param family_file_path: The fully qualified file path of the family to be loaded.
+    :type family_file_path: str
     :raise: None
     
     :return: 
@@ -88,20 +88,20 @@ def load_family(doc, familyFilePath):
         # set up load / reload action to be run within a transaction
         def action():
             # set up return value for the load / reload
-            returnFamily = clr.Reference[rdb.Family]()
-            actionReturnValue = res.Result()
+            return_family = clr.Reference[rdb.Family]()
+            action_return_value = res.Result()
             try:
-                reloadStatus = doc.LoadFamily(
-                    familyFilePath, 
+                reload_status = doc.LoadFamily(
+                    family_file_path, 
                     famLoadOpt.FamilyLoadOption(), # overwrite parameter values etc
-                    returnFamily)
-                actionReturnValue.update_sep(reloadStatus,'Loaded family: ' + familyFilePath + ' :: ' + str(reloadStatus))
-                if(reloadStatus):
-                    actionReturnValue.result.append(returnFamily.Value)
+                    return_family)
+                action_return_value.update_sep(reload_status,'Loaded family: ' + family_file_path + ' :: ' + str(reload_status))
+                if(reload_status):
+                    action_return_value.result.append(return_family.Value)
             except Exception as e:
-                actionReturnValue.update_sep(False,'Failed to load family ' + familyFilePath + ' with exception: '+ str(e))
-            return actionReturnValue
-        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.get_file_name_without_ext(familyFilePath)))
+                action_return_value.update_sep(False,'Failed to load family ' + family_file_path + ' with exception: '+ str(e))
+            return action_return_value
+        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.get_file_name_without_ext(family_file_path)))
         dummy = rTran.in_transaction(transaction, action)
         result.update(dummy)
     except Exception as e:
@@ -127,8 +127,8 @@ def get_family_symbols(doc, cats):
 
     elements = []
     try:
-        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
-        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter).ToElements()
+        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multi_cat_filter).ToElements()
         return elements
     except Exception:
         return elements
@@ -149,26 +149,26 @@ def get_family_instances_by_built_in_categories(doc, cats):
     
     elements = []
     try:
-        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
-        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(multiCatFilter).ToElements()
+        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(multi_cat_filter).ToElements()
         return elements
     except Exception:
         return elements
 
-def get_family_instances_of_built_in_category(doc, builtinCat):
+def get_family_instances_of_built_in_category(doc, builtin_cat):
     '''
     Filters all family instances of a single given built in category from the Revit model.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param builtinCat: single revit builtInCategory Enum value.
-    :type builtinCat: Autodesk.Revit.DB.BuiltInCategory
+    :param builtin_cat: single revit builtInCategory Enum value.
+    :type builtin_cat: Autodesk.Revit.DB.BuiltInCategory
     
     :return: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    filter = rdb.ElementCategoryFilter(builtinCat)
+    filter = rdb.ElementCategoryFilter(builtin_cat)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
     return col
 
@@ -199,13 +199,13 @@ def get_all_loadable_family_ids_through_types(doc):
     :rtype: [Autodesk.Revit.DB.ElementId]
     '''
 
-    familyIds = []
+    family_ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol) 
     # get families from symbols and filter out in place families
-    for famSymbol in col:
-        if (famSymbol.Family.Id not in familyIds and famSymbol.Family.IsInPlace == False):
-            familyIds.append(famSymbol.Family.Id)
-    return familyIds
+    for fam_symbol in col:
+        if (fam_symbol.Family.Id not in family_ids and fam_symbol.Family.IsInPlace == False):
+            family_ids.append(fam_symbol.Family.Id)
+    return family_ids
 
 def get_all_in_place_families(doc):
     '''
@@ -253,30 +253,30 @@ def is_any_nested_family_instance_label_driven(doc):
     '''
 
     flag = False
-    famInstances = get_all_family_instances(doc)
+    fam_instances = get_all_family_instances(doc)
     
-    for famInstance in famInstances:
+    for fam_instance in fam_instances:
         # get the Label parameter value
-        pValue = rParaGet.get_built_in_parameter_value(
-            famInstance,
+        p_value = rParaGet.get_built_in_parameter_value(
+            fam_instance,
             rdb.BuiltInParameter.ELEM_TYPE_LABEL,
             rParaGet.get_parameter_value_as_element_id
             )
         # a valid Element Id means family instance is driven by Label
-        if (pValue != rdb.ElementId.InvalidElementId):
+        if (p_value != rdb.ElementId.InvalidElementId):
             flag = True
             break
             
     return flag
 
-def get_symbols_from_type(doc, typeIds):
+def get_symbols_from_type(doc, type_ids):
     '''
     Get all family types belonging to the same family as types past in.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeIds: - list of element id's representing family symbols (family types)
-    :type typeIds: list of Autodesk.Revit.DB.ElementId
+    :param type_ids: - list of element id's representing family symbols (family types)
+    :type type_ids: list of Autodesk.Revit.DB.ElementId
 
     :return: dictionary:
         where key is the family id as Autodesk.Revit.DB.ElementId
@@ -285,51 +285,51 @@ def get_symbols_from_type(doc, typeIds):
     '''
 
     families = {}
-    for tId in typeIds:
+    for t_id in type_ids:
         # get family element
-        typeEl = doc.GetElement(tId)
-        famEl = typeEl.Family
+        type_el = doc.GetElement(t_id)
+        fam_el = type_el.Family
         # check whether family was already processed
-        if(famEl.Id not in families):
+        if(fam_el.Id not in families):
             # get all available family types
-            sIds = famEl.GetFamilySymbolIds().ToList()
-            families[famEl.Id] = sIds
+            s_ids = fam_el.GetFamilySymbolIds().ToList()
+            families[fam_el.Id] = s_ids
     return families
 
-def get_family_instances_by_symbol_type_id(doc, typeId):
+def get_family_instances_by_symbol_type_id(doc, type_id):
     '''
     Filters all family instances of a single given family symbol (type).
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param Autodesk.Revit.DB.ElementId typeId: The symbol (type) id
+    :param Autodesk.Revit.DB.ElementId type_id: The symbol (type) id
 
     :return: A collector of Autodesk.Revit.DB.FamilyInstance matching filter.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    pvpSymbol = rdb.ParameterValueProvider(rdb.ElementId( rdb.BuiltInParameter.SYMBOL_ID_PARAM ) )
+    pvp_symbol = rdb.ParameterValueProvider(rdb.ElementId( rdb.BuiltInParameter.SYMBOL_ID_PARAM ) )
     equals = rdb.FilterNumericEquals()
-    idFilter = rdb.FilterElementIdRule( pvpSymbol, equals, typeId)
-    elementFilter =  rdb.ElementParameterFilter( idFilter )
-    collector = rdb.FilteredElementCollector(doc).WherePasses( elementFilter )
+    id_filter = rdb.FilterElementIdRule( pvp_symbol, equals, type_id)
+    element_filter =  rdb.ElementParameterFilter( id_filter )
+    collector = rdb.FilteredElementCollector(doc).WherePasses( element_filter )
     return collector
 
-def get_all_in_place_type_ids_in_model_of_category(doc, famBuiltInCategory):
+def get_all_in_place_type_ids_in_model_of_category(doc, fam_built_in_category):
     ''' 
     Filters family symbol (type) ids off all available in place families of single given built in category.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param famBuiltInCategory: built in revit category 
-    :type famBuiltInCategory: Autodesk.Revit.DB.BuiltInCategory
+    :param fam_built_in_category: built in revit category 
+    :type fam_built_in_category: Autodesk.Revit.DB.BuiltInCategory
 
     :return: A list of Element Ids representing the family symbols matching filter.
     :rtype: list Autodesk.Revit.DB.ElementId
     '''
 
     # filter model for family symbols of given built in category
-    filter = rdb.ElementCategoryFilter(famBuiltInCategory)
+    filter = rdb.ElementCategoryFilter(fam_built_in_category)
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = []
     for c in col:
@@ -341,7 +341,7 @@ def get_all_in_place_type_ids_in_model_of_category(doc, famBuiltInCategory):
 
 # --------------------------family purge  ----------------
 
-def get_family_symbols_ids(doc, cats, excludeSharedFam = True):
+def get_family_symbols_ids(doc, cats, exclude_shared_fam = True):
     '''
     Filters family symbols belonging to list of built in categories past in.
     
@@ -356,15 +356,15 @@ def get_family_symbols_ids(doc, cats, excludeSharedFam = True):
 
     ids = []
     try:
-        multiCatFilter = rdb.ElementMulticategoryFilter(cats)
-        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
+        multi_cat_filter = rdb.ElementMulticategoryFilter(cats)
+        elements = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multi_cat_filter)
         for el in elements:
             # check if shared families are to be excluded from return list
-            if(excludeSharedFam):
+            if(exclude_shared_fam):
                 fam = el.Family
-                pValue = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
-                if(pValue != None):
-                    if(pValue == 'No' and el.Id not in ids):
+                p_value = rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
+                if(p_value != None):
+                    if(p_value == 'No' and el.Id not in ids):
                         ids.append(el.Id)
                 else:
                     # some revit families cant be of type shared...()
@@ -387,7 +387,7 @@ def get_all_non_shared_family_symbol_ids(doc):
     '''
 
     ids = []
-    allLoadableThreeDTypeIds = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_3D)
-    allLoadableTagsTypeIds = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_TAGS)
-    ids = allLoadableThreeDTypeIds + allLoadableTagsTypeIds
+    all_loadable_three_d_type_ids = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_3D)
+    all_loadable_tags_type_ids = get_family_symbols_ids(doc, CATEGORIES_LOADABLE_TAGS)
+    ids = all_loadable_three_d_type_ids + all_loadable_tags_type_ids
     return ids

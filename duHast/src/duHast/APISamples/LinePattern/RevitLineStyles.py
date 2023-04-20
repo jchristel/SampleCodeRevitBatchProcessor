@@ -35,13 +35,13 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitDeleteElements as rDel
 
 
-def delete_line_styles_starts_with(doc, startsWith):
+def delete_line_styles_starts_with(doc, starts_with):
     '''
     Deletes all line styles where the name starts with provided string
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param startsWith: Filter: style name needs to start with this string to be deleted.
-    :type startsWith: str
+    :param starts_with: Filter: style name needs to start with this string to be deleted.
+    :type starts_with: str
     :return: 
         Result class instance.
         - .result = True if all views where deleted. Otherwise False.
@@ -50,8 +50,8 @@ def delete_line_styles_starts_with(doc, startsWith):
     '''
 
     lc = doc.Settings.Categories[rdb.BuiltInCategory.OST_Lines]
-    ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = rDel.delete_by_element_ids(doc,ids, 'Delete line styles where name starts with: ' + str(startsWith),'line styles starting with: ' + str(startsWith))
+    ids = list(c.Id for c in lc.SubCategories if c.Name.StartsWith(starts_with)).ToList[rdb.ElementId]()
+    result = rDel.delete_by_element_ids(doc,ids, 'Delete line styles where name starts with: ' + str(starts_with),'line styles starting with: ' + str(starts_with))
     return result
 
 

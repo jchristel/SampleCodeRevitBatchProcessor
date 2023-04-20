@@ -59,10 +59,6 @@ class LinePatternProcessor(IFamilyProcessor):
             string_report_headers=string_report_headers
         )
 
-        #self.data = []
-        #self.dataType = 'LinePattern'
-        #self.preActions = preActions
-
         # set default post action to updated line patterns used in root processor with any line patterns found in nested 
         # families
         #self.postActions = [self._postActionUpdateUsedLinePatterns]
@@ -89,55 +85,55 @@ class LinePatternProcessor(IFamilyProcessor):
         dummy.process(doc)
         self.data.append(dummy)
     
-    def _is_sub_line_pattern_present(self,rootFamilyData, nestedFamilyLinePattern):
+    def _is_sub_line_pattern_present(self,root_family_data, nested_family_line_pattern):
         match = None
-        for rootFam in rootFamilyData:
-            if (rootFam[rLinePatData.PATTERN_NAME] == nestedFamilyLinePattern[rLinePatData.PATTERN_NAME]):
-                match = rootFam
+        for root_fam in root_family_data:
+            if (root_fam[rLinePatData.PATTERN_NAME] == nested_family_line_pattern[rLinePatData.PATTERN_NAME]):
+                match = root_fam
                 break
         return match
     
     def _update_root_family_data(self, root_family_data, nested_families_line_patterns):
         # loop over nested family line pattern data
-        for nestedLinePattern in nested_families_line_patterns:
+        for nested_line_pattern in nested_families_line_patterns:
             # check if pattern is already in root family
-            matchingRootFamPattern = self._is_sub_line_pattern_present(root_family_data, nestedLinePattern)
-            if(matchingRootFamPattern != None):
+            matching_root_fam_pattern = self._is_sub_line_pattern_present(root_family_data, nested_line_pattern)
+            if(matching_root_fam_pattern != None):
                 # update used by list
-                if( nestedLinePattern[rLinePatData.PATTERN_NAME] not in matchingRootFamPattern[IFamData.USED_BY]):
+                if( nested_line_pattern[rLinePatData.PATTERN_NAME] not in matching_root_fam_pattern[IFamData.USED_BY]):
                     # add the root path to the used by list for ease of identification of the origin of this pattern usage
-                    matchingRootFamPattern[IFamData.USED_BY].append(
+                    matching_root_fam_pattern[IFamData.USED_BY].append(
                         { 
-                            rLinePatData.PATTERN_ID : nestedLinePattern[rLinePatData.PATTERN_ID],
-                            IFamData.ROOT : nestedLinePattern[IFamData.ROOT]
+                            rLinePatData.PATTERN_ID : nested_line_pattern[rLinePatData.PATTERN_ID],
+                            IFamData.ROOT : nested_line_pattern[IFamData.ROOT]
                         }
                     )
                     # update used by counter
-                    matchingRootFamPattern[IFamData.USAGE_COUNTER] = matchingRootFamPattern[IFamData.USAGE_COUNTER] + 1
+                    matching_root_fam_pattern[IFamData.USAGE_COUNTER] = matching_root_fam_pattern[IFamData.USAGE_COUNTER] + 1
             else:
                 pass
                 # nothing to do if that pattern has not been reported to start off with 
                 # this patter could, for example, belong to the section marker family present in most 3d families
 
     def _get_used_line_patterns(self, data):
-        usedLinePatterns = []
+        used_line_patterns = []
         for d in data:
             if(d[IFamData.USAGE_COUNTER] > 0):
-                usedLinePatterns.append(d)
-        return usedLinePatterns
+                used_line_patterns.append(d)
+        return used_line_patterns
 
     def _post_action_update_used_line_patterns(self, doc):
-        returnValue = res.Result()
+        return_value = res.Result()
         try:
             # find all line patterns of nested families
-            nestedFamilyData = self._find_nested_families_data()
+            nested_family_data = self._find_nested_families_data()
             # get used sub categories from nested data
-            nestedFamilyUsedLinePatterns = self._get_used_line_patterns(nestedFamilyData)
+            nested_family_used_line_patterns = self._get_used_line_patterns(nested_family_data)
             # update root family data only
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._update_root_family_data(rootFamilyData, nestedFamilyUsedLinePatterns)
-            returnValue.update_sep(True, 'Post Action Update line pattern data successful completed.')
+            self._update_root_family_data(rootFamilyData, nested_family_used_line_patterns)
+            return_value.update_sep(True, 'Post Action Update line pattern data successful completed.')
         except Exception as e:
-            returnValue.update_sep(False, 'Post Action Update line pattern data failed with exception: ' + str(e))
-        return returnValue
+            return_value.update_sep(False, 'Post Action Update line pattern data failed with exception: ' + str(e))
+        return return_value

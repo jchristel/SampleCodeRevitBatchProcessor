@@ -165,7 +165,7 @@ def purge_unplaced_elements (doc,
     try:
         unusedElementIds = get_unused_element_ids(doc)
         unusedElementNames = []
-        ifis_debug:
+        if (is_debug):
             unusedElementNames.append(unused_element_name_header)
             for unusedId in unusedElementIds:
                 unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ rdb.Element.Name.GetValue(doc.GetElement(unusedId)))

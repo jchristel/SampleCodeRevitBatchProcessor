@@ -110,15 +110,15 @@ def get_grid_type_names (doc, g):
     :rtype: list of lists [[GridTypeId as Revit ElementId, grid type name as string],[...]]
     '''
 
-    validGridTypes = []
-    validGridTypeIds = g.GetValidTypes()
-    for validGridTypeId in validGridTypeIds:
-        gridData = []
-        gtypeT = doc.GetElement(validGridTypeId)
-        gridData.append(validGridTypeId)
-        gridData.append(rdb.Element.Name.GetValue(gtypeT))
-        validGridTypes.append(gridData)
-    return validGridTypes
+    valid_grid_types = []
+    valid_grid_type_ids = g.GetValidTypes()
+    for valid_grid_type_id in valid_grid_type_ids:
+        grid_data = []
+        grid_type_t = doc.GetElement(valid_grid_type_id)
+        grid_data.append(valid_grid_type_id)
+        grid_data.append(rdb.Element.Name.GetValue(grid_type_t))
+        valid_grid_types.append(grid_data)
+    return valid_grid_types
 
 def get_grid_type_name (doc, g):
     '''
@@ -133,18 +133,18 @@ def get_grid_type_name (doc, g):
     '''
 
     value = 'unknown'
-    gtypeT = doc.GetElement(g.GetTypeId())
-    value = rdb.Element.Name.GetValue(gtypeT)
+    grid_type_T = doc.GetElement(g.GetTypeId())
+    value = rdb.Element.Name.GetValue(grid_type_T)
     return value
 
-def get_grid_type_id_by_name (doc, gridTypeName):
+def get_grid_type_id_by_name (doc, grid_type_name):
     '''
     Gets the grid type Id based on it's name, if no match found it returns the Revit Invalid Element Id
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param gridTypeName: The grid type name.
-    :type gridTypeName: str
+    :param grid_type_name: The grid type name.
+    :type grid_type_name: str
     :return: The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId
     :rtype: Autodesk.Revit.DB.ElementId
     '''
@@ -153,35 +153,35 @@ def get_grid_type_id_by_name (doc, gridTypeName):
     grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).ToList()
     if(len(grids) > 0):
         g = grids[0]
-        validGridTypeIds = g.GetValidTypes()
-        for gridTypId in validGridTypeIds:
-            gtypeTName = rdb.Element.Name.GetValue(doc.GetElement(gridTypId))
-            if(gtypeTName ==  gridTypeName):
-                id = gridTypId
+        valid_grid_type_ids = g.GetValidTypes()
+        for grid_typ_id in valid_grid_type_ids:
+            g_type_name = rdb.Element.Name.GetValue(doc.GetElement(grid_typ_id))
+            if(g_type_name ==  grid_type_name):
+                id = grid_typ_id
                 break
     return id
 
-def grid_check_parameter_value(g, paraName, paraCondition, conditionValue):
+def grid_check_parameter_value(g, para_name, para_condition, condition_value):
     '''
     Returns true if a given parameter on a grid has a value meeting the parameter condition.
 
     :param g: A grid.
     :type g: Autodesk.Revit.DB.Grid
-    :param paraName: A parameter Name.
-    :type paraName: str
-    :param paraCondition: A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.
-    :type paraCondition: func(arg1,arg2)
-    :param conditionValue: The value to be checked against.
-    :type conditionValue: var
+    :param para_name: A parameter Name.
+    :type para_name: str
+    :param para_condition: A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.
+    :type para_condition: func(arg1,arg2)
+    :param condition_value: The value to be checked against.
+    :type condition_value: var
     :return: True if parameter value is evaluated to True otherwise False.
     :rtype: bool
     '''
 
-    ruleMatch = False
-    pValue = rParaGet.get_parameter_value_by_name (g, paraName)
-    if (pValue != None):
-        ruleMatch = rParaGet.check_parameter_value(g, paraCondition, conditionValue)
-    return ruleMatch
+    rule_match = False
+    p_value = rParaGet.get_parameter_value_by_name (g, para_name)
+    if (p_value != None):
+        rule_match = rParaGet.check_parameter_value(g, para_condition, condition_value)
+    return rule_match
 
 def get_max_extent_as_string(g):
     '''
@@ -209,9 +209,3 @@ def get_all_grid_head_family_type_ids(doc):
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(filter)
     ids = com.get_ids_from_element_collector(col)
     return ids
-
-
-
-
-
-

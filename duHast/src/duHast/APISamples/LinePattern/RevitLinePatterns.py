@@ -63,22 +63,22 @@ def get_line_pattern_from_category(cat, doc):
     :rtype: dictionary {str: str, str: Autodesk.Revit.DB.ElementId}
     '''
 
-    dicPattern = {}
-    dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
-    dicPattern[PROPERTY_PATTERN_ID] = patternId = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
+    dic_pattern = {}
+    dic_pattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
+    dic_pattern[PROPERTY_PATTERN_ID] = pattern_id = cat.GetLinePatternId(rdb.GraphicsStyleType.Projection)
     '''check for 'solid' pattern which apparently is not a pattern at all
     *The RevitAPI.chm documents says: Note that Solid is special. It isn't a line pattern at all -- 
     * it is a special code that tells drawing and export code to use solid lines rather than patterned lines. 
     * Solid is visible to the user when selecting line patterns. 
     '''
-    if(patternId != rdb.LinePatternElement.GetSolidPatternId()):
+    if(pattern_id != rdb.LinePatternElement.GetSolidPatternId()):
         # not a solid line pattern
         collector = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
-        linePatternElement = None
+        line_pattern_element = None
         for c in collector:
-            if(patternId == c.Id):
-                dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
-    return dicPattern
+            if(pattern_id == c.Id):
+                dic_pattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(c)         
+    return dic_pattern
 
 def get_line_pattern_from_level_element(doc, level):
     '''
@@ -94,18 +94,18 @@ def get_line_pattern_from_level_element(doc, level):
     :rtype: dictionary {str: str, str: Autodesk.Revit.DB.ElementId}
     '''
 
-    dicPattern = {}
-    dicPattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
-    dicPattern[PROPERTY_PATTERN_ID] = rdb.ElementId.InvalidElementId
+    dic_pattern = {}
+    dic_pattern[PROPERTY_PATTERN_NAME] = PROPERTY_PATTERN_NAME_VALUE_DEFAULT
+    dic_pattern[PROPERTY_PATTERN_ID] = rdb.ElementId.InvalidElementId
     try:
-        lTypeId = level.GetTypeId()
-        levelType = doc.GetElement(lTypeId)
-        linePatternIdString = rParaGet.get_built_in_parameter_value(levelType, rdb.BuiltInParameter.LINE_PATTERN)
-        dicPattern[PROPERTY_PATTERN_ID] = rdb.ElementId(int(linePatternIdString))
-        dicPattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(levelType)
+        l_type_id = level.GetTypeId()
+        level_type = doc.GetElement(l_type_id)
+        line_pattern_id_string = rParaGet.get_built_in_parameter_value(level_type, rdb.BuiltInParameter.LINE_PATTERN)
+        dic_pattern[PROPERTY_PATTERN_ID] = rdb.ElementId(int(line_pattern_id_string))
+        dic_pattern[PROPERTY_PATTERN_NAME] = rdb.Element.Name.GetValue(level_type)
     except Exception as ex:
-        dicPattern[PROPERTY_PATTERN_NAME] = str(ex)
-    return dicPattern
+        dic_pattern[PROPERTY_PATTERN_NAME] = str(ex)
+    return dic_pattern
 
 # ------------------------------------------------ DELETE LINE PATTERNS ----------------------------------------------
 
@@ -132,14 +132,14 @@ def delete_line_patterns_contains(doc, contains):
     result = rDel.delete_by_element_ids(doc,ids, 'Deleting line patterns where name contains: ' + str(contains),'line patterns containing: ' + str(contains))
     return result
 
-def delete_line_pattern_starts_with(doc, startsWith):
+def delete_line_pattern_starts_with(doc, starts_with):
     '''
     Deletes all line patterns where the name starts with provided string.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param startsWith: Filter: pattern name needs to start with this string to be deleted.
-    :type startsWith: str
+    :param starts_with: Filter: pattern name needs to start with this string to be deleted.
+    :type starts_with: str
 
     :return: 
         Result class instance.
@@ -151,8 +151,8 @@ def delete_line_pattern_starts_with(doc, startsWith):
     '''
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
-    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(startsWith)).ToList[rdb.ElementId]()
-    result = rDel.delete_by_element_ids(doc,ids, 'Delete line patterns where name starts with: ' + str(startsWith),'line patterns starting with: ' + str(startsWith))
+    ids = list(lp.Id for lp in lps if lp.GetLinePattern().Name.StartsWith(starts_with)).ToList[rdb.ElementId]()
+    result = rDel.delete_by_element_ids(doc,ids, 'Delete line patterns where name starts with: ' + str(starts_with),'line patterns starting with: ' + str(starts_with))
     return result
 
 def delete_line_patterns_without(doc, contains):
@@ -175,9 +175,9 @@ def delete_line_patterns_without(doc, contains):
 
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement).ToList()
     ids = list(lp.Id for lp in lps).ToList[rdb.ElementId]()
-    idsContain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
-    deleteIds = list(set(ids)-set(idsContain))
-    result = rDel.delete_by_element_ids(doc,deleteIds, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
+    ids_contain = list(lp.Id for lp in lps if lp.GetLinePattern().Name.Contains(contains)).ToList[rdb.ElementId]()
+    delete_ids = list(set(ids)-set(ids_contain))
+    result = rDel.delete_by_element_ids(doc,delete_ids, 'Delete line patterns where name does not contain: ' + str(contains),'line patterns without: ' + str(contains))
     return result
 
 def get_all_line_patterns(doc):
@@ -203,14 +203,14 @@ def build_patterns_dictionary_by_name(doc):
     :rtype: dictionary(key str, value list of Autodesk.Revit.DB.ElementId)
     '''
 
-    lpDic = {}
+    lp_dic = {}
     lps = rdb.FilteredElementCollector(doc).OfClass(rdb.LinePatternElement)
     for lp in lps:
-        if(lpDic.has_key(lp.GetLinePattern().Name)):
-            lpDic[lp.GetLinePattern().Name].append(lp.Id)
+        if(lp_dic.has_key(lp.GetLinePattern().Name)):
+            lp_dic[lp.GetLinePattern().Name].append(lp.Id)
         else:
-            lpDic[lp.GetLinePattern().Name] = [lp.Id]
-    return lpDic
+            lp_dic[lp.GetLinePattern().Name] = [lp.Id]
+    return lp_dic
 
 def delete_duplicate_line_patter_names(doc):
     '''
@@ -228,15 +228,15 @@ def delete_duplicate_line_patter_names(doc):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    returnValue.append_message('Deletes all but the first line pattern by Id with the exact same name...start')
+    return_value = res.Result()
+    return_value.append_message('Deletes all but the first line pattern by Id with the exact same name...start')
     # get a dictionary: Key pattern name, value all ids of line patterns with the same name
     # anything where the value list is greater then 1 means duplicates of the same name...
-    linePatterns = build_patterns_dictionary_by_name(doc)
-    for key, value in linePatterns.items():
+    line_patterns = build_patterns_dictionary_by_name(doc)
+    for key, value in line_patterns.items():
         if(len(value) > 1):
             # keep the first one (original)
             value.remove(value[0])
-            flagDelete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: {}'.format(key),'line patterns duplicates: {}'.format(key))
-            returnValue.update (flagDelete)
-    return returnValue
+            flag_delete = rDel.delete_by_element_ids(doc,value, 'Deleting duplicate line patterns names: {}'.format(key),'line patterns duplicates: {}'.format(key))
+            return_value.update (flag_delete)
+    return return_value

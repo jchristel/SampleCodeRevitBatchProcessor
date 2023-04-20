@@ -28,17 +28,17 @@ This module contains utility function(s) for grid reports.
 
 import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import RevitWorksets as rWork
-from duHast.Utilities import Utility as util, FilesIO as util
+from duHast.Utilities import Utility as util, FilesIO as fileIO
 from duHast.APISamples.Grids import RevitGrids as rGrid
 
 
-def get_grid_report_data(doc, revitFilePath):
+def get_grid_report_data(doc, revit_file_path):
     '''
     Gets grid data ready for being printed to file
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: fully qualified file path of Revit file
-    :type revitFilePath: str
+    :param revit_file_path: fully qualified file path of Revit file
+    :type revit_file_path: str
     :return: list of list of revit grid properties.
     :rtype: [[str]]
     '''
@@ -46,9 +46,9 @@ def get_grid_report_data(doc, revitFilePath):
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
         data.append([
-            util.get_file_name_without_ext(revitFilePath),
+            fileIO.get_file_name_without_ext(revit_file_path),
             str(p.Id.IntegerValue),
-            util.EncodeAscii(p.Name),
+            util.encode_ascii (p.Name),
             rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),
             rGrid.get_max_extent_as_string(p)])
     return data

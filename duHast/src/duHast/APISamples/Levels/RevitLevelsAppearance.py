@@ -77,12 +77,15 @@ def change_levels_2D (doc, levels, view):
 def show_head_end (doc, level, view, end_identifier, show_head):
     '''
     Toggles level head visibility on specified end for given level.
+    
     :param doc: The current model document.
     :type doc: Autodesk.Revit.DB.Document
     :param level: The level of which a heads visibility is to be toggled.
     :type level: Autodesk.Revit.DB.Level
     :param view: The view in which a level heads visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
+    :param end_identifier: which end.
+    :type end_identifier: 
     :param show_head: True head will switched on, False it will be switched off
     :type show_head: bool
     :return: 

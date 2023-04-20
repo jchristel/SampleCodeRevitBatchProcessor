@@ -65,21 +65,21 @@ def purge_unused(doc, processor):
     # from processor instance get all root line pattern entries where usage counter == 0.
     # delete those line patterns by id
 
-    returnValue = res.Result()
+    return_value = res.Result()
 
-    idsToDelete = []
+    ids_to_delete = []
     # get categories found in root processor data only
-    rootFamData = processor._findRootFamilyData()
+    root_fam_data = processor._findRootFamilyData()
     # get all root line pattern entries where usage counter == 0.
-    for rootFam in rootFamData:
-        if (rootFam[IFamData.USAGE_COUNTER] == 0 ):
-            returnValue.append_message('Found unused line patterns: {} [{}]'.format(rootFam[rLinePatData.PATTERN_NAME],rootFam[rLinePatData.PATTERN_ID]))
-            idsToDelete.append(rdb.ElementId(rootFam[rLinePatData.PATTERN_ID]))
+    for root_fam in root_fam_data:
+        if (root_fam[IFamData.USAGE_COUNTER] == 0 ):
+            return_value.append_message('Found unused line patterns: {} [{}]'.format(root_fam[rLinePatData.PATTERN_NAME],root_fam[rLinePatData.PATTERN_ID]))
+            ids_to_delete.append(rdb.ElementId(root_fam[rLinePatData.PATTERN_ID]))
     # delete any subcategories found
-    if(len(idsToDelete) > 0):
-        resultDelete = rDel.delete_by_element_ids(doc, idsToDelete, 'Deleting unused line patterns.', 'Line patterns')
-        returnValue.update(resultDelete)
+    if(len(ids_to_delete) > 0):
+        result_delete = rDel.delete_by_element_ids(doc, ids_to_delete, 'Deleting unused line patterns.', 'Line patterns')
+        return_value.update(result_delete)
     else:
-        returnValue.update_sep(True, 'No unused line patterns found. Nothing was deleted.')
-    return returnValue
+        return_value.update_sep(True, 'No unused line patterns found. Nothing was deleted.')
+    return return_value
     

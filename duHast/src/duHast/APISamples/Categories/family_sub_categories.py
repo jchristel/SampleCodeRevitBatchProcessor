@@ -29,10 +29,10 @@ Revit sub-category helper functions.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res
-from duHast.APISamples.Categories.RevitCategories import delete_main_sub_category, does_main_sub_category_exists, get_main_sub_categories
-from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import move_elements_from_sub_category_to_sub_category
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesSetUtils import set_category_properties
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_properties
+from duHast.APISamples.Categories.categories import delete_main_sub_category, does_main_sub_category_exists, get_main_sub_categories
+from duHast.APISamples.Categories.Utility.elements_by_category_utils import move_elements_from_sub_category_to_sub_category
+from duHast.APISamples.Categories.Utility.category_properties_set_utils import set_category_properties
+from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_properties
 from duHast.APISamples.Common import RevitTransaction as rTran
 
 

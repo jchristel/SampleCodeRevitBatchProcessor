@@ -36,9 +36,9 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitTransaction as rTran
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Categories.RevitFamilySubCategories import create_new_category_from_saved_properties
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_graphic_style_ids, get_category_properties
-from duHast.APISamples.Categories.Utility.RevitElementsByCategoryUtils import get_elements_by_category, move_elements_to_category
+from duHast.APISamples.Categories.family_sub_categories import create_new_category_from_saved_properties
+from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids, get_category_properties
+from duHast.APISamples.Categories.Utility.elements_by_category_utils import get_elements_by_category, move_elements_to_category
 
 #: subcategory renaming sampled dictionary
 #: key is the current subcategory name, value is the new subcategory name 

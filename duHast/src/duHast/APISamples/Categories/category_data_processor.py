@@ -27,10 +27,10 @@ Family category data processor class.
 #
 
 from duHast.APISamples.Family.Reporting.IFamilyProcessor import IFamilyProcessor
-from duHast.APISamples.Categories import RevitCategoryData as rCatData
+from duHast.APISamples.Categories import category_data as rCatData
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Result as res
-from duHast.APISamples.Categories.Utility import RevitCategoryPropertyNames as rCatPropNames
+from duHast.APISamples.Categories.Utility import category_property_names as rCatPropNames
 
 class CategoryProcessor(IFamilyProcessor):
 

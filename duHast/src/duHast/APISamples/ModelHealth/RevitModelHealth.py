@@ -37,7 +37,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 import System
 
-from duHast.APISamples.BIM360 import RevitBIM360 as b360
+from duHast.APISamples.BIM360 import bim_360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import RevitDesignSetOptions as rDoS

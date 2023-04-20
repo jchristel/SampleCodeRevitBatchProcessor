@@ -28,7 +28,7 @@ Family line pattern data class.
 
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Categories import RevitCategories as rCats
+from duHast.APISamples.Categories import categories as rCats
 from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
 from duHast.APISamples import RevitLevels as rLevel
 

@@ -84,8 +84,8 @@ from duHast.APISamples.Stairs import RevitStairPath as rStairPath
 from duHast.APISamples.Stairs import RevitStairStringersAndCarriages as rStairStringerAndCarriage
 from duHast.APISamples.Stairs import RevitStairCutMarks as rStairCutMark
 
-from duHast.APISamples.BuildingPads import RevitBuildingPads as rBuildP
-from duHast.APISamples.BuildingPads import PurgeUnusedBuildingPadTypes as rBuildingPadPurge
+from duHast.APISamples.BuildingPads import building_pads as rBuildP
+from duHast.APISamples.BuildingPads import purge_unused_building_pad_types as rBuildingPadPurge
 
 from duHast.APISamples.Ceilings import RevitCeilings as rCeil
 from duHast.APISamples.Ceilings import PurgeUnusedCeilingTypes as rCeilingPurge

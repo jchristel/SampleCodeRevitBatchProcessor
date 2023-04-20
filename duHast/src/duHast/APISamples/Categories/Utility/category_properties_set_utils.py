@@ -31,8 +31,8 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.LinePattern import RevitLinePatterns as rPat
 from duHast.APISamples.Common import RevitTransaction as rTran
 from duHast.Utilities import Result as res
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_saved_category_property_by_name
+from duHast.APISamples.Categories.Utility.category_property_names import PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID
+from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_saved_category_property_by_name
 
 
 def set_category_material(doc, cat, material_id):

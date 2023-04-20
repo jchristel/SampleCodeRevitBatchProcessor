@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to purging Revit buil
 
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
 from duHast.APISamples.BuildingPads.Utility import RevitBuildingPadTypeSorting as rBuildingPadSort
-from duHast.APISamples.BuildingPads import RevitBuildingPads as rBuildingPads
+from duHast.APISamples.BuildingPads import building_pads as rBuildingPads
 
 #: Built in family name for pad
 BASIC_BUILDING_PAD_FAMILY_NAME = 'Pad'

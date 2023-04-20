@@ -28,10 +28,10 @@ Family category data class.
 
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Categories import RevitCategories as rCat
-from duHast.APISamples.Categories.Utility import RevitCategoryPropertiesGetUtils as rCatPropGet
-from duHast.APISamples.Categories.Utility import RevitCategoryPropertyNames as rCatPropNames
-from duHast.APISamples.Categories.Utility import RevitElementsByCategoryUtils as rElementByCatUtils
+from duHast.APISamples.Categories import categories as rCat
+from duHast.APISamples.Categories.Utility import category_properties_get_utils as rCatPropGet
+from duHast.APISamples.Categories.Utility import category_property_names as rCatPropNames
+from duHast.APISamples.Categories.Utility import elements_by_category_utils as rElementByCatUtils
 
 
 # import Autodesk

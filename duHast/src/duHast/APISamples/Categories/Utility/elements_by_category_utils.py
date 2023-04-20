@@ -33,9 +33,9 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Links import RevitCadLinksGeometry as rCadLinkGeo
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 
-from duHast.APISamples.Categories.RevitCategories import ELEMENTS_PARAS_SUB, get_main_sub_categories
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertiesGetUtils import get_category_graphic_style_ids
-from duHast.APISamples.Categories.Utility.RevitCategoryPropertyNames import CATEGORY_GRAPHIC_STYLE_3D
+from duHast.APISamples.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories
+from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
+from duHast.APISamples.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D
 from duHast.APISamples.Family import RevitFamilyElementUtils as rFamElementUtils
 
 

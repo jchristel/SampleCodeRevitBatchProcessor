@@ -28,30 +28,30 @@ This module contains a number of functions around exporting from Revit to varies
 
 # 
 # doSomethingWithViewName method will accept view name as arg only
-def build_export_file_name_from_view(viewName, viewFilterRule, fileExtension):
+def build_export_file_name_from_view(view_name, view_filter_rule, file_extension):
     '''
     Function modifying the past in view name and returns a file name.
 
-    :param viewName: The view name to be used as file name.
-    :type viewName: str
-    :param viewFilterRule: A prefix which will be removed from the view name.
-    :type viewFilterRule: str
-    :param fileExtension: The file extension to be used. Format is '.something'
-    :type fileExtension: str
+    :param view_name: The view name to be used as file name.
+    :type view_name: str
+    :param view_filter_rule: A prefix which will be removed from the view name.
+    :type view_filter_rule: str
+    :param file_extension: The file extension to be used. Format is '.something'
+    :type file_extension: str
     :return: A file name.
     :rtype: str
     '''
 
     # check if file extension is not none
-    if (fileExtension is None):
-        fileExtension = '.tbc'
+    if (file_extension is None):
+        file_extension = '.tbc'
     # check the filter rule
-    if (viewFilterRule is None):
-        newFileName = viewName + fileExtension
+    if (view_filter_rule is None):
+        new_file_name = view_name + file_extension
     else:
-        newFileName = viewName[len(viewFilterRule):] + fileExtension
-        newFileName = newFileName.strip()
-    return newFileName
+        new_file_name = view_name[len(view_filter_rule):] + file_extension
+        new_file_name = new_file_name.strip()
+    return new_file_name
 
 
 

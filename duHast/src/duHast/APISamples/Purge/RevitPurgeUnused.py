@@ -48,8 +48,8 @@ import System
 from duHast.Utilities import FilesIO as util
 from duHast.Utilities import Result as res
 
-from duHast.APISamples.Annotation import RevitSpotDimensions as rAnnoSpot
-from duHast.APISamples.Annotation import RevitGenericAnnotation as rGAnno
+from duHast.APISamples.Annotation import spot_dimensions as rAnnoSpot
+from duHast.APISamples.Annotation import generic_annotation as rGAnno
 
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
@@ -70,11 +70,11 @@ from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
 from duHast.APISamples.Walls import RevitStackedWalls as rStackedWall
 from duHast.APISamples.Walls import PurgeUnusedCurtainWallElementTypes as rCurtainWallElemPurge
 
-from duHast.APISamples.Annotation import PurgeUnusedAnnoTypes as rAnnoPurge
-from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
-from duHast.APISamples.Annotation import RevitDimensions as rDim
-from duHast.APISamples.Annotation import RevitMultiRefAnno as rMultiRefAnno
-from duHast.APISamples.Annotation import RevitText as rText
+from duHast.APISamples.Annotation import purge_unused_annotation_types as rAnnoPurge
+from duHast.APISamples.Annotation import arrow_heads as rArrow
+from duHast.APISamples.Annotation import dimensions as rDim
+from duHast.APISamples.Annotation import multi_ref_annotation as rMultiRefAnno
+from duHast.APISamples.Annotation import text as rText
 
 from duHast.APISamples.Stairs import PurgeUnusedStairTypes as rStairPurge
 from duHast.APISamples.Stairs import RevitStairs as rStair

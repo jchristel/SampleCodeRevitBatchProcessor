@@ -1,9 +1,8 @@
 '''
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions relating to stair path annotation. 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A number of functions around Revit annotation objects.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
-
 #
 #License:
 #
@@ -27,31 +26,46 @@ This module contains a number of helper functions relating to stair path annotat
 #
 #
 
+import clr
+import System
+
+# import common library modules
+from duHast.APISamples.Annotation import arrow_heads as rArrow
+
+# import Autodesk
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
+# ----------------------------------------------
 
-
-def get_all_stair_path_types(doc):
+def get_all_anno_symbol_types(doc):
     '''
-    Gets all stairs path types in the model/
+    Gets all annotation symbol types, area tag types, room tag types in the model
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: A filtered element collector of stair path types
-    :rtype: Autodesk.Revit.DB.FilteredElementCollector of stair path types
+
+    :return: list of types
+    :rtype: list
     '''
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
+    types = []
+    col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
+    for c in col:
+        if (c.GetType() == rdb.AnnotationSymbolType or c.GetType == rdb.AreaTagType or c.GetType() == rdbA.RoomTagType):
+            types.append(c)
+    return types
 
-def get_stairs_path_arrow_head_ids(doc):
+def get_anno_symbol_arrow_head_ids(doc):
     '''
-    Gets all arrow head symbol ids used in stairs path types in a model.
+    Gets all arrow head ids used in annotation symbol types, area tag types, room tag types in the model.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
+
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_stair_path_types, rArrow.ARROWHEAD_PARAS_STAIRS_PATH)
+    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
     return used_ids

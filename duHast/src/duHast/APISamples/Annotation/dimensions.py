@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
+from duHast.APISamples.Annotation import arrow_heads as rArrow
 
 
 def get_dim_types(doc):

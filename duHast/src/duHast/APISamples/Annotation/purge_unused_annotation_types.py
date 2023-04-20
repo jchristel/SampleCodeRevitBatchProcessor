@@ -30,18 +30,18 @@ This module contains a number of helper functions relating to purging annotation
 import Autodesk.Revit.DB as rdb
 
 
-from duHast.APISamples.Annotation import RevitGenericAnnotation as rGenericAnno
+from duHast.APISamples.Annotation import generic_annotation as rGenericAnno
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Annotation import RevitAnnotation as rAnno
-from duHast.APISamples.Annotation import RevitDimensions as rDim
-from duHast.APISamples.Annotation import RevitMultiRefAnno as rMultiRefAnno
-from duHast.APISamples.Annotation import RevitText as rText
-from duHast.APISamples.Annotation import RevitArrowHeads as rArrow
-from duHast.APISamples.Annotation import RevitIndependentTags as rIndyTags
-from duHast.APISamples.Annotation import RevitSpotDimensions as rSpots
-from duHast.APISamples.Annotation import RevitStairPath as rStairPath
+from duHast.APISamples.Annotation import annotation as rAnno
+from duHast.APISamples.Annotation import dimensions as rDim
+from duHast.APISamples.Annotation import multi_ref_annotation as rMultiRefAnno
+from duHast.APISamples.Annotation import text as rText
+from duHast.APISamples.Annotation import arrow_heads as rArrow
+from duHast.APISamples.Annotation import independent_tags as rIndyTags
+from duHast.APISamples.Annotation import spot_dimensions as rSpots
+from duHast.APISamples.Annotation import stair_path as rStairPath
 from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
  
 

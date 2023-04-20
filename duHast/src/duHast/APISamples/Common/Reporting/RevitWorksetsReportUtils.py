@@ -39,8 +39,8 @@ def get_workset_report_data(doc, revit_file_path):
     - ISVISIBLEBYDEFAULT
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The fully qualified file path of Revit file.
-    :type revitFilePath: str
+    :param revit_file_path: The fully qualified file path of Revit file.
+    :type revit_file_path: str
     :return: The workset data in a nested list of string
     :rtype: list of list of str
     '''

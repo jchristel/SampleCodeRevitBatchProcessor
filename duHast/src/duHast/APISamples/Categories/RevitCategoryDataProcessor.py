@@ -95,12 +95,12 @@ class CategoryProcessor(IFamilyProcessor):
 
         :param doc: Current family document.
         :type doc: Autodesk.Revit.DB.Document
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
-        :type rootPath: str
-        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :type root_path: str
+        :param root_category_path: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
-        :type rootCategoryPath: str
+        :type root_category_path: str
         '''
 
         dummy = rCatData.CategoryData(root_path, root_category_path, self.data_type)

@@ -50,8 +50,8 @@ def populate_data_ceiling_object(doc, revit_ceiling):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitCeiling: A revit ceiling instance.
-    :type revitCeiling: Autodesk.Revit.DB.Ceiling
+    :param revit_ceiling: A revit ceiling instance.
+    :type revit_ceiling: Autodesk.Revit.DB.Ceiling
     
     :return: A data ceiling object instance.
     :rtype: :class:`.DataCeiling`

@@ -83,8 +83,8 @@ def get_legend_components_in_model(doc, type_ids):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeIds: List of typeIds to check against.
-    :type typeIds: list str
+    :param type_ids: List of typeIds to check against.
+    :type type_ids: list str
     :raise: Any exception will need to be managed by the function caller.
 
     :return: Values are representing symbol (type) ids of legend components in models filtered by ids past in.
@@ -115,7 +115,7 @@ def get_similar_type_families_by_type(doc, type_getter):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param function typeGetter:
+    :param function type_getter:
         The function which takes the document as an argument and returns a list of family symbols (types).
     :raise: Any exception will need to be managed by the function caller.
 
@@ -145,10 +145,10 @@ def check_unique_type_data(existing_types, new_type_data):
     Assumes that second list past in has only one occurrence of type and its similar types
     Compares types by name and if match their similar types.
 
-    :param existingTypes: Source list
-    :type existingTypes: List of List in format [[Autodesk.Revit.DB.ElementType , Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
-    :param newTypeData: Comparison list
-    :type newTypeData: List in format [Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...]
+    :param existing_types: Source list
+    :type existing_types: List of List in format [[Autodesk.Revit.DB.ElementType , Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
+    :param new_type_data: Comparison list
+    :type new_type_data: List in format [Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...]
 
     :return:
         True, if new type is not in list existing Types passed in or
@@ -185,10 +185,10 @@ def get_unused_type_ids_in_model(doc, type_getter, instance_getter):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeGetter: Function accepting current document as argument and returning a collector of types in model
-    :type typeGetter: func
-    :param instanceGetter: Function accepting current document as argument and returning a list of instances in model
-    :type instanceGetter: func
+    :param type_getter: Function accepting current document as argument and returning a collector of types in model
+    :type type_getter: func
+    :param instance_getter: Function accepting current document as argument and returning a list of instances in model
+    :type instance_getter: func
 
     :return: List of type ids which can be purged from the model.
     :rtype: list Autodesk.Revit.DB.ElementId
@@ -256,10 +256,10 @@ def get_not_placed_types(doc, get_types, get_instances):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param getTypes: Types getter function. Needs to accept doc as argument and return a collector of type foo
-    :type getTypes: func (doc)
-    :param getInstances: Instances getter function. Needs to accept doc as argument and return a collector of instances foo
-    :type getInstances: func(doc)
+    :param get_types: Types getter function. Needs to accept doc as argument and return a collector of type foo
+    :type get_types: func (doc)
+    :param get_instances: Instances getter function. Needs to accept doc as argument and return a collector of instances foo
+    :type get_instances: func(doc)
 
     :return: returns a list of unused types
     :rtype: list of type foo
@@ -298,10 +298,10 @@ def check_group_for_type_ids(doc, group_type, type_ids):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param groupTypes: Group to be checked whether they contains elements of types past in.
-    :type groupTypes: Autodesk.Revit.DB.GroupType
-    :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revit.Db.ElementId
+    :param group_type: Group to be checked whether they contains elements of types past in.
+    :type group_type: Autodesk.Revit.DB.GroupType
+    :param type_ids: List of type ids to confirm whether they are in use a group
+    :type type_ids: list of Autodesk.Revit.Db.ElementId
 
     :return: Returns all type ids not matched
     :rtype: list of Autodesk.Revit.Db.ElementId
@@ -331,10 +331,10 @@ def check_groups_for_matching_type_ids(doc, group_types, type_ids):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param groupTypes: Groups to be checked whether they contains elements of types past in.
-    :type groupTypes: list of Autodesk.Revit.DB.GroupType
-    :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revit.Db.ElementId
+    :param group_types: Groups to be checked whether they contains elements of types past in.
+    :type group_types: list of Autodesk.Revit.DB.GroupType
+    :param type_ids: List of type ids to confirm whether they are in use a group
+    :type type_ids: list of Autodesk.Revit.Db.ElementId
 
     :return: Returns all type ids not matched
     :rtype: list of Autodesk.Revit.Db.ElementId
@@ -356,8 +356,8 @@ def get_unused_type_ids_from_detail_groups(doc, type_ids):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeIds: List of type ids to confirm whether they are in use a group
-    :type typeIds: list of Autodesk.Revit.Db.ElementId
+    :param type_ids: List of type ids to confirm whether they are in use a group
+    :type type_ids: list of Autodesk.Revit.Db.ElementId
 
     :return: Returns all type Ids from list past in not found in group definitions
     :rtype: list of Autodesk.Revit.DB.ElementId

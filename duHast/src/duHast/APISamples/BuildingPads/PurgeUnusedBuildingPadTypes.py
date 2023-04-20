@@ -57,10 +57,10 @@ def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
     Compares two lists of ids. True if any id is not in unUsedTypeIds.
     TODO: check for more generic list comparison and remove this function.
-    :param famTypeIds: List of family type ids to check.
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: Reference list of ids.
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param fam_type_ids: List of family type ids to check.
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: Reference list of ids.
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
     :return: True if any id from famTypeIds is not in unUsedTypeIds.
     :rtype: bool
     '''
@@ -96,4 +96,3 @@ def get_unused_non_in_place_building_pad_type_ids_to_purge(doc):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])
     return ids
-

@@ -37,10 +37,10 @@ class RevitCustomElementFilter(Base.Base):
         """
         Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)
 
-        :param elementFilters: List of element filter functions which will need to accept document and elementId as their arguments, defaults to []
-        :type elementFilters: list of functions, optional
-        :param isLogicalANDFilter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)
-        :type isLogicalANDFilter: bool, optional
+        :param element_filters: List of element filter functions which will need to accept document and elementId as their arguments, defaults to []
+        :type element_filters: list of functions, optional
+        :param is_logical_and_filter: Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)
+        :type is_logical_and_filter: bool, optional
         """
 
         # forwards all unused arguments
@@ -60,8 +60,8 @@ class RevitCustomElementFilter(Base.Base):
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :param elementId: The id of the element to be checked against the filter.
-        :type elementId: Autodesk.Revit.DB.ElementId
+        :param element_id: The id of the element to be checked against the filter.
+        :type element_id: Autodesk.Revit.DB.ElementId
         :return: True if it matches the filter(s), otherwise False
         :rtype: bool
         """

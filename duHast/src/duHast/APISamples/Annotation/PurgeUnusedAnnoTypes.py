@@ -95,8 +95,8 @@ def get_used_dim_styles_from_multi_ref(doc, multi_reference_anno_types):
     Gets all dimension styles used in multi ref annotation types.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param multiReferenceAnnoTypes: list in format [[multi refType, [element ids of similar multi ref types, ...]]]
-    :type multiReferenceAnnoTypes: List [[Autodesk.Revit.DB.ElementType, [Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]]
+    :param multi_reference_anno_types: list in format [[multi refType, [element ids of similar multi ref types, ...]]]
+    :type multi_reference_anno_types: List [[Autodesk.Revit.DB.ElementType, [Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]]
     :return: List of element ids representing dimension style
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''

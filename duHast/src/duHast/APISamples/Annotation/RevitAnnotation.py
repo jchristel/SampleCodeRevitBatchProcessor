@@ -69,18 +69,3 @@ def get_anno_symbol_arrow_head_ids(doc):
 
     used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
     return used_ids
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -131,8 +131,8 @@ def get_unplaced_groups(doc, group_category):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param groupCategory: A built in category defining the group category (model vs detail)
-    :type groupCategory: either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
+    :param group_category: A built in category defining the group category (model vs detail)
+    :type group_category: either BuiltInCategory.OST_IOSDetailGroups or BuiltInCategory.OST_IOSModelGroups
     
     :return: List of unplaced group types
     :rtype: list

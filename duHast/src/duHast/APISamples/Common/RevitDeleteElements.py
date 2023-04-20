@@ -36,7 +36,7 @@ def delete_by_element_ids(
     doc,
     ids,
     transaction_name,  # type: str
-    elementName,  # type: str
+    element_name,  # type: str
 ):
     """
     Deleting elements in list all at once.
@@ -44,10 +44,10 @@ def delete_by_element_ids(
     :type doc: Autodesk.Revit.DB.Document
     :param ids: List containing ids of all elements to be deleted.
     :type ids: list of Autodesk.Revit.DB.ElementId
-    :param transactionName: The transaction name used for the deletion.
-    :type transactionName: str
-    :param elementName: The element name added to deletion status message.
-    :type elementName: str
+    :param transaction_name: The transaction name used for the deletion.
+    :type transaction_name: str
+    :param element_name: The element name added to deletion status message.
+    :type element_name: str
     :return:
         Result class instance.
         - .result = True if successfully deleted all elements. Otherwise False.
@@ -61,10 +61,10 @@ def delete_by_element_ids(
         action_return_value = res.Result()
         try:
             doc.Delete(ids.ToList[rdb.ElementId]())
-            action_return_value.message = "Deleted {} {}".format(len(ids), elementName)
+            action_return_value.message = "Deleted {} {}".format(len(ids), element_name)
         except Exception as e:
             action_return_value.update_sep(
-                False, "Failed to delete {} with exception: {}".format(elementName,e)
+                False, "Failed to delete {} with exception: {}".format(element_name,e)
             )
         return action_return_value
 
@@ -77,7 +77,7 @@ def delete_by_element_ids_one_by_one(
     doc,
     ids,
     transaction_name,  # type: str
-    elementName,  # type: str
+    element_name,  # type: str
 ):
     """
     Deleting elements in list one at the time.
@@ -86,10 +86,10 @@ def delete_by_element_ids_one_by_one(
     :type doc: Autodesk.Revit.DB.Document
     :param ids: List containing ids of all elements to be deleted.
     :type ids: list of Autodesk.Revit.DB.ElementId
-    :param transactionName: The transaction name used for the deletion.
-    :type transactionName: str
-    :param elementName: The name of the element (?) Not used!!
-    :type elementName: str
+    :param transaction_name: The transaction name used for the deletion.
+    :type transaction_name: str
+    :param element_name: The name of the element (?) Not used!!
+    :type element_name: str
     :return:
         Result class instance.
         - .result = True if successfully deleted all elements. Otherwise False.

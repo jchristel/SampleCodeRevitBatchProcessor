@@ -34,7 +34,7 @@ from duHast.Utilities import Result as res, FilesIO as util
 
 def sync_file (
     doc,
-    compactCentralFile = False # type: bool
+    compact_central_file = False # type: bool
     ):
     # type: (...) -> res.Result
     '''
@@ -42,38 +42,38 @@ def sync_file (
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param compactCentralFile: option to compact the central file, defaults to False
-    :type compactCentralFile: bool, optional
+    :param compact_central_file: option to compact the central file, defaults to False
+    :type compact_central_file: bool, optional
     :return: 
         Result class instance.
         - .result = True if successfully synced file. Otherwise False.
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # set up sync settings
     ro = rdb.RelinquishOptions(True)
-    transActOptions = rdb.TransactWithCentralOptions()
+    transaction_options = rdb.TransactWithCentralOptions()
     sync = rdb.SynchronizeWithCentralOptions()
     sync.Comment = 'Synchronized by Revit Batch Processor'
-    sync.Compact = compactCentralFile
+    sync.Compact = compact_central_file
     sync.SetRelinquishOptions(ro)
     # Synch it
     try:
         # save local first ( this seems to prevent intermittent crash on sync(?))
         doc.Save()
-        doc.SynchronizeWithCentral(transActOptions, sync)
+        doc.SynchronizeWithCentral(transaction_options, sync)
         # relinquish all
-        rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transActOptions)
-        returnValue.message = 'Successfully synched file.'
+        rdb.WorksharingUtils.RelinquishOwnership(doc, ro, transaction_options)
+        return_value.message = 'Successfully synched file.'
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+    return return_value
 
 
 def saves_as_workshared_file(
     doc,
-    fullFileName  # type: str
+    full_file_name  # type: str
     ):
     # type: (...) -> res.Result
     '''
@@ -86,38 +86,38 @@ def saves_as_workshared_file(
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param fullFileName: The fully qualified file path of where to save the file.
-    :type fullFileName: string
+    :param full_file_name: The fully qualified file path of where to save the file.
+    :type full_file_name: string
     :return: 
         Result class instance.
         - .result = True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        workSharingSaveAsOption = rdb.WorksharingSaveAsOptions()
-        workSharingSaveAsOption.OpenWorksetsDefault = rdb.SimpleWorksetConfiguration.AskUserToSpecify
-        workSharingSaveAsOption.SaveAsCentral = True
-        saveOption = rdb.SaveAsOptions()
-        saveOption.OverwriteExistingFile = True
-        saveOption.SetWorksharingOptions(workSharingSaveAsOption)
-        saveOption.MaximumBackups = 5
-        saveOption.Compact = True
-        doc.SaveAs(fullFileName, saveOption)
-        returnValue.message = 'Successfully saved file: ' + str(fullFileName)
+        worksharing_save_as_option = rdb.WorksharingSaveAsOptions()
+        worksharing_save_as_option.OpenWorksetsDefault = rdb.SimpleWorksetConfiguration.AskUserToSpecify
+        worksharing_save_as_option.SaveAsCentral = True
+        save_option = rdb.SaveAsOptions()
+        save_option.OverwriteExistingFile = True
+        save_option.SetWorksharingOptions(worksharing_save_as_option)
+        save_option.MaximumBackups = 5
+        save_option.Compact = True
+        doc.SaveAs(full_file_name, save_option)
+        return_value.message = 'Successfully saved file: ' + str(full_file_name)
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+    return return_value
 
 
 def save_as_family(
     doc,
-    targetFolderPath, 
-    currentFullFileName, 
-    nameData, 
-    fileExtension = '.rfa',
-    compactFile = False 
+    target_directory_path, 
+    current_full_file_name, 
+    name_data, 
+    file_extension = '.rfa',
+    compact_file = False 
     ):
    
     '''
@@ -125,58 +125,58 @@ def save_as_family(
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param targetFolderPath: The directory path of where to save the file.
-    :type targetFolderPath: str
-    :param currentFullFileName: The current (old) name of the file.
-    :type currentFullFileName: str
-    :param nameData:  Old name and new name are Revit file names without file extension. Used to rename the family on save from old name to new name.
-    :type nameData: List of string arrays in format[[oldname, newName]]
-    :param fileExtension: The file extension used for the new file, defaults to '.rfa'
-    :type fileExtension: str, optional
-    :param compactFile: Flag whether family is to be compacted on save, defaults to False
-    :type compactFile: bool, optional
+    :param target_directory_path: The directory path of where to save the file.
+    :type target_directory_path: str
+    :param current_full_file_name: The current (old) name of the file.
+    :type current_full_file_name: str
+    :param name_data:  Old name and new name are Revit file names without file extension. Used to rename the family on save from old name to new name.
+    :type name_data: List of string arrays in format[[oldname, newName]]
+    :param file_extension: The file extension used for the new file, defaults to '.rfa'
+    :type file_extension: str, optional
+    :param compact_file: Flag whether family is to be compacted on save, defaults to False
+    :type compact_file: bool, optional
     :return: 
         Result class instance.
             - .result = True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
-    revitFileName = util.get_file_name_without_ext(currentFullFileName)
-    newFileName= ''
+    return_value = res.Result()
+    revit_file_name = util.get_file_name_without_ext(current_full_file_name)
+    new_file_name= ''
     match = False
     # find new file name in list past in
-    for oldName, newName in nameData:
-        if (revitFileName.startswith(oldName)):
+    for old_name, new_name in name_data:
+        if (revit_file_name.startswith(old_name)):
             match = True
-            returnValue.message = ('Found file name match for: {} new name: {}'.format(revitFileName ,newName))
+            return_value.message = ('Found file name match for: {} new name: {}'.format(revit_file_name ,new_name))
             # save file under new name
-            newFileName = targetFolderPath + '\\'+ newName + fileExtension
+            new_file_name = target_directory_path + '\\'+ new_name + file_extension
             break
     if(match == False):
         # save under same file name
-        newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
-        returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
+        new_file_name = target_directory_path + '\\'+ revit_file_name + file_extension
+        return_value.message = 'Found no file name match for: {}'.format(current_full_file_name)
     try:
         # setup save as option
         so = rdb.SaveAsOptions()
         so.OverwriteExistingFile = True
         so.MaximumBackups = 5
         so.SetWorksharingOptions(None)
-        so.Compact = compactFile
-        doc.SaveAs(newFileName, so)
-        returnValue.update_sep(True, 'Saved file: {}'.format(newFileName))
+        so.Compact = compact_file
+        doc.SaveAs(new_file_name, so)
+        return_value.update_sep(True, 'Saved file: {}'.format(new_file_name))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file to new location with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed to save revit file to new location with exception: {}'.format(e))
+    return return_value
 
 
 def save_as(
     doc,
-    targetFolderPath, 
-    currentFullFileName, 
-    nameData, 
-    fileExtension = '.rvt' 
+    target_directory_path, 
+    current_full_file_name, 
+    name_data, 
+    file_extension = '.rvt' 
     ):
     
     '''
@@ -184,49 +184,49 @@ def save_as(
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param targetFolderPath: The directory path of where to save the file.
-    :type targetFolderPath: str
-    :param currentFullFileName: The current (old) name of the file.
-    :type currentFullFileName: str
-    :param nameData: Old name and new name are revit file names without file extension. Used to rename the model on save from old name to new name.
-    :type nameData: List of string arrays in format[[oldname, newName]]
-    :param fileExtension: The file extension used for the new file, defaults to '.rvt'
-    :type fileExtension: str, optional
+    :param target_directory_path: The directory path of where to save the file.
+    :type target_directory_path: str
+    :param current_full_file_name: The current (old) name of the file.
+    :type current_full_file_name: str
+    :param name_data: Old name and new name are revit file names without file extension. Used to rename the model on save from old name to new name.
+    :type name_data: List of string arrays in format[[oldname, newName]]
+    :param file_extension: The file extension used for the new file, defaults to '.rvt'
+    :type file_extension: str, optional
     :return: 
         Result class instance.
         - .result = True if successfully saved file, otherwise False.
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # added str() around this expression to satisfy sphinx auto code documentation
     # it will throw an exception when concatenating the string in the return statement
-    revitFileName = str(util.get_file_name_without_ext(currentFullFileName))
-    newFileName= ''
+    revit_file_name = str(util.get_file_name_without_ext(current_full_file_name))
+    new_file_name= ''
     match = False
-    for oldName, newName in nameData:
-        if (revitFileName.startswith(oldName)):
+    for old_name, new_name in name_data:
+        if (revit_file_name.startswith(old_name)):
             match = True
-            returnValue.message = ('Found file name match for: {} new name: {}'.format(revitFileName, newName))
+            return_value.message = ('Found file name match for: {} new name: {}'.format(revit_file_name, new_name))
             # save file under new name
-            newFileName = targetFolderPath + '\\'+ newName + fileExtension
+            new_file_name = target_directory_path + '\\'+ new_name + file_extension
             break
     if(match == False):
         # save under same file name
-        newFileName = targetFolderPath + '\\'+ revitFileName + fileExtension
+        new_file_name = target_directory_path + '\\'+ revit_file_name + file_extension
         # added str.format around this expression to satisfy sphinx auto code documentation
-        returnValue.message = 'Found no file name match for: {}'.format(currentFullFileName)
+        return_value.message = 'Found no file name match for: {}'.format(current_full_file_name)
     try:
-        returnValue.status = saves_as_workshared_file(doc, newFileName).status
-        returnValue.append_message('Saved file: {}'.format(newFileName))
+        return_value.status = saves_as_workshared_file(doc, new_file_name).status
+        return_value.append_message('Saved file: {}'.format(new_file_name))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file to new location; {} with exception: '.format(newFileName, e))
-    return returnValue
+        return_value.update_sep(False, 'Failed to save revit file to new location; {} with exception: '.format(new_file_name, e))
+    return return_value
 
 
 def save_file(
     doc,
-    compactFile = False # type: bool
+    compact_file = False # type: bool
     ):
     # type: (...) -> res.Result
     '''
@@ -234,8 +234,8 @@ def save_file(
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param compactFile: True file will be compacted on save, defaults to False
-    :type compactFile: bool, optional
+    :param compact_file: True file will be compacted on save, defaults to False
+    :type compact_file: bool, optional
     :return: 
             Result class instance.
             - .result = True if file was saved successfully. Otherwise False.
@@ -246,29 +246,32 @@ def save_file(
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        so = rdb.SaveOptions()
-        so.Compact = compactFile
-        doc.Save(so)
-        returnValue.update_sep(True, 'Saved revit file!')
+        save_options = rdb.SaveOptions()
+        save_options.Compact = compact_file
+        doc.Save(save_options)
+        return_value.update_sep(True, 'Saved revit file!')
     except Exception as e:
-        returnValue.update_sep(False, 'Failed to save revit file with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed to save revit file with exception: {}'.format(e))
+    return return_value
 
 
 def enable_worksharing(
     doc, #
-    worksetNameGridLevel = 'Shared Levels and Grids', # type: str
-    worksetName = 'Workset1' # type: str
+    workset_name_grid_level = 'Shared Levels and Grids', # type: str
+    workset_name = 'Workset1' # type: str
     ):
     # type: (...) -> res.Result
     '''
     Enables worksharing in a non workshared revit project file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param worksetNameGridLevel: _description_, defaults to 'Shared Levels and Grids'
-    :type worksetNameGridLevel: str, optional
+    :param workset_name_grid_level: _description_, defaults to 'Shared Levels and Grids'
+    :type workset_name_grid_level: str, optional
+    :param workset_name: _description_, defaults to 'Workset1'
+    :type workset_name: str, optional
+
     :return: 
             Result class instance.
             - .result = True if worksharing was enabled successfully. Otherwise False.
@@ -279,10 +282,10 @@ def enable_worksharing(
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
-        doc.EnableWorksharing('Shared Levels and Grids','Workset1')
-        returnValue.message = 'Successfully enabled worksharing.'
+        doc.EnableWorksharing(workset_name_grid_level,workset_name)
+        return_value.message = 'Successfully enabled worksharing.'
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: {}'.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+    return return_value

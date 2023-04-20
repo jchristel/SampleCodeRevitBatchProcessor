@@ -77,16 +77,16 @@ def get_design_sets(doc):
             design_set_names.append(designSetName)
     return design_sets
 
-def is_design_option_primary(doc, designSetName, design_option_name):
+def is_design_option_primary(doc, design_set_name, design_option_name):
     '''
     Checks whether a design option is the primary option within a design set.
     
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param designSetName: The name of the design set the option belongs to,
-    :type designSetName: str
-    :param designOptionName: The name of the design option to be checked,
-    :type designOptionName: str
+    :param design_set_name: The name of the design set the option belongs to,
+    :type design_set_name: str
+    :param design_option_name: The name of the design option to be checked,
+    :type design_option_name: str
     :return: True if this option is primary otherwise False
     :rtype: bool
     '''
@@ -104,7 +104,7 @@ def is_design_option_primary(doc, designSetName, design_option_name):
         design_set = doc.GetElement(do.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
         design_set_name = rdb.Element.Name.GetValue(design_set)
         # check for match on both set and option
-        if(design_set_name == designSetName and design_o_name == design_option_name):
+        if(design_set_name == design_set_name and design_o_name == design_option_name):
             # get isPrimary property on design option
             is_primary = do.IsPrimary
             break

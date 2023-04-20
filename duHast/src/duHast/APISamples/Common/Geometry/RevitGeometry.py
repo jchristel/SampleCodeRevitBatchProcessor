@@ -354,50 +354,50 @@ def is_point_within_polygon(polygon, point):
 
 # --------------------------------------- END --------------------------------------------------
 
-def get_signed_polygon_area( UVpoints ):
+def get_signed_polygon_area( uv_points ):
     '''
     Calculates the area of a signed UV polygon.
 
     https://thebuildingcoder.typepad.com/blog/2008/12/2d-polygon-areas-and-outer-loop.html
 
-    :param UVpoints: list of points defining the polygon.
-    :type UVpoints: list Autodesk.Revit.DB.UV
+    :param uv_points: list of points defining the polygon.
+    :type uv_points: list Autodesk.Revit.DB.UV
 
     :return: The area of the polygon.
     :rtype: double
     '''
 
-    n = len(UVpoints)
-    sum = UVpoints[0].U * ( UVpoints[1].V - UVpoints[n - 1].V )
+    n = len(uv_points)
+    sum = uv_points[0].U * ( uv_points[1].V - uv_points[n - 1].V )
     for i in range(1, n - 1):
-        sum += UVpoints[i].U * ( UVpoints[i + 1].V - UVpoints[i - 1].V )
-    sum += UVpoints[n - 1].U * ( UVpoints[0].V - UVpoints[n - 2].V );
+        sum += uv_points[i].U * ( uv_points[i + 1].V - uv_points[i - 1].V )
+    sum += uv_points[n - 1].U * ( uv_points[0].V - uv_points[n - 2].V );
     return 0.5 * sum
 
-def convert_edge_arrays_into_list_of_points(edgeArrays):
+def convert_edge_arrays_into_list_of_points(edge_arrays):
     '''
     Converts an edge array into a list of list of revit XYZ points.
 
-    :param edgeArrays: A revit edge array.
-    :type edgeArrays: Autodesk.Revit.DB.EdgeArrayArray ( no not a spelling mistake :) )
+    :param edge_arrays: A revit edge array.
+    :type edge_arrays: Autodesk.Revit.DB.EdgeArrayArray ( no not a spelling mistake :) )
 
     :return: A List of list of revit XYZ points.
     :rtype: list of list Autodesk.Revit.DB.XYZ
     '''
 
     polygons = []
-    for loop in edgeArrays:
+    for loop in edge_arrays:
         vertices = []
         q = None
-        firstPoint = True
+        (first_point) = True
         for edge in loop:
             points = edge.Tessellate()
-            if(firstPoint):
+            if(first_point):
                 q = points[0]
             n = len(points)
             for i in range (n-1):
                 vertices.append( points[ i ] )
-            firstPoint = False
+            (first_point) = False
         # close the loop by ending with first point...not required(?)
         # vertices.append(q)
         polygons.append(vertices)
@@ -432,24 +432,24 @@ def check_duplicate_edge(edges, edge):
     :rtype: bool
     '''
 
-    flagOverAll = False
-    compPoints = get_edge_points(edge)
+    flag_over_all = False
+    comp_points = get_edge_points(edge)
     if(len(edges) > 0):
         for e in edges:
-            listPoints = get_edge_points(e)
-            if (len(compPoints) == len(listPoints)):
-                edgeSameFlag = True
-                for p1 in compPoints:
-                    if(check_duplicate_point(listPoints, p1) == False):
-                        edgeSameFlag = False
-                if(edgeSameFlag):
-                    flagOverAll = True
+            list_points = get_edge_points(e)
+            if (len(comp_points) == len(list_points)):
+                edge_same_flag = True
+                for p1 in comp_points:
+                    if(check_duplicate_point(list_points, p1) == False):
+                        edge_same_flag = False
+                if(edge_same_flag):
+                    flag_over_all = True
                     break
             else:
               pass
     else:
         pass # flag is already False
-    return flagOverAll
+    return flag_over_all
         
 def check_solid_is_zero_height(solid):
     '''
@@ -475,14 +475,14 @@ def check_edges_are_zero_height(edges):
     :rtype: bool
     '''
 
-    lowestZ = 0.0
+    lowest_z = 0.0
     counter = 0
     for edge in edges:
         for p in edge.Tessellate():
             if (counter == 0):
-                lowestZ = p.Z
+                lowest_z = p.Z
             else:
-                if(is_close(p.Z, lowestZ) == False):
+                if(is_close(p.Z, lowest_z) == False):
                     # found multiple z
                     return False
             counter = counter + 1
@@ -512,18 +512,18 @@ def get_lowest_z_from_edges_point_collection(edges):
     :rtype: double
     '''
 
-    lowestZ = 0.0
+    lowest_z = 0.0
     counter = 0
     for edge in edges:
         for p in edge.Tessellate():
             # make sure lowest z is initialized with the first point z values
             if (counter == 0):
-                lowestZ = p.Z
+                lowest_z = p.Z
             else:
-                if(is_close(p.Z, lowestZ) == False and p.Z < lowestZ):
-                    lowestZ = p.Z
+                if(is_close(p.Z, lowest_z) == False and p.Z < lowest_z):
+                    lowest_z = p.Z
             counter = counter + 1 
-    return lowestZ
+    return lowest_z
 
 def edges_are_connected(edge1, edge2):
     '''
@@ -576,52 +576,52 @@ def pair_faces_by_area(faces):
     :rtype: list of list Autodesk.Revit.DB.Face
     '''
 
-    returnValue = []
+    return_value = []
     # duplicate faces list since it will be manipulated
-    copyFaces = list(faces)
+    copy_faces = list(faces)
     flag = True
     while flag:
         # loop over faces and try to find some with the same area measured
-        sameArea = [copyFaces[0]]
-        f = copyFaces[0]
-        for i in range (1, len(copyFaces)):
-            if (is_close(f.Area, copyFaces[i].Area)):
-                sameArea.append(copyFaces[i])
-        returnValue.append(sameArea)
+        same_area = [copy_faces[0]]
+        f = copy_faces[0]
+        for i in range (1, len(copy_faces)):
+            if (is_close(f.Area, copy_faces[i].Area)):
+                same_area.append(copy_faces[i])
+        return_value.append(same_area)
         # removes faces accounted for
-        for a in sameArea:
-            copyFaces.remove(a)
-        if(len(copyFaces) < 2):
+        for a in same_area:
+            copy_faces.remove(a)
+        if(len(copy_faces) < 2):
             flag = False
-    return returnValue
+    return return_value
                     
-def get_faces_with_lowest_z_from_pairs(facePairs):
+def get_faces_with_lowest_z_from_pairs(face_pairs):
     '''
     Gets the face with the lowest Z value from list of faces.
 
-    :param facePairs: A list of lists of face pairs, where a nested list contains faces with the same measured area.
-    :type facePairs: list of list Autodesk.Revit.DB.Face
+    :param face_pairs: A list of lists of face pairs, where a nested list contains faces with the same measured area.
+    :type face_pairs: list of list Autodesk.Revit.DB.Face
 
     :return: A list of faces.
     :rtype: list Autodesk.Revit.DB.Face
     '''
 
     faces = []
-    for faceP in facePairs:
+    for faceP in face_pairs:
         lowestZ = 0.0
         counter = 0
-        currentFace = None
+        current_face = None
         for face in faceP:
-            currentZ = get_lowest_z_from_edges_point_collection(face.EdgeLoops[0])
+            current_z = get_lowest_z_from_edges_point_collection(face.EdgeLoops[0])
             if(counter == 0):
-                currentFace = face
-                lowestZ = currentZ
+                current_face = face
+                lowestZ = current_z
                 counter = counter + 1
             else:
-                if(currentZ < lowestZ):
-                    currentFace = face
-                    lowestZ = currentZ
-        faces.append(currentFace)
+                if(current_z < lowestZ):
+                    current_face = face
+                    lowestZ = current_z
+        faces.append(current_face)
     return faces
 
 def get_unique_horizontal_faces(faces):
@@ -640,33 +640,33 @@ def get_unique_horizontal_faces(faces):
     :rtype: list Autodesk.Revit.DB.Face
     '''
 
-    facesHorizontal = []
+    faces_horizontal = []
     for f in faces:
         # non planar faces are ignored for the moment...
         if(type(f) is rdb.PlanarFace):
             if (f.FaceNormal.Z != 0.0):
-                facesHorizontal.append(f)
+                faces_horizontal.append(f)
     
-    facesFiltered = []
-    if(len(facesHorizontal) > 1):
+    faces_filtered = []
+    if(len(faces_horizontal) > 1):
         # pair faces by area
-        pairedFaces = pair_faces_by_area(facesHorizontal)
+        paired_faces = pair_faces_by_area(faces_horizontal)
         # get faces with lowest Z value for each pair
-        facesFiltered =  get_faces_with_lowest_z_from_pairs(pairedFaces)
-    return facesFiltered
+        faces_filtered =  get_faces_with_lowest_z_from_pairs(paired_faces)
+    return faces_filtered
 
-def is_loop_within_other_loop_but_not_reference_loops(exteriorLoop, otherLoop, holeLoops):
+def is_loop_within_other_loop_but_not_reference_loops(exterior_loop, other_loop, hole_loops):
     '''
     Checks whether any of the other loops is within the exterior loop and if so\
         if it is not also within one of the holeLoops ...that would be an island
     
-    :param exteriorLoop: A polygon loop describing the external boundary of a face.
-    :type exteriorLoop: list of Autodesk.Revit.DB.UV
-    :param otherLoop: A polygon loop which is to be checked as to whether it is within the exterior loop and the any hole loops.
-    :type otherLoop: list of Autodesk.Revit.DB.UV
-    :param holeLoops: A list of named tuples containing .loop property which is a list of UV points forming a polygon which have been identified\
+    :param exterior_loop: A polygon loop describing the external boundary of a face.
+    :type exterior_loop: list of Autodesk.Revit.DB.UV
+    :param other_loop: A polygon loop which is to be checked as to whether it is within the exterior loop and the any hole loops.
+    :type other_loop: list of Autodesk.Revit.DB.UV
+    :param hole_loops: A list of named tuples containing .loop property which is a list of UV points forming a polygon which have been identified\
          as creating a hole in the exteriorLoop.
-    :type holeLoops: namedtuple('uvLoop', 'loop area id threeDPoly')\
+    :type hole_loops: namedtuple('uvLoop', 'loop area id threeDPoly')\
         .Loop is a list of UV points defining a polygon loop
         .area is a double describing the polygon area
         .id is an integer
@@ -676,21 +676,21 @@ def is_loop_within_other_loop_but_not_reference_loops(exteriorLoop, otherLoop, h
     :rtype: bool
     '''
 
-    returnValue = False
+    return_value = False
     # get any point on the loop to check...if it is within the other loop then the entire loop is within the other loop
     # since revit does not allow for overlapping sketches
-    point = otherLoop[0]
+    point = other_loop[0]
     # check whether point is within the other polygon loop
-    if (is_point_within_polygon(exteriorLoop, point)):
-        returnValue = True
+    if (is_point_within_polygon(exterior_loop, point)):
+        return_value = True
         # check whether this point is within the polygon loops identified as holes
         # if so it is actually an island and will be accounted for separately
-        if(len(holeLoops) > 0):
-            for hLoop in holeLoops:
-                if (is_point_within_polygon(hLoop.loop, point)):
-                    returnValue = False
+        if(len(hole_loops) > 0):
+            for hole_loop in hole_loops:
+                if (is_point_within_polygon(hole_loop.loop, point)):
+                    return_value = False
                     break
-    return returnValue
+    return return_value
 
 def build_loops_dictionary(loops):
     '''
@@ -711,40 +711,40 @@ def build_loops_dictionary(loops):
     '''
 
     # duplicate list since I'am about to manipulate it...
-    copyLoops = list(loops)
+    copy_loops = list(loops)
     flag = False
-    returnValue = {}
+    return_value = {}
     counter = 0
     # check if there is more then one loop  to start with
-    if(len(copyLoops) > 1):
-        loopFlag = True
-        while loopFlag:
+    if(len(copy_loops) > 1):
+        loop_flag = True
+        while loop_flag:
             # add the biggest loop as exterior to dictionary (first one in list)
-            key = copyLoops[0].id
-            returnValue[key] = []
+            key = copy_loops[0].id
+            return_value[key] = []
             # assign loop to be checked for holes
-            refLoop = copyLoops[0]
+            reference_loop = copy_loops[0]
             # remove the first exterior loop from list of loops
-            copyLoops.pop(0)
+            copy_loops.pop(0)
             # loop over remaining loops and work out which ones are holes ... if any
-            for loop in copyLoops:
+            for loop in copy_loops:
                 # build list of hole loops already known belonging to this exterior loop
-                holeLoops = []
-                for geoLoop in returnValue[key]:
-                    holeLoops.append(geoLoop)
+                hole_loops = []
+                for geo_loop in return_value[key]:
+                    hole_loops.append(geo_loop)
                 # check whether this is another hole loop
-                flag = is_loop_within_other_loop_but_not_reference_loops(refLoop.loop, loop.loop, holeLoops)
+                flag = is_loop_within_other_loop_but_not_reference_loops(reference_loop.loop, loop.loop, hole_loops)
                 if(flag):
-                    returnValue[key].append(loop)
+                    return_value[key].append(loop)
             # remove loops identified as holes from overall list as to avoid double counting
-            for hole in returnValue[key]:
+            for hole in return_value[key]:
                 counter = counter + 1
-                copyLoops.remove(hole)
+                copy_loops.remove(hole)
             # check whether all loops are accounted for
-            if(len(copyLoops) == 0):
-                loopFlag = False
-    elif(len(copyLoops) == 1):
-        key = copyLoops[0].id
+            if(len(copy_loops) == 0):
+                loop_flag = False
+    elif(len(copy_loops) == 1):
+        key = copy_loops[0].id
         # only one exterior loop exists, no interior loops
-        returnValue[key]=[]
-    return returnValue
+        return_value[key]=[]
+    return return_value

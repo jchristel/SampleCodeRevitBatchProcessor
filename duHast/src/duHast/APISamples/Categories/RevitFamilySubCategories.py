@@ -39,11 +39,13 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 def create_new_sub_category_to_family_category(doc, new_sub_category_name):
     '''
     Creates a new subcategory to the family category and returns it.
+    
     Note: if a subcategory with the name provided already exist it will be returned instead of trying to create another one with the same name.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newSubCategoryName: The new subcategory name
-    :type newSubCategoryName: str
+    :param new_sub_category_name: The new subcategory name
+    :type new_sub_category_name: str
     :return: The new subcategory. Exception "The name 'xys' is already in use" if subcategory with the same name is already in file.
     :rtype: A category. (or str if exception occurred)
     '''
@@ -88,14 +90,15 @@ def create_new_sub_category_to_family_category(doc, new_sub_category_name):
 def create_new_category_from_saved_properties(doc, new_cat_name, saved_cat_props, ignore_missing_cut_style = False):
     '''
     Creates a new category and applies properties stored.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newCatName: The new sub category name.
-    :type newCatName: str
-    :param savedCatProps: Dictionary containing subcategory properties.
-    :type savedCatProps: list of dictionaries in format as per GetCategoryProperties(cat) method.
-    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
-    :type ignoreMissingCutStyle: bool
+    :param new_cat_name: The new sub category name.
+    :type new_cat_name: str
+    :param saved_cat_props: Dictionary containing subcategory properties.
+    :type saved_cat_props: list of dictionaries in format as per GetCategoryProperties(cat) method.
+    :param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignore_missing_cut_style: bool
     :return: 
         Result class instance.
         - result.status. True if category was created or already existed in file, otherwise False.
@@ -126,12 +129,13 @@ def create_new_category_from_saved_properties(doc, new_cat_name, saved_cat_props
 def create_new_category_and_transfer_properties(doc, new_cat_name, existing_cat_name):
     '''
     Creates a new subcategory and transfer properties from existing subcategory.
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newCatName: The new sub category name.
-    :type newCatName: str
-    :param existingCatName: The existing subcategory name
-    :type existingCatName: str
+    :param new_cat_name: The new sub category name.
+    :type new_cat_name: str
+    :param existing_cat_name: The existing subcategory name
+    :type existing_cat_name: str
     :return: 
         Result class instance.
         - result.status. True if category was created or already existed in file, otherwise False.
@@ -173,12 +177,13 @@ def rename_sub_category(doc, old_sub_cat_name, new_sub_cat_name):
     - If the new subcategory already exists in the file:
         - moves all elements belonging to the old subcategory to the new subcategory
         - deletes the old subcategory
+
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param oldSubCatName: The subcategory name to be re-named
-    :type oldSubCatName: str
-    :param newSubCatName: The new subcategory name.
-    :type newSubCatName: str
+    :param old_sub_cat_name: The subcategory name to be re-named
+    :type old_sub_cat_name: str
+    :param new_sub_cat_name: The new subcategory name.
+    :type new_sub_cat_name: str
     :return: 
         Result class instance.
         - result.status. True if subcategory was renamed successfully , otherwise False.

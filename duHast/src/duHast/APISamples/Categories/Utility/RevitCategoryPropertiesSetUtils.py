@@ -42,8 +42,8 @@ def set_category_material(doc, cat, material_id):
     :type doc: Autodesk.Revit.DB.Document
     :param cat: A category.
     :type cat: Autodesk.Revit.DB.Category
-    :param materialId: The new material element id.
-    :type materialId: Autodesk.Revit.DB.ElementId
+    :param material_id: The new material element id.
+    :type material_id: Autodesk.Revit.DB.ElementId
     :return: True if material property was updated successfully, otherwise False.
     :rtype: bool
     '''
@@ -76,10 +76,10 @@ def set_category_line_pattern(doc, cat, line_pattern_id, ignore_missing_cut_styl
     :type doc: Autodesk.Revit.DB.Document
     :param cat: A category.
     :type cat: Autodesk.Revit.DB.Category
-    :param materialId: The new material element id.
-    :type materialId: Autodesk.Revit.DB.ElementId
-    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
-    :type ignoreMissingCutStyle: bool
+    :param line_pattern_id: The newline pattern element id.
+    :type line_pattern_id: Autodesk.Revit.DB.ElementId
+    :param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignore_missing_cut_style: bool
     :return: True if line pattern property was updated successfully, otherwise False.
     :rtype: bool
     '''
@@ -117,12 +117,12 @@ def set_category_line_weights(doc, cat, line_thick_ness_cut, line_thickness_proj
     :type doc: Autodesk.Revit.DB.Document
     :param cat: A category.
     :type cat: Autodesk.Revit.DB.Category
-    :param lineThickNessCut: The cut line weight.
-    :type lineThickNessCut: int
-    :param lineThicknessProjection: The projection line weight.
-    :type lineThicknessProjection: int
-    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
-    :type ignoreMissingCutStyle: bool
+    :param line_thick_ness_cut: The cut line weight.
+    :type line_thick_ness_cut: int
+    :param line_thickness_projection: The projection line weight.
+    :type line_thickness_projection: int
+    :param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignore_missing_cut_style: bool
     :return: True if line weight property was updated successfully, otherwise False.
     :rtype: bool
     '''
@@ -198,8 +198,8 @@ def set_category_properties(doc, cat, properties, ignore_missing_cut_style):
     :type cat: Autodesk.Revit.DB.Category
     :param properties: List of property values to be applied to category.
     :type properties: list of dictionaries in format as per GetCategoryProperties(cat) method.
-    :param ignoreMissingCutStyle: If true will not flag an exception if applying styles fails on missing cut style.
-    :type ignoreMissingCutStyle: bool
+    :param ignore_missing_cut_style: If true will not flag an exception if applying styles fails on missing cut style.
+    :type ignore_missing_cut_style: bool
     :return: True if all properties where updated successfully, otherwise False.
     :rtype: bool
     '''

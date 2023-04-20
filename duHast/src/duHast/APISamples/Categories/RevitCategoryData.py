@@ -50,35 +50,16 @@ class CategoryData(IFamData.IFamilyData):
         '''
         Class constructor
 
-        :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
+        :param root_path: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
-        :type rootPath: str
-        :param dataType: Human readable data type descriptor
-        :type dataType: str
+        :type root_path: str
+        :param data_type: Human readable data type descriptor
+        :type data_type: str
         '''
 
         # store data type  in base class
         super(CategoryData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
-        # super(CategoryData, self).__init__(rootPath, dataType)
 
-        '''
-        self.data = []
-        
-        if(dataType != None):
-            self.dataType = dataType
-        else:
-            self.dataType = 'not declared'
-        
-        if(rootPath != None):
-            self.rootPath = rootPath
-        else:
-            self.rootPath = '-'
-        
-        if(rootCategoryPath != None):
-            self.rootCategoryPath = rootCategoryPath
-        else:
-            self.rootCategoryPath = '-'
-        '''
 
     def add_data(self,root, root_category_path, fam_name, fam_path, use_counter, used_by, fam_cat_name, sub_cat_name, sub_cat_id, cat_gra_style_three_d,
         cat_gra_style_cut, cat_gra_style_pro, prop_mat_name, prop_mat_id, prop_line_weight_cut_name, prop_line_weight_projection_name, prop_line_col_red, prop_line_col_green, prop_line_col_blue):
@@ -116,22 +97,24 @@ class CategoryData(IFamData.IFamilyData):
         :param root: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type root: str
-        :param famName: The family name
-        :type famName: str
-        :param famPath: The family saved file path
-        :type famPath: str
-        :param useCounter: Counter of how many objects in the family are of this category
-        :type useCounter: int
-        :param usedBy: List of element ids of elements of this category.
-        :type usedBy: [Autodesk.Revit.DB.ElementId]
-        :param famCatName: The families category.
-        :type famCatName: str
-        :param subCatName: The subcategory name.
-        :type subCatName: str
-        :param subCatId: The subcategory id.
-        :type subCatId: Autodesk.Revit.DB.ElementId
-        :param categoryGraphicProperties: List of dictionaries describing the graphic properties of this category.
-        :type categoryGraphicProperties: [dict]
+        :param root_category_path: The path of the nested family in a tree of categories. This includes the actual family category as the last node.
+        :type root_category_path: str
+        :param fam_name: The family name
+        :type fam_name: str
+        :param fam_path: The family saved file path
+        :type fam_path: str
+        :param use_counter: Counter of how many objects in the family are of this category
+        :type use_counter: int
+        :param used_by: List of element ids of elements of this category.
+        :type used_by: [Autodesk.Revit.DB.ElementId]
+        :param fam_cat_name: The families category.
+        :type fam_cat_name: str
+        :param sub_cat_name: The subcategory name.
+        :type sub_cat_name: str
+        :param sub_cat_id: The subcategory id.
+        :type sub_cat_id: Autodesk.Revit.DB.ElementId
+        :param category_graphic_properties: List of dictionaries describing the graphic properties of this category.
+        :type category_graphic_properties: [dict]
         
         :return: A flatt dictionary describing key values and properties of a category.
         :rtype: dict
@@ -160,10 +143,10 @@ class CategoryData(IFamData.IFamilyData):
         '''
         Extracts for each category past in, its properties and usage and adds that data to class property .data
 
-        :param mainSubCats: List of sub categories to be processed.
-        :type mainSubCats: [Autodesk.Revit.DB.Category]
-        :param mainCatName: The parent category name.
-        :type mainCatName: str
+        :param main_sub_cats: List of sub categories to be processed.
+        :type main_sub_cats: [Autodesk.Revit.DB.Category]
+        :param main_cat_name: The parent category name.
+        :type main_cat_name: str
         :param doc: Current family document
         :type doc: Autodesk.Revit.DB.Document
         '''
@@ -203,10 +186,10 @@ class CategoryData(IFamData.IFamilyData):
         '''
         Extracts for each category past in, its properties and usage and adds that data to class property .data
 
-        :param mainSubCats: List of sub categories to be processed.
-        :type mainSubCats: [Autodesk.Revit.DB.Category]
-        :param mainCatName: The parent category name.
-        :type mainCatName: str
+        :param  main_sub_cats: List of sub categories to be processed.
+        :type  main_sub_cats: [Autodesk.Revit.DB.Category]
+        :param main_cat_name: The parent category name.
+        :type main_cat_name: str
         :param doc: Current family document
         :type doc: Autodesk.Revit.DB.Document
         '''

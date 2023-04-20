@@ -53,8 +53,8 @@ def get_workset_id_by_name(doc, workset_name):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param worksetName: The name of the workset of which to retrieve the Element Id
-    :type worksetName: str
+    :param workset_name: The name of the workset of which to retrieve the Element Id
+    :type workset_name: str
     
     :return: The workset element id, otherwise invalid Id (-1) if no such workset exists
     :rtype: Autodesk.Revit.DB.ElementId
@@ -73,8 +73,8 @@ def get_workset_name_by_id(doc, id_integer):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param idInteger: The element id as integer value.
-    :type idInteger: int
+    :param id_integer: The element id as integer value.
+    :type id_integer: int
     
     :return: The name of the workset identified by its Id, otherwise 'unknown'
     :rtype: str
@@ -164,12 +164,12 @@ def modify_element_workset(doc, default_workset_name, collector, element_type_na
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param defaultWorksetName: The name of the workset the elements are to be moved to.
-    :type defaultWorksetName: str
+    :param default_workset_name: The name of the workset the elements are to be moved to.
+    :type default_workset_name: str
     :param collector: The element collector containing the elements.
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
-    :param elementTypeName: A description used in the status message returned.
-    :type elementTypeName: str
+    :param element_type_name: A description used in the status message returned.
+    :type element_type_name: str
     
     :return: 
         Result class instance.
@@ -219,8 +219,8 @@ def get_action_change_element_workset(el, default_id):
 
     :param el: The element
     :type el: Autodesk.Revit.DB.Element
-    :param defaultId: The workset element Id
-    :type defaultId: Autodesk.Revit.DB.ElementId
+    :param default_id: The workset element Id
+    :type default_id: Autodesk.Revit.DB.ElementId
     '''
 
     def action():
@@ -242,8 +242,8 @@ def is_element_on_workset_by_id(doc, el, workset_id):
     :type doc: Autodesk.Revit.DB.Document
     :param el: The element.
     :type el: Autodesk.Revit.DB.Element
-    :param worksetId: The workset element Id
-    :type worksetId: Autodesk.Revit.DB.ElementId
+    :param workset_id: The workset element Id
+    :type workset_id: Autodesk.Revit.DB.ElementId
     
     :return: True if element is on given workset, otherwise False
     :rtype: bool
@@ -267,8 +267,8 @@ def is_element_on_workset_by_name(el, workset_name):
 
     :param el: The element
     :type el: Autodesk.Revit.DB.Element
-    :param worksetName: The name of the workset
-    :type worksetName: str
+    :param workset_name: The name of the workset
+    :type workset_name: str
 
     :return: True if element is on given workset, otherwise False
     :rtype: bool
@@ -311,10 +311,10 @@ def update_workset_default_visibility_from_report(doc, report_path, revit_file_p
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param reportPath: The fully qualified file path to tab separated report text file containing workset data.
-    :type reportPath: str
-    :param revitFilePath: The fully qualified file path of the Revit file. Will be used to identify the file in the report data.
-    :type revitFilePath: str
+    :param report_path: The fully qualified file path to tab separated report text file containing workset data.
+    :type report_path: str
+    :param revit_file_path: The fully qualified file path of the Revit file. Will be used to identify the file in the report data.
+    :type revit_file_path: str
 
     :return: 
         Result class instance.

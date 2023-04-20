@@ -272,7 +272,8 @@ def get_parameter_value_with_over_load (para, parameter_value_getters):
 
     :param para: The Parameter.
     :type para: Autodesk.Revit.DB.Parameter
-
+    :param parameter_value_getters: Dictionary containing the functions returning the parameter value depending on parameter storage type
+    :type parameter_value_getters: {Autodesk.Revit.DB.StorageType: func()}
     :return: The parameter value or if empty: None.
     :rtype: Depends on value getters functions
     '''
@@ -445,6 +446,8 @@ def get_all_parameters_and_values_wit_custom_getters(element, parameter_value_ge
 
     :param element: The element
     :type element: var
+    :param parameter_value_getters: Dictionary containing the functions returning the parameter value depending on parameter storage type
+    :type parameter_value_getters: {Autodesk.Revit.DB.StorageType: func()}
 
     :return: Dictionary where key is the parameter name, and the value is the parameter value.
     :rtype: {str:var}
@@ -456,17 +459,17 @@ def get_all_parameters_and_values_wit_custom_getters(element, parameter_value_ge
         return_value[p.Definition.Name] = p_value
     return return_value
 
-def get_built_in_parameter_value(element, builtInParameterDef, parameterValueGetter = get_parameter_value_utf8_string):
+def get_built_in_parameter_value(element, built_in_parameter_def, parameter_value_getter = get_parameter_value_utf8_string):
     '''
     Returns the built-in parameter value. Return value type depends on past in value getter function. Default is UTF-8 encoded string.
 
     :param element: Element to which the built-in parameter belongs.
     :type element: Autodesk.Revit.DB.Element 
-    :param builtInParameterDef: The parameters built-in definition of which the value is to be returned.
-    :type builtInParameterDef: Autodesk.Revit.DB.Definition 
-    :param parameterValueGetter:
+    :param built_in_parameter_def: The parameters built-in definition of which the value is to be returned.
+    :type built_in_parameter_def: Autodesk.Revit.DB.Definition 
+    :param parameter_value_getter:
         The function which takes the parameter as an argument and returns it's value.
-    :type parameterValueGetter: function
+    :type parameter_value_getter: function
     :raise: As per value getter method.
 
     :return:
@@ -479,15 +482,15 @@ def get_built_in_parameter_value(element, builtInParameterDef, parameterValueGet
     parameter_value = None
     paras = element.GetOrderedParameters()
     for para in paras:
-        if(para.Definition.BuiltInParameter == builtInParameterDef):
-            parameter_value = parameterValueGetter(para)
+        if(para.Definition.BuiltInParameter == built_in_parameter_def):
+            parameter_value = parameter_value_getter(para)
             break
     return parameter_value
 
 def get_parameter_value_by_name(
     element, 
-    parameterName, # type: str
-    parameterValueGetter = get_parameter_value_utf8_string
+    parameter_name, # type: str
+    parameter_value_getter = get_parameter_value_utf8_string
     ):
     '''
     Returns the parameter value by parameter name.
@@ -496,11 +499,11 @@ def get_parameter_value_by_name(
 
     :param element: Element to which the built-in parameter belongs.
     :type element: Autodesk.Revit.DB.Element
-    :param parameterName: The parameters name of which the value is to be returned.
-    :type parameterName: str
-    :param parameterValueGetter:
+    :param parameter_name: The parameters name of which the value is to be returned.
+    :type parameter_name: str
+    :param parameter_value_getter:
         The function which takes the parameter as an argument and returns it's value.
-    :type parameterValueGetter: function
+    :type parameter_value_getter: function
     :raise: As per value getter method.
 
     :return:
@@ -513,7 +516,7 @@ def get_parameter_value_by_name(
     parameter_value = None
     paras = element.GetOrderedParameters()
     for para in paras:
-        if(para.Definition.Name == parameterName):
-            parameter_value = parameterValueGetter(para)
+        if(para.Definition.Name == parameter_name):
+            parameter_value = parameter_value_getter(para)
             break
     return parameter_value

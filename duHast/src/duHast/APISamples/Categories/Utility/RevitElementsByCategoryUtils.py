@@ -44,8 +44,8 @@ def sort_elements_by_category(elements, element_dic):
     Returns a dictionary of element ids where key is the category they belong to.
     :param elements:  List of revit elements.
     :type elements: [Autodesk.Revit.DB.Element]
-    :param elementDic:  Dictionary where key is subcategory and values are element ids.
-    :type elementDic: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
+    :param element_dic:  Dictionary where key is subcategory and values are element ids.
+    :type element_dic: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
     :return: Dictionary where key is subcategory id and values are element ids.
     :rtype: {Autodesk.Revit.DB.ElementId: [Autodesk.Revit.DB.ElementId]}
     '''
@@ -154,10 +154,10 @@ def move_elements_to_category(doc, elements, to_category_name, destination_cat_i
     :type doc: Autodesk.Revit.DB.Document
     :param elements: Dictionary of elements, key are graphic style names.
     :type elements: {Autodesk.Revit.DB.Category: [Autodesk.Revit.DB.ElementId]}
-    :param toCategoryName: The name of the subcategory elements are to be moved to.
-    :type toCategoryName: str
-    :param destinationCatIds: Dictionary of ids of graphic style, key are graphic style names
-    :type destinationCatIds: dictionary {str: Autodesk.Revit.DB.ElementId}
+    :param to_category_name: The name of the subcategory elements are to be moved to.
+    :type to_category_name: str
+    :param destination_cat_ids: Dictionary of ids of graphic style, key are graphic style names
+    :type destination_cat_ids: dictionary {str: Autodesk.Revit.DB.ElementId}
     :return: 
         Result class instance.
         - result.status. True if all elements where moved to destination subcategories, otherwise False.
@@ -203,10 +203,10 @@ def move_elements_from_sub_category_to_sub_category(doc, from_category_name, to_
     Moves elements from one subcategory to another one identified by their names.
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param fromCategoryName: The source subcategory name. 
-    :type fromCategoryName: str
-    :param toCategoryName: The destination subcategory name.
-    :type toCategoryName: str
+    :param from_category_name: The source subcategory name. 
+    :type from_category_name: str
+    :param to_category_name: The destination subcategory name.
+    :type to_category_name: str
     :return: 
         Result class instance.
         - result.status. True if all elements from source subcategory where moved to destination subcategory, otherwise False.

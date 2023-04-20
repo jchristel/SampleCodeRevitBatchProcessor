@@ -143,5 +143,3 @@ def get_all_building_pad_type_ids_in_model_by_class(doc):
     col_class = get_building_pad_types_by_class(doc)
     ids = com.get_ids_from_element_collector (col_class)
     return ids
-
-

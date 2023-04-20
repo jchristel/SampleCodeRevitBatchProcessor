@@ -39,31 +39,31 @@ def get_all_phases(doc):
     :rtype: dic{key Autodesk.Revit.DB.ElementId: value str}
     '''
 
-    returnValue = {}
+    return_value = {}
     phases = doc.Phases
     if (phases.Size > 0):
         for phase in phases:
-            returnValue[phase.Id] = phase.Name
-    return returnValue
+            return_value[phase.Id] = phase.Name
+    return return_value
 
-def get_phase_name_by_id(doc, phaseId):
+def get_phase_name_by_id(doc, phase_id):
     '''
     Returns the name of a phase by Id
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param phaseId: The phase element id.
-    :type phaseId: Autodesk.Revit.DB.ElementId
+    :param phase_id: The phase element id.
+    :type phase_id: Autodesk.Revit.DB.ElementId
     
     :return: Name of the phase, otherwise 'No phase in document' if no phase exists or 'Invalid phase id.' if no phase matching the id was found.
     :rtype: str
     '''
 
-    returnValue = 'No phase in document'
+    return_value = 'No phase in document'
     phases = get_all_phases(doc)
     if(len(phases) > 0):
-        if phaseId in phases:
-            returnValue = phases[phaseId]
+        if phase_id in phases:
+            return_value = phases[phase_id]
         else:
-            returnValue = 'Invalid phase id.'
-    return returnValue
+            return_value = 'Invalid phase id.'
+    return return_value

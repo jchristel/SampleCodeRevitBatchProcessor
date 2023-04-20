@@ -41,12 +41,12 @@ def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_
     :type doc: Autodesk.Revit.DB.Document
     :param dic: dictionary containing category properties
     :type dic: _type_
-    :param familyCat: The family category name.
-    :type familyCat: str
-    :param mainCatName: A hard coded revit category name. Can be the same as familyCat.
-    :type mainCatName: str
-    :param docFilePath: The fully qualified family file path.
-    :type docFilePath: str
+    :param family_cat: The family category name.
+    :type family_cat: str
+    :param main_cat_name: A hard coded revit category name. Can be the same as familyCat.
+    :type main_cat_name: str
+    :param doc_file_path: The fully qualified family file path.
+    :type doc_file_path: str
     :return: A list of list of strings. Each row represents one category.
     :rtype: list[list[str]]
     '''
@@ -91,8 +91,8 @@ def get_report_data(doc, revit_file_path):
     Reports all categories, their properties and all elements belonging to them.
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The fully qualified family file path.
-    :type revitFilePath: str
+    :param revit_file_path: The fully qualified family file path.
+    :type revit_file_path: str
     :return: A list of list of strings. Each row represents one category.
     :rtype: list[list[str]]
     '''

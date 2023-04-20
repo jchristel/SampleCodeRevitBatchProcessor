@@ -151,8 +151,8 @@ def get_saved_category_property_by_name(properties, prop_names):
     Returns property values matching property names in saved category data.
     :param properties: List of dictionaries in format as per GetCategoryProperties(cat) method.
     :type properties: list [{str: var}]
-    :param propNames: List of property names of which the values are to be returned
-    :type propNames: list str
+    :param prop_names: List of property names of which the values are to be returned
+    :type prop_names: list str
     :return: A list of values.
     :rtype: list var
     '''

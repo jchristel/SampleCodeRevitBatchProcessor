@@ -69,9 +69,3 @@ def sort_ceiling_types_by_family_name(doc):
     usedWts = build_ceiling_type_dictionary(wts, usedWts)
     usedWts = build_ceiling_type_dictionary(wts_two, usedWts)
     return usedWts
-
-
-
-
-
-

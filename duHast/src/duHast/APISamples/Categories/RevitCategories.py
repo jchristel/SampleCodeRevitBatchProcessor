@@ -88,8 +88,8 @@ def does_main_sub_category_exists(doc, sub_cat_name):
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param subCatName: The name of the subcategory to be checked against.
-    :type subCatName: str
+    :param sub_cat_name: The name of the subcategory to be checked against.
+    :type sub_cat_name: str
 
     :return: True if subcategory exists in family, otherwise False
     :rtype: bool
@@ -110,8 +110,8 @@ def delete_main_sub_category(doc, sub_cat_name):
 
     ::param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param subCatName: The name of the subcategory to be deleted.
-    :type subCatName: str
+    :param sub_cat_name: The name of the subcategory to be deleted.
+    :type sub_cat_name: str
 
     :return: True if subcategory exists in family and was deleted successfully, otherwise False
     :rtype: bool
@@ -245,8 +245,8 @@ def get_category_by_built_in_def_name(doc, built_in_defs):
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param builtInDefs: list of BuiltInCategory Enumeration values
-    :type builtInDefs: [Autodesk.Revit.DB.BuiltInCategory]
+    :param built_in_defs: list of BuiltInCategory Enumeration values
+    :type built_in_defs: [Autodesk.Revit.DB.BuiltInCategory]
 
     :return: list of categories
     :rtype: [Autodesk.Revit.DB.Category]
@@ -267,8 +267,8 @@ def set_family_category(doc, new_category_name):
     
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newCategoryName: The name of the new family category.
-    :type newCategoryName: str
+    :param new_category_name: The name of the new family category.
+    :type new_category_name: str
     
     :return: True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new category)
     :rtype: bool
@@ -306,8 +306,8 @@ def change_family_category(doc, new_category_name):
 
     :param doc: Current Revit family document.
     :type doc: Autodesk.Revit.DB.Document
-    :param newCategoryName: The new family category
-    :type newCategoryName: str
+    :param new_category_name: The new family category
+    :type new_category_name: str
 
     :return: 
         Result class instance.

@@ -75,10 +75,10 @@ def get_arrow_head_ids_from_type(doc, type_getter, parameter_list):
     Gets all arrow head symbol ids used in dim types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeGetter: Function getting dimension types in the model.
-    :type typeGetter: func(doc) returns dim types.
-    :param parameterList: Names of parameters to be checked on dim types.
-    :type parameterList: list of str
+    :param type_getter: Function getting dimension types in the model.
+    :type type_getter: func(doc) returns dim types.
+    :param parameter_list: Names of parameters to be checked on dim types.
+    :type parameter_list: list of str
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''

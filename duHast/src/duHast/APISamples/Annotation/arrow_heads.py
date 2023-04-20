@@ -32,7 +32,7 @@ A number of functions around Revit Arrow heads.
 #: list of built in parameters attached to dimensions containing arrow head ids
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 #:  list of built in parameters attached to
 #:

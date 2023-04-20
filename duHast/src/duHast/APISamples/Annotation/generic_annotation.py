@@ -29,7 +29,7 @@ Revit generic annotation helper functions.
 import clr
 import System
 
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

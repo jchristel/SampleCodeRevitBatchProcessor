@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to image links.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 
 def get_images_types_in_model(doc):

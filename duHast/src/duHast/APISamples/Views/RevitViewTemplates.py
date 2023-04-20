@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit view templat
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 
 

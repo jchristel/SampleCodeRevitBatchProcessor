@@ -28,7 +28,7 @@ This module contains a Revit rooms export to DATA class functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitDesignSetOptions as rDesignO, RevitElementParameterGetUtils as rParaGet, RevitPhases as rPhase
+from duHast.APISamples.Common import design_set_options as rDesignO, parameter_get_utils as rParaGet, phases as rPhase
 from duHast.DataSamples.Objects import DataRoom as dRoom
 from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
 from duHast.APISamples.Rooms.RevitRooms import get_all_rooms

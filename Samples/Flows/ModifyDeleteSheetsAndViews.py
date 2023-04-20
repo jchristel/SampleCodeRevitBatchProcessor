@@ -67,7 +67,7 @@ from duHast.APISamples.Views import RevitViewsDelete as rViewDel
 from duHast.Utilities import FilesIO as fileIO
 from duHast.Utilities import Result as res
 from duHast.Utilities import Compare as compare
-from duHast.APISamples.Common import RevitFileIO as rFileIO
+from duHast.APISamples.Common import file_io as rFileIO
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

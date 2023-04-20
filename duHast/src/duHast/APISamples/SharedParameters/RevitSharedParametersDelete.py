@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res, Utility as util
 from duHast.APISamples.SharedParameters.RevitSharedParameters import check_whether_shared_parameters_are_in_file, get_all_shared_parameters
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 
 
 def delete_shared_parameter_by_name(doc, shared_parameter_name):

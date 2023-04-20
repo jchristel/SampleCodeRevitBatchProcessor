@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to deleting Revit vie
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitDeleteElements as rDel, RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import delete as rDel, parameter_get_utils as rParaGet
 from duHast.Utilities import Result as res, Utility as util
 from duHast.APISamples.Views.RevitViews import get_views_not_on_sheet
 

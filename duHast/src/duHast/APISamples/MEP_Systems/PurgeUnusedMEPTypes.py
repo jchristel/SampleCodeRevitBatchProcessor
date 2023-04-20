@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging unused mep
 #
 #
 
-from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
+from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.APISamples.MEP_Systems.RevitCableTrays import get_all_cable_tray_type_ids_in_model_by_category, get_all_cable_tray_types_by_category
 from duHast.APISamples.MEP_Systems.RevitConduits import get_all_conduit_type_ids_in_model_by_category, get_all_conduit_types_by_category
 from duHast.APISamples.MEP_Systems.RevitDucts import get_all_duct_type_ids_in_model_by_category, get_all_duct_types_by_category

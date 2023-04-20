@@ -27,7 +27,7 @@ This module contains utility function(s) for workset reports.
 #
 
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Common.RevitWorksets import get_worksets_from_collector
+from duHast.APISamples.Common.worksets import get_worksets_from_collector
 
 
 def get_workset_report_data(doc, revit_file_path):

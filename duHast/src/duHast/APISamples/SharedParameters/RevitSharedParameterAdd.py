@@ -13,7 +13,7 @@ import Autodesk.Revit.DB as rdb
 # custom result class
 from duHast.Utilities import Result as res
 # import InTransaction from common module
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 
 def load_shared_parameter_file(doc, path):
     '''

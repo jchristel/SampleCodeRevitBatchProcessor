@@ -56,8 +56,8 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.APISamples.Common.Reporting import RevitWorksetsReportHeader as rWksReportHeader
-from duHast.APISamples.Common.Reporting import RevitWorksetsReportUtils as rWksReportUtils
+from duHast.APISamples.Common.Reporting import worksets_report_header as rWksReportHeader
+from duHast.APISamples.Common.Reporting import worksets_report_utils as rWksReportUtils
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV
 

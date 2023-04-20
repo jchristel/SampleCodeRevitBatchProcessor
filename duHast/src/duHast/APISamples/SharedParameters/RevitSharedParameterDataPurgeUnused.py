@@ -36,7 +36,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.APISamples.SharedParameters import RevitSharedParameterData as rSharedParaData
 from duHast.APISamples.Categories import categories as rCat
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 
 import Autodesk.Revit.DB as rdb
 

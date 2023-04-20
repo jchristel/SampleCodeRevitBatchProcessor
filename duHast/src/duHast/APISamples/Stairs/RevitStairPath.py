@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit stair path e
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 def get_stair_path_types_by_class(doc):
     '''

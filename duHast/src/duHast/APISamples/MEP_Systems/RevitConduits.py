@@ -32,7 +32,7 @@ import Autodesk.Revit.DB.Electrical as rdbE
 
 from duHast.APISamples.MEP_Systems.Utility.SymbolsInSystemTypes import get_symbol_ids_of_mep_system_types, get_unique_ids_of_used_symbols_from_system_type_ids
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import CATS_LOADABLE_CONDUITS
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 
 def get_all_conduit_types_by_category(doc):

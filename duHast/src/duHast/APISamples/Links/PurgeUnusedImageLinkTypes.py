@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging unused ima
 #
 #
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Links.RevitImageLinks import get_image_instances_in_model, get_image_types_in_model
 
 

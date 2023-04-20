@@ -31,7 +31,7 @@ import System
 
 # import common library
 # utility functions for most commonly used Revit API tasks
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 # class used for stats reporting
 from duHast.Utilities import Result as res
 

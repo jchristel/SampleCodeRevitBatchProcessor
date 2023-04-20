@@ -54,8 +54,8 @@ from duHast.APISamples.Annotation import generic_annotation as rGAnno
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
 
-from duHast.APISamples.Common import RevitGroups as rGrp
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import groups as rGrp
+from duHast.APISamples.Common import delete as rDel
 
 from duHast.APISamples.Views import RevitViews as rView
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
@@ -87,8 +87,8 @@ from duHast.APISamples.Stairs import RevitStairCutMarks as rStairCutMark
 from duHast.APISamples.BuildingPads import building_pads as rBuildP
 from duHast.APISamples.BuildingPads import purge_unused_building_pad_types as rBuildingPadPurge
 
-from duHast.APISamples.Ceilings import RevitCeilings as rCeil
-from duHast.APISamples.Ceilings import PurgeUnusedCeilingTypes as rCeilingPurge
+from duHast.APISamples.Ceilings import ceilings as rCeil
+from duHast.APISamples.Ceilings import purge_unused_ceiling_types as rCeilingPurge
 
 from duHast.APISamples.DetailItems import RevitDetailItems as rDet
 from duHast.APISamples.DetailItems import PurgeUnusedDetailItemTypes as rDetailItemPurge

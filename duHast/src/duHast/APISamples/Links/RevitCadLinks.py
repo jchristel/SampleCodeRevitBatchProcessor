@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to CAD links.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitTransaction as rTran, RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel, transaction as rTran
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links.Utility.LinkPath import get_link_path
 

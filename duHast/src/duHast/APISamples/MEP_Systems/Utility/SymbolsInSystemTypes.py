@@ -27,7 +27,7 @@ This module contains a number of helper functions around families used in system
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.MEP_Systems.Utility.MergeLists import merge_into_unique_list
 from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import ROUTING_PREF_RULE_GROUP_TYPES
 

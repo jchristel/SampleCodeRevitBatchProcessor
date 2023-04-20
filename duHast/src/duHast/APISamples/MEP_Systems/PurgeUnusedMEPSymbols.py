@@ -30,7 +30,7 @@ This module contains a number of helper functions relating to purging unused fam
 # -------------------------------- purge loaded families which can be used in system types --------------------------------
 
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
-from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
+from duHast.APISamples.Common import purge_utils as rPurgeUtils
 
 from duHast.APISamples.MEP_Systems.RevitPipes import get_symbol_ids_for_pipe_types_in_model, get_symbol_ids_used_in_pipe_types
 from duHast.APISamples.MEP_Systems.RevitConduits import get_symbol_ids_for_conduit_types_in_model, get_symbol_ids_used_in_conduit_types

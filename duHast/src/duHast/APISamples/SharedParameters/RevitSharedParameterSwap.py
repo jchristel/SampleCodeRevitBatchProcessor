@@ -53,7 +53,7 @@ from duHast.Utilities import Result as res
 from duHast.Utilities import FilesCSV as fileCSV
 from duHast.APISamples.SharedParameters import RevitSharedParameterAdd as rSharedPAdd
 from duHast.APISamples.SharedParameters import RevitSharedParametersTuple as rSharedT
-from duHast.APISamples.Common import RevitParameterGrouping as rPG
+from duHast.APISamples.Common import parameter_grouping as rPG
 from duHast.APISamples.SharedParameters import RevitSharedParameters as rSharedPara
 from duHast.APISamples.SharedParameters import RevitSharedParametersDelete as rSharedParaDelete
 from duHast.APISamples.SharedParameters import RevitSharedParameterTypeChange as rSharedTypeChange

@@ -63,7 +63,7 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.APISamples.Common import RevitFileIO as rFileIO
+from duHast.APISamples.Common import file_io as rFileIO
 from duHast.APISamples.Revisions import RevitRevisions as rRev
 from duHast.Utilities import Result as res
 

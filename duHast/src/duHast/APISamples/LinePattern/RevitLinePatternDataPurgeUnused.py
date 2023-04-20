@@ -33,7 +33,7 @@ This will delete all line patterns which are not used by any element in the fami
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
 from duHast.APISamples.LinePattern import RevitLinePatternData as rLinePatData
 

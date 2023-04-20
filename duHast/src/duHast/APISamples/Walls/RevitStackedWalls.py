@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit stacked wall
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 #: Built in wall family name for stacked wall
 STACKED_WALL_FAMILY_NAME = 'Stacked Wall'

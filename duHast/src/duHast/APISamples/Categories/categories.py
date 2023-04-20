@@ -31,9 +31,9 @@ import clr
 import System
 from System.Collections.Generic import List
 
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 from duHast.Utilities import Result as res
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 
 import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Categories.family_sub_categories import create_new_category_from_saved_properties

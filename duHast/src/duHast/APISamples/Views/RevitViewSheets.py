@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.Utilities import Utility as util
 
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 
 def get_sheets_by_filters(doc, view_rules = None):

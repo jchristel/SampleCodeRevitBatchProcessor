@@ -33,7 +33,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import common library modules
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 from duHast.APISamples.DetailItems.Utility import RevitDetailItemsTypeSorting as rDetailItemTypeSort
 
 # import Autodesk

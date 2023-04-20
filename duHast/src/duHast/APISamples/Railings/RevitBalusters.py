@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit railing balu
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Railings.Utility.MergeLists import merge_into_unique_list
 from duHast.APISamples.Railings.RevitRailings import get_all_railing_type_ids_by_class_and_category
 

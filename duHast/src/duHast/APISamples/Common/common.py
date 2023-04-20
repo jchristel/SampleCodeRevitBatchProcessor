@@ -46,10 +46,10 @@ import os.path as path
 
 # utilities
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 # importing revit groups module
-from duHast.APISamples.Common import RevitGroups as rGroup
+from duHast.APISamples.Common import groups as rGroup
 
 
 def get_element_mark(e):

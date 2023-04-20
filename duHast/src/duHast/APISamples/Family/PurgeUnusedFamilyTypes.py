@@ -25,7 +25,7 @@ This module contains a number of helper functions relating to purging Revit fami
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
+from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.Utilities import Utility as util
 from duHast.APISamples.Family.RevitFamilyUtils import get_family_symbols_ids, get_symbols_from_type
 from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES_LOADABLE_TAGS, CATEGORIES_LOADABLE_3D

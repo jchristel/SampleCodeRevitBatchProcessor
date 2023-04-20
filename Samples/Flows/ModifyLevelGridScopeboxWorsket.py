@@ -57,8 +57,8 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.APISamples.Common import RevitFileIO as rFileIO
-from duHast.APISamples.Common import RevitWorksets as rWork
+from duHast.APISamples.Common import file_io as rFileIO
+from duHast.APISamples.Common import worksets as rWork
 from duHast.Utilities import Utility as util
 from duHast.Utilities import Result as res
 

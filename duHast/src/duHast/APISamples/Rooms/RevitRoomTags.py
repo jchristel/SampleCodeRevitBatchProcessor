@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to Revit rooms tags.
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 from duHast.Utilities import Result as res
 
 

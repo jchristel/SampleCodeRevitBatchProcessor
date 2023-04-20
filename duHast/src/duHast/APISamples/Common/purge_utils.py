@@ -30,7 +30,7 @@ Revit purge utility functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 
 def build_category_dictionary(doc, element_ids):

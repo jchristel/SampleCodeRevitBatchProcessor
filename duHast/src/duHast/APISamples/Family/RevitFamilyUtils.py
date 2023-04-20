@@ -38,7 +38,7 @@ clr.AddReference('System')
 
 # import common library
 # utility functions for most commonly used Revit API tasks
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 # utilities
 from duHast.Utilities import FilesIO as util
 # class used for stats reporting
@@ -47,7 +47,7 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
 # load everything required from family load call back 
 from duHast.APISamples.Family.RevitFamilyLoadOption import *
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 

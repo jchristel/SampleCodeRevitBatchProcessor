@@ -27,7 +27,7 @@ This module contains a Revit walls properties report function.
 #
 
 from duHast.APISamples import RevitMaterials as rMat
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Walls.Utility import RevitWallsTypeSorting as rWallTypeSort
 from duHast.Utilities import Utility as util
 import duHast.Utilities.UnitConversion

@@ -29,7 +29,7 @@ A number of functions around Revit independent tags.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 
 def get_all_independent_tags(doc):

@@ -32,8 +32,8 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Annotation import generic_annotation as rGenericAnno
 from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Annotation import annotation as rAnno
 from duHast.APISamples.Annotation import dimensions as rDim
 from duHast.APISamples.Annotation import multi_ref_annotation as rMultiRefAnno
@@ -42,7 +42,7 @@ from duHast.APISamples.Annotation import arrow_heads as rArrow
 from duHast.APISamples.Annotation import independent_tags as rIndyTags
 from duHast.APISamples.Annotation import spot_dimensions as rSpots
 from duHast.APISamples.Annotation import stair_path as rStairPath
-from duHast.APISamples.Common import RevitPurgeUtils as rPurgeUtils
+from duHast.APISamples.Common import purge_utils as rPurgeUtils
  
 
 # ------------------ used annotation types  ------------------

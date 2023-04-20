@@ -26,7 +26,7 @@ This module contains a Revit ceilings utility functions.
 #
 #
 
-from duHast.APISamples.Ceilings.Utility import RevitCeilingsFilter as rCeilingsFilter
+from duHast.APISamples.Ceilings.Utility import ceilings_filter as rCeilingsFilter
 
 
 def build_ceiling_type_dictionary(collector, dic):

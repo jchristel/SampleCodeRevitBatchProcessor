@@ -28,10 +28,10 @@ Revit elements to category helper functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import parameter_set_utils as rParaSet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links import RevitCadLinksGeometry as rCadLinkGeo
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 from duHast.APISamples.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories
 from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids

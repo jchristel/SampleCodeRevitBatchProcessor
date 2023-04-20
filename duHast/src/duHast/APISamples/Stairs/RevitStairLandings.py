@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit stair landin
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 #: list of built in parameters attached to stair sub types
 STAIR_LANDING_TYPE_PARAS = [

@@ -27,7 +27,7 @@ Revit Geometry to data geometry conversion helper functions.
 #
 
 from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
-from duHast.APISamples.Common.Geometry import RevitGeometry as rGeo
+from duHast.APISamples.Common.Geometry import geometry as rGeo
 from collections import namedtuple
 
 def convert_xyz_in_data_geometry_polygons(doc, dgObject):

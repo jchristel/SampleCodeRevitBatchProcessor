@@ -30,7 +30,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 from duHast.Utilities import Result as res
 from duHast.APISamples.Links.Utility.LinkPath import get_link_path
 

@@ -32,7 +32,7 @@ import System
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 from duHast.APISamples.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 

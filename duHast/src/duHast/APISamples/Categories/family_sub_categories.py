@@ -33,7 +33,7 @@ from duHast.APISamples.Categories.categories import delete_main_sub_category, do
 from duHast.APISamples.Categories.Utility.elements_by_category_utils import move_elements_from_sub_category_to_sub_category
 from duHast.APISamples.Categories.Utility.category_properties_set_utils import set_category_properties
 from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_properties
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 
 
 def create_new_sub_category_to_family_category(doc, new_sub_category_name):

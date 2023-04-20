@@ -30,7 +30,7 @@ import System
 
 # import common library modules
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Common import RevitTransaction as rTran
+from duHast.APISamples.Common import transaction as rTran
 from duHast.APISamples.Views import RevitViewFilters as rView
 #from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Result as res

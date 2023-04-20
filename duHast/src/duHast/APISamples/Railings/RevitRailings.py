@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit railings.
 import clr
 import System
 
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Family import RevitFamilyUtils as rFam
 
 # import Autodesk

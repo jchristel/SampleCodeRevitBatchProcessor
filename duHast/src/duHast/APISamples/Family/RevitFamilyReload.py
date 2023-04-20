@@ -34,7 +34,7 @@ from System.Collections.Generic import List
 
 
 # import common library
-from duHast.APISamples.Common import RevitDeleteElements as rDel
+from duHast.APISamples.Common import delete as rDel
 
 from duHast.Utilities import Result as res , FilesGet as fileGet
 from duHast.APISamples.Family import RevitFamilyUtils as rFamUtil

@@ -30,7 +30,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
 from duHast.APISamples.Views.RevitViewSchedules import filter_revision_schedules
 from duHast.APISamples.Views.RevitViewSheets import get_all_sheets

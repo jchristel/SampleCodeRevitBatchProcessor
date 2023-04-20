@@ -29,7 +29,7 @@ Revit families helper functions to change the reference type of reference planes
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet, RevitElementParameterSetUtils as rParaSet
+from duHast.APISamples.Common import parameter_get_utils as rParaGet, parameter_set_utils as rParaSet
 from duHast.Utilities import Result as res
 from duHast.APISamples.Family.RevitFamilyElementUtils import get_all_curve_based_elements_in_family
 

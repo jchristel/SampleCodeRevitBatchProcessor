@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to Revit view filters
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Views.RevitViewTemplates import get_template_ids_which_can_have_filters
-from duHast.APISamples.Common import RevitCommonAPI as com
+from duHast.APISamples.Common import common as com
 
 
 VIEW_TYPE_WHICH_CAN_HAVE_FILTERS = [

@@ -31,11 +31,11 @@ import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Links.RevitCadLinks import get_all_cad_link_instances
 
 
-def get_cad_import_instance_geometry(importInstance):
+def get_cad_import_instance_geometry(import_instance):
     '''
     Returns a list of geometry elements from an import instance
-    :param importInstance: A import instance
-    :type importInstance: AutoDesk.Revit.DB.ImportInstance
+    :param import_instance: A import instance
+    :type import_instance: AutoDesk.Revit.DB.ImportInstance
     :return: A list of geometry objects. Can return an empty list!
     :rtype: [Autodesk.Revit.DB GeometryObject]
     '''
@@ -43,13 +43,13 @@ def get_cad_import_instance_geometry(importInstance):
     geo = []
     # default geometry option
     opt = rdb.Options()
-    geoElemLevel1 = importInstance.get_Geometry(opt)
-    if (geoElemLevel1 != None):
-        for geoInstance in geoElemLevel1:
-            if(geoInstance!= None):
-                geoElemLevel2 = geoInstance.GetInstanceGeometry()
-                if(geoElemLevel2 !=None):
-                    for item in geoElemLevel2:
+    geo_elem_level1 = import_instance.get_Geometry(opt)
+    if (geo_elem_level1 != None):
+        for geo_instance in geo_elem_level1:
+            if(geo_instance!= None):
+                geo_elem_level2 = geo_instance.GetInstanceGeometry()
+                if(geo_elem_level2 !=None):
+                    for item in geo_elem_level2:
                         geo.append(item)
     return geo
 
@@ -62,10 +62,10 @@ def get_all_cad_import_instances_geometry(doc):
     :return: A list of geometry objects. Can return an empty list!
     :rtype: [Autodesk.Revit.DB GeometryObject]
     '''
-    instancesGeometry = []
-    allImportInstances = get_all_cad_link_instances(doc)
-    for importInstance in allImportInstances:
-        geometryInstances = get_cad_import_instance_geometry(importInstance)
-        if (len(geometryInstances) > 0):
-            instancesGeometry += geometryInstances
-    return instancesGeometry
+    instances_geometry = []
+    all_import_instances = get_all_cad_link_instances(doc)
+    for import_instance in all_import_instances:
+        geometry_instances = get_cad_import_instance_geometry(import_instance)
+        if (len(geometry_instances) > 0):
+            instances_geometry += geometry_instances
+    return instances_geometry

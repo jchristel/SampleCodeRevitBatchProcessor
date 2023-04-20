@@ -87,6 +87,6 @@ def get_material_name_by_id(doc, id):
     mats = get_all_materials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
-            mName = rdb.Element.Name.GetValue(m)
-            name = '' if mName == None else mName
+            m_name = rdb.Element.Name.GetValue(m)
+            name = '' if m_name == None else m_name
     return name

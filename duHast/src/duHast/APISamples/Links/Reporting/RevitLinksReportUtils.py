@@ -32,48 +32,48 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.APISamples.Links.RevitLinks import get_all_revit_link_instances, get_revit_link_type_from_instance
 
 
-def get_revit_link_type_data(doc, revitLinkType):
+def get_revit_link_type_data(doc, revit_link_type):
     '''
     Gets Revit Link Type data for reporting.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitLinkType: The link type of which to get the data from.
-    :type revitLinkType: Autodesk.Revit.DB.RevitLinkType
+    :param revit_link_type: The link type of which to get the data from.
+    :type revit_link_type: Autodesk.Revit.DB.RevitLinkType
     :return: A list of string 
     :rtype: list str
     '''
 
     # default values
-    modelPath = 'unknown'
-    isLoaded = False
-    isFromLocalPath = False
-    pathType = 'unknown'
-    isLoaded = revitLinkType.IsLoaded(doc, revitLinkType.Id)
-    isFromLocalPath = revitLinkType.IsFromLocalPath()
-    exFileRef = revitLinkType.GetExternalFileReference()
+    model_path = 'unknown'
+    is_loaded = False
+    is_from_local_path = False
+    path_type = 'unknown'
+    is_loaded = revit_link_type.IsLoaded(doc, revit_link_type.Id)
+    is_from_local_path = revit_link_type.IsFromLocalPath()
+    ex_file_ref = revit_link_type.GetExternalFileReference()
     # get the workset of the link type (this can bew different to the workset of the link instance)
-    wsParameter = revitLinkType.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
-    if(exFileRef.IsValidExternalFileReference(exFileRef)):
-        modelPath = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(exFileRef.GetPath())
-        pathType = exFileRef.PathType.ToString()
+    ws_parameter = revit_link_type.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+    if(ex_file_ref.IsValidExternalFileReference(ex_file_ref)):
+        model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(ex_file_ref.GetPath())
+        path_type = ex_file_ref.PathType.ToString()
 
     data=[
-        rdb.Element.Name.GetValue(revitLinkType),
-        str(isLoaded),
-        str(wsParameter.AsValueString()),
-        str(isFromLocalPath),
-        pathType,
-        modelPath]
+        rdb.Element.Name.GetValue(revit_link_type),
+        str(is_loaded),
+        str(ws_parameter.AsValueString()),
+        str(is_from_local_path),
+        path_type,
+        model_path]
 
     return data
 
-def get_revit_link_report_data(doc, revitFilePath):
+def get_revit_link_report_data(doc, revit_file_path):
     '''
     Gets link data ready for being printed to file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The file hostname, which is added to data returned.
-    :type revitFilePath: str
+    :param revit_file_path: The file hostname, which is added to data returned.
+    :type revit_file_path: str
     :return: list of list of revit link properties.
     :rtype: list of list of str
     '''
@@ -82,23 +82,23 @@ def get_revit_link_report_data(doc, revitFilePath):
     collector = get_all_revit_link_instances(doc)
     for c in collector:
         # get the workset
-        wsParameter = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
+        ws_parameter = c.get_Parameter(rdb.BuiltInParameter.ELEM_PARTITION_PARAM)
         # get the design option
-        doParameter = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
+        do_parameter = c.get_Parameter(rdb.BuiltInParameter.DESIGN_OPTION_ID)
         # get whether link is shared or not (only works when link is loaded)
         if ('<Not Shared>' in c.Name):
-            lS = False
+            l_s = False
         else:
-            lS = True
+            l_s = True
         # get shared location name ( needs to be in try catch in case file is unloaded)
-        linkLocationName = 'unknown'
+        link_location_name = 'unknown'
         try:
-            linkLocationName = c.GetLinkDocument().ActiveProjectLocation.Name
+            link_location_name = c.GetLinkDocument().ActiveProjectLocation.Name
         except Exception:
             pass
-        linkType = get_revit_link_type_from_instance(doc, c)
-        linkTypeData = get_revit_link_type_data(doc, linkType)
+        link_type = get_revit_link_type_from_instance(doc, c)
+        link_type_data = get_revit_link_type_data(doc, link_type)
         # add other data
-        linkTypeData = [revitFilePath] + [str(c.Id)] + linkTypeData + [str(lS)] +[linkLocationName] + [rParaGet.get_parameter_value (wsParameter)] + [rParaGet.get_parameter_value(doParameter)]
-        data.append(linkTypeData)
+        link_type_data = [revit_file_path] + [str(c.Id)] + link_type_data + [str(l_s)] +[link_location_name] + [rParaGet.get_parameter_value (ws_parameter)] + [rParaGet.get_parameter_value(do_parameter)]
+        data.append(link_type_data)
     return data

@@ -67,22 +67,22 @@ def get_all_revit_link_types(doc):
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType)
     return collector
     
-def get_revit_link_type_from_instance(doc, linkInstance):
+def get_revit_link_type_from_instance(doc, link_instance):
     '''
     Gets the Revit link type from a given revit link instance.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkInstance: The link instance the type of is to be returned
-    :type linkInstance: Autodesk.Revit.DB.RevitLinkInstance
+    :param link_instance: The link instance the type of is to be returned
+    :type link_instance: Autodesk.Revit.DB.RevitLinkInstance
 
     :return: The matching revit link type.
     :rtype: Autodesk.Revit.DB.RevitLinkType
     '''
     
-    revitLinkTypes = get_all_revit_link_types(doc)
-    for lt in revitLinkTypes:
-        if(lt.Id == linkInstance.GetTypeId()):
+    revit_link_types = get_all_revit_link_types(doc)
+    for lt in revit_link_types:
+        if(lt.Id == link_instance.GetTypeId()):
             return lt
 
 def delete_revit_links(doc):
@@ -101,28 +101,28 @@ def delete_revit_links(doc):
     '''
 
     ids = []
-    returnValue = res.Result()
+    return_value = res.Result()
     for p in rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_RvtLinks):
         ids.append(p.Id)
     # delete all links at once
-    returnValue = rDel.delete_by_element_ids(doc, ids, 'Deleting Revit links', 'Revit link(s)')
-    return returnValue
+    return_value = rDel.delete_by_element_ids(doc, ids, 'Deleting Revit links', 'Revit link(s)')
+    return return_value
 
-def reload_revit_links(doc, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+def reload_revit_links(doc, link_locations, host_name_formatted, do_something_with_link_name, workset_config):
     '''
     Reloads Revit links from a given file location based on the original link type name (starts with comparison)
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkLocations: A list of directories where CAD files can be located.
-    :type linkLocations: list str
-    :param hostNameFormatted: Not used yet
-    :type hostNameFormatted: TBC
-    :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
+    :param link_locations: A list of directories where CAD files can be located.
+    :type link_locations: list str
+    :param host_name_formatted: Not used yet
+    :type host_name_formatted: TBC
+    :param do_something_with_link_name: A function which amends the link name prior search for a match in folders.\
         I.e. can be used to truncate the link name i.e. the revision details of a link
-    :type doSomethingWithLinkName: func(str) -> str
-    :param worksetConfig: To use the previously applied workset config use None, otherwise provide custom config.
-    :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
+    :type do_something_with_link_name: func(str) -> str
+    :param workset_config: To use the previously applied workset config use None, otherwise provide custom config.
+    :type workset_config: Autodesk.Revit.DB.WorksetConfiguration
 
     :return: 
         Result class instance.
@@ -133,49 +133,49 @@ def reload_revit_links(doc, linkLocations, hostNameFormatted, doSomethingWithLin
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
         # get all revit link types in model
         for p in rdb.FilteredElementCollector(doc).OfClass(rdb.RevitLinkType):
-            linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
-            newLinkPath = 'unknown'
+            link_type_name = do_something_with_link_name(rdb.Element.Name.GetValue(p))
+            new_link_path = 'unknown'
             try:
-                newLinkPath = get_link_path(linkTypeName, linkLocations, '.rvt')
-                if(newLinkPath != None):
-                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                new_link_path = get_link_path(link_type_name, link_locations, '.rvt')
+                if(new_link_path != None):
+                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(new_link_path)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
                     # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
-                    wc = worksetConfig()
+                    wc = workset_config()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.append_message('{} :: {}'.format(linkTypeName ,result.LoadResult))
+                    return_value.append_message('{} :: {}'.format(link_type_name ,result.LoadResult))
                 else:
-                    returnValue.update_sep(False, '{} :: No link path or multiple path found in provided locations'.format(linkTypeName))
+                    return_value.update_sep(False, '{} :: No link path or multiple path found in provided locations'.format(link_type_name))
             except Exception as e:
-                returnValue.update_sep(False, '{} :: Failed with exception: {}'.format(linkTypeName ,e))
+                return_value.update_sep(False, '{} :: Failed with exception: {}'.format(link_type_name ,e))
     except Exception as e:
-        returnValue.update_sep(False, 'Failed with exception: '.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Failed with exception: '.format(e))
+    return return_value
 
-def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostNameFormatted, doSomethingWithLinkName, worksetConfig):
+def reload_revit_links_from_list(doc, link_types_tob_reloaded, link_locations, host_name_formatted, do_something_with_link_name, workset_config):
     '''
     Reloads Revit links from a given file location based on the original link type name (starts with comparison)
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param linkTypesTobReloaded: List of link type elements to be reloaded.
-    :type linkTypesTobReloaded: list Autodesk.Revit.DB.RevitLinkType
-    :param linkLocations: A list of directories where CAD files can be located.
-    :type linkLocations: list str
-    :param hostNameFormatted: Not used yet
-    :type hostNameFormatted: TBC
-    :param doSomethingWithLinkName: A function which amends the link name prior search for a match in folders.\
+    :param link_types_tob_reloaded: List of link type elements to be reloaded.
+    :type link_types_tob_reloaded: list Autodesk.Revit.DB.RevitLinkType
+    :param link_locations: A list of directories where CAD files can be located.
+    :type link_locations: list str
+    :param host_name_formatted: Not used yet
+    :type host_name_formatted: TBC
+    :param do_something_with_link_name: A function which amends the link name prior search for a match in folders.\
         I.e. can be used to truncate the link name i.e. the revision details of a link
-    :type doSomethingWithLinkName: func(str) -> str
-    :param worksetConfig: To use the previously applied workset config use None, otherwise provide custom config.
-    :type worksetConfig: Autodesk.Revit.DB.WorksetConfiguration
+    :type do_something_with_link_name: func(str) -> str
+    :param workset_config: To use the previously applied workset config use None, otherwise provide custom config.
+    :type workset_config: Autodesk.Revit.DB.WorksetConfiguration
 
     :return: 
         Result class instance.
@@ -186,31 +186,31 @@ def reload_revit_links_from_list(doc, linkTypesTobReloaded, linkLocations, hostN
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     try:
         # loop over links supplied
-        for p in linkTypesTobReloaded:
-            linkTypeName = doSomethingWithLinkName(rdb.Element.Name.GetValue(p))
-            newLinkPath = 'unknown'
+        for p in link_types_tob_reloaded:
+            link_type_name = do_something_with_link_name(rdb.Element.Name.GetValue(p))
+            new_link_path = 'unknown'
             try:
-                newLinkPath = get_link_path(linkTypeName, linkLocations, '.rvt')
-                if(newLinkPath != None):
-                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(newLinkPath)
+                new_link_path = get_link_path(link_type_name, link_locations, '.rvt')
+                if(new_link_path != None):
+                    mp = rdb.ModelPathUtils.ConvertUserVisiblePathToModelPath(new_link_path)
                     # attempt to reload with worksets set to last viewed
                     # wc = WorksetConfiguration(WorksetConfigurationOption.OpenLastViewed)
                     # however that can be achieved also ... According to Autodesk:
                     # If you want to load the same set of worksets the link previously had, leave this argument as a null reference ( Nothing in Visual Basic) .
-                    wc = worksetConfig()
+                    wc = workset_config()
                     result = p.LoadFrom(mp,  wc)
                     # store result in message 
-                    returnValue.append_message('{} :: {}'.format(linkTypeName,result.LoadResult))
+                    return_value.append_message('{} :: {}'.format(link_type_name,result.LoadResult))
                 else:
-                    returnValue.update_sep(False,'{} :: No link path or multiple path found in provided locations'.format(linkTypeName))
+                    return_value.update_sep(False,'{} :: No link path or multiple path found in provided locations'.format(link_type_name))
             except Exception as e:
-                returnValue.update_sep(False, '{} :: Failed with exception: '.format(linkTypeName ,e))
+                return_value.update_sep(False, '{} :: Failed with exception: '.format(link_type_name ,e))
     except Exception as e:
-        returnValue.update_sep(False, 'Reload Revit links Failed with exception: '.format(e))
-    return returnValue
+        return_value.update_sep(False, 'Reload Revit links Failed with exception: '.format(e))
+    return return_value
 
 def default_link_name(name):
     '''

@@ -39,11 +39,11 @@ def get_all_unused_image_type_ids_in_model(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedImages = com.get_not_placed_types(doc, get_image_types_in_model, get_image_instances_in_model)
-    unusedTypeIds = []
-    for i in unusedImages:
-        unusedTypeIds.append(i.Id)
-    return unusedTypeIds
+    unused_images = com.get_not_placed_types(doc, get_image_types_in_model, get_image_instances_in_model)
+    unused_type_ids = []
+    for i in unused_images:
+        unused_type_ids.append(i.Id)
+    return unused_type_ids
 
 
 def get_all_unused_image_type_ids_in_model_with_group_check(doc):
@@ -57,7 +57,7 @@ def get_all_unused_image_type_ids_in_model_with_group_check(doc):
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
-    unusedTypeIds = get_all_unused_image_type_ids_in_model(doc)
+    unused_type_ids = get_all_unused_image_type_ids_in_model(doc)
     # and filter by any type id's in groups which may not be placed and hence no instance present in the model
-    unusedTypeIds = com.get_unused_type_ids_from_detail_groups(doc, unusedTypeIds)
-    return unusedTypeIds
+    unused_type_ids = com.get_unused_type_ids_from_detail_groups(doc, unused_type_ids)
+    return unused_type_ids

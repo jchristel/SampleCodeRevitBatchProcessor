@@ -32,7 +32,7 @@ from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
 from duHast.Utilities import Utility as util, FilesIO as util
 from duHast.APISamples.Materials.RevitMaterials import get_all_materials
 
-def get_material_report_data(doc, revitFilePath):
+def get_material_report_data(doc, revit_file_path):
     '''
     Gets material data ready for being written to file.
     - HOSTFILE
@@ -41,8 +41,8 @@ def get_material_report_data(doc, revitFilePath):
     - and any parameter names and values attached to a material
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: The fully qualified file path of Revit file.
-    :type revitFilePath: str
+    :param revit_file_path: The fully qualified file path of Revit file.
+    :type revit_file_path: str
     :return: The material data in a nested list of string
     :rtype: list of list of str
     '''
@@ -53,18 +53,18 @@ def get_material_report_data(doc, revitFilePath):
         try:
             paras = mat.GetOrderedParameters()
             for p in paras:
-                paraName = p.Definition.Name
-                pValue = rParaGet.get_parameter_value(p)
+                para_name = p.Definition.Name
+                p_value = rParaGet.get_parameter_value(p)
                 data.append(
-                    [revitFilePath,
+                    [revit_file_path,
                     str(mat.Id),
                     util.EncodeAscii(rdb.Element.Name.GetValue(mat)),
-                    util.EncodeAscii(paraName),
-                    util.EncodeAscii(pValue)]
+                    util.EncodeAscii(para_name),
+                    util.EncodeAscii(p_value)]
                 )
         except Exception:
             data.append([
-                util.get_file_name_without_ext(revitFilePath),
+                util.get_file_name_without_ext(revit_file_path),
                 str(mat.Id),
                 util.EncodeAscii(rdb.Element.Name.GetValue(mat))
             ])

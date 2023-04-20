@@ -68,15 +68,15 @@ def sort_image_link_types_by_import_or_linked(doc):
     :rtype: list Autodesk.Revit.DB.ImageType, list Autodesk.Revit.DB.ImageType 
     '''
 
-    imageLink = []
-    imageImport = []
-    collectorImageTypes = get_images_types_in_model(doc)
-    for im in collectorImageTypes:
+    image_link = []
+    image_import = []
+    collector_image_types = get_images_types_in_model(doc)
+    for im in collector_image_types:
         if(im.IsLoadedFromFile()):
-            imageLink.append(im)
+            image_link.append(im)
         else:
-            imageImport.append(im)
-    return imageLink, imageImport
+            image_import.append(im)
+    return image_link, image_import
 
 
 def get_all_image_link_type_linked_in_model(doc):
@@ -88,8 +88,8 @@ def get_all_image_link_type_linked_in_model(doc):
     :rtype: list Autodesk.Revit.DB.ImageType
     '''
 
-    imageLinks, imageImport = sort_image_link_types_by_import_or_linked(doc)
-    return imageLinks
+    image_links, image_import = sort_image_link_types_by_import_or_linked(doc)
+    return image_links
 
 
 def get_all_image_link_type_imported_in_model(doc):
@@ -101,8 +101,8 @@ def get_all_image_link_type_imported_in_model(doc):
     :rtype: list Autodesk.Revit.DB.ImageType
     '''
 
-    imageLinks, imageImport = sort_image_link_types_by_import_or_linked(doc)
-    return imageImport
+    image_links, image_import = sort_image_link_types_by_import_or_linked(doc)
+    return image_import
 
 
 def get_image_types_in_model(doc):

@@ -30,19 +30,19 @@ There are build in python function(s) to do this...
 #
 #
 
-def merge_into_unique_list(listSource, listMerge):
+def merge_into_unique_list(list_source, list_merge):
     '''
     Merges the second list into the first by adding elements from second list which are not already in first list.
     TODO: Consider more generic code!
-    :param listSource: List to add unique values to.
-    :type listSource: list var
-    :param listMerge: List containing values.
-    :type listMerge: list var
+    :param list_source: List to add unique values to.
+    :type list_source: list var
+    :param list_merge: List containing values.
+    :type list_merge: list var
     :return: List of unique objects.
     :rtype: list var
     '''
 
-    for i in listMerge:
-        if (i not in listSource):
-            listSource.append(i)
-    return listSource
+    for i in list_merge:
+        if (i not in list_source):
+            list_source.append(i)
+    return list_source

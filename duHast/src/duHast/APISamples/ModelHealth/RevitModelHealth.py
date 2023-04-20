@@ -69,23 +69,23 @@ MODEL_HEALTH_TRACKER_FAMILY = 'Symbol_GraphicModelHealth_ANN'
 #: Default value if unable to retrieve a health metric value from model
 FAILED_TO_RETRIEVE_VALUE = -1
 
-def _cast_parameter_value(pValue):
+def _cast_parameter_value(p_value):
     '''
     Check if parameter is of type string ( currently the date only)
     and only cast to string if not...
 
-    :param pValue: The parameter value
-    :type pValue: unknown
+    :param p_value: The parameter value
+    :type p_value: unknown
     :return: The parameter value as a string
     :rtype: str
     '''
     
-    newParaValue = ''
-    if(pValue.GetType() != System.String):
-        newParaValue = str(pValue)
+    new_para_value = ''
+    if(p_value.GetType() != System.String):
+        new_para_value = str(p_value)
     else:
-        newParaValue = pValue
-    return newParaValue
+        new_para_value = p_value
+    return new_para_value
 
 def get_instances_of_model_health(doc):
     '''
@@ -109,12 +109,12 @@ def get_instances_of_model_health(doc):
     filter = rdb.ElementParameterFilter( rule )
     return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter).ToList()
 
-def get_parameters_of_instance(famInstance, doc):
+def get_parameters_of_instance(fam_instance, doc):
     '''
     Updates parameter values of model tracker family instance.
 
-    :param famInstance: An instance of the model health tracker family.
-    :type famInstance: Autodesk.Revit.DB.FamilyInstance
+    :param fam_instance: An instance of the model health tracker family.
+    :type fam_instance: Autodesk.Revit.DB.FamilyInstance
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
@@ -127,24 +127,24 @@ def get_parameters_of_instance(famInstance, doc):
     :rtype: :class:`.Result`
     '''
 
-    resultValue = res.Result()
-    flagUpdate = False
-    for p in famInstance.GetOrderedParameters():
+    result_value = res.Result()
+    flag_update = False
+    for p in fam_instance.GetOrderedParameters():
         # check if parameter is read only
         if(p.IsReadOnly == False):
             # check an action to update this parameter value exists
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
-                parameterValue = PARAM_ACTIONS[p.Definition.Name].getData(doc)
-                if(parameterValue != FAILED_TO_RETRIEVE_VALUE):
-                    flag = rParaSet.set_parameter_value (p, _cast_parameter_value(parameterValue), doc)
-                    resultValue.update(flag)
-                    flagUpdate = True
+                parameter_value = PARAM_ACTIONS[p.Definition.Name].getData(doc)
+                if(parameter_value != FAILED_TO_RETRIEVE_VALUE):
+                    flag = rParaSet.set_parameter_value (p, _cast_parameter_value(parameter_value), doc)
+                    result_value.update(flag)
+                    flag_update = True
                 else:
-                    resultValue.update_sep(False, 'Failed to get value for ' + p.Definition.Name)
-    if(flagUpdate == False):
-        resultValue.message = 'No family parameters where updated'
-        resultValue.status = True
-    return resultValue
+                    result_value.update_sep(False, 'Failed to get value for ' + p.Definition.Name)
+    if(flag_update == False):
+        result_value.message = 'No family parameters where updated'
+        result_value.status = True
+    return result_value
 
 # ----------------------------------------------
 # model properties 
@@ -193,14 +193,14 @@ def get_file_size(doc):
     try:
         # get the path from the document
         # this will fail if not a file based doc or the document is detached
-        revitFilePath = doc.PathName
+        revit_file_path = doc.PathName
         # check if bim 360 file
-        if (revitFilePath.StartsWith('BIM 360')):
+        if (revit_file_path.StartsWith('BIM 360')):
             size = b360.get_model_file_size(doc)
         else:
-            if(util.file_exist(revitFilePath)):
+            if(util.file_exist(revit_file_path)):
                 # get file size in MB
-                size = util.get_file_size(revitFilePath)
+                size = util.get_file_size(revit_file_path)
     except:
         pass
     return size
@@ -717,14 +717,14 @@ PARAM_ACTIONS = {
     'ValueDateLastUpdated' : health_data_action(get_current_date, rFns.PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED)
 }
 
-def update_model_health_tracer_family(doc, revitFilePath):
+def update_model_health_tracer_family(doc, revit_file_path):
     '''
     Updates instances of model health tracker family in project.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: Fully qualified revit model file path.
-    :type revitFilePath: str
+    :param revit_file_path: Fully qualified revit model file path.
+    :type revit_file_path: str
 
     :return: 
         Result class instance.
@@ -735,20 +735,20 @@ def update_model_health_tracer_family(doc, revitFilePath):
     :rtype: :class:`.Result`
     '''
 
-    revitFileName = util.get_file_name_without_ext(revitFilePath)
-    resultValue = res.Result()
+    revit_file_name = util.get_file_name_without_ext(revit_file_path)
+    result_value = res.Result()
     instances = get_instances_of_model_health(doc)
     if(len(instances) > 0):
         for instance in instances:
-            updateFlag = get_parameters_of_instance(instance, doc)
-            resultValue.update(updateFlag)
+            update_flag = get_parameters_of_instance(instance, doc)
+            result_value.update(update_flag)
     else:
-        resultValue.update_sep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revitFileName)
-    return resultValue
+        result_value.update_sep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revit_file_name)
+    return result_value
 
 # doc   current document
 # revitFilePath     path of the current document
-def write_model_health_report(doc, revitFilePath, outputDirectory):
+def write_model_health_report(doc, revit_file_path, output_directory):
     '''
     Write out health tracker data to file.
 
@@ -756,10 +756,10 @@ def write_model_health_report(doc, revitFilePath, outputDirectory):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: Fully qualified revit model file path.
-    :type revitFilePath: str
-    :param outputDirectory: The directory path of where to write the data to.
-    :type outputDirectory: str
+    :param revit_file_path: Fully qualified revit model file path.
+    :type revit_file_path: str
+    :param output_directory: The directory path of where to write the data to.
+    :type output_directory: str
 
     :return: 
         Result class instance.
@@ -770,30 +770,30 @@ def write_model_health_report(doc, revitFilePath, outputDirectory):
     :rtype: :class:`.Result`
     '''
     
-    revitFileName = util.get_file_name_without_ext(revitFilePath)
-    resultValue = res.Result()
+    revit_file_name = util.get_file_name_without_ext(revit_file_path)
+    result_value = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
-        parameterValue = PARAM_ACTIONS[key].getData(doc)
-        fileName = dateStamp.get_file_date_stamp() + revitFileName + PARAM_ACTIONS[key].reportFileName + '.temp'
-        resExport = res.Result()
+        parameter_value = PARAM_ACTIONS[key].getData(doc)
+        file_name = dateStamp.get_file_date_stamp() + revit_file_name + PARAM_ACTIONS[key].reportFileName + '.temp'
+        res_export = res.Result()
         try:
             fileTab.write_report_data(
-                outputDirectory + '\\' + fileName,
+                output_directory + '\\' + file_name,
                 '',
                 [
                     [
-                        revitFileName, 
+                        revit_file_name, 
                         key, 
                         dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
                         dateStamp.get_date_stamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
-                        _cast_parameter_value(parameterValue)
+                        _cast_parameter_value(parameter_value)
                         ]
                     ]
                 )
                 
-            resExport.update_sep(True, 'Exported: ' + str(key))
+            res_export.update_sep(True, 'Exported: ' + str(key))
         except Exception as e:
-                resExport.update_sep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
-        resultValue.update(resExport)
-    return resultValue
+                res_export.update_sep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
+        result_value.update(res_export)
+    return result_value

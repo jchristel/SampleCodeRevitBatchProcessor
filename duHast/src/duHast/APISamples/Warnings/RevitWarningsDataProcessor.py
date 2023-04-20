@@ -58,11 +58,6 @@ class WarningsProcessor(IFamilyProcessor):
             string_report_headers=string_report_headers
         )
 
-        #self.data = []
-        #self.dataType = 'Warnings'
-        #self.preActions = preActions
-        #self.postActions = postActions
-
     def process(self, doc, root_path, root_category_path):
         '''
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
@@ -72,7 +67,7 @@ class WarningsProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         '''

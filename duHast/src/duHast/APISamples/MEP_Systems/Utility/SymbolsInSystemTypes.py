@@ -44,26 +44,26 @@ Properties of system types which can use symbols: (note: RoutingPreferenceManage
 
 '''
 
-def get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId):
+def get_unique_ids_of_used_symbols_from_system_type_id(doc, system_type_id):
     '''
     Gets list of unique symbol ids used in a single system type property.
     List can be empty if an exception during processing occurred.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param systemTypeId: MEP system type id (pipe, conduit, duct, cable tray)
-    :type systemTypeId: Autodesk.Revit.DB.ElementId
+    :param system_type_id: MEP system type id (pipe, conduit, duct, cable tray)
+    :type system_type_id: Autodesk.Revit.DB.ElementId
     :return: List of unique ids representing family symbols used in a system.
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
-    el = doc.GetElement(systemTypeId)
+    el = doc.GetElement(system_type_id)
     try:
-        unfilteredElements = [el.Cross, el.Elbow, el.MultiShapeTransition, el.Tap, el.Tee, el.Transition, el.Union]
-        for unfilteredElement in unfilteredElements:
-            if (unfilteredElement != None):
-                if (unfilteredElement.Id != rdb.ElementId.InvalidElementId and unfilteredElement.Id not in ids):
-                    ids.append(unfilteredElement.Id)
+        unfiltered_elements = [el.Cross, el.Elbow, el.MultiShapeTransition, el.Tap, el.Tee, el.Transition, el.Union]
+        for unfiltered_element in unfiltered_elements:
+            if (unfiltered_element != None):
+                if (unfiltered_element.Id != rdb.ElementId.InvalidElementId and unfiltered_element.Id not in ids):
+                    ids.append(unfiltered_element.Id)
         #check if there is a RoutingPreferenceManager object...it may have some more symbols in its rules
         if(el.RoutingPreferenceManager != None):
             # routing manager got a list RoutingReferenceRule objects
@@ -71,19 +71,19 @@ def get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId):
             rpm = el.RoutingPreferenceManager
             for group in ROUTING_PREF_RULE_GROUP_TYPES:
                 # loop over RoutingPreferenceRuleGroupTypes!
-                numberOfRules = rpm.GetNumberOfRules(group)
-                for i in range(numberOfRules):
+                number_of_rules = rpm.GetNumberOfRules(group)
+                for i in range(number_of_rules):
                     rule = rpm.GetRule(group, i)
                     if rule.MEPPartId not in ids:
                         ids.append(rule.MEPPartId)
 
 
     except Exception as ex:
-        print('System type id: {} get used symbol ids threw exception: {}'.format(systemTypeId, ex))
+        print('System type id: {} get used symbol ids threw exception: {}'.format(system_type_id, ex))
     return ids
 
 
-def get_unique_ids_of_used_symbols_from_system_type_ids(doc, systemTypeIds):
+def get_unique_ids_of_used_symbols_from_system_type_ids(doc, system_type_ids):
     '''
     Gets a list of unique symbol ids used in these MEP system type properties:
     - Cross
@@ -95,39 +95,39 @@ def get_unique_ids_of_used_symbols_from_system_type_ids(doc, systemTypeIds):
     - Union
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param systemTypeIds: List of MEP system type id belonging to pipe, conduit, duct or cable tray.
-    :type systemTypeIds: List Autodesk.Revit.DB.ElementId
+    :param system_type_ids: List of MEP system type id belonging to pipe, conduit, duct or cable tray.
+    :type system_type_ids: List Autodesk.Revit.DB.ElementId
     :return: List of unique ids representing family symbols used in mep systems.
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
-    for systemTypeId in systemTypeIds:
-        idsUnfiltered = get_unique_ids_of_used_symbols_from_system_type_id(doc, systemTypeId)
-        ids = merge_into_unique_list(ids, idsUnfiltered)
+    for system_type_id in system_type_ids:
+        ids_unfiltered = get_unique_ids_of_used_symbols_from_system_type_id(doc, system_type_id)
+        ids = merge_into_unique_list(ids, ids_unfiltered)
     return ids
 
 
 # --------------------------------------- symbols available in model -------------------------------
 
-def get_symbol_ids_of_mep_system_types(doc, categoryList, systemTypeName):
+def get_symbol_ids_of_mep_system_types(doc, category_list, system_type_name):
     '''
     Gets list of symbol ids belonging to provided categories loaded in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param categoryList: List of built in categories to filter symbols by.
-    :type categoryList: list Autodesk.Revit.DB.BuiltInCategory
-    :param systemTypeName: Used in exception message to identify the mep system
-    :type systemTypeName: str
+    :param category_list: List of built in categories to filter symbols by.
+    :type category_list: list Autodesk.Revit.DB.BuiltInCategory
+    :param system_type_name: Used in exception message to identify the mep system
+    :type system_type_name: str
     :return: List of ids representing family symbols.
     :rtype: list  Autodesk.Revit.DB.ElementId
     '''
 
     ids = []
     try:
-        multiCatFilter = rdb.ElementMulticategoryFilter(categoryList)
-        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multiCatFilter)
+        multi_cat_filter = rdb.ElementMulticategoryFilter(category_list)
+        col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol).WherePasses(multi_cat_filter)
         ids = com.get_ids_from_element_collector (col)
     except Exception as ex:
-        print (systemTypeName+ ' threw exception: ' + str(ex))
+        print (system_type_name+ ' threw exception: ' + str(ex))
     return ids

@@ -132,25 +132,25 @@ from System.Collections.Generic import List
 # --------------------------------------------- Purge - utility ---------------------------------------------
 
 def purge_unplaced_elements (doc, 
-    getUnusedElementIds, 
-    transactionName, 
-    unUsedElementNameHeader,
-    isDebug = False):
+    get_unused_element_ids, 
+    transaction_name, 
+    unused_element_name_header,
+    is_debug = False):
     '''
     
     Purges all unplaced elements provided through a passed in element id getter method from a model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param getUnusedElementIds: A function accepting the current document as the argument and returning element ids which can be purged.
-    :type getUnusedElementIds: func (doc) returning list of Autodesk.Revit.DB.ElementId
-    :param transactionName: A human readable description of the transaction containing the purge action.
-    :type transactionName: str
-    :param unUsedElementNameHeader: The text to be displayed at the start of the list containing the deleted element names.
-    :type unUsedElementNameHeader: str
-    :param isDebug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs, defaults to False\
+    :param get_unused_element_ids: A function accepting the current document as the argument and returning element ids which can be purged.
+    :type get_unused_element_ids: func (doc) returning list of Autodesk.Revit.DB.ElementId
+    :param transaction_name: A human readable description of the transaction containing the purge action.
+    :type transaction_name: str
+    :param unused_element_name_header: The text to be displayed at the start of the list containing the deleted element names.
+    :type unused_element_name_header: str
+    :param is_debug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs, defaults to False\
         Will attempt to delete all elements at once.
-    :type isDebug: bool, optional
+    :type is_debug: bool, optional
 
     :return: 
         Result class instance.
@@ -163,23 +163,23 @@ def purge_unplaced_elements (doc,
 
     resultValue = res.Result()
     try:
-        unusedElementIds = getUnusedElementIds(doc)
+        unusedElementIds = get_unused_element_ids(doc)
         unusedElementNames = []
-        if(isDebug):
-            unusedElementNames.append(unUsedElementNameHeader)
+        ifis_debug:
+            unusedElementNames.append(unused_element_name_header)
             for unusedId in unusedElementIds:
                 unusedElementNames.append(SPACER + 'ID:\t' + str(unusedId) + ' Name:\t'+ rdb.Element.Name.GetValue(doc.GetElement(unusedId)))
         else:
-            unusedElementNames.append(unUsedElementNameHeader + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
-        purgeResult = rDel.delete_by_element_ids(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+            unusedElementNames.append(unused_element_name_header + ': ' + str(len(unusedElementIds)) + ' Element(s) purged.')
+        purgeResult = rDel.delete_by_element_ids(doc, unusedElementIds, transaction_name, '\n'.join( unusedElementNames ))
         # check if an exception occurred and in debug mode, purge elements one by one
-        if(isDebug and purgeResult.status == False):
+        if(is_debug and purgeResult.status == False):
             #pass
             print('second debug run')
-            purgeResult = rDel.delete_by_element_ids_one_by_one(doc, unusedElementIds, transactionName, '\n'.join( unusedElementNames ))
+            purgeResult = rDel.delete_by_element_ids_one_by_one(doc, unusedElementIds, transaction_name, '\n'.join( unusedElementNames ))
         resultValue.update(purgeResult)
     except Exception as e:
-        resultValue.update_sep(False,'Terminated purge unused ' + unUsedElementNameHeader + ' with exception: '+ str(e))
+        resultValue.update_sep(False,'Terminated purge unused ' + unused_element_name_header + ' with exception: '+ str(e))
     return resultValue
 
 # --------------------------------------------- Main ---------------------------------------------
@@ -251,17 +251,17 @@ SPACER = '...'
 TIMER_TASK = Timer()
 TIMER_OVERALL = Timer()
 
-def purge_unused(doc, revitFilePath, isDebug):
+def purge_unused(doc, revit_file_path, is_debug):
     '''
     Calls all available purge actions defined in global list.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revitFilePath: Fully qualified file path of current model document. (Not used)
-    :type revitFilePath: str
-    :param isDebug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs. False\
+    :param revit_file_path: Fully qualified file path of current model document. (Not used)
+    :type revit_file_path: str
+    :param is_debug: True: will return detailed report and attempt to try to delete elements one by one if an exception occurs. False\
         Will attempt to delete all elements at once, less detailed purge report.
-    :type isDebug: bool
+    :type is_debug: bool
 
     :return: 
         Result class instance.
@@ -273,22 +273,22 @@ def purge_unused(doc, revitFilePath, isDebug):
     '''
 
     # the current file name
-    revitFileName = util.get_file_name_without_ext(revitFilePath)
-    resultValue = res.Result()
+    revitFileName = util.get_file_name_without_ext(revit_file_path)
+    result_value = res.Result()
     TIMER_OVERALL.start()
     for pA in PURGE_ACTIONS:
         try:
             TIMER_TASK.start()
-            purgeFlag = purge_unplaced_elements(
+            purge_flag = purge_unplaced_elements(
                 doc,
                 pA.purgeIdsGetter,
                 pA.purgeTransactionName,
                 pA.purgeReportHeader,
-                isDebug
+                is_debug
             )
-            purgeFlag.append_message('{}{}'.format(SPACER,TIMER_TASK.stop()))
-            resultValue.update(purgeFlag)
+            purge_flag.append_message('{}{}'.format(SPACER,TIMER_TASK.stop()))
+            result_value.update(purge_flag)
         except Exception as e:
-            resultValue.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
-    resultValue.append_message('purge duration: {}'.formatTIMER_OVERALL.stop())
-    return resultValue
+            result_value.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
+    result_value.append_message('purge duration: {}'.formatTIMER_OVERALL.stop())
+    return result_value

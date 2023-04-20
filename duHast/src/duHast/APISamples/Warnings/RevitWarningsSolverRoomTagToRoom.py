@@ -42,7 +42,7 @@ class RevitWarningsSolverRoomTagToRoom(Base.Base):
 
         # ini super class to allow multi inheritance in children!
         super(RevitWarningsSolverRoomTagToRoom, self).__init__() 
-        self.filterName = 'Room tag outside of room.'
+        self.filter_name = 'Room tag outside of room.'
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
@@ -75,5 +75,4 @@ class RevitWarningsSolverRoomTagToRoom(Base.Base):
                     return_value.update(result)
         else:
             return_value.update_sep(True,'No warnings of type: room tag outside of room in model.')
-        return  return_value 
-    
+        return  return_value

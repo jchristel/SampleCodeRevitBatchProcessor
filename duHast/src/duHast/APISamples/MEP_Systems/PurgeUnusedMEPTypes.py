@@ -176,49 +176,49 @@ def get_unused_pipe_type_ids(doc):
     return ids
 
 
-def family_no_types_in_use(famTypeIds,unUsedTypeIds):
+def family_no_types_in_use(fam_type_ids,un_used_type_ids):
     '''
     Compares two lists of element ids and returns False if any element id in first list is not in the second list.
     Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
     TODO: repetitive code...Consider generic function!
-    :param famTypeIds: List of family symbols (types).
-    :type famTypeIds: List of Autodesk.Revit.DB.ElementId
-    :param unUsedTypeIds: List of unused family symbols (types)
-    :type unUsedTypeIds: List of Autodesk.Revit.DB.ElementId
+    :param fam_type_ids: List of family symbols (types).
+    :type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+    :param un_used_type_ids: List of unused family symbols (types)
+    :type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
     :return: True if all ids in first list are also in second list, otherwise False.
     :rtype: bool
     '''
 
     match = True
-    for famTypeId in famTypeIds:
-        if (famTypeId not in unUsedTypeIds):
+    for fam_type_id in fam_type_ids:
+        if (fam_type_id not in un_used_type_ids):
             match = False
             break
     return match
 
 
-def get_unused_mep_system_type_ids_to_purge(doc, allTypeIDGetter, allTypesGetter, builtInFamilyTypeNames):
+def get_unused_mep_system_type_ids_to_purge(doc, all_type_id_getter, all_types_getter, built_in_family_type_names):
     '''
     Gets the ids of unused MEP system types. 
     In the case that no mep system instance using any of the types is placed, this will return all but one type id since\
         Revit requires at least one mep system type definition to be in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param allTypeIDGetter: Function getting all available system type ids as a list.
-    :type allTypeIDGetter: func(doc) -> List Autodesk.Revit.ED.ElementId
-    :param allTypesGetter: Function getting all available system types as a collector.
-    :type allTypesGetter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
-    :param builtInFamilyTypeNames: List containing all available major type names.
-    :type builtInFamilyTypeNames: List str
+    :param all_type_id_getter: Function getting all available system type ids as a list.
+    :type all_type_id_getter: func(doc) -> List Autodesk.Revit.ED.ElementId
+    :param all_types_getter: Function getting all available system types as a collector.
+    :type all_types_getter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
+    :param built_in_family_type_names: List containing all available major type names.
+    :type built_in_family_type_names: List str
     :return: A list of ids representing mep system types.
     :rtype: List Autodesk.Revit.DB.ElementId
     '''
 
-    ids = rPurgeUtils.get_used_unused_type_ids(doc, allTypeIDGetter, 0)
+    ids = rPurgeUtils.get_used_unused_type_ids(doc, all_type_id_getter, 0)
     # make sure there is at least on Stair type per system family left in model
-    types = sort_types_by_family_name(doc, allTypesGetter)
+    types = sort_types_by_family_name(doc, all_types_getter)
     for key, value in types.items():
-        if(key in builtInFamilyTypeNames ):
+        if(key in built_in_family_type_names ):
             if(family_no_types_in_use(value,ids) == True):
                 # remove one type of this system family from unused list
                 ids.remove(value[0])

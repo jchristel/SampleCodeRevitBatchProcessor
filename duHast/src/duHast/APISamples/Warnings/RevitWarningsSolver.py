@@ -82,7 +82,7 @@ class RevitWarningsSolver(Base.Base):
         # ini super class to allow multi inheritance in children!
         super(RevitWarningsSolver, self).__init__() 
 
-        self.filterFuncSameMark = self.default_filter_return_all
+        self.filter_function_same_mark = self.default_filter_return_all
     
     def set_same_mark_filter_and_filter_solver(self, same_mark_filter_solver):
         '''
@@ -122,5 +122,3 @@ class RevitWarningsSolver(Base.Base):
         except Exception as e:
             print (str(e))
         return return_value
-
-    

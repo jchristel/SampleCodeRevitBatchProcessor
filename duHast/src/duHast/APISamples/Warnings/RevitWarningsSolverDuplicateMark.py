@@ -52,8 +52,8 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
         super(RevitWarningsSolverDuplicateMark, self).__init__() 
 
         self.filter = filter_func
-        self.filterValues = filter_values
-        self.filterName = 'Duplicate mark value.'
+        self.filter_values = filter_values
+        self.filter_name = 'Duplicate mark value.'
 
     # --------------------------- duplicate mark guid ---------------------------
     #: guid identifying this specific warning
@@ -84,7 +84,7 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
                 for el_id in element_ids:
                     element = doc.GetElement(el_id)
                     # check whether element passes filter
-                    if(self.filter(doc, el_id, self.filterValues)):
+                    if(self.filter(doc, el_id, self.filter_values)):
                         try:
                             p_value = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.ALL_MODEL_MARK)
                             if (p_value != None):
@@ -93,7 +93,7 @@ class RevitWarningsSolverDuplicateMark(Base.Base):
                         except Exception as e:
                             return_value.update_sep(False, 'Failed to solve warning duplicate mark with exception: ' + str(e))
                     else:
-                        return_value.update_sep(True,'Element removed by filter:' + self.filterName + ' : ' + rdb.Element.Name.GetValue(element))
+                        return_value.update_sep(True,'Element removed by filter:' + self.filter_name + ' : ' + rdb.Element.Name.GetValue(element))
         else:
             return_value.update_sep(True,'No warnings of type: duplicate mark in model.')
         return return_value

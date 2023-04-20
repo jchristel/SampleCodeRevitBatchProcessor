@@ -53,20 +53,20 @@ def build_type_dictionary(collector, dic):
             dic[c.FamilyName] = [c.Id]
     return dic
 
-def sort_types_by_family_name(doc, typeGetter):
+def sort_types_by_family_name(doc, type_getter):
     '''
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param typeGetter: function returning element types
-    :type typeGetter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
+    :param type_getter: function returning element types
+    :type type_getter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
     '''
 
     # get all Wall Type Elements
-    wts = typeGetter(doc)
-    usedWts = {}
-    usedWts = build_type_dictionary(wts, usedWts)
-    return usedWts
+    wts = type_getter(doc)
+    used_wts = {}
+    used_wts = build_type_dictionary(wts, used_wts)
+    return used_wts

@@ -42,17 +42,17 @@ from duHast.APISamples.Common import RevitTransaction as rTran
 import Autodesk.Revit.DB as rdb
 
 # tuples containing revision information
-revisionData = namedtuple('revisionData', 'description issuedBy issuedTo revisionNumberType revisionDate tagCloudVisibility')
+REVISION_DATA = namedtuple('revisionData', 'description issuedBy issuedTo revisionNumberType revisionDate tagCloudVisibility')
 
 
-def create_revision (doc, revData):
+def create_revision (doc, revision_data):
     '''
     Creates a revision in the document.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revData: Named tuple containing revision data
-    :type revData: :class:`.revisionData`
+    :param revision_data: Named tuple containing revision data
+    :type revision_data: :class:`.revisionData`
 
     :return:  
         Result class instance.
@@ -69,25 +69,25 @@ def create_revision (doc, revData):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
-            newRevision = rdb.Revision.Create(doc)
-            newRevision.Description = revData.description
-            newRevision.IssuedBy = revData.issuedBy
-            newRevision.IssuedTo = revData.issuedTo
-            newRevision.NumberType = revData.revisionNumberType
-            newRevision.RevisionDate = revData.revisionDate
-            newRevision.Visibility = revData.tagCloudVisibility #rdb.RevisionVisibility.Hidden
-            actionReturnValue.result.append(newRevision)
-            actionReturnValue.update_sep(True, 'Created new revision in document.')
+            new_revision = rdb.Revision.Create(doc)
+            new_revision.Description = revision_data.description
+            new_revision.IssuedBy = revision_data.issuedBy
+            new_revision.IssuedTo = revision_data.issuedTo
+            new_revision.NumberType = revision_data.revisionNumberType
+            new_revision.RevisionDate = revision_data.revisionDate
+            new_revision.Visibility = revision_data.tagCloudVisibility #rdb.RevisionVisibility.Hidden
+            action_return_value.result.append(new_revision)
+            action_return_value.update_sep(True, 'Created new revision in document.')
         except Exception as e:
-            actionReturnValue.update_sep(False, 'Failed to create new revision in document with exception: ' + str(e))
-        return actionReturnValue
+            action_return_value.update_sep(False, 'Failed to create new revision in document with exception: ' + str(e))
+        return action_return_value
     transaction = rdb.Transaction(doc, "adding revision to file")
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
 
 def mark_revision_as_issued(doc, revision):
     '''
@@ -113,27 +113,27 @@ def mark_revision_as_issued(doc, revision):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             revision.Issued = True
-            actionReturnValue.update_sep(True, 'Marked revision as issued.')
+            action_return_value.update_sep(True, 'Marked revision as issued.')
         except Exception as e:
-            actionReturnValue.update_sep(False,'Failed to mark revision as issued with exception: '+ str(e))
-        return actionReturnValue
+            action_return_value.update_sep(False,'Failed to mark revision as issued with exception: '+ str(e))
+        return action_return_value
     transaction = rdb.Transaction(doc, "Setting revision to issued")
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
 
-def mark_revision_as_issued_by_revision_id(doc, revisionId):
+def mark_revision_as_issued_by_revision_id(doc, revision_id):
     '''
     Sets a revision, identified by its id, status to 'Issued'.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param revisionId: The Id of the revision.
-    :type revisionId: Autodesk.Revit.DB.ElementId
+    :param revision_id: The Id of the revision.
+    :type revision_id: Autodesk.Revit.DB.ElementId
 
     :return:  
         Result class instance.
@@ -150,19 +150,19 @@ def mark_revision_as_issued_by_revision_id(doc, revisionId):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get all revisions in file
-    revsInModel = rdb.Revision.GetAllRevisionIds(doc)
-    if(revisionId in revsInModel):
+    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    if(revision_id in revisions_in_model):
         # get the revision element
-        revision = doc.GetElement(revisionId)
+        revision = doc.GetElement(revision_id)
         # mark revision as issued
-        returnValue = mark_revision_as_issued(doc, revision)
+        return_value = mark_revision_as_issued(doc, revision)
     else:
-        returnValue.update_sep(False,'Revision with id provided does not exist in model.')
-    return returnValue
+        return_value.update_sep(False,'Revision with id provided does not exist in model.')
+    return return_value
 
-def add_revisions_to_sheet(doc, sheet, revIds):
+def add_revisions_to_sheet(doc, sheet, revision_ids):
     '''
     Adds revisions to single sheet
 
@@ -170,8 +170,8 @@ def add_revisions_to_sheet(doc, sheet, revIds):
     :type doc: Autodesk.Revit.DB.Document
     :param sheet: The sheet to add the revision to.
     :type sheet: Autodesk.Revit.DB.SheetView
-    :param revIds: List of revision ids
-    :type revIds: [Autodesk.Revit.ElementId]
+    :param revision_ids: List of revision ids
+    :type revision_ids: [Autodesk.Revit.ElementId]
 
     :return:  
         Result class instance.
@@ -188,25 +188,25 @@ def add_revisions_to_sheet(doc, sheet, revIds):
     :rtype: :class:`.Result`
     '''
 
-    returnValue = res.Result()
+    return_value = res.Result()
     # get revisions already on sheet (this is important, since they need to be passed in again when adding a new revision!)
     # this call converts ids to a c# List<ElementId> : ids.ToList[ElementId]()
     ids = sheet.GetAdditionalRevisionIds()
     # add new revisions to sheet
-    for revId in revIds:
-        ids.Add(revId)
+    for revision_id in revision_ids:
+        ids.Add(revision_id)
     # commit new revisions in a transaction
     def action():
-        actionReturnValue = res.Result()
+        action_return_value = res.Result()
         try:
             sheet.SetAdditionalRevisionIds(ids)
-            actionReturnValue.update_sep(True, 'Added revision(s) to sheet.')
+            action_return_value.update_sep(True, 'Added revision(s) to sheet.')
         except Exception as e:
-            actionReturnValue.update_sep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
-        return actionReturnValue
+            action_return_value.update_sep(False,'Failed to add revision(s) to sheet with exception: '+ str(e))
+        return action_return_value
     transaction = rdb.Transaction(doc, "adding revision to sheet")
-    returnValue = rTran.in_transaction(transaction, action)
-    return returnValue
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
 
 # ---------------------------------------- deleting revisions --------------------------------------------
 
@@ -224,13 +224,13 @@ def _check_Revision_against_filters(revision, revision_description_filter):
     '''
 
     paras = revision.GetOrderedParameters()
-    ruleMatch = True
-    for paraName, paraCondition, conditionValue in revision_description_filter:
+    rule_match = True
+    for para_name, para_condition, condition_value in revision_description_filter:
         for p in paras:
-            if(p.Definition.Name == paraName):
-                match = rParaGet.check_parameter_value(p, paraCondition, conditionValue)
-                ruleMatch = ruleMatch and match
-    return ruleMatch
+            if(p.Definition.Name == para_name):
+                match = rParaGet.check_parameter_value(p, para_condition, condition_value)
+                rule_match = rule_match and match
+    return rule_match
 
 def delete_all_revisions_in_model(doc, revision_description_filter = []):
     '''
@@ -238,8 +238,8 @@ def delete_all_revisions_in_model(doc, revision_description_filter = []):
 
     :param doc: Current model document
     :type doc: Autodesk.Revit.DB.Document
-    :param revisionDescriptionFilter: list of filters, defaults to []
-    :type revisionDescriptionFilter: list, optional
+    :param revision_description_filter: list of filters, defaults to []
+    :type revision_description_filter: list, optional
 
     :return: 
         Result class instance.

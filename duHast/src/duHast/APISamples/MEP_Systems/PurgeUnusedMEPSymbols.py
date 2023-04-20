@@ -54,12 +54,12 @@ def get_used_duct_and_flex_duct_symbol_ids(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_duct_types_in_model, 1)
-    idsUsedInTypes = get_symbol_ids_used_in_duct_types(doc)
-    idsUsedInFlexTypes = get_symbol_ids_used_in_flex_duct_types(doc)
-    ids = merge_into_unique_list(ids, idsInModel)
-    ids = merge_into_unique_list(ids, idsUsedInTypes)
-    ids = merge_into_unique_list(ids, idsUsedInFlexTypes)
+    ids_in_model = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_duct_types_in_model, 1)
+    ids_used_in_types = get_symbol_ids_used_in_duct_types(doc)
+    ids_used_in_flex_types = get_symbol_ids_used_in_flex_duct_types(doc)
+    ids = merge_into_unique_list(ids, ids_in_model)
+    ids = merge_into_unique_list(ids, ids_used_in_types)
+    ids = merge_into_unique_list(ids, ids_used_in_flex_types)
     return ids
 
 
@@ -77,10 +77,10 @@ def get_unused_duct_and_flex_duct_symbol_ids(doc):
     '''
 
     ids = []
-    idsUsed = get_used_duct_and_flex_duct_symbol_ids(doc)
-    idsAvailable = get_symbol_ids_for_duct_types_in_model(doc)
-    for id in idsAvailable:
-        if (id not in idsUsed):
+    ids_used = get_used_duct_and_flex_duct_symbol_ids(doc)
+    ids_available = get_symbol_ids_for_duct_types_in_model(doc)
+    for id in ids_available:
+        if (id not in ids_used):
             ids.append(id)
     return ids
 
@@ -115,10 +115,10 @@ def get_used_cable_tray_symbol_ids(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_cable_tray_types_in_model, 1)
-    idsUsedInTypes = get_symbol_ids_used_in_cable_tray_types(doc)
-    ids = merge_into_unique_list(ids, idsInModel)
-    ids = merge_into_unique_list(ids, idsUsedInTypes)
+    ids_in_model = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_cable_tray_types_in_model, 1)
+    ids_used_in_types = get_symbol_ids_used_in_cable_tray_types(doc)
+    ids = merge_into_unique_list(ids, ids_in_model)
+    ids = merge_into_unique_list(ids, ids_used_in_types)
     return ids
 
 
@@ -134,10 +134,10 @@ def get_unused_cable_tray_symbol_ids(doc):
     '''
 
     ids = []
-    idsUsed = get_used_cable_tray_symbol_ids(doc)
-    idsAvailable = get_symbol_ids_for_cable_tray_types_in_model(doc)
-    for id in idsAvailable:
-        if (id not in idsUsed):
+    ids_used = get_used_cable_tray_symbol_ids(doc)
+    ids_available = get_symbol_ids_for_cable_tray_types_in_model(doc)
+    for id in ids_available:
+        if (id not in ids_used):
             ids.append(id)
     return ids
 
@@ -170,10 +170,10 @@ def get_used_conduit_symbol_ids(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_conduit_types_in_model, 1)
-    idsUsedInTypes = get_symbol_ids_used_in_conduit_types(doc)
-    ids = merge_into_unique_list(ids, idsInModel)
-    ids = merge_into_unique_list(ids, idsUsedInTypes)
+    ids_in_model = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_conduit_types_in_model, 1)
+    ids_used_in_types = get_symbol_ids_used_in_conduit_types(doc)
+    ids = merge_into_unique_list(ids, ids_in_model)
+    ids = merge_into_unique_list(ids, ids_used_in_types)
     return ids
 
 
@@ -189,10 +189,10 @@ def get_unused_conduit_symbol_ids(doc):
     '''
 
     ids = []
-    idsUsed = get_used_conduit_symbol_ids(doc)
-    idsAvailable = get_symbol_ids_for_conduit_types_in_model(doc)
-    for id in idsAvailable:
-        if (id not in idsUsed):
+    ids_used = get_used_conduit_symbol_ids(doc)
+    ids_available = get_symbol_ids_for_conduit_types_in_model(doc)
+    for id in ids_available:
+        if (id not in ids_used):
             ids.append(id)
     return ids
 
@@ -226,10 +226,10 @@ def get_used_pipe_symbol_ids(doc):
     '''
 
     ids = []
-    idsInModel = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_pipe_types_in_model, 1)
-    idsUsedInTypes = get_symbol_ids_used_in_pipe_types(doc)
-    ids = merge_into_unique_list(ids, idsInModel)
-    ids = merge_into_unique_list(ids, idsUsedInTypes)
+    ids_in_model = rPurgeUtils.get_used_unused_type_ids(doc, get_symbol_ids_for_pipe_types_in_model, 1)
+    ids_used_in_types = get_symbol_ids_used_in_pipe_types(doc)
+    ids = merge_into_unique_list(ids, ids_in_model)
+    ids = merge_into_unique_list(ids, ids_used_in_types)
     return ids
 
 
@@ -246,10 +246,10 @@ def get_unused_pipe_symbol_ids(doc):
     '''
 
     ids = []
-    idsUsed = get_used_pipe_symbol_ids(doc)
-    idsAvailable = get_symbol_ids_for_pipe_types_in_model(doc)
-    for id in idsAvailable:
-        if (id not in idsUsed):
+    ids_used = get_used_pipe_symbol_ids(doc)
+    ids_available = get_symbol_ids_for_pipe_types_in_model(doc)
+    for id in ids_available:
+        if (id not in ids_used):
             ids.append(id)
     return ids
 

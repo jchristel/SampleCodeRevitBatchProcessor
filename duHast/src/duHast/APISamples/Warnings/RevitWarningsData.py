@@ -44,24 +44,6 @@ class WarningsData(IFamData.IFamilyData):
         
         super(WarningsData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
 
-        '''
-        self.data = []
-        
-        if(data_type != None):
-            self.dataType = data_type
-        else:
-            self.dataType = 'not declared'
-        
-        if(root_path != None):
-            self.rootPath = root_path
-        else:
-            self.rootPath = '-'
-
-        if(root_category_path != None):
-            self.rootCategoryPath = root_category_path
-        else:
-            self.rootCategoryPath = '-'
-        '''
 
     def process(self, doc):
         # get all warnings in document

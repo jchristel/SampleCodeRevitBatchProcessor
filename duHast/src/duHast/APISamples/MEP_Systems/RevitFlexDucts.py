@@ -98,8 +98,8 @@ def get_all_flex_duct_type_ids_in_model_by_category(doc):
     '''
 
     ids = []
-    colCat = get_all_flex_duct_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (colCat)
+    col_cat = get_all_flex_duct_types_by_category(doc)
+    ids = com.get_ids_from_element_collector (col_cat)
     return ids
 
 
@@ -113,8 +113,8 @@ def get_all_flex_duct_type_ids_in_model_by_class(doc):
     '''
 
     ids = []
-    colClass = get_all_flex_duct_types_by_class(doc)
-    ids = com.get_ids_from_element_collector(colClass)
+    col_class = get_all_flex_duct_types_by_class(doc)
+    ids = com.get_ids_from_element_collector(col_class)
     return ids
 
 
@@ -128,8 +128,8 @@ def get_symbol_ids_used_in_flex_duct_types(doc):
     '''
 
     ids = []
-    tyeIds = get_all_flex_duct_type_ids_in_model_by_category(doc)
-    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tyeIds)
+    tye_ids = get_all_flex_duct_type_ids_in_model_by_category(doc)
+    ids = get_unique_ids_of_used_symbols_from_system_type_ids(doc, tye_ids)
     return ids
 
 

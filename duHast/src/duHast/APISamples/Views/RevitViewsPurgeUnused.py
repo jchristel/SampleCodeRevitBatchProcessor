@@ -30,10 +30,10 @@ Views purge unused utilities.
 import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import common as com
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
+from duHast.APISamples.Family import family_utils as rFamUPurge
 from duHast.APISamples.Views import RevitViewReferencing as rViewRef
 from duHast.APISamples.Views.Utility.ViewTypes import _get_view_types
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 
 
 # view reference purging

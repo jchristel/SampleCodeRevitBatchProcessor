@@ -42,7 +42,7 @@ Note:
 #import System
 import os
 
-from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils
+from duHast.APISamples.Family import family_rename_files_utils as rFamRenameUtils
 from duHast.Utilities import Result as res
 from duHast.Utilities import FilesIO as util
 

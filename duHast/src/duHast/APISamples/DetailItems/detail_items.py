@@ -34,7 +34,7 @@ clr.ImportExtensions(Linq)
 
 # import common library modules
 from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.DetailItems.Utility import RevitDetailItemsTypeSorting as rDetailItemTypeSort
+from duHast.APISamples.DetailItems.Utility import detail_items_type_sorting as rDetailItemTypeSort
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

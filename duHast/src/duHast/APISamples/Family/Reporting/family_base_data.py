@@ -27,10 +27,10 @@ Family base data class.
 #
 #
 
-from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
+from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
 from duHast.Utilities import DirectoryIO as dirIO, FilesIO as util
 from duHast.APISamples.Common import file_io as rFile
-from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples.Family.Reporting import family_base_data_utils as rFamBaseDataUtils
 
 # import Autodesk
 #import Autodesk.Revit.DB as rdb

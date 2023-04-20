@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to purging Revit leve
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Common import parameter_get_utils as rParaGet, purge_utils as rPurgeUtils
 from duHast.APISamples.Levels import RevitLevels as rLevel
 

@@ -44,14 +44,14 @@ from duHast.Utilities import FilesIO as util
 # class used for stats reporting
 from duHast.Utilities import Result as res
 # implementation of Revit API callback required when loading families into a Revit model
-from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
+from duHast.APISamples.Family import family_load_option as famLoadOpt
 # load everything required from family load call back 
-from duHast.APISamples.Family.RevitFamilyLoadOption import *
+from duHast.APISamples.Family.family_load_option import *
 from duHast.APISamples.Common import transaction as rTran
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES_LOADABLE_3D, CATEGORIES_LOADABLE_TAGS
+from duHast.APISamples.Family.Utility.loadable_family_categories import CATEGORIES_LOADABLE_3D, CATEGORIES_LOADABLE_TAGS
 
 # --------------------------------------------------- Family Loading / inserting -----------------------------------------
 

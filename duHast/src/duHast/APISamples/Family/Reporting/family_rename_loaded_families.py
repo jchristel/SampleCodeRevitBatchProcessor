@@ -36,8 +36,8 @@ This helper function expect a folder containing rename directive files. For form
 #import clr
 #import System
 
-from duHast.APISamples.Family import RevitFamilyRenameFilesUtils as rFamRenameUtils
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUtils
+from duHast.APISamples.Family import family_rename_files_utils as rFamRenameUtils
+from duHast.APISamples.Family import family_utils as rFamUtils
 from duHast.APISamples.Common import transaction as rTran
 from duHast.Utilities import Result as res
 

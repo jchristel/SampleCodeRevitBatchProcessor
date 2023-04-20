@@ -37,10 +37,10 @@ from System.Collections.Generic import List
 from duHast.APISamples.Common import delete as rDel
 
 from duHast.Utilities import Result as res , FilesGet as fileGet
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUtil
-from duHast.APISamples.Family import RevitFamilyLoadOption as famLoadOpt
-from duHast.APISamples.Family.RevitFamilyLoadOption import *
-from duHast.APISamples.Family.Utility import LoadableFamilyCategories as rFamLoadable
+from duHast.APISamples.Family import family_utils as rFamUtil
+from duHast.APISamples.Family import family_load_option as famLoadOpt
+from duHast.APISamples.Family.family_load_option import *
+from duHast.APISamples.Family.Utility import loadable_family_categories as rFamLoadable
 
 import Autodesk.Revit.DB as rdb
 

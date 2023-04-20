@@ -27,8 +27,8 @@ This module contains a number of helper functions relating to purging Revit fami
 #
 from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.Utilities import Utility as util
-from duHast.APISamples.Family.RevitFamilyUtils import get_family_symbols_ids, get_symbols_from_type
-from duHast.APISamples.Family.Utility.LoadableFamilyCategories import CATEGORIES_LOADABLE_TAGS, CATEGORIES_LOADABLE_3D
+from duHast.APISamples.Family.family_utils import get_family_symbols_ids, get_symbols_from_type
+from duHast.APISamples.Family.Utility.loadable_family_categories import CATEGORIES_LOADABLE_TAGS, CATEGORIES_LOADABLE_3D
 
 
 def family_all_types_in_use(fam_type_ids, used_type_ids):

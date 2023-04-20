@@ -59,9 +59,9 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.Utilities import Result as res
-from duHast.APISamples.Exports import RevitExportNavis as rExNavis
-from duHast.APISamples.Exports import RevitExportIFC as rExIFC
-from duHast.APISamples.Exports.Utility import  IFCCoordinates, IFCSpaceBoundaries
+from duHast.APISamples.Exports import export_navis as rExNavis
+from duHast.APISamples.Exports import export_ifc as rExIFC
+from duHast.APISamples.Exports.Utility import  ifc_export_coordinates, ifc_export_space_boundaries
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -131,7 +131,7 @@ def ifc_export_view(doc):
     try:
         ifc_export_option = rExIFC.ifc_get_third_party_export_config_by_view(doc, rdb.IFCVersion.IFC2x3)
         # exports 3D view where name starts with 'NWCP', Origin is project base point
-        return_value = rExIFC.export_3d_views_to_ifc(doc, 'NWCP', ifc_export_option, ROOT_PATH, IFCCoordinates.IFCCoords.project_base_point)
+        return_value = rExIFC.export_3d_views_to_ifc(doc, 'NWCP', ifc_export_option, ROOT_PATH, ifc_export_coordinates.IFCCoords.project_base_point)
     except Exception as e:
         return_value.update_sep(False, 'Failed to export view to IFC with exception{}'.format(e))
     return return_value
@@ -161,7 +161,7 @@ def ifc_export_view_default(doc):
 
     return_value = res.Result()
     try:
-        ifc_export_option_default = rExIFC.ifc_get_export_config_by_view(rdb.IFCVersion.IFC2x3, IFCSpaceBoundaries.IFCSpaceBoundaries.no_boundaries)
+        ifc_export_option_default = rExIFC.ifc_get_export_config_by_view(rdb.IFCVersion.IFC2x3, ifc_export_space_boundaries.IFCSpaceBoundaries.no_boundaries)
         return_value = rExIFC.export_3d_views_to_ifc_default(doc, 'NWCS', ifc_export_option_default, ROOT_PATH)
     except Exception as e:
         return_value.update_sep(False, 'Failed to export view to IFC with exception{}'.format(e))

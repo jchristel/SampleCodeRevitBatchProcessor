@@ -36,7 +36,7 @@ from duHast.APISamples.Common import parameter_get_utils as rParaGet
 from duHast.APISamples.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories
 from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
 from duHast.APISamples.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D
-from duHast.APISamples.Family import RevitFamilyElementUtils as rFamElementUtils
+from duHast.APISamples.Family import family_element_utils as rFamElementUtils
 
 
 def sort_elements_by_category(elements, element_dic):

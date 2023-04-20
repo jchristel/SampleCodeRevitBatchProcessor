@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import worksets as rWork
-from duHast.APISamples.Grids import RevitGrids as rGrid
+from duHast.APISamples.Grids import grids as rGrid
 
 
 def modify_grid_worksets_default (doc, worksetRules):

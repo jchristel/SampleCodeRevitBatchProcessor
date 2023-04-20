@@ -26,9 +26,9 @@ Family base data processor class.
 #
 #
 
-from duHast.APISamples.Family.Reporting.IFamilyProcessor import IFamilyProcessor
-from duHast.APISamples.Family.Reporting import RevitFamilyBaseData as rFamData
-from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
+from duHast.APISamples.Family.Reporting.ifamily_processor import IFamilyProcessor
+from duHast.APISamples.Family.Reporting import family_base_data as rFamData
+from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
 from duHast.Utilities import UtilBatchP as uBP
 
 class FamilyBaseProcessor(IFamilyProcessor):

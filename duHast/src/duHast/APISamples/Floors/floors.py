@@ -30,12 +30,12 @@ import clr
 import System
 
 from duHast.APISamples.Common import common as com
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import family_utils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Floors.Utility import RevitFloorsFilter as rFloorFilter
+from duHast.APISamples.Floors.Utility import floors_filter as rFloorFilter
 
 #: Built in family name for standard floor
 FLOOR_FAMILY_NAME = 'Floor'

@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit roof
 #
 #
 
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.APISamples.Roofs.RevitRoofs import get_all_in_place_roof_type_ids, get_all_roof_type_ids_by_class, get_all_roof_type_ids_by_category
 from duHast.APISamples.Roofs.Utility.RevitRoofsFamilyNames import BUILTIN_ROOF_TYPE_FAMILY_NAMES

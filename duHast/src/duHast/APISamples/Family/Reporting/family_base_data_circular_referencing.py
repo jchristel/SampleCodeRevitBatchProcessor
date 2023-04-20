@@ -51,7 +51,7 @@ Algorithm description:
 import threading
 import os
 
-from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDataUtils
+from duHast.APISamples.Family.Reporting import family_base_data_utils as rFamBaseDataUtils
 from duHast.Utilities.timer import Timer
 from duHast.Utilities import Result as res
 

@@ -51,10 +51,10 @@ from duHast.APISamples.LinePattern import RevitLineStyles as rLineStyle
 from duHast.APISamples.Links import RevitCadLinks as rCadLink
 from duHast.APISamples.Links import RevitImageLinks as rImageLink
 from duHast.APISamples.ModelHealth import RevitModelHealthReportFileNames as rFns
-from duHast.APISamples.Family import RevitFamilyUtils as rFams
+from duHast.APISamples.Family import family_utils as rFams
 from duHast.APISamples.Common import groups as rGrp
 from duHast.APISamples.Rooms import RevitRooms as rRooms
-from duHast.APISamples.DetailItems import RevitDetailItems as rDetItems
+from duHast.APISamples.DetailItems import detail_items as rDetItems
 from duHast.APISamples.Common import parameter_set_utils as rParaSet
 from duHast.Utilities import DateStamps as dateStamp, FilesIO as util, FilesTab as fileTab
 

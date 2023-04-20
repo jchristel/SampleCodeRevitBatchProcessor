@@ -29,7 +29,7 @@ This module contains utility function(s) for grid reports.
 import Autodesk.Revit.DB as rdb
 from duHast.APISamples.Common import worksets as rWork
 from duHast.Utilities import Utility as util, FilesIO as fileIO
-from duHast.APISamples.Grids import RevitGrids as rGrid
+from duHast.APISamples.Grids import grids as rGrid
 
 
 def get_grid_report_data(doc, revit_file_path):

@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit curt
 #
 #
 
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.APISamples.Walls import RevitCurtainWallElements as rCurtainWallElem
 

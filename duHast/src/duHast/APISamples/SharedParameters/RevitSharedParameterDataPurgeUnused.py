@@ -33,7 +33,7 @@ This will delete all shared parameter definitions which are not used by any fami
 
 # class used for stats reporting
 from duHast.Utilities import Result as res
-from duHast.APISamples.Family.Reporting import IFamilyData as IFamData
+from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
 from duHast.APISamples.SharedParameters import RevitSharedParameterData as rSharedParaData
 from duHast.APISamples.Categories import categories as rCat
 from duHast.APISamples.Common import delete as rDel

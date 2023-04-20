@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to purging Revit wall
 
 from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.APISamples.Walls import RevitWalls as rWall
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Walls import RevitCurtainWalls as rCurtainWall
 from duHast.APISamples.Walls import RevitStackedWalls as rStackWall
 

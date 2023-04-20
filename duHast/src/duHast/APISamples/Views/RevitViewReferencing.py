@@ -35,7 +35,7 @@ from System.Collections.Generic import List
 
 from duHast.APISamples.Common import common as com
 from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
+from duHast.APISamples.Family import family_utils as rFamUPurge
 from duHast.APISamples.Views.Utility import ViewTypes as rViewType
 
 # import Autodesk

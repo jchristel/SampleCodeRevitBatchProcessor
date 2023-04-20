@@ -26,7 +26,7 @@ This module contains a Revit floor utility functions.
 #
 #
 
-from duHast.APISamples.Floors.Utility import RevitFloorsFilter as rFloorsFilter
+from duHast.APISamples.Floors.Utility import floors_filter as rFloorsFilter
 
 def build_floor_type_dictionary(collector, dic):
     '''

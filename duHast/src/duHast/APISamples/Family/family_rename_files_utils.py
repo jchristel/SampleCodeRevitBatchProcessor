@@ -46,7 +46,7 @@ from collections import namedtuple
 from duHast.Utilities.timer import Timer
 
 from duHast.Utilities import Result as res, FilesCSV as fileCSV, FilesGet as fileGet
-from duHast.APISamples.Family.Reporting import RevitFamilyBaseDataUtils as rFamBaseDUtils
+from duHast.APISamples.Family.Reporting import family_base_data_utils as rFamBaseDUtils
 
 
 # tuples containing rename directive read from file

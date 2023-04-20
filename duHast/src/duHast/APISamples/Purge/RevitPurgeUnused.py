@@ -51,8 +51,8 @@ from duHast.Utilities import Result as res
 from duHast.APISamples.Annotation import spot_dimensions as rAnnoSpot
 from duHast.APISamples.Annotation import generic_annotation as rGAnno
 
-from duHast.APISamples.Family import RevitFamilyUtils as rFamUPurge
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import family_utils as rFamUPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 
 from duHast.APISamples.Common import groups as rGrp
 from duHast.APISamples.Common import delete as rDel
@@ -90,14 +90,14 @@ from duHast.APISamples.BuildingPads import purge_unused_building_pad_types as rB
 from duHast.APISamples.Ceilings import ceilings as rCeil
 from duHast.APISamples.Ceilings import purge_unused_ceiling_types as rCeilingPurge
 
-from duHast.APISamples.DetailItems import RevitDetailItems as rDet
-from duHast.APISamples.DetailItems import PurgeUnusedDetailItemTypes as rDetailItemPurge
+from duHast.APISamples.DetailItems import detail_items as rDet
+from duHast.APISamples.DetailItems import purge_unused_detail_item_types as rDetailItemPurge
 
-from duHast.APISamples.Floors import RevitFloors as rFlo
-from duHast.APISamples.Floors import PurgeUnusedFloorTypes as rFloorPurge
+from duHast.APISamples.Floors import floors as rFlo
+from duHast.APISamples.Floors import purge_unused_floor_types as rFloorPurge
 
-from duHast.APISamples.Grids import RevitGrids as rGrid
-from duHast.APISamples.Grids import PurgeUnusedGridTypes as rGridPurge
+from duHast.APISamples.Grids import grids as rGrid
+from duHast.APISamples.Grids import purge_unused_grid_types as rGridPurge
 
 from duHast.APISamples.Levels import RevitLevels as rLev
 from duHast.APISamples.Levels import PurgeUnusedLevelTypes as rLevelPurge

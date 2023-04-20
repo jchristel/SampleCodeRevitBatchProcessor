@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to purging Revit stai
 #
 #
 
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Common import purge_utils as rPurgeUtils
 from duHast.APISamples.Common import parameter_get_utils as rParaGet
 from duHast.APISamples.Stairs import RevitStairs as rStair

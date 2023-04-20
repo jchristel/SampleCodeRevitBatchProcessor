@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 
 from duHast.APISamples.Annotation import generic_annotation as rGenericAnno
-from duHast.APISamples.Family import PurgeUnusedFamilyTypes as rFamPurge
+from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
 from duHast.APISamples.Common import parameter_get_utils as rParaGet
 from duHast.APISamples.Common import common as com
 from duHast.APISamples.Annotation import annotation as rAnno

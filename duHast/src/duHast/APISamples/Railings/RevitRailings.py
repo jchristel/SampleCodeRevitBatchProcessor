@@ -30,7 +30,7 @@ import clr
 import System
 
 from duHast.APISamples.Common import common as com
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.APISamples.Family import family_utils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -32,9 +32,9 @@ import clr
 #from collections import namedtuple
 
 from duHast.Utilities import Result as res
-from duHast.APISamples.Warnings import RevitWarnings as rWar
-from duHast.APISamples.Warnings import RevitWarningsSolverRoomTagToRoom as rwsRoomTagToRoom
-from duHast.APISamples.Warnings import RevitWarningsSolverDuplicateMark as rwsDuplicateMark
+from duHast.APISamples.Warnings import warnings as rWar
+from duHast.APISamples.Warnings import solver_room_tag_to_room as rwsRoomTagToRoom
+from duHast.APISamples.Warnings import solver_duplicate_mark as rwsDuplicateMark
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

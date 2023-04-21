@@ -26,7 +26,7 @@ Family category data class.
 #
 #
 
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import Utility as util
 from duHast.APISamples.Categories import categories as rCat
 from duHast.APISamples.Categories.Utility import category_properties_get_utils as rCatPropGet

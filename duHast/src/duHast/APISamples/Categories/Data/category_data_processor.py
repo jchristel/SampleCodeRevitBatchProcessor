@@ -26,9 +26,9 @@ Family category data processor class.
 #
 #
 
-from duHast.APISamples.Family.Reporting.ifamily_processor import IFamilyProcessor
+from duHast.APISamples.Family.Data.ifamily_processor import IFamilyProcessor
 from duHast.APISamples.Categories import category_data as rCatData
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import Result as res
 from duHast.APISamples.Categories.Utility import category_property_names as rCatPropNames
 

@@ -49,7 +49,7 @@ from duHast.Utilities.timer import Timer
 
 from duHast.Utilities import Result as res
 #from duHast.Utilities import Utility as util
-from duHast.APISamples.Family.Reporting import family_base_data_utils as rFamBaseDataUtils
+from duHast.APISamples.Family.Data import family_base_data_utils as rFamBaseDataUtils
 from duHast.APISamples.Family import family_rename_files_utils as rFamRenameUtils
 
 #---------------------------------------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ from duHast.APISamples.BIM360 import bim_360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
 from duHast.Utilities import Result as res
 from duHast.APISamples.Common import design_set_options as rDoS
-from duHast.APISamples.Warnings import RevitWarnings as rWarn
+from duHast.APISamples.Warnings import warnings as rWarn
 from duHast.APISamples.Common import worksets as rWork
 from duHast.APISamples.Views import sheets as rViewSheets
 from duHast.APISamples.Views import views as rViews

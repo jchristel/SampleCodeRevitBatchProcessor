@@ -26,9 +26,9 @@ Family warnings data class.
 #
 #
 
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
 #from duHast.Utilities import Utility as util
-from duHast.APISamples.Warnings import RevitWarnings as rWarn
+from duHast.APISamples.Warnings import warnings as rWarn
 
 # import Autodesk
 #import Autodesk.Revit.DB as rdb

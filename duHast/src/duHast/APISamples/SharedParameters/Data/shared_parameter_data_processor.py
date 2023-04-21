@@ -26,9 +26,9 @@ Family shared parameter data processor class.
 #
 #
 
-from duHast.APISamples.Family.Reporting.ifamily_processor import IFamilyProcessor
+from duHast.APISamples.Family.Data.ifamily_processor import IFamilyProcessor
 from duHast.APISamples.SharedParameters import shared_parameter_data as rSharedData
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import Result as res
 
 class SharedParameterProcessor(IFamilyProcessor):

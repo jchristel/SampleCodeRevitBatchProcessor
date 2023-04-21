@@ -27,9 +27,9 @@ Family line pattern data processor class.
 #
 
 
-from duHast.APISamples.Family.Reporting.ifamily_processor import IFamilyProcessor
+from duHast.APISamples.Family.Data.ifamily_processor import IFamilyProcessor
 from duHast.APISamples.LinePattern import line_pattern_data as rLinePatData
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import Result as res
 
 class LinePatternProcessor(IFamilyProcessor):

@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Family warnings data processor class.
+Family base data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -26,37 +26,52 @@ Family warnings data processor class.
 #
 #
 
+from duHast.APISamples.Family.Data.ifamily_processor import IFamilyProcessor
+from duHast.APISamples.Family.Data import family_base_data as rFamData
+from duHast.APISamples.Family.Data import ifamily_data as IFamData
+from duHast.Utilities import UtilBatchP as uBP
 
-from duHast.APISamples.Family.Reporting.ifamily_processor import IFamilyProcessor
-from duHast.APISamples.Warnings import RevitWarningsData as rWarnData
-from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+class FamilyBaseProcessor(IFamilyProcessor):
 
-class WarningsProcessor(IFamilyProcessor):
-
-    def __init__(self,pre_actions = None, post_actions = None):
+    def __init__(self, 
+        reference_file_path = None, 
+        family_out_directory_path = None, 
+        session_id = None,
+        pre_actions = None, 
+        post_actions = None
+        ):
         '''
         Class constructor.
         '''
 
-        # setup report header
+        # store data type  in base class
         string_report_headers = [
             IFamData.ROOT,
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
             IFamData.FAMILY_FILE_PATH,
-            rWarnData.WARNING_TEXT,
-            rWarnData.WARNING_GUID,
-            rWarnData.WARNING_RELATED_IDS,
-            rWarnData.WARNING_OTHER_IDS
+            rFamData.CATEGORY_NAME
         ]
 
         # store data type  in base class
-        super(WarningsProcessor, self).__init__(
+        super(FamilyBaseProcessor, self).__init__(
+            data_type = 'FamilyBase',
             pre_actions=pre_actions, 
-            post_actions=post_actions, 
-            data_type='Warnings', 
+            post_actions=post_actions,
             string_report_headers=string_report_headers
         )
+
+        #self.data = []
+        #self.dataType = 'FamilyBase'
+        self.reference_file_path = reference_file_path
+        self.family_out_directory_path = family_out_directory_path
+        if(session_id != None):
+            self.session_id = uBP.adjust_session_id_for_directory_name(session_id)
+        else:
+            self.session_id = session_id
+
+        #self.preActions = preActions
+        #self.postActions = postActions
 
     def process(self, doc, root_path, root_category_path):
         '''
@@ -67,11 +82,11 @@ class WarningsProcessor(IFamilyProcessor):
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
             This includes the actual family name as the last node.
         :type rootPath: str
-        :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
+        :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
         '''
-         
-        dummy = rWarnData.WarningsData(root_path, root_category_path, self.data_type)
-        dummy.process(doc)
+
+        dummy = rFamData.FamilyBaseData(root_path, root_category_path, self.data_type)
+        dummy.process(doc, self.reference_file_path, self.family_out_directory_path, self.session_id)
         self.data.append(dummy)

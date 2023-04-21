@@ -27,7 +27,7 @@ This module contains a number of helper functions relating to sorting Revit stai
 #
 
 
-from duHast.APISamples.Stairs.Utility import stairs_filter as rStairFilter
+from duHast.Revit.Stairs.Utility import stairs_filter as rStairFilter
 
 def build_stair_type_dictionary(collector, dic):
     '''

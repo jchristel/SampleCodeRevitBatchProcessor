@@ -28,9 +28,9 @@ This module contains a number of helper functions relating to Revit railing balu
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Railings.Utility.merge_lists import merge_into_unique_list
-from duHast.APISamples.Railings.railings import get_all_railing_type_ids_by_class_and_category
+from duHast.Revit.Common import common as com
+from duHast.Revit.Railings.Utility.merge_lists import merge_into_unique_list
+from duHast.Revit.Railings.railings import get_all_railing_type_ids_by_class_and_category
 
 
 def get_balusters_used_in_pattern(b_pattern):

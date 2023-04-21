@@ -29,15 +29,15 @@ This module contains a number of helper functions relating to Revit railings.
 import clr
 import System
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Family import family_utils as rFam
+from duHast.Revit.Common import common as com
+from duHast.Revit.Family import family_utils as rFam
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Railings.Utility.railing_categories import RAILING_CATEGORY_FILTER
-from duHast.APISamples.Railings.Utility import railings_filter as rRailFilter
+from duHast.Revit.Railings.Utility.railing_categories import RAILING_CATEGORY_FILTER
+from duHast.Revit.Railings.Utility import railings_filter as rRailFilter
 
 # --------------------------------------------- utility functions ------------------
 

@@ -29,9 +29,9 @@ This module contains a number of helper functions relating to changing Revit sha
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import transaction as rTran
-from duHast.Utilities import Result as res
-from duHast.APISamples.SharedParameters.shared_parameters import get_family_parameters
+from duHast.Revit.Common import transaction as rTran
+from duHast.Utilities import result as res
+from duHast.Revit.SharedParameters.shared_parameters import get_family_parameters
 
 
 def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_'):

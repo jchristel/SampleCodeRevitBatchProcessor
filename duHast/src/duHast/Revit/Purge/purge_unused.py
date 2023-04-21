@@ -45,85 +45,85 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-from duHast.Utilities import FilesIO as util
-from duHast.Utilities import Result as res
+from duHast.Utilities import files_io as util
+from duHast.Utilities import result as res
 
-from duHast.APISamples.Annotation import spot_dimensions as rAnnoSpot
-from duHast.APISamples.Annotation import generic_annotation as rGAnno
+from duHast.Revit.Annotation import spot_dimensions as rAnnoSpot
+from duHast.Revit.Annotation import generic_annotation as rGAnno
 
-from duHast.APISamples.Family import family_utils as rFamUPurge
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Family import family_utils as rFamUPurge
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
 
-from duHast.APISamples.Common import groups as rGrp
-from duHast.APISamples.Common import delete as rDel
+from duHast.Revit.Common import groups as rGrp
+from duHast.Revit.Common import delete as rDel
 
-from duHast.APISamples.Views import views as rView
-from duHast.APISamples.Views import referencing as rViewRef
-from duHast.APISamples.Views import filters as rViewFilter
-from duHast.APISamples.Views import views_purge_unused as rViewPurge
-from duHast.APISamples.Views import templates as rViewTemp
+from duHast.Revit.Views import views as rView
+from duHast.Revit.Views import referencing as rViewRef
+from duHast.Revit.Views import filters as rViewFilter
+from duHast.Revit.Views import views_purge_unused as rViewPurge
+from duHast.Revit.Views import templates as rViewTemp
 
-from duHast.APISamples.Walls import walls as rWall
-from duHast.APISamples.Walls import purge_unused_wall_types as rWallPurge
-from duHast.APISamples.Walls import curtain_wall_elements as rCurtainWallElem
-from duHast.APISamples.Walls import curtain_walls as rCurtainWall
-from duHast.APISamples.Walls import stacked_walls as rStackedWall
-from duHast.APISamples.Walls import purge_unused_curtain_wall_element_types as rCurtainWallElemPurge
+from duHast.Revit.Walls import walls as rWall
+from duHast.Revit.Walls import purge_unused_wall_types as rWallPurge
+from duHast.Revit.Walls import curtain_wall_elements as rCurtainWallElem
+from duHast.Revit.Walls import curtain_walls as rCurtainWall
+from duHast.Revit.Walls import stacked_walls as rStackedWall
+from duHast.Revit.Walls import purge_unused_curtain_wall_element_types as rCurtainWallElemPurge
 
-from duHast.APISamples.Annotation import purge_unused_annotation_types as rAnnoPurge
-from duHast.APISamples.Annotation import arrow_heads as rArrow
-from duHast.APISamples.Annotation import dimensions as rDim
-from duHast.APISamples.Annotation import multi_ref_annotation as rMultiRefAnno
-from duHast.APISamples.Annotation import text as rText
+from duHast.Revit.Annotation import purge_unused_annotation_types as rAnnoPurge
+from duHast.Revit.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation import dimensions as rDim
+from duHast.Revit.Annotation import multi_ref_annotation as rMultiRefAnno
+from duHast.Revit.Annotation import text as rText
 
-from duHast.APISamples.Stairs import purge_unused_stair_types as rStairPurge
-from duHast.APISamples.Stairs import stairs as rStair
-from duHast.APISamples.Stairs import runs as rStairRun
-from duHast.APISamples.Stairs import landings as rStairLanding
-from duHast.APISamples.Stairs import path as rStairPath
-from duHast.APISamples.Stairs import stringers_carriages as rStairStringerAndCarriage
-from duHast.APISamples.Stairs import cut_marks as rStairCutMark
+from duHast.Revit.Stairs import purge_unused_stair_types as rStairPurge
+from duHast.Revit.Stairs import stairs as rStair
+from duHast.Revit.Stairs import runs as rStairRun
+from duHast.Revit.Stairs import landings as rStairLanding
+from duHast.Revit.Stairs import path as rStairPath
+from duHast.Revit.Stairs import stringers_carriages as rStairStringerAndCarriage
+from duHast.Revit.Stairs import cut_marks as rStairCutMark
 
-from duHast.APISamples.BuildingPads import building_pads as rBuildP
-from duHast.APISamples.BuildingPads import purge_unused_building_pad_types as rBuildingPadPurge
+from duHast.Revit.BuildingPads import building_pads as rBuildP
+from duHast.Revit.BuildingPads import purge_unused_building_pad_types as rBuildingPadPurge
 
-from duHast.APISamples.Ceilings import ceilings as rCeil
-from duHast.APISamples.Ceilings import purge_unused_ceiling_types as rCeilingPurge
+from duHast.Revit.Ceilings import ceilings as rCeil
+from duHast.Revit.Ceilings import purge_unused_ceiling_types as rCeilingPurge
 
-from duHast.APISamples.DetailItems import detail_items as rDet
-from duHast.APISamples.DetailItems import purge_unused_detail_item_types as rDetailItemPurge
+from duHast.Revit.DetailItems import detail_items as rDet
+from duHast.Revit.DetailItems import purge_unused_detail_item_types as rDetailItemPurge
 
-from duHast.APISamples.Floors import floors as rFlo
-from duHast.APISamples.Floors import purge_unused_floor_types as rFloorPurge
+from duHast.Revit.Floors import floors as rFlo
+from duHast.Revit.Floors import purge_unused_floor_types as rFloorPurge
 
-from duHast.APISamples.Grids import grids as rGrid
-from duHast.APISamples.Grids import purge_unused_grid_types as rGridPurge
+from duHast.Revit.Grids import grids as rGrid
+from duHast.Revit.Grids import purge_unused_grid_types as rGridPurge
 
-from duHast.APISamples.Levels import levels as rLev
-from duHast.APISamples.Levels import purge_unused_level_types as rLevelPurge
+from duHast.Revit.Levels import levels as rLev
+from duHast.Revit.Levels import purge_unused_level_types as rLevelPurge
 
-from duHast.APISamples.Links import image_links as rImageLink
-from duHast.APISamples.Links import purge_unused_image_link_types as rLinkPurge
+from duHast.Revit.Links import image_links as rImageLink
+from duHast.Revit.Links import purge_unused_image_link_types as rLinkPurge
 
-from duHast.APISamples.Railings import railings as rRail
-from duHast.APISamples.Railings import balusters as rBal
-from duHast.APISamples.Railings import purge_unused_railing_and_baluster_types as rRailPurge
+from duHast.Revit.Railings import railings as rRail
+from duHast.Revit.Railings import balusters as rBal
+from duHast.Revit.Railings import purge_unused_railing_and_baluster_types as rRailPurge
 
-from duHast.APISamples.MEP_Systems import purge_unused_mep_symbols as rMEPSymbolPurge
-from duHast.APISamples.MEP_Systems import purge_unused_mep_types as rMEPTypePurge
-from duHast.APISamples.MEP_Systems import cable_trays as rCableTray
-from duHast.APISamples.MEP_Systems import conduits as rConduit
-from duHast.APISamples.MEP_Systems  import ducts as rDuct
-from duHast.APISamples.MEP_Systems import pipes as rPipe
+from duHast.Revit.MEP_Systems import purge_unused_mep_symbols as rMEPSymbolPurge
+from duHast.Revit.MEP_Systems import purge_unused_mep_types as rMEPTypePurge
+from duHast.Revit.MEP_Systems import cable_trays as rCableTray
+from duHast.Revit.MEP_Systems import conduits as rConduit
+from duHast.Revit.MEP_Systems  import ducts as rDuct
+from duHast.Revit.MEP_Systems import pipes as rPipe
 
-from duHast.APISamples.Ramps import ramps as rRam
-from duHast.APISamples.Ramps import purge_unused_ramp_types as rRampPurge
+from duHast.Revit.Ramps import ramps as rRam
+from duHast.Revit.Ramps import purge_unused_ramp_types as rRampPurge
 
-from duHast.APISamples.Roofs import roofs as rRoof
-from duHast.APISamples.Roofs import purge_unused_roof_types as rRoofPurge
+from duHast.Revit.Roofs import roofs as rRoof
+from duHast.Revit.Roofs import purge_unused_roof_types as rRoofPurge
 
 from duHast.Utilities.timer import Timer
-from duHast.APISamples.Purge import purge_action as pA
+from duHast.Revit.Purge import purge_action as pA
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

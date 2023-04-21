@@ -26,13 +26,13 @@ This module contains a number of helper functions relating to purging Revit rail
 #
 #
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Railings.balusters import get_all_baluster_symbols_ids, get_baluster_types_from_railings
-from duHast.APISamples.Railings.railings import get_in_place_railing_type_ids_in_model, get_all_railing_type_ids_by_class_and_category
-from duHast.APISamples.Railings.Utility.railing_family_names import BUILTIN_RAILING_TYPE_FAMILY_NAMES
-from duHast.APISamples.Railings.Utility.merge_lists import merge_into_unique_list
-from duHast.APISamples.Railings.Utility.railings_type_sorting import sort_railing_types_by_family_name
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Railings.balusters import get_all_baluster_symbols_ids, get_baluster_types_from_railings
+from duHast.Revit.Railings.railings import get_in_place_railing_type_ids_in_model, get_all_railing_type_ids_by_class_and_category
+from duHast.Revit.Railings.Utility.railing_family_names import BUILTIN_RAILING_TYPE_FAMILY_NAMES
+from duHast.Revit.Railings.Utility.merge_lists import merge_into_unique_list
+from duHast.Revit.Railings.Utility.railings_type_sorting import sort_railing_types_by_family_name
 
 
 def get_used_railing_type_ids(doc):

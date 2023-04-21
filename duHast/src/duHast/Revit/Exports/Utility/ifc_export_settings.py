@@ -28,9 +28,9 @@ IFC export settings class.
 #
 
 import System
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class IFCSettings(Base.Base):
+class IFCSettings(base.Base):
     
     supported_ifc_versions = {
             'Default' : 'The Autodesk Revit applications default export format. Note that this may change as the defaults change in the Revit user interface.',

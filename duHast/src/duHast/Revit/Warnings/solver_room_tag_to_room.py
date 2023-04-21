@@ -26,14 +26,14 @@ Room tag not in room warnings solver class.
 #
 #
 
-from duHast.Utilities import Result as res
-from duHast.APISamples import RevitRooms as rRoom
+from duHast.Utilities import result as res
+from duHast.Revit import RevitRooms as rRoom
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class RevitWarningsSolverRoomTagToRoom(Base.Base):
+class RevitWarningsSolverRoomTagToRoom(base.Base):
 
     def __init__(self):
         '''

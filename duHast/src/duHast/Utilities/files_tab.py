@@ -28,8 +28,8 @@ Helper functions relating to tab separated text files.
 
 import codecs
 import csv
-from duHast.Utilities.FilesIO import get_first_row_in_file
-from duHast.Utilities.FilesIO import get_file_name_without_ext
+from duHast.Utilities.files_io import get_first_row_in_file
+from duHast.Utilities.files_io import get_file_name_without_ext
 
 
 def get_unique_headers(files):

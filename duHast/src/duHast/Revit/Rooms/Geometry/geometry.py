@@ -28,8 +28,8 @@ This module contains a Revit rooms geometry extraction functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Rooms.rooms import get_all_rooms
-from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon as dGeometryPoly
+from duHast.Revit.Rooms.rooms import get_all_rooms
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometryPoly
 
 
 def get_room_boundary_loops(revit_room):

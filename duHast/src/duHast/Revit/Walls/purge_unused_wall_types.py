@@ -26,11 +26,11 @@ This module contains a number of helper functions relating to purging Revit wall
 #
 #
 
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Walls import walls as rWall
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Walls import curtain_walls as rCurtainWall
-from duHast.APISamples.Walls import stacked_walls as rStackWall
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Walls import walls as rWall
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Walls import curtain_walls as rCurtainWall
+from duHast.Revit.Walls import stacked_walls as rStackWall
 
 
 # -------------------- used types --------------------------

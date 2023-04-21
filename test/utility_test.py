@@ -1,4 +1,4 @@
-from duHast.Utilities import Utility as util
+from duHast.Utilities import utility as util
 
 def test_EncodeAscii():
     assert util.encode_ascii("hello world") == b"hello world"

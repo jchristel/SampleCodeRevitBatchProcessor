@@ -26,12 +26,12 @@ Utility functions writing revit geometry data to file.
 #
 #
 
-from duHast.APISamples.Ceilings.Export import to_data_ceiling as rCeil
-from duHast.APISamples.Rooms.Export import to_data_room as rRoom
-from duHast.Utilities import Result as res
-from duHast.Utilities import DateStamps as dateStamp
-from duHast.DataSamples.Objects import DataCeiling as dc
-from duHast.DataSamples.Objects import DataRoom as dr
+from duHast.Revit.Ceilings.Export import to_data_ceiling as rCeil
+from duHast.Revit.Rooms.Export import to_data_room as rRoom
+from duHast.Utilities import result as res
+from duHast.Utilities import date_stamps as dateStamp
+from duHast.Data.Objects import data_ceiling as dc
+from duHast.Data.Objects import data_room as dr
 
 import json
 import codecs

@@ -29,9 +29,9 @@ This module contains utility function(s) for level reports.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import worksets as rWork
-from duHast.Utilities import Utility as util
-from duHast.Utilities import FilesIO as util
+from duHast.Revit.Common import worksets as rWork
+from duHast.Utilities import utility as util
+from duHast.Utilities import files_io as util
 
 
 def get_level_report_data(doc, revitFilePath):

@@ -28,8 +28,8 @@ Delete elements from model.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import transaction as rTran
-from duHast.Utilities import Result as res
+from duHast.Revit.Common import transaction as rTran
+from duHast.Utilities import result as res
 
 
 def delete_by_element_ids(

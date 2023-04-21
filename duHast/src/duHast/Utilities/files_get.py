@@ -28,7 +28,7 @@ Helper functions relating to retrieving file information.
 
 import glob
 
-from duHast.Utilities.FilesIO import get_file_name_without_ext
+from duHast.Utilities.files_io import get_file_name_without_ext
 import os
 
 

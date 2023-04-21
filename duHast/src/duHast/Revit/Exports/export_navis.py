@@ -28,9 +28,9 @@ This module contains a number of functions around exporting from Revit to nwc fi
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views import views as rView
-from duHast.Utilities import Result as res
-from duHast.APISamples.Exports.export import build_export_file_name_from_view
+from duHast.Revit.Views import views as rView
+from duHast.Utilities import result as res
+from duHast.Revit.Exports.export import build_export_file_name_from_view
 
 
 def setup_nwc_custom_export_option(using_shared_coordinates, export_entire_model, export_links, split_model_by_level, export_parts, export_room_as_attributes, export_room_geometry, find_missing_materials):

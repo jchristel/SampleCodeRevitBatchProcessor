@@ -57,7 +57,7 @@ This module contains a Revit railings utility functions.
 
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Railings.Utility.railing_categories import RAILING_CATEGORY_FILTER
+from duHast.Revit.Railings.Utility.railing_categories import RAILING_CATEGORY_FILTER
 
 def _get_all_railing_types_by_category(doc):
     '''

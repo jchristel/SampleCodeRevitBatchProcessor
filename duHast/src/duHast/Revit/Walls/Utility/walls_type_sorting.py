@@ -27,7 +27,7 @@ This module contains a Revit walls utility functions.
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Walls.Utility import walls_filter as rWallFilter
+from duHast.Revit.Walls.Utility import walls_filter as rWallFilter
 
 def build_wall_type_dictionary(collector, dic):
     '''

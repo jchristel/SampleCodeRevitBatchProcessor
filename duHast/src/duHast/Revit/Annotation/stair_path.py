@@ -30,7 +30,7 @@ This module contains a number of helper functions relating to stair path annotat
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
-from duHast.APISamples.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation import arrow_heads as rArrow
 
 
 def get_all_stair_path_types(doc):

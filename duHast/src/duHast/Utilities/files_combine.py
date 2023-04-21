@@ -29,9 +29,9 @@ Helper functions relating to combining text files.
 
 import codecs
 import glob
-from duHast.Utilities.FilesIO import get_file_name_without_ext
-from duHast.Utilities.FilesGet import get_files_single_directory
-from duHast.Utilities.FilesTab import get_unique_headers
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_get import get_files_single_directory
+from duHast.Utilities.files_tab import get_unique_headers
 
 
 def combine_files(folder_path, file_prefix = '', file_suffix = '', file_extension='.txt', out_put_file_name = 'result.txt', file_getter = get_files_single_directory):

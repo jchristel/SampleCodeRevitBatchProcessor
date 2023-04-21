@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data storage class.
+Data storage class for Revit element phasing properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Geometry data storage class.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2022  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,11 +27,13 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples.Utils import DataBase
+from duHast.Data.Utils import data_base
 
-class DataGeometryBase(DataBase.DataBase):
+class DataPhasing(data_base.DataBase):
+    
+    data_type = 'phasing'
 
-    def __init__(self, data_type, j = {}):
+    def __init__(self, j = {}):
         '''
         Class constructor
 
@@ -40,7 +42,7 @@ class DataGeometryBase(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataGeometryBase, self).__init__(data_type)
+        super(DataPhasing, self).__init__(DataPhasing.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -52,22 +54,17 @@ class DataGeometryBase(DataBase.DataBase):
                 # no action required
                 pass
             else:
-                print('j', j)
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-            
-            # translation as per shared coordinates in revit file
-            if('translation_coord' in j ):
-                self.translation_coord = j['translation_coord']
+        
+            if('created' in j ):
+                self.created = j['created']
             else:
-                self.translation_coord = [0.0, 0.0, 0.0]
+                self.created = '-'
             
-            # rotation as per shared coordinates in revit file
-            if('rotation_coord' in j ):
-                self.rotation_coord = j['rotation_coord']
+            if('demolished' in j ):
+                self.demolished = j['demolished']
             else:
-                self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
-
+                self.demolished = '-'
         else:
-            # set default values
-            self.translation_coord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
-            self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file
+            self.created = '-'     
+            self.demolished = '-'

@@ -56,10 +56,10 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
-from duHast.APISamples.Walls.Reporting import walls_report_header as rWallHeader
-from duHast.APISamples.Walls.Reporting import walls_report as rWallRep
-from duHast.Utilities import DateStamps as dStamp
-from duHast.Utilities import FilesCSV as fileCSV
+from duHast.Revit.Walls.Reporting import walls_report_header as rWallHeader
+from duHast.Revit.Walls.Reporting import walls_report as rWallRep
+from duHast.Utilities import date_stamps as dStamp
+from duHast.Utilities import files_csv as fileCSV
 
 # autodesk API
 from Autodesk.Revit.DB import *

@@ -37,12 +37,12 @@ import os
 
 
 # import file item class
-from duHast.UI import FileItem as fi
+from duHast.UI import file_item as fi
 # import workloader utils
-from duHast.UI import Workloader as wl
+from duHast.UI import workloader as wl
 
 # custom result class
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 
 # -------------
 # my code here:

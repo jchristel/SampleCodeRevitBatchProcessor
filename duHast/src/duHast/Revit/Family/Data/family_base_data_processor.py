@@ -26,10 +26,10 @@ Family base data processor class.
 #
 #
 
-from duHast.APISamples.Family.Data.ifamily_processor import IFamilyProcessor
-from duHast.APISamples.Family.Data import family_base_data as rFamData
-from duHast.APISamples.Family.Data import ifamily_data as IFamData
-from duHast.Utilities import UtilBatchP as uBP
+from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
+from duHast.Revit.Family.Data import family_base_data as rFamData
+from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Utilities import util_batch_p as uBP
 
 class FamilyBaseProcessor(IFamilyProcessor):
 

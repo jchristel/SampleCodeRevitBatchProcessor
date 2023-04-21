@@ -38,8 +38,8 @@ This module requires python >3.9 due to dependencies:
 import shapely.geometry as sg
 import numpy as np
 
-from duHast.DataSamples.Objects import DataCeiling as dc
-from duHast.DataSamples.Objects import DataRoom as dr
+from duHast.Data.Objects import data_ceiling as dc
+from duHast.Data.Objects import data_room as dr
 
 # --------------- shapely polygon creation ------------------
 

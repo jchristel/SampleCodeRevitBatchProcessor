@@ -33,12 +33,12 @@ Data storage base class used for geometry aspects of Revit elements.
 #
 
 import json
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryPolygon
-from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryTopoCell
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon
+from duHast.Data.Objects.Properties.Geometry import geometry_topo_cell
 
-class DataElementGeometryBase(Base.Base):
+class DataElementGeometryBase(base.Base):
     
     def __init__(self, j , **kwargs):
         '''
@@ -72,7 +72,7 @@ class DataElementGeometryBase(Base.Base):
                 for item in j['polygon']:
                     if('data_type' in item):
                         if(item['data_type']):
-                            dummy = DataGeometryPolygon.DataPolygon(item)
+                            dummy = geometry_polygon.DataPolygon(item)
                             geometry_data_list.append(dummy)
                     else:
                         print('no data type in item')
@@ -80,11 +80,11 @@ class DataElementGeometryBase(Base.Base):
 
             # check for topo cell data
             if('topologic_cell' in j):
-                self.topologic_cell = DataGeometryTopoCell.DataTopologyCell(j[DataGeometryTopoCell.DataTopologyCell.DataType])
+                self.topologic_cell = geometry_topo_cell.DataTopologyCell(j[geometry_topo_cell.DataTopologyCell.DataType])
             else:
-                self.topologic_cell = DataGeometryTopoCell.DataTopologyCell()
+                self.topologic_cell = geometry_topo_cell.DataTopologyCell()
 
         else:
             # initialise classes with default values
             self.polygon = []
-            self.topologic_cell = DataGeometryTopoCell.DataTopologyCell()
+            self.topologic_cell = geometry_topo_cell.DataTopologyCell()

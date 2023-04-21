@@ -54,16 +54,16 @@ import System
 # set path to library and this script
 import sys
 
-from duHast.Utilities import DateStamps as dStamp
-from duHast.Utilities import FilesCSV as fileCSV
-from duHast.APISamples.SharedParameters.Reporting import shared_parameter_report_header as rSharedParaHeader
-from duHast.APISamples.SharedParameters.Reporting import shared_parameter_report as rSharedParaRep
+from duHast.Utilities import date_stamps as dStamp
+from duHast.Utilities import files_csv as fileCSV
+from duHast.Revit.SharedParameters.Reporting import shared_parameter_report_header as rSharedParaHeader
+from duHast.Revit.SharedParameters.Reporting import shared_parameter_report as rSharedParaRep
 
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
-from duHast.Utilities import Utility as util
-from duHast.APISamples import RevitSharedParameters as rSp
+from duHast.Utilities import utility as util
+from duHast.Revit import RevitSharedParameters as rSp
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

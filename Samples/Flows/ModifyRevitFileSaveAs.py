@@ -64,7 +64,7 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.APISamples.Common import file_io as rFileIO
+from duHast.Revit.Common import file_io as rFileIO
 
 # flag whether this runs in debug or not
 DEBUG = False

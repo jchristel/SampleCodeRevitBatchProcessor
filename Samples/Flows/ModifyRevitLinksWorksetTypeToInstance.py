@@ -58,11 +58,11 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.APISamples.Common import file_io as rFileIO
-from duHast.APISamples.Common import worksets as rWork
-from duHast.Utilities import Utility as util
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import transaction as rTran
+from duHast.Revit.Common import file_io as rFileIO
+from duHast.Revit.Common import worksets as rWork
+from duHast.Utilities import utility as util
+from duHast.Utilities import result as res
+from duHast.Revit.Common import transaction as rTran
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

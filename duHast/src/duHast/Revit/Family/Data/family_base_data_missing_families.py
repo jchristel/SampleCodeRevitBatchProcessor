@@ -48,9 +48,9 @@ Algorithm description:
 
 #from collections import namedtuple
 
-from duHast.APISamples.Family.Data import family_base_data_utils as rFamBaseDataUtils
+from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
 from duHast.Utilities.timer import Timer
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 
 def _build_unique_nested_family_dic(overallFamilyBaseNestedData):
     '''

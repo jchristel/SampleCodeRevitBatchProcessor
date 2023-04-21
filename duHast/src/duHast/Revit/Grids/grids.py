@@ -35,8 +35,8 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import common as com
+from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

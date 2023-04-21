@@ -27,11 +27,11 @@ Revit category report functions .
 #
 
 
-from duHast.APISamples.LinePattern import RevitLineStylesPatterns as rPat
-from duHast.APISamples.Categories.categories import get_family_category, get_main_sub_categories, get_other_sub_categories
-from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_colour, get_category_line_weights, get_category_material
-from duHast.APISamples.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME
-from duHast.APISamples.Categories.Utility.elements_by_category_utils import get_elements_by_category
+from duHast.Revit.LinePattern import RevitLineStylesPatterns as rPat
+from duHast.Revit.Categories.categories import get_family_category, get_main_sub_categories, get_other_sub_categories
+from duHast.Revit.Categories.Utility.category_properties_get_utils import get_category_colour, get_category_line_weights, get_category_material
+from duHast.Revit.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME
+from duHast.Revit.Categories.Utility.elements_by_category_utils import get_elements_by_category
 
 
 def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_path):

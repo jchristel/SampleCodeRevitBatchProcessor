@@ -34,12 +34,12 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples.Common import common as com
+from duHast.Revit.Common import common as com
 
-from duHast.APISamples.Walls.Utility import walls_type_sorting as rWallTypeSort
-from duHast.APISamples.Walls import curtain_walls as rCurtainWall
-from duHast.APISamples.Walls import stacked_walls as rStackedWall
-from duHast.APISamples.Walls.Utility import walls_filter as rWallFilter
+from duHast.Revit.Walls.Utility import walls_type_sorting as rWallTypeSort
+from duHast.Revit.Walls import curtain_walls as rCurtainWall
+from duHast.Revit.Walls import stacked_walls as rStackedWall
+from duHast.Revit.Walls.Utility import walls_filter as rWallFilter
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

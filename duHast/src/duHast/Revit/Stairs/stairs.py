@@ -29,9 +29,9 @@ This module contains a number of helper functions relating to Revit stairs.
 import clr
 import System
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Family import family_utils as rFam
-from duHast.APISamples.Stairs.Utility import stairs_filter as rStairsFilter
+from duHast.Revit.Common import common as com
+from duHast.Revit.Family import family_utils as rFam
+from duHast.Revit.Stairs.Utility import stairs_filter as rStairsFilter
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

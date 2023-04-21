@@ -26,7 +26,7 @@ This module contains a number of helper functions relating to sorting Revit buil
 #
 #
 
-from duHast.APISamples.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
+from duHast.Revit.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
 
 def build_building_pad_type_dictionary(collector, dic):
     '''

@@ -30,10 +30,10 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Views.Utility.view_types import _get_view_types
-from duHast.APISamples.Views.schedules import filter_revision_schedules
-from duHast.APISamples.Views.sheets import get_all_sheets
+from duHast.Revit.Common import common as com
+from duHast.Revit.Views.Utility.view_types import _get_view_types
+from duHast.Revit.Views.schedules import filter_revision_schedules
+from duHast.Revit.Views.sheets import get_all_sheets
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

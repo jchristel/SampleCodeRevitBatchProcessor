@@ -30,9 +30,9 @@ Purge action storage class for Revit purge unused.
 #import System
 #import clr
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class PurgeAction(Base.Base): 
+class PurgeAction(base.Base): 
     def __init__(
         self, 
         purgeTransactionName, # the function which returns all element ids to be purged

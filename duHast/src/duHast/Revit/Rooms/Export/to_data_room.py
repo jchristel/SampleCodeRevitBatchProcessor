@@ -28,11 +28,11 @@ This module contains a Revit rooms export to DATA class functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import design_set_options as rDesignO, parameter_get_utils as rParaGet, phases as rPhase
-from duHast.DataSamples.Objects import DataRoom as dRoom
-from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rGeo
-from duHast.APISamples.Rooms.rooms import get_all_rooms
-from duHast.APISamples.Rooms.Geometry.geometry import get_2d_points_from_revit_room
+from duHast.Revit.Common import design_set_options as rDesignO, parameter_get_utils as rParaGet, phases as rPhase
+from duHast.Data.Objects import data_room as dRoom
+from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rGeo
+from duHast.Revit.Rooms.rooms import get_all_rooms
+from duHast.Revit.Rooms.Geometry.geometry import get_2d_points_from_revit_room
 
 
 def populate_data_room_object(doc, revit_room):

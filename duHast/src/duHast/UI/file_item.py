@@ -29,9 +29,9 @@ A class to store file information.
 
 # An item to represent a file name in a row in a grid.
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class MyFileItem(Base.Base):
+class MyFileItem(base.Base):
     
     def __init__(self, name, size,  bim360_project_guid = None , bim360_file_guid = None, bim360_revit_version = '-'):
         '''

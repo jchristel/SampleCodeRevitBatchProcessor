@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit stair string
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import common as com
+from duHast.Revit.Common import common as com
 
 #: list of built in parameters for stair support types
 STAIR_SUPPORT_TYPE_PARAS = [

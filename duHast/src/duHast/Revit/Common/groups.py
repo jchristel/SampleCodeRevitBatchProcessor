@@ -33,7 +33,7 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples.Common import common as com
+from duHast.Revit.Common import common as com
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -28,9 +28,9 @@ This module contains the Revit view report functionality.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views.Reporting.views_report_header import REPORT_SHEETS_HEADER, get_report_headers
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import Result as res, FilesTab as filesTab
+from duHast.Revit.Views.Reporting.views_report_header import REPORT_SHEETS_HEADER, get_report_headers
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Utilities import files_tab as filesTab, result as res
 
 
 def get_sheet_report_data(doc, host_name):

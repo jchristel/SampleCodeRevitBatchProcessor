@@ -64,8 +64,8 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
-from duHast.Utilities import DateStamps as dateStamp
-from duHast.Utilities import FilesCombine as fileCombine
+from duHast.Utilities import date_stamps as dateStamp
+from duHast.Utilities import files_combine as fileCombine
 
 clr.AddReference('System.Core')
 clr.ImportExtensions(System.Linq)

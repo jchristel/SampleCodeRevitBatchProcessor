@@ -27,9 +27,9 @@ This module contains a number of helper functions around families used in system
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.MEP_Systems.Utility.MergeLists import merge_into_unique_list
-from duHast.APISamples.MEP_Systems.Utility.RevitMEPSystemCategories import ROUTING_PREF_RULE_GROUP_TYPES
+from duHast.Revit.Common import common as com
+from duHast.Revit.MEP_Systems.Utility.MergeLists import merge_into_unique_list
+from duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories import ROUTING_PREF_RULE_GROUP_TYPES
 
 '''
 Properties of system types which can use symbols: (note: RoutingPreferenceManager may contain multiple rules per connection type!)

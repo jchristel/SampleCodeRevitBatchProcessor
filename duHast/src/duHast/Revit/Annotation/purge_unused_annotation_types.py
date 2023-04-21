@@ -30,19 +30,19 @@ This module contains a number of helper functions relating to purging annotation
 import Autodesk.Revit.DB as rdb
 
 
-from duHast.APISamples.Annotation import generic_annotation as rGenericAnno
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Annotation import annotation as rAnno
-from duHast.APISamples.Annotation import dimensions as rDim
-from duHast.APISamples.Annotation import multi_ref_annotation as rMultiRefAnno
-from duHast.APISamples.Annotation import text as rText
-from duHast.APISamples.Annotation import arrow_heads as rArrow
-from duHast.APISamples.Annotation import independent_tags as rIndyTags
-from duHast.APISamples.Annotation import spot_dimensions as rSpots
-from duHast.APISamples.Annotation import stair_path as rStairPath
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Annotation import generic_annotation as rGenericAnno
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import common as com
+from duHast.Revit.Annotation import annotation as rAnno
+from duHast.Revit.Annotation import dimensions as rDim
+from duHast.Revit.Annotation import multi_ref_annotation as rMultiRefAnno
+from duHast.Revit.Annotation import text as rText
+from duHast.Revit.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation import independent_tags as rIndyTags
+from duHast.Revit.Annotation import spot_dimensions as rSpots
+from duHast.Revit.Annotation import stair_path as rStairPath
+from duHast.Revit.Common import purge_utils as rPurgeUtils
  
 
 # ------------------ used annotation types  ------------------

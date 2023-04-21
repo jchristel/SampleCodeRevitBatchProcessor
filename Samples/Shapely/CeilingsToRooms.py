@@ -51,7 +51,7 @@ DU_HAST_PATH = (
 sys.path += [DU_HAST_PATH]
 
 # import module processing ceilings and rooms in a model
-from duHast.DataSamples import ProcessCeilingsToRooms as magic
+from duHast.Data import process_ceilings_to_rooms as magic
 
 # files required
 # data previously exported from a given model

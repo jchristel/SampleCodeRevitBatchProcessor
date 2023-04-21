@@ -29,8 +29,8 @@ Revit building pads helper functions.
 import clr
 import System
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
+from duHast.Revit.Common import common as com
+from duHast.Revit.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -26,10 +26,10 @@ This module contains a number of helper functions relating to purging Revit ramp
 #
 #
 
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Ramps.Utility.RevitRampsFamilyNames import BUILTIN_RAMP_TYPE_FAMILY_NAMES
-from duHast.APISamples.Ramps.Utility.RevitRampsTypeSorting import sort_ramp_types_by_family_name
-from duHast.APISamples.Ramps.ramps import get_all_ramp_types_ids_by_category
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Ramps.Utility.RevitRampsFamilyNames import BUILTIN_RAMP_TYPE_FAMILY_NAMES
+from duHast.Revit.Ramps.Utility.RevitRampsTypeSorting import sort_ramp_types_by_family_name
+from duHast.Revit.Ramps.ramps import get_all_ramp_types_ids_by_category
 
 
 def get_used_ramp_type_ids(doc):

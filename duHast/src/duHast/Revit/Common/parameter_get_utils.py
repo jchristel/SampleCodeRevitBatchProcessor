@@ -37,8 +37,8 @@ clr.ImportExtensions(Linq)
 import Autodesk.Revit.DB as rdb
 
 # utilities
-from duHast.Utilities import Utility as util
-from duHast.Utilities import UnitConversion as unitConversion
+from duHast.Utilities import utility as util
+from duHast.Utilities import unit_conversion as unitConversion
 
 # type checker
 #from typing import List, Callable

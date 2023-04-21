@@ -27,9 +27,9 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryBase
+from duHast.Data.Objects.Properties.Geometry import geometry_base
 
-class DataTopologyCell(DataGeometryBase.DataGeometryBase):
+class DataTopologyCell(geometry_base.DataGeometryBase):
     data_type = 'topology cell'
 
     def __init__(self, j = {}):

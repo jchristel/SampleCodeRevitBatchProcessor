@@ -28,13 +28,13 @@ Revit API utility functions to set parameter values.
 #
 
 # class used for stats reporting
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
 import Autodesk.Revit.DB as rdb
 # utilities
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Common import transaction as rTran
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import transaction as rTran
 
 # type checker
 #from typing import List, Callable

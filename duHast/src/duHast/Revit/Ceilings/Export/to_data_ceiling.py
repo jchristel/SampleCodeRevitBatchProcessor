@@ -28,12 +28,12 @@ This module contains a Revit ceilings export to DATA class functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import design_set_options as rDesignO, parameter_get_utils as rParaGet, phases as rPhase
+from duHast.Revit.Common import design_set_options as rDesignO, parameter_get_utils as rParaGet, phases as rPhase
 #from duHast.APISamples.Ceilings.Geometry import Geometry
-from duHast.APISamples.Ceilings import ceilings as rCeiling
-from duHast.DataSamples.Objects import DataCeiling as dCeiling
-from duHast.DataSamples.Objects.Properties.Geometry import FromRevitConversion as rCon
-from duHast.APISamples.Common.Geometry import solids as rSolid
+from duHast.Revit.Ceilings import ceilings as rCeiling
+from duHast.Data.Objects import data_ceiling as dCeiling
+from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
+from duHast.Revit.Common.Geometry import solids as rSolid
 
 
 def populate_data_ceiling_object(doc, revit_ceiling):

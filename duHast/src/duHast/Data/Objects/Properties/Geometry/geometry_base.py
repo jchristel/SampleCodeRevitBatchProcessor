@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element type properties.
+Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Data storage class for Revit element type properties.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2023  Jan Christel
+# Copyright (c) 2022  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,13 +27,11 @@ Data storage class for Revit element type properties.
 #
 
 import json
-from duHast.DataSamples.Utils import DataBase
+from duHast.Data.Utils import data_base
 
-class DataTypeProperties(DataBase.DataBase):
+class DataGeometryBase(data_base.DataBase):
 
-    data_type = 'type properties'
-    
-    def __init__(self, j = {}):
+    def __init__(self, data_type, j = {}):
         '''
         Class constructor
 
@@ -42,7 +40,7 @@ class DataTypeProperties(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
+        super(DataGeometryBase, self).__init__(data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -54,24 +52,22 @@ class DataTypeProperties(DataBase.DataBase):
                 # no action required
                 pass
             else:
+                print('j', j)
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('name' in j ):
-                self.name = j['name']
-            else:
-                self.name = '-'
             
-            if('id' in j ):
-                self.id = j['id']
+            # translation as per shared coordinates in revit file
+            if('translation_coord' in j ):
+                self.translation_coord = j['translation_coord']
             else:
-                self.id = -1
+                self.translation_coord = [0.0, 0.0, 0.0]
             
-            if('properties' in j ):
-                self.properties = j['properties']
+            # rotation as per shared coordinates in revit file
+            if('rotation_coord' in j ):
+                self.rotation_coord = j['rotation_coord']
             else:
-                self.properties = {}
+                self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] 
 
         else:
-            self.name = '-'
-            self.id = -1
-            self.properties = {}
+            # set default values
+            self.translation_coord = [0.0, 0.0, 0.0] # translation as per shared coordinates in revit file
+            self.rotation_coord = [[0.0, 0.0, 0.0],[0.0, 0.0, 0.0],[0.0, 0.0, 0.0]] # rotation as per shared coordinates in revit file

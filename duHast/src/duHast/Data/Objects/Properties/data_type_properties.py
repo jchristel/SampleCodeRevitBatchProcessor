@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element level properties.
+Data storage class for Revit element type properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,11 +27,11 @@ Data storage class for Revit element level properties.
 #
 
 import json
-from duHast.DataSamples.Utils import DataBase
+from duHast.Data.Utils import data_base
 
-class DataLevel(DataBase.DataBase):
+class DataTypeProperties(data_base.DataBase):
 
-    data_type = 'level'
+    data_type = 'type properties'
     
     def __init__(self, j = {}):
         '''
@@ -42,7 +42,7 @@ class DataLevel(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataLevel, self).__init__(DataLevel.data_type)
+        super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -66,11 +66,12 @@ class DataLevel(DataBase.DataBase):
             else:
                 self.id = -1
             
-            if('offset_from_level' in j ):
-                self.offset_from_level = j['offset_from_level']
+            if('properties' in j ):
+                self.properties = j['properties']
             else:
-                self.offset_from_level = 0.0
+                self.properties = {}
+
         else:
-            self.name = '-'     
+            self.name = '-'
             self.id = -1
-            self.offset_from_level = 0.0
+            self.properties = {}

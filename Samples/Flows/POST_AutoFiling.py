@@ -68,11 +68,11 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.Utilities import FilesGet as fileGet
-from duHast.Utilities import FilesIO as fileIO
-from duHast.Utilities import DirectoryIO as dirIO
-from duHast.Utilities import DateStamps as dateStamp
-from duHast.Utilities import FilesCSV as fileCSV
+from duHast.Utilities import files_get as fileGet
+from duHast.Utilities import files_io as fileIO
+from duHast.Utilities import directory_io as dirIO
+from duHast.Utilities import date_stamps as dateStamp
+from duHast.Utilities import files_csv as fileCSV
 
 import os.path
 from os import path

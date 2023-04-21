@@ -30,7 +30,7 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Annotation import arrow_heads as rArrow
+from duHast.Revit.Annotation import arrow_heads as rArrow
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

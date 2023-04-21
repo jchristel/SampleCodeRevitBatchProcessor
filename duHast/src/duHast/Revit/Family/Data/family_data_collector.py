@@ -29,12 +29,12 @@ Family data collector class.
 #
 #
 
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class RevitFamilyDataCollector(Base.Base):
+class RevitFamilyDataCollector(base.Base):
 
     def __init__(self, data_processors):
         '''

@@ -26,10 +26,10 @@ This module contains a number of helper functions relating to purging Revit ceil
 #
 #
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Ceilings import ceilings as rCeiling
-from duHast.APISamples.Ceilings.Utility import ceilings_type_sorting as rCeilingTypeSort
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Ceilings import ceilings as rCeiling
+from duHast.Revit.Ceilings.Utility import ceilings_type_sorting as rCeilingTypeSort
 
 
 #: Built in family name for compound ceilings

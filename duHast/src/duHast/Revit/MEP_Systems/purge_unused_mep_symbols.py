@@ -29,15 +29,15 @@ This module contains a number of helper functions relating to purging unused fam
 
 # -------------------------------- purge loaded families which can be used in system types --------------------------------
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
 
-from duHast.APISamples.MEP_Systems.pipes import get_symbol_ids_for_pipe_types_in_model, get_symbol_ids_used_in_pipe_types
-from duHast.APISamples.MEP_Systems.conduits import get_symbol_ids_for_conduit_types_in_model, get_symbol_ids_used_in_conduit_types
-from duHast.APISamples.MEP_Systems.cable_trays import get_symbol_ids_for_cable_tray_types_in_model, get_symbol_ids_used_in_cable_tray_types
-from duHast.APISamples.MEP_Systems.ducts import get_symbol_ids_for_duct_types_in_model, get_symbol_ids_used_in_duct_types
-from duHast.APISamples.MEP_Systems.flex_ducts import get_symbol_ids_used_in_flex_duct_types
-from duHast.APISamples.MEP_Systems.Utility.MergeLists import merge_into_unique_list
+from duHast.Revit.MEP_Systems.pipes import get_symbol_ids_for_pipe_types_in_model, get_symbol_ids_used_in_pipe_types
+from duHast.Revit.MEP_Systems.conduits import get_symbol_ids_for_conduit_types_in_model, get_symbol_ids_used_in_conduit_types
+from duHast.Revit.MEP_Systems.cable_trays import get_symbol_ids_for_cable_tray_types_in_model, get_symbol_ids_used_in_cable_tray_types
+from duHast.Revit.MEP_Systems.ducts import get_symbol_ids_for_duct_types_in_model, get_symbol_ids_used_in_duct_types
+from duHast.Revit.MEP_Systems.flex_ducts import get_symbol_ids_used_in_flex_duct_types
+from duHast.Revit.MEP_Systems.Utility.MergeLists import merge_into_unique_list
 
 
 def get_used_duct_and_flex_duct_symbol_ids(doc):

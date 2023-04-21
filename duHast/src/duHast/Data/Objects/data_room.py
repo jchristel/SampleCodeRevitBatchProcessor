@@ -29,15 +29,15 @@ Data storage class for Revit room properties.
 
 import json
 
-from duHast.DataSamples.Objects.Properties import DataDesignSetOption
-from duHast.DataSamples.Objects.Properties import DataPhasing
-from duHast.DataSamples.Objects.Properties import DataLevel
-from duHast.DataSamples.Objects.Properties import DataInstanceProperties
-from duHast.DataSamples.Objects.Properties import DataRevitModel
-from duHast.DataSamples.Utils import DataBase
-from duHast.DataSamples.Objects.Properties import DataElementGeometry
+from duHast.Data.Objects.Properties import DataDesignSetOption
+from duHast.Data.Objects.Properties import DataPhasing
+from duHast.Data.Objects.Properties import DataLevel
+from duHast.Data.Objects.Properties import DataInstanceProperties
+from duHast.Data.Objects.Properties import DataRevitModel
+from duHast.Data.Utils import data_base
+from duHast.Data.Objects.Properties import DataElementGeometry
 
-class DataRoom(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
+class DataRoom(data_base.DataBase, DataElementGeometry.DataElementGeometryBase):
     data_type = 'room'
     
     def __init__(self, j = {}):

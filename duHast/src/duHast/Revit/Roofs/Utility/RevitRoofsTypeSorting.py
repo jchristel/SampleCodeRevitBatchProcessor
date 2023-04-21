@@ -26,7 +26,7 @@ This module contains a Revit roofs utility functions.
 #
 #
 
-from duHast.APISamples.Roofs.Utility import RevitRoofsFilter as rRoofFilter
+from duHast.Revit.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 
 
 def build_roof_type_dictionary(collector, dic):

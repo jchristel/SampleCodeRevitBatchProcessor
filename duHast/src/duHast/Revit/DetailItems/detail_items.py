@@ -33,8 +33,8 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 # import common library modules
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.DetailItems.Utility import detail_items_type_sorting as rDetailItemTypeSort
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.DetailItems.Utility import detail_items_type_sorting as rDetailItemTypeSort
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

@@ -29,10 +29,10 @@ Customizable element filter class.
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
 
-class RevitCustomElementFilter(Base.Base):
+class RevitCustomElementFilter(base.Base):
     def __init__(self, element_filters=[], is_logical_and_filter=True, **kwargs):
         """
         Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)

@@ -26,7 +26,7 @@ This module contains a Revit railings utility functions.
 #
 #
 
-from duHast.APISamples.Railings.railings import get_all_railing_types_by_category, get_railing_types_by_class
+from duHast.Revit.Railings.railings import get_all_railing_types_by_category, get_railing_types_by_class
 
 
 def build_railing_type_dictionary(collector, dic):

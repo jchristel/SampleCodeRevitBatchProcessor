@@ -37,26 +37,26 @@ from System import Linq
 clr.ImportExtensions(Linq)
 import System
 
-from duHast.APISamples.BIM360 import bim_360 as b360
+from duHast.Revit.BIM360 import bim_360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import design_set_options as rDoS
-from duHast.APISamples.Warnings import warnings as rWarn
-from duHast.APISamples.Common import worksets as rWork
-from duHast.APISamples.Views import sheets as rViewSheets
-from duHast.APISamples.Views import views as rViews
-from duHast.APISamples.LinePattern import line_patterns as rLinePat
-from duHast.APISamples.LinePattern import fill_patterns as rFill
-from duHast.APISamples.LinePattern import line_styles as rLineStyle
-from duHast.APISamples.Links import cad_links as rCadLink
-from duHast.APISamples.Links import image_links as rImageLink
-from duHast.APISamples.ModelHealth.Reporting import report_file_names as rFns
-from duHast.APISamples.Family import family_utils as rFams
-from duHast.APISamples.Common import groups as rGrp
-from duHast.APISamples.Rooms import rooms as rRooms
-from duHast.APISamples.DetailItems import detail_items as rDetItems
-from duHast.APISamples.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import DateStamps as dateStamp, FilesIO as util, FilesTab as fileTab
+from duHast.Utilities import date_stamps as dateStamp, files_io as util, result as res
+from duHast.Revit.Common import design_set_options as rDoS
+from duHast.Revit.Warnings import warnings as rWarn
+from duHast.Revit.Common import worksets as rWork
+from duHast.Revit.Views import sheets as rViewSheets
+from duHast.Revit.Views import views as rViews
+from duHast.Revit.LinePattern import line_patterns as rLinePat
+from duHast.Revit.LinePattern import fill_patterns as rFill
+from duHast.Revit.LinePattern import line_styles as rLineStyle
+from duHast.Revit.Links import cad_links as rCadLink
+from duHast.Revit.Links import image_links as rImageLink
+from duHast.Revit.ModelHealth.Reporting import report_file_names as rFns
+from duHast.Revit.Family import family_utils as rFams
+from duHast.Revit.Common import groups as rGrp
+from duHast.Revit.Rooms import rooms as rRooms
+from duHast.Revit.DetailItems import detail_items as rDetItems
+from duHast.Revit.Common import parameter_set_utils as rParaSet
+from duHast.Utilities import files_tab as fileTab
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List

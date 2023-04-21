@@ -57,7 +57,7 @@ change_family_category:
 
 from collections import namedtuple
 
-from duHast.Utilities import FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as util
+from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as util
 
 # tuples containing change family category data read from file
 change_family_category = namedtuple('change_family_category', 'filePath newCategoryName')

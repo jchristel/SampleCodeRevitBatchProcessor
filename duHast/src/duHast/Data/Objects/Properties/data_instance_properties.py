@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit design option properties.
+Data storage class for Revit element instance properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -27,22 +27,23 @@ Data storage class for Revit design option properties.
 #
 
 import json
-from duHast.DataSamples.Utils import DataBase
+from duHast.Data.Utils import data_base
 
-class DataDesignSetOption(DataBase.DataBase):
-    data_type = 'design set'
+class DataInstanceProperties(data_base.DataBase):
+    
+    data_type = 'instance properties'
 
     def __init__(self, j = {}):
         '''
-        Class constructor.
+        Class constructor
 
-        :param j: A json formatted dictionary of this class, defaults to {}
+        :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
         '''
-
+        
         # store data type  in base class
-        super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
-
+        super(DataInstanceProperties, self).__init__(DataInstanceProperties.data_type)
+        
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
             # check type of data that came in: 
@@ -54,23 +55,16 @@ class DataDesignSetOption(DataBase.DataBase):
                 pass
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('designSetName' in j ):
-                self.set_name = j['designSetName']
+            
+            if('id' in j ):
+                self.id = j['id']
             else:
-                self.set_name = '-'
-        
-            if('designOptionName' in j ):
-                self.option_name = j['designOptionName']
+                self.id = -1
+            
+            if('properties' in j ):
+                self.properties = j['properties']
             else:
-                self.option_name = '-'
-
-            if('isPrimary' in j ):
-                self.is_primary = j['isPrimary']
-            else:
-                self.is_primary = True
+                self.properties = {}
         else:
-            # set default values
-            self.set_name = '-'
-            self.option_name = '-'
-            self.is_primary = True
+            self.id = -1
+            self.properties = {}

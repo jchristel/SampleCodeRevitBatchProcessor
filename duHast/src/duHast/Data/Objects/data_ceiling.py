@@ -29,16 +29,16 @@ Data storage class for Revit ceiling properties.
 import json
 
 #from duHast.DataSamples import DataGeometry
-from duHast.DataSamples.Objects.Properties import DataDesignSetOption
-from duHast.DataSamples.Objects.Properties import DataPhasing
-from duHast.DataSamples.Objects.Properties import DataLevel
-from duHast.DataSamples.Objects.Properties import DataTypeProperties
-from duHast.DataSamples.Objects.Properties import DataInstanceProperties
-from duHast.DataSamples.Objects.Properties import DataRevitModel
-from duHast.DataSamples.Utils import DataBase
-from duHast.DataSamples.Objects.Properties import DataElementGeometry
+from duHast.Data.Objects.Properties import DataDesignSetOption
+from duHast.Data.Objects.Properties import DataPhasing
+from duHast.Data.Objects.Properties import DataLevel
+from duHast.Data.Objects.Properties import DataTypeProperties
+from duHast.Data.Objects.Properties import DataInstanceProperties
+from duHast.Data.Objects.Properties import DataRevitModel
+from duHast.Data.Utils import data_base
+from duHast.Data.Objects.Properties import DataElementGeometry
 
-class DataCeiling(DataBase.DataBase, DataElementGeometry.DataElementGeometryBase):
+class DataCeiling(data_base.DataBase, DataElementGeometry.DataElementGeometryBase):
 
     data_type = 'ceiling'
     

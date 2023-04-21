@@ -58,12 +58,12 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
-from duHast.Utilities import DateStamps as dStamp
-from duHast.APISamples.Links.Reporting import links_report_utils as rLinkRep
-from duHast.APISamples.Links.Reporting import links_report_header as rLinkHeader
-from duHast.APISamples.Links.Reporting import cad_links_report_utils as rLinkCadRep
-from duHast.APISamples.Links.Reporting import cad_links_report_header as rLinkCadHeader
-from duHast.Utilities import FilesCSV as fileCSV
+from duHast.Utilities import date_stamps as dStamp
+from duHast.Revit.Links.Reporting import links_report_utils as rLinkRep
+from duHast.Revit.Links.Reporting import links_report_header as rLinkHeader
+from duHast.Revit.Links.Reporting import cad_links_report_utils as rLinkCadRep
+from duHast.Revit.Links.Reporting import cad_links_report_header as rLinkCadHeader
+from duHast.Utilities import files_csv as fileCSV
 
 # flag whether this runs in debug or not
 DEBUG = False

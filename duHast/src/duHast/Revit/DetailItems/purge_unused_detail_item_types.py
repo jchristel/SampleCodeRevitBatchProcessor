@@ -27,10 +27,10 @@ This module contains a number of helper functions relating to purging Revit deta
 #
 
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.DetailItems import detail_items as rDetail
-from duHast.APISamples.DetailItems.Utility import detail_items_type_sorting as rDetailTypeSort
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.DetailItems import detail_items as rDetail
+from duHast.Revit.DetailItems.Utility import detail_items_type_sorting as rDetailTypeSort
 
 # -------------------------------- repeating detail types -------------------------------------------------------
 

@@ -32,7 +32,7 @@ This module provides utility functions to read and write reload task lists for t
 
 from collections import namedtuple
 
-from duHast.Utilities import FilesCSV as fileCSV, FilesGet as fileGet, FilesIO as util, FilesTab as fileTab
+from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as util, files_tab as fileTab
 
 # tuples containing base family data and changed family data read from files
 changed_family = namedtuple('changed_family', 'name category filePath')

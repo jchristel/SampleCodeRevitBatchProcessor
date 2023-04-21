@@ -32,7 +32,7 @@ from System import Linq
 clr.ImportExtensions(Linq)
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Common import delete as rDel
+from duHast.Revit.Common import delete as rDel
 
 
 def delete_line_styles_starts_with(doc, starts_with):

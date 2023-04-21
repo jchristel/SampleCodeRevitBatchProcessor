@@ -32,10 +32,10 @@ This will delete all line patterns which are not used by any element in the fami
 #
 
 # class used for stats reporting
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import delete as rDel
-from duHast.APISamples.Family.Data import ifamily_data as IFamData
-from duHast.APISamples.LinePattern import line_pattern_data as rLinePatData
+from duHast.Utilities import result as res
+from duHast.Revit.Common import delete as rDel
+from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Revit.LinePattern import line_pattern_data as rLinePatData
 
 import Autodesk.Revit.DB as rdb
 

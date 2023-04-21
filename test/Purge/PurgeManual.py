@@ -4,11 +4,11 @@ Purge unit testing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 
-from duHast.Utilities import Result as res
-from duHast.Utilities import FilesTab as filesTab
+from duHast.Utilities import result as res
+from duHast.Utilities import files_tab as filesTab
 from duHast.Utilities.timer import Timer
 
-from duHast.APISamples.Purge.purge_unused import PURGE_ACTIONS
+from duHast.Revit.Purge.purge_unused import PURGE_ACTIONS
 
 
 #: indentation for names of items purged

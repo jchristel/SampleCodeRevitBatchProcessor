@@ -47,10 +47,10 @@ Finds host families of nested families requiring to be renamed.
 #import System
 from duHast.Utilities.timer import Timer
 
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 #from duHast.Utilities import Utility as util
-from duHast.APISamples.Family.Data import family_base_data_utils as rFamBaseDataUtils
-from duHast.APISamples.Family import family_rename_files_utils as rFamRenameUtils
+from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
+from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
 
 #---------------------------------------------------------------------------------------------------------------
 #                      find families containing nested families needing to be renamed

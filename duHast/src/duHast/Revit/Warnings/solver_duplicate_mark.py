@@ -27,16 +27,16 @@ Duplicate mark warnings solver class.
 #
 #
 
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import Result as res
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import parameter_set_utils as rParaSet
+from duHast.Utilities import result as res
 
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class RevitWarningsSolverDuplicateMark(Base.Base):
+class RevitWarningsSolverDuplicateMark(base.Base):
 
     def __init__(self, filter_func, filter_values = []):
         '''

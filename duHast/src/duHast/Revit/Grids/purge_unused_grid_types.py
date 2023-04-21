@@ -28,9 +28,9 @@ This module contains a number of helper functions relating to purging Revit grid
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamUPurge
-from duHast.APISamples.Common import parameter_get_utils as rParaGet, purge_utils as rPurgeUtils
-from duHast.APISamples.Grids import grids as rGrids 
+from duHast.Revit.Family import purge_unused_family_types as rFamUPurge
+from duHast.Revit.Common import parameter_get_utils as rParaGet, purge_utils as rPurgeUtils
+from duHast.Revit.Grids import grids as rGrids 
 
 def get_unused_grid_types_for_purge(doc):
     ''' this will return all ids of unused grid types in the model to be purged'''

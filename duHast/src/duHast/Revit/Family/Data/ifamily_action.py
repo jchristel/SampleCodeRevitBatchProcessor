@@ -27,9 +27,9 @@ Interface for family data storage / processing class.
 #
 #
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class IFamilyAction(Base.Base):
+class IFamilyAction(base.Base):
 
     def __init__(self, action_type, **kwargs):
 

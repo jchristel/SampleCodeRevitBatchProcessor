@@ -33,10 +33,10 @@ clr.ImportExtensions(Linq)
 import System
 from System.Collections.Generic import List
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Family import family_utils as rFamUPurge
-from duHast.APISamples.Views.Utility import view_types as rViewType
+from duHast.Revit.Common import common as com
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Family import family_utils as rFamUPurge
+from duHast.Revit.Views.Utility import view_types as rViewType
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

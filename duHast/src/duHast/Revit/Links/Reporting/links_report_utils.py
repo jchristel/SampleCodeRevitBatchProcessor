@@ -28,8 +28,8 @@ This module contains utility function(s) for Revit link reports.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Links.links import get_all_revit_link_instances, get_revit_link_type_from_instance
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Links.links import get_all_revit_link_instances, get_revit_link_type_from_instance
 
 
 def get_revit_link_type_data(doc, revit_link_type):

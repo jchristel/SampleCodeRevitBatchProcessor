@@ -28,7 +28,7 @@ This module contains the hRevit shared parameter report functionality.
 
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.SharedParameters.shared_parameters import get_all_shared_parameters, param_binding_exists
+from duHast.Revit.SharedParameters.shared_parameters import get_all_shared_parameters, param_binding_exists
 
 
 def get_shared_parameter_report_data(doc, revit_file_path):

@@ -35,12 +35,12 @@ clr.ImportExtensions(Linq)
 import System
 
 # import common library modules
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import transaction as rTran
-from duHast.Utilities import Utility as util
-from duHast.Utilities import FilesIO as filesIO
-from duHast.Utilities import FilesTab as filesTab
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Utilities import result as res
+from duHast.Revit.Common import transaction as rTran
+from duHast.Utilities import utility as util
+from duHast.Utilities import files_io as filesIO
+from duHast.Utilities import files_tab as filesTab
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

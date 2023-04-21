@@ -34,7 +34,7 @@ import clr
 
 #import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 from duHast.Utilities.timer import Timer
 
 def _purge(doc, dll_path):

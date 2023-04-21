@@ -49,14 +49,14 @@ import System
 
 # import common library modules
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import Result as res
-from duHast.Utilities import FilesCSV as fileCSV
-from duHast.APISamples.SharedParameters import shared_parameter_add as rSharedPAdd
-from duHast.APISamples.SharedParameters import shared_parameters_tuple as rSharedT
-from duHast.APISamples.Common import parameter_grouping as rPG
-from duHast.APISamples.SharedParameters import shared_parameters as rSharedPara
-from duHast.APISamples.SharedParameters import shared_parameters_delete as rSharedParaDelete
-from duHast.APISamples.SharedParameters import shared_parameter_type_change as rSharedTypeChange
+from duHast.Utilities import result as res
+from duHast.Utilities import files_csv as fileCSV
+from duHast.Revit.SharedParameters import shared_parameter_add as rSharedPAdd
+from duHast.Revit.SharedParameters import shared_parameters_tuple as rSharedT
+from duHast.Revit.Common import parameter_grouping as rPG
+from duHast.Revit.SharedParameters import shared_parameters as rSharedPara
+from duHast.Revit.SharedParameters import shared_parameters_delete as rSharedParaDelete
+from duHast.Revit.SharedParameters import shared_parameter_type_change as rSharedTypeChange
 
 from collections import namedtuple
 

@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Data storage class for Revit element phasing properties.
+Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Data storage class for Revit element phasing properties.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2023  Jan Christel
+# Copyright (c) 2022  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,11 +27,10 @@ Data storage class for Revit element phasing properties.
 #
 
 import json
-from duHast.DataSamples.Utils import DataBase
+from duHast.Data.Objects.Properties.Geometry import geometry_base
 
-class DataPhasing(DataBase.DataBase):
-    
-    data_type = 'phasing'
+class DataPolygon(geometry_base.DataGeometryBase):
+    data_type = 'polygons'
 
     def __init__(self, j = {}):
         '''
@@ -42,7 +41,7 @@ class DataPhasing(DataBase.DataBase):
         '''
 
         # store data type  in base class
-        super(DataPhasing, self).__init__(DataPhasing.data_type)
+        super(DataPolygon, self).__init__('polygons', j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -56,15 +55,16 @@ class DataPhasing(DataBase.DataBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('created' in j ):
-                self.created = j['created']
+            if('outer_loop' in j ):
+                self.outer_loop = j['outer_loop']
             else:
-                self.created = '-'
-            
-            if('demolished' in j ):
-                self.demolished = j['demolished']
+                self.outer_loop = []
+
+            if('inner_loops' in j ):
+                self.inner_loops = j['inner_loops']
             else:
-                self.demolished = '-'
+                self.inner_loops = []
         else:
-            self.created = '-'     
-            self.demolished = '-'
+            # set default values
+            self.outer_loop = []        
+            self.inner_loops = []

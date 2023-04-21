@@ -28,8 +28,8 @@ Revit grids appearance modifier functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import Result as res
-from duHast.APISamples.Common import transaction as rTran
+from duHast.Utilities import result as res
+from duHast.Revit.Common import transaction as rTran
 
 
 

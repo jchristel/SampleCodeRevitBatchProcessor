@@ -45,11 +45,11 @@ import Autodesk.Revit.DB as rdb
 import os.path as path
 
 # utilities
-from duHast.Utilities import Utility as util
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
+from duHast.Utilities import utility as util
+from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 # importing revit groups module
-from duHast.APISamples.Common import groups as rGroup
+from duHast.Revit.Common import groups as rGroup
 
 
 def get_element_mark(e):

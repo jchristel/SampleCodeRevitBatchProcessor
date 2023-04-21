@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to CAD link geometry.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Links.cad_links import get_all_cad_link_instances
+from duHast.Revit.Links.cad_links import get_all_cad_link_instances
 
 
 def get_cad_import_instance_geometry(import_instance):

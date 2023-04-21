@@ -29,9 +29,9 @@ Revit families helper functions to change the reference type of reference planes
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import parameter_get_utils as rParaGet, parameter_set_utils as rParaSet
-from duHast.Utilities import Result as res
-from duHast.APISamples.Family.family_element_utils import get_all_curve_based_elements_in_family
+from duHast.Revit.Common import parameter_get_utils as rParaGet, parameter_set_utils as rParaSet
+from duHast.Utilities import result as res
+from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family
 
 
 def set_ref_planes_to_not_a_reference(doc):

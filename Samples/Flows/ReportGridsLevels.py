@@ -54,13 +54,13 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common libraries
-from duHast.APISamples.Grids.Reporting import grids_report_header as rGridHeader
-from duHast.APISamples.Grids.Reporting import grid_report_utils as rGridRep
-from duHast.APISamples.Levels.Reporting import levels_report_header as rLevelHeader
-from duHast.APISamples.Levels.Reporting import levels_report_utils as rLevelRep
+from duHast.Revit.Grids.Reporting import grids_report_header as rGridHeader
+from duHast.Revit.Grids.Reporting import grid_report_utils as rGridRep
+from duHast.Revit.Levels.Reporting import levels_report_header as rLevelHeader
+from duHast.Revit.Levels.Reporting import levels_report_utils as rLevelRep
 
-from duHast.Utilities import DateStamps as dStamp
-from duHast.Utilities import FilesCSV as fileCSV
+from duHast.Utilities import date_stamps as dStamp
+from duHast.Utilities import files_csv as fileCSV
 
 # flag whether this runs in debug or not
 DEBUG = False

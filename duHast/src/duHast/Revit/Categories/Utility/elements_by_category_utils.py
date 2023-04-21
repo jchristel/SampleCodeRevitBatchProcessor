@@ -28,15 +28,15 @@ Revit elements to category helper functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import Result as res
-from duHast.APISamples.Links import cad_links_geometry as rCadLinkGeo
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import parameter_set_utils as rParaSet
+from duHast.Utilities import result as res
+from duHast.Revit.Links import cad_links_geometry as rCadLinkGeo
+from duHast.Revit.Common import parameter_get_utils as rParaGet
 
-from duHast.APISamples.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories
-from duHast.APISamples.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
-from duHast.APISamples.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D
-from duHast.APISamples.Family import family_element_utils as rFamElementUtils
+from duHast.Revit.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories
+from duHast.Revit.Categories.Utility.category_properties_get_utils import get_category_graphic_style_ids
+from duHast.Revit.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D
+from duHast.Revit.Family import family_element_utils as rFamElementUtils
 
 
 def sort_elements_by_category(elements, element_dic):

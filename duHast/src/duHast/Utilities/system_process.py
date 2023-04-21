@@ -28,7 +28,7 @@ Helper functions relating to system processes.
 import subprocess
 import os, signal
 
-from duHast.Utilities import DateStamps as dateStamp
+from duHast.Utilities import date_stamps as dateStamp
 
 
 def get_all_running_processes():

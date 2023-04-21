@@ -32,11 +32,11 @@ Interface for family processing class.
 import System
 import Autodesk.Revit.DB as rdb
 import json
-from duHast.APISamples.Family.Data import ifamily_data as IFamData
-from duHast.Utilities import Result as res
-from duHast.Utilities import Base
+from duHast.Revit.Family.Data import ifamily_data as IFamData
+from duHast.Utilities import result as res
+from duHast.Utilities import base
 
-class IFamilyProcessor(Base.Base):
+class IFamilyProcessor(base.Base):
     
     def __init__(self, data_type = 'not declared', pre_actions = None, post_actions = None, string_report_headers = [], **kwargs):
         

@@ -26,16 +26,16 @@ This module contains a number of helper functions relating to purging Revit stai
 #
 #
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Stairs import stairs as rStair
-from duHast.APISamples.Stairs.Utility import stairs_type_sorting as rStairSort
-from duHast.APISamples.Stairs import cut_marks as rStairCut
-from duHast.APISamples.Stairs import landings as rStairLanding
-from duHast.APISamples.Stairs import path as rStairPath
-from duHast.APISamples.Stairs import runs as rStairRun
-from duHast.APISamples.Stairs import stringers_carriages as rStairStringersAndCarriages
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Stairs import stairs as rStair
+from duHast.Revit.Stairs.Utility import stairs_type_sorting as rStairSort
+from duHast.Revit.Stairs import cut_marks as rStairCut
+from duHast.Revit.Stairs import landings as rStairLanding
+from duHast.Revit.Stairs import path as rStairPath
+from duHast.Revit.Stairs import runs as rStairRun
+from duHast.Revit.Stairs import stringers_carriages as rStairStringersAndCarriages
 
 #: Built in stair family name for basic stairs
 BASIC_STAIR_FAMILY_NAME = 'Stair'

@@ -26,7 +26,7 @@ This module contains a Revit ramps utility functions.
 #
 #
 
-from duHast.APISamples.Ramps.ramps import get_all_ramp_types_by_category
+from duHast.Revit.Ramps.ramps import get_all_ramp_types_by_category
 
 
 def build_ramp_type_dictionary(collector, dic):

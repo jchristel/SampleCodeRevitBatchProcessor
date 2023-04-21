@@ -26,10 +26,10 @@ This module contains a number of helper functions relating to purging Revit floo
 #
 #
 
-from duHast.APISamples.Family import purge_unused_family_types as rFamPurge
-from duHast.APISamples.Common import purge_utils as rPurgeUtils
-from duHast.APISamples.Floors import floors as rFloor
-from duHast.APISamples.Floors.Utility import floors_type_sorting as rFloorTypeSort
+from duHast.Revit.Family import purge_unused_family_types as rFamPurge
+from duHast.Revit.Common import purge_utils as rPurgeUtils
+from duHast.Revit.Floors import floors as rFloor
+from duHast.Revit.Floors.Utility import floors_type_sorting as rFloorTypeSort
 
 
 def get_used_floor_type_ids(doc):

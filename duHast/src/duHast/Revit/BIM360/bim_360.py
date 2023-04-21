@@ -28,12 +28,12 @@ Functions around Revit BIM360.
 
 import System
 import clr
-from duHast.Utilities import Utility as util
+from duHast.Utilities import files_get as fileGet, utility as util
 
 #from System.IO import Path
 import Autodesk.Revit.DB as rdb
 
-from  duHast.Utilities import FilesGet as fileGet, FilesIO as util
+from  duHast.Utilities import files_io as util
 
 
 def get_bim_360_path(doc):

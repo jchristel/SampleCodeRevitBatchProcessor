@@ -1,9 +1,9 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Data base class for Revit object properties.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
 
-'''
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-A function used to output messages to a console.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
 #
 #License:
 #
@@ -27,34 +27,30 @@ A function used to output messages to a console.
 #
 #
 
-from duHast.Utilities import DateStamps as dateStamp
+from duHast.Utilities import base
 
-def output(message = ''):
-    '''
-    Print message to console. 
+class DataBase(base.Base):
 
-    Note:
+    def __init__(self, data_type, **kwargs):
+        '''
+        Class constructor
 
-    - The message will be prefixed with a date stamp in format '2022-08-09 19:09:19 :'
-    - If message is not a string it will convert it to a string.
-    - Multiline strings will pe printed line by line
+        :param data_type: human readable data type
+        :type data_type: str
+        '''
 
-    :param message: The message, defaults to ''
-    :type message: str, optional
-    '''
+        # forwards all unused arguments
+        # ini super class to allow multi inheritance in children!
+        super(DataBase, self).__init__(**kwargs)  
+        self.data_type = data_type
+    
+    @property
+    def DataType(self):
+        '''
+        Property: returns the data type of this class.
 
-    # make sure message is a string:
-    if(type(message) != str):
-        message = str(message)
+        :return: 'ceiling'
+        :rtype: str
+        '''
 
-    # get the current time string
-    # 2022-08-09 19:09:19 :
-    timestamp = dateStamp.get_date_stamp('%y-%m-%d %H_%M_%S : ')
-
-    # check for multi row messages
-    if('/n' in message):
-        message_chunks = message.split('\n')
-        for message_chunk in message_chunks:
-            print ('{} {}'.format(timestamp, message_chunk))
-    else:
-        print ('{} {}'.format(timestamp,message))
+        return self.data_type

@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Geometry data storage class.
+Data storage class for Revit element level properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -9,7 +9,7 @@ Geometry data storage class.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2022  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,11 +27,12 @@ Geometry data storage class.
 #
 
 import json
-from duHast.DataSamples.Objects.Properties.Geometry import DataGeometryBase
+from duHast.Data.Utils import data_base
 
-class DataPolygon(DataGeometryBase.DataGeometryBase):
-    data_type = 'polygons'
+class DataLevel(data_base.DataBase):
 
+    data_type = 'level'
+    
     def __init__(self, j = {}):
         '''
         Class constructor
@@ -41,7 +42,7 @@ class DataPolygon(DataGeometryBase.DataGeometryBase):
         '''
 
         # store data type  in base class
-        super(DataPolygon, self).__init__('polygons', j)
+        super(DataLevel, self).__init__(DataLevel.data_type)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):
@@ -55,16 +56,21 @@ class DataPolygon(DataGeometryBase.DataGeometryBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
         
-            if('outer_loop' in j ):
-                self.outer_loop = j['outer_loop']
+            if('name' in j ):
+                self.name = j['name']
             else:
-                self.outer_loop = []
-
-            if('inner_loops' in j ):
-                self.inner_loops = j['inner_loops']
+                self.name = '-'
+            
+            if('id' in j ):
+                self.id = j['id']
             else:
-                self.inner_loops = []
+                self.id = -1
+            
+            if('offset_from_level' in j ):
+                self.offset_from_level = j['offset_from_level']
+            else:
+                self.offset_from_level = 0.0
         else:
-            # set default values
-            self.outer_loop = []        
-            self.inner_loops = []
+            self.name = '-'     
+            self.id = -1
+            self.offset_from_level = 0.0

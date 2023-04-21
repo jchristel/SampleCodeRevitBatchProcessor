@@ -69,7 +69,7 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.UI import FileList as fl
+from duHast.UI import file_list as fl
 
 # flag whether this runs in debug or not
 DEBUG = False

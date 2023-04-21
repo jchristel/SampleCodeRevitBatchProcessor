@@ -28,7 +28,7 @@ Revit transaction wrapper utility functions.
 #
 
 # class used for stats reporting
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 
 # type checker
 #from typing import List, Callable

@@ -28,13 +28,13 @@ This module contains a number of functions around exporting from Revit to nwc fi
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import transaction as rTran
-from duHast.Utilities import Result as res
-from duHast.APISamples.Views import views as rView
-from duHast.APISamples.Exports import export_ifc_config as ifcCon
-from duHast.APISamples.Exports.export import build_export_file_name_from_view
-from duHast.APISamples.Exports.Utility.ifc_export_coordinates import IFCCoords
-from duHast.APISamples.Exports.Utility.ifc_export_space_boundaries import IFCSpaceBoundaries
+from duHast.Revit.Common import transaction as rTran
+from duHast.Utilities import result as res
+from duHast.Revit.Views import views as rView
+from duHast.Revit.Exports import export_ifc_config as ifcCon
+from duHast.Revit.Exports.export import build_export_file_name_from_view
+from duHast.Revit.Exports.Utility.ifc_export_coordinates import IFCCoords
+from duHast.Revit.Exports.Utility.ifc_export_space_boundaries import IFCSpaceBoundaries
 
 
 def ifc_get_export_config_by_view(ifc_version, ifc_space_bounds = IFCSpaceBoundaries.no_boundaries):

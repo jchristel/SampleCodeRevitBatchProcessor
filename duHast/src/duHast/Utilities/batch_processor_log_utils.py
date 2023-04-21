@@ -58,9 +58,9 @@ import os
 import json
 
 # custom result class from common library
-from duHast.Utilities import Result as res
+from duHast.Utilities import result as res
 # library from common library
-from duHast.Utilities import FilesIO as util
+from duHast.Utilities import files_io as util
 
 #: global variable controlling debug output
 debug_mode_ = False

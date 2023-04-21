@@ -35,7 +35,7 @@ clr.AddReference("System.Core")
 from System import Linq
 clr.ImportExtensions(Linq)
 
-from duHast.UI import WorkloadBucket as wb
+from duHast.UI import workload_bucket as wb
 
 def distribute_workload (numberOfBuckets, items, getWorkloadSize):
     '''

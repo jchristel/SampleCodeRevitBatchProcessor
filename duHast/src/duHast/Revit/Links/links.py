@@ -30,9 +30,9 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import delete as rDel
-from duHast.Utilities import Result as res
-from duHast.APISamples.Links.Utility.link_path import get_link_path
+from duHast.Revit.Common import delete as rDel
+from duHast.Utilities import result as res
+from duHast.Revit.Links.Utility.link_path import get_link_path
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

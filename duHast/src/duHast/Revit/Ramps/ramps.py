@@ -32,8 +32,8 @@ import System
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Ramps.Utility import RevitRampsFilter as rRampFilter
+from duHast.Revit.Common import common as com
+from duHast.Revit.Ramps.Utility import RevitRampsFilter as rRampFilter
 
 # --------------------------------------------- utility functions ------------------
 

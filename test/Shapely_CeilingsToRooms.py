@@ -2,7 +2,7 @@ import sys
 SAMPLES_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src'
 sys.path += [SAMPLES_PATH]
 
-from duHast.DataSamples import ProcessCeilingsToRooms as magic
+from duHast.Data import process_ceilings_to_rooms as magic
 
 # files required
 data_in = r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromModel.json'

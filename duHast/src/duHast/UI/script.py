@@ -31,18 +31,18 @@ import sys, getopt, os
 
 
 # import file item class
-from duHast.UI import FileItem as fi
+from duHast.UI import file_item as fi
 # import file list methods
-from duHast.UI import FileList as fl
+from duHast.UI import file_list as fl
 # import UI class
 import UIFileSelect as UIFs
 # import settings class
-from duHast.UI import FileSelectSettings as set
+from duHast.UI import file_select_settings as set
 # import workloader utils
-from duHast.UI import Workloader as wl
+from duHast.UI import workloader as wl
 
 # import bim360 utils from Library
-from duHast.APISamples.BIM360 import util_bim_360 as ub360
+from duHast.Revit.BIM360 import util_bim_360 as ub360
 
 def main(argv):
     '''

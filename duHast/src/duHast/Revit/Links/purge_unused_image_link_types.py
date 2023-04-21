@@ -26,8 +26,8 @@ This module contains a number of helper functions relating to purging unused ima
 #
 #
 
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Links.image_links import get_image_instances_in_model, get_image_types_in_model
+from duHast.Revit.Common import common as com
+from duHast.Revit.Links.image_links import get_image_instances_in_model, get_image_types_in_model
 
 
 def get_all_unused_image_type_ids_in_model(doc):

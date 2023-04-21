@@ -29,9 +29,9 @@ This module contains a number of helper functions relating to dimensions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
-from duHast.APISamples.Common import common as com
-from duHast.APISamples.Annotation import arrow_heads as rArrow
+from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common import common as com
+from duHast.Revit.Annotation import arrow_heads as rArrow
 
 
 def get_dim_types(doc):

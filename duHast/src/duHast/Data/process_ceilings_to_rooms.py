@@ -44,11 +44,11 @@ import codecs
 import csv
 
 
-from duHast.Utilities import Result as res
-from duHast.DataSamples.Objects import DataCeiling as dc
-from duHast.DataSamples.Objects import DataRoom as dr
-from duHast.DataSamples.Utils import DataImport as dReader
-from duHast.DataSamples import DataToShapely as dToS
+from duHast.Utilities import result as res
+from duHast.Data.Objects import data_ceiling as dc
+from duHast.Data.Objects import data_room as dr
+from duHast.Data.Utils import data_import as dReader
+from duHast.Data import data_to_shapely as dToS
 
 # --------------- writing out data ------------------
 

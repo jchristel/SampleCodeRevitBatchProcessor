@@ -26,7 +26,7 @@ This module contains a Revit generic annotation utility functions.
 #
 #
 
-from duHast.APISamples.Annotation.generic_annotation import get_all_generic_annotation_types_by_category
+from duHast.Revit.Annotation.generic_annotation import get_all_generic_annotation_types_by_category
 
 
 def build_generic_annotation_types_dictionary(collector, dic):

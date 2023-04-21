@@ -34,13 +34,13 @@ from System.Collections.Generic import List
 
 
 # import common library
-from duHast.APISamples.Common import delete as rDel
+from duHast.Revit.Common import delete as rDel
 
-from duHast.Utilities import Result as res , FilesGet as fileGet
-from duHast.APISamples.Family import family_utils as rFamUtil
-from duHast.APISamples.Family import family_load_option as famLoadOpt
-from duHast.APISamples.Family.family_load_option import *
-from duHast.APISamples.Family.Utility import loadable_family_categories as rFamLoadable
+from duHast.Utilities import files_get as fileGet, result as res
+from duHast.Revit.Family import family_utils as rFamUtil
+from duHast.Revit.Family import family_load_option as famLoadOpt
+from duHast.Revit.Family.family_load_option import *
+from duHast.Revit.Family.Utility import loadable_family_categories as rFamLoadable
 
 import Autodesk.Revit.DB as rdb
 

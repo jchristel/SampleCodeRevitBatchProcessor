@@ -27,7 +27,7 @@ This module contains a Revit curtain walls utility functions.
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples.Walls.Utility import walls_type_sorting  as rWallTypeSort
+from duHast.Revit.Walls.Utility import walls_type_sorting  as rWallTypeSort
 
 #: Built in wall family name for curtain wall
 CURTAIN_WALL_FAMILY_NAME = 'Curtain Wall'

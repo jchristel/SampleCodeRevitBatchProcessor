@@ -26,7 +26,7 @@ Utility function getting 2D points from element solids.
 #
 #
 
-from duHast.APISamples.Common.Geometry import solids as rSolid
+from duHast.Revit.Common.Geometry import solids as rSolid
 
 def get_2d_points_from_revit_element_type_in_model(doc, element_instance_getter):
     '''

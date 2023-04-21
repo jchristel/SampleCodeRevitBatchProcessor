@@ -27,10 +27,10 @@ This module contains a number of helper functions relating to Revit view sheets.
 #
 
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import Utility as util
+from duHast.Utilities import utility as util
 
-from duHast.APISamples.Views.Utility.view_types import _get_view_types
-from duHast.APISamples.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Views.Utility.view_types import _get_view_types
+from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 
 def get_sheets_by_filters(doc, view_rules = None):

@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to Revit view schedul
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views.Utility.view_types import _get_view_types
+from duHast.Revit.Views.Utility.view_types import _get_view_types
 
 
 def get_schedule_ids_on_sheets(doc):

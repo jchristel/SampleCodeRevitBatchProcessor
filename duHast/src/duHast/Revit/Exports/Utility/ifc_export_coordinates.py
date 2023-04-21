@@ -29,9 +29,9 @@ IFC export Coordinate system settings class.
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
-class IFCCoords(Base.Base):
+class IFCCoords(base.Base):
     '''
     Using enum class for IFC coordinates options.
     '''

@@ -27,7 +27,7 @@ Interface for family data storage / processing class.
 #
 #
 
-from duHast.Utilities import Base
+from duHast.Utilities import base
 
 # common data dictionary keys
 ROOT = 'root'
@@ -38,7 +38,7 @@ USAGE_COUNTER = 'usageCounter'
 USED_BY = 'usedBy'
 
 
-class IFamilyData(Base.Base):
+class IFamilyData(base.Base):
 
     def __init__(self, root_path, root_category_path=None, data_type=None, **kwargs):
 

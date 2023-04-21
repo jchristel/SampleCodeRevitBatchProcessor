@@ -56,8 +56,8 @@ import sys
 
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV
-from duHast.APISamples.SharedParameters.Reporting import RevitSharedParameterReportHeader as rSharedParaHeader
-from duHast.APISamples.SharedParameters.Reporting import RevitSharedParameterReport as rSharedParaRep
+from duHast.APISamples.SharedParameters.Reporting import shared_parameter_report_header as rSharedParaHeader
+from duHast.APISamples.SharedParameters.Reporting import shared_parameter_report as rSharedParaRep
 
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 

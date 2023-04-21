@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import transaction as rTran
 from duHast.Utilities import Result as res
-from duHast.APISamples.Views import RevitViews as rView
+from duHast.APISamples.Views import views as rView
 from duHast.APISamples.Exports import export_ifc_config as ifcCon
 from duHast.APISamples.Exports.export import build_export_file_name_from_view
 from duHast.APISamples.Exports.Utility.ifc_export_coordinates import IFCCoords

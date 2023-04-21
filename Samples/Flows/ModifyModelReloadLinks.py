@@ -62,7 +62,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
 from duHast.APISamples.Common import file_io as rFileIO
-from duHast.APISamples.Links import RevitLinks as rLink, RevitCadLinks as rCadLink
+from duHast.APISamples.Links import cad_links as rCadLink, links as rLink
 from duHast.Utilities import DateStamps as dStamp
 
 # autodesk API

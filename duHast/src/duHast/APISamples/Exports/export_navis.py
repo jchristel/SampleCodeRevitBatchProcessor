@@ -28,7 +28,7 @@ This module contains a number of functions around exporting from Revit to nwc fi
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.APISamples.Views import RevitViews as rView
+from duHast.APISamples.Views import views as rView
 from duHast.Utilities import Result as res
 from duHast.APISamples.Exports.export import build_export_file_name_from_view
 

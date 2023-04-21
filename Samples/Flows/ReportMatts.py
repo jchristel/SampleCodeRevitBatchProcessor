@@ -56,8 +56,8 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 # import common libraries
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV
-from duHast.APISamples.Materials.Reporting import RevitMaterialsReportHeader as rMatHeader
-from duHast.APISamples.Materials.Reporting import RevitMaterialsReportUtils as rMatRep
+from duHast.APISamples.Materials.Reporting import materials_report_header as rMatHeader
+from duHast.APISamples.Materials.Reporting import materials_report_utils as rMatRep
 
 # flag whether this runs in debug or not
 DEBUG = False

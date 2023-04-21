@@ -56,8 +56,8 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 # import common libraries
 from duHast.APISamples.Grids.Reporting import grids_report_header as rGridHeader
 from duHast.APISamples.Grids.Reporting import grid_report_utils as rGridRep
-from duHast.APISamples.Levels.Reporting import RevitLevelsReportHeader as rLevelHeader
-from duHast.APISamples.Levels.Reporting import RevitLevelsReportUtils as rLevelRep
+from duHast.APISamples.Levels.Reporting import levels_report_header as rLevelHeader
+from duHast.APISamples.Levels.Reporting import levels_report_utils as rLevelRep
 
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV

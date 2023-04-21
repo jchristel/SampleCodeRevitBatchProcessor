@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.APISamples.Common import parameter_set_utils as rParaSet
 from duHast.Utilities import Result as res
-from duHast.APISamples.Links import RevitCadLinksGeometry as rCadLinkGeo
+from duHast.APISamples.Links import cad_links_geometry as rCadLinkGeo
 from duHast.APISamples.Common import parameter_get_utils as rParaGet
 
 from duHast.APISamples.Categories.categories import ELEMENTS_PARAS_SUB, get_main_sub_categories

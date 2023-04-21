@@ -56,8 +56,8 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import common library
-from duHast.APISamples.Walls.Reporting import RevitWallsReportHeader as rWallHeader
-from duHast.APISamples.Walls.Reporting import RevitWallsReport as rWallRep
+from duHast.APISamples.Walls.Reporting import walls_report_header as rWallHeader
+from duHast.APISamples.Walls.Reporting import walls_report as rWallRep
 from duHast.Utilities import DateStamps as dStamp
 from duHast.Utilities import FilesCSV as fileCSV
 

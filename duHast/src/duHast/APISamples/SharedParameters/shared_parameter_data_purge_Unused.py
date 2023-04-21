@@ -1,0 +1,98 @@
+'''
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Family shared parameters purge unused utilities.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This will delete all shared parameter definitions which are not used by any family parameter.
+
+- requires a revit shared parameter processor object
+
+'''
+#
+#License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# Copyright (c) 2022  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+# class used for stats reporting
+from duHast.Utilities import Result as res
+from duHast.APISamples.Family.Reporting import ifamily_data as IFamData
+from duHast.APISamples.SharedParameters import shared_parameter_data as rSharedParaData
+from duHast.APISamples.Categories import categories as rCat
+from duHast.APISamples.Common import delete as rDel
+
+import Autodesk.Revit.DB as rdb
+
+def purge_unused(doc, processor):
+    '''
+    This will delete all shared parameter definitions which are not used by any family parameter in the family or nested families.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param processor: An RevitSharedParameterDataProcessor object containing all shared parameter information of the family document and any nested families.
+    :type processor: :class:`.SharedParameterProcessor`
+
+    :return: 
+        Result class instance.
+
+        - True if all unused shared parameters where deleted successfully or none needed to be deleted. Otherwise False.
+        - Result.message property updated in format: Found unused shared parameter: shared parameter Name [GUID] 
+        
+        On exception:
+        
+        - status (bool) will be False.
+        - message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    '''
+
+    # from processor instance get all root line pattern entries where usage counter == 0.
+    # delete those line patterns by id
+
+    return_value = res.Result()
+
+    # check the category of the family first:
+    # Tags and generic annotations (may) contain labels which in turn use shared parameters to drive them
+    # there is currently no way in the api (Revit 2022) to find out what parameter is driving the label...
+
+    # get the family category name:
+    fam_cat_name = list(rCat.get_family_category(doc))[0]
+    if(fam_cat_name != 'Generic Annotations' and fam_cat_name.endswith( 'Tags') == False):
+        ids_to_delete = []
+        # get categories found in root processor data only
+        root_fam_data = processor._findRootFamilyData()
+        # get all root line pattern entries where usage counter == 0.
+        for root_fam in root_fam_data:
+            if (root_fam[IFamData.USAGE_COUNTER] == 0 ):
+                return_value.append_message('Found unused shared parameter: {} [{}]'.format(root_fam[rSharedParaData.PARAMETER_NAME],root_fam[rSharedParaData.PARAMETER_GUID]))
+                ids_to_delete.append(rdb.ElementId(root_fam[rSharedParaData.PARAMETER_ID]))
+        # delete any subcategories found
+        if(len(ids_to_delete) > 0):
+            result_delete = rDel.delete_by_element_ids(doc, ids_to_delete, 'Deleting unused shared parameters.', 'Shared Parameters')
+            return_value.update(result_delete)
+            # may need to delete shared parameters one by one if one or more cant be deleted
+            if (result_delete.status == False):
+                result_delete_one_by_one = rDel.delete_by_element_ids_one_by_one(doc, ids_to_delete, 'Deleting unused shared parameters: one by one.', 'Shared Parameters')
+                return_value.update(result_delete_one_by_one)
+        else:
+            return_value.update_sep(True, 'No unused shared parameters found. Nothing was deleted.')
+    else:
+        return_value.update_sep(True, 'This is an annotation family (tag or generic annotation). Due to limitations in the Revit API no shared parameter was purged.')
+    return return_value

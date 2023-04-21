@@ -63,7 +63,7 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import from duHast
-from duHast.APISamples.Views import RevitViewsDelete as rViewDel
+from duHast.APISamples.Views import delete as rViewDel
 from duHast.Utilities import FilesIO as fileIO
 from duHast.Utilities import Result as res
 from duHast.Utilities import Compare as compare

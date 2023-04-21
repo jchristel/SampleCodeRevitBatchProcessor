@@ -2,7 +2,7 @@ import sys
 SAMPLES_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src'
 sys.path += [SAMPLES_PATH]
 
-from duHast.APISamples.Purge.RevitPurgeAction import PurgeAction
+from duHast.APISamples.Purge.purge_action import PurgeAction
 
 import unittest
 

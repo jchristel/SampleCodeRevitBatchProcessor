@@ -150,6 +150,8 @@ def getter_double_as_double_converted_to_metric(para):
             parameter_value =  unitConversion.convert_imperial_feet_to_metric_mm( para.AsDouble() )
         elif (para.Definition.ParameterType == rdb.ParameterType.Area):
             parameter_value =  unitConversion.convert_imperial_square_feet_to_metric_square_metre( para.AsDouble() )
+        elif(para.Definition.ParameterType == rdb.ParameterType.Volume):
+            parameter_value =  unitConversion.convert_imperial_cubic_feet_to_metric_cubic_metre( para.AsDouble() )
         else:
             parameter_value = para.AsDouble()
     return parameter_value

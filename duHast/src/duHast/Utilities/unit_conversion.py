@@ -42,10 +42,23 @@ def convert_imperial_feet_to_metric_mm(value):
 def convert_imperial_square_feet_to_metric_square_metre(value):
     '''
     Converts square feet and inches to square m
-    :param value: The value in feet to be converted
+
+    :param value: The value in square feet to be converted
     :type value: float
     :return: The converted value
     :rtype: float
     '''
 
     return value * 0.092903
+
+def convert_imperial_cubic_feet_to_metric_cubic_metre(value):
+    '''
+    Converts cubic feet and inches to cubic m
+
+    :param value: The value in cubic feet to be converted
+    :type value: float
+    :return: The converted value
+    :rtype: float
+    '''
+
+    return value * 0.02831685

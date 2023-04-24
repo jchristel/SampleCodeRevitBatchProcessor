@@ -47,7 +47,7 @@ def get_files_single_directory(folder_path, file_prefix, file_suffix, file_exten
     :rtype: list str
     '''
 
-    fileList = glob.glob(folder_path + '\\' + file_prefix + '*' + file_suffix + file_extension)
+    fileList = glob.glob(os.path.join(folder_path, file_prefix + '*' + file_suffix + file_extension))
     return fileList
 
 
@@ -71,7 +71,7 @@ def get_files_from_directory_walker_with_filters(folder_path, file_prefix, file_
         for name in files:
             file_name = get_file_name_without_ext(name)
             if (name.endswith(file_extension) and file_name.startswith(file_prefix) and file_name.endswith(file_suffix)):
-                files_found.append(root + '\\' + name)
+                files_found.append(os.path.join(root, name))
     return files_found
 
 
@@ -145,7 +145,7 @@ def get_files(folder_path, file_extension='.rvt'):
     :rtype: list of str
     '''
 
-    file_list = glob.glob(folder_path + '\\*' + file_extension)
+    file_list = glob.glob(os.path.join(folder_path, '*' + file_extension))
     return file_list
 
 
@@ -163,7 +163,7 @@ def get_files_with_filter(folder_path, file_extension='.rvt', filter = '*'):
     :rtype: list of str
     '''
 
-    file_list = glob.glob(folder_path + '\\' + filter + file_extension)
+    file_list = glob.glob(os.path.join(folder_path, filter + file_extension))
     return file_list
 
 
@@ -183,5 +183,5 @@ def get_files_from_directory_walker(path, filter):
     for root, dirs, files in os.walk(path):
         for name in files:
             if (name.Contains(filter)) :
-                files_found.append(root + '\\' + name)
+                files_found.append(os.path.join(root, name))
     return files_found

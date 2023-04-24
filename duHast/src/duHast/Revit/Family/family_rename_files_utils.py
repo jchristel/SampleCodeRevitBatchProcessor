@@ -84,7 +84,7 @@ def _read_rename_directives(files):
         for i in range (1, len(rows)):
             if (len(rows[i]) >= 4):
                 data = rename_directive(
-                    rows[i][_RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME], 
+                    rows[i][RENAME_DIRECTIVE_LIST_INDEX_CURRENT_FAMILY_NAME], 
                     rows[i][RENAME_DIRECTIVE_INDEX_FAMILY_FILE_PATH], 
                     rows[i][RENAME_DIRECTIVE_INDEX_CATEGORY],
                     rows[i][RENAME_DIRECTIVE_LIST_INDEX_NEW_FAMILY_NAME]

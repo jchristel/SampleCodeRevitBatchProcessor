@@ -31,6 +31,11 @@ import Autodesk.Revit.DB as rdb
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities import result as res
 
+# required for .ToList()
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 def delete_by_element_ids(
     doc,

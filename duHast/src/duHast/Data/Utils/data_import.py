@@ -139,7 +139,6 @@ class ReadDataFromFile:
             # add to global list
             for cj in ceiling_json:
                 data_objects.append(cj)
-        
         self.data = data_objects
     
     def get_data_by_level(self, level_name):

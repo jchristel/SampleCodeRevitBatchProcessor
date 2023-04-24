@@ -5,7 +5,7 @@ sys.path += [SAMPLES_PATH]
 from duHast.Data import process_ceilings_to_rooms as magic
 
 # files required
-data_in = r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromModel.json'
+data_in = r"C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\jsonFromFile.json"
 report_out = r'C:\Users\jchristel\Documents\DebugRevitBP\CeilingsVsRooms\ceilingsByRoom.csv'
 
 print('Getting data from {}'.format(data_in))

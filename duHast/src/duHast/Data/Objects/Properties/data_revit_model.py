@@ -31,7 +31,7 @@ from duHast.Data.Utils import data_base
 
 class DataRevitModel(data_base.DataBase):
     
-    data_type = 'revit model'
+    data_type = 'revit_model'
 
     def __init__(self, j = {}):
         '''

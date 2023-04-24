@@ -30,7 +30,7 @@ import json
 from duHast.Data.Utils import data_base
 
 class DataDesignSetOption(data_base.DataBase):
-    data_type = 'design set'
+    data_type = 'design_set'
 
     def __init__(self, j = {}):
         '''

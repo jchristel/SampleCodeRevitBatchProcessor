@@ -390,6 +390,7 @@ def get_ceilings_by_room(data_source_path):
         #       - check if rooms and ceilings
         #       - intersection check
         #       - update room object with ceiling match
+        # print(data_objects)
         for level_name in data_objects:
             # check rooms are on this level
             if(len(data_objects[level_name][0]) > 0):

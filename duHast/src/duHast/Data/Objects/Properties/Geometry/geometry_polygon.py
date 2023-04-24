@@ -30,7 +30,7 @@ import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 
 class DataPolygon(geometry_base.DataGeometryBase):
-    data_type = 'polygons'
+    data_type = 'polygon'
 
     def __init__(self, j = {}):
         '''
@@ -41,7 +41,7 @@ class DataPolygon(geometry_base.DataGeometryBase):
         '''
 
         # store data type  in base class
-        super(DataPolygon, self).__init__('polygons', j)
+        super(DataPolygon, self).__init__(DataPolygon.data_type, j)
         
         # check if any data was past in with constructor!
         if(j != None and len(j) > 0 ):

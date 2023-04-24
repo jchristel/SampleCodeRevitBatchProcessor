@@ -90,7 +90,7 @@ def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     '''
 
     single_polygon_loop = []
-    if(geometry_object.dataType == geometry_polygon.DataPolygon.data_type):
+    if(geometry_object.data_type == geometry_polygon.DataPolygon.data_type):
         for point_double in geometry_object.outer_loop:
             # need to add 1 to list for matrix multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)

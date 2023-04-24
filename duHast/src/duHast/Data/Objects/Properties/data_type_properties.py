@@ -31,7 +31,7 @@ from duHast.Data.Utils import data_base
 
 class DataTypeProperties(data_base.DataBase):
 
-    data_type = 'type properties'
+    data_type = 'type_properties'
     
     def __init__(self, j = {}):
         '''

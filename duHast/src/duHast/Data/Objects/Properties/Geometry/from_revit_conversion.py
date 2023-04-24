@@ -43,23 +43,23 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     :rtype: :class:`.DataGeometryPolygon`
     '''
 
-    dataGeometry = dGeometryPoly.DataPolygon()
-    outerLoop = []
-    for xyzPoint in dgObject.outerLoop:
-        pointDouble = rGeo.get_point_as_doubles(xyzPoint)
-        outerLoop.append(pointDouble)
-    innerLoops = []
-    for innerLoop in dgObject.innerLoops:
-        innerLoopPoints = []
-        for xyzPoint in innerLoop:
-            pointDouble = rGeo.get_point_as_doubles(xyzPoint)
-            innerLoopPoints.append(pointDouble)
-        innerLoops.append(innerLoopPoints)
-    dataGeometry.outer_loop = outerLoop
-    dataGeometry.inner_loops = innerLoops
+    data_geometry = dGeometryPoly.DataPolygon()
+    outer_loop = []
+    for xyz_point in dgObject.outer_loop:
+        point_as_double = rGeo.get_point_as_doubles(xyz_point)
+        outer_loop.append(point_as_double)
+    inner_loops = []
+    for inner_loop in dgObject.inner_loops:
+        inner_loop_points = []
+        for xyz_point in inner_loop:
+            point_as_double = rGeo.get_point_as_doubles(xyz_point)
+            inner_loop_points.append(point_as_double)
+        inner_loops.append(inner_loop_points)
+    data_geometry.outer_loop = outer_loop
+    data_geometry.inner_loops = inner_loops
     # add coordinate system translation and rotation data
-    dataGeometry.rotation_coord, dataGeometry.translation_coord = rGeo.get_coordinate_system_translation_and_rotation(doc)
-    return dataGeometry
+    data_geometry.rotation_coord, data_geometry.translation_coord = rGeo.get_coordinate_system_translation_and_rotation(doc)
+    return data_geometry
 
 def convert_solid_to_flattened_2d_points(solid):
     '''

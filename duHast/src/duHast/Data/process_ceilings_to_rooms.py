@@ -120,7 +120,7 @@ def _write_report_data(file_name, header, data,):
 
 # --------------- data processing ------------------
 
-def _build_dictionary_by_level_and_data_type(dataReader):
+def _build_dictionary_by_level_and_data_type(data_reader):
     '''
     Returns a dictionary where:
 
@@ -129,18 +129,18 @@ def _build_dictionary_by_level_and_data_type(dataReader):
     -       first list room data objects
     -       second list ceilings data objects
 
-    :param dataReader: A data reader class instance
-    :type dataReader: :class:`.ReadDataFromFile`
+    :param data_reader: A data reader class instance
+    :type data_reader: :class:`.ReadDataFromFile`
 
     :return: A dictionary where key is the level name, value is a tuple of two lists: first one are rooms, second ones are ceiling data objects.
     :rtype: dic{str:[[:class:`.DataRoom],[:class:`.DataCeiling`]]}
     '''
 
     dic = {}
-    for d_object in dataReader.data:
+    for d_object in data_reader.data:
         if(d_object.level.name not in dic):
-            rooms_by_level = dataReader.get_data_by_level_and_data_type(d_object.level.name, dr.DataRoom.data_type)
-            ceilings_by_level = dataReader.get_data_by_level_and_data_type(d_object.level.name, dc.DataCeiling.data_type)
+            rooms_by_level = data_reader.get_data_by_level_and_data_type(d_object.level.name, dr.DataRoom.data_type)
+            ceilings_by_level = data_reader.get_data_by_level_and_data_type(d_object.level.name, dc.DataCeiling.data_type)
             dic[d_object.level.name] = (rooms_by_level, ceilings_by_level)
     return dic
 

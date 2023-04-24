@@ -26,7 +26,7 @@ This module contains a Revit walls properties report function.
 #
 #
 
-from duHast.Revit import RevitMaterials as rMat
+from duHast.Revit.Materials import materials as rMat
 from duHast.Revit.Common import common as com
 from duHast.Revit.Walls.Utility import walls_type_sorting as rWallTypeSort
 from duHast.Utilities import utility as util
@@ -55,9 +55,9 @@ def get_wall_report_data(doc, revit_file_path):
                 cs_layers = cs.GetLayers()
                 #print(len(cs_layers))
                 for cs_layer in cs_layers:
-                    layer_mat = rMat.GetMaterialById(doc, cs_layer.MaterialId)
+                    layer_mat = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
                     material_mark = com.get_element_mark(layer_mat)
-                    material_name = rMat.GetMaterialNameById(doc, cs_layer.MaterialId)
+                    material_name = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
                     layer_function = str(cs_layer.Function)
                     layer_width = str(duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm(cs_layer.Width)) # conversion from imperial to metric
                     data.append([

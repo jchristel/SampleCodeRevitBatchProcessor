@@ -27,11 +27,10 @@ Helper functions relating to file IO operations.
 #
 
 import os
-from os import path
 import os.path
 import shutil
 
-from System.IO import Path
+#from System.IO import Path
 
 
 def file_exist(full_file_path):
@@ -167,19 +166,27 @@ def convert_relative_path_to_full_path(relative_file_path, full_file_path):
 def get_file_name_without_ext(file_path):
     '''
     Returns the file name without the file extension.
+
     :param file_path: Fully qualified file path to file
     :type file_path: str
     :return: The file name.
     :rtype: str
     '''
 
-    name = Path.GetFileNameWithoutExtension(file_path)
+    file_name = os.path.basename(file_path)
+    name_chunks = file_name.split('.')
+    name = ''
+    if(len(name_chunks)>1):
+        name = '.'.join(name_chunks[:-1])
+    else:
+        name = file_name
     return name
 
 
 def get_first_row_in_file(file_path):
     '''
     Reads the first line of a text file and returns it as a single string
+    
     :param file_path: The fully qualified file path.
     :type file_path: str
     :return: The first row of a text file.

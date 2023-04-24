@@ -30,10 +30,10 @@ import clr
 import System
 
 # import common library modules
-from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.APISamples.Family import RevitFamilyUtils as rFam
+from duHast.Revit.Common import common as com
+from duHast.Revit.Family import family_utils as rFam
 
-from duHast.APISamples.Ceilings.Utility import RevitCeilingsFilter  as rCeilingsFilter
+from duHast.Revit.Ceilings.Utility import ceilings_filter  as rCeilingsFilter
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

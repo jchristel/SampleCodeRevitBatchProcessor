@@ -41,6 +41,8 @@ import numpy as np
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
 
+from duHast.Data.Objects.Properties.Geometry import geometry_polygon
+
 # --------------- shapely polygon creation ------------------
 
 def get_translation_matrix(geometry_object):
@@ -58,10 +60,10 @@ def get_translation_matrix(geometry_object):
     # note numpy creates arrays by row!
     # need to append one more row since matrix dot multiplication rule:
     # number of columns in first matrix must match number of rows in second matrix (point later on)
-    for vector in geometry_object.rotationCoord:
+    for vector in geometry_object.rotation_coord:
         vector.append(0.0)
         translation_matrix.append(vector)
-    rotation_matrix = geometry_object.translationCoord # rotation matrix
+    rotation_matrix = geometry_object.translation_coord # rotation matrix
     # adding extra row here
     rotation_matrix.append(1.0)
     translation_matrix.append(rotation_matrix)
@@ -88,8 +90,8 @@ def get_outer_loop_as_shapely_points(geometry_object, translation_matrix):
     '''
 
     single_polygon_loop = []
-    if(geometry_object.dataType == 'polygons'):
-        for point_double in geometry_object.outerLoop:
+    if(geometry_object.dataType == geometry_polygon.DataPolygon.data_type):
+        for point_double in geometry_object.outer_loop:
             # need to add 1 to list for matrix multiplication
             # number of columns in first matrix (translation) must match number of rows in second matrix (point)
             translated_point = np.dot(translation_matrix,[point_double[0], point_double[1], point_double[2], 1.0])
@@ -119,9 +121,9 @@ def get_inner_loops_as_shapely_points(geometry_object, translation_matrix):
     
     shapely_points = []
     # get inner loops
-    if(len(geometry_object.innerLoops) > 0):
+    if(len(geometry_object.inner_loops) > 0):
         # there might be more then one inner loop
-        for inner_loop in geometry_object.innerLoops:
+        for inner_loop in geometry_object.inner_loops:
             single_polygon_loop = []
             for point_double in inner_loop:
                 # need to add 1 to list for matrix multiplication
@@ -184,8 +186,8 @@ def get_shapely_polygons_from_data_instance(data_instance):
     all_polygons = []
     # loop over data geometry and convert into shapely polygons
 
-    for geometry_object in data_instance.geometry:
-        if(geometry_object.dataType == 'polygons'):
+    for geometry_object in data_instance.polygon:
+        if(geometry_object.data_type == geometry_polygon.DataPolygon.data_type):
             translation_matrix = get_translation_matrix(geometry_object)
             shape_shapely = []
             outer_loop = get_outer_loop_as_shapely_points(geometry_object, translation_matrix)
@@ -227,9 +229,9 @@ def get_shapely_polygons_from_geo_object(geometry_objects, data_type):
 
     multi_polygons = {}
     for i in range (len(geometry_objects)):
-        multi_polygons[geometry_objects[i].instanceProperties.instanceId] = []
+        multi_polygons[geometry_objects[i].instance_properties.id] = []
         poly = GEOMETRY_CONVERTER[data_type](geometry_objects[i])
         for p in poly:
             if(p != None):
-                multi_polygons[geometry_objects[i].instanceProperties.instanceId].append(p)
+                multi_polygons[geometry_objects[i].instance_properties.id].append(p)
     return multi_polygons

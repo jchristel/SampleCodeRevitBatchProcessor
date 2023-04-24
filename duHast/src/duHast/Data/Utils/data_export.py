@@ -66,14 +66,14 @@ def get_data_from_model(doc):
     return data_json
 
 
-def write_json_to_file (json_data, dataOutPutFileName):
+def write_json_to_file (json_data, data_output_file_path):
     '''
     Writes collected data to a new json formatted file.
 
     :param json_data: A dictionary to be written to file.
     :type json_data: json object (dictionary)
-    :param dataOutPutFileName: Fully qualified file path to json data file.
-    :type dataOutPutFileName: str
+    :param data_output_file_path: Fully qualified file path to json data file.
+    :type data_output_file_path: str
 
     :return: 
         Result class instance.
@@ -96,11 +96,11 @@ def write_json_to_file (json_data, dataOutPutFileName):
 
     try:
         json_object = json.dumps(json_data, indent = None, default=lambda o: o.__dict__)
-        with codecs.open(dataOutPutFileName, 'w', encoding='utf-8') as f:
+        with codecs.open(data_output_file_path, 'w', encoding='utf-8') as f:
             f.write(json_object)
             f.close()
 
-        result.update_sep(True, 'Data written to file: ' + dataOutPutFileName)
+        result.update_sep(True, 'Data written to file: {}'.format(data_output_file_path))
     except  Exception as e:
-        result.update_sep(False, 'Failed to write data to file with exception: ' + str(e))
+        result.update_sep(False, 'Failed to write data to file with exception: {}'.format(e))
     return result

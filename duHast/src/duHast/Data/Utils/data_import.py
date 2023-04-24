@@ -166,7 +166,7 @@ class ReadDataFromFile:
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.dataType == data_type ) , self.data)))
+        return (list(filter(lambda x: (x.data_type == data_type ) , self.data)))
     
     def get_data_by_level_and_data_type(self, level_name, data_type):
         '''
@@ -182,5 +182,5 @@ class ReadDataFromFile:
         :rtype: list [data objects]
         '''
 
-        return (list(filter(lambda x: (x.level.name == level_name and x.dataType == data_type), self.data)))
+        return (list(filter(lambda x: (x.level.name == level_name and x.data_type == data_type), self.data)))
 

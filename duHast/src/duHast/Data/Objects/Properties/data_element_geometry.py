@@ -68,8 +68,8 @@ class DataElementGeometryBase(base.Base):
             # check for polygon data
             # this is stored as a list since there could be multiple polygons representing an object
             geometry_data_list = []
-            if('polygon' in j):
-                for item in j['polygon']:
+            if(geometry_polygon.DataPolygon.data_type in j):
+                for item in j[geometry_polygon.DataPolygon.data_type]:
                     if('data_type' in item):
                         if(item['data_type']):
                             dummy = geometry_polygon.DataPolygon(item)
@@ -79,7 +79,7 @@ class DataElementGeometryBase(base.Base):
             self.polygon = geometry_data_list
 
             # check for topo cell data
-            if('topologic_cell' in j):
+            if(geometry_topo_cell.DataTopologyCell.data_type in j):
                 self.topologic_cell = geometry_topo_cell.DataTopologyCell(j[geometry_topo_cell.DataTopologyCell.DataType])
             else:
                 self.topologic_cell = geometry_topo_cell.DataTopologyCell()

@@ -29,15 +29,15 @@ Data storage class for Revit room properties.
 
 import json
 
-from duHast.Data.Objects.Properties import DataDesignSetOption
-from duHast.Data.Objects.Properties import DataPhasing
-from duHast.Data.Objects.Properties import DataLevel
-from duHast.Data.Objects.Properties import DataInstanceProperties
-from duHast.Data.Objects.Properties import DataRevitModel
+from duHast.Data.Objects.Properties import data_design_set_option
+from duHast.Data.Objects.Properties import data_phasing
+from duHast.Data.Objects.Properties import data_level
+from duHast.Data.Objects.Properties import data_instance_properties
+from duHast.Data.Objects.Properties import data_revit_model
 from duHast.Data.Utils import data_base
-from duHast.Data.Objects.Properties import DataElementGeometry
+from duHast.Data.Objects.Properties import data_element_geometry
 
-class DataRoom(data_base.DataBase, DataElementGeometry.DataElementGeometryBase):
+class DataRoom(data_base.DataBase, data_element_geometry.DataElementGeometryBase):
     data_type = 'room'
     
     def __init__(self, j = {}):
@@ -63,40 +63,40 @@ class DataRoom(data_base.DataBase, DataElementGeometry.DataElementGeometryBase):
             else:
                 raise  ValueError ('Argument supplied must be of type string or type dictionary')
 
-            if (DataInstanceProperties.DataInstanceProperties.data_type in j):
-                self.instance_properties = DataInstanceProperties.DataInstanceProperties(j[DataInstanceProperties.DataInstanceProperties.data_type])
+            if (data_instance_properties.DataInstanceProperties.data_type in j):
+                self.instance_properties = data_instance_properties.DataInstanceProperties(j[data_instance_properties.DataInstanceProperties.data_type])
             else:
-                self.instance_properties = DataInstanceProperties.DataInstanceProperties()
+                self.instance_properties = data_instance_properties.DataInstanceProperties()
 
-            if(DataDesignSetOption.DataDesignSetOption.data_type in j):
-                self.design_set_and_option = DataDesignSetOption.DataDesignSetOption(j[DataDesignSetOption.DataDesignSetOption.data_type])
+            if(data_design_set_option.DataDesignSetOption.data_type in j):
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption(j[data_design_set_option.DataDesignSetOption.data_type])
             else:
-                self.design_set_and_option = DataDesignSetOption.DataDesignSetOption()
+                self.design_set_and_option = data_design_set_option.DataDesignSetOption()
             
             if('associated_elements' in j ):
                 self.associated_elements = j['associated_elements']
             else:
                 self.associated_elements = []
             
-            if(DataLevel.DataLevel.data_type in j):
-                self.level = DataLevel.DataLevel(j[DataLevel.DataLevel.data_type])
+            if(data_level.DataLevel.data_type in j):
+                self.level = data_level.DataLevel(j[data_level.DataLevel.data_type])
             else:
-                self.level = DataLevel.DataLevel()
+                self.level = data_level.DataLevel()
 
-            if(DataRevitModel.DataRevitModel.data_type in j):
-                self.revit_model = DataRevitModel.DataRevitModel(j[DataRevitModel.DataRevitModel.data_type])
+            if(data_revit_model.DataRevitModel.data_type in j):
+                self.revit_model = data_revit_model.DataRevitModel(j[data_revit_model.DataRevitModel.data_type])
             else:
-                self.revit_model = DataRevitModel.DataRevitModel()  
+                self.revit_model = data_revit_model.DataRevitModel()  
 
-            if(DataPhasing.DataPhasing.data_type in j):
-                self.phasing = DataPhasing.DataPhasing(j[DataPhasing.DataPhasing.data_type])
+            if(data_phasing.DataPhasing.data_type in j):
+                self.phasing = data_phasing.DataPhasing(j[data_phasing.DataPhasing.data_type])
             else:
-                self.phasing = DataPhasing.DataPhasing() 
+                self.phasing = data_phasing.DataPhasing() 
         else:
             # initialise classes with default values
             self.associated_elements = []
-            self.instance_properties = DataInstanceProperties.DataInstanceProperties()
-            self.level = DataLevel.DataLevel()
-            self.revit_model = DataRevitModel.DataRevitModel()
-            self.phasing = DataPhasing.DataPhasing()
-            self.design_set_and_option = DataDesignSetOption.DataDesignSetOption()
+            self.instance_properties = data_instance_properties.DataInstanceProperties()
+            self.level = data_level.DataLevel()
+            self.revit_model = data_revit_model.DataRevitModel()
+            self.phasing = data_phasing.DataPhasing()
+            self.design_set_and_option = data_design_set_option.DataDesignSetOption()

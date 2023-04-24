@@ -32,7 +32,8 @@ This module contains a number of helper functions relating to:
 
 #: default file stamp date format using underscores as delimiter: 21_03_01
 import datetime
-from System.IO import Path
+import os
+#from System.IO import Path
 
 
 FILE_DATE_STAMP_YY_MM_DD = '%y_%m_%d'
@@ -127,5 +128,11 @@ def get_date_stamped_file_name(revit_file_path, file_extension = '.txt', file_su
     file_prefix = get_file_date_stamp()
     # added str() around this expression to satisfy sphinx auto code documentation
     # it will throw an exception when concatenating the string in the return statement
-    name = str(Path.GetFileNameWithoutExtension(revit_file_path))
+    file_name = os.path.basename(revit_file_path)
+    name_chunks = file_name.split('.')
+    if(len(name_chunks)>1):
+        name = '.'.join(name_chunks[:-1])
+    else:
+        name = file_name
+    #name = str(Path.GetFileNameWithoutExtension(revit_file_path))
     return file_prefix + '_' + name + file_suffix + file_extension

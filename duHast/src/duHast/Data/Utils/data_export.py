@@ -1,6 +1,6 @@
 '''
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Utility functions writing revit geometry data to file.
+Utility functions exporting revit geometry to data objects.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 #
@@ -28,13 +28,10 @@ Utility functions writing revit geometry data to file.
 
 from duHast.Revit.Ceilings.Export import to_data_ceiling as rCeil
 from duHast.Revit.Rooms.Export import to_data_room as rRoom
-from duHast.Utilities import result as res
-from duHast.Utilities import date_stamps as dateStamp
+
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
 
-import json
-import codecs
 
 # -------------------------------- write data to file -------------------------------------------------------
 
@@ -56,51 +53,9 @@ def get_data_from_model(doc):
     allRoomData = rRoom.get_all_room_data(doc)
     allCeilingData = rCeil.get_all_ceiling_data(doc)
 
-    data_json = {
-        "file name": doc.Title,
-        "date processed": dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
+    dic = {
         dr.DataRoom.data_type: allRoomData,
-        dc.DataCeiling.data_type: allCeilingData
+        dc.DataCeiling.data_type: allCeilingData,
     }
 
-    return data_json
-
-
-def write_json_to_file (json_data, data_output_file_path):
-    '''
-    Writes collected data to a new json formatted file.
-
-    :param json_data: A dictionary to be written to file.
-    :type json_data: json object (dictionary)
-    :param data_output_file_path: Fully qualified file path to json data file.
-    :type data_output_file_path: str
-
-    :return: 
-        Result class instance.
-        
-        - result.status. True if json data file was written successfully, otherwise False.
-        - result.message will confirm path of json data file.
-        - result.result empty list
-
-        On exception:
-        
-        - result.status (bool) will be False.
-        - result.message will contain exception message.
-        - result.result will be empty
-
-    :rtype: :class:`.Result`
-    '''
-
-    result = res.Result()
-   
-
-    try:
-        json_object = json.dumps(json_data, indent = None, default=lambda o: o.__dict__)
-        with codecs.open(data_output_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_object)
-            f.close()
-
-        result.update_sep(True, 'Data written to file: {}'.format(data_output_file_path))
-    except  Exception as e:
-        result.update_sep(False, 'Failed to write data to file with exception: {}'.format(e))
-    return result
+    return dic

@@ -89,7 +89,7 @@ def get_floor_types_by_class(doc):
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
     '''
 
-    collector = rFloorFilter._get_ceiling_types_by_class(doc)
+    collector = rFloorFilter._get_floor_types_by_class(doc)
     return  collector
 
 # -------------------------------- none in place Floor types -------------------------------------------------------

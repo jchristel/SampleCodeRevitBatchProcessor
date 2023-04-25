@@ -26,12 +26,18 @@ This module contains a number of helper functions relating to purging Revit wall
 #
 #
 
+
+# required for .ToList() call
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
+
 from duHast.Revit.Common import purge_utils as rPurgeUtils
 from duHast.Revit.Walls import walls as rWall
 from duHast.Revit.Family import purge_unused_family_types as rFamPurge
 from duHast.Revit.Walls import curtain_walls as rCurtainWall
 from duHast.Revit.Walls import stacked_walls as rStackWall
-
 
 # -------------------- used types --------------------------
 

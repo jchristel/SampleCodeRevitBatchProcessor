@@ -36,7 +36,7 @@ from System.Collections.Generic import List
 from duHast.Revit.Common import common as com
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Family import family_utils as rFamUPurge
-from duHast.Revit.Views.Utility import view_types as rViewType
+from duHast.Revit.Views import views as rView
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -201,7 +201,7 @@ def get_used_view_reference_type_id_data(doc):
     '''
 
     dic = {}
-    col = rViewType.GetViewTypes(doc)
+    col = rView.get_view_types(doc)
     for c in col:
         # get reference types from view types
         reference_type_by_view_type = get_reference_type_ids_from_view_type(c)
@@ -227,7 +227,7 @@ def get_all_view_reference_type_id_data(doc):
     '''
 
     dic = {}
-    col = rViewType.GetViewTypes(doc)
+    col = rView.get_view_types(doc)
     for c in col:
         # get reference types from view types
         reference_type_by_view_type = get_reference_type_ids_from_view_type(c)

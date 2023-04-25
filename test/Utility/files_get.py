@@ -6,8 +6,6 @@ SAMPLES_PATH = (
 sys.path += [SAMPLES_PATH]
 
 import os
-import shutil
-import glob
 import tempfile
 
 from duHast.Utilities.files_get import (
@@ -15,6 +13,7 @@ from duHast.Utilities.files_get import (
     get_files_with_filter,
     get_files_single_directory,
     files_as_dictionary,
+    get_files_from_directory_walker,
 )
 
 
@@ -200,7 +199,7 @@ def test_get_files_with_filter(tmp_dir):
     :param tmpdir: temp directory
     :type tmpdir: str
     :return: True if all tests past, otherwise False
-    :rtype: _bool
+    :rtype: bool
     """
 
     flag = True
@@ -232,12 +231,56 @@ def test_get_files_with_filter(tmp_dir):
             os.path.join(tmp_dir, "something2.rvt"),
         ]
 
+        # print('{} \nvs \n{}'.format(result, expected_result))
+
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
         print(
             "An exception occurred in function test_get_files_with_filter {}".format(e)
+        )
+    return flag
+
+
+def test_get_files_from_directory_walker(tmp_dir):
+    """
+    get_files_from_directory_walker test
+
+    :param tmpdir: temp directory
+    :type tmpdir: str
+    :return: True if all tests past, otherwise False
+    :rtype: bool
+    """
+
+    flag = True
+    try:
+        test_files = [
+            "testfile1.txt",
+            "testfile2.csv",
+            "testfile3.rfa",
+            "tetfile3.rfa",
+        ]
+
+        # write out test files
+        _write_test_files(test_files, tmp_dir)
+
+        filter = "testfile"
+        result = get_files_from_directory_walker(tmp_dir, filter)
+        expected_result = [
+            os.path.join(tmp_dir, file) for file in test_files if filter in file
+        ]
+
+        # print('{} \nvs \n{}'.format(result, expected_result))
+
+        assert sorted(result) == sorted(expected_result)
+
+    except Exception as e:
+        flag = False
+        print(
+            "An exception occurred in function test_get_files_from_directory_walker {}".format(
+                e
+            )
         )
     return flag
 
@@ -254,3 +297,6 @@ if __name__ == "__main__":
 
     flag = _call_with_temp_directory(test_get_files_from_directory_walker_with_filters)
     print("test_get_files_from_directory_walker_with_filters [{}]".format(flag))
+
+    flag = _call_with_temp_directory(test_get_files_from_directory_walker)
+    print("test_get_files_from_directory_walker [{}]".format(flag))

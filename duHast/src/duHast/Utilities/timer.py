@@ -27,7 +27,7 @@ A timer class to measure code performance.
 #
 
 from System.Diagnostics import Stopwatch
-
+from duHast.Utilities import base
 #: time output formatting 2 digit padding
 PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 #: time output formatting default 3 digit padding
@@ -38,9 +38,12 @@ class TimerError(Exception):
     A custom exception used to report errors in use of Timer class
     '''
 
-class Timer:
+class Timer(base.Base):
     def __init__(self):
         self._stop_watch = None
+
+        super(Timer, self).__init__()
+
 
     def start(self):
         '''

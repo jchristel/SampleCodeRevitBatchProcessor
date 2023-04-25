@@ -32,7 +32,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.Revit.Common import common as com
 from duHast.Revit.Family import family_utils as rFamUPurge
 from duHast.Revit.Views import referencing as rViewRef
-from duHast.Revit.Views.Utility.view_types import _get_view_types
+from duHast.Revit.Views import views as rView
 from duHast.Revit.Family import purge_unused_family_types as rFamPurge
 
 
@@ -181,5 +181,5 @@ def get_unused_view_type_ids(doc):
     :rtype: list of Autodesk.Revit.DB.ElementId
     '''
 
-    filtered_unused_view_type_ids = com.get_unused_type_ids_in_model(doc, _get_view_types, get_used_view_type_ids)
+    filtered_unused_view_type_ids = com.get_unused_type_ids_in_model(doc, rView.get_view_types, get_used_view_type_ids)
     return filtered_unused_view_type_ids

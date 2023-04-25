@@ -270,7 +270,7 @@ def get_used_generic_annotation_type_ids(doc):
     # get ids from symbols used in dim types
     ids_dim_types = rDim.get_symbol_ids_from_dim_types(doc)
     # get ids from symbols used in spots
-    ids_spots = rAnno.GetSymbolIdsFromSpotTypes(doc)
+    ids_spots = rSpots.get_symbol_ids_from_spot_types(doc)
     # get detail types used in model
     ids_used_in_model = rPurgeUtils.get_used_unused_type_ids(doc, rGenericAnno.get_all_generic_annotation_type_ids_by_category, 1)
     # build overall list

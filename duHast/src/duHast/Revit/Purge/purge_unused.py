@@ -247,9 +247,7 @@ PURGE_ACTIONS.append( pA.PurgeAction('Purge Unused Loadable Family Types', rFamP
 #: indentation for names of items purged
 SPACER = '...'
 
-# set up a timer objects
-TIMER_TASK = Timer()
-TIMER_OVERALL = Timer()
+
 
 def purge_unused(doc, revit_file_path, is_debug):
     '''
@@ -275,20 +273,24 @@ def purge_unused(doc, revit_file_path, is_debug):
     # the current file name
     revitFileName = util.get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
-    TIMER_OVERALL.start()
+    # set up a timer objects
+    timer_task = Timer()
+    timer_overall = Timer()
+    timer_overall.start()
     for pA in PURGE_ACTIONS:
         try:
-            TIMER_TASK.start()
+            timer_task.start()
             purge_flag = purge_unplaced_elements(
                 doc,
-                pA.purgeIdsGetter,
-                pA.purgeTransactionName,
-                pA.purgeReportHeader,
+                pA.purge_ids_getter,
+                pA.purge_transaction_name,
+                pA.purge_report_header,
                 is_debug
             )
-            purge_flag.append_message('{}{}'.format(SPACER,TIMER_TASK.stop()))
+            purge_flag.append_message('{}{}'.format(SPACER,timer_task.stop()))
             result_value.update(purge_flag)
         except Exception as e:
+            timer_task.stop()
             result_value.update_sep(False,'Terminated purge unused actions with exception: {}'.format(e))
-    result_value.append_message('purge duration: {}'.formatTIMER_OVERALL.stop())
+    result_value.append_message('purge duration: {}'.format(timer_overall.stop()))
     return result_value

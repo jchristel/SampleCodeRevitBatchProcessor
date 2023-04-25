@@ -97,6 +97,7 @@ def files_as_dictionary(folder_path, file_prefix, file_suffix, file_extension, i
     - key file name without extension
     - values: list of directories where this file occurs (based on file name only!)
     Use case: check for duplicates by file name only
+
     :param folder_path: Root folder path from which to get files.
     :type folder_path: str
     :param file_prefix: Filter: File name starts with this value
@@ -118,9 +119,9 @@ def files_as_dictionary(folder_path, file_prefix, file_suffix, file_extension, i
     file_dic = {}
     try:
         if(include_sub_dirs):
-            files_found = get_files_from_directory_walker_with_filters(folder_path, '', '', '.rfa')
+            files_found = get_files_from_directory_walker_with_filters(folder_path, file_prefix, file_suffix, file_extension)
         else:
-            files_found = get_files_single_directory(folder_path, '', '', '.rfa')
+            files_found = get_files_single_directory(folder_path, file_prefix, file_suffix, file_extension)
     except Exception:
         return file_dic
 

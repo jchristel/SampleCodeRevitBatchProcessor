@@ -34,13 +34,10 @@ import os
 import os.path
 import collections
 
-import clr
-
-
-
-clr.AddReference("System.Core")
-from System import Linq
-clr.ImportExtensions(Linq)
+#import clr
+#clr.AddReference("System.Core")
+#from System import Linq
+#clr.ImportExtensions(Linq)
 
 def get_local_app_data_path():
     '''

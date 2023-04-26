@@ -111,11 +111,11 @@ def get_date_stamp(format):
     return d.strftime(format)
 
 
-def get_date_stamped_file_name(revit_file_path, file_extension = '.txt', file_suffix = ''):
+def get_date_stamped_file_name(file_path, file_extension = '.txt', file_suffix = ''):
     '''
     Returns a time stamped output file name based on the past in file name and file extension.
-    :param revit_file_path: Fully qualified file path to file
-    :type revit_file_path: str
+    :param file_path: Fully qualified file path to file
+    :type file_path: str
     :param file_extension: File extension needs to include '.', defaults to '.txt'
     :type file_extension: str, optional
     :param file_suffix: File suffix will be appended after the name but before the file extension, defaults to ''
@@ -126,14 +126,5 @@ def get_date_stamped_file_name(revit_file_path, file_extension = '.txt', file_su
 
     # get date prefix for file name
     file_prefix = get_file_date_stamp()
-    name = get_file_name_without_ext(revit_file_path)
-    # added str() around this expression to satisfy sphinx auto code documentation
-    # it will throw an exception when concatenating the string in the return statement
-    #file_name = os.path.basename(revit_file_path)
-    #name_chunks = file_name.split('.')
-    #if(len(name_chunks)>1):
-    #    name = '.'.join(name_chunks[:-1])
-    #else:
-    #    name = file_name
-    #name = str(Path.GetFileNameWithoutExtension(revit_file_path))
+    name = get_file_name_without_ext(file_path)
     return file_prefix + '_' + name + file_suffix + file_extension

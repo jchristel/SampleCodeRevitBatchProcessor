@@ -44,9 +44,10 @@ def _call_with_temp_directory(func):
     """
 
     flag = True
+    message = '-'
     with tempfile.TemporaryDirectory() as tmp_dir:
-        flag = func(tmp_dir)
-    return flag
+        flag,message = func(tmp_dir)
+    return flag, message
 
 
 def test_get_files_single_directory(tmp_dir):
@@ -60,6 +61,7 @@ def test_get_files_single_directory(tmp_dir):
     """
 
     flag = True
+    message = '-'
     try:
         # test data
         test_files = [
@@ -85,16 +87,18 @@ def test_get_files_single_directory(tmp_dir):
             os.path.join(tmp_dir, "test_prefix_name_suffix_1.txt"),
         ]
 
+        message = ('{} \nvs \n{}'.format(result, expected_result))
+        
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
-        print(
+        message =  message + '\n' +(
             "An exception occurred in function test_get_files_single_directory {}".format(
                 e
             )
         )
-    return flag
+    return flag, message
 
 
 def test_get_files_from_directory_walker_with_filters(tmp_dir):
@@ -108,6 +112,7 @@ def test_get_files_from_directory_walker_with_filters(tmp_dir):
     """
 
     flag = True
+    message = '-'
     try:
         # Create some files with different prefixes, suffixes, and extensions
         test_files = [
@@ -143,20 +148,32 @@ def test_get_files_from_directory_walker_with_filters(tmp_dir):
             os.path.join(folder_path, "prefix_file9_suffix.csv"),
         ]
 
+        message = ('{} \nvs \n{}'.format(result, expected_result))
+
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
-        print(
+        message =  message + '\n' +(
             "An exception occurred in function test_get_files_from_directory_walker_with_filters {}".format(
                 e
             )
         )
-    return flag
+    return flag, message
 
 
 def test_files_as_dictionary(tmp_dir):
+    '''
+    files_as_dictionary test 
+
+    :param tmpdir: temp directory
+    :type tmpdir: str
+    :return: True if all tests past, otherwise False
+    :rtype: bool
+    '''
+
     flag = True
+    message = '-'
     try:
         test_files = [
             "test_prefix_file1_test_suffix.rfa",
@@ -182,14 +199,14 @@ def test_files_as_dictionary(tmp_dir):
             "test_prefix_file2_test_suffix": [os.path.join(tmp_dir, test_files[2])],
         }
 
-        # print('{} \nvs \n{}'.format(result, expected_result))
+        message = ('{} \nvs \n{}'.format(result, expected_result))
 
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
-        print("An exception occurred in function test_files_as_dictionary {}".format(e))
-    return flag
+        message = message + '\n' + ("An exception occurred in function test_files_as_dictionary {}".format(e))
+    return flag, message
 
 
 def test_get_files_with_filter(tmp_dir):
@@ -203,6 +220,7 @@ def test_get_files_with_filter(tmp_dir):
     """
 
     flag = True
+    message = '-'
     try:
         # Create some files with different extensions and names
         test_files = [
@@ -231,16 +249,16 @@ def test_get_files_with_filter(tmp_dir):
             os.path.join(tmp_dir, "something2.rvt"),
         ]
 
-        # print('{} \nvs \n{}'.format(result, expected_result))
+        message = ('{} \nvs \n{}'.format(result, expected_result))
 
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
-        print(
+        message = message + '\n' + (
             "An exception occurred in function test_get_files_with_filter {}".format(e)
         )
-    return flag
+    return flag, message
 
 
 def test_get_files_from_directory_walker(tmp_dir):
@@ -254,6 +272,7 @@ def test_get_files_from_directory_walker(tmp_dir):
     """
 
     flag = True
+    message = '-'
     try:
         test_files = [
             "testfile1.txt",
@@ -271,32 +290,61 @@ def test_get_files_from_directory_walker(tmp_dir):
             os.path.join(tmp_dir, file) for file in test_files if filter in file
         ]
 
-        # print('{} \nvs \n{}'.format(result, expected_result))
+        message = ('{} \nvs \n{}'.format(result, expected_result))
 
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
         flag = False
-        print(
+        message = message + '\n' + (
             "An exception occurred in function test_get_files_from_directory_walker {}".format(
                 e
             )
         )
-    return flag
+    return flag, message
 
+
+def run_tests(output):
+    '''
+    Runs all tests in this module
+    '''
+
+    all_tests = True
+    
+    flag,message = _call_with_temp_directory(test_get_files_single_directory)
+    all_tests = all_tests & flag
+    output('test_get_files_single_directory()', flag, message)
+
+    flag,message = _call_with_temp_directory(test_get_files_with_filter)
+    all_tests = all_tests & flag
+    output('test_get_files_with_filter()', flag, message)
+
+    flag,message = _call_with_temp_directory(test_files_as_dictionary)
+    all_tests = all_tests & flag
+    output('test_files_as_dictionary()', flag, message)
+
+    flag,message = _call_with_temp_directory(test_get_files_from_directory_walker_with_filters)
+    all_tests = all_tests & flag
+    output('test_get_files_from_directory_walker_with_filters()', flag, message)
+
+    flag,message = _call_with_temp_directory(test_get_files_from_directory_walker)
+    all_tests = all_tests & flag
+    output('test_get_files_from_directory_walker()', flag, message)
+
+    return all_tests
 
 if __name__ == "__main__":
-    flag = _call_with_temp_directory(test_get_files_single_directory)
+    flag,message = _call_with_temp_directory(test_get_files_single_directory)
     print("test_get_files_single_directory [{}]".format(flag))
 
-    flag = _call_with_temp_directory(test_get_files_with_filter)
+    flag,message = _call_with_temp_directory(test_get_files_with_filter)
     print("test_get_files_with_filter [{}]".format(flag))
 
-    flag = _call_with_temp_directory(test_files_as_dictionary)
+    flag,message = _call_with_temp_directory(test_files_as_dictionary)
     print("test_files_as_dictionary [{}]".format(flag))
 
-    flag = _call_with_temp_directory(test_get_files_from_directory_walker_with_filters)
+    flag,message = _call_with_temp_directory(test_get_files_from_directory_walker_with_filters)
     print("test_get_files_from_directory_walker_with_filters [{}]".format(flag))
 
-    flag = _call_with_temp_directory(test_get_files_from_directory_walker)
+    flag,message = _call_with_temp_directory(test_get_files_from_directory_walker)
     print("test_get_files_from_directory_walker [{}]".format(flag))

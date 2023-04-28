@@ -75,11 +75,11 @@ class MyWindow (Windows.Window):
         self.selectedFiles = []
         self.revitfiles = revitFiles
         self.files.ItemsSource = revitFiles
-        self.tbSourceFolder.Text = settings.inputDir
-        self.tbDestinationFolder.Text = settings.outputDir
-        self.tbFileType.Text = settings.revitFileExtension
-        self.tbNoOfFiles.Text = str(settings.outputFileNum)
-        self.cbInclSubDirs.IsChecked = settings.inclSubDirs
+        self.tbSourceFolder.Text = settings.input_directory
+        self.tbDestinationFolder.Text = settings.output_dir
+        self.tbFileType.Text = settings.revit_file_extension
+        self.tbNoOfFiles.Text = str(settings.output_file_num)
+        self.cbInclSubDirs.IsChecked = settings.incl_sub_dirs
         
     def BtnOK(self, sender, EventArgs):
         '''

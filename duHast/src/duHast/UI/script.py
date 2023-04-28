@@ -28,14 +28,15 @@ The entry point for the file selection GUI.
 #
 
 import sys, getopt, os
-
+# to get to the root folder of this repo
+sys.path.append(os.path.join(os.path.realpath(__file__), os.pardir, os.pardir, os.pardir))
 
 # import file item class
-from duHast.UI import file_item as fi
+#from duHast.UI import file_item as fi
 # import file list methods
 from duHast.UI import file_list as fl
 # import UI class
-import UIFileSelect as UIFs
+from duHast.UI import ui_file_select as UIFs
 # import settings class
 from duHast.UI import file_select_settings as set
 # import workloader utils
@@ -212,18 +213,18 @@ def get_file_data(settings):
     # check whether input is a directory path or a text file (csv) containing BIM 360 data
     # since we tested for a valid path initially it will need to be either one...
     try:
-        if(os.path.isfile(settings.inputDir)):
+        if(os.path.isfile(settings.input_directory)):
             # got a text file...extract BIM 360 data
-            revit_files = ub360.get_bim_360_file_data(settings.inputDir)
-        elif(os.path.isdir(settings.inputDir)):
+            revit_files = ub360.get_bim_360_file_data(settings.input_directory)
+        elif(os.path.isdir(settings.input_directory)):
             # check a to search for files is to include sub dirs
             revit_files_unfiltered = []
-            if(settings.inclSubDirs):
+            if(settings.incl_sub_dirs):
                 # get revit files in input dir and subdirs
-                revit_files_unfiltered = fl.get_revit_files_incl_sub_dirs(settings.inputDir, settings.revitFileExtension)
+                revit_files_unfiltered = fl.get_revit_files_incl_sub_dirs(settings.input_directory, settings.revit_file_extension)
             else:
                 # get revit files in input dir
-                revit_files_unfiltered = fl.get_revit_files(settings.inputDir, settings.revitFileExtension)
+                revit_files_unfiltered = fl.get_revit_files(settings.input_directory, settings.revit_file_extension)
             # check for max path violations!
             # The specified path, file name, or both are too long. The fully qualified file name must be less than 260 characters, and the directory name must be less than 248 characters.
             for revit_file in revit_files_unfiltered:
@@ -232,10 +233,10 @@ def get_file_data(settings):
                     if(len(os.path.dirname(os.path.abspath(revit_file.name))) < 248  and len(revit_file.name) < 260 ):
                         revit_files.append(revit_file)
                     else:
-                        print ('Max path length violation: ' + revit_file.name)
+                        print ('Max path length violation: {}' .format(revit_file.name))
                         print ('File has been removed from selection!')
     except Exception as e:
-        print ('An exception occurred during BIM360 file read! ' + str(e))
+        print ('An exception occurred during BIM360 file read! {}'.format(e))
         # return an empty list which will cause this script to abort
         revit_files = []
     return revit_files
@@ -253,7 +254,7 @@ def is_bim_360_file(revit_files):
     '''
     bim360_file = False
     for r in revit_files:
-        if(r.BIM360ProjectGUID != None):
+        if(r.bim_360_project_guid != None):
             bim360_file = True
             break
     return bim360_file

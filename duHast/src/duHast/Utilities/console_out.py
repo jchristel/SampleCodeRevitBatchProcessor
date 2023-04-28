@@ -52,7 +52,7 @@ def output(message = ''):
     timestamp = dateStamp.get_date_stamp('%y-%m-%d %H_%M_%S : ')
 
     # check for multi row messages
-    if('/n' in message):
+    if('\n' in message):
         message_chunks = message.split('\n')
         for message_chunk in message_chunks:
             print ('{} {}'.format(timestamp, message_chunk))

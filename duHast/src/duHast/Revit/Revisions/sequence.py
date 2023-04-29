@@ -47,3 +47,21 @@ def get_revision_seq_of_name(doc, revision_sequence_name):
         if (c.Name == revision_sequence_name):
             return c
     return None
+
+def create_revision_alpha_seq(doc, revision_sequence_name, alpha_settings = rdb.AlphanumericRevisionSettings()):
+    '''
+    Creates a revision sequence with provided name and settings
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revision_sequence_name: The name of the sequence
+    :type revision_sequence_name: str
+    :param alpha_settings: Custom settings, defaults to rdb.AlphanumericRevisionSettings()
+    :type alpha_settings: Autodesk.Revit.DB.AlphanumericRevisionSettings, optional
+    
+    :return: The new sequence.
+    :rtype: Autodesk.Revit.DB.RevisionNumberingSequence
+    '''
+
+    seq = rdb.RevisionNumberingSequence.CreateAlphanumericSequence(doc, revision_sequence_name, alpha_settings)
+    return seq

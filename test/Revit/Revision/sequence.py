@@ -5,33 +5,116 @@ SAMPLES_PATH = (
 )
 sys.path += [SAMPLES_PATH]
 
-from duHast.Revit.Common.revit_version import get_revit_version_number
+from duHast.Revit.Revisions.sequence import (
+    get_revision_seq_of_name,
+    create_revision_alpha_seq,
+)
+
+ALPHA_SEQUENCE_NAME = "alpha_test_sequence"
 
 
-def test_get_revision_seq_of_name(self):
-        # create a mock revision sequence
-        seq = rdb.RevisionNumberingSequence.Create(self.doc)
-        seq.Name = "Test Sequence"
-        
-        # call the function and assert it returns the correct sequence
-        result = get_revision_seq_of_name(self.doc
+def test_create_revision_alpha_seq(doc):
+    """
+    create_revision_alpha_seq test
 
-def test_get_revit_version_number(doc):
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: True if all tests pass, otherwise False
+    :rtype: bool
+    """
+
     flag = True
-    message = '-'
+    message = "-"
     try:
-        expected_result = 2022
-        result = get_revit_version_number(doc)
-        message = (' {} vs {}'.format(result, expected_result))
+        # create a mock revision sequence
+        expected_result = ALPHA_SEQUENCE_NAME
+        result = create_revision_alpha_seq(doc, expected_result)
+        message = " {} vs {}".format(result.Name, expected_result)
         assert result == expected_result
     except Exception as e:
-        message = message + '\n' + ('An exception occurred in function test_get_revit_version_number {}'.format(e))
+        message = (
+            message
+            + "\n"
+            + (
+                "An exception occurred in function test_create_revision_alpha_seq {}".format(
+                    e
+                )
+            )
+        )
         flag = False
     return flag, message
 
 
+def test_get_revision_seq_of_name(doc):
+    """
+    get_revision_seq_of_name test
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: True if all tests pass, otherwise False
+    :rtype: bool
+    """
+
+    flag = True
+    message = "-"
+    try:
+        # create sequence
+        create_revision_alpha_seq(doc, ALPHA_SEQUENCE_NAME)
+
+        # get sequence by name
+        result = get_revision_seq_of_name(doc, ALPHA_SEQUENCE_NAME)
+        message = " {} vs {}".format(result.Name, ALPHA_SEQUENCE_NAME)
+        assert result.Name == ALPHA_SEQUENCE_NAME
+
+        # test missing sequence
+        result = get_revision_seq_of_name(doc, "Missing Sequence")
+        message = " {} vs {}".format(result, "Missing Sequence")
+        assert result == None
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + (
+                "An exception occurred in function get_revision_seq_of_name {}".format(
+                    e
+                )
+            )
+        )
+        flag = False
+    return flag, message
+
+def run_tests(doc, output):
+    '''
+    Runs all tests in this module
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param output: A function to direct any output to.
+    :type output: fun(message)
+    :return: True if all tests returned True, otherwise False
+    :rtype: boolean
+    '''
+
+    all_tests = True
+
+    flag, message = test_create_revision_alpha_seq(doc)
+    all_tests = all_tests & flag
+    output("test_create_revision_alpha_seq()", flag, message)
+
+    flag, message = test_get_revision_seq_of_name(doc)
+    all_tests = all_tests & flag
+    output("test_create_revision_alpha_seq()", flag, message)
+
+    return all_tests
+
+
 
 if __name__ == "__main__":
-    flag, message = test_get_revit_version_number(doc)
-    print('test_get_revit_version_number() [{}]'.format(flag))
+    flag, message = test_create_revision_alpha_seq(doc)
+    print("test_create_revision_alpha_seq() [{}]".format(flag))
+    print(message)
+
+    flag, message = test_get_revision_seq_of_name(doc)
+    print("get_revision_seq_of_name() [{}]".format(flag))
     print(message)

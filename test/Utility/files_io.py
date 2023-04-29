@@ -60,6 +60,11 @@ def test_get_file_name_without_ext():
 def run_tests(output):
     '''
     Runs all tests in this module
+
+    :param output: A function to direct any output to.
+    :type output: fun(message)
+    :return: True if all tests returned True, otherwise False
+    :rtype: boolean
     '''
 
     all_tests = True

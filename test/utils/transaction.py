@@ -46,7 +46,7 @@ def in_transaction_group(doc, action):
     '''
 
     # create a transaction group
-    tg = rdb.TransactionGroup(doc, "test create revision")
+    tg = rdb.TransactionGroup(doc, "test")
     tg.Start()
 
     flag, message = action(doc)

@@ -1,71 +1,12 @@
 from colorama import Fore
-import datetime
+from utils.date_time import date_time
+from utils.padding import pad_string, pad_header
 
 #: overall debug flag. If False no messages from tests will be printed to console. If True messages will be printed.
 IS_DEBUG = False
 
 
-def _date_time():
-    """
-    Get the current time string in format 2022-08-09 19:09:19 :
-
-    :return: current date and time.
-    :rtype: str
-    """
-
-    d = datetime.datetime.now()
-    timestamp = d.strftime("%y-%m-%d %H_%M_%S : ")
-    return timestamp
-
-
-def _pad_string(message, padding_length=70):
-    """
-    Pads a string message to be formatted: left hand side message, right hand side status (if any)
-    Maximum length 70 characters (excludes time stamp!)
-    If message is longer then 70-2 characters it will be returned un-changed.
-
-    :param message: The message to be padded
-    :type message: str
-    :param padding_length: Length of message string after padding, defaults to 70
-    :type padding_length: int, optional
-    :return: Padded message
-    :rtype: str
-    """
-
-    if len(message) < padding_length:
-        status_length = 0
-        status = ""
-        if "[False]" in message:
-            status_length = len("[False]")
-            status = "[False]"
-        elif "[True]" in message:
-            status_length = len("[True]")
-            status = "[True]"
-        if status_length > 0:
-            message_left = message[:-status_length]
-            message_left = message_left.ljust(padding_length - status_length, ".")
-            message = message_left + status
-            return message
-        else:
-            return message
-    else:
-        return message
-
-def pad_header(header_name, padding_length=70):
-
-    if padding_length > len(header_name) + 2:
-        sides = (padding_length - len(header_name)) // 2
-        return(
-            "\n"
-            + _date_time()
-            + "-".ljust(sides, "-")
-            + header_name
-            + "-".ljust(sides, "-")
-        )
-    else:
-        return("\n" + header_name)
-
-def header(header_name, padding_length=70):
+def out_header(header_name, padding_length=70):
     """
     Prints a padded header row to console.
     Header will be padded equally to both sides with '-' characters.
@@ -79,7 +20,7 @@ def header(header_name, padding_length=70):
     print(pad_header(header_name, padding_length))
 
 
-def output(message=""):
+def out_message(message=""):
     """
     Print message to console.
 
@@ -97,19 +38,19 @@ def output(message=""):
     if type(message) != str:
         message = str(message)
 
-    timestamp = _date_time()
+    timestamp = date_time()
 
     # check for multi row messages
     if "/n" in message:
         message_chunks = message.split("\n")
         for message_chunk in message_chunks:
             if "False" in message_chunk:
-                print(Fore.RED + "{} {}".format(timestamp, _pad_string(message_chunk)))
+                print(Fore.RED + "{} {}".format(timestamp, pad_string(message_chunk)))
             elif "True" in message_chunk:
                 print(
-                    Fore.GREEN + "{} {}".format(timestamp, _pad_string(message_chunk))
+                    Fore.GREEN + "{} {}".format(timestamp, pad_string(message_chunk))
                 )
             else:
                 print("{} {}".format(timestamp, message_chunk))
     else:
-        print("{} {}".format(timestamp, _pad_string(message)))
+        print("{} {}".format(timestamp, pad_string(message)))

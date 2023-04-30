@@ -1,3 +1,31 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains text output to console functions . 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+#
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# Copyright (c) 2023  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
 from colorama import Fore
 from utils.date_time import date_time
 from utils.padding import pad_string, pad_header
@@ -47,9 +75,7 @@ def out_message(message=""):
             if "False" in message_chunk:
                 print(Fore.RED + "{} {}".format(timestamp, pad_string(message_chunk)))
             elif "True" in message_chunk:
-                print(
-                    Fore.GREEN + "{} {}".format(timestamp, pad_string(message_chunk))
-                )
+                print(Fore.GREEN + "{} {}".format(timestamp, pad_string(message_chunk)))
             else:
                 print("{} {}".format(timestamp, message_chunk))
     else:

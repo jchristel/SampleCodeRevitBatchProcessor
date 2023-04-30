@@ -1,3 +1,31 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains revit version tests . 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+#
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# Copyright (c) 2023  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
 import sys
 
 SAMPLES_PATH = (
@@ -52,6 +80,9 @@ def run_tests(doc, output):
 
 
 if __name__ == "__main__":
-    flag, message = test_get_revit_version_number(doc)
-    print('test_get_revit_version_number() [{}]'.format(flag))
-    print(message)
+    # in line function to print
+    def action(function, flag, message):
+        print('{} [{}]'.format(function, flag))
+        print(message)
+
+    run_tests(doc, action)

@@ -1,9 +1,38 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains revit revision tests . 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+#
+# License:
+#
+#
+# Revit Batch Processor Sample Code
+#
+# Copyright (c) 2023  Jan Christel
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
 import sys
 
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-sys.path += [SAMPLES_PATH]
+TEST_PATH = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor"
+sys.path += [SAMPLES_PATH, TEST_PATH]
 
 from duHast.Revit.Revisions.revisions import (
     REVISION_DATA,
@@ -12,6 +41,8 @@ from duHast.Revit.Revisions.revisions import (
     mark_revision_as_issued_by_revision_id,
 )
 from duHast.Revit.Common.revit_version import get_revit_version_number
+
+from test.utils.transaction import in_transaction_group
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -49,6 +80,7 @@ def test_create_revision_pre_2023(doc):
 
     flag = True
     message = "-"
+
     try:
         result = create_revision(doc, TEST_DATA_2022)
         message = " {} ".format(result)
@@ -72,6 +104,7 @@ def test_create_revision_pre_2023(doc):
             )
         )
         flag = False
+
     return flag, message
 
 
@@ -127,6 +160,7 @@ def test_mark_revision_as_issued(doc):
 
     flag = True
     message = "-"
+
     try:
         # check which revit version
         revit_version = get_revit_version_number(doc)
@@ -155,6 +189,7 @@ def test_mark_revision_as_issued(doc):
             )
         )
         flag = False
+
     return flag, message
 
 
@@ -172,6 +207,7 @@ def test_mark_revision_as_issued_by_id(doc):
 
     flag = True
     message = "-"
+
     try:
         # check which revit version
         revit_version = get_revit_version_number(doc)
@@ -200,6 +236,7 @@ def test_mark_revision_as_issued_by_id(doc):
             )
         )
         flag = False
+
     return flag, message
 
 
@@ -220,19 +257,19 @@ def run_tests(doc, output):
     revit_version = get_revit_version_number(doc)
     # run test
     if revit_version <= 2022:
-        flag, message = test_create_revision_pre_2023(doc)
+        flag, message = in_transaction_group(doc, test_create_revision_pre_2023)
         all_tests = all_tests & flag
         output("test_create_revision_pre_2023()", flag, message)
     else:
-        flag, message = test_create_revision_2023(doc)
+        flag, message = in_transaction_group(doc, test_create_revision_2023)
         all_tests = all_tests & flag
         output("test_create_revision_2023()", flag, message)
 
-    flag, message = test_mark_revision_as_issued(doc)
+    flag, message = in_transaction_group(doc, test_mark_revision_as_issued)
     all_tests = all_tests & flag
     output("test_mark_revision_as_issued()", flag, message)
 
-    flag, message = test_mark_revision_as_issued_by_id(doc)
+    flag, message = in_transaction_group(doc, test_mark_revision_as_issued_by_id)
     all_tests = all_tests & flag
     output("test_mark_revision_as_issued_by_id()", flag, message)
 
@@ -240,20 +277,10 @@ def run_tests(doc, output):
 
 
 if __name__ == "__main__":
-    revit_version = get_revit_version_number(doc)
-    if revit_version <= 2022:
-        flag, message = test_create_revision_pre_2023(doc)
-        all_tests = all_tests & flag
-        print("test_create_revision_pre_2023()", flag, message)
-    else:
-        flag, message = test_create_revision_2023(doc)
-        all_tests = all_tests & flag
-        print("test_create_revision_2023()", flag, message)
 
-    flag, message = test_mark_revision_as_issued(doc)
-    all_tests = all_tests & flag
-    print("test_mark_revision_as_issued()", flag, message)
+    # in line function to print
+    def action(function, flag, message):
+        print('{} [{}]'.format(function, flag))
+        print(message)
 
-    flag, message = test_mark_revision_as_issued_by_id(doc)
-    all_tests = all_tests & flag
-    print("test_mark_revision_as_issued_by_id()", flag, message)
+    run_tests(doc, action)

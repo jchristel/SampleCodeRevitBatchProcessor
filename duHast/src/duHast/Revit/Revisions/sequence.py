@@ -28,6 +28,8 @@ This module contains a number of helper functions relating to revit revision seq
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+from duHast.Utilities import result as res
+from duHast.Revit.Common import transaction as rTran
 
 def get_revision_seq_of_name(doc, revision_sequence_name):
     '''
@@ -50,7 +52,9 @@ def get_revision_seq_of_name(doc, revision_sequence_name):
 
 def create_revision_alpha_seq(doc, revision_sequence_name, alpha_settings = rdb.AlphanumericRevisionSettings()):
     '''
-    Creates a revision sequence with provided name and settings
+    Creates a revision sequence with provided name and settings. 
+
+    Will throw an exception if sequence creation failed.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -63,5 +67,18 @@ def create_revision_alpha_seq(doc, revision_sequence_name, alpha_settings = rdb.
     :rtype: Autodesk.Revit.DB.RevisionNumberingSequence
     '''
 
-    seq = rdb.RevisionNumberingSequence.CreateAlphanumericSequence(doc, revision_sequence_name, alpha_settings)
-    return seq
+    def action():
+        action_return_value = res.Result()
+        try:
+            seq = rdb.RevisionNumberingSequence.CreateAlphanumericSequence(doc, revision_sequence_name, alpha_settings)
+            action_return_value.update_sep(True, 'Created sequence: {}'.format(revision_sequence_name))
+            action_return_value.result.append(seq)
+        except Exception as e:
+            action_return_value.update_sep(False, 'Failed to create sequence {} with exception: {}'.format(revision_sequence_name, e))
+        return action_return_value
+    transaction = rdb.Transaction(doc,'Creating sequence: {}'.format(revision_sequence_name))
+    transaction_value = rTran.in_transaction(transaction, action)
+    if(transaction_value.status and len(transaction_value.result) > 0 ):
+        return transaction_value.result[0]
+    else:
+        raise  ValueError ('Failed to create sequence: {} with exception:{}'.format(revision_sequence_name, transaction_value.message))

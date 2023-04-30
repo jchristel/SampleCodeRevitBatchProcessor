@@ -63,27 +63,19 @@ init()
 #: overall test status
 OVERALL_STATUS = True
 
+#: list of test names and associated test functions
+TESTS = [
+    ["date_stamps", date_stamps.run_tests],
+    ["files_get", files_get.run_tests],
+    ["files_io",files_io.run_tests],
+    ["utility",utility.run_tests],
+]
 
-# run tests in all modules
-out_header("date_stamps")
-status = date_stamps.run_tests(output=out)
-OVERALL_STATUS = OVERALL_STATUS & status
-out("date_stamps completed with status", status, "")
-
-out_header("files_get")
-status = files_get.run_tests(output=out)
-OVERALL_STATUS = OVERALL_STATUS & status
-out("files_get completed with status", status, "")
-
-out_header("files_io")
-status = files_io.run_tests(output=out)
-OVERALL_STATUS = OVERALL_STATUS & status
-out("files_io completed with status", status, "")
-
-out_header("utility")
-status = utility.run_tests(output=out)
-OVERALL_STATUS = OVERALL_STATUS & status
-out("utility completed with status", status, "")
+#: run tests in all modules
+for test in TESTS:
+    out_header(test[0])
+    status = test[1](output=out)
+    out("{} completed with status".format(test[0]), status, "")
 
 out_header("FINISHED")
 print("All tests completed with [{}]".format(OVERALL_STATUS))

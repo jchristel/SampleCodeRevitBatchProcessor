@@ -12,6 +12,8 @@ from duHast.Utilities.utility import (
     pad_single_digit_numeric_string,
     PAD_SINGLE_DIGIT_TO_THREE,
     index_of,
+    remove_items_from_list,
+    flatten,
 )
 
 
@@ -230,7 +232,7 @@ def test_index_of():
         assert index_of([1, 2, 3, 4], 3) == 2
 
         # Test with a list that doesn't contain the item
-        result = ([1, 2, 3, 4], 5)
+        result = index_of([1, 2, 3, 4], 5)
         message = message + "\n" + (" {} vs {}".format(result, -1))
         assert index_of([1, 2, 3, 4], 5) == -1
 
@@ -259,53 +261,134 @@ def test_index_of():
     return flag, message
 
 
+def test_remove_items():
+    """
+    remove_items test
+
+    :return: True if all tests pass, otherwise False
+    :rtype: bool
+    """
+
+    message = "-"
+    flag = True
+    try:
+        # Test removing items from a list
+        source_list = [1, 2, 3, 4, 5]
+        remove_list = [2, 4]
+        expected_result = [1, 3, 5]
+        result = remove_items_from_list(source_list, remove_list)
+        message = "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+        # remove non existing items
+        source_list = [1, 2, 3, 4, 5]
+        remove_list = [6, 7]
+        expected_result = [1, 2, 3, 4, 5]
+        result = remove_items_from_list(source_list, remove_list)
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+        # test empty lists
+        source_list = []
+        remove_list = []
+        expected_result = []
+        result = remove_items_from_list(source_list, remove_list)
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_remove_items {}".format(e))
+        )
+        flag = False
+    return flag, message
+
+
+def test_flatten_dict():
+    """
+    flatten_dict test
+
+    :return: True if all tests pass, otherwise False
+    :rtype: bool
+    """
+
+    message = "-"
+    flag = True
+    try:
+        # Test flattening a nested dictionary
+        nested_dict = {
+            "a": {"b": {"c": 1, "d": 2}},
+            "e": {"f": {"g": 3, "h": 4}, "i": 5},
+        }
+
+        result = flatten(nested_dict)
+        expected_result = {"a_b_c": 1, "a_b_d": 2, "e_f_g": 3, "e_f_h": 4, "e_i": 5}
+
+        message = "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+        # Test flattening an empty dictionary
+        nested_dict = {}
+        result = flatten(nested_dict)
+        expected_result = {}
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+        # Test flattening a dictionary with nested lists
+        nested_dict = {"a": {"b": {"c": [1, 2, 3], "d": [4, 5]}}}
+        result = flatten(nested_dict)
+        expected = {"a_b_c": [1, 2, 3], "a_b_d": [4, 5]}
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert result == expected_result
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_flatten_dict {}".format(e))
+        )
+        flag = False
+    return flag, message
+
+
 def run_tests(output):
-    '''
+    """
     Runs all tests in this module
 
     :param output: A function to direct any output to.
     :type output: fun(message)
     :return: True if all tests returned True, otherwise False
     :rtype: boolean
-    '''
+    """
 
     all_tests = True
 
-    flag, message = test_parse_string_to_bool()
-    all_tests = all_tests & flag
-    output("test_parse_string_to_bool()", flag, message)
+    # lists of tests to be executed
+    tests = [
+        ["test_parse_string_to_bool", test_parse_string_to_bool],
+        ["test_pad_single_digit_numeric_string", test_pad_single_digit_numeric_string],
+        ["test_encode_ascii", test_encode_ascii],
+        ["test_get_first", test_get_first],
+        ["test_index_of", test_index_of],
+        ["test_remove_items", test_remove_items],
+        ["test_flatten_dict", test_flatten_dict],
+    ]
 
-    flag, message = test_pad_single_digit_numeric_string()
-    all_tests = all_tests & flag
-    output("test_pad_single_digit_numeric_string()", flag, message)
-
-    flag, message = test_encode_ascii()
-    all_tests = all_tests & flag
-    output("test_encode_ascii()", flag, message)
-
-    flag, message = test_get_first()
-    all_tests = all_tests & flag
-    output("test_get_first()", flag, message)
-
-    flag, message = test_index_of()
-    all_tests = all_tests & flag
-    output("test_index_of()", flag, message)
+    # execute tests
+    for test in tests:
+        flag, message = test[1]()
+        all_tests = all_tests & flag
+        output(test[0], flag, message)
 
     return all_tests
 
 
 if __name__ == "__main__":
-    flag, message = test_encode_ascii()
-    print("test_encode_ascii [{}]".format(flag))
+    # in line function to print
+    def action(function, flag, message):
+        print("{} [{}]".format(function, flag))
+        print(message)
 
-    flag, message = test_get_first()
-    print("test_get_first [{}]".format(flag))
-
-    flag, message = test_parse_string_to_bool()
-    print("test_parse_string_to_bool [{}]".format(flag))
-
-    flag, message = test_pad_single_digit_numeric_string()
-    print("test_pad_single_digit_numeric_string [{}]".format(flag))
-
-    flag, message = test_index_of()
-    print("test_index_of [{}]".format(flag))
+    run_tests(action)

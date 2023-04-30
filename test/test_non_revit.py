@@ -3,7 +3,7 @@ from Utility import files_get
 from Utility import files_io
 from Utility import utility
 
-from utils.output import output, header
+from utils.output import out_message, out_header
 
 from colorama import init, Fore, Back, Style
 
@@ -23,9 +23,9 @@ def out(func_name, result_flag, message):
     :type message: str
     """
 
-    output("{} [{}]".format(func_name, result_flag))
+    out_message("{} [{}]".format(func_name, result_flag))
     if IS_DEBUG:
-        output(message)
+        out_message(message)
 
 
 #: colour coding for console output
@@ -36,25 +36,25 @@ OVERALL_STATUS = True
 
 
 # run tests in all modules
-header("date_stamps")
+out_header("date_stamps")
 status = date_stamps.run_tests(output=out)
 OVERALL_STATUS = OVERALL_STATUS & status
 out("date_stamps completed with status", status, "")
 
-header("files_get")
+out_header("files_get")
 status = files_get.run_tests(output=out)
 OVERALL_STATUS = OVERALL_STATUS & status
 out("files_get completed with status", status, "")
 
-header("files_io")
+out_header("files_io")
 status = files_io.run_tests(output=out)
 OVERALL_STATUS = OVERALL_STATUS & status
 out("files_io completed with status", status, "")
 
-header("utility")
+out_header("utility")
 status = utility.run_tests(output=out)
 OVERALL_STATUS = OVERALL_STATUS & status
 out("utility completed with status", status, "")
 
-header("FINISHED")
+out_header("FINISHED")
 print("All tests completed with [{}]".format(OVERALL_STATUS))

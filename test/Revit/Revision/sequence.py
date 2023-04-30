@@ -104,7 +104,7 @@ def run_tests(doc, output):
 
     flag, message = test_get_revision_seq_of_name(doc)
     all_tests = all_tests & flag
-    output("test_create_revision_alpha_seq()", flag, message)
+    output("test_get_revision_seq_of_name()", flag, message)
 
     return all_tests
 

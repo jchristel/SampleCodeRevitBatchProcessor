@@ -51,6 +51,19 @@ def _pad_string(message, padding_length=70):
     else:
         return message
 
+def pad_header(header_name, padding_length=70):
+
+    if padding_length > len(header_name) + 2:
+        sides = (padding_length - len(header_name)) // 2
+        return(
+            "\n"
+            + _date_time()
+            + "-".ljust(sides, "-")
+            + header_name
+            + "-".ljust(sides, "-")
+        )
+    else:
+        return("\n" + header_name)
 
 def header(header_name, padding_length=70):
     """
@@ -63,17 +76,7 @@ def header(header_name, padding_length=70):
     :type padding_length: int, optional
     """
 
-    if padding_length > len(header_name) + 2:
-        sides = (padding_length - len(header_name)) // 2
-        print(
-            "\n"
-            + _date_time()
-            + "-".ljust(sides, "-")
-            + header_name
-            + "-".ljust(sides, "-")
-        )
-    else:
-        print("\n" + header_name)
+    print(pad_header(header_name, padding_length))
 
 
 def output(message=""):

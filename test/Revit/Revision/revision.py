@@ -9,6 +9,7 @@ from duHast.Revit.Revisions.revisions import (
     REVISION_DATA,
     create_revision,
     mark_revision_as_issued,
+    mark_revision_as_issued_by_revision_id,
 )
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
@@ -22,7 +23,7 @@ TEST_DATA_2022 = REVISION_DATA(
     issuedTo="testy",
     revisionNumberType=rdb.RevisionNumberType.Numeric,
     revisionDate="23/12/23",
-    tagCloudVisibility=False,
+    tagCloudVisibility=rdb.RevisionVisibility.Hidden,
 )
 
 #: set up revision data for Revit from version 2023 onwards
@@ -32,7 +33,7 @@ TEST_DATA_2023 = REVISION_DATA(
     issuedTo="testy",
     revisionNumberType="Numeric",
     revisionDate="23/12/23",
-    tagCloudVisibility=False,
+    tagCloudVisibility=rdb.RevisionVisibility.Hidden,
 )
 
 
@@ -181,7 +182,7 @@ def test_mark_revision_as_issued_by_id(doc):
             result = create_revision(doc, TEST_DATA_2023)
 
         if result.status:
-            result = mark_revision_as_issued(doc, result.result[0].id)
+            result = mark_revision_as_issued_by_revision_id(doc, result.result[0].Id)
             message = " {} ".format(result)
             assert result.status == True
         else:
@@ -233,7 +234,7 @@ def run_tests(doc, output):
 
     flag, message = test_mark_revision_as_issued_by_id(doc)
     all_tests = all_tests & flag
-    output("test_mark_revision_as_issued()", flag, message)
+    output("test_mark_revision_as_issued_by_id()", flag, message)
 
     return all_tests
 

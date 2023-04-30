@@ -30,7 +30,7 @@ def test_create_revision_alpha_seq(doc):
         expected_result = ALPHA_SEQUENCE_NAME
         result = create_revision_alpha_seq(doc, expected_result)
         message = " {} vs {}".format(result.Name, expected_result)
-        assert result == expected_result
+        assert result.Name == expected_result
     except Exception as e:
         message = (
             message
@@ -68,7 +68,7 @@ def test_get_revision_seq_of_name(doc):
 
         # test missing sequence
         result = get_revision_seq_of_name(doc, "Missing Sequence")
-        message = " {} vs {}".format(result, "Missing Sequence")
+        message = " {} vs {}".format(result, None)
         assert result == None
 
     except Exception as e:

@@ -1,9 +1,10 @@
-import sys
+import sys, os
 
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-TEST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test'
+#TEST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test'
+TEST_PATH = os.path.join(os.path.realpath(__file__), os.pardir, os.pardir)
 sys.path += [SAMPLES_PATH, TEST_PATH]
 
 
@@ -107,3 +108,4 @@ if __name__ == "__main__":
         print(message)
 
     run_tests(action)
+

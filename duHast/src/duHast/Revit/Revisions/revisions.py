@@ -234,17 +234,17 @@ def get_issued_revisions(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: Dictionary where key is the revision sequence and value is the revision object
-    :rtype: {int:Autodesk.Revit.DB.Revision}
+    :return: list of revision objects
+    :rtype: [Autodesk.Revit.DB.Revision]
     '''
 
-    issued_revisions = {}
+    issued_revisions = []
     # get all revisions in file
     revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
     for revision_id in revisions_in_model:
         rev = doc.GetElement(revision_id)
         if (rev.Issued == True):
-            issued_revisions[rev.SequenceNumber] = rev
+            issued_revisions.append(rev)
     return issued_revisions
 
 
@@ -277,6 +277,7 @@ def re_order_revisions(doc, revision_sequence):
         try:
             rdb.Revision.ReorderRevisionSequence(doc, revision_sequence)
             action_return_value.update_sep(True, "Re-ordered revisions in model.")
+            action_return_value.result = rdb.Revision.GetAllRevisionIds(doc)
         except Exception as e:
             action_return_value.update_sep(
                 False, "Failed to re-order revision(s) with exception: {}".format(e)

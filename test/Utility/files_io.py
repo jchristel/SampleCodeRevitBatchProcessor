@@ -1,16 +1,18 @@
 import sys, os
 
+#: path to samples library in repository
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-#TEST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test'
-TEST_PATH = os.path.join(os.path.realpath(__file__), os.pardir, os.pardir)
+#: path to test directory in repository
+TEST_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path += [SAMPLES_PATH, TEST_PATH]
 
 
 from duHast.Utilities.files_io import get_file_name_without_ext
 
 from Utility import temp_files_dirs
+
 
 def test_file_size():
     pass
@@ -108,4 +110,3 @@ if __name__ == "__main__":
         print(message)
 
     run_tests(action)
-

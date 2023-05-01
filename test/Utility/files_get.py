@@ -1,12 +1,9 @@
-import sys
+import sys, os, tempfile
 
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
 sys.path += [SAMPLES_PATH]
-
-import os
-import tempfile
 
 from duHast.Utilities.files_get import (
     get_files_from_directory_walker_with_filters,

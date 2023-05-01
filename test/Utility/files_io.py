@@ -8,6 +8,9 @@ sys.path += [SAMPLES_PATH]
 
 from duHast.Utilities.files_io import get_file_name_without_ext
 
+def test_file_size():
+    pass
+
 
 def test_get_file_name_without_ext():
     """

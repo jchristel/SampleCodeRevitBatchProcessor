@@ -105,8 +105,8 @@ def out(func_name, result_flag, message):
     :type message: str
     """
 
-    message = "{} [{}]".format(func_name, result_flag)
-    print(pad_string(message))
+    message_short = "{} [{}]".format(func_name, result_flag)
+    print(pad_string(message_short))
     if IS_RBP_RUN:
         print(pad_string(message))
 

@@ -27,6 +27,11 @@ This module contains revit revision tests .
 #
 
 import sys
+import clr
+# require for ToList()
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
@@ -40,6 +45,7 @@ from duHast.Revit.Revisions.revisions import (
     mark_revision_as_issued,
     mark_revision_as_issued_by_revision_id,
     get_issued_revisions,
+    re_order_revisions,
 )
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
@@ -242,7 +248,7 @@ def test_mark_revision_as_issued_by_id(doc):
 
 
 def test_get_issued_revisions(doc):
-    '''
+    """
     get_issued_revisions test
 
     :param doc: Current Revit model document.
@@ -251,17 +257,16 @@ def test_get_issued_revisions(doc):
     :raises ValueError: _description_
     :return: True if revision was created successfully, otherwise False
     :rtype: Boolean
-    '''
+    """
 
     flag = True
     message = "-"
     try:
         # test model has no issued revisions to start with, check for empty:
         result = get_issued_revisions(doc)
-        expected_result = {}
+        expected_result = []
         message = " {} ".format(result)
         assert result == expected_result
-
 
         # set up a revision , mark it as issued
         # check which revit version
@@ -271,17 +276,18 @@ def test_get_issued_revisions(doc):
         else:
             result = create_revision(doc, TEST_DATA_2023)
         # check revision was created
-        if (result.status == False):
-            raise  ValueError (result.message)
+        if result.status == False:
+            raise ValueError(result.message)
         # mark revision as issued
         result = mark_revision_as_issued_by_revision_id(doc, result.result[0].Id)
-        if (result.status == False):
-            raise  ValueError (result.message)
-        # check for issued revision again, should be on sequence number 2 (on 1 is not issued revision in test model )
+        if result.status == False:
+            raise ValueError(result.message)
+        # check for issued revision again
         result = get_issued_revisions(doc)
-        expected_result = {2: 'Revision issued'}
-        message = message + "\n {} vs {}".format(result, expected_result)
-        assert 2 in result
+        # there should be one issued revision in the model
+        expected_result = 1
+        message = message + "\n {} vs {}".format(len(result), expected_result)
+        assert len(result) == expected_result
 
     except Exception as e:
         message = (
@@ -295,6 +301,78 @@ def test_get_issued_revisions(doc):
         )
         flag = False
 
+    return flag, message
+
+
+def _get_id_integers_from_list(my_list):
+    """
+    Returns a list representing the integer values of ids list past in.
+
+    :param my_list: A list of element ids
+    :type my_list: [Autodesk.Revit.DB.ElementId]
+    :return: A list of integers
+    :rtype: [int]
+    """
+
+    ids = []
+    for item in my_list:
+        ids.append(item.IntegerValue)
+    return ids
+
+
+def test_re_order_revisions(doc):
+    """
+    re_order_revisions test
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :raises ValueError: Any exception occurred in creating a revision will be re-raised
+    :return: True if revision was created successfully, otherwise False
+    :rtype: Boolean
+    """
+
+    flag = True
+    message = "-"
+    try:
+        # add another revision to model
+        # check which revit version
+        revit_version = get_revit_version_number(doc)
+        if revit_version <= 2022:
+            result = create_revision(doc, TEST_DATA_2022)
+        else:
+            result = create_revision(doc, TEST_DATA_2023)
+        # check revision was created
+        if result.status == False:
+            raise ValueError(result.message)
+
+        # get revisions in model
+        revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+        # and reverse the list because thats what the end result should look like
+        expected_result = list(reversed(revisions_in_model)).ToList[rdb.ElementId]()
+
+        # apply new revisions order to model
+        result = re_order_revisions(doc, expected_result)
+
+        # get revisions now in the model
+        revisions_in_model_re_ordered = rdb.Revision.GetAllRevisionIds(doc)
+
+        message = "from result: {} vs expected: {} vs model: {}".format(
+            _get_id_integers_from_list(result.result),
+            _get_id_integers_from_list(expected_result),
+            _get_id_integers_from_list(revisions_in_model_re_ordered),
+        )
+        # compare all three values
+        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(expected_result) 
+        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(revisions_in_model_re_ordered)
+        
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_re_order_revisions {}".format(e))
+        )
+        flag = False
     return flag, message
 
 
@@ -316,17 +394,18 @@ def run_tests(doc, output):
 
     # lists of tests to be executed up to version revit 2022
     tests_2022 = [
-        ["test_create_revision_2023", test_create_revision_2023],
+        ["test_create_revision_2023", test_create_revision_pre_2023],
     ]
     # lists of tests to be executed from version revit 2023 onwards
     tests_2023 = [
-        ["test_create_revision_2022", test_create_revision_pre_2023],
+        ["test_create_revision_2022", test_create_revision_2023],
     ]
     # lists of common tests ( not version specific )
     tests_common = [
         ["test_mark_revision_as_issued", test_mark_revision_as_issued],
         ["test_mark_revision_as_issued_by_id", test_mark_revision_as_issued_by_id],
-        ['get_issued_revisions', test_get_issued_revisions],
+        ["test_get_issued_revisions", test_get_issued_revisions],
+        ["test_re_order_revisions", test_re_order_revisions],
     ]
 
     # check which version specific tests to execute

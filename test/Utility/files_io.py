@@ -3,10 +3,13 @@ import sys
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-sys.path += [SAMPLES_PATH]
+TEST_PATH = r'C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\test'
+sys.path += [SAMPLES_PATH, TEST_PATH]
 
 
 from duHast.Utilities.files_io import get_file_name_without_ext
+
+from Utility import temp_files_dirs
 
 def test_file_size():
     pass

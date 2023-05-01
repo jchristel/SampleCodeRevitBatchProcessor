@@ -39,6 +39,7 @@ from duHast.Revit.Revisions.revisions import (
     create_revision,
     mark_revision_as_issued,
     mark_revision_as_issued_by_revision_id,
+    get_issued_revisions,
 )
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
@@ -240,6 +241,63 @@ def test_mark_revision_as_issued_by_id(doc):
     return flag, message
 
 
+def test_get_issued_revisions(doc):
+    '''
+    get_issued_revisions test
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :raises ValueError: Any exception occurred in creating a revision or setting a revision to issued will be thrown again
+    :raises ValueError: _description_
+    :return: True if revision was created successfully, otherwise False
+    :rtype: Boolean
+    '''
+
+    flag = True
+    message = "-"
+    try:
+        # test model has no issued revisions to start with, check for empty:
+        result = get_issued_revisions(doc)
+        expected_result = {}
+        message = " {} ".format(result)
+        assert result == expected_result
+
+
+        # set up a revision , mark it as issued
+        # check which revit version
+        revit_version = get_revit_version_number(doc)
+        if revit_version <= 2022:
+            result = create_revision(doc, TEST_DATA_2022)
+        else:
+            result = create_revision(doc, TEST_DATA_2023)
+        # check revision was created
+        if (result.status == False):
+            raise  ValueError (result.message)
+        # mark revision as issued
+        result = mark_revision_as_issued_by_revision_id(doc, result.result[0].Id)
+        if (result.status == False):
+            raise  ValueError (result.message)
+        # check for issued revision again, should be on sequence number 2 (on 1 is not issued revision in test model )
+        result = get_issued_revisions(doc)
+        expected_result = {2: 'Revision issued'}
+        message = message + "\n {} vs {}".format(result, expected_result)
+        assert 2 in result
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + (
+                "An exception occurred in function test_get_issued_revisions {}".format(
+                    e
+                )
+            )
+        )
+        flag = False
+
+    return flag, message
+
+
 def run_tests(doc, output):
     """
     Runs all tests in this module
@@ -255,32 +313,48 @@ def run_tests(doc, output):
     all_tests = True
     # check which revit version
     revit_version = get_revit_version_number(doc)
-    # run test
+
+    # lists of tests to be executed up to version revit 2022
+    tests_2022 = [
+        ["test_create_revision_2023", test_create_revision_2023],
+    ]
+    # lists of tests to be executed from version revit 2023 onwards
+    tests_2023 = [
+        ["test_create_revision_2022", test_create_revision_pre_2023],
+    ]
+    # lists of common tests ( not version specific )
+    tests_common = [
+        ["test_mark_revision_as_issued", test_mark_revision_as_issued],
+        ["test_mark_revision_as_issued_by_id", test_mark_revision_as_issued_by_id],
+        ['get_issued_revisions', test_get_issued_revisions],
+    ]
+
+    # check which version specific tests to execute
+    by_version_tests = []
     if revit_version <= 2022:
-        flag, message = in_transaction_group(doc, test_create_revision_pre_2023)
-        all_tests = all_tests & flag
-        output("test_create_revision_pre_2023()", flag, message)
+        by_version_tests = tests_2022
     else:
-        flag, message = in_transaction_group(doc, test_create_revision_2023)
+        by_version_tests = tests_2023
+
+    # run version specific tests
+    for test in by_version_tests:
+        flag, message = in_transaction_group(doc, test[1])
         all_tests = all_tests & flag
-        output("test_create_revision_2023()", flag, message)
+        output(test[0], flag, message)
 
-    flag, message = in_transaction_group(doc, test_mark_revision_as_issued)
-    all_tests = all_tests & flag
-    output("test_mark_revision_as_issued()", flag, message)
-
-    flag, message = in_transaction_group(doc, test_mark_revision_as_issued_by_id)
-    all_tests = all_tests & flag
-    output("test_mark_revision_as_issued_by_id()", flag, message)
+    # run common tests
+    for test in tests_common:
+        flag, message = in_transaction_group(doc, test[1])
+        all_tests = all_tests & flag
+        output(test[0], flag, message)
 
     return all_tests
 
 
 if __name__ == "__main__":
-
     # in line function to print
     def action(function, flag, message):
-        print('{} [{}]'.format(function, flag))
+        print("{} [{}]".format(function, flag))
         print(message)
 
     run_tests(doc, action)

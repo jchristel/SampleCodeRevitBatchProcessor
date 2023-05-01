@@ -3,7 +3,12 @@ import sys, os, tempfile
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-sys.path += [SAMPLES_PATH]
+
+#: path to test directory in repository
+TEST_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path += [SAMPLES_PATH, TEST_PATH]
+
+from Utility.temp_files_dirs import write_test_files, call_with_temp_directory
 
 from duHast.Utilities.files_get import (
     get_files_from_directory_walker_with_filters,
@@ -12,39 +17,6 @@ from duHast.Utilities.files_get import (
     files_as_dictionary,
     get_files_from_directory_walker,
 )
-
-
-def _write_test_files(file_names, tmp_dir):
-    """
-    Utility function writing out test files into given directory
-
-    :param file_names: A list of file names.
-    :type file_names: [str]
-    :param temp_dir: Fully qualified directory path.
-    :type temp_dir: str
-    """
-
-    for file_name in file_names:
-        file_path = os.path.join(tmp_dir, file_name)
-        with open(file_path, "w") as f1:
-            f1.write("test content")
-
-
-def _call_with_temp_directory(func):
-    """
-    Utility function setting up a temp directory and calling pass in function with that directory as an argument.
-
-    :param func: test function to be executed
-    :type func: func
-    :return: True if all tests past, otherwise False
-    :rtype: bool
-    """
-
-    flag = True
-    message = "-"
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        flag, message = func(tmp_dir)
-    return flag, message
 
 
 def test_get_files_single_directory(tmp_dir):
@@ -72,7 +44,7 @@ def test_get_files_single_directory(tmp_dir):
         file_extension = ".txt"
 
         # write out test files
-        _write_test_files(test_files, tmp_dir)
+        write_test_files(test_files, tmp_dir)
 
         # get files and check result
         result = get_files_single_directory(
@@ -130,7 +102,7 @@ def test_get_files_from_directory_walker_with_filters(tmp_dir):
         ]
 
         # write out test files
-        _write_test_files(test_files, tmp_dir)
+        write_test_files(test_files, tmp_dir)
 
         # Set up the input parameters for the function
         folder_path = tmp_dir
@@ -190,7 +162,7 @@ def test_files_as_dictionary(tmp_dir):
         ]
 
         # write out test files
-        _write_test_files(test_files, tmp_dir)
+        write_test_files(test_files, tmp_dir)
 
         # Call the function with the temporary directory and filter values
         result = files_as_dictionary(tmp_dir, "test_prefix", "_test_suffix", ".rfa")
@@ -247,7 +219,7 @@ def test_get_files_with_filter(tmp_dir):
         ]
 
         # write out test files
-        _write_test_files(test_files, tmp_dir)
+        write_test_files(test_files, tmp_dir)
 
         # Set up the input parameters for the function
         file_extension = ".rvt"
@@ -301,7 +273,7 @@ def test_get_files_from_directory_walker(tmp_dir):
         ]
 
         # write out test files
-        _write_test_files(test_files, tmp_dir)
+        write_test_files(test_files, tmp_dir)
 
         filter = "testfile"
         result = get_files_from_directory_walker(tmp_dir, filter)
@@ -353,7 +325,7 @@ def run_tests(output):
 
     # execute tests
     for test in tests:
-        flag, message = _call_with_temp_directory(test[1])
+        flag, message = call_with_temp_directory(test[1])
         all_tests = all_tests & flag
         output(test[0], flag, message)
 

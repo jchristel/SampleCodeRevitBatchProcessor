@@ -8,14 +8,132 @@ SAMPLES_PATH = (
 TEST_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path += [SAMPLES_PATH, TEST_PATH]
 
+from Utility.temp_files_dirs import write_test_files, call_with_temp_directory
 
-from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.files_io import (
+    file_exist,
+    file_delete,
+    get_file_name_without_ext,
+    get_file_size,
+    FILE_SIZE_IN_KB,
+    FILE_SIZE_IN_MB,
+    FILE_SIZE_IN_GB,
+)
 
-from Utility import temp_files_dirs
+
+def test_file_exist(tmp_dir):
+    flag = True
+    message = "-"
+    try:
+        # test data
+        test_files = [
+            "test_file_size.txt",
+        ]
+
+        # write out test files
+        write_test_files(test_files, tmp_dir)
+
+        result = file_exist(os.path.join(tmp_dir, test_files[0]))
+        expected_result = True
+        message = " {} vs {}".format(result, expected_result)
+        assert expected_result == result
+
+    except Exception as e:
+        flag = False
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_file_exist {}".format(e))
+        )
+    return flag, message
 
 
-def test_file_size():
-    pass
+def test_file_delete(tmp_dir):
+    flag = True
+    message = "-"
+    try:
+        # test data
+        test_files = [
+            "test_file_delete.txt",
+        ]
+
+        # write out test files
+        write_test_files(test_files, tmp_dir)
+
+        result = file_delete(os.path.join(tmp_dir, test_files[0]))
+        expected_result = True
+        expected_result_check = file_exist(os.path.join(tmp_dir, test_files[0]))
+        message = "File deleted: {} vs  expected: {} vs file check {}".format(
+            result, expected_result, expected_result_check
+        )
+        assert result == expected_result
+        # file exist should have returned a false!
+        assert result is not expected_result_check
+
+    except Exception as e:
+        flag = False
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_file_delete {}".format(e))
+        )
+    return flag, message
+
+
+def test_file_size(tmp_dir):
+    """
+    file_size test
+
+    :param tmpdir: temp directory
+    :type tmpdir: str
+    :return: True if all tests past, otherwise False
+    :rtype: bool
+    """
+
+    flag = True
+    message = "-"
+    try:
+        # test data
+        test_files = [
+            "test_file_size.txt",
+        ]
+
+        # write out test files
+        write_test_files(test_files, tmp_dir)
+
+        # get full test file path
+        file_path = os.path.join(tmp_dir, test_files[0])
+
+        # get file size
+        file_size = os.path.getsize(file_path)
+        message = "File size in byte on disk: {}".format(file_size)
+
+        # Test file size in KB
+        result = get_file_size(file_path, unit=FILE_SIZE_IN_KB)
+        expected_result = file_size / FILE_SIZE_IN_KB
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert expected_result == result
+
+        # Test file size in MB
+        result = get_file_size(file_path, unit=FILE_SIZE_IN_MB)
+        expected_result = file_size / FILE_SIZE_IN_MB
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert expected_result == result
+
+        # Test file size in GB
+        result = get_file_size(file_path, unit=FILE_SIZE_IN_GB)
+        expected_result = file_size / FILE_SIZE_IN_GB
+        message = message + "\n" + (" {} vs {}".format(result, expected_result))
+        assert expected_result == result
+
+    except Exception as e:
+        flag = False
+        message = (
+            message
+            + "\n"
+            + ("An exception occurred in function test_file_size {}".format(e))
+        )
+    return flag, message
 
 
 def test_get_file_name_without_ext():
@@ -92,11 +210,25 @@ def run_tests(output):
     all_tests = True
 
     # lists of tests to be executed
-    tests = [["test_get_file_name_without_ext", test_get_file_name_without_ext]]
+    tests = [
+        ["test_get_file_name_without_ext", test_get_file_name_without_ext],
+    ]
+
+    tests_temp_files = [
+        ["test_file_size", test_file_size],
+        ["test_file_exist", test_file_exist],
+        ["test_file_delete", test_file_delete],
+    ]
 
     # execute tests
     for test in tests:
         flag, message = test[1]()
+        all_tests = all_tests & flag
+        output(test[0], flag, message)
+
+    # exec tests requiring a temp directory
+    for test in tests_temp_files:
+        flag, message = call_with_temp_directory(test[1])
         all_tests = all_tests & flag
         output(test[0], flag, message)
 

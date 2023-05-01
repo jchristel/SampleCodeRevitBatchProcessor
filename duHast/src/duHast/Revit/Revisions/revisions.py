@@ -228,6 +228,65 @@ def add_revisions_to_sheet(doc, sheet, revision_ids):
     return return_value
 
 
+def get_issued_revisions(doc):
+    '''
+    Get all issued revisions in a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: Dictionary where key is the revision sequence and value is the revision object
+    :rtype: {int:Autodesk.Revit.DB.Revision}
+    '''
+
+    issued_revisions = {}
+    # get all revisions in file
+    revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+    for revision_id in revisions_in_model:
+        rev = doc.GetElement(revision_id)
+        if (rev.Issued == True):
+            issued_revisions[rev.SequenceNumber] = rev
+    return issued_revisions
+
+
+def re_order_revisions(doc, revision_sequence):
+    """
+    _summary_
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revision_sequence: List of revision element ids describing the new sequence.
+    :type revision_sequence: IList<ElementId> 
+    :return:
+        Result class instance.
+
+        - Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message revision re-ordered successfully.
+        - result.result: new revision sequence list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+
+    :rtype: :class:`.Result`
+    """
+
+    return_value = res.Result()
+    def action():
+        action_return_value = res.Result()
+        try:
+            rdb.Revision.ReorderRevisionSequence(doc, revision_sequence)
+            action_return_value.update_sep(True, "Re-ordered revisions in model.")
+        except Exception as e:
+            action_return_value.update_sep(
+                False, "Failed to re-order revision(s) with exception: {}".format(e)
+            )
+        return action_return_value
+    transaction = rdb.Transaction(doc, "Re-ordering revisions in model.")
+    return_value = rTran.in_transaction(transaction, action)
+    return return_value
+
+    
 # ---------------------------------------- deleting revisions --------------------------------------------
 
 

@@ -71,13 +71,15 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
     #: overall test status
     overall_status = True
 
-    # start tests -> should run revision sequence tests first since they form 
+    # start tests -> should run revision sequence tests first since they form
     # part of revision tests
-    output_function_header(pad_header_no_time_stamp("Revisions"))
-    result = revTest.run_tests(doc, output_function)
-    overall_status = overall_status & result
+
     output_function_header(pad_header_no_time_stamp("Revision Sequence"))
     result = seqTest.run_tests(doc, output_function)
+    overall_status = overall_status & result
+
+    output_function_header(pad_header_no_time_stamp("Revisions"))
+    result = revTest.run_tests(doc, output_function)
     overall_status = overall_status & result
 
     return overall_status

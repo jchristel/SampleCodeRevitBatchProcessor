@@ -10,11 +10,11 @@ Two design sets with a total of 3 design options.
 - Design Set 1
 
     - Option 1
-    - Option 2
+    - Option 2 (primary)
 
 - Design Set 2
 
-    - Option 1
+    - Option 1 (primary)
 
  
 """
@@ -41,12 +41,13 @@ Two design sets with a total of 3 design options.
 #
 #
 
-import sys
+import sys, os
 
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-sys.path += [SAMPLES_PATH]
+TEST_PATH = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor"
+sys.path += [SAMPLES_PATH, TEST_PATH]
 
 from duHast.Revit.Common.design_set_options import get_design_options, get_design_sets
 
@@ -59,11 +60,24 @@ from test.utils.transaction import in_transaction_group
 import Autodesk.Revit.DB as rdb
 
 DESIGN_OPTION_DATA = [
-    ["Option 1", "Design Set 1", False],
-    ["Option 2", "Design Set 1", True],
-    ["Option 1", "Design Set 2", False],
+    ["Option 1", "Option Set 1", False],
+    ["Option 2", "Option Set 1", True],
+    ["Option 1", "Option Set 2", True],
 ]
 
+def _strip_primary(option_name):
+    '''
+    Strips anything after ' <' from an option name. ie. <primary> if in option name. Otherwise the name will be returned unchanged.
+
+    :param option_name: The design option name.
+    :type option_name: str
+    :return: Option name without the primary indicator
+    :rtype: str
+    '''
+
+    if("<" in option_name):
+        option_name = option_name[:option_name.index("<")-2]
+    return option_name
 
 def test_get_design_options(doc):
     """
@@ -81,10 +95,10 @@ def test_get_design_options(doc):
     try:
         result_sets = get_design_options(doc)
         # get the option names only
-        result = [rdb.Element.Name.GetValue(entry) for entry in result_sets]
+        result = list([_strip_primary(rdb.Element.Name.GetValue(entry)) for entry in result_sets])
         # get all option names
-        expected_result = (do[0] for do in DESIGN_OPTION_DATA)
-        message = " {} vs {}".format(result, expected_result)
+        expected_result = list(do[0] for do in DESIGN_OPTION_DATA)
+        message = " {} vs {}".format(sorted(result), sorted(expected_result))
 
         assert sorted(result) == sorted(expected_result)
 
@@ -115,10 +129,10 @@ def test_get_design_sets(doc):
     try:
         result_sets = get_design_sets(doc)
         # get the set names only
-        result = (rdb.Element.Name.GetValue(entry) for entry in result_sets)
+        result = list(rdb.Element.Name.GetValue(entry) for entry in result_sets)
         # get a unique list of design set names
         expected_result = list(set(do[1] for do in DESIGN_OPTION_DATA))
-        message = " {} vs {}".format(result, expected_result)
+        message = " {} vs {}".format(sorted(result), sorted(expected_result))
 
         assert sorted(result) == sorted(expected_result)
 

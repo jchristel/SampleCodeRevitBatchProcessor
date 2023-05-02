@@ -133,6 +133,7 @@ def get_design_set_option_info(doc, element):
     new_value= ['Main Model','-',True]
     dic = dict(zip(new_key,new_value))
     try:
+        # this only works for objects inheriting from Autodesk.Revit.DB.Element
         design_option = element.DesignOption
         dic['designOptionName'] = design_option.Name
         dic['isPrimary'] = design_option.IsPrimary

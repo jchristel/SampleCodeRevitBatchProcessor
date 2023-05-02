@@ -26,7 +26,7 @@ This module contains revit revision tests .
 #
 #
 
-import sys
+import sys, os
 import clr
 
 # require for ToList()
@@ -35,10 +35,24 @@ from System import Linq
 
 clr.ImportExtensions(Linq)
 
-SAMPLES_PATH = (
-    r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
-)
-TEST_PATH = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor"
+# add additional path
+TEST_PATH = ""
+SAMPLES_PATH = ""
+# check if __file__ is defined. Not the case when running this in the revit python shell
+# should work in batch processor!
+try:
+    # __file__ is defined
+    TEST_PATH = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    )
+    SAMPLES_PATH = os.path.join(TEST_PATH, r"duHast\src")
+except:
+    # __file__ is not defined, add manual path to repo. Not sure whether there is a better way...
+    SAMPLES_PATH = (
+        r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
+    )
+    TEST_PATH = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor"
+
 sys.path += [SAMPLES_PATH, TEST_PATH]
 
 from duHast.Revit.Revisions.revisions import (

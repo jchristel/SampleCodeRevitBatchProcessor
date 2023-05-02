@@ -51,7 +51,7 @@ import Autodesk.Revit.DB as rdb
 # tuples containing revision information
 REVISION_DATA = namedtuple(
     "revisionData",
-    "description issuedBy issuedTo revisionNumberType revisionDate tagCloudVisibility",
+    "description issued_by issued_to revision_number_type revision_date tag_cloud_visibility",
 )
 
 

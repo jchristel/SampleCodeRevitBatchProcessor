@@ -60,12 +60,12 @@ def new_revision_action_2022(doc, revision_data):
     try:
         new_revision = rdb.Revision.Create(doc)
         new_revision.Description = revision_data.description
-        new_revision.IssuedBy = revision_data.issuedBy
-        new_revision.IssuedTo = revision_data.issuedTo
-        new_revision.NumberType = revision_data.revisionNumberType
-        new_revision.RevisionDate = revision_data.revisionDate
+        new_revision.IssuedBy = revision_data.issued_by
+        new_revision.IssuedTo = revision_data.issued_to
+        new_revision.NumberType = revision_data.revision_number_type
+        new_revision.RevisionDate = revision_data.revision_date
         new_revision.Visibility = (
-            revision_data.tagCloudVisibility
+            revision_data.tag_cloud_visibility
         )  # rdb.RevisionVisibility.Hidden
         action_return_value.result.append(new_revision)
         action_return_value.update_sep(True, "Created new revision in document.")
@@ -105,41 +105,41 @@ def new_revision_action_2023(doc, revision_data):
     try:
         new_revision = rdb.Revision.Create(doc)
         new_revision.Description = revision_data.description
-        new_revision.IssuedBy = revision_data.issuedBy
+        new_revision.IssuedBy = revision_data.issued_by
 
         # set the revision sequence based on revision number type property past in
         seq = doc.GetElement(new_revision.RevisionNumberingSequenceId)
-        if seq.Name == revision_data.revisionNumberType:
-            action_return_value.AppendMessage(
+        if seq.Name == revision_data.revision_number_type:
+            action_return_value.append_message(
                 "Using rev sequence type assigned by default: {}".format(seq.Name)
             )
         else:
-            action_return_value.AppendMessage(
+            action_return_value.append_message(
                 "Need to assign none default revision sequence type: {}".format(
-                    revision_data.revisionNumberType
+                    revision_data.revision_number_type
                 )
             )
             rev_sequence = get_revision_seq_of_name(
-                doc, revision_data.revisionNumberType
+                doc, revision_data.revision_number_type
             )
             if rev_sequence != None:
                 new_revision.RevisionNumberingSequenceId = rev_sequence.Id
-                action_return_value.AppendMessage(
+                action_return_value.append_message(
                     "Successfully assigned non default revision sequence type: {}".format(
                         rev_sequence.Name
                     )
                 )
             else:
-                action_return_value.AppendMessage(
+                action_return_value.append_message(
                     "Rev sequence type: {} does not exist in model. Default used instead: {} !".format(
-                        revision_data.revisionNumberType, seq.Name
+                        revision_data.revision_number_type, seq.Name
                     )
                 )
 
-        new_revision.IssuedTo = revision_data.issuedTo
-        new_revision.RevisionDate = revision_data.revisionDate
+        new_revision.IssuedTo = revision_data.issued_to
+        new_revision.RevisionDate = revision_data.revision_date
         new_revision.Visibility = (
-            revision_data.tagCloudVisibility
+            revision_data.tag_cloud_visibility
         )  # rdb.RevisionVisibility.Hidden
         action_return_value.result.append(new_revision)
         action_return_value.update_sep(True, "Created new revision in document.")

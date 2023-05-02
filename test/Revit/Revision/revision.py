@@ -28,9 +28,11 @@ This module contains revit revision tests .
 
 import sys
 import clr
+
 # require for ToList()
 clr.AddReference("System.Core")
 from System import Linq
+
 clr.ImportExtensions(Linq)
 
 SAMPLES_PATH = (
@@ -57,21 +59,21 @@ import Autodesk.Revit.DB as rdb
 #: set up revision data for Revit up to version 2022
 TEST_DATA_2022 = REVISION_DATA(
     description="unit test",
-    issuedBy="tester",
-    issuedTo="testy",
-    revisionNumberType=rdb.RevisionNumberType.Numeric,
-    revisionDate="23/12/23",
-    tagCloudVisibility=rdb.RevisionVisibility.Hidden,
+    issued_by="tester",
+    issued_to="testy",
+    revision_number_type=rdb.RevisionNumberType.Numeric,
+    revision_date="23/12/23",
+    tag_cloud_visibility=rdb.RevisionVisibility.Hidden,
 )
 
 #: set up revision data for Revit from version 2023 onwards
 TEST_DATA_2023 = REVISION_DATA(
     description="unit test",
-    issuedBy="tester",
-    issuedTo="testy",
-    revisionNumberType="Numeric",
-    revisionDate="23/12/23",
-    tagCloudVisibility=rdb.RevisionVisibility.Hidden,
+    issued_by="tester",
+    issued_to="testy",
+    revision_number_type="Numeric",  # sequence name, which in turn defines the number type
+    revision_date="23/12/23",
+    tag_cloud_visibility=rdb.RevisionVisibility.Hidden,
 )
 
 
@@ -94,11 +96,11 @@ def test_create_revision_pre_2023(doc):
         assert result.status == True
         assert len(result.result) == 1
         assert result.result[0].Description == TEST_DATA_2022.description
-        assert result.result[0].IssuedTo == TEST_DATA_2022.issuedTo
-        assert result.result[0].IssuedBy == TEST_DATA_2022.issuedBy
-        assert result.result[0].RevisionDate == TEST_DATA_2022.revisionDate
-        assert result.result[0].Visibility == TEST_DATA_2022.tagCloudVisibility
-        assert result.result[0].NumberType == TEST_DATA_2022.revisionNumberType
+        assert result.result[0].IssuedTo == TEST_DATA_2022.issued_to
+        assert result.result[0].IssuedBy == TEST_DATA_2022.issued_by
+        assert result.result[0].RevisionDate == TEST_DATA_2022.revision_date
+        assert result.result[0].Visibility == TEST_DATA_2022.tag_cloud_visibility
+        assert result.result[0].NumberType == TEST_DATA_2022.revision_number_type
 
     except Exception as e:
         message = (
@@ -133,11 +135,11 @@ def test_create_revision_2023(doc):
         assert result.status == True
         assert len(result.result) == 1
         assert result.result[0].Description == TEST_DATA_2023.description
-        assert result.result[0].IssuedTo == TEST_DATA_2023.issuedTo
-        assert result.result[0].IssuedBy == TEST_DATA_2023.issuedBy
-        assert result.result[0].RevisionDate == TEST_DATA_2023.revisionDate
-        assert result.result[0].Visibility == TEST_DATA_2023.tagCloudVisibility
-        assert result.result[0].NumberType == TEST_DATA_2023.revisionNumberType
+        assert result.result[0].IssuedTo == TEST_DATA_2023.issued_to
+        assert result.result[0].IssuedBy == TEST_DATA_2023.issued_by
+        assert result.result[0].RevisionDate == TEST_DATA_2023.revision_date
+        assert result.result[0].Visibility == TEST_DATA_2023.tag_cloud_visibility
+        assert result.result[0].NumberType == TEST_DATA_2023.revision_number_type
 
     except Exception as e:
         message = (
@@ -362,9 +364,12 @@ def test_re_order_revisions(doc):
             _get_id_integers_from_list(revisions_in_model_re_ordered),
         )
         # compare all three values
-        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(expected_result) 
-        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(revisions_in_model_re_ordered)
-        
+        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(
+            expected_result
+        )
+        assert _get_id_integers_from_list(result.result) == _get_id_integers_from_list(
+            revisions_in_model_re_ordered
+        )
 
     except Exception as e:
         message = (

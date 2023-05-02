@@ -132,16 +132,12 @@ def get_design_set_option_info(doc, element):
     new_key= ['designSetName','designOptionName','isPrimary']
     new_value= ['Main Model','-',True]
     dic = dict(zip(new_key,new_value))
-    # get design option data from element
-    p_value = rParaGet.get_built_in_parameter_value(element, rdb.BuiltInParameter.DESIGN_OPTION_PARAM)
-    if(p_value != None):
-        design_option_data = p_value.split(':')
-        # check if main model ( length is 1! )
-        if(len(design_option_data) > 1):
-            dic['designSetName'] = design_option_data[0].Trim()
-            dic['designOptionName'] = design_option_data[1].Trim()
-            dic['isPrimary'] = is_design_option_primary(doc, dic['designSetName'], dic['designOptionName'])
-        else:
-            # use default values
-            pass
+    try:
+        design_option = element.DesignOption
+        dic['designOptionName'] = design_option.Name
+        dic['isPrimary'] = design_option.IsPrimary
+        e = doc.GetElement(design_option.get_Parameter(rdb.BuiltInParameter.OPTION_SET_ID).AsElementId())
+        dic['designSetName'] = rdb.Element.Name.GetValue(e)
+    except Exception as e:
+        pass
     return dic

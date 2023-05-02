@@ -40,7 +40,7 @@ class WorkloadBucket(base.Base):
 
         Initializes this class with:
 
-        - .workLoadValue = 0
+        - .workload_value = 0
         - .items = []
 
         '''

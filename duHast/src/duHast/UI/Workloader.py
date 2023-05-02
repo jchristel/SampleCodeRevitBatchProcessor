@@ -37,7 +37,7 @@ clr.ImportExtensions(Linq)
 
 from duHast.UI import workload_bucket as wb
 
-def distribute_workload (numberOfBuckets, items, getWorkloadSize):
+def distribute_workload (number_of_buckets, items, getWorkloadSize):
     '''
     Distributes a given number of items evenly by workload size into workload buckets.
 
@@ -52,11 +52,11 @@ def distribute_workload (numberOfBuckets, items, getWorkloadSize):
     :rtype: list[ :class:`.WorkloadBucket`]
     '''
     
-    workloadBuckets = []
+    workload_buckets = []
     try:
         # ini bucket list
-        for x in range(numberOfBuckets):
-            workloadBuckets.append(wb.WorkloadBucket())
+        for x in range(number_of_buckets):
+            workload_buckets.append(wb.WorkloadBucket())
         itemToWorkLoadValues = []
         
         # build key value list of items and their workload value
@@ -69,17 +69,17 @@ def distribute_workload (numberOfBuckets, items, getWorkloadSize):
         # load up with buckets
         for bucket in itemToWorkLoadValues:
             # find bucket with smallest work load value
-            lowBucket = min(workloadBuckets, key=lambda wbucket: wbucket.workLoadValue)
+            lowBucket = min(workload_buckets, key=lambda work_bucket: work_bucket.workload_value)
             # add new item to bucket list
-            lowBucket.AddItem(bucket[0])
+            lowBucket.add_item(bucket[0])
             # increase work bucket size by size of item added
-            lowBucket.SetWorkLoadValue(lowBucket.workLoadValue + bucket[1])
+            lowBucket.set_workload_value(lowBucket.workload_value + bucket[1])
 
     except Exception as e:
         print(e)
         pass
     # send loaded buckets back
-    return workloadBuckets
+    return workload_buckets
 
 def sort(sub_li): 
     '''

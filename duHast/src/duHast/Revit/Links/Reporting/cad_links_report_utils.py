@@ -29,7 +29,7 @@ This module contains utility function(s) for CAD link reports.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Links.cad_links import get_all_cad_link_instances
-from duHast.Utilities import files_io as util
+from duHast.Utilities import files_io as fileIO
 
 
 def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
@@ -54,7 +54,7 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
                 ex_file_ref = p.GetExternalFileReference()
                 if(ex_file_ref.IsValidExternalFileReference(ex_file_ref)):
                     model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(ex_file_ref.GetPath())
-                    model_path = util.convert_relative_path_to_full_path(model_path, revit_file_path)
+                    model_path = fileIO.convert_relative_path_to_full_path(model_path, revit_file_path)
                 break
             except Exception as e:
                 model_path = str(e)

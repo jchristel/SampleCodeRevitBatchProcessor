@@ -40,7 +40,7 @@ clr.AddReference('System')
 # utility functions for most commonly used Revit API tasks
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 # utilities
-from duHast.Utilities import files_io as util
+from duHast.Utilities import files_io as fileIO
 # class used for stats reporting
 from duHast.Utilities import result as res
 # implementation of Revit API callback required when loading families into a Revit model
@@ -101,7 +101,7 @@ def load_family(doc, family_file_path):
             except Exception as e:
                 action_return_value.update_sep(False,'Failed to load family ' + family_file_path + ' with exception: '+ str(e))
             return action_return_value
-        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(util.get_file_name_without_ext(family_file_path)))
+        transaction = rdb.Transaction(doc, 'Loading Family: ' + str(fileIO.get_file_name_without_ext(family_file_path)))
         dummy = rTran.in_transaction(transaction, action)
         result.update(dummy)
     except Exception as e:

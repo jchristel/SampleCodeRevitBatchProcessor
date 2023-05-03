@@ -29,7 +29,7 @@ This module contains utility function(s) for material reports.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import files_io as util, utility as util
+from duHast.Utilities import files_io as fileIO, utility as util
 from duHast.Revit.Materials.materials import get_all_materials
 
 def get_material_report_data(doc, revit_file_path):
@@ -58,14 +58,14 @@ def get_material_report_data(doc, revit_file_path):
                 data.append(
                     [revit_file_path,
                     str(mat.Id),
-                    util.EncodeAscii(rdb.Element.Name.GetValue(mat)),
-                    util.EncodeAscii(para_name),
-                    util.EncodeAscii(p_value)]
+                    util.encode_ascii(rdb.Element.Name.GetValue(mat)),
+                    util.encode_ascii(para_name),
+                    util.encode_ascii(p_value)]
                 )
         except Exception:
             data.append([
-                util.get_file_name_without_ext(revit_file_path),
+                fileIO.get_file_name_without_ext(revit_file_path),
                 str(mat.Id),
-                util.EncodeAscii(rdb.Element.Name.GetValue(mat))
+                util.encode_ascii(rdb.Element.Name.GetValue(mat))
             ])
     return data

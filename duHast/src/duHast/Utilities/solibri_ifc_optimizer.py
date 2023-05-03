@@ -36,7 +36,7 @@ List of imports:
 import subprocess
 from System.IO import Path
 
-from duHast.Utilities import files_get as fileGet, files_io as util, result as res
+from duHast.Utilities import files_get as fileGet, files_io as fileIO, result as res
 
 
 #: The default install path for solibri ifc optimizer.
@@ -66,7 +66,7 @@ def optimize_all_ifc_files_in_directory(directory_path):
 
     return_value = res.Result()
     # check if ifc optimizer is installed:
-    if(util.file_exist(solibri_install_path_)):
+    if(fileIO.file_exist(solibri_install_path_)):
         return_value.message = 'Solibri IFC optimizer is installed.'
         ifc_files = fileGet.get_files(directory_path, '.ifc')
         if(len(ifc_files) > 0):
@@ -105,7 +105,7 @@ def optimize_ifc_files_in_list(ifc_files, directory_path):
 
     return_value = res.Result()
     # check if ifc optimizer is installed:
-    if(util.file_exist(solibri_install_path_)):
+    if(fileIO.file_exist(solibri_install_path_)):
         return_value.message = 'Solibri IFC optimizer is installed.'
         if(len(ifc_files) > 0):
             process_files_result = process_ifc_files(ifc_files, directory_path)
@@ -156,7 +156,7 @@ def process_ifc_files(ifc_files, directory_path):
                 # get the rename information
                 # contains old and new file name
                 rename = []
-                p = util.get_directory_path_from_file_path(ifc_file)
+                p = fileIO.get_directory_path_from_file_path(ifc_file)
                 if(p != ''):
                     new_file_path = str(p)+'\\'+ str(Path.GetFileNameWithoutExtension(ifc_file))+'_optimized.ifc'
                     rename.append(new_file_path)
@@ -167,13 +167,13 @@ def process_ifc_files(ifc_files, directory_path):
                     return_value.update_sep(False, 'Failed to optimize file: {}'.format(ifc_file))
         # clean up
         for file_to_delete in files_to_delete:
-            status_delete = util.file_delete(file_to_delete)
+            status_delete = fileIO.file_delete(file_to_delete)
             if(status_delete):
                 return_value.append_message('Deleted original file: {}'.format(file_to_delete))
             else:
                 return_value.update_sep(False,'Failed to delete original file: {}'.format(file_to_delete))
         for file_to_rename in files_to_rename:
-            status_rename = util.rename_file(file_to_rename[0], file_to_rename[1])
+            status_rename = fileIO.rename_file(file_to_rename[0], file_to_rename[1])
             if(status_rename):
                 return_value.append_message('Renamed original file: {} to: {}'.format(file_to_rename[0],file_to_rename[1]))
             else:

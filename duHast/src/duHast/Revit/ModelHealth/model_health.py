@@ -39,7 +39,7 @@ import System
 
 from duHast.Revit.BIM360 import bim_360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import date_stamps as dateStamp, files_io as util, result as res
+from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO, result as res
 from duHast.Revit.Common import design_set_options as rDoS
 from duHast.Revit.Warnings import warnings as rWarn
 from duHast.Revit.Common import worksets as rWork
@@ -198,9 +198,9 @@ def get_file_size(doc):
         if (revit_file_path.StartsWith('BIM 360')):
             size = b360.get_model_file_size(doc)
         else:
-            if(util.file_exist(revit_file_path)):
+            if(fileIO.file_exist(revit_file_path)):
                 # get file size in MB
-                size = util.get_file_size(revit_file_path)
+                size = fileIO.get_file_size(revit_file_path)
     except:
         pass
     return size
@@ -735,7 +735,7 @@ def update_model_health_tracer_family(doc, revit_file_path):
     :rtype: :class:`.Result`
     '''
 
-    revit_file_name = util.get_file_name_without_ext(revit_file_path)
+    revit_file_name = fileIO.get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
     instances = get_instances_of_model_health(doc)
     if(len(instances) > 0):
@@ -770,7 +770,7 @@ def write_model_health_report(doc, revit_file_path, output_directory):
     :rtype: :class:`.Result`
     '''
     
-    revit_file_name = util.get_file_name_without_ext(revit_file_path)
+    revit_file_name = fileIO.get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():

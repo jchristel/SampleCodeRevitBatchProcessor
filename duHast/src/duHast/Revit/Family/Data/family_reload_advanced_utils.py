@@ -32,7 +32,7 @@ This module provides utility functions to read and write reload task lists for t
 
 from collections import namedtuple
 
-from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as util, files_tab as fileTab
+from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as fileIO, files_tab as fileTab
 
 # tuples containing base family data and changed family data read from files
 changed_family = namedtuple('changed_family', 'name category filePath')
@@ -93,8 +93,8 @@ def delete_old_task_lists(directory_path):
     files = fileGet.get_files(directory_path, '.txt')
     if (len(files) > 0):
         for f in files:
-            if (util.get_file_name_without_ext(f).startswith(TASK_COUNTER_FILE_PREFIX)):
-                flag = flag & util.file_delete(f)
+            if (fileIO.get_file_name_without_ext(f).startswith(TASK_COUNTER_FILE_PREFIX)):
+                flag = flag & fileIO.file_delete(f)
     return flag
 
 def write_out_empty_task_list(directory_path, counter = 0):
@@ -148,7 +148,7 @@ def read_change_list(file_path):
     '''
 
     rows = []
-    if(util.file_exist(file_path)):
+    if(fileIO.file_exist(file_path)):
         rows = fileCSV.read_csv_file(file_path)
     else:
         raise Exception("Changed families list files does not exist.")

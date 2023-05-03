@@ -45,7 +45,7 @@ Future: just provide improvements over e-transmit purge unused in this code sect
 import clr
 import System
 
-from duHast.Utilities import files_io as util
+from duHast.Utilities import files_io as fileIO
 from duHast.Utilities import result as res
 
 from duHast.Revit.Annotation import spot_dimensions as rAnnoSpot
@@ -271,7 +271,7 @@ def purge_unused(doc, revit_file_path, is_debug):
     '''
 
     # the current file name
-    revitFileName = util.get_file_name_without_ext(revit_file_path)
+    revitFileName = fileIO.get_file_name_without_ext(revit_file_path)
     result_value = res.Result()
     # set up a timer objects
     timer_task = Timer()

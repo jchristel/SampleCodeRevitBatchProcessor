@@ -28,7 +28,7 @@ Family base data class.
 #
 
 from duHast.Revit.Family.Data import ifamily_data as IFamData
-from duHast.Utilities import directory_io as dirIO, files_io as util
+from duHast.Utilities import directory_io as dirIO, files_io as fileIO
 from duHast.Revit.Common import file_io as rFile
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
 
@@ -104,7 +104,7 @@ class FamilyBaseData(IFamData.IFamilyData):
 
         # process reference file list and look for a match:
         # based on file name and category
-        if(util.file_exist(reference_file_path)):
+        if(fileIO.file_exist(reference_file_path)):
             # read overall family base data from file 
             overall_family_base_root_data, overall_family_base_nested_data = rFamBaseDataUtils.read_overall_family_data_list(reference_file_path)
             found_match = False

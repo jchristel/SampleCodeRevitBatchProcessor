@@ -28,12 +28,10 @@ Functions around Revit BIM360.
 
 import System
 import clr
-from duHast.Utilities import files_get as fileGet, utility as util
+from duHast.Utilities import files_get as fileGet, files_io as fileIO, utility as util
 
 #from System.IO import Path
 import Autodesk.Revit.DB as rdb
-
-from  duHast.Utilities import files_io as util
 
 
 def get_bim_360_path(doc):
@@ -112,7 +110,7 @@ def get_model_file_size(doc):
     full_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(path)
     if (full_path.StartsWith("BIM 360")):
         # get user environment
-        host_name = util.GetLocalAppDataPath()
+        host_name = util.get_local_app_data_path()
         # build path to local cache files
         folder = host_name + '\\Autodesk\\Revit\\Autodesk Revit ' + str(doc.Application.VersionNumber) + '\\CollaborationCache'
         # local cache file name is same as file GUID on BIM360
@@ -123,6 +121,6 @@ def get_model_file_size(doc):
             for file in file_list:
                 # just select one of the file instance..not to sure why this one?
                 if (file.Contains('CentralCache') == False):
-                    file_size = util.get_file_size(file)
+                    file_size = fileIO.get_file_size(file)
                     break
     return file_size

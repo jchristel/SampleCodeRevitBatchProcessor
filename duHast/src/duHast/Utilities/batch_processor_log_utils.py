@@ -60,7 +60,7 @@ import json
 # custom result class from common library
 from duHast.Utilities import result as res
 # library from common library
-from duHast.Utilities import files_io as util
+from duHast.Utilities import files_io as fileIO, files_get as fileGet
 
 #: global variable controlling debug output
 debug_mode_ = False
@@ -78,7 +78,28 @@ EXCEPTION_MESSAGES = [
 def output(message = ''):
     if debug_mode_:
         print (message)
-        
+
+
+def delete_log_data_files(directory_path):
+    '''
+    Deletes all log marker files in a directory.
+
+    :param directory_path: The directory path containing marker files to be deleted.
+    :type directory_path: str
+
+    :return: True if all files where deleted successfully, otherwise False.
+    :rtype: bool
+    '''
+
+    status = True
+    # get files in directory
+    files_to_delete = fileGet.get_files_with_filter(directory_path,".txt")
+    if(len(files_to_delete) > 0):
+        status_delete = True
+        for file in files_to_delete:
+            status_delete = status_delete and fileIO.file_delete(file)
+    return status
+
 def adjust_session_id_for_file_name(id):
     '''
     Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it\
@@ -158,7 +179,7 @@ def get_current_session_ids(folder_path):
     result_delete = True
     for fd in file_list:
         if(debug_mode_ == False):
-            result_delete = result_delete & util.file_delete(fd)
+            result_delete = result_delete & fileIO.file_delete(fd)
     if(not result_delete):
         output ('Failed to delete a marker file!')
     for f in file_list:

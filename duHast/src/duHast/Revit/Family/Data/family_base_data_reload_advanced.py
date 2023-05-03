@@ -44,7 +44,7 @@ Family Base data analysis module containing functions to build a reload tree.
 
 
 from duHast.Utilities.timer import Timer
-from duHast.Utilities import files_get as fileGet, files_io as util, files_tab as fileTab, result as res
+from duHast.Utilities import files_get as fileGet, files_io as fileIO, files_tab as fileTab, result as res
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
 from duHast.Revit.Family.Data import family_reload_advanced_utils as rFamReloadAdvUtils
 
@@ -99,8 +99,8 @@ def _delete_old_task_lists(directory_path):
     files = fileGet.get_files(directory_path, '.txt')
     if (len(files) > 0):
         for f in files:
-            if (util.get_file_name_without_ext(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
-                flag = flag & util.file_delete(f)
+            if (fileIO.get_file_name_without_ext(f).startswith(_TASK_COUNTER_FILE_PREFIX)):
+                flag = flag & fileIO.file_delete(f)
     return flag
 
 def _write_out_empty_task_list(directory_path, counter = 0):

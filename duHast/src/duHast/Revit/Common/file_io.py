@@ -29,7 +29,7 @@ Revit file operations utility functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import files_io as util, result as res
+from duHast.Utilities import files_io as fileIO, result as res
 
 
 def sync_file (
@@ -142,7 +142,7 @@ def save_as_family(
     '''
 
     return_value = res.Result()
-    revit_file_name = util.get_file_name_without_ext(current_full_file_name)
+    revit_file_name = fileIO.get_file_name_without_ext(current_full_file_name)
     new_file_name= ''
     match = False
     # find new file name in list past in
@@ -201,7 +201,7 @@ def save_as(
     return_value = res.Result()
     # added str() around this expression to satisfy sphinx auto code documentation
     # it will throw an exception when concatenating the string in the return statement
-    revit_file_name = str(util.get_file_name_without_ext(current_full_file_name))
+    revit_file_name = str(fileIO.get_file_name_without_ext(current_full_file_name))
     new_file_name= ''
     match = False
     for old_name, new_name in name_data:

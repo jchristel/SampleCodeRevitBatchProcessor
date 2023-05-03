@@ -44,7 +44,7 @@ import os
 
 from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
 from duHast.Utilities import result as res
-from duHast.Utilities import files_io as util
+from duHast.Utilities import files_io as fileIO
 
 def _rename_files(rename_directives):
     '''
@@ -80,7 +80,7 @@ def _rename_files(rename_directives):
                 try:
                     # build the new file name
                     new_full_name = os.path.join(os.path.dirname(rename_directive.filePath), rename_directive.newName + '.rfa')
-                    if(util.file_exist(rename_directive.filePath)):
+                    if(fileIO.file_exist(rename_directive.filePath)):
                         os.rename(rename_directive.filePath, new_full_name)
                         return_value.append_message('{} -> {}'.format(rename_directive.name,rename_directive.newName))
                     else:
@@ -94,7 +94,7 @@ def _rename_files(rename_directives):
                 oldname = rename_directive.name + '.txt'
                 newname = rename_directive.newName + '.txt'
                 try:
-                    if(util.file_exist(old_full_name)):
+                    if(fileIO.file_exist(old_full_name)):
                         os.rename(old_full_name, new_full_name)
                         return_value.append_message('{} -> {}'.format(oldname,newname))
                     else:

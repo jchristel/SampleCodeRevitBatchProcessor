@@ -26,7 +26,7 @@ Helper functions relating to Revit worksharing monitor process.
 #
 #
 
-from duHast.Utilities import files_csv as filesCSV, files_get as fileGet, files_io as util
+from duHast.Utilities import files_csv as filesCSV, files_get as fileGet, files_io as fileIO
 from duHast.Utilities import result as res
 from duHast.Utilities import system_process as sp
 
@@ -102,7 +102,7 @@ def delete_wsm_data_files(directory_path):
     if(len(files_to_delete) > 0):
         status_delete = True
         for file in files_to_delete:
-            status_delete = status_delete and util.file_delete(file)
+            status_delete = status_delete and fileIO.file_delete(file)
     return status
 
 def read_wsm_data_from_file(directory_path):

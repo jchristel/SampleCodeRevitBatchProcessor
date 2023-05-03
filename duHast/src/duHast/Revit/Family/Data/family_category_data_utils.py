@@ -57,7 +57,7 @@ change_family_category:
 
 from collections import namedtuple
 
-from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as util
+from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, files_io as fileIO
 
 # tuples containing change family category data read from file
 change_family_category = namedtuple('change_family_category', 'filePath newCategoryName')
@@ -305,7 +305,7 @@ def read_overall_family_data_list(file_path):
     '''
 
     rows = []
-    if(util.file_exist(file_path)):
+    if(fileIO.file_exist(file_path)):
         rows = fileCSV.read_csv_file(file_path)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_CATEGORY_DATA_FILES)
@@ -379,7 +379,7 @@ def read_overall_change_category_directives_list(file_paths):
     rows = []
     match_any_file = False
     for file_path in file_paths:
-        if(util.file_exist(file_path)):
+        if(fileIO.file_exist(file_path)):
             # set flag that we at least found one file
             match_any_file = True
             rows_file = fileCSV.read_csv_file(file_path)
@@ -503,7 +503,7 @@ def read_overall_change_sub_category_directives_list(file_paths):
     rows = []
     match_any_file = False
     for file_path in file_paths:
-        if(util.file_exist(file_path)):
+        if(fileIO.file_exist(file_path)):
             # set flag that we at least found one file
             match_any_file = True
             rows_file = fileCSV.read_csv_file(file_path)

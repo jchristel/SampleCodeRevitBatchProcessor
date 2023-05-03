@@ -46,7 +46,7 @@ nestedFamily:
 
 from collections import namedtuple
 
-from duHast.Utilities import files_csv as fileCSV, files_io as util, result as res
+from duHast.Utilities import files_csv as fileCSV, files_io as fileIO, result as res
 
 # tuples containing base family data read from file
 rootFamily = namedtuple('rootFamily', 'name category filePath')
@@ -79,7 +79,7 @@ def read_unique_families_from_report(filePath):
     '''
 
     rows = []
-    if(util.file_exist(filePath)):
+    if(fileIO.file_exist(filePath)):
         rows = fileCSV.read_csv_file(filePath)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
@@ -135,7 +135,7 @@ def read_unique_families_with_row_data_from_report(filePath):
     '''
 
     rows = []
-    if(util.file_exist(filePath)):
+    if(fileIO.file_exist(filePath)):
         rows = fileCSV.read_csv_file(filePath, True)
     else:
         raise Exception(EXCEPTION_NO_FAMILY_BASE_DATA_FILES)
@@ -323,7 +323,7 @@ def _check_families_still_exist(famData):
         # get keys from dic as a list
         # check which ones do not exist anymore
         for filePath in famData.keys():
-            if (util.file_exist(filePath) == False):
+            if (fileIO.file_exist(filePath) == False):
                 removeKeys.append(filePath)
         
         # check if any family requires to be removed from the data set

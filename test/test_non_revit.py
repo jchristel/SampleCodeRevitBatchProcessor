@@ -31,6 +31,7 @@ from Utility import date_stamps
 from Utility import files_get
 from Utility import files_io
 from Utility import utility
+from Utility import files_csv
 
 from utils.output import out_message, out_header
 
@@ -68,6 +69,7 @@ TESTS = [
     ["date_stamps", date_stamps.run_tests],
     ["files_get", files_get.run_tests],
     ["files_io",files_io.run_tests],
+    ["files_csv",files_csv.run_tests],
     ["utility",utility.run_tests],
 ]
 

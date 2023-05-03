@@ -50,6 +50,14 @@ def file_exist(full_file_path):
 
 
 def file_delete(full_file_path):
+    '''
+    Deletes file.
+
+    :param full_file_path: Fully qualified file path
+    :type full_file_path: str
+    :return: True if deleted, otherwise False
+    :rtype: bool
+    '''
     try:
         os.remove(full_file_path)
         value = True
@@ -61,6 +69,7 @@ def file_delete(full_file_path):
 def get_directory_path_from_file_path(file_path):
     '''
     Extracts directory from file path.
+    
     :param file_path: A fully qualified file path.
     :type file_path: str
     :return: If no exception occurs : A fully qualified directory path,else an empty string.

@@ -217,7 +217,7 @@ def test_rename_file(tmp_dir):
             message
             + "\n"
             + (
-                "An exception occurred in function test_get_directory_path_from_file_path {}".format(
+                "An exception occurred in function test_rename_file {}".format(
                     e
                 )
             )

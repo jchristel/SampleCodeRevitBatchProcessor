@@ -65,15 +65,16 @@ def get_first_row_in_csv_file(filePath):
     :rtype: str
     '''
 
-    row = []
+    return_value = []
     try:
-        with open(filePath) as f:
-            reader = csv.reader(f)
-            row = f.readline()
-            row = row.strip()
-    except Exception:
-        row = []
-    return row
+        with open(filePath) as csvFile:
+            reader = csv.reader(csvFile)
+            for row in reader: # each row is a list
+                return_value = row
+                break
+    except Exception as e:
+        print (str(e))
+    return return_value
 
 
 def write_report_data_as_csv (fileName, header, data, writeType = 'w'):

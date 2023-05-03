@@ -65,19 +65,55 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
+    '''
+    prints message to console or rbp log console
+
+    :param message: the message, defaults to ''
+    :type message: str, optional
+    '''
+
     if not debug_:
         revit_script_util.Output(str(message))
     else:
         print (message)
 
 def get_splash_sheet(doc):
+    '''
+    Returns the splash screen sheet.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A list containing the splash screen sheet or empty if no matching sheet
+    :rtype: [Autodesk.Revit.DB.View]
+    '''
+
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.View).Where(lambda e: e.Name == utilM.SPLASH_SCREEN_SHEET_NAME)
     results = collector.ToList()
     return results
 
 def mark_revisions_as_issued(doc, revIds):
+    '''
+    Mark added model issue revision as issued.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revIds: A list of revision ids to be marked as issued.
+    :type revIds: [Autodesk.Revit.DB.ElementId]
+    :return: 
+        Result class instance.
+
+        - Setting revisions as issued status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message revision(s) marked as issued successfully..
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    
+    :rtype: :class:`.Result`
+    '''
+
     result = res.Result()
     # get all revisions in file
     revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
@@ -90,6 +126,26 @@ def mark_revisions_as_issued(doc, revIds):
     return result
 
 def add_revisions_to_document(doc):
+    '''
+    Will add revisions defined in global list REVISIONS_TO_ADD to the model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :raises ValueError: if revision could not be added to the model
+    :return: 
+        Result class instance.
+
+        - Adding revisions status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message revision(s) added successfully..
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    
+    :rtype: :class:`.Result`:return: 
+    '''
+
     result = res.Result()
     # store rev id's in list
     ids=[]
@@ -108,6 +164,26 @@ def add_revisions_to_document(doc):
     return result
 
 def add_revisions_to_sheets(doc):
+    '''
+    Adds revisions created to splash screen sheet.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: 
+        Result class instance.
+
+        - Adding revisions to sheet status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message chain from adding a revision, adding it to a sheet, setting it as issued
+        
+        On exception:
+        
+        - result.status (bool) will be False.
+        - result.message will contain exception message.
+    
+    :rtype: :class:`.Result`:return: 
+    '''
+
     result = res.Result()
     # get splashscreen sheet
     sheets = get_splash_sheet(doc)
@@ -133,24 +209,24 @@ def add_revisions_to_sheets(doc):
 # main:
 # -------------
 
-
+#: list of revisions to be added to the model and the splash screen sheet
 REVISIONS_TO_ADD = [
     rRev.REVISION_DATA('MODEL ISSUE - FOR INFORMATION','JC', '', rdb.RevisionNumberType.Numeric, datetime.datetime.now().strftime("%d/%m/%y"),rdb.RevisionVisibility.Hidden)
 ]
 
-Output('Add revision.... start')
+output('Add revision.... start')
 
-#add revision to doc and to sheet named 'Splashscreen'
+# add revision to doc and to splash screen sheet
 result_  = add_revisions_to_sheets(doc)
-Output('Add revision.... message: {}\nAdd revision.... status: {}'.format(result_.message, result_.status))
+output('Add revision.... message: {}\nAdd revision.... status: {}'.format(result_.message, result_.status))
 
 # synch the file
 if(debug_ == False):
     if (doc.IsWorkshared):
-        Output('Add revision.... Syncing to Central: start')
+        output('Add revision.... Syncing to Central: start')
         result_ = rFileIO.sync_file(doc)
-        Output('Add revision.... Syncing to Central: finished [{}]'.format(result_.status))
+        output('Add revision.... Syncing to Central: finished [{}]'.format(result_.status))
     else:
         # none work shared
-        Output('Add revision.... This is a non workshared file...not saved!')
-Output('Add revision.... finished ')
+        output('Add revision.... This is a non workshared file...not saved!')
+output('Add revision.... finished ')

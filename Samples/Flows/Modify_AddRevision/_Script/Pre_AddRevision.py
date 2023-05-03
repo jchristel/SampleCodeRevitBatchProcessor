@@ -58,7 +58,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     if not debug_:
         script_util.Output(str(message))
     else:
@@ -69,7 +69,7 @@ def Output(message = ''):
 # -------------
 
 # show WSM marker status
-Output('Wrote WSM marker:.... status: {}\nWrote WSM marker:.... message: {}'.format(wsmMarker_.status, wsmMarker_.message))
+output('Wrote WSM marker:.... status: {}\nWrote WSM marker:.... message: {}'.format(wsmMarker_.status, wsmMarker_.message))
 
 # show log marker status
-Output('Wrote log marker: ....[{}]'.format(statusMarker_))
+output('Wrote log marker: ....[{}]'.format(statusMarker_))

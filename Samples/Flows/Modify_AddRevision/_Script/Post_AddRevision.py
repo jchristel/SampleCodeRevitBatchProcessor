@@ -30,7 +30,7 @@
 import utilAddRevBVN as utilM # sets up all commonly used variables and path locations!
 
 # import log utils
-from duHast.Utilities import batch_processor_log_utils as logutils
+from duHast.Utilities import batch_processor_log_utils as logUtils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 from duHast.Utilities.console_out import output
 
@@ -39,9 +39,12 @@ from duHast.Utilities.console_out import output
 # main:
 # -------------
 
-# process logs
-PROCESSING_RESULTS = logutils.process_log_file(utilM.LOG_MARKER_DIRECTORY)
-output('Log results.... message(s): \n[{}]'.format(PROCESSING_RESULTS))
+PROCESSING_RESULTS = logUtils.process_log_files(utilM.LOG_MARKER_DIRECTORY)
+output('Log results.... message(s): \n[{}]'.format(PROCESSING_RESULTS.status))
+output(PROCESSING_RESULTS.message)
+# remove old log marker files
+flag_delete_log_markers = logUtils.delete_log_data_files(utilM.LOG_MARKER_DIRECTORY)
+output('Log marker deletion.: [{}]'.format(flag_delete_log_markers))
 
 # WSMP marker files clean up
 cleanUpWSMFiles_ = wsmp.clean_up_wsm_data_files(utilM.WSM_MARKER_DIRECTORY)

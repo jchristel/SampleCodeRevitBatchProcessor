@@ -44,7 +44,7 @@ if not debug_:
 # -------------
 
 # output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
+def output(message = ''):
     if not debug_:
         script_util.Output(str(message))
     else:
@@ -58,4 +58,4 @@ def Output(message = ''):
 statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
-Output('WSM Kill status: ....{} [{}]'.format(statusWSMKill_.message, statusWSMKill_.status))
+output('WSM Kill status: ....{} [{}]'.format(statusWSMKill_.message, statusWSMKill_.status))

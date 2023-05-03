@@ -29,6 +29,7 @@ This module contains a Revit walls properties report function.
 from duHast.Revit.Materials import materials as rMat
 from duHast.Revit.Common import common as com
 from duHast.Revit.Walls.Utility import walls_type_sorting as rWallTypeSort
+from duHast.Revit.Walls.walls import get_all_wall_types_by_category
 from duHast.Utilities import utility as util
 import duHast.Utilities.unit_conversion
 
@@ -46,7 +47,7 @@ def get_wall_report_data(doc, revit_file_path):
     '''
 
     data = []
-    wall_types = rWallTypeSort.GetAllWallTypes(doc)
+    wall_types = get_all_wall_types_by_category(doc)
     for wt in wall_types:
         try:
             wall_type_name = str(rdb.Element.Name.GetValue(wt))
@@ -55,9 +56,12 @@ def get_wall_report_data(doc, revit_file_path):
                 cs_layers = cs.GetLayers()
                 #print(len(cs_layers))
                 for cs_layer in cs_layers:
-                    layer_mat = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
-                    material_mark = com.get_element_mark(layer_mat)
-                    material_name = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
+                    layer_mat = doc.GetElement(cs_layer.MaterialId)
+                    material_mark = material_name = 'N/A'
+                    # not all layers may have assigned a material (could be Default)
+                    if (layer_mat is not None):
+                            material_mark = com.get_element_mark(layer_mat)
+                            material_name = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
                     layer_function = str(cs_layer.Function)
                     layer_width = str(duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm(cs_layer.Width)) # conversion from imperial to metric
                     data.append([

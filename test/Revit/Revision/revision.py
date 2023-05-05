@@ -61,6 +61,8 @@ from duHast.Revit.Revisions.revisions import (
     mark_revision_as_issued,
     mark_revision_as_issued_by_revision_id,
     get_issued_revisions,
+    get_last_issued_revision,
+    change_revision_sequence_number,
     re_order_revisions,
 )
 from duHast.Revit.Common.revit_version import get_revit_version_number
@@ -319,6 +321,72 @@ def test_get_issued_revisions(doc):
 
     return flag, message
 
+def test_get_last_issued_revisions(doc):
+    flag = True
+    message = "-"
+    try:
+        # the test model has no issued revision:
+        result = get_last_issued_revision(doc)
+        expected_result = None
+        message = " {} vs {}".format(result, expected_result)
+        assert result == expected_result
+        
+        # create a revision and mark it as issued
+        # check which revit version
+        revit_version = get_revit_version_number(doc)
+        if revit_version <= 2022:
+            result = create_revision(doc, TEST_DATA_2022)
+        else:
+            result = create_revision(doc, TEST_DATA_2023)
+        # check revision was created
+        if result.status == False:
+            raise ValueError(result.message)
+        
+        result = mark_revision_as_issued(doc, result.result[0])
+        # check revision was created
+        if result.status == False:
+            raise ValueError(result.message)
+        # should get a list one 1 back
+        # issued revision should have sequence number 2
+        result = get_last_issued_revision(doc)
+        expected_result = 2
+        message = message + "\n" + " {} vs {}".format(result.SequenceNumber, expected_result)
+        assert result.SequenceNumber == expected_result
+
+        # create another revision and try again
+        if revit_version <= 2022:
+            result = create_revision(doc, TEST_DATA_2022)
+        else:
+            result = create_revision(doc, TEST_DATA_2023)
+        # check revision was created
+        if result.status == False:
+            raise ValueError(result.message)
+        
+        result = mark_revision_as_issued(doc, result.result[0])
+        # check revision was created
+        if result.status == False:
+            raise ValueError(result.message)
+        # should get a list one 1 back
+        # issued revision should have sequence number 3
+        result = get_last_issued_revision(doc)
+        expected_result = 3
+        message = message + "\n" + " {} vs {}".format(result.SequenceNumber, expected_result)
+        assert result.SequenceNumber == expected_result
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + (
+                "An exception occurred in function test_get_last_issued_revisions {}".format(
+                    e
+                )
+            )
+        )
+        flag = False
+
+    return flag, message
+
 
 def _get_id_integers_from_list(my_list):
     """
@@ -394,6 +462,74 @@ def test_re_order_revisions(doc):
         flag = False
     return flag, message
 
+def test_change_revision_sequence_number(doc):
+    '''
+    change revision sequence test
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :raises ValueError: Any exception occurred in creating a revision will be re-raised
+    :return: True if revision was created successfully, otherwise False
+    :rtype: Boolean
+    '''
+
+    flag = True
+    message = "-"
+    try:
+        # add another few revision to model
+        # check which revit version
+        revit_version = get_revit_version_number(doc)
+        result = None
+        test_data = None
+        if revit_version <= 2022:
+            test_data = TEST_DATA_2022
+        else:
+            test_data = TEST_DATA_2023
+        
+        revisions = []
+        for i in range(5):
+            result = create_revision(doc, test_data)
+            if(result.status):
+                revisions.append(result.result[0])
+            else:
+               raise ValueError(result.message) 
+       
+        # move revisions around...
+        # first test -> pass in same sequence number
+
+        expected_result = revisions[0].SequenceNumber
+        result = change_revision_sequence_number(doc, revisions[0], expected_result)
+        message = " {} vs {} vs status: {} message: {}".format(revisions[0].SequenceNumber, expected_result, result.status , result.message)
+        assert result.status == True
+        assert revisions[0].SequenceNumber == expected_result
+
+        # second test -> pass in sequence number + 1
+        expected_result = revisions[1].SequenceNumber + 1
+        result = change_revision_sequence_number(doc, revisions[1], expected_result)
+        message = message + "\n" + " {} vs {} vs status: {} message: {}".format(revisions[1].SequenceNumber, expected_result, result.status , result.message)
+        assert result.status == True
+        assert revisions[1].SequenceNumber == expected_result
+
+        # third test -> pass in invalid sequence number (outside of range)
+        expected_result = revisions[2].SequenceNumber
+        result = change_revision_sequence_number(doc, revisions[2], 10)
+        message = message + "\n" + " {} vs {} vs status: {} message: {}".format(revisions[2].SequenceNumber, expected_result, result.status , result.message)
+        assert result.status == False
+        assert revisions[2].SequenceNumber == expected_result
+
+    except Exception as e:
+        message = (
+            message
+            + "\n"
+            + (
+                "An exception occurred in function test_change_revision_sequence_number {}".format(
+                    e
+                )
+            )
+        )
+        flag = False
+
+    return flag, message
 
 def run_tests(doc, output):
     """
@@ -424,7 +560,9 @@ def run_tests(doc, output):
         ["test_mark_revision_as_issued", test_mark_revision_as_issued],
         ["test_mark_revision_as_issued_by_id", test_mark_revision_as_issued_by_id],
         ["test_get_issued_revisions", test_get_issued_revisions],
+        ["test_get_last_issued_revisions", test_get_last_issued_revisions],
         ["test_re_order_revisions", test_re_order_revisions],
+        ["test_change_revision_sequence_number", test_change_revision_sequence_number],
     ]
 
     # check which version specific tests to execute

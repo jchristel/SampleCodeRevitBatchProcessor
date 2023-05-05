@@ -247,10 +247,82 @@ def get_issued_revisions(doc):
             issued_revisions.append(rev)
     return issued_revisions
 
+def get_last_issued_revision(doc):
+    '''
+    Get the last issued revision from a model.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: A revision object or None if no issued revision in the model
+    :rtype: Autodesk.Revit.DB.Revision or None
+    '''
+
+    issued_revs = get_issued_revisions(doc)
+    if(len(issued_revs) > 0):
+        issued_revs.sort(key = lambda x: x.SequenceNumber)
+        return issued_revs[-1]
+    else:
+        return None
+
+
+def change_revision_sequence_number(doc, revision, new_sequence_number):
+    '''
+    Updates the revision sequence number of a revision.
+
+    Pop the revision from its current index in the revision sequence list.
+    Insert it again at the new index
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revision: the revision
+    :type revision: Autodesk.Revit.DB.Revision
+    :param new_sequence_number: The new index (sequence number ) of the revision. 1 based!!
+    :type new_sequence_number: int
+
+    :return:
+        Result class instance.
+
+        - Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain the message revision re-ordered successfully.
+        - result.result: new revision sequence list
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+    '''
+    
+    return_value = res.Result()
+    try:
+        # note revision sequence list starts with 1 with internal revision id index list starts at 0!
+        new_sequence_number = new_sequence_number - 1
+        revision_id = revision.Id
+        revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
+        if (revision_id in revisions_in_model):
+            # this is a c# list: List[ElementId] hence .IndexOf
+            current_index = revisions_in_model.IndexOf(revision_id)
+            if(new_sequence_number != current_index):
+                # remove the revision at the current index
+                # this is a c# list: List[ElementId] hence .RemoveAt
+                revisions_in_model.RemoveAt(current_index)
+                # and add at the new index
+                # this is a c# list: List[ElementId] hence .Insert
+                revisions_in_model.Insert(new_sequence_number, revision_id)
+                # update the revision sequence in the model
+                return_value.update(re_order_revisions(doc, revisions_in_model))
+            else:
+                return_value.update_sep(True, 'New sequence number: {} is identical to current sequence number: {}.'.format(new_sequence_number, current_index))
+        else:
+            return_value.update_sep(False, 'Invalid revision provided. Id {} does not exist in model revision sequence'.format(revision_id))
+    except Exception as e:
+        return_value.update_sep(False, "An exception occurred in change revision sequence number: {}".format(e))
+    return return_value
 
 def re_order_revisions(doc, revision_sequence):
     """
-    _summary_
+    Attempts to replace the current revision sequence with the one past in.
+
+    Note: both sequences must contain the same revisions...just in a different order.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

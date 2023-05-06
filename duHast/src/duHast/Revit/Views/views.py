@@ -64,7 +64,7 @@ def get_view_type_ids(doc):
     '''
 
     ids = []
-    col = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewFamilyType)
+    col = get_view_types(doc)
     ids = com.get_ids_from_element_collector(col)
     return ids
 

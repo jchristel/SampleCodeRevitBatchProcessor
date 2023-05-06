@@ -76,10 +76,10 @@ def test_get_views_in_model(doc):
         def action(x):
             return True
         
-        # get all views in model
+        # get all views in model (only 1 in test model)
         result = get_views_in_model(doc, action)
 
-        
+
     except Exception as e:
         message = (
             message

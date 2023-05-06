@@ -179,7 +179,7 @@ def test_mark_revision_as_issued(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :return: True if revision was created successfully, otherwise False
+    :return: True if revision was marked issued successfully, otherwise False
     :rtype: Boolean
     """
 

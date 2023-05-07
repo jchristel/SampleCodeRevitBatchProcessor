@@ -62,17 +62,20 @@ from duHast.Revit.Views.Reporting.sheets_report import (
     write_sheet_data,
     write_sheet_data_by_property_names,
 )
-
 from duHast.Revit.Common.revit_version import get_revit_version_number
-from duHast.Utilities.directory_io import directory_delete
 
 from test.utils.transaction import in_transaction_group
+from test.Revit.Views.utils import report_tests as rep_test
+
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 #: the test file name to be used in reports
 REVIT_TEST_FILE_NAME = "TEST.rvt"
+
+#: file name of report file
+OUTPUT_FILE_NAME = "Report.csv"
 
 # These are the properties to be reported on in filtered reports
 VIEW_DATA_FILTERS = ["View Name", "Title on Sheet", "View Template"]
@@ -211,25 +214,38 @@ def test_get_sheets_report_data_filtered(doc):
 
 
 def test_write_sheets_data(doc):
-    '''
+    """
     Write all sheet data test.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: True if tested successfully, otherwise False
     :rtype: Boolean
-    '''
+    """
 
     flag = True
     message = "-"
     try:
+        # set up a temp dir and test file path
         tmp_dir = tempfile.mkdtemp()
+        test_file_path = os.path.join(tmp_dir, OUTPUT_FILE_NAME)
+
+        # attempt to write out data
         result = write_sheet_data(
             doc, os.path.join(tmp_dir, "sheets_test.txt"), REVIT_TEST_FILE_NAME
         )
-        print(result)
-        # remove the temp directory:
-        directory_delete(tmp_dir)
+        message = " file written: {} to: {}".format(result.status, result.message)
+        # check file was written
+        assert result.status == True
+
+        # double check...
+        expected_result_file_read = []
+        # check file content and perform temp directory clean up
+        flag_clean_up, message_clean_up = rep_test.check_csv_file(
+            test_file_path, expected_result_file_read, tmp_dir, "test_write_sheets_data"
+        )
+        flag = flag & flag_clean_up
+        message = message + "\n" + message_clean_up
 
     except Exception as e:
         message = (
@@ -242,28 +258,41 @@ def test_write_sheets_data(doc):
 
 
 def test_write_sheet_data_by_property_names(doc):
-    '''
+    """
     Write sheet data with property filter test.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: True if tested successfully, otherwise False
     :rtype: Boolean
-    '''
+    """
 
     flag = True
     message = "-"
     try:
+        # set up a temp dir and test file path
         tmp_dir = tempfile.mkdtemp()
+        test_file_path = os.path.join(tmp_dir, OUTPUT_FILE_NAME)
+
+        # attempt to write out data
         result = write_sheet_data_by_property_names(
             doc,
             os.path.join(tmp_dir, "sheets_test.txt"),
             REVIT_TEST_FILE_NAME,
             VIEW_DATA_FILTERS,
         )
-        print(result)
-        # remove the temp directory:
-        directory_delete(tmp_dir)
+        message = " file written: {} to: {}".format(result.status, result.message)
+        # check file was written
+        assert result.status == True
+
+        # double check...
+        expected_result_file_read = []
+        # check file content and perform temp directory clean up
+        flag_clean_up, message_clean_up = rep_test.check_csv_file(
+            test_file_path, expected_result_file_read, tmp_dir, "test_write_sheets_data_by_property_name"
+        )
+        flag = flag & flag_clean_up
+        message = message + "\n" + message_clean_up
 
     except Exception as e:
         message = (

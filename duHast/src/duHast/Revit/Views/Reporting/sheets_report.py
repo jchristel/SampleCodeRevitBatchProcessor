@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.Revit.Views.Reporting.views_report_header import REPORT_SHEETS_HEADER, get_sheets_report_headers
 from duHast.Revit.Views.Reporting.view_property_filter import filter_data_by_properties
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import files_tab as filesTab, result as res
+from duHast.Utilities import files_csv as filesCSV, result as res
 
 
 def get_sheet_report_data(doc, host_name):
@@ -88,6 +88,9 @@ def get_sheets_report_data_filtered(doc, host_name, sheet_properties):
 def write_sheet_data(doc, file_name, current_file_name):
     '''
     Writes to file all sheet properties.
+
+    file type: csv
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
@@ -105,7 +108,7 @@ def write_sheet_data(doc, file_name, current_file_name):
     try:
         data = get_sheet_report_data(doc, current_file_name)
         headers = get_sheets_report_headers(doc)
-        filesTab.write_report_data(
+        filesCSV.write_report_data_as_csv(
             file_name,
             headers,
             data)
@@ -117,6 +120,9 @@ def write_sheet_data(doc, file_name, current_file_name):
 def write_sheet_data_by_property_names(doc, file_name, current_file_name, sheet_properties):
     '''
     Writes to file sheet properties as nominated in past in list.
+
+    file type: csv
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
@@ -139,7 +145,7 @@ def write_sheet_data_by_property_names(doc, file_name, current_file_name, sheet_
         # change headers to filtered + default
         headers = REPORT_SHEETS_HEADER[:] + sheet_properties
         # write data out to file
-        filesTab.write_report_data(
+        filesCSV.write_report_data_as_csv.write_report_data(
             file_name,
             headers,
             data)

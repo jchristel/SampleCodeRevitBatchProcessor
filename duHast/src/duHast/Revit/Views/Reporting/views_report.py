@@ -35,8 +35,8 @@ from duHast.Revit.Views.Reporting.views_report_header import (
 from duHast.Revit.Views.views import get_views_of_type
 from duHast.Revit.Views.Reporting.view_property_filter import filter_data_by_properties
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-
 from duHast.Utilities import files_tab as filesTab, result as res
+from duHast.Utilities import files_csv as filesCSV
 
 #: list of view types to be reported on.
 VIEW_TYPES = [
@@ -117,6 +117,9 @@ def get_views_report_data_filtered(doc, host_name, view_properties):
 def write_views_data(doc, file_name, current_file_name):
     """
     Writes to file all views properties.
+
+    file type: csv
+    
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
@@ -134,8 +137,10 @@ def write_views_data(doc, file_name, current_file_name):
     try:
         data = get_views_report_data(doc, current_file_name)
         headers = get_views_report_headers(doc)
-        filesTab.write_report_data(file_name, headers, data)
-        return_value.update_sep(True, "Successfully wrote data file at {}".format(file_name))
+        filesCSV.write_report_data_as_csv(file_name, headers, data)
+        return_value.update_sep(
+            True, "Successfully wrote data file at {}".format(file_name)
+        )
     except Exception as e:
         return_value.update_sep(False, str(e))
     return return_value
@@ -146,6 +151,9 @@ def write_view_data_by_property_names(
 ):
     """
     Writes to file sheet properties as nominated in past in list.
+
+    file type: csv
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
@@ -168,8 +176,10 @@ def write_view_data_by_property_names(
         # change headers to filtered + default
         headers = REPORT_VIEWS_HEADER[:] + view_properties
         # write data out to file
-        filesTab.write_report_data(file_name, headers, data)
-        return_value.update_sep(True, "Successfully wrote data file at {}".format(file_name))
+        filesCSV.write_report_data_as_csv(file_name, headers, data)
+        return_value.update_sep(
+            True, "Successfully wrote data file at {}".format(file_name)
+        )
     except Exception as e:
         return_value.update_sep(False, str(e))
     return return_value

@@ -110,7 +110,7 @@ def getter_double_or_int_as_string(para):
     :rtype: str or None
     '''
 
-    parameter_value = None
+    parameter_value = 'None'
     if(para.AsValueString() != None and para.AsValueString() != ''):
         parameter_value = para.AsValueString()
     return parameter_value
@@ -183,7 +183,7 @@ def getter_string_as_UTF8_string(para):
     :rtype: String or None
     '''
 
-    parameter_value = None
+    parameter_value = 'None'
     if(para.StorageType == rdb.StorageType.String):
         if(para.AsString() != None and para.AsString() != ''):
             parameter_value = para.AsString().encode('utf-8')
@@ -200,7 +200,7 @@ def getter_string_as_string(para):
     :rtype: String or None
     '''
 
-    parameter_value = None
+    parameter_value = 'None'
     if(para.StorageType == rdb.StorageType.String):
         if(para.AsString() != None and para.AsString() != ''):
             parameter_value = para.AsString()
@@ -217,7 +217,7 @@ def getter_element_id_as_string(para):
     :rtype: String or None
     '''
 
-    parameter_value = None
+    parameter_value = 'None'
     if(para.StorageType == rdb.StorageType.ElementId):
         if(para.AsElementId() != None):
             parameter_value = str(para.AsElementId())
@@ -280,34 +280,30 @@ def get_parameter_value_with_over_load (para, parameter_value_getters):
     :rtype: Depends on value getters functions
     '''
 
-    # set return value default 
+    # set return value default ( default value should never be used...!)
     parameter_value = None
     try:
         # extract parameter value depending on its storage type
         if(para.StorageType == rdb.StorageType.Double):
-            if(para.AsValueString()!= None and para.AsValueString() != ''):
-                if(rdb.StorageType.Double in parameter_value_getters):
-                    parameter_value = parameter_value_getters[rdb.StorageType.Double](para)
-                else:
-                    raise ValueError('No parameter value getter for storage type Double provided')
+            if(rdb.StorageType.Double in parameter_value_getters):
+                parameter_value = parameter_value_getters[rdb.StorageType.Double](para)
+            else:
+                raise ValueError('No parameter value getter for storage type Double provided')
         elif(para.StorageType == rdb.StorageType.Integer):
-            if(para.AsValueString()!= None and para.AsValueString() != ''):
-                if(rdb.StorageType.Integer in parameter_value_getters):
-                    parameter_value = parameter_value_getters[rdb.StorageType.Integer](para)
-                else:
-                    raise ValueError('No parameter value getter for storage type Integer provided')
+            if(rdb.StorageType.Integer in parameter_value_getters):
+                parameter_value = parameter_value_getters[rdb.StorageType.Integer](para)
+            else:
+                raise ValueError('No parameter value getter for storage type Integer provided')
         elif(para.StorageType == rdb.StorageType.String):
-            if(para.AsString() != None and para.AsString() != ''):
-                if(rdb.StorageType.String in parameter_value_getters):
-                    parameter_value = parameter_value_getters[rdb.StorageType.String](para)
-                else:
-                    raise ValueError('No parameter value getter for storage type String provided')
+            if(rdb.StorageType.String in parameter_value_getters):
+                parameter_value = parameter_value_getters[rdb.StorageType.String](para)
+            else:
+                raise ValueError('No parameter value getter for storage type String provided')
         elif(para.StorageType == rdb.StorageType.ElementId):
-            if(para.AsElementId() != None):
-                if(rdb.StorageType.ElementId in parameter_value_getters):
-                    parameter_value = parameter_value_getters[rdb.StorageType.ElementId](para)
-                else:
-                    raise ValueError('No parameter value getter for storage type Element Id provided')
+            if(rdb.StorageType.ElementId in parameter_value_getters):
+                parameter_value = parameter_value_getters[rdb.StorageType.ElementId](para)
+            else:
+                raise ValueError('No parameter value getter for storage type Element Id provided')
         else:
             # this should be invalid storage type only
             parameter_value = parameter_value_getters[str(None)](para)

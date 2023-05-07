@@ -67,6 +67,15 @@ import Autodesk.Revit.DB as rdb
 
 
 def test_get_wall_report_data(doc):
+    """
+    get wall report data test
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: True if tested successfully, otherwise False
+    :rtype: Boolean
+    """
+
     flag = True
     message = "-"
     try:

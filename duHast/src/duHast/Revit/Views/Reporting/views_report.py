@@ -35,8 +35,7 @@ from duHast.Revit.Views.Reporting.views_report_header import (
 from duHast.Revit.Views.views import get_views_of_type
 from duHast.Revit.Views.Reporting.view_property_filter import filter_data_by_properties
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import files_tab as filesTab, result as res
-from duHast.Utilities import files_csv as filesCSV
+from duHast.Utilities import files_csv as filesCSV, result as res
 
 #: list of view types to be reported on.
 VIEW_TYPES = [
@@ -80,8 +79,6 @@ def get_views_report_data(doc, host_name):
                 # get values as utf-8 encoded strings
                 value = rParaGet.get_parameter_value_utf8_string(para)
                 try:
-                    if value == None:
-                        print(para.Definition.Name, para.StorageType)
                     data.append(value)
                 except:
                     data.append("Failed to retrieve value")
@@ -100,7 +97,7 @@ def get_views_report_data_filtered(doc, host_name, view_properties):
     :type doc: Autodesk.Revit.DB.Document
     :param host_name: The file hostname, which is added to data returned
     :type host_name: str
-    :param view_properties: List of view properties to be extracted from sheets.
+    :param view_properties: List of view properties to be extracted from views.
     :type view_properties: list of str
     :return: list of list of view properties.
     :rtype: list of list of str

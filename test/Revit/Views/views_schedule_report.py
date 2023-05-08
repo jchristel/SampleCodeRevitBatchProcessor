@@ -97,67 +97,22 @@ def test_get_schedules_report_data(doc):
         result = get_schedules_report_data(doc, REVIT_TEST_FILE_NAME)
         expected_result = [
             [
-                REVIT_TEST_FILE_NAME,
-                "970427",
+                "TEST.rvt",
+                "970420",
                 "-1",
-                "Level 00",
+                "Wall Schedule",
                 "Independent",
-                "None",
-                " 1 : 100",
-                "100",
-                "Normal",
-                "Coarse",
-                "Show Original",
-                "None",
-                "None",
-                "No",
-                "No",
-                "No",
                 "Invalid storage type: (NONE)",
-                "Invalid storage type: (NONE)",
-                "-1",
-                "-1",
-                "Look down",
-                "Invalid storage type: (NONE)",
-                "Level 00",
-                "Project North",
                 "2029",
                 "3",
-                "Clean all wall joins",
-                "-1",
-                "Architectural",
-                "By Discipline",
-                "Background",
                 "Invalid storage type: (NONE)",
-                "-1",
-                "None",
-                "-1",
-                "None",
-                "None",
-                "None",
-                "970435",
-                "No",
-            ],
-            [
-                REVIT_TEST_FILE_NAME,
-                "21930",
-                "-1",
-                "TEST",
-                "Independent",
-                "None",
-                " 1 : 1",
-                "1",
-                "Medium",
-                "None",
-                "None",
                 "Invalid storage type: (NONE)",
-                "Architectural",
-                "TEST",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
                 "None",
-                "TEST",
-                "21935",
-                "Hidden Line",
-            ],
+                "-1",
+            ]
         ]
         message = " result: {} \n expected: {} ".format(result, expected_result)
         assert sorted(result) == sorted(expected_result)
@@ -192,10 +147,7 @@ def test_get_schedules_report_data_filtered(doc):
         result = get_schedules_report_data_filtered(
             doc, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
         )
-        expected_result = [
-            [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
-            [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
-        ]
+        expected_result = [["TEST.rvt", "970420", "Wall Schedule", "-1"]]
         message = " result: {} \n expected: {} ".format(result, expected_result)
         assert sorted(result) == sorted(expected_result)
 
@@ -231,15 +183,48 @@ def test_write_schedules_data(doc):
         test_file_path = os.path.join(tmp_dir, OUTPUT_FILE_NAME)
 
         # attempt to write out data
-        result = write_schedule_data(
-            doc, os.path.join(tmp_dir, "sheets_test.txt"), REVIT_TEST_FILE_NAME
-        )
+        result = write_schedule_data(doc, test_file_path, REVIT_TEST_FILE_NAME)
         message = " file written: {} to: {}".format(result.status, result.message)
         # check file was written
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            [
+                "HOSTFILE",
+                "Id",
+                "View Template",
+                "View Name",
+                "Dependency",
+                "Visibility/Graphics Overrides",
+                "Phase Filter",
+                "Phase",
+                "Fields",
+                "Filter",
+                "Sorting/Grouping",
+                "Formatting",
+                "Appearance",
+                "Design Stage",
+                "None",
+            ],
+            [
+                "TEST.rvt",
+                "970420",
+                "-1",
+                "Wall Schedule",
+                "Independent",
+                "Invalid storage type: (NONE)",
+                "2029",
+                "3",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "None",
+                "-1",
+            ],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
             test_file_path,
@@ -284,7 +269,7 @@ def test_write_schedule_data_by_property_names(doc):
         # attempt to write out data
         result = write_schedule_data_by_property_names(
             doc,
-            os.path.join(tmp_dir, "sheets_test.txt"),
+            test_file_path,
             REVIT_TEST_FILE_NAME,
             VIEW_DATA_FILTERS,
         )
@@ -293,7 +278,10 @@ def test_write_schedule_data_by_property_names(doc):
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            ["HOSTFILE", "Id", "View Name", "View Template"],
+            ["TEST.rvt", "970420", "Wall Schedule", "-1"],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
             test_file_path,

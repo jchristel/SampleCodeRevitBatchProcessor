@@ -236,7 +236,112 @@ def test_write_views_data(doc):
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            [
+                "HOSTFILE",
+                "Id",
+                "View Template",
+                "View Name",
+                "Dependency",
+                "Title on Sheet",
+                "View Scale",
+                "Scale Value    1:",
+                "Display Model",
+                "Detail Level",
+                "Parts Visibility",
+                "Referencing Sheet",
+                "Referencing Detail",
+                "Crop View",
+                "Crop Region Visible",
+                "Annotation Crop",
+                "Visibility/Graphics Overrides",
+                "Graphic Display Options",
+                "Range: Base Level",
+                "Range: Top Level",
+                "Underlay Orientation",
+                "View Range",
+                "Associated Level",
+                "Orientation",
+                "Phase Filter",
+                "Phase",
+                "Wall Join Display",
+                "Scope Box",
+                "Discipline",
+                "Show Hidden Lines",
+                "Color Scheme Location",
+                "Color Scheme",
+                "Default Analysis Display Style",
+                "Depth Clipping",
+                "Visible In Option",
+                "Design Stage",
+                "Building",
+                "View Type",
+                "None",
+                "Sun Path",
+            ],
+            [
+                "TEST.rvt",
+                "21930",
+                "-1",
+                "TEST",
+                "Independent",
+                "None",
+                " 1 : 1",
+                "1",
+                "Medium",
+                "None",
+                "None",
+                "Invalid storage type: (NONE)",
+                "Architectural",
+                "TEST",
+                "None",
+                "TEST",
+                "21935",
+                "Hidden Line",
+            ],
+            [
+                "TEST.rvt",
+                "970427",
+                "-1",
+                "Level 00",
+                "Independent",
+                "None",
+                " 1 : 100",
+                "100",
+                "Normal",
+                "Coarse",
+                "Show Original",
+                "None",
+                "None",
+                "No",
+                "No",
+                "No",
+                "Invalid storage type: (NONE)",
+                "Invalid storage type: (NONE)",
+                "-1",
+                "-1",
+                "Look down",
+                "Invalid storage type: (NONE)",
+                "Level 00",
+                "Project North",
+                "2029",
+                "3",
+                "Clean all wall joins",
+                "-1",
+                "Architectural",
+                "By Discipline",
+                "Background",
+                "Invalid storage type: (NONE)",
+                "-1",
+                "None",
+                "-1",
+                "None",
+                "None",
+                "None",
+                "970435",
+                "No",
+            ],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
             test_file_path, expected_result_file_read, tmp_dir, "test_write_views_data"
@@ -284,10 +389,17 @@ def test_write_view_data_by_property_names(doc):
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            ["HOSTFILE", "Id", "View Name", "Title on Sheet", "View Template"],
+            ["TEST.rvt", "21930", "TEST", "None", "-1"],
+            ["TEST.rvt", "970427", "Level 00", "None", "-1"],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
-            test_file_path, expected_result_file_read, tmp_dir, "test_write_view_data_by_property_names"
+            test_file_path,
+            expected_result_file_read,
+            tmp_dir,
+            "test_write_view_data_by_property_names",
         )
         flag = flag & flag_clean_up
         message = message + "\n" + message_clean_up

@@ -138,12 +138,24 @@ def test_get_views_in_model(doc):
 
         # get all views in model (only 1 in test model)
         result = get_views_in_model(doc, action)
-        message = " view name: {} view type: {} ".format(
+        message = " view name: {}, view type: {}, ".format(
             result[0].Name, result[0].ViewType
         )
         assert result[0].Name == "TEST"
         assert result[0].ViewType == rdb.ViewType.DraftingView
-        assert len(result) == 1
+
+        message = message + "\n" + " view name: {}, view type: {} ".format(
+            result[1].Name, result[1].ViewType
+        )
+        assert result[1].ViewType == rdb.ViewType.Schedule
+        assert result[1].Name == 'Wall Schedule'
+
+        message = message + "\n" + " view name: {}, view type: {} ".format(
+            result[2].Name, result[2].ViewType
+        )
+        assert result[2].ViewType == rdb.ViewType.FloorPlan
+        assert result[2].Name=='Level 00'
+        assert len(result) == 3
 
     except Exception as e:
         message = (

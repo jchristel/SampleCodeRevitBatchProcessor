@@ -70,21 +70,20 @@ def check_csv_file(test_file_path, expected_file_content,tmp_dir, calling_functi
     try:
         # double check...
         file_exist_status = file_exist(test_file_path)
-        message = message + "\n" + " file exists check: {}".format(file_exist_status)
+        message = " file exists check: {}".format(file_exist_status)
         assert file_exist_status == True
 
         # read file content
         result_file_read = read_csv_file(test_file_path)
-        message = message + "\n" + " content: {}".format(sorted(result_file_read))
         expected_result_file_read = expected_file_content
         message = (
             message
             + "\n"
-            + " file read results: \n {} vs \n {}".format(
-                result_file_read, expected_result_file_read
+            + " file read results: \n {} \n vs \n {}".format(
+                sorted(result_file_read), sorted(expected_result_file_read)
             )
         )
-        assert result_file_read == expected_result_file_read
+        assert sorted(result_file_read) == sorted(expected_result_file_read)
 
         # clean up...
         # remove the temp directory:
@@ -92,7 +91,7 @@ def check_csv_file(test_file_path, expected_file_content,tmp_dir, calling_functi
         message = message + "\n" + " delete temp dir: {}".format(del_temp_dir)
         assert del_temp_dir == True
         temp_dir_exists = directory_exists(tmp_dir)
-        message = message + "\n" + " delete temp dir check: {}".format(temp_dir_exists)
+        message = message + "\n" + " deleted temp dir still exists: {}".format(temp_dir_exists)
         assert temp_dir_exists == False
     except Exception as e:
         message = (

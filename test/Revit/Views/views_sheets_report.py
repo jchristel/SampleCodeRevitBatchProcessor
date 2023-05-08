@@ -101,69 +101,38 @@ def test_get_sheet_report_data(doc):
         result = get_sheet_report_data(doc, REVIT_TEST_FILE_NAME)
         expected_result = [
             [
-                REVIT_TEST_FILE_NAME,
-                "970427",
-                "-1",
-                "Level 00",
+                "TEST.rvt",
+                "21924",
                 "Independent",
                 "None",
-                " 1 : 100",
-                "100",
-                "Normal",
-                "Coarse",
-                "Show Original",
                 "None",
-                "None",
+                "Invalid storage type: (NONE)",
                 "No",
-                "No",
-                "No",
+                "None",
+                "None",
+                "None",
+                "None",
+                "None",
+                "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\Revit\\TestFiles\\Revit_2022.rvt",
+                "Approver",
+                "Designer",
+                "Checker",
+                "Author",
+                " ",
+                "SPLASH",
+                "SPLASH",
+                "None",
+                "SPLASH",
+                "None",
+                "21928",
+                "Yes",
                 "Invalid storage type: (NONE)",
-                "Invalid storage type: (NONE)",
                 "-1",
-                "-1",
-                "Look down",
-                "Invalid storage type: (NONE)",
-                "Level 00",
-                "Project North",
-                "2029",
-                "3",
-                "Clean all wall joins",
-                "-1",
-                "Architectural",
-                "By Discipline",
-                "Background",
-                "Invalid storage type: (NONE)",
-                "-1",
-                "None",
-                "-1",
-                "None",
-                "None",
-                "None",
-                "970435",
-                "No",
-            ],
-            [
-                REVIT_TEST_FILE_NAME,
-                "21930",
-                "-1",
-                "TEST",
-                "Independent",
-                "None",
-                " 1 : 1",
-                "1",
-                "Medium",
-                "None",
-                "None",
-                "Invalid storage type: (NONE)",
-                "Architectural",
-                "TEST",
-                "None",
-                "TEST",
-                "21935",
-                "Hidden Line",
-            ],
+            ]
         ]
-        message = " result: {} \n expected: {} ".format(result, expected_result)
+        message = " result: {} \n expected: {} ".format(
+            sorted(result), sorted(expected_result)
+        )
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
@@ -196,11 +165,10 @@ def test_get_sheets_report_data_filtered(doc):
         result = get_sheets_report_data_filtered(
             doc, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
         )
-        expected_result = [
-            [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
-            [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
-        ]
-        message = " result: {} \n expected: {} ".format(result, expected_result)
+        expected_result = [['TEST.rvt', '21924', 'SPLASH', 'SPLASH', 'None']] 
+        message = " result: {} \n expected: {} ".format(
+            sorted(result), sorted(expected_result)
+        )
         assert sorted(result) == sorted(expected_result)
 
     except Exception as e:
@@ -235,15 +203,72 @@ def test_write_sheets_data(doc):
         test_file_path = os.path.join(tmp_dir, OUTPUT_FILE_NAME)
 
         # attempt to write out data
-        result = write_sheet_data(
-            doc, os.path.join(tmp_dir, "sheets_test.txt"), REVIT_TEST_FILE_NAME
-        )
+        result = write_sheet_data(doc, test_file_path, REVIT_TEST_FILE_NAME)
         message = " file written: {} to: {}".format(result.status, result.message)
         # check file was written
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            [
+                "HOSTFILE",
+                "Id",
+                "Dependency",
+                "Referencing Sheet",
+                "Referencing Detail",
+                "Visibility/Graphics Overrides",
+                "Current Revision Issued",
+                "Current Revision Issued By",
+                "Current Revision Issued To",
+                "Current Revision Date",
+                "Current Revision Description",
+                "Current Revision",
+                "File Path",
+                "Approved By",
+                "Designed By",
+                "Checked By",
+                "Drawn By",
+                "Scale",
+                "Sheet Number",
+                "Sheet Name",
+                "Sheet Issue Date",
+                "Design Stage",
+                "View Type",
+                "None",
+                "Appears In Sheet List",
+                "Revisions on Sheet",
+                "Guide Grid",
+            ],
+            [
+                "TEST.rvt",
+                "21924",
+                "Independent",
+                "None",
+                "None",
+                "Invalid storage type: (NONE)",
+                "No",
+                "None",
+                "None",
+                "None",
+                "None",
+                "None",
+                "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\Revit\\TestFiles\\Revit_2022.rvt",
+                "Approver",
+                "Designer",
+                "Checker",
+                "Author",
+                " ",
+                "SPLASH",
+                "SPLASH",
+                "None",
+                "SPLASH",
+                "None",
+                "21928",
+                "Yes",
+                "Invalid storage type: (NONE)",
+                "-1",
+            ],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
             test_file_path, expected_result_file_read, tmp_dir, "test_write_sheets_data"
@@ -281,7 +306,7 @@ def test_write_sheet_data_by_property_names(doc):
         # attempt to write out data
         result = write_sheet_data_by_property_names(
             doc,
-            os.path.join(tmp_dir, "sheets_test.txt"),
+            test_file_path,
             REVIT_TEST_FILE_NAME,
             VIEW_DATA_FILTERS,
         )
@@ -290,7 +315,10 @@ def test_write_sheet_data_by_property_names(doc):
         assert result.status == True
 
         # double check...
-        expected_result_file_read = []
+        expected_result_file_read = [
+            ["HOSTFILE", "Id", "Sheet Number", "Sheet Name", "Sheet Issue Date"],
+            ["TEST.rvt", "21924", "SPLASH", "SPLASH", "None"],
+        ]
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
             test_file_path,

@@ -43,6 +43,8 @@ from test.utils.rbp_setup import add_rbp_ref, output as rbp_out
 from test.Revit.Views.views import run_tests as view_run_test
 from test.Revit.Views.views_report import run_tests as report_run_test
 from test.Revit.Views.views_report_header import run_tests as report_header_run_test
+from test.Revit.Views.views_sheets_report import run_tests as report_sheets_run_test
+from test.Revit.Views.views_schedule_report import run_tests as report_schedules_run_test
 
 from test.utils.padding import pad_header_no_time_stamp, pad_string
 
@@ -79,6 +81,8 @@ def run_view_tests(doc, rbp_run_type=IS_RBP_RUN):
         ["Views", view_run_test],
         ["view report headers", report_header_run_test],
         ["view reports", report_run_test],
+        ["sheet reports", report_sheets_run_test],
+        ["report_schedules_run_test",report_schedules_run_test]
     ]
 
     for test in tests:

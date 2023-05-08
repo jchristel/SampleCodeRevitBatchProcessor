@@ -78,7 +78,11 @@ REVIT_TEST_FILE_NAME = "TEST.rvt"
 OUTPUT_FILE_NAME = "Report.csv"
 
 # These are the properties to be reported on in filtered reports
-VIEW_DATA_FILTERS = ["View Name", "Title on Sheet", "View Template"]
+VIEW_DATA_FILTERS = [
+    "Sheet Number",
+    "Sheet Name",
+    "Sheet Issue Date",
+]
 
 
 def test_get_sheet_report_data(doc):
@@ -289,7 +293,10 @@ def test_write_sheet_data_by_property_names(doc):
         expected_result_file_read = []
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
-            test_file_path, expected_result_file_read, tmp_dir, "test_write_sheets_data_by_property_name"
+            test_file_path,
+            expected_result_file_read,
+            tmp_dir,
+            "test_write_sheets_data_by_property_name",
         )
         flag = flag & flag_clean_up
         message = message + "\n" + message_clean_up

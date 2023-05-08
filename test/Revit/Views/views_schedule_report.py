@@ -78,7 +78,7 @@ REVIT_TEST_FILE_NAME = "TEST.rvt"
 OUTPUT_FILE_NAME = "Report.csv"
 
 # These are the properties to be reported on in filtered reports
-VIEW_DATA_FILTERS = ["View Name", "Title on Sheet", "View Template"]
+VIEW_DATA_FILTERS = ["View Name", "View Template"]
 
 
 def test_get_schedules_report_data(doc):
@@ -242,7 +242,10 @@ def test_write_schedules_data(doc):
         expected_result_file_read = []
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
-            test_file_path, expected_result_file_read, tmp_dir, "test_write_schedules_data"
+            test_file_path,
+            expected_result_file_read,
+            tmp_dir,
+            "test_write_schedules_data",
         )
         flag = flag & flag_clean_up
         message = message + "\n" + message_clean_up
@@ -251,7 +254,11 @@ def test_write_schedules_data(doc):
         message = (
             message
             + "\n"
-            + ("An exception occurred in function test_write_schedules_data {}".format(e))
+            + (
+                "An exception occurred in function test_write_schedules_data {}".format(
+                    e
+                )
+            )
         )
         flag = False
     return flag, message
@@ -289,7 +296,10 @@ def test_write_schedule_data_by_property_names(doc):
         expected_result_file_read = []
         # check file content and perform temp directory clean up
         flag_clean_up, message_clean_up = rep_test.check_csv_file(
-            test_file_path, expected_result_file_read, tmp_dir, "test_write_schedule_data_by_property_names"
+            test_file_path,
+            expected_result_file_read,
+            tmp_dir,
+            "test_write_schedule_data_by_property_names",
         )
         flag = flag & flag_clean_up
         message = message + "\n" + message_clean_up
@@ -331,7 +341,10 @@ def run_tests(doc, output):
     # lists of common tests ( not version specific )
     tests_common = [
         ["test_get_schedules_report_data", test_get_schedules_report_data],
-        ["test_get_schedules_report_data_filtered", test_get_schedules_report_data_filtered],
+        [
+            "test_get_schedules_report_data_filtered",
+            test_get_schedules_report_data_filtered,
+        ],
         ["test_write_schedules_data", test_write_schedules_data],
         [
             "test_write_schedule_data_by_property_names",

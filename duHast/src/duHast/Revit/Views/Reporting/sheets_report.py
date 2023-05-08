@@ -145,7 +145,7 @@ def write_sheet_data_by_property_names(doc, file_name, current_file_name, sheet_
         # change headers to filtered + default
         headers = REPORT_SHEETS_HEADER[:] + sheet_properties
         # write data out to file
-        filesCSV.write_report_data_as_csv.write_report_data(
+        filesCSV.write_report_data_as_csv(
             file_name,
             headers,
             data)

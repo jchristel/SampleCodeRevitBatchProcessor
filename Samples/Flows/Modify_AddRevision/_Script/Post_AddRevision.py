@@ -27,7 +27,7 @@
 # Imports
 # --------------------------
 
-import utilAddRevBVN as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM # sets up all commonly used variables and path locations!
 
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils

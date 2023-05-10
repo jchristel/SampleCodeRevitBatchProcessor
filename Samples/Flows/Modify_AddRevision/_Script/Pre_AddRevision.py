@@ -31,7 +31,7 @@
 
 
 # import flow specific utils
-import utilAddRevBVN as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM # sets up all commonly used variables and path locations!
 # import common library (in this case the post lib since it got the methods we are after)
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logutils

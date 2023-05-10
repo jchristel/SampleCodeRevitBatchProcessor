@@ -27,7 +27,7 @@
 # Imports
 # --------------------------
 
-import utilAddRevBVN as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM # sets up all commonly used variables and path locations!
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp

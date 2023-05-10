@@ -1,5 +1,5 @@
 # load util functions
-. "C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\PowerShell\PowerShell\BatchProcessorUtils.ps1"
+. "C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
 # output settings header
 Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
 
@@ -42,7 +42,7 @@ $settings_directory = $root_flow_directory + "\_settings\"
 # Display the settings directory
 Write-ToLogAndConsole -Message "settings directory: $settings_directory"
 # file path to post step one script
-$_post_step_one_script="`"$root_flow_directory`"\_Script\Post_AddRev.py"
+$_post_step_one_script="`"$root_flow_directory`"\_Script\Post_AddRevision.py"
 Write-ToLogAndConsole -Message "post step one script file path: $_post_step_one_script"
 
 Write-ToLogAndConsole -Message "-"

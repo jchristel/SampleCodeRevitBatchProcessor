@@ -33,7 +33,7 @@ import clr
 import System
 import datetime
 
-import utilAddRevBVN as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM # sets up all commonly used variables and path locations!
 #import common library
 from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Revisions import revisions as rRev

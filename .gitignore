@@ -192,3 +192,6 @@ x64/
 docs/.buildinfo
 #Sphinx build output
 /docsource/C*
+
+# test processing logs
+/test/_rbp_2022_flow/_Script/logs/*.log

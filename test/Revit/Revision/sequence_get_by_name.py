@@ -35,10 +35,10 @@ from duHast.Revit.Revisions.sequence import (
 from duHast.Utilities import result as res
 
 
-class CreateAlphaSequence(revit_test.RevitTest):
+class GetSequenceByName(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(CreateAlphaSequence, self).__init__(doc=doc)
+        super(GetSequenceByName, self).__init__(doc=doc)
 
     def test(self):
         """

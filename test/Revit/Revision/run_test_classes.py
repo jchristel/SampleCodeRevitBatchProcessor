@@ -68,7 +68,7 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
 
     run_tests = [
         ["Sequence Alpha Create", seq_create_alpha.CreateAlphaSequence],
-        ["Sequence Get By Name", seq_get_by_name],
+        ["Sequence Get By Name", seq_get_by_name.GetSequenceByName],
         ["Revision Create", rev_create.CreateRevision],
         ["Revision Mark As Issued", rev_mark_issued.MarkIssued],
         ["Revision Mark As Issued By Id", rev_mark_issued_id.MarkIssuedById],

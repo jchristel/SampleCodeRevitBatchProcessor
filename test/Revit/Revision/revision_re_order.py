@@ -35,6 +35,11 @@ from duHast.Utilities import result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
+# required for .ToList()
+import clr
+clr.AddReference("System.Core")
+from System import Linq
+clr.ImportExtensions(Linq)
 
 class ChangeRevOrder(revit_test.RevitTest):
     def __init__(self, doc):

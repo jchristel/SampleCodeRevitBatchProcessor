@@ -31,7 +31,10 @@ These are required when running tests in Revit batch processor.
 
 
 import clr
-
+from padding import pad_string
+# Add batch processor scripting references
+import revit_script_util
+import revit_file_util
 
 def add_rbp_ref():
     """
@@ -40,16 +43,10 @@ def add_rbp_ref():
     :return: Current Revit model document.
     :rtype: Autodesk.Revit.DB.Document
     """
-
-    # Add batch processor scripting reference   s
-    import revit_script_util
-    import revit_file_util
-
     clr.AddReference("RevitAPI")
     clr.AddReference("RevitAPIUI")
     # NOTE: these only make sense for batch Revit file processing mode.
     doc = revit_script_util.GetScriptDocument()
-    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
     return doc
 
 
@@ -61,4 +58,14 @@ def output(message=""):
     :type message: str, optional
     """
 
-    revit_script_util.Output(str(message))
+    # make sure message is a string:
+    if type(message) != str:
+        message = str(message)
+
+    # check for multi row messages
+    if "/n" in message:
+        message_chunks = message.split("\n")
+        for message_chunk in message_chunks:
+            revit_script_util.Output(pad_string(message_chunk))
+    else:
+        revit_script_util.Output(pad_string(message))

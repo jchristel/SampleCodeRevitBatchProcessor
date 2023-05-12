@@ -28,58 +28,35 @@
 # --------------------------
 # Imports
 # --------------------------
-
-import clr
-import System
-
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
-# required in lambda expressions!
-clr.AddReference("System.Core")
-clr.ImportExtensions(System.Linq)
+# get document and import revit batch processor
+from test.utils.rbp_setup import add_rbp_ref, output
+
+# get the document from revit batch processor
+doc = add_rbp_ref()
 
 # flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import revit_script_util
-    import revit_file_util
-
-    clr.AddReference("RevitAPI")
-    clr.AddReference("RevitAPIUI")
-    # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
-else:
-    # get default revit file name
-    REVIT_FILE_PATH = utilM.DEBUG_REVIT_FILE_NAME
+DEBUG = False
 
 # -------------
 # my code here:
 # -------------
 
-
+#: import test runners
 from test.Revit.Revision.run_test_classes import run_revision_tests as run_rev_tests
 
-
-def output(message=""):
-    """
-    prints message to console or rbp log console
-
-    :param message: the message, defaults to ''
-    :type message: str, optional
-    """
-
-    if not debug_:
-        revit_script_util.Output(str(message))
-    else:
-        print(message)
+#: add test runners to list
+TESTS = [
+    run_rev_tests,
+]
 
 
+#: execute tests
 output("Executing tests.... start")
 
-result = run_rev_tests(doc, True)
-output (result)
+for test in TESTS:
+    result = test(doc, True)
+    output(result.message)
 
 output("Executing tests.... finished ")

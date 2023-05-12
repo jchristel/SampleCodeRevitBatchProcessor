@@ -29,7 +29,7 @@ This module runs all revit revision related tests .
 
 
 from test.utils.rbp_setup import add_rbp_ref
-from test.utils.padding import pad_header_no_time_stamp
+from test.utils.padding import pad_header_no_time_stamp, pad_string
 
 import test.Revit.Revision.change_revision_seq as change_rev_seq
 from duHast.Utilities import result as res
@@ -66,5 +66,6 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
         test_class = test[1](doc)
         result_test = test_class.test()
         return_value.update(result_test)
+        return_value.append_message(pad_string("{} completed status [{}]".format(test[0], result_test.status)))
     
     return return_value

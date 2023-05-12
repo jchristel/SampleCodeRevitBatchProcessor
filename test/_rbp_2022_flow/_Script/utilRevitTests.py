@@ -20,24 +20,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-DU_HAST_DIRECTORY = (
-    r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
-)
 # set path to common library
 import sys, os
 
-sys.path += [DU_HAST_DIRECTORY]
-
-from duHast.Utilities.files_io import get_directory_path_from_file_path
-from duHast.Utilities.directory_io import get_parent_directory
-
 # get the script location
-SCRIPT_DIRECTORY = get_directory_path_from_file_path(__file__)
-# add the script directory to path
-sys.path += [SCRIPT_DIRECTORY]
+SCRIPT_DIRECTORY = os.path.dirname(__file__)
 # build flow directory name
-FLOW_DIRECTORY = get_parent_directory(SCRIPT_DIRECTORY)
+FLOW_DIRECTORY =  os.path.dirname(SCRIPT_DIRECTORY)
+# build duHast and duHast test directories
+DU_HAST_TEST_DIRECTORY = os.path.dirname(os.path.dirname(FLOW_DIRECTORY))
+DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r'duHast\src')
+
+print ("Script directory: {}".format(SCRIPT_DIRECTORY))
+print ("flow directory: {}".format(FLOW_DIRECTORY))
+print ("duHast directory: {}".format( DU_HAST_DIRECTORY))
+print ("duHast test directory: {}".format(DU_HAST_TEST_DIRECTORY))
+
+# add the directories to path
+sys.path += [DU_HAST_DIRECTORY, DU_HAST_TEST_DIRECTORY,SCRIPT_DIRECTORY,]
 
 # any data output to go here
 OUTPUT_FOLDER = FLOW_DIRECTORY + r"\_Output"

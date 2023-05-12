@@ -31,15 +31,12 @@
 
 import clr
 import System
-import datetime
 
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
 # required in lambda expressions!
 clr.AddReference("System.Core")
 clr.ImportExtensions(System.Linq)
-
-import Autodesk.Revit.DB as rdb
 
 # flag whether this runs in debug or not
 debug_ = False
@@ -63,6 +60,9 @@ else:
 # -------------
 
 
+from test.Revit.Revision.run_test_classes import run_revision_tests as run_rev_tests
+
+
 def output(message=""):
     """
     prints message to console or rbp log console
@@ -79,5 +79,7 @@ def output(message=""):
 
 output("Executing tests.... start")
 
+result = run_rev_tests(doc, True)
+output (result)
 
 output("Executing tests.... finished ")

@@ -33,6 +33,7 @@ import tempfile
 from duHast.Utilities import base
 from duHast.Utilities.directory_io import directory_delete
 from duHast.Revit.Common.revit_version import get_revit_version_number
+from duHast.Utilities import result as res
 
 
 class RevitTest(base.Base):
@@ -55,6 +56,10 @@ class RevitTest(base.Base):
             self.tmp_dir = self.create_tmp_dir()
         else:
             self.tmp_dir = None
+    
+    def test(self):
+        return_value = res.Result()
+        return return_value
 
     def in_transaction_group(self, action):
         """
@@ -66,16 +71,17 @@ class RevitTest(base.Base):
         :rtype: bool, str
         """
 
+        return_value = res.Result()
         # create a transaction group
         tg = rdb.TransactionGroup(self.document, "test")
         tg.Start()
 
-        flag, message = action(self.document)
+        return_value = action(self.document)
 
         # roll every thing back
         tg.RollBack()
 
-        return flag, message
+        return return_value
 
     def create_temp_dir(self):
         # set up a temp dir and test file path

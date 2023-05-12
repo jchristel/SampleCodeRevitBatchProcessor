@@ -34,7 +34,7 @@ or with a time stamp:
 #
 #
 
-from utils.date_time import date_time
+from test.utils.date_time import date_time
 
 
 def pad_header_no_time_stamp(header_name, padding_length=70):

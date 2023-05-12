@@ -27,8 +27,8 @@ This module contains text output to console functions .
 #
 
 from colorama import Fore
-from utils.date_time import date_time
-from utils.padding import pad_string, pad_header
+from test.utils.date_time import date_time
+from test.utils.padding import pad_string, pad_header
 
 #: overall debug flag. If False no messages from tests will be printed to console. If True messages will be printed.
 IS_DEBUG = False

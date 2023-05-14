@@ -38,6 +38,8 @@ from test.Revit.Views import views_get_report_headers
 
 from test.Revit.Views import views_get_report_data
 from test.Revit.Views import views_get_report_data_filtered
+from test.Revit.Views import views_write_report_data
+from test.Revit.Views import views_write_report_data_filtered
 
 #: Type of test run flag. If False run in revit python shell. If True runs in revit batch processor.
 IS_RBP_RUN = False
@@ -68,6 +70,8 @@ def run_views_tests(doc, rbp_run_type=IS_RBP_RUN):
         ["Get Views Report Header", views_get_report_headers.GetViewReportHeaders],
         ["Get Views Report Data", views_get_report_data.GetViewReportData],
         ["Get Views Report Data Filtered", views_get_report_data_filtered.GetViewReportDataFiltered]
+        ["Write Views Report Data", views_write_report_data.WriteViewReportData],
+        ["Write Views Report Data Filtered", views_write_report_data_filtered.WriteViewReportDataFiltered],
     ]
 
     for test in run_tests:

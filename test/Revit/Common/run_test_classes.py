@@ -31,9 +31,11 @@ from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
+from test.Revit.Common import design_sets_get
+from test.Revit.Common import design_options_get
 
 
-def run_views_tests(doc):
+def run_design_set_options_tests(doc):
     """
     Runs all views related tests.
 
@@ -49,7 +51,10 @@ def run_views_tests(doc):
     # start tests -> should run ... tests first since they form
     # part of ... tests
 
-    run_tests = []
+    run_tests = [
+        ["Get Design Sets" , design_sets_get.GetDesignSets],
+        ["Get Design Options", design_options_get.GetDesignOptions ],
+    ]
 
     runner = RevitRunTest(run_tests)
     return_value = runner.run_tests(doc)

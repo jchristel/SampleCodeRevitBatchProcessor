@@ -26,7 +26,7 @@ This module contains revit create revision tests .
 #
 #
 
-from test.Revit.TestUtilis import revit_test
+from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.revision import TEST_DATA_2022, TEST_DATA_2023
 from duHast.Revit.Revisions.revisions import create_revision
 from duHast.Utilities import result as res
@@ -60,15 +60,29 @@ class CreateRevision(revit_test.RevitTest):
             def action(doc):
                 action_return_value = res.Result()
                 try:
-                    action_return_value = create_revision(doc, test_data)
-                    assert action_return_value.status == True
-                    assert len(action_return_value.result) == 1
-                    assert action_return_value.result[0].Description == test_data.description
-                    assert action_return_value.result[0].IssuedTo == test_data.issued_to
-                    assert action_return_value.result[0].IssuedBy == test_data.issued_by
-                    assert action_return_value.result[0].RevisionDate == test_data.revision_date
-                    assert action_return_value.result[0].Visibility == test_data.tag_cloud_visibility
-                    assert action_return_value.result[0].NumberType == test_data.revision_number_type
+                    create_rev_value = create_revision(doc, test_data)
+                    assert create_rev_value.status == True
+                    assert len(create_rev_value.result) == 1
+                    assert (
+                        create_rev_value.result[0].Description == test_data.description
+                    )
+                    assert create_rev_value.result[0].IssuedTo == test_data.issued_to
+                    assert create_rev_value.result[0].IssuedBy == test_data.issued_by
+                    assert (
+                        create_rev_value.result[0].RevisionDate
+                        == test_data.revision_date
+                    )
+                    assert (
+                        create_rev_value.result[0].Visibility
+                        == test_data.tag_cloud_visibility
+                    )
+                    assert (
+                        create_rev_value.result[0].NumberType
+                        == test_data.revision_number_type
+                    )
+                    action_return_value.update_sep(
+                        True, "Created revision successfully."
+                    )
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
@@ -79,7 +93,6 @@ class CreateRevision(revit_test.RevitTest):
                 return action_return_value
 
             return_value = self.in_transaction_group(action)
-
         except Exception as e:
             return_value.update_sep(
                 False,

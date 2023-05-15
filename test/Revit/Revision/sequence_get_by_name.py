@@ -26,7 +26,7 @@ This module contains revit get revision sequence by name tests .
 #
 #
 
-from test.Revit.TestUtilis import revit_test
+from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.sequence import ALPHA_SEQUENCE_NAME
 from duHast.Revit.Revisions.sequence import (
     create_revision_alpha_seq,

@@ -27,7 +27,7 @@ This module contains revit views report data tests .
 #
 import os
 
-from test.Revit.TestUtilis import revit_test
+from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.views_report import write_views_data
 from duHast.Utilities import result as res
 

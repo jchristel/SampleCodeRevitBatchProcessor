@@ -75,12 +75,17 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
     ]
 
     for test in run_tests:
-        return_value.append_message(pad_header_no_time_stamp(test[0]))
         test_class = test[1](doc)
         result_test = test_class.test()
         return_value.update(result_test)
-        return_value.append_message(
-            pad_string("{} completed status [{}]".format(test[0], result_test.status))
+        return_value.result.append(
+            [
+                pad_header_no_time_stamp(test[0]),
+                result_test,
+                pad_string(
+                    "{} completed status [{}]".format(test[0], result_test.status)
+                ),
+            ]
         )
 
     return return_value

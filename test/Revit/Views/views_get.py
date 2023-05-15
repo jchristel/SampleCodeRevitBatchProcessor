@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit views report data filtered tests . 
+This module contains revit get view tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,20 +27,21 @@ This module contains revit views report data filtered tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Views.Reporting.views_report import get_views_report_data_filtered
+from duHast.Revit.Views.views import get_views_in_model
 from duHast.Utilities import result as res
 
-from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
+# import Autodesk
+import Autodesk.Revit.DB as rdb
 
 
-class GetViewReportDataFiltered(revit_test.RevitTest):
+class GetViews(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetViewReportDataFiltered, self).__init__(doc=doc)
+        super(GetViews, self).__init__(doc=doc)
 
     def test(self):
         """
-        get views report data filtered test
+        get views in model test
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -50,25 +51,43 @@ class GetViewReportDataFiltered(revit_test.RevitTest):
 
         return_value = res.Result()
         try:
-            # get sheet report headers
-            result = get_views_report_data_filtered(
-                self.document, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
+            # set up a return all views filter
+            def action(x):
+                return True
+
+            # get all views in model (only 1 in test model)
+            result = get_views_in_model(self.document, action)
+
+            return_value.append_message(
+                " view name: {}, view type: {}, ".format(
+                    result[0].Name, result[0].ViewType
+                )
             )
-            expected_result = [
-                [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
-                [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
-            ]
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            assert result[0].Name == "TEST"
+            assert result[0].ViewType == rdb.ViewType.DraftingView
+
+            return_value.append_message(
+                " view name: {}, view type: {} ".format(
+                    result[1].Name, result[1].ViewType
+                )
             )
-            assert sorted(result) == sorted(expected_result)
+            assert result[1].ViewType == rdb.ViewType.Schedule
+            assert result[1].Name == "Wall Schedule"
+
+            return_value.append_message(
+                " view name: {}, view type: {} ".format(
+                    result[2].Name, result[2].ViewType
+                )
+            )
+
+            assert result[2].ViewType == rdb.ViewType.FloorPlan
+            assert result[2].Name == "Level 00"
+            assert len(result) == 3
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_views_report_data_filtered {}".format(
-                    e
-                ),
+                "An exception occurred in function test_get_views_in_model {}".format(e),
             )
 
         return return_value

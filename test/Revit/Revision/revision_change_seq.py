@@ -26,7 +26,7 @@ This module contains revit change revision sequence tests .
 #
 #
 
-from test.Revit.TestUtilis import revit_test
+from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.revision import TEST_DATA_2022, TEST_DATA_2023
 from duHast.Revit.Revisions.revisions import create_revision
 from duHast.Revit.Revisions.revisions import change_revision_sequence_number

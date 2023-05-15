@@ -148,7 +148,6 @@ class RevitTest(base.Base):
 
             # read file content
             result_file_read = read_csv_file(test_file_path)
-            return_value.result = result_file_read
             return_value.append_message(
                 " file read results: \n {} \n vs \n {}".format(
                     sorted(result_file_read), sorted(expected_file_content)

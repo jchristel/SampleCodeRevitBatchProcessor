@@ -32,9 +32,7 @@ import utilRevitTests as utilM  # sets up all commonly used variables and path l
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils
 from duHast.Utilities import worksharing_monitor_process as wsmp
-from duHast.Utilities.console_out import output
-
-
+from test.utils.output_script_util import output
 # -------------
 # main:
 # -------------
@@ -49,7 +47,7 @@ output("Log marker deletion.: [{}]".format(flag_delete_log_markers))
 # WSMP marker files clean up
 cleanUpWSMFiles_ = wsmp.clean_up_wsm_data_files(utilM.WSM_MARKER_DIRECTORY)
 output(
-    "WSM files clean up.... status: {}\nWSM files clean up.... message: {}".format(
+    "WSM files clean up.... status: [{}]\nWSM files clean up.... message: \n\t{}".format(
         cleanUpWSMFiles_.status, cleanUpWSMFiles_.message
     )
 )

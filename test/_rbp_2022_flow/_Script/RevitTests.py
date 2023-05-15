@@ -59,6 +59,16 @@ output("Executing tests.... start")
 
 for test in TESTS:
     result = test(doc, True)
-    output(result.message)
+    for test_result in result.result:
+        # if everything went well just provide a summary
+        if(test_result[1].status):
+            output(test_result[0])
+            output(test_result[2])
+        else:
+            # something went wrong...provide details
+            output(test_result[0])
+            output(test_result[1].message)
+            output(test_result[2])
+
 
 output("Executing tests.... finished ")

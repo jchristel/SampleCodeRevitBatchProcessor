@@ -31,11 +31,6 @@ FLOW_DIRECTORY =  os.path.dirname(SCRIPT_DIRECTORY)
 DU_HAST_TEST_DIRECTORY = os.path.dirname(os.path.dirname(FLOW_DIRECTORY))
 DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r'duHast\src')
 
-print ("Script directory: {}".format(SCRIPT_DIRECTORY))
-print ("flow directory: {}".format(FLOW_DIRECTORY))
-print ("duHast directory: {}".format( DU_HAST_DIRECTORY))
-print ("duHast test directory: {}".format(DU_HAST_TEST_DIRECTORY))
-
 # add the directories to path
 sys.path += [DU_HAST_DIRECTORY, DU_HAST_TEST_DIRECTORY,SCRIPT_DIRECTORY,]
 

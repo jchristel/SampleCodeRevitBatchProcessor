@@ -27,7 +27,7 @@ This module runs all revit views related tests .
 #
 
 
-from test.utils.padding import pad_header_no_time_stamp, pad_string
+from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
@@ -44,11 +44,7 @@ from test.Revit.Views import views_write_report_data
 from test.Revit.Views import views_write_report_data_filtered
 
 
-#: Type of test run flag. If False run in revit python shell. If True runs in revit batch processor.
-IS_RBP_RUN = False
-
-
-def run_views_tests(doc, rbp_run_type=IS_RBP_RUN):
+def run_views_tests(doc):
     """
     Runs all views related tests.
 
@@ -85,18 +81,7 @@ def run_views_tests(doc, rbp_run_type=IS_RBP_RUN):
         ],
     ]
 
-    for test in run_tests:
-        test_class = test[1](doc)
-        result_test = test_class.test()
-        return_value.update(result_test)
-        return_value.result.append(
-            [
-                pad_header_no_time_stamp(test[0]),
-                result_test,
-                pad_string(
-                    "{} completed status [{}]".format(test[0], result_test.status)
-                ),
-            ]
-        )
+    runner = RevitRunTest(run_tests)
+    return_value = runner.run_tests(doc)
 
     return return_value

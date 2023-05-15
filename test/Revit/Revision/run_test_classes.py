@@ -27,7 +27,7 @@ This module runs all revit revision related tests .
 #
 
 
-from test.utils.padding import pad_header_no_time_stamp, pad_string
+from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
@@ -42,11 +42,8 @@ import test.Revit.Revision.revision_get_last_issued as rev_get_last_issued
 import test.Revit.Revision.sequence_create_alpha as seq_create_alpha
 import test.Revit.Revision.sequence_get_by_name as seq_get_by_name
 
-#: Type of test run flag. If False run in revit python shell. If True runs in revit batch processor.
-IS_RBP_RUN = False
 
-
-def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
+def run_revision_tests(doc):
     """
     Runs all revision related tests.
 
@@ -74,18 +71,7 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
         ["Revision Order", re_order_rev.ChangeRevOrder],
     ]
 
-    for test in run_tests:
-        test_class = test[1](doc)
-        result_test = test_class.test()
-        return_value.update(result_test)
-        return_value.result.append(
-            [
-                pad_header_no_time_stamp(test[0]),
-                result_test,
-                pad_string(
-                    "{} completed status [{}]".format(test[0], result_test.status)
-                ),
-            ]
-        )
+    runner = RevitRunTest(run_tests)
+    return_value = runner.run_tests(doc)
 
     return return_value

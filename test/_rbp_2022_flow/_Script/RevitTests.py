@@ -47,12 +47,14 @@ DEBUG = False
 from test.Revit.Common.run_test_classes import run_design_set_options_tests as run_des_tests
 from test.Revit.Revision.run_test_classes import run_revision_tests as run_rev_tests
 from test.Revit.Views.run_test_classes import run_views_tests as run_view_tests
+from test.Revit.Walls.run_test_classes import run_walls_tests as run_wall_tests
 
 #: add test runners to list
 TESTS = [
     run_des_tests,
     run_rev_tests,
     run_view_tests,
+    run_wall_tests,
 ]
 
 

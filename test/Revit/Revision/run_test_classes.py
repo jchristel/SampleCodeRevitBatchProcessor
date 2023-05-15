@@ -27,7 +27,6 @@ This module runs all revit revision related tests .
 #
 
 
-from test.utils.rbp_setup import add_rbp_ref
 from test.utils.padding import pad_header_no_time_stamp, pad_string
 from duHast.Utilities import result as res
 
@@ -59,9 +58,6 @@ def run_revision_tests(doc, rbp_run_type=IS_RBP_RUN):
     """
 
     return_value = res.Result()
-    if rbp_run_type == True:
-        # add revit batch processor references and get the current document
-        doc = add_rbp_ref()
 
     # start tests -> should run revision sequence tests first since they form
     # part of revision tests

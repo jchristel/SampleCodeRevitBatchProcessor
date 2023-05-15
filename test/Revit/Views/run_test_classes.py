@@ -27,7 +27,6 @@ This module runs all revit views related tests .
 #
 
 
-from test.utils.rbp_setup import add_rbp_ref
 from test.utils.padding import pad_header_no_time_stamp, pad_string
 from duHast.Utilities import result as res
 
@@ -57,9 +56,6 @@ def run_views_tests(doc, rbp_run_type=IS_RBP_RUN):
     """
 
     return_value = res.Result()
-    if rbp_run_type == True:
-        # add revit batch processor references and get the current document
-        doc = add_rbp_ref()
 
     # start tests -> should run report header tests first since they form
     # part of report tests
@@ -69,7 +65,7 @@ def run_views_tests(doc, rbp_run_type=IS_RBP_RUN):
         ["Get Schedule Report Header", schedules_get_report_headers.GetScheduleReportHeaders],
         ["Get Views Report Header", views_get_report_headers.GetViewReportHeaders],
         ["Get Views Report Data", views_get_report_data.GetViewReportData],
-        ["Get Views Report Data Filtered", views_get_report_data_filtered.GetViewReportDataFiltered]
+        ["Get Views Report Data Filtered", views_get_report_data_filtered.GetViewReportDataFiltered],
         ["Write Views Report Data", views_write_report_data.WriteViewReportData],
         ["Write Views Report Data Filtered", views_write_report_data_filtered.WriteViewReportDataFiltered],
     ]

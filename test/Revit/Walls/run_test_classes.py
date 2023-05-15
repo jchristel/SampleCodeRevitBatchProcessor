@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit wall report tests constants . 
+This module runs all revit walls related tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,4 +27,34 @@ This module contains revit wall report tests constants .
 #
 
 
-REVIT_TEST_FILE_NAME = "wall type test.rvt"
+from test.Revit.TestUtils.run_revit_tests import RevitRunTest
+from duHast.Utilities import result as res
+
+# import test classes
+from test.Revit.Walls import walls_get_report_data
+
+
+def run_walls_tests(doc):
+    """
+    Runs all walls related tests.
+
+    :param doc: Current Revit document.
+    :type doc: Autodesk.Revit.DB.Document
+
+    :return: True if all tests completed successfully, otherwise False.
+    :rtype: bool
+    """
+
+    return_value = res.Result()
+
+    # start tests -> should run ... tests first since they form
+    # part of ... tests
+
+    run_tests = [
+        ["Get Wall Report Data", walls_get_report_data.GetWallReportData],
+    ]
+
+    runner = RevitRunTest(run_tests)
+    return_value = runner.run_tests(doc)
+
+    return return_value

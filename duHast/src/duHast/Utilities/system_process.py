@@ -70,7 +70,8 @@ def get_all_running_processes():
                         fixedProcessData.append(dummyList[i])
                     processFiltered.append(fixedProcessData)
     except IndexError as e:
-        print ('Got all running processes')
+        #print ('Got all running processes')
+        pass
     return processFiltered
 
 def filter_by_process_name (processNames, processList, returnMatch = True):

@@ -57,7 +57,7 @@ class RevitTest(base.Base):
         self.revit_version_number = get_revit_version_number(doc)
         # set up a temp directory if required
         if requires_temp_dir:
-            self.tmp_dir = self.create_tmp_dir()
+            self.tmp_dir = tempfile.mkdtemp()
         else:
             self.tmp_dir = None
 
@@ -86,17 +86,6 @@ class RevitTest(base.Base):
         tg.RollBack()
 
         return return_value
-
-    def create_temp_dir(self):
-        """
-        Set up a temp dir and return the directory path
-
-        :return: Temp directory path
-        :rtype: str
-        """
-
-        tmp_dir = tempfile.mkdtemp()
-        return tmp_dir
 
     def clean_up(self):
         """

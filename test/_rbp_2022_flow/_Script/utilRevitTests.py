@@ -1,3 +1,16 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module containing settings used in all flow scripts.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- adds the following directories to the environment
+
+    - duHast library
+    - test library
+
+- populates a number of variables used in all flow scripts
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # License:

@@ -1,15 +1,18 @@
-"""
+﻿"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Module executed as a post process script within the batch processor environment.
+Module executed as a pre process script outside the batch processor environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- kills all running revit work sharing monitor sessions
+- this module gets executed first in the test chain
+- it runs any non Revit related code tests
+
+- if any test fails it will terminate with an exit code greater than 0, indicating to the powershell script to terminate
 
 """
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# License:
+#License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,30 +34,19 @@ Module executed as a post process script within the batch processor environment.
 #
 #
 
+# this sample shows how to write out a number of task files using bucket distribution
+
 # --------------------------
-# Imports
+# default file path locations
 # --------------------------
 
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+import sys
 
-# import WSM kill utils
-from duHast.Utilities import worksharing_monitor_process as wsmp
-
-# import script_util
-import script_util
-from duHast.Utilities.console_out import output
 # -------------
 # my code here:
 # -------------
 
-# -------------
-# main:
-# -------------
-
-# kill off all WSM sessions
-statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
-
-# show WSM kill status
-output(
-    "WSM Kill status: ....{} [{}]".format(statusWSMKill_.message, statusWSMKill_.status), script_util.Output
-)
+if (True):
+    # all is well...
+    sys.exit(0)

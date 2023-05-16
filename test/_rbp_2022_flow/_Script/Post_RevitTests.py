@@ -1,3 +1,16 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module containing post processing script which runs outside the revit batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- runs at the very end of the flow
+- processes log files ( did any exception occur?)
+- deletes marker files
+
+    - log marker files
+    - revit work sharing monitor marker files
+    
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #

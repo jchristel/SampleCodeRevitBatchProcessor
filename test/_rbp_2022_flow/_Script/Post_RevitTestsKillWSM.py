@@ -32,25 +32,12 @@ import utilRevitTests as utilM  # sets up all commonly used variables and path l
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import script_util
-
+# import script_util
+import script_util
+from duHast.Utilities.console_out import output
 # -------------
 # my code here:
 # -------------
-
-
-# output messages either to batch processor (debug = False) or console (debug = True)
-def output(message=""):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print(message)
-
 
 # -------------
 # main:
@@ -61,5 +48,5 @@ statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
 output(
-    "WSM Kill status: ....{} [{}]".format(statusWSMKill_.message, statusWSMKill_.status)
+    "WSM Kill status: ....{} [{}]".format(statusWSMKill_.message, statusWSMKill_.status), script_util.Output
 )

@@ -39,18 +39,17 @@ import utilRevitTests as utilM  # sets up all commonly used variables and path l
 from duHast.Utilities import batch_processor_log_utils as logUtils
 from duHast.Utilities import util_batch_p as uBP
 from duHast.Utilities.files_get import get_files
+from duHast.Utilities.console_out import output
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 
-# get document and import revit batch processor
-from test.utils.output_script_util import output
 
 # logfile marker creation status
 status_marker_ = logUtils.write_session_id_marker_file(
-        utilM.LOG_MARKER_DIRECTORY,
-        uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
-    )
+    utilM.LOG_MARKER_DIRECTORY,
+    uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
+)
 
 wsm_marker_ = wsmp.write_out_wsm_data_to_file(utilM.WSM_MARKER_DIRECTORY)
 
@@ -81,7 +80,9 @@ def write_file_list(source_directory):
             f.close()
     except Exception as e:
         status = False
-        output("Failed to save file list with exception: {}".format(e))
+        output(
+            "Failed to save file list with exception: {}".format(e), script_util.Output
+        )
     return status
 
 
@@ -89,22 +90,25 @@ def write_file_list(source_directory):
 # main:
 # -------------
 
-output ("Script directory: {}".format(utilM.SCRIPT_DIRECTORY))
-output ("flow directory: {}".format(utilM.FLOW_DIRECTORY))
-output ("duHast directory: {}".format(utilM.DU_HAST_DIRECTORY))
-output ("duHast test directory: {}".format(utilM.DU_HAST_TEST_DIRECTORY))
+output("Script directory: {}".format(utilM.SCRIPT_DIRECTORY), script_util.Output)
+output("flow directory: {}".format(utilM.FLOW_DIRECTORY), script_util.Output)
+output("duHast directory: {}".format(utilM.DU_HAST_DIRECTORY), script_util.Output)
+output(
+    "duHast test directory: {}".format(utilM.DU_HAST_TEST_DIRECTORY), script_util.Output
+)
 
 
-output("Writing file Data.... start")
+output("Writing file Data.... start", script_util.Output)
 result_ = write_file_list(utilM.SAMPLE_FILES_DIRECTORY)
-output("Writing file Data.... status: [{}]".format(result_))
+output("Writing file Data.... status: [{}]".format(result_), script_util.Output)
 
 # show WSM marker status
 output(
     "Wrote WSM marker:.... status: [{}]\nWrote WSM marker:.... message: \n\t{}".format(
         wsm_marker_.status, wsm_marker_.message
-    )
+    ),
+    script_util.Output,
 )
 
 # show log marker status
-output("Wrote log marker: ....[{}]".format(status_marker_))
+output("Wrote log marker: ....[{}]".format(status_marker_), script_util.Output)

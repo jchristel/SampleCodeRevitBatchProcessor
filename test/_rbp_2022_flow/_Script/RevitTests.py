@@ -31,7 +31,9 @@
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
 # get document and import revit batch processor
-from test.utils.rbp_setup import add_rbp_ref, output
+from test.utils.rbp_setup import add_rbp_ref
+from duHast.Utilities.console_out import output, output_header
+import revit_script_util
 
 # get the document from revit batch processor
 doc = add_rbp_ref()
@@ -59,20 +61,20 @@ TESTS = [
 
 
 #: execute tests
-output("Executing tests.... start")
+output_header("Executing tests.... start", revit_script_util.Output)
 
 for test in TESTS:
-    result = test(doc, True)
+    result = test(doc)
     for test_result in result.result:
         # if everything went well just provide a summary
         if(test_result[1].status):
-            output(test_result[0])
-            output(test_result[2])
+            output(test_result[0],revit_script_util.Output)
+            output(test_result[2],revit_script_util.Output)
         else:
             # something went wrong...provide details
-            output(test_result[0])
-            output(test_result[1].message)
-            output(test_result[2])
+            output(test_result[0], revit_script_util.Output)
+            output(test_result[1].message, revit_script_util.Output)
+            output(test_result[2], revit_script_util.Output)
 
 
-output("Executing tests.... finished ")
+output_header("Executing tests.... finished ", revit_script_util.Output)

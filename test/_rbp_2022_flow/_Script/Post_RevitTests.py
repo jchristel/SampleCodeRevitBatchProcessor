@@ -32,7 +32,8 @@ import utilRevitTests as utilM  # sets up all commonly used variables and path l
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils
 from duHast.Utilities import worksharing_monitor_process as wsmp
-from test.utils.output_script_util import output
+from duHast.Utilities.console_out import output_with_time_stamp as output
+
 # -------------
 # main:
 # -------------

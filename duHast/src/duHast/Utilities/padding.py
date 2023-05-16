@@ -9,7 +9,7 @@ Sample output without a time stamp:
 
 or with a time stamp:
 
-23-04-30 20_31_07 : ------------------------------header------------------------------ 
+23-04-30 20_31_07 : -----------------header------------------------ 
 """
 #
 # License:
@@ -34,10 +34,12 @@ or with a time stamp:
 #
 #
 
-from test.utils.date_time import date_time
+from duHast.Utilities import date_stamps
 
+#: how long is a padded row
+DEFAULT_PADDING_LENGTH = 90
 
-def pad_header_no_time_stamp(header_name, padding_length=70):
+def pad_header_no_time_stamp(header_name, padding_length=DEFAULT_PADDING_LENGTH):
     """
     Pads a header string to be centred in a row of dashes of a given length.
 
@@ -56,7 +58,7 @@ def pad_header_no_time_stamp(header_name, padding_length=70):
         return "\n" + header_name
 
 
-def pad_header(header_name, padding_length=70):
+def pad_header_with_time_stamp(header_name, padding_length=DEFAULT_PADDING_LENGTH):
     """
     Pads a header string to be centred in a row of dashes of a given length.
 
@@ -70,12 +72,15 @@ def pad_header(header_name, padding_length=70):
     :rtype: str
     """
 
-    if padding_length > len(header_name) + 2:
-        sides = (padding_length - len(header_name)) // 2
+    # get a time stamp
+    time_stamp = date_stamps.get_date_stamp("%y-%m-%d %H_%M_%S : ")
+    # check whether max length is not exceeded
+    if padding_length > len(header_name) + 2 + len(time_stamp):
+        sides = (padding_length - len(header_name) - len(time_stamp)) // 2
         # return the padded header text
         return (
             "\n"
-            + date_time()
+            + date_stamps.get_date_stamp("%y-%m-%d %H_%M_%S : ")
             + "-".ljust(sides, "-")
             + header_name
             + "-".ljust(sides, "-")
@@ -84,11 +89,12 @@ def pad_header(header_name, padding_length=70):
         return "\n" + header_name
 
 
-def pad_string(message, padding_length=70):
+def pad_string(message, padding_length=DEFAULT_PADDING_LENGTH):
     """
     Pads a string message to be formatted: left hand side message, right hand side status (if any)
     Maximum length 70 characters (excludes time stamp!)
     If message is longer then 70-2 characters it will be returned un-changed.
+
     :param message: The message to be padded
     :type message: str
     :param padding_length: Length of message string after padding, defaults to 70

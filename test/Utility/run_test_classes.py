@@ -28,7 +28,6 @@ This module runs all revit revision related tests .
 
 
 from test.utils.run_tests import RunTest
-from duHast.Utilities import result as res
 
 # import test classes
 from test.Utility import get_date_stamp_directory
@@ -44,8 +43,6 @@ def run_utility_tests():
          - message string
     :rtype: {str:bool,str}
     """
-
-    return_value = res.Result()
 
     # start tests
 

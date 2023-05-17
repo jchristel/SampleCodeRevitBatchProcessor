@@ -45,7 +45,7 @@ class Test(base.Base):
     def test(self):
         return True, ""
 
-    def call_with_temp_directory(func):
+    def call_with_temp_directory(self,func):
         """
         Utility function setting up a temp directory and calling pass in function with that directory as an argument.
 
@@ -61,7 +61,7 @@ class Test(base.Base):
             flag, message = func(tmp_dir)
         return flag, message
 
-    def write_test_files(file_names, tmp_dir):
+    def write_test_files(self, file_names, tmp_dir):
         """
         Utility function writing out test files into given directory
 
@@ -76,7 +76,7 @@ class Test(base.Base):
             with open(file_path, "w") as f1:
                 f1.write("test content")
 
-    def write_file_with_data(file_name, tmp_dir, data):
+    def write_file_with_data(self,file_name, tmp_dir, data):
         """
         Function writing out a text file with given data.
 
@@ -92,3 +92,4 @@ class Test(base.Base):
             for d in data:
                 f.write(d + "\n")
             f.close()
+    

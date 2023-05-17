@@ -43,10 +43,7 @@ Write-ToLogAndConsole -Message "-"
 
 
 # start running non revit tests
-Write-ToLogAndConsole -Message "runnin non tests" -IsHeader $True
-
-# start batch processor
-Write-ToLogAndConsole -Message "runnin Revit tests" -IsHeader $True
+Write-ToLogAndConsole -Message "runnin non Revit tests" -IsHeader $True
 # use start warpper function to capture output from script
 $process_file_selection = start-wrapper -path "$iron_python_3_4_path" -arguments $_pre_step_one_script
 $exitCode = $process_file_selection.ExitCode
@@ -56,6 +53,9 @@ if ($exitCode -eq 0) {
 
     # start batch processor
     Write-ToLogAndConsole -Message "Non revit tests completed successfully"
+
+    # start batch processor
+    Write-ToLogAndConsole -Message "runnin Revit tests" -IsHeader $True
     # start batch processor sessions with individual settings scripts
     start-batchProcessor -settings_directory $settings_directory -settings_file_names $settings_step_one
         

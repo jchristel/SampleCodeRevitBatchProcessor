@@ -1,18 +1,22 @@
-import sys, os
+import os
+from datetime import datetime
 
-#: path to samples library in repository
+
+import sys
+
 SAMPLES_PATH = (
     r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src"
 )
-#: path to test directory in repository
-TEST_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path += [SAMPLES_PATH, TEST_PATH]
+sys.path += [SAMPLES_PATH]
 
-from Utility.temp_files_dirs import write_test_files, call_with_temp_directory
-
-from duHast.Utilities.directory_io import (
-    directory_exists,
+'''
+from duHast.Utilities.date_stamps import (
+    get_date_stamped_file_name,
+    get_file_date_stamp,
+    get_folder_date_stamp,
 )
+'''
+
 
 def run_tests(output):
     """
@@ -28,22 +32,13 @@ def run_tests(output):
 
     # lists of tests to be executed
     tests = [
-        
-    ]
-
-    tests_temp_files = [
-        
+        ["test_get_date_stamped_file_name", test_get_date_stamped_file_name],
+        ["test_get_folder_date_stamp", test_get_folder_date_stamp],
     ]
 
     # execute tests
     for test in tests:
         flag, message = test[1]()
-        all_tests = all_tests & flag
-        output(test[0], flag, message)
-
-    # exec tests requiring a temp directory
-    for test in tests_temp_files:
-        flag, message = call_with_temp_directory(test[1])
         all_tests = all_tests & flag
         output(test[0], flag, message)
 

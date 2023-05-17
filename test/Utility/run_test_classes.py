@@ -30,10 +30,10 @@ This module runs all revit revision related tests .
 from test.utils.run_tests import RunTest
 
 # import test classes
-from test.Utility import get_date_stamp_directory
+from test.Utility import get_date_stamp_directory, get_date_stamp_file, file_csv_read
 
 
-def run_utility_tests():
+def run_tests():
     """
     Runs all utility related tests.
 
@@ -47,7 +47,9 @@ def run_utility_tests():
     # start tests
 
     run_tests = [
-        ["Directory Get Dated Stamp", get_date_stamp_directory.GetDateStampDirectory],
+        ["Directory Get Date Stamp", get_date_stamp_directory.GetDateStampDirectory],
+        ["File Get Date Stamp", get_date_stamp_file.GetDateStampFile],
+        ["Read CSV File", file_csv_read.FileCSVRead],
     ]
 
     runner = RunTest(run_tests)

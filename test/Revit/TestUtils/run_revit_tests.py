@@ -26,9 +26,9 @@ This module contains revit test base class .
 #
 #
 
-from test.utils.padding import pad_header_no_time_stamp, pad_string
 from duHast.Utilities import result as res
 from duHast.Utilities import base
+from duHast.Utilities.padding import pad_header_no_time_stamp, pad_string
 
 
 class RevitRunTest(base.Base):

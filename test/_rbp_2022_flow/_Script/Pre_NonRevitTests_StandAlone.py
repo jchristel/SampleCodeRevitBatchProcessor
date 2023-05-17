@@ -40,13 +40,58 @@ Module executed as a pre process script outside the batch processor environment.
 # default file path locations
 # --------------------------
 
-import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 import sys
+import datetime
+import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+
+from test.Utility import run_test_classes as run_util_tests
+
+def time_stamp():
+        """
+        2023-05-17 17:36:50
+        """
+        d = datetime.datetime.now()
+        return d.strftime('%Y-%m-%d %H:%M:%S : \t')
 
 # -------------
 # my code here:
 # -------------
 
-if (True):
-    # all is well...
+#: tests to be executed
+all_tests = [
+        run_util_tests,
+    ]
+
+#: will contain the outcome of all tests
+all_results = []
+
+
+# run tests
+for test_result in all_tests:
+    result = test_result.run_tests()
+    all_results.append(result)
+
+#: overall tests outcome: true of all tests successfully executed, otherwise False
+its_all_good = True
+
+# print("all_results \n",all_results)
+# check out what came back
+for batch_result in all_results:
+    # print('batch result\n', batch_result)
+    for result in batch_result:
+        # print('result\n', result)
+        # print(batch_result[result])
+        its_all_good = its_all_good & batch_result[result][0]
+        # write to log
+        if(batch_result[result][0] == False):
+            print("{}Test: {} failed with message {}".format(time_stamp(), result, batch_result[result][1]))
+        else:
+            print("{}Test: {} [{}]".format(time_stamp(), result, batch_result[result][0]))
+        
+
+# pass any error back to caller in powershell script
+if(its_all_good):
+    #sys.exit(1)
     sys.exit(0)
+else:
+    sys.exit(1)

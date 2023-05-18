@@ -41,7 +41,7 @@ from duHast.Utilities import result as res
 
 
 class RevitTest(base.Base):
-    def __init__(self, doc, requires_temp_dir=False):
+    def __init__(self, doc, test_name, requires_temp_dir=False):
         """
         Class constructor.
 
@@ -52,6 +52,7 @@ class RevitTest(base.Base):
         # initialise base class
         super(RevitTest, self).__init__()
 
+        self.test_name = test_name
         self.document = doc
         # set up document revit version
         self.revit_version_number = get_revit_version_number(doc)

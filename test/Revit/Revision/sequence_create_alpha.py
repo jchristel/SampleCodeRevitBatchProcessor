@@ -35,7 +35,7 @@ from duHast.Utilities import result as res
 class CreateAlphaSequence(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(CreateAlphaSequence, self).__init__(doc=doc)
+        super(CreateAlphaSequence, self).__init__(doc=doc, test_name="create_revision_alpha_seq")
 
     def test(self):
         """
@@ -62,8 +62,8 @@ class CreateAlphaSequence(revit_test.RevitTest):
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "An exception occurred in test create revision alpha seq {}".format(
-                            e
+                        "An exception occurred in test {}: {}".format(
+                            self.test_name,e
                         ),
                     )
                 return action_return_value
@@ -73,8 +73,8 @@ class CreateAlphaSequence(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in test create revision alpha seq {}".format(
-                    e
+                "An exception occurred in test {}: {}".format(
+                    self.test_name,e
                 ),
             )
 

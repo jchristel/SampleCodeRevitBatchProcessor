@@ -38,7 +38,7 @@ import Autodesk.Revit.DB as rdb
 class GetDesignOptions(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetDesignOptions, self).__init__(doc=doc)
+        super(GetDesignOptions, self).__init__(doc=doc, test_name="get_design_options")
 
     def _strip_primary(self, option_name):
         """
@@ -85,8 +85,8 @@ class GetDesignOptions(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_design_options {}".format(
-                    e
+                "An exception occurred in function {}: {}".format(
+                    self.test_name,e
                 ),
             )
 

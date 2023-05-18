@@ -37,7 +37,7 @@ import Autodesk.Revit.DB as rdb
 class GetViewTypes(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetViewTypes, self).__init__(doc=doc)
+        super(GetViewTypes, self).__init__(doc=doc, test_name="get_view_types")
 
     def test(self):
         """
@@ -88,7 +88,7 @@ class GetViewTypes(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_view_types {}".format(e),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

@@ -36,7 +36,7 @@ from test.Revit.Walls.walls_report import REVIT_TEST_FILE_NAME
 class GetWallReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetWallReportData, self).__init__(doc=doc)
+        super(GetWallReportData, self).__init__(doc=doc, test_name="get_wall_report_data")
 
     def test(self):
         """
@@ -80,8 +80,8 @@ class GetWallReportData(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_wall_report_data {}".format(
-                    e
+                "An exception occurred in function {}: {}".format(
+                    self.test_name, e
                 ),
             )
 

@@ -38,7 +38,7 @@ import Autodesk.Revit.DB as rdb
 class GetDesignSets(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetDesignSets, self).__init__(doc=doc)
+        super(GetDesignSets, self).__init__(doc=doc, test_name="get_design_sets")
 
     def test(self):
         """
@@ -66,7 +66,7 @@ class GetDesignSets(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_design_sets {}".format(e),
+                "An exception occurred in function {}: {}".format(self.test_name,e),
             )
 
         return return_value

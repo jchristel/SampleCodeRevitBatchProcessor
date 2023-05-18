@@ -36,7 +36,7 @@ from duHast.Utilities import result as res
 class ChangeRevSeq(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ChangeRevSeq, self).__init__(doc=doc)
+        super(ChangeRevSeq, self).__init__(doc=doc, test_name="change_revision_sequence_number")
 
     def test(self):
         """
@@ -121,8 +121,8 @@ class ChangeRevSeq(revit_test.RevitTest):
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "An exception occurred in function test_change_revision_sequence_number {}".format(
-                            e
+                        "An exception occurred in function {}: {}".format(
+                            self.test_name, e
                         ),
                     )
                 return action_return_value
@@ -132,8 +132,8 @@ class ChangeRevSeq(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_change_revision_sequence_number {}".format(
-                    e
+                "An exception occurred in function {}: {}".format(
+                    self.test_name,e
                 ),
             )
 

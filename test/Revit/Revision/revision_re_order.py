@@ -44,7 +44,7 @@ clr.ImportExtensions(Linq)
 class ChangeRevOrder(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ChangeRevOrder, self).__init__(doc=doc)
+        super(ChangeRevOrder, self).__init__(doc=doc, test_name="re_order_revisions")
 
     def _get_id_integers_from_list(self, my_list):
         """
@@ -122,7 +122,7 @@ class ChangeRevOrder(revit_test.RevitTest):
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "An exception occurred in re-order revisions {}".format(e),
+                        "An exception occurred in {}: {}".format(self.test_name, e),
                     )
                 return action_return_value
 
@@ -131,8 +131,8 @@ class ChangeRevOrder(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_change_revision_sequence_number {}".format(
-                    e
+                "An exception occurred in function {}: {}".format(
+                    self.test_name,e
                 ),
             )
 

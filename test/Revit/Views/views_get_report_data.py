@@ -36,7 +36,7 @@ from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME
 class GetViewReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetViewReportData, self).__init__(doc=doc)
+        super(GetViewReportData, self).__init__(doc=doc, test_name="get_views_report_data")
 
     def test(self):
         """
@@ -124,8 +124,8 @@ class GetViewReportData(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_views_report_data {}".format(
-                    e
+                "An exception occurred in function {}: {}".format(
+                    self.test_name, e
                 ),
             )
 

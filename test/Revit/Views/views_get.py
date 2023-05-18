@@ -37,7 +37,7 @@ import Autodesk.Revit.DB as rdb
 class GetViews(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetViews, self).__init__(doc=doc)
+        super(GetViews, self).__init__(doc=doc, test_name="get_views_in_model")
 
     def test(self):
         """
@@ -87,7 +87,7 @@ class GetViews(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test_get_views_in_model {}".format(e),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

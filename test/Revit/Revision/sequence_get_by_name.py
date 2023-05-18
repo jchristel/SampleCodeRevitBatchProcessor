@@ -38,7 +38,7 @@ from duHast.Utilities import result as res
 class GetSequenceByName(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetSequenceByName, self).__init__(doc=doc)
+        super(GetSequenceByName, self).__init__(doc=doc, test_name="get_revision_seq_of_name")
 
     def test(self):
         """
@@ -76,8 +76,8 @@ class GetSequenceByName(revit_test.RevitTest):
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "An exception occurred in test get revision seq by name{}".format(
-                            e
+                        "An exception occurred in test {}: {}".format(
+                            self.test_name,e
                         ),
                     )
                 return action_return_value
@@ -87,7 +87,7 @@ class GetSequenceByName(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in test get revision seq by name {}".format(e),
+                "An exception occurred in test {}: {}".format(self.test_name,e),
             )
 
         return return_value

@@ -38,7 +38,7 @@ from duHast.Utilities import result as res
 class MarkIssuedById(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(MarkIssuedById, self).__init__(doc=doc)
+        super(MarkIssuedById, self).__init__(doc=doc, test_name="mark_revision_as_issued_by_revision_id")
 
     def test(self):
         """
@@ -77,8 +77,8 @@ class MarkIssuedById(revit_test.RevitTest):
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "An exception occurred in test mark revision as issued by id {}".format(
-                            e
+                        "An exception occurred in test {}: {}".format(
+                            self.test_name,e
                         ),
                     )
                 return action_return_value
@@ -88,8 +88,8 @@ class MarkIssuedById(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function test mark revision as issued by id {}".format(
-                    e
+                "An exception occurred in function test {}: {}".format(
+                    self.test_name,e
                 ),
             )
 

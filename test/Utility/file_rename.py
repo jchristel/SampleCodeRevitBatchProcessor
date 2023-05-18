@@ -67,7 +67,7 @@ class FileRename(test.Test):
                 flag_action = True
                 message_action = ""
                 try:
-                    self.write_test_files(test_files,tmp_dir)
+                    self.write_test_files(test_file_to_be_written,tmp_dir)
                     
                     # test valid scenario
                     result = rename_file(

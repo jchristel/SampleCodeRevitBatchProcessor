@@ -71,7 +71,7 @@ class FlattenDictionary(test.Test):
             # Test flattening a dictionary with nested lists
             nested_dict = {"a": {"b": {"c": [1, 2, 3], "d": [4, 5]}}}
             result = flatten(nested_dict)
-            expected = {"a_b_c": [1, 2, 3], "a_b_d": [4, 5]}
+            expected_result = {"a_b_c": [1, 2, 3], "a_b_d": [4, 5]}
             message = message + "\n" + (" {} vs {}".format(result, expected_result))
             assert result == expected_result
 

@@ -33,11 +33,14 @@ Module running Revit related tests as the main script within batch processor flo
 # --------------------------
 # Imports
 # --------------------------
+import os.path
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
 # get document and import revit batch processor
 from test.utils.rbp_setup import add_rbp_ref
 from duHast.Utilities.console_out import output, output_header
+from duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_io import get_file_name_without_ext
 import revit_script_util
 
 # get the document from revit batch processor
@@ -51,7 +54,9 @@ DEBUG = False
 # -------------
 
 #: import test runners
-from test.Revit.Common.run_test_classes import run_design_set_options_tests as run_des_tests
+from test.Revit.Common.run_test_classes import (
+    run_design_set_options_tests as run_des_tests,
+)
 from test.Revit.Revision.run_test_classes import run_revision_tests as run_rev_tests
 from test.Revit.Views.run_test_classes import run_views_tests as run_view_tests
 from test.Revit.Walls.run_test_classes import run_walls_tests as run_wall_tests
@@ -64,22 +69,29 @@ TESTS = [
     run_wall_tests,
 ]
 
-
 #: execute tests
 output_header("Executing tests.... start", revit_script_util.Output)
+#: test log file
+file_name = os.path.join(
+    utilM.OUTPUT_FOLDER, get_file_name_without_ext(doc.Title) + ".csv"
+)
+#: overwrite previous test date at log file open
+write_mode = "w"
 
 for test in TESTS:
     result = test(doc)
     for test_result in result.result:
-        # if everything went well just provide a summary
-        if(test_result[1].status):
-            output(test_result[0],revit_script_util.Output)
-            output(test_result[2],revit_script_util.Output)
-        else:
-            # something went wrong...provide details
-            output(test_result[0], revit_script_util.Output)
-            output(test_result[1].message, revit_script_util.Output)
-            output(test_result[2], revit_script_util.Output)
-
+        # write results to file
+        write_report_data_as_csv(
+            file_name,
+            "",
+            [[test_result[3], test_result[4], test_result[1].message]],
+            write_mode,
+        )
+        # provide short summary only...more details in log file
+        output(test_result[0], revit_script_util.Output)
+        output(test_result[2], revit_script_util.Output)
+        # make sure all subsequent data is appended to log file
+        write_mode = "a"
 
 output_header("Executing tests.... finished ", revit_script_util.Output)

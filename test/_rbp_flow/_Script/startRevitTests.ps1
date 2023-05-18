@@ -48,7 +48,7 @@ Write-ToLogAndConsole -Message "post step one script file path: $_post_step_one_
 Write-ToLogAndConsole -Message "-"
 
 # start running non revit tests
-Write-ToLogAndConsole -Message "runnin non Revit tests" -IsHeader $True
+Write-ToLogAndConsole -Message "running non Revit tests" -IsHeader $True
 # use start warpper function to capture output from script
 $process_non_revit_tests = start-wrapper -path "$iron_python_3_4_path" -arguments $_pre_step_one_script
 $exitCode = $process_non_revit_tests.ExitCode
@@ -73,7 +73,7 @@ if ($exitCode -eq 0) {
 
     if($write_task_files -eq 0){
         # start batch processor sessions
-        Write-ToLogAndConsole -Message "runnin Revit tests" -IsHeader $True
+        Write-ToLogAndConsole -Message "running Revit tests" -IsHeader $True
 
         # create new array from 2D array containing just the settings file names
         $settingsFilesArray = @()

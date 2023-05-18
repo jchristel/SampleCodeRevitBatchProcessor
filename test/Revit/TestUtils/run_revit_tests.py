@@ -57,17 +57,20 @@ class RevitRunTest(base.Base):
 
         return_value = res.Result()
 
-        for test in self.tests:
-            test_class = test[1](doc)
+        for revit_test in self.tests:
+            test_class = revit_test[1](doc)
             result_test = test_class.test()
             return_value.update(result_test)
+            print('test0',revit_test[0])
             return_value.result.append(
                 [
-                    pad_header_no_time_stamp(test[0]),
+                    pad_header_no_time_stamp(revit_test[0]),
                     result_test,
                     pad_string(
-                        "{} completed status [{}]".format(test[0], result_test.status)
+                        "{} completed status [{}]".format(revit_test[0], result_test.status)
                     ),
+                    revit_test[0],
+                    str(result_test.status),
                 ]
             )
 

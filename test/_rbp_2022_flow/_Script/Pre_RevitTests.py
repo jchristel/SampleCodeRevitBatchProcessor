@@ -106,11 +106,11 @@ output(
     "duHast test directory: {}".format(utilM.DU_HAST_TEST_DIRECTORY), script_util.Output
 )
 
-
+'''
 output("Writing file Data.... start", script_util.Output)
 result_ = write_file_list(utilM.SAMPLE_FILES_DIRECTORY)
 output("Writing file Data.... status: [{}]".format(result_), script_util.Output)
-
+'''
 # show WSM marker status
 output(
     "Wrote WSM marker:.... status: [{}]\nWrote WSM marker:.... message: \n\t{}".format(

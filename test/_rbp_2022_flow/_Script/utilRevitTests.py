@@ -56,12 +56,6 @@ LOG_MARKER_DIRECTORY = FLOW_DIRECTORY + r"\_LogMarker"
 # task list directory
 TASK_LIST_DIRECTORY = FLOW_DIRECTORY + r"\_TaskList"
 
-# task file name
-TASK_FILE_NAME = "Tasklist_0.txt"
-
-# fully qualified task file path
-FULL_TASK_FILE_PATH = os.path.join(TASK_LIST_DIRECTORY, TASK_FILE_NAME)
-
 # sample files directory
 SAMPLE_FILES_DIRECTORY = FLOW_DIRECTORY + r"\_sampleFiles"
 
@@ -73,3 +67,7 @@ DEBUG_REVIT_FILE_NAME = r"C:\temp\Test_Files.rvt"
 
 # splash sceen sheet name
 SPLASH_SCREEN_SHEET_NAME = "SPLASH SCREEN"
+
+#: revit version used in determining which revit files to add to task list
+#: Revit files will have revit version number applicable to them in their file name
+DEFAULT_REVIT_VERSION = "Revit_2022"

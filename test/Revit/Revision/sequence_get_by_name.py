@@ -46,8 +46,21 @@ class GetSequenceByName(revit_test.RevitTest):
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :return: True if all tests pass, otherwise False
-        :rtype: bool
+        :param test_name: The test name.
+        :type test_name: str
+        
+        :return:
+            Result class instance.
+                - .result = True if test past successfully, otherwise False
+                - .message will contain result(s) vs expected result(s)
+                - . result (empty list)
+
+                on exception:
+
+                - .result Will be False
+                - .message will contain exception message.
+                - . result (empty list)
+        :rtype: :class:`.Result`
         """
 
         return_value = res.Result()

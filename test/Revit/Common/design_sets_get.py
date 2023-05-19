@@ -46,8 +46,21 @@ class GetDesignSets(revit_test.RevitTest):
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :return: True if design options where retrieved successfully, otherwise False
-        :rtype: Boolean
+        :param test_name: The test name.
+        :type test_name: str
+
+        :return:
+            Result class instance.
+                - .result = True if design sets where retrieved successfully, otherwise False.
+                - .message will contain result(s) vs expected result(s)
+                - . result (empty list)
+
+                on exception:
+
+                - .result Will be False
+                - .message will contain exception message.
+                - . result (empty list)
+        :rtype: :class:`.Result`
         """
 
         return_value = res.Result()

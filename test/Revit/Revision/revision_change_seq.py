@@ -44,9 +44,21 @@ class ChangeRevSeq(revit_test.RevitTest):
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
-        :raises ValueError: Any exception occurred in creating a revision will be re-raised
-        :return: True if revision was created successfully, otherwise False
-        :rtype: Boolean
+        :param test_name: The test name.
+        :type test_name: str
+
+        :return:
+            Result class instance.
+                - .result = True if revision sequence was changed successfully, otherwise False
+                - .message will contain result(s) vs expected result(s)
+                - . result (empty list)
+
+                on exception:
+
+                - .result Will be False
+                - .message will contain exception message.
+                - . result (empty list)
+        :rtype: :class:`.Result`
         """
 
         return_value = res.Result()

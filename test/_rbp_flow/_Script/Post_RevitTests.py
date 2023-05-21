@@ -40,16 +40,64 @@ Module containing post processing script which runs outside the revit batch proc
 # Imports
 # --------------------------
 
+import sys
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 from duHast.Utilities.console_out import output_with_time_stamp as output
+from duHast.Utilities.files_get import (
+    get_files_from_directory_walker_with_filters_simple,
+)
+from duHast.Utilities.files_csv import read_csv_file
+from duHast.Utilities.utility import parse_string_to_bool
+
+
+# -------------
+# my code:
+# -------------
+
+
+def check_failed_tests(rows):
+    """
+    Checks whether any row from log files contains a false as test result. 
+
+    Note: Field with index 1 contains test result as boolean ( in string format)
+
+    :param rows: Rows from a log file
+    :type rows: [[str]]
+    :return: True if all tests past, otherwise False
+    :rtype: Boolean
+    """
+    for row in rows:
+        if parse_string_to_bool(row[1]) == False:
+            return False
+    return True
+
+
+def read_revit_test_log_files(log_files):
+    """
+    Checks all revit test log files in /Output directory for failed tests.
+
+    :param log_files: Directory containing revit test log files
+    :type log_files: str
+    :return: True if all tests recorded in log files past, otherwise False
+    :rtype: bool
+    """
+    overall_results = True
+    for log_file in log_files:
+        rows = read_csv_file(log_file)
+        log_result = check_failed_tests(rows=rows)
+        output("{}: [{}]".format(log_file, log_result))
+        overall_results = overall_results & log_result
+    return overall_results
+
 
 # -------------
 # main:
 # -------------
+
 
 PROCESSING_RESULTS = logUtils.process_log_files(utilM.LOG_MARKER_DIRECTORY)
 output("Log results.... message(s): \n[{}]".format(PROCESSING_RESULTS.status))
@@ -65,3 +113,16 @@ output(
         cleanUpWSMFiles_.status, cleanUpWSMFiles_.message
     )
 )
+
+# read logs and check for any False flags indicating a failed test
+# get log files
+revit_test_log_files = get_files_from_directory_walker_with_filters_simple(
+    utilM.OUTPUT_FOLDER, ".csv"
+)
+did_all_revit_test_pass = read_revit_test_log_files(revit_test_log_files)
+
+# pass the results back to the calling powershell script
+if (did_all_revit_test_pass):
+    sys.exit(0)
+else:
+    sys.exit(1)

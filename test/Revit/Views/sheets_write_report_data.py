@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit views report data tests . 
+This module contains revit sheets report data tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -25,23 +25,22 @@ This module contains revit views report data tests .
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-import os
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Views.Reporting.views_report import write_views_data
+from duHast.Revit.Views.Reporting.sheets_report import write_sheet_data
 from duHast.Utilities import result as res
 
-from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME, OUTPUT_FILE_NAME
+from test.Revit.Views.sheets_report import REVIT_TEST_FILE_NAME, OUTPUT_FILE_NAME
 
 
-class WriteViewReportData(revit_test.RevitTest):
+class WriteSheetReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(WriteViewReportData, self).__init__(doc=doc, test_name="write_views_data", requires_temp_dir=True)
+        super(WriteSheetReportData, self).__init__(doc=doc, test_name="Write all sheet data", requires_temp_dir=True)
 
     def test(self):
         """
-        Write all view data test.
+        Write all sheet data test.
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -50,7 +49,7 @@ class WriteViewReportData(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if view report data was written to file successfully, otherwise False
+                - .result = True if sheets report data was written to file successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -66,7 +65,7 @@ class WriteViewReportData(revit_test.RevitTest):
 
         try:
             # get sheet report headers
-            result = write_views_data(
+            result = write_sheet_data(
                 self.document,
                 self.get_full_file_path(OUTPUT_FILE_NAME),
                 REVIT_TEST_FILE_NAME,
@@ -81,108 +80,63 @@ class WriteViewReportData(revit_test.RevitTest):
                 [
                     "HOSTFILE",
                     "Id",
-                    "View Template",
-                    "View Name",
                     "Dependency",
-                    "Title on Sheet",
-                    "View Scale",
-                    "Scale Value    1:",
-                    "Display Model",
-                    "Detail Level",
-                    "Parts Visibility",
                     "Referencing Sheet",
                     "Referencing Detail",
-                    "Crop View",
-                    "Crop Region Visible",
-                    "Annotation Crop",
                     "Visibility/Graphics Overrides",
-                    "Graphic Display Options",
-                    "Range: Base Level",
-                    "Range: Top Level",
-                    "Underlay Orientation",
-                    "View Range",
-                    "Associated Level",
-                    "Orientation",
-                    "Phase Filter",
-                    "Phase",
-                    "Wall Join Display",
-                    "Scope Box",
-                    "Discipline",
-                    "Show Hidden Lines",
-                    "Color Scheme Location",
-                    "Color Scheme",
-                    "Default Analysis Display Style",
-                    "Depth Clipping",
-                    "Visible In Option",
+                    "Current Revision Issued",
+                    "Current Revision Issued By",
+                    "Current Revision Issued To",
+                    "Current Revision Date",
+                    "Current Revision Description",
+                    "Current Revision",
+                    "File Path",
+                    "Approved By",
+                    "Designed By",
+                    "Checked By",
+                    "Drawn By",
+                    "Scale",
+                    "Sheet Number",
+                    "Sheet Name",
+                    "Sheet Issue Date",
                     "Design Stage",
-                    "Building",
                     "View Type",
                     "None",
-                    "Sun Path",
+                    "Appears In Sheet List",
+                    "Revisions on Sheet",
+                    "Guide Grid",
                 ],
                 [
                     REVIT_TEST_FILE_NAME,
-                    "21930",
-                    "-1",
-                    "TEST",
+                    "21924",
                     "Independent",
                     "None",
-                    " 1 : 1",
-                    "1",
-                    "Medium",
-                    "None",
                     "None",
                     "Invalid storage type: (NONE)",
-                    "Architectural",
-                    "TEST",
-                    "None",
-                    "TEST",
-                    "21935",
-                    "Hidden Line",
-                ],
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "970427",
-                    "-1",
-                    "Level 00",
-                    "Independent",
-                    "None",
-                    " 1 : 100",
-                    "100",
-                    "Normal",
-                    "Coarse",
-                    "Show Original",
-                    "None",
-                    "None",
                     "No",
-                    "No",
-                    "No",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "-1",
-                    "-1",
-                    "Look down",
-                    "Invalid storage type: (NONE)",
-                    "Level 00",
-                    "Project North",
-                    "2029",
-                    "3",
-                    "Clean all wall joins",
-                    "-1",
-                    "Architectural",
-                    "By Discipline",
-                    "Background",
-                    "Invalid storage type: (NONE)",
-                    "-1",
-                    "None",
-                    "-1",
                     "None",
                     "None",
                     "None",
-                    "970435",
-                    "No",
+                    "None",
+                    "None",
+                    "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\Revit\\TestFiles\\Revit_2022.rvt",
+                    "Approver",
+                    "Designer",
+                    "Checker",
+                    "Author",
+                    " ",
+                    "SPLASH",
+                    "SPLASH",
+                    "None",
+                    "SPLASH",
+                    "None",
+                    "21928",
+                    "Yes",
+                    "Invalid storage type: (NONE)",
+                    "-1",
                 ],
             ]
+            
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(
                 self.get_full_file_path(OUTPUT_FILE_NAME), expected_result_file_read

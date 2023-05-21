@@ -43,6 +43,16 @@ from test.Revit.Views import views_get_report_data_filtered
 from test.Revit.Views import views_write_report_data
 from test.Revit.Views import views_write_report_data_filtered
 
+from test.Revit.Views import schedules_get_report_data
+from test.Revit.Views import schedules_get_report_data_filtered
+from test.Revit.Views import schedules_write_report_data
+from test.Revit.Views import schedules_write_report_data_filtered
+
+from test.Revit.Views import sheets_get_report_data
+from test.Revit.Views import sheets_get_report_data_filtered
+from test.Revit.Views import sheets_write_report_data
+from test.Revit.Views import sheets_write_report_data_filtered
+
 
 def run_views_tests(doc):
     """
@@ -78,6 +88,26 @@ def run_views_tests(doc):
         [
             "Write Views Report Data Filtered",
             views_write_report_data_filtered.WriteViewReportDataFiltered,
+        ],
+        ["Get Schedules Report Data", schedules_get_report_data.GetScheduleReportData],
+        [
+            "Get Schedules Report Data Filtered",
+            schedules_get_report_data_filtered.GetScheduleReportDataFiltered,
+        ],
+        ["Write Schedules Report Data", schedules_write_report_data.WriteScheduleReportData],
+        [
+            "Write Schedules Report Data Filtered",
+            schedules_write_report_data_filtered.WriteScheduleReportDataFiltered
+        ],
+        ["Get Sheets Report Data", sheets_get_report_data.GetSheetReportData],
+        [
+            "Get Sheets Report Data Filtered",
+            sheets_get_report_data_filtered.GetSheetReportDataFiltered,
+        ],
+        ["Write Sheets Report Data", sheets_write_report_data.WriteSheetReportData],
+        [
+            "Write Sheets Report Data Filtered",
+            sheets_write_report_data_filtered.WriteSheetReportDataFiltered
         ],
     ]
 

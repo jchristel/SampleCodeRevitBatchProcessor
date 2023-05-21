@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit views report data tests . 
+This module contains revit schedule report data tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,17 +27,17 @@ This module contains revit views report data tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Views.Reporting.views_report import get_views_report_data
+from duHast.Revit.Views.Reporting.schedules_report import get_schedules_report_data
 from duHast.Utilities import result as res
 
-from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME
+from test.Revit.Views.schedules_report import REVIT_TEST_FILE_NAME
 
 
-class GetViewReportData(revit_test.RevitTest):
+class GetScheduleReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetViewReportData, self).__init__(
-            doc=doc, test_name="get_views_report_data"
+        super(GetScheduleReportData, self).__init__(
+            doc=doc, test_name="get schedules report data"
         )
 
     def test(self):
@@ -51,7 +51,7 @@ class GetViewReportData(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if view report data was retrieved successfully, otherwise False
+                - .result = True if schedule report data was retrieved successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -66,70 +66,26 @@ class GetViewReportData(revit_test.RevitTest):
         return_value = res.Result()
         try:
             # get sheet report headers
-            result = get_views_report_data(self.document, REVIT_TEST_FILE_NAME)
+            result = get_schedules_report_data(self.document, REVIT_TEST_FILE_NAME)
+            
             expected_result = [
                 [
                     REVIT_TEST_FILE_NAME,
-                    "970427",
+                    "970420",
                     "-1",
-                    "Level 00",
+                    "Wall Schedule",
                     "Independent",
-                    "None",
-                    " 1 : 100",
-                    "100",
-                    "Normal",
-                    "Coarse",
-                    "Show Original",
-                    "None",
-                    "None",
-                    "No",
-                    "No",
-                    "No",
                     "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "-1",
-                    "-1",
-                    "Look down",
-                    "Invalid storage type: (NONE)",
-                    "Level 00",
-                    "Project North",
                     "2029",
                     "3",
-                    "Clean all wall joins",
-                    "-1",
-                    "Architectural",
-                    "By Discipline",
-                    "Background",
                     "Invalid storage type: (NONE)",
-                    "-1",
-                    "None",
-                    "-1",
-                    "None",
-                    "None",
-                    "None",
-                    "970435",
-                    "No",
-                ],
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "21930",
-                    "-1",
-                    "TEST",
-                    "Independent",
-                    "None",
-                    " 1 : 1",
-                    "1",
-                    "Medium",
-                    "None",
-                    "None",
                     "Invalid storage type: (NONE)",
-                    "Architectural",
-                    "TEST",
+                    "Invalid storage type: (NONE)",
+                    "Invalid storage type: (NONE)",
+                    "Invalid storage type: (NONE)",
                     "None",
-                    "TEST",
-                    "21935",
-                    "Hidden Line",
-                ],
+                    "-1",
+                ]
             ]
             return_value.append_message = " result: {} \n expected: {} ".format(
                 result, expected_result

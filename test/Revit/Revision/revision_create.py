@@ -66,8 +66,10 @@ class CreateRevision(revit_test.RevitTest):
             test_data = None
             if self.revit_version_number <= 2022:
                 test_data = TEST_DATA_2022
+                return_value.append_message("Using test data for Revit 2022")
             else:
                 test_data = TEST_DATA_2023
+                return_value.append_message("Using test data for Revit 2023")
 
             # action to be executed in a transaction group so it can be rolled back at end of test
             def action(doc):
@@ -105,7 +107,7 @@ class CreateRevision(revit_test.RevitTest):
                     )
                 return action_return_value
 
-            return_value = self.in_transaction_group(action)
+            return_value.update(self.in_transaction_group(action))
         except Exception as e:
             return_value.update_sep(
                 False,

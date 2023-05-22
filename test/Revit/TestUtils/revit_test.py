@@ -54,11 +54,17 @@ class RevitTest(base.Base):
 
         self.test_name = test_name
         self.document = doc
+        # doc.Title does not include the file extension
+        self.file_name_without_extension = os.path.basename(doc.Title)
+        self.file_name = os.path.basename(doc.PathName)
         # set up document revit version
         self.revit_version_number = get_revit_version_number(doc)
-        # set up a temp directory if required
+        # set up a temp directory if required in directory sharing the file name
+        # this is to ensure a unique sub directory to avoid overlap between different
+        # test running concurrently
+        doc_file_name = self.file_name_without_extension.replace(' ', '_')
         if requires_temp_dir:
-            self.tmp_dir = tempfile.mkdtemp()
+            self.tmp_dir = tempfile.mkdtemp(prefix=doc_file_name)
         else:
             self.tmp_dir = None
 

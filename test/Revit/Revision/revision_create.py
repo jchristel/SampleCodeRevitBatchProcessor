@@ -45,7 +45,7 @@ class CreateRevision(revit_test.RevitTest):
         :type doc: Autodesk.Revit.DB.Document
         :param test_name: The test name.
         :type test_name: str
-        
+
         :return:
             Result class instance.
                 - .result = True if revision was created successfully, otherwise False
@@ -76,6 +76,7 @@ class CreateRevision(revit_test.RevitTest):
                 action_return_value = res.Result()
                 try:
                     create_rev_value = create_revision(doc, test_data)
+                    # return_value.update(create_rev_value)
                     assert create_rev_value.status == True
                     assert len(create_rev_value.result) == 1
                     assert (
@@ -91,10 +92,19 @@ class CreateRevision(revit_test.RevitTest):
                         create_rev_value.result[0].Visibility
                         == test_data.tag_cloud_visibility
                     )
-                    assert (
-                        create_rev_value.result[0].NumberType
-                        == test_data.revision_number_type
-                    )
+                    # version dependent result testing required since API change with Revit 2023
+                    if self.revit_version_number <= 2022:
+                        assert (
+                            create_rev_value.result[0].NumberType
+                            == test_data.revision_number_type
+                        )
+                    else:
+                        rev_sequence = self.document.GetElement(
+                            create_rev_value.result[0].RevisionNumberingSequenceId
+                        )
+                        assert (
+                            rev_sequence.SequenceName == test_data.revision_number_type
+                        )
                     action_return_value.update_sep(
                         True, "Created revision successfully."
                     )
@@ -111,9 +121,7 @@ class CreateRevision(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name,e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

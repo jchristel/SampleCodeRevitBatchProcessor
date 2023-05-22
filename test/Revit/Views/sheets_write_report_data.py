@@ -26,6 +26,7 @@ This module contains revit sheets report data tests .
 #
 #
 
+import os
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.sheets_report import write_sheet_data
 from duHast.Utilities import result as res
@@ -121,7 +122,7 @@ class WriteSheetReportData(revit_test.RevitTest):
                     "None",
                     "None",
                     "None",
-                    "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles\\Revit_2022.rvt",
+                    os.path.join("C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles", self.file_name),
                     "Approver",
                     "Designer",
                     "Checker",

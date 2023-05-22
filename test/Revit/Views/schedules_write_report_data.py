@@ -78,42 +78,83 @@ class WriteScheduleReportData(revit_test.RevitTest):
             # check file was written
             assert result.status == True
             # double check...
-            expected_result_file_read = [
-                [
-                    "HOSTFILE",
-                    "Id",
-                    "View Template",
-                    "View Name",
-                    "Dependency",
-                    "Visibility/Graphics Overrides",
-                    "Phase Filter",
-                    "Phase",
-                    "Fields",
-                    "Filter",
-                    "Sorting/Grouping",
-                    "Formatting",
-                    "Appearance",
-                    "Design Stage",
-                    "None",
-                ],
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "970420",
-                    "-1",
-                    "Wall Schedule",
-                    "Independent",
-                    "Invalid storage type: (NONE)",
-                    "2029",
-                    "3",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "None",
-                    "-1",
-                ],
-            ]
+            expected_result_file_read = []
+            if self.revit_version_number == 2022:
+                expected_result_file_read = [
+                    [
+                        "HOSTFILE",
+                        "Id",
+                        "View Template",
+                        "View Name",
+                        "Dependency",
+                        "Visibility/Graphics Overrides",
+                        "Phase Filter",
+                        "Phase",
+                        "Fields",
+                        "Filter",
+                        "Sorting/Grouping",
+                        "Formatting",
+                        "Appearance",
+                        "Design Stage",
+                        "None",
+                    ],
+                    [
+                        REVIT_TEST_FILE_NAME,
+                        "970420",
+                        "-1",
+                        "Wall Schedule",
+                        "Independent",
+                        "Invalid storage type: (NONE)",
+                        "2029",
+                        "3",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "None",
+                        "-1",
+                    ],
+                ]
+            elif self.revit_version_number > 2022:
+                expected_result_file_read = [
+                    [
+                        "HOSTFILE",
+                        "Id",
+                        "View Template",
+                        "View Name",
+                        "Dependency",
+                        "Visibility/Graphics Overrides",
+                        "Phase Filter",
+                        "Phase",
+                        "Fields",
+                        "Filter",
+                        "Sorting/Grouping",
+                        "Formatting",
+                        "Appearance",
+                        "Export to IFC", #2023
+                        "Design Stage",
+                        "None",
+                    ],
+                    [
+                        "TEST.rvt",
+                        "970420",
+                        "-1",
+                        "Wall Schedule",
+                        "Independent",
+                        "Invalid storage type: (NONE)",
+                        "2029",
+                        "3",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "By Type", #2023
+                        "None",
+                        "-1",
+                    ],
+                ]
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(
                 self.get_full_file_path(OUTPUT_FILE_NAME), expected_result_file_read

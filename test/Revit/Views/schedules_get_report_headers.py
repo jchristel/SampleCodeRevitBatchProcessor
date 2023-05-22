@@ -65,23 +65,45 @@ class GetScheduleReportHeaders(revit_test.RevitTest):
         try:
             # get sheet report headers
             result = get_schedules_report_headers(self.document)
-            expected_result = [
-                "HOSTFILE",
-                "Id",
-                "View Template",
-                "View Name",
-                "Dependency",
-                "Visibility/Graphics Overrides",
-                "Phase Filter",
-                "Phase",
-                "Fields",
-                "Filter",
-                "Sorting/Grouping",
-                "Formatting",
-                "Appearance",
-                "Design Stage",
-                "None",
-            ]
+            expected_result = []
+            if (self.revit_version_number == 2022):
+                expected_result = [
+                    "HOSTFILE",
+                    "Id",
+                    "View Template",
+                    "View Name",
+                    "Dependency",
+                    "Visibility/Graphics Overrides",
+                    "Phase Filter",
+                    "Phase",
+                    "Fields",
+                    "Filter",
+                    "Sorting/Grouping",
+                    "Formatting",
+                    "Appearance",
+                    "Design Stage",
+                    "None",
+                ]
+            elif (self.revit_version_number > 2022):
+                expected_result = [
+                    "HOSTFILE",
+                    "Id",
+                    "View Template",
+                    "View Name",
+                    "Dependency",
+                    "Visibility/Graphics Overrides",
+                    "Phase Filter",
+                    "Phase",
+                    "Fields",
+                    "Filter",
+                    "Sorting/Grouping",
+                    "Formatting",
+                    "Appearance",
+                    "Export to IFC", #2023
+                    "Design Stage",
+                    "None",
+                ]
+
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)
             )

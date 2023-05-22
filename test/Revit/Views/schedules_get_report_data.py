@@ -67,26 +67,48 @@ class GetScheduleReportData(revit_test.RevitTest):
         try:
             # get sheet report headers
             result = get_schedules_report_data(self.document, REVIT_TEST_FILE_NAME)
-
-            expected_result = [
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "970420",
-                    "-1",
-                    "Wall Schedule",
-                    "Independent",
-                    "Invalid storage type: (NONE)",
-                    "2029",
-                    "3",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "Invalid storage type: (NONE)",
-                    "None",
-                    "-1",
+            expected_result = []
+            if (self.revit_version_number == 2022):
+                expected_result = [
+                    [
+                        REVIT_TEST_FILE_NAME,
+                        "970420",
+                        "-1",
+                        "Wall Schedule",
+                        "Independent",
+                        "Invalid storage type: (NONE)",
+                        "2029",
+                        "3",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "None",
+                        "-1",
+                    ]
                 ]
-            ]
+            elif (self.revit_version_number > 2022):
+                expected_result = [
+                    [
+                        REVIT_TEST_FILE_NAME,
+                        "970420",
+                        "-1",
+                        "Wall Schedule",
+                        "Independent",
+                        "Invalid storage type: (NONE)",
+                        "2029",
+                        "3",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "Invalid storage type: (NONE)",
+                        "By Type", #2023
+                        "None",
+                        "-1",
+                    ]
+                ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)
             )

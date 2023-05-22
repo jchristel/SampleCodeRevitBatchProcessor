@@ -27,7 +27,9 @@ This module contains revit sheets report data tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Views.Reporting.sheets_report import write_sheet_data_by_property_names
+from duHast.Revit.Views.Reporting.sheets_report import (
+    write_sheet_data_by_property_names,
+)
 from duHast.Utilities import result as res
 
 from test.Revit.Views.sheets_report import (
@@ -41,7 +43,9 @@ class WriteSheetReportDataFiltered(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
         super(WriteSheetReportDataFiltered, self).__init__(
-            doc=doc, test_name="Write sheet data with property filter", requires_temp_dir=True
+            doc=doc,
+            test_name="Write sheet data with property filter",
+            requires_temp_dir=True,
         )
 
     def test(self):
@@ -87,7 +91,7 @@ class WriteSheetReportDataFiltered(revit_test.RevitTest):
                 ["HOSTFILE", "Id", "Sheet Number", "Sheet Name", "Sheet Issue Date"],
                 [REVIT_TEST_FILE_NAME, "21924", "SPLASH", "SPLASH", "None"],
             ]
-            
+
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(
                 self.get_full_file_path(OUTPUT_FILE_NAME), expected_result_file_read
@@ -97,9 +101,7 @@ class WriteSheetReportDataFiltered(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
         finally:
             # clean up temp directory

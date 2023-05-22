@@ -27,7 +27,9 @@ This module contains revit schedules report data tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Views.Reporting.schedules_report import write_schedule_data_by_property_names
+from duHast.Revit.Views.Reporting.schedules_report import (
+    write_schedule_data_by_property_names,
+)
 from duHast.Utilities import result as res
 
 from test.Revit.Views.schedules_report import (
@@ -41,7 +43,9 @@ class WriteScheduleReportDataFiltered(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
         super(WriteScheduleReportDataFiltered, self).__init__(
-            doc=doc, test_name="Write schedule data with property filter", requires_temp_dir=True
+            doc=doc,
+            test_name="Write schedule data with property filter",
+            requires_temp_dir=True,
         )
 
     def test(self):
@@ -87,7 +91,7 @@ class WriteScheduleReportDataFiltered(revit_test.RevitTest):
                 ["HOSTFILE", "Id", "View Name", "View Template"],
                 [REVIT_TEST_FILE_NAME, "970420", "Wall Schedule", "-1"],
             ]
-            
+
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(
                 self.get_full_file_path(OUTPUT_FILE_NAME), expected_result_file_read
@@ -97,9 +101,7 @@ class WriteScheduleReportDataFiltered(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
         finally:
             # clean up temp directory

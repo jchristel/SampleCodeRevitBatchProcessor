@@ -34,7 +34,9 @@ from duHast.Utilities import result as res
 class GetScheduleReportHeaders(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetScheduleReportHeaders, self).__init__(doc=doc, test_name="get_schedules_report_headers")
+        super(GetScheduleReportHeaders, self).__init__(
+            doc=doc, test_name="get_schedules_report_headers"
+        )
 
     def test(self):
         """
@@ -80,17 +82,15 @@ class GetScheduleReportHeaders(revit_test.RevitTest):
                 "Design Stage",
                 "None",
             ]
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

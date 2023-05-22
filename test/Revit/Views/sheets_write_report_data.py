@@ -36,7 +36,9 @@ from test.Revit.Views.sheets_report import REVIT_TEST_FILE_NAME, OUTPUT_FILE_NAM
 class WriteSheetReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(WriteSheetReportData, self).__init__(doc=doc, test_name="Write all sheet data", requires_temp_dir=True)
+        super(WriteSheetReportData, self).__init__(
+            doc=doc, test_name="Write all sheet data", requires_temp_dir=True
+        )
 
     def test(self):
         """
@@ -119,7 +121,7 @@ class WriteSheetReportData(revit_test.RevitTest):
                     "None",
                     "None",
                     "None",
-                    "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\Revit\\TestFiles\\Revit_2022.rvt",
+                    "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles\\Revit_2022.rvt",
                     "Approver",
                     "Designer",
                     "Checker",
@@ -136,7 +138,7 @@ class WriteSheetReportData(revit_test.RevitTest):
                     "-1",
                 ],
             ]
-            
+
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(
                 self.get_full_file_path(OUTPUT_FILE_NAME), expected_result_file_read
@@ -146,9 +148,7 @@ class WriteSheetReportData(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
         finally:
             # clean up temp directory

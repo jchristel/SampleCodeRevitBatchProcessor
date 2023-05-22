@@ -67,39 +67,41 @@ class GetSheetReportData(revit_test.RevitTest):
         try:
             # get sheet report headers
             result = get_sheet_report_data(self.document, REVIT_TEST_FILE_NAME)
-            
+
             expected_result = [
-                    "HOSTFILE",
-                    "Id",
-                    "Dependency",
-                    "Referencing Sheet",
-                    "Referencing Detail",
-                    "Visibility/Graphics Overrides",
-                    "Current Revision Issued",
-                    "Current Revision Issued By",
-                    "Current Revision Issued To",
-                    "Current Revision Date",
-                    "Current Revision Description",
-                    "Current Revision",
-                    "File Path",
-                    "Approved By",
-                    "Designed By",
-                    "Checked By",
-                    "Drawn By",
-                    "Scale",
-                    "Sheet Number",
-                    "Sheet Name",
-                    "Sheet Issue Date",
-                    "Design Stage",
-                    "View Type",
+                [
+                    REVIT_TEST_FILE_NAME,
+                    "21924",
+                    "Independent",
                     "None",
-                    "Appears In Sheet List",
-                    "Revisions on Sheet",
-                    "Guide Grid",
+                    "None",
+                    "Invalid storage type: (NONE)",
+                    "No",
+                    "None",
+                    "None",
+                    "None",
+                    "None",
+                    "None",
+                    "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles\\Revit_2022.rvt",
+                    "Approver",
+                    "Designer",
+                    "Checker",
+                    "Author",
+                    " ",
+                    "SPLASH",
+                    "SPLASH",
+                    "None",
+                    "SPLASH",
+                    "None",
+                    "21928",
+                    "Yes",
+                    "Invalid storage type: (NONE)",
+                    "-1",
                 ]
-            
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            ]
+
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 

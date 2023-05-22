@@ -42,7 +42,9 @@ class WriteViewReportDataFiltered(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
         super(WriteViewReportDataFiltered, self).__init__(
-            doc=doc, test_name="write_view_data_by_property_names", requires_temp_dir=True
+            doc=doc,
+            test_name="write_view_data_by_property_names",
+            requires_temp_dir=True,
         )
 
     def test(self):
@@ -98,9 +100,7 @@ class WriteViewReportDataFiltered(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
         finally:
             # clean up temp directory

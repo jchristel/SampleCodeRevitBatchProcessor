@@ -73,9 +73,9 @@ class GetScheduleReportDataFiltered(revit_test.RevitTest):
             )
 
             expected_result = [[REVIT_TEST_FILE_NAME, "970420", "Wall Schedule", "-1"]]
-            
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 

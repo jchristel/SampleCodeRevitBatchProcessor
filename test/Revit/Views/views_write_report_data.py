@@ -37,7 +37,9 @@ from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME, OUTPUT_FILE_NAME
 class WriteViewReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(WriteViewReportData, self).__init__(doc=doc, test_name="write_views_data", requires_temp_dir=True)
+        super(WriteViewReportData, self).__init__(
+            doc=doc, test_name="write_views_data", requires_temp_dir=True
+        )
 
     def test(self):
         """
@@ -192,9 +194,7 @@ class WriteViewReportData(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
         finally:
             # clean up temp directory

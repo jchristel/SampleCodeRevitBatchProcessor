@@ -67,7 +67,7 @@ class GetScheduleReportData(revit_test.RevitTest):
         try:
             # get sheet report headers
             result = get_schedules_report_data(self.document, REVIT_TEST_FILE_NAME)
-            
+
             expected_result = [
                 [
                     REVIT_TEST_FILE_NAME,
@@ -87,8 +87,8 @@ class GetScheduleReportData(revit_test.RevitTest):
                     "-1",
                 ]
             ]
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 

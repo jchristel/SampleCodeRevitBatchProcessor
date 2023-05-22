@@ -34,7 +34,9 @@ from duHast.Utilities import result as res
 class GetSheetReportHeaders(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetSheetReportHeaders, self).__init__(doc=doc, test_name="get_sheets_report_headers")
+        super(GetSheetReportHeaders, self).__init__(
+            doc=doc, test_name="get_sheets_report_headers"
+        )
 
     def test(self):
         """
@@ -92,17 +94,15 @@ class GetSheetReportHeaders(revit_test.RevitTest):
                 "Revisions on Sheet",
                 "Guide Grid",
             ]
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

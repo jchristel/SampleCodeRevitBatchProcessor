@@ -72,17 +72,19 @@ class GetSheetReportDataFiltered(revit_test.RevitTest):
                 self.document, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
             )
 
-            expected_result = [[REVIT_TEST_FILE_NAME, '21924', 'SPLASH', 'SPLASH', 'None']] 
-            
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            expected_result = [
+                [REVIT_TEST_FILE_NAME, "21924", "SPLASH", "SPLASH", "None"]
+            ]
+
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(e),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

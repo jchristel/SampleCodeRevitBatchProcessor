@@ -85,7 +85,7 @@ for test in TESTS:
         write_report_data_as_csv(
             file_name,
             "",
-            [[test_result[3], test_result[4], test_result[1].message]],
+            [[test_result[3], test_result[4], test_result[5]]],
             write_mode,
         )
         # provide short summary only...more details in log file

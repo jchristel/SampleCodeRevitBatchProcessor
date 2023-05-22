@@ -36,7 +36,9 @@ from test.Revit.Walls.walls_report import REVIT_TEST_FILE_NAME
 class GetWallReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetWallReportData, self).__init__(doc=doc, test_name="get_wall_report_data")
+        super(GetWallReportData, self).__init__(
+            doc=doc, test_name="get_wall_report_data"
+        )
 
     def test(self):
         """
@@ -85,17 +87,15 @@ class GetWallReportData(revit_test.RevitTest):
                     "NA",
                 ],
             ]
-            return_value.append_message = " result: {} \n expected: {} ".format(
-                result, expected_result
+            return_value.append_message(
+                " result: {} \n expected: {} ".format(result, expected_result)
             )
             assert sorted(result) == sorted(expected_result)
 
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(
-                    self.test_name, e
-                ),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

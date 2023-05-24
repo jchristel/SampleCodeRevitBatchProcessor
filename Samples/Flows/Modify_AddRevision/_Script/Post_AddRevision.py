@@ -1,7 +1,21 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module containing post processing script which runs outside the revit batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- runs at the very end of the flow
+- processes log files ( did any exception occur?)
+- deletes marker files
+
+    - log marker files
+    - revit work sharing monitor marker files
+    
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,7 +41,7 @@
 # Imports
 # --------------------------
 
-import utilAddRev as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM  # sets up all commonly used variables and path locations!
 
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils
@@ -40,12 +54,16 @@ from duHast.Utilities.console_out import output
 # -------------
 
 PROCESSING_RESULTS = logUtils.process_log_files(utilM.LOG_MARKER_DIRECTORY)
-output('Log results.... message(s): \n[{}]'.format(PROCESSING_RESULTS.status))
+output("Log results.... message(s): \n[{}]".format(PROCESSING_RESULTS.status))
 output(PROCESSING_RESULTS.message)
 # remove old log marker files
 flag_delete_log_markers = logUtils.delete_log_data_files(utilM.LOG_MARKER_DIRECTORY)
-output('Log marker deletion.: [{}]'.format(flag_delete_log_markers))
+output("Log marker deletion.: [{}]".format(flag_delete_log_markers))
 
 # WSMP marker files clean up
 cleanUpWSMFiles_ = wsmp.clean_up_wsm_data_files(utilM.WSM_MARKER_DIRECTORY)
-output('WSM files clean up.... status: {}\nWSM files clean up.... message: {}'.format(cleanUpWSMFiles_.status, cleanUpWSMFiles_.message))
+output(
+    "WSM files clean up.... status: [{}]\nWSM files clean up.... message: {}".format(
+        cleanUpWSMFiles_.status, cleanUpWSMFiles_.message
+    )
+)

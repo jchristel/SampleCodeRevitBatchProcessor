@@ -1,7 +1,17 @@
-﻿#!/usr/bin/python
+﻿"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a pre process script within the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- populates task list files for revit batch processor
+- writes marker files to identify log files used in this process
+- writes revit work sharing marker files identifying Revit work sharing monitor sessions running
+"""
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,47 +39,53 @@
 # Imports
 # --------------------------
 
+import script_util
 
 # import flow specific utils
-import utilAddRev as utilM # sets up all commonly used variables and path locations!
-# import common library (in this case the post lib since it got the methods we are after)
+import utilAddRev as utilM  # sets up all commonly used variables and path locations!
+
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logutils
 from duHast.Utilities import util_batch_p as uBP
+
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
+from duHast.Utilities.console_out import output
 
-# flag whether this runs in debug or not
-debug_ = False
 
-#logfile marker creation status
-statusMarker_ = False
+# logfile marker creation status
+status_marker_ = False
 
-# Add batch processor scripting references
-if not debug_:
-    import script_util
-    statusMarker_ = logutils.write_session_id_marker_file(
-        utilM.LOG_MARKER_DIRECTORY , 
-        uBP.adjust_session_id_for_file_name(script_util.GetSessionId())
-    )
-    wsmMarker_ = wsmp.write_out_wsm_data_to_file(utilM.WSM_MARKER_DIRECTORY)
+# logfile marker creation status
+status_marker_ = logutils.write_session_id_marker_file(
+    utilM.LOG_MARKER_DIRECTORY,
+    uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
+)
+
+wsm_marker_ = wsmp.write_out_wsm_data_to_file(utilM.WSM_MARKER_DIRECTORY)
+
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def output(message = ''):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print (message)
+output("Script directory: {}".format(utilM.SCRIPT_DIRECTORY), script_util.Output)
+output("flow directory: {}".format(utilM.FLOW_DIRECTORY), script_util.Output)
+output("duHast directory: {}".format(utilM.DU_HAST_DIRECTORY), script_util.Output)
 
 # -------------
 # main:
 # -------------
 
 # show WSM marker status
-output('Wrote WSM marker:.... status: {}\nWrote WSM marker:.... message: {}'.format(wsmMarker_.status, wsmMarker_.message))
+output(
+    "Wrote WSM marker:.... status: [{}]\n\tWrote WSM marker:.... message: {}".format(
+        wsm_marker_.status, wsm_marker_.message
+    ),
+    script_util.Output,
+)
 
 # show log marker status
-output('Wrote log marker: ....[{}]'.format(statusMarker_))
+output(
+    "Wrote log marker: ....[{}]".format(status_marker_),
+    script_util.Output,
+)

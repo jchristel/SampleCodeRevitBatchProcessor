@@ -1,7 +1,16 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a post process script within the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- kills all running revit work sharing monitor sessions
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,28 +36,18 @@
 # Imports
 # --------------------------
 
-import utilAddRev as utilM # sets up all commonly used variables and path locations!
+import utilAddRev as utilM  # sets up all commonly used variables and path locations!
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import script_util
+# import script_util
+import script_util
+from duHast.Utilities.console_out import output
 
 # -------------
 # my code here:
 # -------------
-
-# output messages either to batch processor (debug = False) or console (debug = True)
-def output(message = ''):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print (message)
 
 # -------------
 # main:
@@ -58,4 +57,9 @@ def output(message = ''):
 statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
-output('WSM Kill status: ....{} [{}]'.format(statusWSMKill_.message, statusWSMKill_.status))
+output(
+    "WSM Kill status: ....{} [{}]".format(
+        statusWSMKill_.message, statusWSMKill_.status
+    ),
+    script_util.Output,
+)

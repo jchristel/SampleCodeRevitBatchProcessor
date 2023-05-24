@@ -43,6 +43,7 @@ from duHast.Utilities import worksharing_monitor_process as wsmp
 # import script_util
 import script_util
 from duHast.Utilities.console_out import output
+
 # -------------
 # my code here:
 # -------------
@@ -56,5 +57,8 @@ statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
 output(
-    "WSM Kill status: ....{} [{}]".format(statusWSMKill_.message, statusWSMKill_.status), script_util.Output
+    "WSM Kill status: ....{} [{}]".format(
+        statusWSMKill_.message, statusWSMKill_.status
+    ),
+    script_util.Output,
 )

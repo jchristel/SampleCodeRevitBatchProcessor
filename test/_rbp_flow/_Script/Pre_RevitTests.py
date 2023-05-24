@@ -7,6 +7,7 @@ Module executed as a pre process script within the batch processor environment.
 - writes marker files to identify log files used in this process
 - writes revit work sharing marker files identifying Revit work sharing monitor sessions running
 """
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -31,8 +32,6 @@ Module executed as a pre process script within the batch processor environment.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-
-# this sample shows how to set up a dated folder as a pre - process
 
 # --------------------------
 # Imports

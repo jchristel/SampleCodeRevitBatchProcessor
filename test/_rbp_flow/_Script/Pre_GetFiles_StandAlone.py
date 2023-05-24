@@ -104,7 +104,7 @@ output("Collecting files from: {}".format(utilM.SAMPLE_FILES_DIRECTORY))
 status_write_tasks = write_file_list(utilM.SAMPLE_FILES_DIRECTORY)
 output("Collecting files completed with status: {}".format(status_write_tasks))
 
-# make sure the calling powershell script know if something went wrong
+# make sure the calling powershell script knows if something went wrong
 if status_write_tasks:
     sys.exit(0)
 else:

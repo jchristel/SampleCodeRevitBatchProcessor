@@ -39,13 +39,17 @@ import sys, os
 # get the script location
 SCRIPT_DIRECTORY = os.path.dirname(__file__)
 # build flow directory name
-FLOW_DIRECTORY =  os.path.dirname(SCRIPT_DIRECTORY)
+FLOW_DIRECTORY = os.path.dirname(SCRIPT_DIRECTORY)
 # build duHast and duHast test directories
 DU_HAST_TEST_DIRECTORY = os.path.dirname(os.path.dirname(FLOW_DIRECTORY))
-DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r'duHast\src')
+DU_HAST_DIRECTORY = os.path.join(DU_HAST_TEST_DIRECTORY, r"duHast\src")
 
 # add the directories to path
-sys.path += [DU_HAST_DIRECTORY, DU_HAST_TEST_DIRECTORY,SCRIPT_DIRECTORY,]
+sys.path += [
+    DU_HAST_DIRECTORY,
+    DU_HAST_TEST_DIRECTORY,
+    SCRIPT_DIRECTORY,
+]
 
 # any data output to go here
 OUTPUT_FOLDER = FLOW_DIRECTORY + r"\_Output"

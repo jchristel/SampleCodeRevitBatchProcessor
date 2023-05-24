@@ -44,6 +44,7 @@ import sys
 import datetime
 import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
 
+from duHast.Utilities.console_out import output
 from test.Utility import run_test_classes as run_util_tests
 
 def time_stamp():
@@ -84,9 +85,9 @@ for batch_result in all_results:
         its_all_good = its_all_good & batch_result[result][0]
         # write to log
         if(batch_result[result][0] == False):
-            print("{}Test: {} failed with message {}".format(time_stamp(), result, batch_result[result][1]))
+            output("Test: {} failed with message {}".format(time_stamp(), result, batch_result[result][1]))
         else:
-            print("{}Test: {} [{}]".format(time_stamp(), result, batch_result[result][0]))
+            output("Test: {} [{}]".format(time_stamp(), result, batch_result[result][0]))
         
 
 # pass any error back to caller in powershell script

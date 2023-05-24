@@ -40,6 +40,19 @@ _LogMarker
 
 Directory containing log marker files. Those will be deleted at the end of each flow run.
 
+
+_Output
+^^^^^^^^^^
+
+Directory containing Revit report log files. These files are generated per Revit processed and carry the same name as the Revit file.
+
+log file info
+
+- file format: csv
+- column 0: test name
+- column 1: test result
+- column 2: data collected during test (most commonly expected vs actual test result)
+
 _sampleFiles
 ^^^^^^^^^^^^^
 

@@ -151,7 +151,7 @@ class CustomElementFilterActionNameContains(revit_test.RevitTest):
 
                 # store result vs expected result
                 return_value.append_message(
-                    " {} vs {}".format(result, data.expected_result)
+                    " {} vs {} test values: {}".format(result, data.expected_result, data.test_values)
                 )
 
                 # check the outcome

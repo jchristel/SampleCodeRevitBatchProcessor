@@ -130,13 +130,13 @@ class CustomElementFilterActionNameDoesNotContains(revit_test.RevitTest):
                     968295,
                     ["value1", "Text", "value3"],
                     value_is_element_type_family_name,
-                    True,
+                    False,#ee
                 ),  # this is a text note instance, family element type name is 'Text'
                 SETTINGS_DATA(
                     968295,
                     ["value1", "value2", "value3"],
                     value_equals_workset_name,
-                    False,
+                    True,
                 ),  # this is a text note instance, there is no workset in the test file
             )
 
@@ -151,7 +151,7 @@ class CustomElementFilterActionNameDoesNotContains(revit_test.RevitTest):
 
                 # store result vs expected result
                 return_value.append_message(
-                    " {} vs {}".format(result, data.expected_result)
+                    " {} vs {} : test values: {}".format(result, data.expected_result, data.test_values)
                 )
 
                 # check the outcome

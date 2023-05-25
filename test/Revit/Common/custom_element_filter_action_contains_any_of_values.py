@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a custom element filter action of type name contains any of values tests . 
+This module contains a custom element filter action of type: property contains any of values tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -28,7 +28,7 @@ This module contains a custom element filter action of type name contains any of
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Common.custom_element_filter_actions import (
-    action_element_name_contains_any_of_values,
+    action_element_property_contains_any_of_values,
 )
 from duHast.Revit.Common.custom_element_filter_tests import (
     value_in_name,
@@ -58,11 +58,11 @@ SETTINGS_DATA = namedtuple(
 )
 
 
-class CustomElementFilterActionNameContains(revit_test.RevitTest):
+class CustomElementFilterActionPropertyContains(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(CustomElementFilterActionNameContains, self).__init__(
-            doc=doc, test_name="name_contains_any_of_values"
+        super(CustomElementFilterActionPropertyContains, self).__init__(
+            doc=doc, test_name="property_contains_any_of_values"
         )
 
     def _output(self, message):
@@ -142,7 +142,7 @@ class CustomElementFilterActionNameContains(revit_test.RevitTest):
 
             for data in data_set:
                 # Create the action function
-                action = action_element_name_contains_any_of_values(
+                action = action_element_property_contains_any_of_values(
                     test_values=data.test_values, test=data.test, output=self._output
                 )
 

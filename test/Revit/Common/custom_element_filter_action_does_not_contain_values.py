@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a custom element filter action of type name does not contains any of values tests . 
+This module contains a custom element filter action of type: property does not contains any of values tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -28,7 +28,7 @@ This module contains a custom element filter action of type name does not contai
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Common.custom_element_filter_actions import (
-    action_element_name_does_not_contains_any_of_values,
+    action_element_property_does_not_contains_any_of_values,
 )
 from duHast.Revit.Common.custom_element_filter_tests import (
     value_in_name,
@@ -58,11 +58,11 @@ SETTINGS_DATA = namedtuple(
 )
 
 
-class CustomElementFilterActionNameDoesNotContains(revit_test.RevitTest):
+class CustomElementFilterActionPropertyDoesNotContains(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(CustomElementFilterActionNameDoesNotContains, self).__init__(
-            doc=doc, test_name="name_does_not_contains_any_of_values"
+        super(CustomElementFilterActionPropertyDoesNotContains, self).__init__(
+            doc=doc, test_name="property_does_not_contains_any_of_values"
         )
 
     def _output(self, message):
@@ -142,7 +142,7 @@ class CustomElementFilterActionNameDoesNotContains(revit_test.RevitTest):
 
             for data in data_set:
                 # Create the action function
-                action = action_element_name_does_not_contains_any_of_values(
+                action = action_element_property_does_not_contains_any_of_values(
                     test_values=data.test_values, test=data.test, output=self._output
                 )
 

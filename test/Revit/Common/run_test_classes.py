@@ -33,7 +33,7 @@ from duHast.Utilities import result as res
 # import test classes
 from test.Revit.Common import design_sets_get
 from test.Revit.Common import design_options_get
-from test.Revit.Common import custom_element_filter_action_name_contains_any_of_values
+from test.Revit.Common import custom_element_filter_action_contains_any_of_values
 from test.Revit.Common import custom_element_filter_action_does_not_contain_values
 
 
@@ -58,11 +58,11 @@ def run_design_set_options_tests(doc):
         ["Get Design Options", design_options_get.GetDesignOptions],
         [
             "Custom Element Filter Name Contains",
-            custom_element_filter_action_name_contains_any_of_values.CustomElementFilterActionNameContains,
+            custom_element_filter_action_contains_any_of_values.CustomElementFilterActionPropertyContains,
         ],
         [
             "Custom Element Filter Name Does Not Contains",
-            custom_element_filter_action_does_not_contain_values.CustomElementFilterActionNameDoesNotContains,
+            custom_element_filter_action_does_not_contain_values.CustomElementFilterActionPropertyDoesNotContains,
         ],
     ]
 

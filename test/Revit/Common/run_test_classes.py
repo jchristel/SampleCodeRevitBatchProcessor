@@ -34,6 +34,7 @@ from duHast.Utilities import result as res
 from test.Revit.Common import design_sets_get
 from test.Revit.Common import design_options_get
 from test.Revit.Common import custom_element_filter_action_name_contains_any_of_values
+from test.Revit.Common import custom_element_filter_action_does_not_contain_values
 
 
 def run_design_set_options_tests(doc):
@@ -53,9 +54,16 @@ def run_design_set_options_tests(doc):
     # part of ... tests
 
     run_tests = [
-        ["Get Design Sets" , design_sets_get.GetDesignSets],
-        ["Get Design Options", design_options_get.GetDesignOptions ],
-        ["Custom Element Filter Name Contains", custom_element_filter_action_name_contains_any_of_values.CustomElementFilterActionNameContains],
+        ["Get Design Sets", design_sets_get.GetDesignSets],
+        ["Get Design Options", design_options_get.GetDesignOptions],
+        [
+            "Custom Element Filter Name Contains",
+            custom_element_filter_action_name_contains_any_of_values.CustomElementFilterActionNameContains,
+        ],
+        [
+            "Custom Element Filter Name Does Not Contains",
+            custom_element_filter_action_does_not_contain_values.CustomElementFilterActionNameDoesNotContains,
+        ],
     ]
 
     runner = RevitRunTest(run_tests)

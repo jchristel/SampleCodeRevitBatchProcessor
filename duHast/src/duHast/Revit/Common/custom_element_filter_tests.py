@@ -3,7 +3,9 @@
 Customizable element filter tests which can be used with the custom element filter actions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-test expect:
+These tests are used in the custom element filter actions as an argument.
+
+test expects:
 
 - the element of which is the test to be performed against
 - the test value

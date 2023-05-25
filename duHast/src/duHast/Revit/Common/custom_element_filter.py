@@ -2,6 +2,15 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Customizable element filter class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This class takes as constructor arguments
+
+- a number of filter actions
+- a boolean indicating whether filters are logical and or OR filters
+
+Filter actions checks whether a property matches or does not match provided values. Refer to module: custom_element_filter_actions. The actual property test is undertaken by another function. Samples of those can be found in
+module custom_element_filter_tests.
+
 """
 #
 # License:

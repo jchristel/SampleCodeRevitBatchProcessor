@@ -3,11 +3,19 @@
 Customizable element filter actions which can be used with the custom element filter class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Thw two action in this module check whether:
+
+- a given property does contain / match a set of test value
+- a given property does not contain / match a set of test value
+
+
 actions expect:
 
 - the test to be performed
 - the test values to be performed against
 - an output function to pipe any exception message to
+
+
 
 """
 
@@ -35,7 +43,7 @@ actions expect:
 #
 
 
-def action_element_name_contains_any_of_values(test_values, test, output):
+def action_element_property_contains_any_of_values(test_values, test, output):
     """
 
     Set up a function checking whether element name contains any of the test values.
@@ -60,7 +68,7 @@ def action_element_name_contains_any_of_values(test_values, test, output):
                     break
         except Exception as e:
             output(
-                "action_element_name_contains_values terminated with exception: {}".format(
+                "action_element_property_contains_values terminated with exception: {}".format(
                     e
                 )
             )
@@ -70,7 +78,7 @@ def action_element_name_contains_any_of_values(test_values, test, output):
     return action
 
 
-def action_element_name_does_not_contains_any_of_values(test_values, test, output):
+def action_element_property_does_not_contains_any_of_values(test_values, test, output):
     """
 
     Set up a function checking whether element name does not contains any of the test values.
@@ -94,7 +102,7 @@ def action_element_name_does_not_contains_any_of_values(test_values, test, outpu
                     break
         except Exception as e:
             output(
-                "action_element_name_does_ not_contains_values terminated with exception: {}".format(
+                "action_element_property_does_ not_contains_values terminated with exception: {}".format(
                     e
                 )
             )

@@ -86,6 +86,21 @@ def value_in_family_name(value, element):
 
     return value in rdb.Element.Name.GetValue(element.Symbol.Family)
 
+def value_in_element_type_family_name(value, element):
+    """
+    Check if provided value is part of the element type Family name.
+
+    :param value: test value
+    :type value: str
+    :param element: The element
+    :type element: Autodesk.Revit.DB.Element
+
+    :return: True if elements family name partly matches, otherwise False
+    :rtype: bool
+    """
+
+    return value in element.Symbol.FamilyName
+
 
 def value_is_family_name(value, element):
     """
@@ -101,3 +116,18 @@ def value_is_family_name(value, element):
     """
 
     return value == rdb.Element.Name.GetValue(element.Symbol.Family)
+
+def value_is_element_type_family_name(value, element):
+    """
+    Check if provided value is equal to the element type Family name.
+
+    :param value: test value
+    :type value: str
+    :param element: The element
+    :type element: Autodesk.Revit.DB.Element
+
+    :return: True if elements family name matches, otherwise False
+    :rtype: bool
+    """
+
+    return value == element.Symbol.FamilyName

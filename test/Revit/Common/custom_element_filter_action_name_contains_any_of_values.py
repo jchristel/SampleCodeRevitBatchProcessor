@@ -106,16 +106,31 @@ class CustomElementFilterActionNameContains(revit_test.RevitTest):
                     968295, ["value1", "value2", "value3"], value_in_family_name, False
                 ),  # this is a text note instance, family does not exist on its type
                 SETTINGS_DATA(
-                    968295, ["value1", "value2", "value3"], value_in_element_type_family_name, False
+                    968295, ["value1", "value2", "value3"], value_is_family_name, False
+                ),  # this is a text note instance, family does not exist on its type
+                SETTINGS_DATA(
+                    968295,
+                    ["value1", "value2", "value3"],
+                    value_in_element_type_family_name,
+                    False,
                 ),  # this is a text note instance, family element type name is 'Text'
                 SETTINGS_DATA(
-                    968295, ["value1", "ex", "value3"], value_in_element_type_family_name, True
+                    968295,
+                    ["value1", "ex", "value3"],
+                    value_in_element_type_family_name,
+                    True,
                 ),  # this is a text note instance, family element type name is 'Text'
                 SETTINGS_DATA(
-                    968295, ["value1", "value2", "value3"], value_is_element_type_family_name, False
+                    968295,
+                    ["value1", "value2", "value3"],
+                    value_is_element_type_family_name,
+                    False,
                 ),  # this is a text note instance, family element type name is 'Text'
                 SETTINGS_DATA(
-                    968295, ["value1", "Text", "value3"], value_is_element_type_family_name, True
+                    968295,
+                    ["value1", "Text", "value3"],
+                    value_is_element_type_family_name,
+                    True,
                 ),  # this is a text note instance, family element type name is 'Text'
                 SETTINGS_DATA(
                     968295,

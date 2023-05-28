@@ -55,20 +55,40 @@ class FileCombineFiles(test.Test):
         try:
             # test data
             test_files = [
-                ["test_file_one.csv",["data 1","data 2","data 3"]], 
-                ["test_file_two.csv",["data 4","data 4","data 5"]],
-                ["test_file_three.csv",["data 1","data 2","data 3"]], 
+                [
+                    "test_file_one.csv",
+                    ["data 1", "data 2", "data 3"],
+                    ["header 1", "header 2", "header 3"],
+                ],
+                [
+                    "test_file_two.csv",
+                    ["data 4", "data 4", "data 5"],
+                    ["header 1", "header 2", "header 3"],
+                ],
+                [
+                    "test_file_three.csv",
+                    ["data 1", "data 2", "data 3"],
+                    ["header 1", "header 2", "header 3"],
+                ],
             ]
 
             test_files_two = [
-                ["test_file_one.csv",["data 1","data 3"]], 
-                ["test_file_two.csv",["data 4","data 4","data 5"]],
-                ["test_file_three.csv",["data 1","data 2"]],
-                ["test_file_two.csv",["data 4","data 4","data 5","data 6"]],
+                ["test_file_one.csv", ["data 1", "data 3"], ["header 1", "header 2"]],
+                [
+                    "test_file_two.csv",
+                    ["data 4", "data 4", "data 5"],
+                    ["header 1", "header 2", "header 3"],
+                ],
+                ["test_file_three.csv", ["data 1", "data 2"], ["header 1", "header 2"]],
+                [
+                    "test_file_four.csv",
+                    ["data 4", "data 4", "data 5", "data 6"],
+                    ["header 1", "header 2", "header 3", "header 4"],
+                ],
             ]
 
-            combined_file_name = 'result.csv'
-            
+            combined_file_name = "result.csv"
+
             # test homogenous data
             def action_one(tmp_dir):
                 flag_action = True
@@ -76,16 +96,26 @@ class FileCombineFiles(test.Test):
                 try:
                     # write test files
                     for test_file in test_files:
-                        self.write_file_with_data(test_file[0], tmp_dir, test_file[1])
+                        # set up header row
+                        data = [",".join(test_file[2])]
+                        # set up data row
+                        data.append(",".join(test_file[1]))
+                        self.write_file_with_data(test_file[0], tmp_dir, data)
                     # combine test files
-                    result = combine_files(tmp_dir,"test",'','.csv',combined_file_name)
+                    result = combine_files(
+                        tmp_dir, "test", "", ".csv", combined_file_name
+                    )
                     # reading the CSV file back in
                     result = read_csv_file(os.path.join(tmp_dir, combined_file_name))
-
                     # build expected result list
-                    expected_result = [file[1][1] for file in test_files]
-                    message_action = "{} \nvs \n{}".format(result, expected_result)
-                    assert result == expected_result
+                    expected_result = [file[1] for file in test_files]
+                    # insert header row
+                    expected_result.insert(0, test_files_two[0][2])
+                    # compare lists sorted in case files got read in a different order when combined
+                    message_action = "{} \nvs \n{}".format(
+                        sorted(result), sorted(expected_result)
+                    )
+                    assert sorted(result) == sorted(expected_result)
                 except Exception as e:
                     flag_action = False
                     message_action = (
@@ -98,7 +128,7 @@ class FileCombineFiles(test.Test):
                         )
                     )
                 return flag_action, message_action
-            
+
             # test non homogenous data
             def action_two(tmp_dir):
                 flag_action = True
@@ -106,16 +136,27 @@ class FileCombineFiles(test.Test):
                 try:
                     # write test files
                     for test_file in test_files_two:
-                        self.write_file_with_data(test_file[0], tmp_dir, test_file[1])
+                        # set up header row
+                        data = [",".join(test_file[2])]
+                        # set up data row
+                        data.append(",".join(test_file[1]))
+                        self.write_file_with_data(test_file[0], tmp_dir, data)
                     # combine test files
-                    result = combine_files(tmp_dir,"test",'','.csv',combined_file_name)
+                    result = combine_files(
+                        tmp_dir, "test", "", ".csv", combined_file_name
+                    )
                     # reading the CSV file back in
                     result = read_csv_file(os.path.join(tmp_dir, combined_file_name))
-
                     # build expected result list
-                    expected_result = [file[1][1] for file in test_files_two]
-                    message_action = "{} \nvs \n{}".format(result, expected_result)
-                    assert result == expected_result
+                    expected_result = [file[1] for file in test_files_two]
+                    # insert first file header
+                    expected_result.insert(0, test_files_two[0][2])
+                    # compare lists sorted in case files got read in a different order when combined
+                    message_action = "{} \nvs \n{}".format(
+                        sorted(result), sorted(expected_result)
+                    )
+                    # should not be the same...
+                    assert sorted(result) != sorted(expected_result)
                 except Exception as e:
                     flag_action = False
                     message_action = (
@@ -128,7 +169,7 @@ class FileCombineFiles(test.Test):
                         )
                     )
                 return flag_action, message_action
-            
+
             flag_one, message_one = self.call_with_temp_directory(action_one)
             flag_two, message_two = self.call_with_temp_directory(action_two)
 
@@ -140,6 +181,10 @@ class FileCombineFiles(test.Test):
             message = (
                 message
                 + "\n"
-                + ("An exception occurred in function {} : {}".format(self.test_name,e))
+                + (
+                    "An exception occurred in function {} : {}".format(
+                        self.test_name, e
+                    )
+                )
             )
         return flag, message

@@ -80,14 +80,14 @@ its_all_good = True
 for batch_result in all_results:
     # print('batch result\n', batch_result)
     for result in batch_result:
-        # print('result\n', result)
+        #print('result\n', result)
         # print(batch_result[result])
         its_all_good = its_all_good & batch_result[result][0]
         # write to log
         if(batch_result[result][0] == False):
-            output("Test: {} failed with message {}".format(time_stamp(), result, batch_result[result][1]))
+            output("{} - Test: {} failed with message {}".format(time_stamp(), result, batch_result[result][1]))
         else:
-            output("Test: {} [{}]".format(time_stamp(), result, batch_result[result][0]))
+            output("{} - Test: {} [{}]".format(time_stamp(), result, batch_result[result][0]))
         
 
 # pass any error back to caller in powershell script

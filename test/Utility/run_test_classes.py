@@ -37,6 +37,7 @@ from test.Utility import (
     file_delete,
     file_copy,
     file_combine_files,
+    file_combine_files_tab_independent_headers,
     file_rename,
     file_get_directory_path,
     file_name_without_extension,
@@ -90,6 +91,7 @@ def run_tests():
         ["Read CSV File First Row", file_csv_read_first_row.FileCSVReadFirstRow],
         ["Write CSF File Report", file_csv_write_report.FileCSVWriteReport],
         ["Combine files", file_combine_files.FileCombineFiles],
+        ["Combine files varied headers", file_combine_files_tab_independent_headers.FileCombineFilesIndependentHeadersTab],
     ]
 
     # run tests

@@ -29,9 +29,13 @@ Helper functions relating to combining text files.
 
 import codecs
 import glob
+import os
 from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.files_get import get_files_single_directory
-from duHast.Utilities.files_tab import get_unique_headers
+from duHast.Utilities.files_tab import get_unique_headers as get_unique_headers_tab
+from duHast.Utilities.files_tab import read_tab_separated_file, write_report_data
+from duHast.Utilities.files_csv import get_unique_headers as get_unique_headers_csv
+from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
 
 
 def combine_files(
@@ -86,6 +90,7 @@ def combine_files(
 def append_to_file(source_file, append_file):
     """
     Appends one text file to another. Assumes same number of headers (columns) in both files.
+    
     :param source_file: The fully qualified file path of the file to which the other file will be appended.
     :type source_file: str
     :param append_file: The fully qualified file path of the file to be appended.
@@ -109,7 +114,7 @@ def append_to_file(source_file, append_file):
 
 
 def _format_headers(headers_in_file, file):
-    '''
+    """
     Replace any empty strings in header row
 
     :param headers_in_file: list of header entries
@@ -119,18 +124,17 @@ def _format_headers(headers_in_file, file):
 
     :return: Header row
     :rtype:[str]
-    '''
-    
+    """
+
     file_name = get_file_name_without_ext(file)
     empty_header_counter = 0
     for i in range(len(headers_in_file)):
         # reformat any empty headers to be unique
         if headers_in_file[i] == "":
-            headers_in_file[i] = (
-                file_name + ".Empty." + str(empty_header_counter)
-            )
+            headers_in_file[i] = file_name + ".Empty." + str(empty_header_counter)
             empty_header_counter = empty_header_counter + 1
     return headers_in_file
+
 
 def combine_files_header_independent(
     folder_path,
@@ -141,10 +145,10 @@ def combine_files_header_independent(
 ):
     """
     Used to combine report files into one file, files may have different number / named columns.
-    
+
     Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
     File need to use <tab> character as column separator
-    
+
     :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
     :type folder_path: str
     :param file_prefix: Filter: File name starts with this value
@@ -161,49 +165,120 @@ def combine_files_header_independent(
         folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
     )
     # build list of unique headers
-    headers = get_unique_headers(file_list)
-    # open output file
-    with open(folder_path + "\\" + out_put_file_name, "w") as combined_file:
-        file_counter = 0
-        for file in file_list:
-            line_counter = 0
-            column_mapper = []
-            with open(file, "r") as file_read:
-                lines = file_read.readlines()
-                for line in lines:
-                    line = line.rstrip("\n")
-                    # read the headers in file
-                    if line_counter == 0:
-                        headers_in_file = line.split("\t")
-                        # replace any empty strings in header
-                        headers_in_file = _format_headers(headers_in_file, file)
-                        # match up unique headers with headers from this file
-                        # build header mapping
-                        for unique_header in headers:
-                            if unique_header in headers_in_file:
-                                column_mapper.append(headers_in_file.index(unique_header))
-                            else:
-                                #print('unique header not in file: ', unique_header, 'header in file', headers_in_file, 'unique headers', headers)
-                                column_mapper.append(-1)
-                    # ensure unique header is written to file
-                    if file_counter == 0 and line_counter == 0:
-                        combined_file.write("\t".join(headers) + "\n")
-                    elif line_counter != 0:
-                        # write out padded rows
-                        row_data = line.split("\t")
-                        # print(row_data)
-                        padded_row = []
-                        for cm in column_mapper:
-                            if cm == -1:
-                                # this column does not exist in this file
-                                padded_row.append("N/A")
-                            elif cm > len(row_data):
-                                # less columns in file than mapper index (should'nt happen??)
-                                padded_row.append("index out of bounds")
-                            else:
-                                padded_row.append(row_data[cm])
-                        combined_file.write("\t".join(padded_row)+"\n")
-                    line_counter += 1
-                file_counter += 1
-                file_read.close()
-        combined_file.close()
+    headers = get_unique_headers_tab(file_list)
+    combined_file_name = os.path.join(folder_path, out_put_file_name)
+    # loop over files to be combined
+    file_counter = 0
+    for file in file_list:
+        line_counter = 0
+        column_mapper = []
+        lines = read_tab_separated_file(file)
+        lines_to_be_transferred = []
+        for line in lines:
+            # read the headers in file
+            if line_counter == 0:
+                # replace any empty strings in header
+                headers_in_file = _format_headers(line, file)
+                # match up unique headers with headers from this file
+                # build header mapping
+                for unique_header in headers:
+                    if unique_header in headers_in_file:
+                        column_mapper.append(headers_in_file.index(unique_header))
+                    else:
+                        column_mapper.append(-1)
+            # ensure unique header is written to file
+            if file_counter == 0 and line_counter == 0:
+                lines_to_be_transferred.append(headers)
+            elif line_counter != 0:
+                padded_row = []
+                for cm in column_mapper:
+                    if cm == -1:
+                        # this column does not exist in this file
+                        padded_row.append("N/A")
+                    elif cm > len(line):
+                        # less columns in file than mapper index (should'nt happen??)
+                        padded_row.append("index out of bounds")
+                    else:
+                        padded_row.append(line[cm])
+                lines_to_be_transferred.append(padded_row)
+            line_counter += 1
+        # write file data to combined file
+        write_report_data(
+            combined_file_name, header=[], data=lines_to_be_transferred, write_type="a"
+        )
+        file_counter += 1
+
+
+def combine_files_csv_header_independent(
+    folder_path,
+    file_prefix="",
+    file_suffix="",
+    file_extension=".txt",
+    out_put_file_name="result.csv",
+):
+    """
+    Used to combine report files into one file, files may have different number / named columns.
+
+    Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
+    File need to use <,> character as column separator. (.CSV)
+
+    :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
+    :type folder_path: str
+    :param file_prefix: Filter: File name starts with this value
+    :type file_prefix: str
+    :param file_suffix: Filter: File name ends with this value.
+    :type file_suffix: str
+    :param file_extension: Filter: File needs to have this file extension
+    :type file_extension: str, format '.extension'
+    :param out_put_file_name: The file name of the combined file, defaults to 'result.csv'
+    :type out_put_file_name: str, optional
+    """
+
+    file_list = glob.glob(
+        folder_path + "\\" + file_prefix + "*" + file_suffix + file_extension
+    )
+    # build list of unique headers
+    headers = get_unique_headers_csv(file_list)
+    combined_file_name = os.path.join(folder_path, out_put_file_name)
+
+    # loop over files and combine...
+    file_counter = 0
+    for file in file_list:
+        line_counter = 0
+        column_mapper = []
+        lines = read_csv_file(file, increaseMaxFieldSizeLimit=False)
+        lines_to_be_transferred = []
+        for line in lines:
+            # read the headers in file
+            if line_counter == 0:
+                # replace any empty strings in header
+                headers_in_file = _format_headers(line, file)
+                # match up unique headers with headers from this file
+                # build header mapping
+                for unique_header in headers:
+                    if unique_header in headers_in_file:
+                        column_mapper.append(headers_in_file.index(unique_header))
+                    else:
+                        column_mapper.append(-1)
+            # ensure unique header is written to file
+            if file_counter == 0 and line_counter == 0:
+                lines_to_be_transferred.append(headers)
+            elif line_counter != 0:
+                # map data columns to headers
+                padded_row = []
+                for cm in column_mapper:
+                    if cm == -1:
+                        # this column does not exist in this file
+                        padded_row.append("N/A")
+                    elif cm > len(line):
+                        # less columns in file than mapper index (should'nt happen??)
+                        padded_row.append("index out of bounds")
+                    else:
+                        padded_row.append(line[cm])
+                lines_to_be_transferred.append(padded_row)
+            line_counter += 1
+        # write file data to combined file
+        write_report_data_as_csv(
+            combined_file_name, header=[], data=lines_to_be_transferred, write_type="a"
+        )
+        file_counter += 1

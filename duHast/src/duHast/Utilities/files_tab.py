@@ -88,7 +88,7 @@ def write_report_data(file_name, header, data, write_type = 'w'):
         if(len(data) > 0):
             for d in data:
                 if (len(d) > 1):
-                    f.write('\t'.join(d + ['\n']))
+                    f.write('\t'.join(d) + '\n')
                 elif(len(d) == 1):
                     f.write(d[0] + '\n')
         f.close()

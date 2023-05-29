@@ -194,7 +194,7 @@ def get_file_name_without_ext(file_path):
 
 def get_first_row_in_file(file_path):
     '''
-    Reads the first line of a text file and returns it as a single string
+    Reads the first line of a text file and returns it as a single string with any leading or trailing white spaces stripped!
     
     :param file_path: The fully qualified file path.
     :type file_path: str
@@ -206,6 +206,26 @@ def get_first_row_in_file(file_path):
     try:
         with open(file_path) as f:
             row = f.readline().strip()
+    except Exception:
+        row = None
+    return row
+
+def get_first_row_in_file_no_strip(file_path):
+    '''
+    Reads the first line of a text file and returns it as a single string.
+
+    Note this may contain a new line character at the end! ('\n')
+    
+    :param file_path: The fully qualified file path.
+    :type file_path: str
+    :return: The first row of a text file.
+    :rtype: str
+    '''
+
+    row = ''
+    try:
+        with open(file_path) as f:
+            row = f.readline()
     except Exception:
         row = None
     return row

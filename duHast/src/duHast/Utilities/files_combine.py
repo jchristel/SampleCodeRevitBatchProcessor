@@ -51,6 +51,7 @@ def combine_files(
     - files have the same header names per column
 
     The new file will be saved into the same folder as the original files.
+
     :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
     :type folder_path: str
     :param file_prefix: Filter: File name starts with this value
@@ -107,6 +108,30 @@ def append_to_file(source_file, append_file):
     return flag
 
 
+def _format_headers(headers_in_file, file):
+    '''
+    Replace any empty strings in header row
+
+    :param headers_in_file: list of header entries
+    :type headers_in_file: [str]
+    :param file: Fully qualified file name
+    :type file: str
+
+    :return: Header row
+    :rtype:[str]
+    '''
+    
+    file_name = get_file_name_without_ext(file)
+    empty_header_counter = 0
+    for i in range(len(headers_in_file)):
+        # reformat any empty headers to be unique
+        if headers_in_file[i] == "":
+            headers_in_file[i] = (
+                file_name + ".Empty." + str(empty_header_counter)
+            )
+            empty_header_counter = empty_header_counter + 1
+    return headers_in_file
+
 def combine_files_header_independent(
     folder_path,
     file_prefix="",
@@ -116,7 +141,10 @@ def combine_files_header_independent(
 ):
     """
     Used to combine report files into one file, files may have different number / named columns.
+    
     Columns which are unique to some files will have as a value 'N/A' in files where those columns do not exist.
+    File need to use <tab> character as column separator
+    
     :param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
     :type folder_path: str
     :param file_prefix: Filter: File name starts with this value
@@ -135,52 +163,47 @@ def combine_files_header_independent(
     # build list of unique headers
     headers = get_unique_headers(file_list)
     # open output file
-    with open(folder_path + "\\" + out_put_file_name, "w") as result:
+    with open(folder_path + "\\" + out_put_file_name, "w") as combined_file:
         file_counter = 0
-        for file_ in file_list:
+        for file in file_list:
             line_counter = 0
             column_mapper = []
-            for line in open(file_, "r"):
-                line = line.rstrip("\n")
-                # read the headers in file
-                if line_counter == 0:
-                    headers_in_file = line.split("\t")
-                    # replace any empty strings in header
-                    file_name = get_file_name_without_ext(file_)
-                    empty_header_counter = 0
-                    for i in range(len(headers_in_file)):
-                        # reformat any empty headers to be unique
-                        if headers_in_file[i] == "":
-                            headers_in_file[i] = (
-                                file_name + ".Empty." + str(empty_header_counter)
-                            )
-                            empty_header_counter = empty_header_counter + 1
-                    # match up unique headers with headers from this file
-                    # build header mapping
-                    for uh in headers:
-                        if uh in headers_in_file:
-                            column_mapper.append(headers_in_file.index(uh))
-                        else:
-                            column_mapper.append(-1)
-                # ensure unique header is written
-                if file_counter == 0 and line_counter == 0:
-                    headers.append("\n")
-                    result.write("\t".join(headers))
-                elif line_counter != 0:
-                    # write out padded rows
-                    row_data = line.split("\t")
-                    # print(row_data)
-                    padded_row = []
-                    for cm in column_mapper:
-                        if cm == -1:
-                            # this column does not exist in this file
-                            padded_row.append("N/A")
-                        elif cm > len(row_data):
-                            # less columns in file than mapper index (should'nt happen??)
-                            padded_row.append("index out of bounds")
-                        else:
-                            padded_row.append(row_data[cm])
-                    padded_row.append("\n")
-                    result.write("\t".join(padded_row))
-                line_counter += 1
-            file_counter += 1
+            with open(file, "r") as file_read:
+                lines = file_read.readlines()
+                for line in lines:
+                    line = line.rstrip("\n")
+                    # read the headers in file
+                    if line_counter == 0:
+                        headers_in_file = line.split("\t")
+                        # replace any empty strings in header
+                        headers_in_file = _format_headers(headers_in_file, file)
+                        # match up unique headers with headers from this file
+                        # build header mapping
+                        for unique_header in headers:
+                            if unique_header in headers_in_file:
+                                column_mapper.append(headers_in_file.index(unique_header))
+                            else:
+                                #print('unique header not in file: ', unique_header, 'header in file', headers_in_file, 'unique headers', headers)
+                                column_mapper.append(-1)
+                    # ensure unique header is written to file
+                    if file_counter == 0 and line_counter == 0:
+                        combined_file.write("\t".join(headers) + "\n")
+                    elif line_counter != 0:
+                        # write out padded rows
+                        row_data = line.split("\t")
+                        # print(row_data)
+                        padded_row = []
+                        for cm in column_mapper:
+                            if cm == -1:
+                                # this column does not exist in this file
+                                padded_row.append("N/A")
+                            elif cm > len(row_data):
+                                # less columns in file than mapper index (should'nt happen??)
+                                padded_row.append("index out of bounds")
+                            else:
+                                padded_row.append(row_data[cm])
+                        combined_file.write("\t".join(padded_row)+"\n")
+                    line_counter += 1
+                file_counter += 1
+                file_read.close()
+        combined_file.close()

@@ -28,7 +28,7 @@ Helper functions relating to tab separated text files.
 
 import codecs
 import csv
-from duHast.Utilities.files_io import get_first_row_in_file
+from duHast.Utilities.files_io import get_first_row_in_file_no_strip
 from duHast.Utilities.files_io import get_file_name_without_ext
 
 
@@ -48,7 +48,8 @@ def get_unique_headers(files):
 
     headers_in_all_files = {}
     for f in files:
-        data = get_first_row_in_file(f)
+        # get unmodified row data and remove the next line character at the end
+        data = get_first_row_in_file_no_strip(f).rstrip('\n')
         if (data is not None):
             row_split = data.split('\t')
             headers_in_all_files[get_file_name_without_ext(f)] = row_split

@@ -110,9 +110,9 @@ class FileCombineFiles(test.Test):
                     # build expected result list
                     expected_result = [file[1] for file in test_files]
                     # insert header row
-                    expected_result.insert(0, test_files_two[0][2])
+                    expected_result.insert(0, test_files[0][2])
                     # compare lists sorted in case files got read in a different order when combined
-                    message_action = "{} \nvs \n{}".format(
+                    message_action = "result: {} \nvs \nexpected: {}".format(
                         sorted(result), sorted(expected_result)
                     )
                     assert sorted(result) == sorted(expected_result)
@@ -122,7 +122,7 @@ class FileCombineFiles(test.Test):
                         message_action
                         + "\n"
                         + (
-                            "An exception occurred in function {} data short: {}".format(
+                            "An exception occurred in function {} uniform number of columns: {}".format(
                                 self.test_name, e
                             )
                         )
@@ -163,7 +163,7 @@ class FileCombineFiles(test.Test):
                         message_action
                         + "\n"
                         + (
-                            "An exception occurred in function {} data short: {}".format(
+                            "An exception occurred in function {} varied number of columns: {}".format(
                                 self.test_name, e
                             )
                         )

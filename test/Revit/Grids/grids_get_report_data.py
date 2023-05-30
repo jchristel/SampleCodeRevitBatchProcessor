@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit walls report data tests . 
+This module contains revit grids report data tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,22 +27,22 @@ This module contains revit walls report data tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.Walls.Reporting.walls_report import get_wall_report_data
+from duHast.Revit.Grids.Reporting.grid_report_utils import get_grid_report_data
 from duHast.Utilities import result as res
 
-from test.Revit.Walls.walls_report import REVIT_TEST_FILE_NAME
+from test.Revit.Grids.grids_report import REVIT_TEST_FILE_NAME
 
 
-class GetWallReportData(revit_test.RevitTest):
+class GetGridReportData(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GetWallReportData, self).__init__(
-            doc=doc, test_name="get_wall_report_data"
+        super(GetGridReportData, self).__init__(
+            doc=doc, test_name="get_grid_report_data"
         )
 
     def test(self):
         """
-        get wall report data test
+        get grid report data test
 
         :param doc: Current Revit model document.
         :type doc: Autodesk.Revit.DB.Document
@@ -51,7 +51,7 @@ class GetWallReportData(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if wall data was retrieved successfully, otherwise False
+                - .result = True if grid data was retrieved successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -65,8 +65,8 @@ class GetWallReportData(revit_test.RevitTest):
 
         return_value = res.Result()
         try:
-            # get wall report headers
-            result = get_wall_report_data(self.document, REVIT_TEST_FILE_NAME)
+            # get grid report headers
+            result = get_grid_report_data(self.document, REVIT_TEST_FILE_NAME)
             expected_result = [
                 [
                     REVIT_TEST_FILE_NAME,

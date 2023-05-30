@@ -29,4 +29,4 @@ This module contains the header row for any Revit shared parameter reports.
 
 # -------------------------------------------- common variables --------------------
 #: headers used in reports
-REPORT_SHAREDPARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBINDINGS']
+REPORT_SHARED_PARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBINDINGS']

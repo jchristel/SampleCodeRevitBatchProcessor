@@ -32,6 +32,7 @@ from duHast.Utilities import result as res
 
 # import test classes
 from test.Revit.Grids import grids_get_report_data
+from test.Revit.Grids import grids_two_d
 
 
 def run_grids_tests(doc):
@@ -52,6 +53,7 @@ def run_grids_tests(doc):
 
     run_tests = [
         ["Get Grids Report Data", grids_get_report_data.GetGridReportData],
+        ["grids to 2D", grids_two_d.GridsTwoD],
     ]
 
     runner = RevitRunTest(run_tests)

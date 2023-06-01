@@ -66,6 +66,7 @@ from test.Revit.Grids.run_test_classes import run_grids_tests as run_grids_tests
 
 #: add test runners to list
 TESTS = [
+    #run_grids_tests,
     run_des_tests,
     run_rev_tests,
     run_view_tests,
@@ -83,20 +84,27 @@ file_name = os.path.join(
 #: overwrite previous test date at log file open
 write_mode = "w"
 
+counter = 0
 for test in TESTS:
-    result = test(doc)
-    for test_result in result.result:
-        # write results to file
-        write_report_data_as_csv(
-            file_name,
-            "",
-            [[test_result[3], test_result[4], test_result[5]]],
-            write_mode,
-        )
-        # provide short summary only...more details in log file
-        output(test_result[0], revit_script_util.Output)
-        output(test_result[2], revit_script_util.Output)
-        # make sure all subsequent data is appended to log file
-        write_mode = "a"
+    output_header('starting test group: {}'.format(counter), revit_script_util.Output)
+    try:
+        result = test(doc)
+        for test_result in result.result:
+            # write results to file
+            write_report_data_as_csv(
+                file_name,
+                "",
+                [[test_result[3], test_result[4], test_result[5]]],
+                write_mode,
+            )
+            # provide short summary only...more details in log file
+            output(test_result[0], revit_script_util.Output)
+            output(test_result[2], revit_script_util.Output)
+            # make sure all subsequent data is appended to log file
+            write_mode = "a"
+    except Exception as e:
+        output("test counter: {} failed with exception: {}".format(counter, e))
+    output_header('completed test group: {}'.format(counter), revit_script_util.Output)
+    counter = counter + 1
 
 output_header("Executing tests.... finished ", revit_script_util.Output)

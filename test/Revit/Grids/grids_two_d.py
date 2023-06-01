@@ -39,9 +39,7 @@ import Autodesk.Revit.DB as rdb
 class GridsTwoD(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(GridsTwoD, self).__init__(
-            doc=doc, test_name="change_grids_2D"
-        )
+        super(GridsTwoD, self).__init__(doc=doc, test_name="change_grids_2D")
 
     def test(self):
         """
@@ -69,10 +67,10 @@ class GridsTwoD(revit_test.RevitTest):
         return_value = res.Result()
 
         # set up a return specific plan return filter
-        def action(x):
-            if(x.Name == 'value'):
+        def action_name_check(x):
+            if x.Name == "Level 00":
                 return True
-        
+
         try:
             # action to be executed in a transaction group so it can be rolled back at end of test
             def action(doc):
@@ -81,18 +79,55 @@ class GridsTwoD(revit_test.RevitTest):
                     # get all grids in the model
                     grids = get_grids_in_model(self.document)
                     # get sample view
-                    views = get_views_in_model(self.document, action)
-                    # set all grids to 2D in view
-                    set_grids_2d = change_grids_2D(self.document, grids, views[0])
-                    # check for any exceptions
-                    action_return_value.append_message("result: {} vs expected: {}".format(set_grids_2d.status, True))
-                    assert set_grids_2d.status == True
-                    # check grids
-                    for grid in grids:
-                        action_return_value.append_message("id: {} result: {} vs expected: {}".format(grid.Id, grid.GetDatumExtentTypeInView(rdb.DatumEnds.End0, views[0]), rdb.DatumExtentType.ViewSpecific))
-                        action_return_value.append_message("id: {} result: {} vs expected: {}".format(grid.Id, grid.GetDatumExtentTypeInView(rdb.DatumEnds.End0, views[1]), rdb.DatumExtentType.ViewSpecific))
-                        assert grid.GetDatumExtentTypeInView(rdb.DatumEnds.End0, views[0]) == rdb.DatumExtentType.ViewSpecific
-                        assert grid.GetDatumExtentTypeInView(rdb.DatumEnds.End1, views[0]) == rdb.DatumExtentType.ViewSpecific
+                    views = get_views_in_model(self.document, action_name_check)
+
+                    if len(views) >= 1:
+                        # set all grids to 2D in view
+                        set_grids_2d = change_grids_2D(self.document, grids, views[0])
+                        # check for any exceptions
+                        action_return_value.append_message(
+                            "result: {} vs expected: {}".format(
+                                set_grids_2d.status, True
+                            )
+                        )
+                        assert set_grids_2d.status == True
+                        # check grids
+                        for grid in grids:
+                            action_return_value.append_message(
+                                "id: {} result: {} vs expected: {}".format(
+                                    grid.Id,
+                                    grid.GetDatumExtentTypeInView(
+                                        rdb.DatumEnds.End0, views[0]
+                                    ),
+                                    rdb.DatumExtentType.ViewSpecific,
+                                )
+                            )
+                            action_return_value.append_message(
+                                "id: {} result: {} vs expected: {}".format(
+                                    grid.Id,
+                                    grid.GetDatumExtentTypeInView(
+                                        rdb.DatumEnds.End0, views[0]
+                                    ),
+                                    rdb.DatumExtentType.ViewSpecific,
+                                )
+                            )
+                            assert (
+                                grid.GetDatumExtentTypeInView(
+                                    rdb.DatumEnds.End0, views[0]
+                                )
+                                == rdb.DatumExtentType.ViewSpecific
+                            )
+                            assert (
+                                grid.GetDatumExtentTypeInView(
+                                    rdb.DatumEnds.End1, views[0]
+                                )
+                                == rdb.DatumExtentType.ViewSpecific
+                            )
+                    else:
+                        raise ValueError(
+                            "No view found in which to change grid appearance!"
+                        )
+
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
@@ -109,5 +144,4 @@ class GridsTwoD(revit_test.RevitTest):
                 False,
                 "An exception occurred in function {}: {}".format(self.test_name, e),
             )
-
         return return_value

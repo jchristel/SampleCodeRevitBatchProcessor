@@ -70,21 +70,17 @@ class GetGridReportData(revit_test.RevitTest):
             expected_result = [
                 [
                     REVIT_TEST_FILE_NAME,
-                    "1641",
-                    "Wall 1",
-                    "Structure",
-                    "200.0",
-                    "N/A",
-                    "N/A",
+                    "224340",
+                    "A",
+                    "unknown",
+                    "[-1.39259773061e-14,-8.61998952334,-1.0]\t[9.28594923983e-14,57.4787559983,8.0]",
                 ],
                 [
                     REVIT_TEST_FILE_NAME,
-                    "1642",
-                    "Curtain Wall 1",
-                    "no layers - in place family or curtain wall",
-                    "0.0",
-                    "NA",
-                    "NA",
+                    "224438",
+                    "01",
+                    "unknown",
+                    "[-10.7328110722,-1.9732224956e-13,-1.0]\t[61.0698871087,3.46777487067e-14,8.0]",
                 ],
             ]
             return_value.append_message(

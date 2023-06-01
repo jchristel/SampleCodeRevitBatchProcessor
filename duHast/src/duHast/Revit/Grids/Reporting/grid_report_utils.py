@@ -28,7 +28,7 @@ This module contains utility function(s) for grid reports.
 
 import Autodesk.Revit.DB as rdb
 from duHast.Revit.Common import worksets as rWork
-from duHast.Utilities import files_io as fileIO, utility as util
+from duHast.Utilities import utility as util
 from duHast.Revit.Grids import grids as rGrid
 
 
@@ -46,7 +46,7 @@ def get_grid_report_data(doc, revit_file_path):
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
         data.append([
-            fileIO.get_file_name_without_ext(revit_file_path),
+            revit_file_path,
             str(p.Id.IntegerValue),
             util.encode_ascii (p.Name),
             rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),

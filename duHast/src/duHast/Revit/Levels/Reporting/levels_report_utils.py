@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
-from duHast.Utilities import files_io as fileIO
+from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 
 def get_level_report_data(doc, revitFilePath):
@@ -48,9 +48,9 @@ def get_level_report_data(doc, revitFilePath):
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
         data.append([
-            fileIO.get_file_name_without_ext(revitFilePath),
+            revitFilePath,
             str(p.Id.IntegerValue),
             util.encode_ascii(p.Name),
             util.encode_ascii(rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)),
-            str(p.Elevation)])
+            str(convert_imperial_feet_to_metric_mm(p.Elevation))])
     return data

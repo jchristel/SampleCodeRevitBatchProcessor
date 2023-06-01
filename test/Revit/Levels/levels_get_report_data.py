@@ -68,24 +68,8 @@ class GetLevelsReportData(revit_test.RevitTest):
             # get grid report headers
             result = get_level_report_data(self.document, REVIT_TEST_FILE_NAME)
             expected_result = [
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "1641",
-                    "Wall 1",
-                    "Structure",
-                    "200.0",
-                    "N/A",
-                    "N/A",
-                ],
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "1642",
-                    "Curtain Wall 1",
-                    "no layers - in place family or curtain wall",
-                    "0.0",
-                    "NA",
-                    "NA",
-                ],
+                [REVIT_TEST_FILE_NAME, "1610", "Level 00", "unknown", "0.0"],
+                [REVIT_TEST_FILE_NAME, "333988", "Level 01", "unknown", "11.4829396325"],
             ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)

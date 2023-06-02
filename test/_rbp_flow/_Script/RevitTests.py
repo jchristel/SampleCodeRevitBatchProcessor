@@ -63,16 +63,17 @@ from test.Revit.Views.run_test_classes import run_views_tests as run_view_tests
 from test.Revit.Walls.run_test_classes import run_walls_tests as run_wall_tests
 from test.Revit.Levels.run_test_classes import run_levels_tests as run_levels_tests
 from test.Revit.Grids.run_test_classes import run_grids_tests as run_grids_tests
+from test.Revit.SharedParameters.run_test_classes import run_shared_parameters_tests
 
 #: add test runners to list
 TESTS = [
-    #run_grids_tests,
     run_des_tests,
     run_rev_tests,
     run_view_tests,
     run_wall_tests,
     run_grids_tests,
     run_levels_tests,
+    run_shared_parameters_tests,
 ]
 
 #: execute tests

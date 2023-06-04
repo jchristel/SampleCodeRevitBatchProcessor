@@ -30,9 +30,10 @@ import clr
 import System
 
 # import common library modules
-
+from duHast.Revit.Common.revit_version import get_revit_version_number
 # import Autodesk
 import Autodesk.Revit.DB as rdb
+
 
 
 # --------------------------------------------- utility functions ------------------
@@ -229,7 +230,32 @@ def get_shared_parameter_definition(parameter_name, def_file):
 
 def param_binding_exists(doc, param_name, param_type):
     '''
-    Gets all parameter bindings for a given parameter.
+    Gets all parameter bindings for a given parameter depending on revit version.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param param_name: The name of the parameter.
+    :type param_name: str
+    :param param_type: The parameter type. (Area, vs text vs... (deprecated in Revit 2022!)
+    :type param_type: Autodesk.Revit.DB.ParameterType
+
+    :return: List of categories a parameter is attached to.
+    :rtype: list of str
+    '''
+
+    revit_version = get_revit_version_number(doc)
+    data = []
+    if(revit_version<=2022):
+        data = param_binding_exists_2022(doc=doc, param_name=param_name, param_type=param_type)
+    else:
+        data = param_binding_exists_2023(doc=doc, param_name=param_name, type_id=param_type)
+    return data
+    
+
+
+def param_binding_exists_2022(doc, param_name, param_type):
+    '''
+    Gets all parameter bindings for a given parameter fro Revit versions up to 2022.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -248,6 +274,33 @@ def param_binding_exists(doc, param_name, param_type):
     iterator.Reset()
     while iterator.MoveNext():
         if iterator.Key != None and iterator.Key.Name == param_name and iterator.Key.ParameterType == param_type:
+            elem_bind = iterator.Current
+            for cat in elem_bind.Categories:
+                categories.append(cat.Name)
+            break
+    return categories
+
+def param_binding_exists_2023(doc, param_name, type_id):
+    '''
+    Gets all parameter bindings for a given parameter for Revit 2023 onwards
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param param_name: The name of the parameter.
+    :type param_name: str
+    :param type_id: Forge type id
+    :type type_id: Autodesk.Revit.DB.ForgeTypeId
+
+    :return: List of categories a parameter is attached to.
+    :rtype: list of str
+    '''
+
+    categories = []
+    map = doc.ParameterBindings
+    iterator = map.ForwardIterator()
+    iterator.Reset()
+    while iterator.MoveNext():
+        if iterator.Key != None and iterator.Key.Name == param_name and iterator.Key.GetDataType() == type_id:
             elem_bind = iterator.Current
             for cat in elem_bind.Categories:
                 categories.append(cat.Name)

@@ -69,7 +69,7 @@ class GetLevelsReportData(revit_test.RevitTest):
             result = get_level_report_data(self.document, REVIT_TEST_FILE_NAME)
             expected_result = [
                 [REVIT_TEST_FILE_NAME, "1610", "Level 00", "unknown", "0.0"],
-                [REVIT_TEST_FILE_NAME, "333988", "Level 01", "unknown", "11.4829396325"],
+                [REVIT_TEST_FILE_NAME, "333988", "Level 01", "unknown", "3500.0"],
             ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)

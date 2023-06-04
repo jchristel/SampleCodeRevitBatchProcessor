@@ -27,7 +27,9 @@ This module contains revit shared report data tests .
 #
 
 from test.Revit.TestUtils import revit_test
-from duHast.Revit.SharedParameters.Reporting.shared_parameter_report import get_shared_parameter_report_data
+from duHast.Revit.SharedParameters.Reporting.shared_parameter_report import (
+    get_shared_parameter_report_data,
+)
 from duHast.Utilities import result as res
 
 from test.Revit.SharedParameters.shared_parameters_report import REVIT_TEST_FILE_NAME
@@ -66,26 +68,17 @@ class GetSharedParameterReportData(revit_test.RevitTest):
         return_value = res.Result()
         try:
             # get wall report headers
-            result = get_shared_parameter_report_data(self.document, REVIT_TEST_FILE_NAME)
+            result = get_shared_parameter_report_data(
+                self.document, REVIT_TEST_FILE_NAME
+            )
             expected_result = [
                 [
                     REVIT_TEST_FILE_NAME,
-                    "1641",
-                    "Wall 1",
-                    "Structure",
-                    "200.0",
-                    "N/A",
-                    "N/A",
-                ],
-                [
-                    REVIT_TEST_FILE_NAME,
-                    "1642",
-                    "Curtain Wall 1",
-                    "no layers - in place family or curtain wall",
-                    "0.0",
-                    "NA",
-                    "NA",
-                ],
+                    "2fb72b30-386f-4b5d-a2b1-e99e0f55921f",
+                    "970451",
+                    "test_length",
+                    "['Walls']",
+                ]
             ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)

@@ -29,7 +29,6 @@ This module contains a number of helper functions relating to Revit view sheets.
 import Autodesk.Revit.DB as rdb
 from duHast.Utilities import utility as util
 
-from duHast.Revit.Views.Utility.view_types import _get_view_types
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 
 
@@ -72,7 +71,8 @@ def get_all_sheets(doc):
     :rtype: list of Autodesk.Revit.DB.View
     '''
 
-    return _get_view_types(doc, rdb.ViewType.DrawingSheet)
+    collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewSheet)
+    return collector_views
 
 def get_sheet_rev_by_sheet_number(
     doc,

@@ -58,10 +58,10 @@ def move_tag_to_room(doc, tag_id):
         action_return_value = res.Result()
         try:
             rt.Location.Move(translation)
-            action_return_value.message = 'Moved tag to room ' + room_data
+            action_return_value.message = 'Moved tag to room: {}'.format(room_data)
         except Exception as e:
-            action_return_value.update_sep(False, 'Failed to move tag to room ' + room_data + ' with exception: ' + str(e))
+            action_return_value.update_sep(False, 'Failed to move tag to room: {} with exception: {}'.format( room_data,e))
         return action_return_value
-    transaction = rdb.Transaction(doc, 'Moving room tag to room : ' + room_data)
+    transaction = rdb.Transaction(doc, 'Moving room tag to room : {}'.format(room_data))
     return_value.update(rTran.in_transaction(transaction, action))
     return return_value

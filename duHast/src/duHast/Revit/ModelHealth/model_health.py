@@ -31,6 +31,7 @@ and or data can be exported to text files which can be used to visualize key met
 #
 
 import clr
+import os
 
 clr.AddReference("System.Core")
 from System import Linq
@@ -56,7 +57,7 @@ from duHast.Revit.Common import groups as rGrp
 from duHast.Revit.Rooms import rooms as rRooms
 from duHast.Revit.DetailItems import detail_items as rDetItems
 from duHast.Revit.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import files_tab as fileTab
+from duHast.Utilities.files_csv import write_report_data_as_csv
 
 import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
@@ -134,7 +135,7 @@ def get_parameters_of_instance(fam_instance, doc):
         if(p.IsReadOnly == False):
             # check an action to update this parameter value exists
             if(PARAM_ACTIONS.ContainsKey(p.Definition.Name)):
-                parameter_value = PARAM_ACTIONS[p.Definition.Name].getData(doc)
+                parameter_value = PARAM_ACTIONS[p.Definition.Name].get_data(doc)
                 if(parameter_value != FAILED_TO_RETRIEVE_VALUE):
                     flag = rParaSet.set_parameter_value (p, _cast_parameter_value(parameter_value), doc)
                     result_value.update(flag)
@@ -272,7 +273,7 @@ def get_number_of_sheets(doc):
 
     number = FAILED_TO_RETRIEVE_VALUE
     try:
-        number = len(rViewSheets.get_all_sheets(doc))
+        number = len(rViewSheets.get_all_sheets(doc).ToList())
     except:
         pass
     return number
@@ -683,7 +684,7 @@ def get_number_of_filled_regions(doc):
 # ----------------------------------------------
 
 #set up a named tuple to store data in it
-health_data_action = namedtuple('healthDataAction', 'getData reportFileName')
+health_data_action = namedtuple('healthDataAction', 'get_data report_file_name')
 
 #: List of actions reporting model health metrics and their associated parameter name
 PARAM_ACTIONS = {
@@ -743,7 +744,7 @@ def update_model_health_tracer_family(doc, revit_file_path):
             update_flag = get_parameters_of_instance(instance, doc)
             result_value.update(update_flag)
     else:
-        result_value.update_sep(False, 'Family to update ' + MODEL_HEALTH_TRACKER_FAMILY + ' was not found in model: '+ revit_file_name)
+        result_value.update_sep(False, 'Family to update: {} was not found in model: {}'.format(MODEL_HEALTH_TRACKER_FAMILY,revit_file_name))
     return result_value
 
 # doc   current document
@@ -774,26 +775,26 @@ def write_model_health_report(doc, revit_file_path, output_directory):
     result_value = res.Result()
     # get values and write them out
     for key, value in PARAM_ACTIONS.items():
-        parameter_value = PARAM_ACTIONS[key].getData(doc)
-        file_name = dateStamp.get_file_date_stamp() + revit_file_name + PARAM_ACTIONS[key].reportFileName + '.temp'
+        parameter_value = PARAM_ACTIONS[key].get_data(doc)
+        file_name = dateStamp.get_file_date_stamp() + revit_file_name + PARAM_ACTIONS[key].report_file_name + '.temp'
         res_export = res.Result()
         try:
-            fileTab.write_report_data(
-                output_directory + '\\' + file_name,
-                '',
+            write_report_data_as_csv(
+                os.path.join(output_directory, file_name),
+                rFns.LOG_FILE_HEADER,
                 [
                     [
                         revit_file_name, 
                         key, 
                         dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYYMMDD_SPACE), 
-                        dateStamp.get_date_stamp(dateStamp.DateStamps.TIME_STAMP_HHMMSEC_COLON), 
+                        dateStamp.get_date_stamp(dateStamp.TIME_STAMP_HHMMSEC_COLON), 
                         _cast_parameter_value(parameter_value)
                         ]
                     ]
                 )
                 
-            res_export.update_sep(True, 'Exported: ' + str(key))
+            res_export.update_sep(True, 'Exported: {}'.format(key))
         except Exception as e:
-                res_export.update_sep(True, 'Export failed: ' + str(key)+ ' ' + str(e))
+                res_export.update_sep(False, 'Export failed: {} with exception: {}'.format(key, e))
         result_value.update(res_export)
     return result_value

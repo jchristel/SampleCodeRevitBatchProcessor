@@ -27,7 +27,7 @@ Room tag not in room warnings solver class.
 #
 
 from duHast.Utilities import result as res
-from duHast.Revit import RevitRooms as rRoom
+from duHast.Revit.Rooms.room_tags import move_tag_to_room
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
@@ -71,7 +71,7 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
             for warning in warnings:
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
-                    result = rRoom.MoveTagToRoom(doc, el_id)
+                    result = move_tag_to_room(doc, el_id)
                     return_value.update(result)
         else:
             return_value.update_sep(True,'No warnings of type: room tag outside of room in model.')

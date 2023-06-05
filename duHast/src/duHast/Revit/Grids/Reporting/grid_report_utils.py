@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains utility function(s) for grid reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,7 +33,7 @@ from duHast.Revit.Grids import grids as rGrid
 
 
 def get_grid_report_data(doc, revit_file_path):
-    '''
+    """
     Gets grid data ready for being printed to file
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -41,14 +41,18 @@ def get_grid_report_data(doc, revit_file_path):
     :type revit_file_path: str
     :return: list of list of revit grid properties.
     :rtype: [[str]]
-    '''
+    """
 
     data = []
-    for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
-        data.append([
-            revit_file_path,
-            str(p.Id.IntegerValue),
-            util.encode_ascii (p.Name),
-            rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue),
-            rGrid.get_max_extent_as_string(p)])
+    for grid in rdb.FilteredElementCollector(doc).OfClass(rdb.Grid):
+        data.append(
+            [
+                revit_file_path,
+                str(grid.Id.IntegerValue),
+                util.encode_ascii(grid.Name),
+                rWork.get_workset_name_by_id(doc, grid.WorksetId.IntegerValue),
+                rGrid.get_max_extent_as_string(grid),
+                rGrid.get_min_extent_as_string(grid),
+            ]
+        )
     return data

@@ -84,6 +84,8 @@ def show_bubble_end (doc, grid, view, end_identifier, show_bubble):
     :type grid: Autodesk.Revit.DB.Grid
     :param view: The view in which a grid bubbles visibility is to be toggled.
     :type view: Autodesk.Revit.DB.View
+    :param end_identifier: An enumerated type representing ends of a datum plane.
+    :type end_identifier: Autodesk.Revit.DB.DatumEnds
     :param show_bubble: True bubble will switched on, False it will be switched off
     :type show_bubble: bool
     :return: 

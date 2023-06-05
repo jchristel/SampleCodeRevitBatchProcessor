@@ -32,7 +32,8 @@ from duHast.Utilities import result as res
 
 # import test classes
 from test.Revit.Grids import grids_get_report_data
-from test.Revit.Grids import grids_two_d
+from test.Revit.Grids import grids_two_d, grids_show_bubble_end, grids_toggle_bubble_end_one, grids_toggle_bubble_end_zero
+
 
 
 def run_grids_tests(doc):
@@ -54,6 +55,9 @@ def run_grids_tests(doc):
     run_tests = [
         ["Get Grids Report Data", grids_get_report_data.GetGridReportData],
         ["grids to 2D", grids_two_d.GridsTwoD],
+        ["Toggle Grid Bubbles", grids_show_bubble_end.GridsToggleBubbleVisibilityAtEnd],
+        ["Toggle Grid Bubbles Zero End", grids_toggle_bubble_end_zero.GridsToggleBubbleVisibilityAtZeroEnd],
+        ["Toggle Grid Bubbles One End", grids_toggle_bubble_end_one.GridsToggleBubbleVisibilityAtOneEnd],
     ]
 
     runner = RevitRunTest(run_tests)

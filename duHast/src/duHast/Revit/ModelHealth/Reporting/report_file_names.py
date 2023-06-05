@@ -26,6 +26,10 @@ Contains file names used by model health report.
 #
 #
 
+#: header for each report file
+LOG_FILE_HEADER = ['HOSTFILE','REPORT','DATE','TIME','VALUE']
+
+
 #: report file name suffix : date last updated
 PARAM_ACTIONS_FILENAME_DATE_LAST_UPDATED = '_DateLastUpdated'
 #: report file name suffix : worksets

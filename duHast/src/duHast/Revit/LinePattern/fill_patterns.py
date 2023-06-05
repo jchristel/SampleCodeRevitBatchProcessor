@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 def get_all_fill_pattern(doc):
     '''
-    Gets all fill pattern element ids in the model.
+    Gets all fill pattern elements in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of all fill pattern elements.

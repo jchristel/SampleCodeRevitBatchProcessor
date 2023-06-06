@@ -79,17 +79,17 @@ class GridsToggleBubbleVisibilityAtEnd(revit_test.RevitTest):
             # check for any exceptions
             return_value.append_message(
                 "grid id: {} result zero end: {} vs expected: {}".format(
-                    grid.Id, change_bubble_zero.status, is_visible
+                    grid.Id, change_bubble_zero.status, True
                 )
             )
             # check for any exceptions
             return_value.append_message(
                 "grid id: {} result one end: {} vs expected: {}".format(
-                    grid.Id, change_bubble_one.status, is_visible
+                    grid.Id, change_bubble_one.status, True
                 )
             )
-            assert change_bubble_zero.status == is_visible
-            assert change_bubble_one.status == is_visible
+            assert change_bubble_zero.status == True
+            assert change_bubble_one.status == True
         return return_value
 
     def _check_grid_bubbles(self, grids, view, is_visible):
@@ -179,22 +179,32 @@ class GridsToggleBubbleVisibilityAtEnd(revit_test.RevitTest):
                     if len(views) >= 1:
                         # switch grid bubbles off
                         toggle_grids_off = self._toggle_grid_bubbles(
-                            self, grids, views[0], False
+                            grids,
+                            views[0],
+                            False,  # False here refers to the actual bubble visibility
                         )
                         action_return_value.update(toggle_grids_off)
                         # check actual grids
                         check_grids_off = self._check_grid_bubbles(
-                            grids, views[0], False
+                            grids,
+                            views[0],
+                            False,  # False here refers the actual visibility of the bubble
                         )
                         action_return_value.update(check_grids_off)
 
                         # switch bubbles back on
                         toggle_grids_on = self._toggle_grid_bubbles(
-                            self, grids, views[0], True
+                            grids,
+                            views[0],
+                            True,  # true here refers to the actual bubble visibility
                         )
                         action_return_value.update(toggle_grids_on)
                         # check actual grids
-                        check_grids_on = self._check_grid_bubbles(grids, views[0], True)
+                        check_grids_on = self._check_grid_bubbles(
+                            grids,
+                            views[0],
+                            True,  # True here refers the actual visibility of the bubble
+                        )
                         action_return_value.update(check_grids_on)
 
                     else:

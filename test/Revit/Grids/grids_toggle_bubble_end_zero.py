@@ -43,7 +43,7 @@ class GridsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
             doc=doc, test_name="toggle_bubble_zero_end"
         )
 
-    def _toggle_grid_bubbles(self, grids, view, is_visible):
+    def _toggle_grid_bubbles(self, grids, view):
         """
         Tests toggling grid end zero of each grid past in.
 
@@ -65,18 +65,24 @@ class GridsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
         """
 
         return_value = res.Result()
-        # toggle grid bubbles off on both ends
-        for grid in grids:
+        try:
             # set hide bubble at zero end
-
-            change_bubble_zero = toggle_bubble_zero_end(self.document, grid, view)
+            change_bubble_zero = toggle_bubble_zero_end(self.document, grids, view)
             # check for any exceptions
             return_value.append_message(
-                "grid id: {} result zero end: {} vs expected: {}".format(
-                    grid.Id, change_bubble_zero.status, True
+                "result zero end: {} vs expected: {}".format(
+                    change_bubble_zero.status,
+                    True,  # expecting the action to complete successfully
                 )
             )
-            assert change_bubble_zero.status == is_visible
+            assert (
+                change_bubble_zero.status == True
+            )  # expecting the action to complete successfully
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function {}: {}".format(self.test_name, e),
+            )
         return return_value
 
     def _check_grid_bubbles(self, grids, view, is_visible):
@@ -112,14 +118,7 @@ class GridsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                     is_visible,
                 )
             )
-            return_value.append_message(
-                "id: {} result: {} vs expected: {}".format(
-                    grid.Id,
-                    grid.IsBubbleVisibleInView(rdb.DatumEnds.End1, view),
-                    is_visible,
-                )
-            )
-            assert grid.IsBubbleVisibleInView(rdb.DatumEnds.End1, view) == is_visible
+            assert grid.IsBubbleVisibleInView(rdb.DatumEnds.End0, view) == is_visible
         return return_value
 
     def test(self):
@@ -165,22 +164,29 @@ class GridsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                     if len(views) >= 1:
                         # switch grid bubbles off
                         toggle_grids_first = self._toggle_grid_bubbles(
-                            self, grids, views[0], False
+                            grids,
+                            views[0]
                         )
                         action_return_value.update(toggle_grids_first)
                         # check actual grids
                         check_grids_off = self._check_grid_bubbles(
-                            grids, views[0], False
+                            grids,
+                            views[0],
+                            False,  # False here refers the actual visibility of the bubble
                         )
                         action_return_value.update(check_grids_off)
-
                         # switch bubbles back on
                         toggle_grids_on = self._toggle_grid_bubbles(
-                            self, grids, views[0], True
+                            grids,
+                            views[0]
                         )
                         action_return_value.update(toggle_grids_on)
                         # check actual grids
-                        check_grids_on = self._check_grid_bubbles(grids, views[0], True)
+                        check_grids_on = self._check_grid_bubbles(
+                            grids,
+                            views[0],
+                            True,  # True here refers the actual visibility of the bubble
+                        )
                         action_return_value.update(check_grids_on)
 
                     else:

@@ -56,26 +56,27 @@ class RevitRunTest(base.Base):
         """
 
         return_value = res.Result()
-
-        for revit_test in self.tests:
-            # initialise test class with current document
-            test_class = revit_test[1](doc)
-            # run the test
-            result_test = test_class.test()
-            # update overall status with test outcome
-            return_value.update(result_test)
-            # add string to the result for later processing
-            return_value.result.append(
-                [
-                    pad_header_no_time_stamp(revit_test[0]), # test name formatted as a header
-                    result_test, # result object
-                    pad_string(
-                        "{} completed status [{}]".format(revit_test[0], result_test.status)
-                    ), # completed message
-                    revit_test[0], # test name
-                    str(result_test.status), # test outcome
-                    result_test.message, # test result message object
-                ]
-            )
-
+        try:
+            for revit_test in self.tests:
+                # initialise test class with current document
+                test_class = revit_test[1](doc)
+                # run the test
+                result_test = test_class.test()
+                # update overall status with test outcome
+                return_value.update(result_test)
+                # add string to the result for later processing
+                return_value.result.append(
+                    [
+                        pad_header_no_time_stamp(revit_test[0]), # test name formatted as a header
+                        result_test, # result object
+                        pad_string(
+                            "{} completed status [{}]".format(revit_test[0], result_test.status)
+                        ), # completed message
+                        revit_test[0], # test name
+                        str(result_test.status), # test outcome
+                        result_test.message, # test result message object
+                    ]
+                )
+        except Exception as e:
+            return_value.update_sep(False, 'An exception ocurred when marshalling tests: {}'.format(e))
         return return_value

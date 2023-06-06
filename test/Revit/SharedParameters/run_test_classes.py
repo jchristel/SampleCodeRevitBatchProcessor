@@ -48,8 +48,8 @@ def run_shared_parameters_tests(doc):
 
     return_value = res.Result()
 
-    # start tests -> should run revision sequence tests first since they form
-    # part of revision tests
+    # start tests -> should run ...  tests first since they form
+    # part of ... tests
 
     run_tests = [
         ["Shared Parameter Report",shared_para_report.GetSharedParameterReportData],

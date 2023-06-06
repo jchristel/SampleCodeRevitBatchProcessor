@@ -75,13 +75,18 @@ class LevelsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                     True,  # expecting the action to complete successfully
                 )
             )
+
             assert (
-                change_bubble_zero.status == True
-            )  # expecting the action to complete successfully
+                change_bubble_zero.status
+                == True  # expecting the action to complete successfully
+            )
+
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(self.test_name, e),
+                "An exception occurred in function ( _toggle_level_bubbles) {}: {}".format(
+                    self.test_name, e
+                ),
             )
         return return_value
 
@@ -109,16 +114,25 @@ class LevelsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
         """
 
         return_value = res.Result()
-        # check levels
-        for level in levels:
-            return_value.append_message(
-                "id: {} result: {} vs expected: {}".format(
-                    level.Id,
-                    level.IsBubbleVisibleInView(rdb.DatumEnds.End0, view),
-                    is_visible,
+        try:
+            # check levels
+            for level in levels:
+                return_value.append_message(
+                    "id: {} result: {} vs expected: {}".format(
+                        level.Id,
+                        level.IsBubbleVisibleInView(rdb.DatumEnds.End0, view),
+                        is_visible,
+                    )
                 )
+                assert level.IsBubbleVisibleInView(rdb.DatumEnds.End0, view) == is_visible
+
+        except Exception as e:
+            return_value.update_sep(
+                False,
+                "An exception occurred in function ( _check_level_bubbles) {}: {}".format(
+                    self.test_name, e
+                ),
             )
-            assert level.IsBubbleVisibleInView(rdb.DatumEnds.End0, view) == is_visible
         return return_value
 
     def test(self):
@@ -162,7 +176,7 @@ class LevelsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                     views = get_views_in_model(self.document, action_name_check)
 
                     if len(views) >= 1:
-                        # switch level bubbles off
+                        # switch level bubbles on at zero end ( is by default off!)
                         toggle_levels_first = self._toggle_level_bubbles(
                             levels, views[0]
                         )
@@ -171,17 +185,17 @@ class LevelsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                         check_levels_off = self._check_level_bubbles(
                             levels,
                             views[0],
-                            False,  # False here refers the actual visibility of the bubble
+                            True,  # True here refers the actual visibility of the bubble
                         )
                         action_return_value.update(check_levels_off)
-                        # switch bubbles back on
+                        # switch bubbles back off
                         toggle_levels_on = self._toggle_level_bubbles(levels, views[0])
                         action_return_value.update(toggle_levels_on)
                         # check actual levels
                         check_levels_on = self._check_level_bubbles(
                             levels,
                             views[0],
-                            True,  # True here refers the actual visibility of the bubble
+                            False,  # True here refers the actual visibility of the bubble
                         )
                         action_return_value.update(check_levels_on)
 

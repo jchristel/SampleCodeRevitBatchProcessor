@@ -49,7 +49,7 @@ class GetViewReportHeaders(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if revision sequence was changed successfully, otherwise False
+                - .result = True if views report headers where retrieved successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 

@@ -50,7 +50,7 @@ class GetViews(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if revision sequence was changed successfully, otherwise False
+                - .result = True if views where retrieved successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -68,34 +68,35 @@ class GetViews(revit_test.RevitTest):
             def action(x):
                 return True
 
+            views_in_model = [
+                ["TEST", rdb.ViewType.DraftingView],
+                ["Wall Schedule", rdb.ViewType.Schedule],
+                ["Level 00", rdb.ViewType.FloorPlan],
+                ["Section - Level Test", rdb.ViewType.Section],
+            ]
             # get all views in model (only 1 in test model)
             result = get_views_in_model(self.document, action)
 
+            # check against expected views
+            counter = 0
+            for view_retrieved in result:
+                return_value.append_message(
+                    " view name: {}, view type: {}, ".format(
+                        view_retrieved.Name, view_retrieved.ViewType
+                    )
+                )
+                assert view_retrieved.Name == views_in_model[counter][0]
+                assert view_retrieved.ViewType == views_in_model[counter][1]
+
+                counter = counter + 1
+
+            # check overall number of views retrieved matches expected
             return_value.append_message(
-                " view name: {}, view type: {}, ".format(
-                    result[0].Name, result[0].ViewType
+                " number of retrieved views: {}, number of expected views: {}, ".format(
+                    len(result), len(views_in_model)
                 )
             )
-            assert result[0].Name == "TEST"
-            assert result[0].ViewType == rdb.ViewType.DraftingView
-
-            return_value.append_message(
-                " view name: {}, view type: {} ".format(
-                    result[1].Name, result[1].ViewType
-                )
-            )
-            assert result[1].ViewType == rdb.ViewType.Schedule
-            assert result[1].Name == "Wall Schedule"
-
-            return_value.append_message(
-                " view name: {}, view type: {} ".format(
-                    result[2].Name, result[2].ViewType
-                )
-            )
-
-            assert result[2].ViewType == rdb.ViewType.FloorPlan
-            assert result[2].Name == "Level 00"
-            assert len(result) == 3
+            assert len(result) == len(views_in_model)
 
         except Exception as e:
             return_value.update_sep(

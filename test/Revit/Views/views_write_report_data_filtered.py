@@ -58,7 +58,7 @@ class WriteViewReportDataFiltered(revit_test.RevitTest):
 
         :return:
             Result class instance.
-                - .result = True if revision sequence was changed successfully, otherwise False
+                - .result = True if views report data was written successfully, otherwise False
                 - .message will contain result(s) vs expected result(s)
                 - . result (empty list)
 
@@ -90,6 +90,7 @@ class WriteViewReportDataFiltered(revit_test.RevitTest):
                 ["HOSTFILE", "Id", "View Name", "Title on Sheet", "View Template"],
                 [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
                 [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
+                [REVIT_TEST_FILE_NAME, "970637", "Section - Level Test", "None", "-1"],
             ]
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(

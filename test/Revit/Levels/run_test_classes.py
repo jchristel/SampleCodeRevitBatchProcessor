@@ -60,7 +60,7 @@ def run_levels_tests(doc):
         ["Get Levels Report Data", levels_get_report_data.GetLevelsReportData],
         ["Change Levels 2D", levels_two_d.LevelsTwoD],
         ["Toggle level ends", levels_show_bubble_end.LevelsToggleBubbleVisibilityAtEnd],
-        ["Toggle level end one", levels_toggle_bubble_end_one],
+        ["Toggle level end one", levels_toggle_bubble_end_one.LevelsToggleBubbleVisibilityAtOneEnd],
         [
             "Toggle level end zero",
             levels_toggle_bubble_end_zero.LevelsToggleBubbleVisibilityAtZeroEnd,

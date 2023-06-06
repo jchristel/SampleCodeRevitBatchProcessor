@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module runs all revit grids related tests . 
+This module runs all revit levels related tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -31,12 +31,18 @@ from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
-from test.Revit.Levels import levels_get_report_data, levels_two_d
+from test.Revit.Levels import (
+    levels_get_report_data,
+    levels_two_d,
+    levels_show_bubble_end,
+    levels_toggle_bubble_end_one,
+    levels_toggle_bubble_end_zero,
+)
 
 
 def run_levels_tests(doc):
     """
-    Runs all grids related tests.
+    Runs all levels related tests.
 
     :param doc: Current Revit document.
     :type doc: Autodesk.Revit.DB.Document
@@ -53,6 +59,12 @@ def run_levels_tests(doc):
     run_tests = [
         ["Get Levels Report Data", levels_get_report_data.GetLevelsReportData],
         ["Change Levels 2D", levels_two_d.LevelsTwoD],
+        ["Toggle level ends", levels_show_bubble_end.LevelsToggleBubbleVisibilityAtEnd],
+        ["Toggle level end one", levels_toggle_bubble_end_one],
+        [
+            "Toggle level end zero",
+            levels_toggle_bubble_end_zero.LevelsToggleBubbleVisibilityAtZeroEnd,
+        ],
     ]
 
     runner = RevitRunTest(run_tests)

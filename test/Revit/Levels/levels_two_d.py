@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains revit grids in view to 2D tests . 
+This module contains revit levels in view to 2D tests . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -36,6 +36,7 @@ from duHast.Utilities import result as res
 import Autodesk.Revit.DB as rdb
 from duHast.Utilities.console_out import output
 import revit_script_util
+
 
 class LevelsTwoD(revit_test.RevitTest):
     def __init__(self, doc):
@@ -77,13 +78,13 @@ class LevelsTwoD(revit_test.RevitTest):
             def action(doc):
                 action_return_value = res.Result()
                 try:
-                    # get all grids in the model
+                    # get all levels in the model
                     levels = get_levels_in_model(self.document)
                     # get sample view
                     views = get_views_in_model(self.document, action_name_check)
 
-                    if (len(views) >= 1):
-                        # set all grids to 2D in view
+                    if len(views) >= 1:
+                        # set all levels to 2D in view
                         set_levels_2d = change_levels_2D(
                             self.document, levels, views[0]
                         )
@@ -94,7 +95,7 @@ class LevelsTwoD(revit_test.RevitTest):
                             )
                         )
                         assert set_levels_2d.status == True
-                        # check grids
+                        # check levels
                         for level in levels:
                             action_return_value.append_message(
                                 "id: {} result: {} vs expected: {}".format(
@@ -128,7 +129,7 @@ class LevelsTwoD(revit_test.RevitTest):
                             )
                     else:
                         raise ValueError(
-                            "No view found in which to change grid appearance!"
+                            "No view found in which to change level appearance!"
                         )
 
                 except Exception as e:

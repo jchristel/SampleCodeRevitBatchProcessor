@@ -31,7 +31,7 @@ from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
-from test.Revit.Levels import levels_get_report_data
+from test.Revit.Levels import levels_get_report_data, levels_two_d
 
 
 def run_levels_tests(doc):
@@ -52,6 +52,7 @@ def run_levels_tests(doc):
 
     run_tests = [
         ["Get Levels Report Data", levels_get_report_data.GetLevelsReportData],
+        ["Change Levels 2D", levels_two_d.LevelsTwoD],
     ]
 
     runner = RevitRunTest(run_tests)

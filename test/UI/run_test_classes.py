@@ -31,8 +31,10 @@ from test.utils.run_tests import RunTest
 
 # import test classes
 from test.UI import (
+    file_list_bucket_to_task_list_item_b360,
     file_list_is_back_up_file,
     file_list_get_revit_files,
+    workloader
 )
 
 
@@ -51,6 +53,8 @@ def run_tests():
     run_tests = [
         ['Is Back Up File', file_list_is_back_up_file.IsBackUpFile],
         ['Get Revit Files', file_list_get_revit_files.GetRevitFiles],
+        ["File List Bucket To Task List Item BIM 360", file_list_bucket_to_task_list_item_b360.BucketToTaskListBIM360],
+        ["Workloader", workloader.Workloader],
     ]
 
     # run tests

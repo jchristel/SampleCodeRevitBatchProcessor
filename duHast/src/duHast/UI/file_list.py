@@ -66,9 +66,8 @@ def get_revit_files(directory, file_extension):
     for f in list_of_files:
         # check for file extension match
         if(f.lower().endswith(file_extension.lower())):
-            # check if this is a back up file, remove the file extension
-            file_path = f[:-len(file_extension)]
-            if(is_back_up_file(file_path) == False):
+            # check if this is a back up file
+            if(is_back_up_file(f) == False):
                 # Use join to get full file path.
                 location = os.path.join(directory, f)
                 # Get size and add to list of files.
@@ -97,9 +96,8 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
     for f in list_of_files:
         # check for file extension match
         if(f.lower().endswith(file_extension.lower())):
-            # check if this is a back up file, remove the file extension
-            file_path = f[:-len(file_extension)]
-            if(is_back_up_file(file_path) == False):
+            # check if this is a back up file, 
+            if(is_back_up_file(f) == False):
                 # Get size and add to list of files.
                 size = os.path.getsize(f)
                 files.append(fi.MyFileItem(f,size))

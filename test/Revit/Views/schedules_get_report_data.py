@@ -68,46 +68,46 @@ class GetScheduleReportData(revit_test.RevitTest):
             # get sheet report headers
             result = get_schedules_report_data(self.document, REVIT_TEST_FILE_NAME)
             expected_result = []
-            if (self.revit_version_number == 2022):
+            if self.revit_version_number == 2022:
                 expected_result = [
-                    [
-                        REVIT_TEST_FILE_NAME,
-                        "970420",
-                        "-1",
-                        "Wall Schedule",
-                        "Independent",
-                        "Invalid storage type: (NONE)",
-                        "2029",
-                        "3",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "None",
-                        "-1",
-                    ]
+                    {
+                        "View Template": "-1",
+                        "HOSTFILE": REVIT_TEST_FILE_NAME,
+                        "Phase Filter": "2029",
+                        "None": "-1",
+                        "Id": "970420",
+                        "Dependency": "Independent",
+                        "Filter": "Invalid storage type: (NONE)",
+                        "Sorting/Grouping": "Invalid storage type: (NONE)",
+                        "View Name": "Wall Schedule",
+                        "Phase": "3",
+                        "Formatting": "Invalid storage type: (NONE)",
+                        "Visibility/Graphics Overrides": "Invalid storage type: (NONE)",
+                        "Design Stage": "None",
+                        "Fields": "Invalid storage type: (NONE)",
+                        "Appearance": "Invalid storage type: (NONE)",
+                    }
                 ]
-            elif (self.revit_version_number > 2022):
+            elif self.revit_version_number > 2022:
                 expected_result = [
-                    [
-                        REVIT_TEST_FILE_NAME,
-                        "970420",
-                        "-1",
-                        "Wall Schedule",
-                        "Independent",
-                        "Invalid storage type: (NONE)",
-                        "2029",
-                        "3",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "Invalid storage type: (NONE)",
-                        "By Type", #2023
-                        "None",
-                        "-1",
-                    ]
+                    {
+                        "View Template": "-1",
+                        "HOSTFILE": REVIT_TEST_FILE_NAME,
+                        "Phase Filter": "2029",
+                        "None": "-1",
+                        "Id": "970420",
+                        "Dependency": "Independent",
+                        "Filter": "Invalid storage type: (NONE)",
+                        "Sorting/Grouping": "Invalid storage type: (NONE)",
+                        "View Name": "Wall Schedule",
+                        "Phase": "3",
+                        "Formatting": "Invalid storage type: (NONE)",
+                        "Visibility/Graphics Overrides": "Invalid storage type: (NONE)",
+                        "Design Stage": "None",
+                        "Fields": "Invalid storage type: (NONE)",
+                        "Appearance": "Invalid storage type: (NONE)",
+                        "Export to IFC": "By Type", #2023 onwards
+                    }
                 ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)

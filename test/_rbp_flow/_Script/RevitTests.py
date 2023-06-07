@@ -87,25 +87,37 @@ write_mode = "w"
 
 counter = 0
 for test in TESTS:
-    output_header('starting test group: {}'.format(counter), revit_script_util.Output)
+    output_header("starting test group: {}".format(counter), revit_script_util.Output)
     try:
         result = test(doc)
-        for test_result in result.result:
-            # write results to file
-            write_report_data_as_csv(
-                file_name,
-                "",
-                [[test_result[3], test_result[4], test_result[5]]],
-                write_mode,
-            )
-            # provide short summary only...more details in log file
-            output(test_result[0], revit_script_util.Output)
-            output(test_result[2], revit_script_util.Output)
-            # make sure all subsequent data is appended to log file
-            write_mode = "a"
+        # check if anything went wrong when attempting to marshall tests
+        if result.status == False and len(result.result) == 0:
+            output_header("Failed to marshall any tests", revit_script_util.Output)
+            output(result.message, revit_script_util.Output)
+        elif result.status == False and len(result.result) > 0:
+            output_header("Failed to marshall all tests", revit_script_util.Output)
+            output(result.message, revit_script_util.Output)
+        # display and write out any messages from tests
+        if len(result.result) > 0:
+            for test_result in result.result:
+                try:
+                    # write results to file
+                    write_report_data_as_csv(
+                        file_name,
+                        "",
+                        [[test_result[3], test_result[4], test_result[5]]],
+                        write_mode,
+                    )
+                except Exception as e:
+                    output("Failed to write test report with exception: {}".format(e))
+                # provide short summary only...more details in log file
+                output(test_result[0], revit_script_util.Output)
+                output(test_result[2], revit_script_util.Output)
+                # make sure all subsequent data is appended to log file
+                write_mode = "a"
     except Exception as e:
         output("test counter: {} failed with exception: {}".format(counter, e))
-    output_header('completed test group: {}'.format(counter), revit_script_util.Output)
+    output_header("completed test group: {}".format(counter), revit_script_util.Output)
     counter = counter + 1
 
 output_header("Executing tests.... finished ", revit_script_util.Output)

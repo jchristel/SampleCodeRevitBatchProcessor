@@ -70,9 +70,27 @@ class GetViewReportDataFiltered(revit_test.RevitTest):
                 self.document, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
             )
             expected_result = [
-                [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
-                [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
-                [REVIT_TEST_FILE_NAME, "970637", "Section - Level Test", "None", "-1"],
+                {
+                    "HOSTFILE":REVIT_TEST_FILE_NAME,
+                    "Id": "970427",
+                    "View Name": "Level 00",
+                    "View Template": "-1",
+                    "Title on Sheet": "None",
+                },
+                {
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
+                    "Id": "21930",
+                    "View Name": "TEST",
+                    "View Template": "-1",
+                    "Title on Sheet": "None",
+                },
+                {
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
+                    "Id": "970637",
+                    "View Name": "Section - Level Test",
+                    "View Template": "-1",
+                    "Title on Sheet": "None",
+                },
             ]
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)

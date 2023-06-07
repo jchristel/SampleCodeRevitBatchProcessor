@@ -72,7 +72,14 @@ class GetScheduleReportDataFiltered(revit_test.RevitTest):
                 self.document, REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
             )
 
-            expected_result = [[REVIT_TEST_FILE_NAME, "970420", "Wall Schedule", "-1"]]
+            expected_result = [
+                {
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
+                    "View Template": "-1",
+                    "Id": "970420",
+                    "View Name": "Wall Schedule",
+                }
+            ]
 
             return_value.append_message(
                 " result: {} \n expected: {} ".format(result, expected_result)
@@ -82,7 +89,7 @@ class GetScheduleReportDataFiltered(revit_test.RevitTest):
         except Exception as e:
             return_value.update_sep(
                 False,
-                "An exception occurred in function {}: {}".format(e),
+                "An exception occurred in function {}: {}".format(self.test_name, e),
             )
 
         return return_value

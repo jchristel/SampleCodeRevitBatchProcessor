@@ -73,7 +73,13 @@ class GetSheetReportDataFiltered(revit_test.RevitTest):
             )
 
             expected_result = [
-                [REVIT_TEST_FILE_NAME, "21924", "SPLASH", "SPLASH", "None"]
+                {
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
+                    "Sheet Name": "SPLASH",
+                    "Id": "21924",
+                    "Sheet Number": "SPLASH",
+                    "Sheet Issue Date": "None",
+                }
             ]
 
             return_value.append_message(

@@ -46,6 +46,7 @@ import utilRevitTests as utilM  # sets up all commonly used variables and path l
 
 from duHast.Utilities.console_out import output
 from test.Utility import run_test_classes as run_util_tests
+from test.UI import run_test_classes as run_ui_tests
 
 def time_stamp():
         """
@@ -61,6 +62,7 @@ def time_stamp():
 #: tests to be executed
 all_tests = [
         run_util_tests,
+        run_ui_tests,
     ]
 
 #: will contain the outcome of all tests

@@ -195,7 +195,7 @@ class LevelsToggleBubbleVisibilityAtZeroEnd(revit_test.RevitTest):
                         check_levels_on = self._check_level_bubbles(
                             levels,
                             views[0],
-                            False,  # True here refers the actual visibility of the bubble
+                            False,  # False here refers the actual visibility of the bubble
                         )
                         action_return_value.update(check_levels_on)
 

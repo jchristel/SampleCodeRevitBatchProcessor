@@ -275,7 +275,7 @@ def get_files_from_list_file(file_path_csv):
     :param filePathCSV: The fully qualified file path to the task list file.
     :type filePathCSV: str
 
-    :return: A list of MyFileitem objects. If an exception occured an empty list will be returned.
+    :return: A list of MyFileItem objects. If an exception occurred an empty list will be returned.
     :rtype: :class:`.MyFileItem`
     """
 
@@ -305,7 +305,7 @@ def get_file_data_from_text_file(file_path):
 
     :param filePath: The fully qualified file path to the task list file.
     :type filePath: str
-    :return: A list of MyFileitem objects.
+    :return: A list of MyFileItem objects.
     :rtype: :class:`.MyFileItem`
     """
 

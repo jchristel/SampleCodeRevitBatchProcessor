@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the view property data filter.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,34 +27,36 @@ This module contains the view property data filter.
 #
 
 
-def filter_data_by_properties(data, headers, sheet_properties, default_headers):
-    '''
+def filter_data_by_properties(data, headers, properties, default_headers):
+    """
     Filters view data by supplied property names.
-    Data gets filtered twice: property needs to exist in headers list as well as in sheet properties list.
+    Data gets filtered twice: property needs to exist in headers list as well as in properties list.
 
     :param data: List of sheet properties to be kept.
     :type data: list of list of str
     :param headers: Filter: list of headers representing property names.
     :type headers: list of str
-    :param sheet_properties: list of optional view properties to be extracted from data
-    :type sheet_properties: list of str
+    :param properties: list of optional properties to be extracted from data
+    :type properties: list of str
     :param default_headers: list of view properties always extracted from data
     :type default_headers: list of str
     :return: List of sheet properties matching filters.
     :rtype: list of list of str
-    '''
+    """
 
-    # add default headers to properties to be filtered first
-    data_index_list= [iter for iter in range(len(default_headers))]
-    # build index pointer list of data to be kept
-    for f in sheet_properties:
-        if (f in headers):
-            data_index_list.append(headers.index(f))
     # filter data out
     new_data = []
     for d in data:
-        data_row = []
-        for i in data_index_list:
-            data_row.append(d[i])
+        data_row = {}
+        for default_head in default_headers:
+            if default_head in d:
+                data_row[default_head] = d[default_head]
+            else:
+                data_row[default_head] = "default property does not exist on element"
+        for prop in properties:
+            if prop in d:
+                data_row[prop] = d[prop]
+            else:
+                data_row[prop] = "property does not exist on element"
         new_data.append(data_row)
     return new_data

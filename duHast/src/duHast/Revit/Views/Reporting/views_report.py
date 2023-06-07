@@ -36,6 +36,7 @@ from duHast.Revit.Views.views import get_views_of_type
 from duHast.Revit.Views.Reporting.view_property_filter import filter_data_by_properties
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Utilities import files_csv as filesCSV, result as res
+from duHast.Revit.Views.Reporting.view_property_utils import convert_view_data_to_list
 
 #: list of view types to be reported on.
 VIEW_TYPES = [
@@ -74,14 +75,17 @@ def get_views_report_data(doc, host_name):
         for v in collector_views:
             # get all parameters attached to sheet
             paras = v.GetOrderedParameters()
-            data = [host_name, str(v.Id)]
+            data = {
+                REPORT_VIEWS_HEADER[0]: host_name,
+                REPORT_VIEWS_HEADER[1]: str(v.Id),
+            }
             for para in paras:
                 # get values as utf-8 encoded strings
                 value = rParaGet.get_parameter_value_utf8_string(para)
                 try:
-                    data.append(value)
+                    data[para.Definition.Name] = value
                 except:
-                    data.append("Failed to retrieve value")
+                    data[para.Definition.Name] = "Failed to retrieve value"
             views.append(data)
     return views
 
@@ -116,7 +120,7 @@ def write_views_data(doc, file_name, current_file_name):
     Writes to file all views properties.
 
     file type: csv
-    
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param file_name: The fully qualified file path of the report file.
@@ -134,7 +138,8 @@ def write_views_data(doc, file_name, current_file_name):
     try:
         data = get_views_report_data(doc, current_file_name)
         headers = get_views_report_headers(doc)
-        filesCSV.write_report_data_as_csv(file_name, headers, data)
+        data_converted = convert_view_data_to_list(data, headers)
+        filesCSV.write_report_data_as_csv(file_name, headers, data_converted)
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )
@@ -169,11 +174,11 @@ def write_view_data_by_property_names(
     return_value = res.Result()
     try:
         data = get_views_report_data_filtered(doc, current_file_name, view_properties)
-        headers = get_views_report_headers(doc)
         # change headers to filtered + default
         headers = REPORT_VIEWS_HEADER[:] + view_properties
+        data_converted = convert_view_data_to_list(data, headers)
         # write data out to file
-        filesCSV.write_report_data_as_csv(file_name, headers, data)
+        filesCSV.write_report_data_as_csv(file_name, headers, data_converted)
         return_value.update_sep(
             True, "Successfully wrote data file at {}".format(file_name)
         )

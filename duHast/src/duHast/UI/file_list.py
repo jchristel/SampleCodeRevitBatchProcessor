@@ -179,7 +179,7 @@ def bucket_to_task_list_bim_360(item):
     :rtype: str
     '''
 
-    return ' '.join([item.BIM360RevitVersion, item.BIM360ProjectGUID, item.BIM360FileGUID])
+    return ' '.join([item.bim_360_revit_version, item.bim_360_project_guid, item.bim_360_file_guid])
 
 def write_revit_task_file(file_name, bucket, get_data = bucket_to_task_list_file_system):
     '''

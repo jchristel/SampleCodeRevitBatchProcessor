@@ -29,7 +29,7 @@ import os
 
 from test.utils import test
 
-from duHast.UI.Workloader import distribute_workload
+from duHast.UI.workloader import distribute_workload
 from duHast.UI.file_item import MyFileItem
 from duHast.UI.file_list import get_file_size
 import uuid
@@ -62,7 +62,7 @@ class Workloader(test.Test):
                 ),
                 MyFileItem(
                     "test_file_02_size.rvt",
-                    100,
+                    50,
                     uuid.uuid4(),
                     uuid.uuid4(),
                     uuid.uuid4(),
@@ -71,16 +71,36 @@ class Workloader(test.Test):
 
             # test a single bucket
             result = distribute_workload(1, test_files, get_file_size)
-            message = "\n expected: {} vs: {}".format(1, len(result))
+            message = "\n single bucket: expected: {} vs: {}".format(1, len(result))
             assert len(result) == 1
             # bucket should contain 2 items
-            message = message + "\n expected: {} vs: {}".format(2, len(result[0].items))
+            message = message + "\n single bucket: item count: expected: {} vs: {}".format(2, len(result[0].items))
             assert len(result[0].items) == 2
 
             for t_file in test_files:
                 if t_file not in result[0].items:
-                    message = message + "\n expected: {} not in bucket!".format(t_file)
+                    message = message + "\n single bucket: items expected: {} not in bucket!".format(t_file)
                 assert t_file in result[0].items
+
+            # test 2 buckets
+            result = distribute_workload(2, test_files, get_file_size)
+            message = message + "\n two buckets: expected: {} vs: {}".format(2, len(result))
+            assert len(result) == 2
+
+            for test_bucket in result:
+                # bucket should contain 1 items
+                message = message + "\n two buckets: item count: expected: {} vs: {}".format(1, len(test_bucket.items))
+                assert len(test_bucket.items) == 1
+
+
+            # test 3 buckets
+            result = distribute_workload(2, test_files, get_file_size)
+            message = message + "\n three buckets: expected: {} vs: {}".format(3, len(result))
+            assert len(result) == 3
+
+            for test_bucket in result:
+                # bucket should contain 1 items
+                message = message + "\n three buckets: item count: expected: {} vs: {}".format(1, len(test_bucket.items))
 
         except Exception as e:
             flag = False

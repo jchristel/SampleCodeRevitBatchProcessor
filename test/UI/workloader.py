@@ -45,6 +45,17 @@ class Workloader(test.Test):
         super(Workloader, self).__init__(test_name="workloader")
 
     def _check_items_per_bucket(self, buckets, test_outcome):
+        """
+        Checks that items per bucket count and the actual items are as expected.
+
+        :param buckets: A workload_bucket object
+        :type buckets: WorkloadBucket
+        :param test_outcome: A tuple containing the test outcome values
+        :type test_outcome: namedtuple
+        :return: A boolean (True if all tests past, otherwise False), a message containing test data
+        :rtype: bool, str
+        """
+
         flag = True
         bucket_counter = 0
         message = ""
@@ -53,7 +64,7 @@ class Workloader(test.Test):
                 # check number of items per bucket
                 message = (
                     message
-                    + "\n bucket items count: item count: expected: {} vs: {}".format(
+                    + "\n bucket items count: item count: \nexpected: {} \nvs: {}".format(
                         len(test_outcome.items_per_bucket[bucket_counter]),
                         len(bucket.items),
                     )
@@ -61,19 +72,20 @@ class Workloader(test.Test):
                 assert len(test_outcome.items_per_bucket[bucket_counter]) == len(
                     bucket.items
                 )
-
                 # check items per bucket
-                message = (
-                    message
-                    + "\n bucket items : item : expected: {} vs: {}".format(
-                        sorted(test_outcome.items_per_bucket[bucket_counter]),
-                        sorted(bucket.items),
-                    )
+                message = message + "\n bucket items : item : \nexpected: {} \nvs: {}".format(
+                    # sort both item list by name
+                    sorted(
+                        test_outcome.items_per_bucket[bucket_counter],
+                        key=lambda obj: obj.name,
+                    ),
+                    sorted(bucket.items, key=lambda obj: obj.name),
                 )
-                assert sorted(test_outcome.items_per_bucket[bucket_counter]) == sorted(
-                    bucket.items
-                )
-
+                assert sorted(
+                    # sort both item list by name
+                    test_outcome.items_per_bucket[bucket_counter],
+                    key=lambda obj: obj.name,
+                ) == sorted(bucket.items, key=lambda obj: obj.name)
             except Exception as e:
                 flag = False
                 message = (
@@ -85,6 +97,7 @@ class Workloader(test.Test):
                         )
                     )
                 )
+            bucket_counter = bucket_counter + 1
         return flag, message
 
     def test(self):

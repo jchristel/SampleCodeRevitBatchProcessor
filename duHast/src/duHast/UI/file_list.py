@@ -218,7 +218,10 @@ def write_revit_task_file(file_name, bucket, get_data = bucket_to_task_list_file
                 data = '\n' + data
             else:
                 row_counter += 1
-            f.write(data.encode('utf-8'))
+            # this looks horrible: but:
+            # string.encode('utf-8') returns a byte string b''
+            # so it needs to be converted to an actual string again
+            f.write(data.encode('utf-8').decode('utf-8'))
         f.close()
         return_value.append_message('wrote task list: {} [TRUE]'.format(file_name))
     except Exception as e:

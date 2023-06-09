@@ -34,7 +34,8 @@ from test.UI import (
     file_list_bucket_to_task_list_item_b360,
     file_list_is_back_up_file,
     file_list_get_revit_files,
-    workloader
+    workloader,
+    file_list_write_revit_task_file,
 )
 
 
@@ -55,6 +56,7 @@ def run_tests():
         ['Get Revit Files', file_list_get_revit_files.GetRevitFiles],
         ["File List Bucket To Task List Item BIM 360", file_list_bucket_to_task_list_item_b360.BucketToTaskListBIM360],
         ["Workloader", workloader.Workloader],
+        ["Write Revit Task List", file_list_write_revit_task_file.WriteRevitTaskFile],
     ]
 
     # run tests

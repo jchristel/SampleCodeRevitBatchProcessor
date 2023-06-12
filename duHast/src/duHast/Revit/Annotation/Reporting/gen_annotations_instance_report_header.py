@@ -9,7 +9,7 @@ This module contains the header row for any (future) generic annotation reports.
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2021  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@ This module contains the header row for any (future) generic annotation reports.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+
+from duHast.Revit.Common.revit_version import get_revit_version_number
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports up to revit 2022
@@ -51,3 +53,22 @@ REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023 = [
     "TAG_PRESENTATION_MODE",
     "MERGE_ELBOWS",
 ]
+
+
+def get_report_header(doc):
+    """
+    Returns the report header depending on Revit version
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :return: The report headers.
+    :rtype: [str]
+    """
+
+    revit_version = get_revit_version_number(doc)
+    if revit_version <= 2022:
+        return REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER
+    else:
+        return REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER.extend(
+            REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
+        )

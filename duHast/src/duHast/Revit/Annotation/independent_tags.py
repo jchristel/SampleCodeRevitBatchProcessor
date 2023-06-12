@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A number of functions around Revit independent tags.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,36 +28,103 @@ A number of functions around Revit independent tags.
 
 
 import Autodesk.Revit.DB as rdb
-
 from duHast.Revit.Common import parameter_get_utils as rParaGet
+from duHast.Revit.Common.revit_version import get_revit_version_number
+
+ELBOW_LOCATION = "elbow_location"
+LEADER_END = "leader_end"
 
 
 def get_all_independent_tags(doc):
-    '''
+    """
     Gets all independent tag types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of independent tag elements
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of independent tag elements
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.IndependentTag)
 
+
 def get_independent_tag_type_arrow_head_ids(doc):
-    '''
+    """
     Gets all arrow head symbol ids used in independent tag types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     used_ids = []
     tags = get_all_independent_tags(doc)
     for t in tags:
         t_type_id = t.GetTypeId()
         t_type_element = doc.GetElement(t_type_id)
-        id = rParaGet.get_built_in_parameter_value(t_type_element, rdb.BuiltInParameter.LEADER_ARROWHEAD)
-        if(id not in used_ids and id != rdb.ElementId.InvalidElementId and id != None):
+        id = rParaGet.get_built_in_parameter_value(
+            t_type_element, rdb.BuiltInParameter.LEADER_ARROWHEAD
+        )
+        if id not in used_ids and id != rdb.ElementId.InvalidElementId and id != None:
             used_ids.append(id)
     return used_ids
+
+
+def get_elbow_properties(doc, tag):
+    """
+    Returns elbow properties depending on revit version.
+
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param tag: The tag element
+    :type tag: Autodesk.Revit.DB.IndependentTag
+
+    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
+    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    """
+
+    # get the revit version:
+    revit_version = get_revit_version_number(doc)
+    data = None
+    if revit_version <= 2022:
+        data = get_elbow_properties_2022(tag)
+    elif revit_version >= 2023:
+        data = get_elbow_properties_2023(tag)
+    return data
+
+
+def get_elbow_properties_2022(tag):
+    """
+    Get elbow properties in revit versions up to revit 2022
+
+    :param tag: The tag element
+    :type tag: Autodesk.Revit.DB.IndependentTag
+
+    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
+    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    """
+
+    data = {}
+    data[ELBOW_LOCATION] = [tag.LeaderElbow]
+    data[LEADER_END] = [tag.LeaderEnd]
+    return data
+
+
+def get_elbow_properties_2023(tag):
+    """
+    Get elbow properties in revit versions from revit 2023 onwards
+
+    :param tag: The tag element
+    :type tag: Autodesk.Revit.DB.IndependentTag
+
+    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
+    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    """
+    
+    data = {}
+    data[ELBOW_LOCATION] = []
+    data[LEADER_END] = []
+    tagged_references = tag.GetTaggedReferences()
+    for tag_ref in tagged_references:
+        data[ELBOW_LOCATION].append(tag.GetLeaderElbow(tag_ref))
+        data[LEADER_END].append(tag.GetLeaderEnd(tag_ref))
+    return data

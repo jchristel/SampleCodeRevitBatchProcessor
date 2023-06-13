@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of functions around exporting from Revit to nwc file format.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,8 +33,19 @@ from duHast.Utilities import result as res
 from duHast.Revit.Exports.export import build_export_file_name_from_view
 
 
-def setup_nwc_custom_export_option(using_shared_coordinates, export_entire_model, export_links, split_model_by_level, export_parts, export_room_as_attributes, export_room_geometry, find_missing_materials):
-    '''
+def setup_nwc_custom_export_option(
+    using_shared_coordinates,
+    export_entire_model,
+    export_links,
+    split_model_by_level,
+    export_parts,
+    export_room_as_attributes,
+    export_room_geometry,
+    find_missing_materials,
+    navis_parameters=rdb.NavisworksParameters.All,
+    convert_element_properties=False,
+):
+    """
     Return an NWC Export Options object as per values past oin.
     :param using_shared_coordinates: True shared coordinates will be used, otherwise project internal
     :type using_shared_coordinates: bool
@@ -52,35 +63,61 @@ def setup_nwc_custom_export_option(using_shared_coordinates, export_entire_model
     :type export_room_geometry: bool
     :param find_missing_materials: True exporter will attempt to find missing materials, otherwise not
     :type find_missing_materials: bool
+
+    :param navis_parameters: Options which specifies the parameter conversion of Navisworks Exporter. Default value is All.
+    :type navis_parameters: Autodesk.Revit.DB.NavisworksParameters
+
+    :param convert_element_properties: True to convert element properties, false otherwise. Default value is false.
+    :type convert_element_properties: bool
+
     :return: A Navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
-    '''
+    """
 
     ex_nwc = rdb.NavisworksExportOptions()
-    ex_nwc.Coordinates = rdb.NavisworksCoordinates.Shared if using_shared_coordinates == True else rdb.NavisworksCoordinates.Internal
-    ex_nwc.ExportScope = rdb.NavisworksExportScope.Model if export_entire_model == True else rdb.NavisworksExportScope.View
+    ex_nwc.Coordinates = (
+        rdb.NavisworksCoordinates.Shared
+        if using_shared_coordinates == True
+        else rdb.NavisworksCoordinates.Internal
+    )
+    ex_nwc.ExportScope = (
+        rdb.NavisworksExportScope.Model
+        if export_entire_model == True
+        else rdb.NavisworksExportScope.View
+    )
     ex_nwc.ExportLinks = export_links
     ex_nwc.DivideFileIntoLevels = split_model_by_level
-    ex_nwc.ExportParts =  export_parts
+    ex_nwc.ExportParts = export_parts
     ex_nwc.ExportRoomAsAttribute = export_room_as_attributes
     ex_nwc.ExportRoomGeometry = export_room_geometry
     ex_nwc.FindMissingMaterials = find_missing_materials
-    ex_nwc.ConvertElementProperties = False
+    ex_nwc.ConvertElementProperties = convert_element_properties
+    ex_nwc.Parameters = navis_parameters
 
     return ex_nwc
 
 
 def setup_nwc_default_export_option_shared_by_view():
-    '''
+    """
     Return an NWC Export Options object with shared coordinates, export by View.
     :return: A Navisworks .nwc export option.
     :rtype: Autodesk.Revit.DB.NavisworksExportOptions
-    '''
+    """
 
-    return setup_nwc_custom_export_option(True, False, False, True, True, False, False, False)
+    return setup_nwc_custom_export_option(
+        using_shared_coordinates=True, 
+        export_entire_model=False, 
+        export_links=False, 
+        split_model_by_level=True, 
+        export_parts=True,
+        export_room_as_attributes=False, 
+        export_room_geometry=False, 
+        find_missing_materials=False
+    )
+
 
 def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
-    '''
+    """
     Function exporting either entire model or view to NWC
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -90,7 +127,7 @@ def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
     :type file_name: str
-    :return: 
+    :return:
         Result class instance.
         - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
@@ -98,23 +135,28 @@ def export_to_nwc(doc, nwc_export_option, directory_path, file_name):
         - result.status (bool) will be False.
         - result.message will contain the exception message.
     :rtype: :class:`.Result`
-    '''
+    """
 
     # nwc export does not need to run in a transaction
     return_value = res.Result()
     try:
         # export to NWC
         doc.Export(directory_path, file_name, nwc_export_option)
-        return_value.update_sep(True, 'Exported: {}'.format(directory_path + '\\' + str(file_name)))
+        return_value.update_sep(
+            True, "Exported: {}".format(directory_path + "\\" + str(file_name))
+        )
         # needs to be a list in a list to stay together when combined with previous results in the update status result code
         return_value.result = [[directory_path, file_name]]
     except Exception as e:
-        return_value.update_sep(False, 'Script Exception: Failed to export to NWC with exception: {}'.format(e))
+        return_value.update_sep(
+            False,
+            "Script Exception: Failed to export to NWC with exception: {}".format(e),
+        )
     return return_value
 
 
 def export_model_to_nwc(doc, nwc_export_option, directory_path, file_name):
-    '''
+    """
     Function exporting the entire model to NWC.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -124,7 +166,7 @@ def export_model_to_nwc(doc, nwc_export_option, directory_path, file_name):
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
     :type file_name: str
-    :return: 
+    :return:
         Result class instance.
         - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
@@ -132,16 +174,24 @@ def export_model_to_nwc(doc, nwc_export_option, directory_path, file_name):
         - result.status (bool) will be False.
         - result.message will contain the exception message.
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
-    return_value_by_model = export_to_nwc(doc, nwc_export_option, directory_path, file_name)
+    return_value_by_model = export_to_nwc(
+        doc, nwc_export_option, directory_path, file_name
+    )
     return_value.update(return_value_by_model)
     return return_value
 
 
-def export_3d_views_to_nwc(doc, view_filter, nwc_export_option, directory_path, do_something_with_view_name = None):
-    '''
+def export_3d_views_to_nwc(
+    doc,
+    view_filter,
+    nwc_export_option,
+    directory_path,
+    do_something_with_view_name=None,
+):
+    """
     Function exporting 3D views matching a filter (view starts with) to NWC.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -153,7 +203,7 @@ def export_3d_views_to_nwc(doc, view_filter, nwc_export_option, directory_path, 
     :type directory_path: str
     :param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
     :type do_something_with_view_name: function , optional
-    :return: 
+    :return:
         Result class instance.
         - Export status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the fully qualified file path of the exported file.
@@ -161,24 +211,32 @@ def export_3d_views_to_nwc(doc, view_filter, nwc_export_option, directory_path, 
         - result.status (bool) will be False.
         - result.message will contain the exception message.
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     views_to_export = []
     # get all 3D views in model and filter out views to be exported
     views = rView.get_views_of_type(doc, rdb.ViewType.ThreeD)
     for v in views:
-        if(v.Name.lower().startswith(view_filter.lower())):
+        if v.Name.lower().startswith(view_filter.lower()):
             views_to_export.append(v)
     # export those views one by one
-    if(len(views_to_export) > 0):
+    if len(views_to_export) > 0:
         for export_view in views_to_export:
             return_value_by_view = res.Result()
             # store view ID in export option
             nwc_export_option.ViewId = export_view.Id
-            file_name = build_export_file_name_from_view(export_view.Name, view_filter, '.nwc') if do_something_with_view_name == None else do_something_with_view_name(export_view.Name)
-            return_value_by_view = export_to_nwc(doc, nwc_export_option, directory_path, file_name)
+            file_name = (
+                build_export_file_name_from_view(export_view.Name, view_filter, ".nwc")
+                if do_something_with_view_name == None
+                else do_something_with_view_name(export_view.Name)
+            )
+            return_value_by_view = export_to_nwc(
+                doc, nwc_export_option, directory_path, file_name
+            )
             return_value.update(return_value_by_view)
     else:
-        return_value.update_sep(True, 'NWC Export: No 3D views found matching filter...nothing was exported')
+        return_value.update_sep(
+            True, "NWC Export: No 3D views found matching filter...nothing was exported"
+        )
     return return_value

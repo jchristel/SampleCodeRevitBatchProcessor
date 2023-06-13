@@ -69,6 +69,7 @@ def get_report_header(doc):
     if revit_version <= 2022:
         return REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER
     else:
-        return REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER.extend(
-            REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
+        return (
+            REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER
+            + REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
         )

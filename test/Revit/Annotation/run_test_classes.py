@@ -34,7 +34,7 @@ from duHast.Utilities import result as res
 
 from test.Revit.Annotation import independent_tag_get_report_data, independent_tag_get_report_data_header
 
-def run_design_set_options_tests(doc):
+def run_annotation_tests(doc):
     """
     Runs all annotation related tests.
 

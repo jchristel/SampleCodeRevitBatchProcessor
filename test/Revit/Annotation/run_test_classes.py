@@ -32,7 +32,7 @@ from duHast.Utilities import result as res
 
 # import test classes
 
-from test.Revit.Annotation import independent_tag_get_report_data
+from test.Revit.Annotation import independent_tag_get_report_data, independent_tag_get_report_data_header
 
 def run_design_set_options_tests(doc):
     """
@@ -51,6 +51,7 @@ def run_design_set_options_tests(doc):
     # part of ... tests
 
     run_tests = [
+        ["Independent Tags Report Headers", independent_tag_get_report_data_header.GetIndependentTagReportDataHeader],
         ["Independent Tags", independent_tag_get_report_data.GetIndependentTagReportData],
     ]
 

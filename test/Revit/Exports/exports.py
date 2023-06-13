@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module runs all revit exports related tests . 
+This module contains revit wall report tests constants . 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 #
@@ -27,33 +27,4 @@ This module runs all revit exports related tests .
 #
 
 
-from test.Revit.TestUtils.run_revit_tests import RevitRunTest
-from duHast.Utilities import result as res
-
-# import test classes
-from test.Revit.Exports import export_model_to_nwc
-
-def run_export_tests(doc):
-    """
-    Runs all annotation related tests.
-
-    :param doc: Current Revit document.
-    :type doc: Autodesk.Revit.DB.Document
-
-    :return: True if all tests completed successfully, otherwise False.
-    :rtype: bool
-    """
-
-    return_value = res.Result()
-
-    # start tests -> should run ... tests first since they form
-    # part of ... tests
-
-    run_tests = [
-        ['Export model to NWC', export_model_to_nwc.ExportModelToNWC],
-    ]
-
-    runner = RevitRunTest(run_tests)
-    return_value = runner.run_tests(doc)
-
-    return return_value
+NWC_TEST_FILE_NAME = "view_export.nwc"

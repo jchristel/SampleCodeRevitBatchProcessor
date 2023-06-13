@@ -76,9 +76,7 @@ class GetIndependentTagReportDataHeader(revit_test.RevitTest):
             result = get_report_header(self.document)
             expected_result_all = {
                 2022: REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER,
-                2023: REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER.extend(
-                    REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
-                ),
+                2023: REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER + REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
             }
             # get the expected result based on Revit version
             expected_result = []

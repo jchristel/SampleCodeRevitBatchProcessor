@@ -28,3 +28,5 @@ This module contains revit wall report tests constants .
 
 
 REVIT_INDEPENDENT_TAG_TEST_FILE_NAME = "independent tags.rvt"
+
+MULTI_CATEGORY_TAG_TYPE_NAME = "MultiCategory_2022"

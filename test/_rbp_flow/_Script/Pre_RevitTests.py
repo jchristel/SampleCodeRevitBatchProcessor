@@ -4,6 +4,9 @@ Module executed as a pre process script within the batch processor environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - populates task list files for revit batch processor
+
+    - note: does not filter out back up files!!
+    
 - writes marker files to identify log files used in this process
 - writes revit work sharing marker files identifying Revit work sharing monitor sessions running
 """

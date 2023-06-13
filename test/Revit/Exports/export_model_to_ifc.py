@@ -35,6 +35,7 @@ from duHast.Revit.Exports.export_ifc import (
     setup_ifc_export_option,
     ifc_get_third_party_export_config_by_model,
 )
+from duHast.Revit.Exports.Utility.ifc_export_settings import IFCSettings
 
 from test.Revit.Exports.exports import IFC_TEST_FILE_NAME
 from duHast.Utilities.files_io import file_exist
@@ -45,6 +46,93 @@ class ExportModelToIFC(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
         super(ExportModelToIFC, self).__init__(doc=doc, test_name="export_model_to_ifc",requires_temp_dir=True)
+
+    def _setup_settings(self):
+        name  = 'batch processor sample code'
+        ifcVersion  = 'IFC2x2'
+        spaceBoundaries = 1
+        activePhaseId = -1
+        activeViewId = -1
+        exportBaseQuantities = True 
+        splitWallsAndColumns = True 
+        visibleElementsOfCurrentView = False 
+        use2DRoomBoundaryForVolume = True
+        useFamilyAndTypeNameForReference = False 
+        exportInternalRevitPropertySets = True
+        exportIFCCommonPropertySets = True
+        export2DElements = True
+        exportPartsAsBuildingElements = True
+        exportBoundingBox = False
+        exportSolidModelRep = False
+        exportSchedulesAsPsets = False 
+        exportUserDefinedPsets = False 
+        exportUserDefinedPsetsFileName = '' 
+        exportLinkedFiles = False 
+        includeSiteElevation = True  
+        useActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
+        exportSpecificSchedules = False 
+        tessellationLevelOfDetail = 0
+        storeIFCGUID = True 
+        exportRoomsInView = True 
+        useOnlyTriangulation = False
+        includeSteelElements = True 
+        cOBieCompanyInfo = 'n/a'
+        cOBieProjectInfo = 'batch processor sample code'
+        useTypeNameOnlyForIfcType = True
+        useVisibleRevitNameAsEntityName = True
+        sitePlacement = 'SiteTransformBasis.Shared'
+        selectedSite = 'sample site'
+        geoRefCRSName = 'geoRefCRSName'
+        geoRefCRSDesc ='geoRefCRSDesc'
+        geoRefEPSGCode ='geoRefEPSGCode'
+        geoRefGeodeticDatum ='geoRefGeodeticDatum'
+        geoRefMapUnit ='geoRefMapUnit'
+        excludeFilter = ''
+        
+        # set up settings class
+        ifc_settings_test = IFCSettings(
+            name, 
+            ifcVersion, 
+            spaceBoundaries,
+            activePhaseId,
+            activeViewId,
+            exportBaseQuantities,
+            splitWallsAndColumns,
+            visibleElementsOfCurrentView,
+            use2DRoomBoundaryForVolume,
+            useFamilyAndTypeNameForReference,
+            exportInternalRevitPropertySets,
+            exportIFCCommonPropertySets,
+            export2DElements,
+            exportPartsAsBuildingElements,
+            exportBoundingBox,
+            exportSolidModelRep,
+            exportSchedulesAsPsets,
+            exportUserDefinedPsets,
+            exportUserDefinedPsetsFileName,
+            exportLinkedFiles,
+            includeSiteElevation,
+            useActiveViewGeometry,
+            exportSpecificSchedules,
+            tessellationLevelOfDetail,
+            storeIFCGUID,
+            exportRoomsInView,
+            useOnlyTriangulation,
+            includeSteelElements,
+            cOBieCompanyInfo,
+            cOBieProjectInfo,
+            useTypeNameOnlyForIfcType,
+            useVisibleRevitNameAsEntityName,
+            sitePlacement,
+            selectedSite,
+            geoRefCRSName,
+            geoRefCRSDesc,
+            geoRefEPSGCode,
+            geoRefGeodeticDatum,
+            geoRefMapUnit,
+            excludeFilter
+        )
+        return ifc_settings_test
 
     def test(self):
         """
@@ -73,13 +161,11 @@ class ExportModelToIFC(revit_test.RevitTest):
         try:
 
             # ifc settings
-            #TODO:
-
-            
+            ifc_export_settings= self._setup_settings()
             # setup an export config by model:
             ifc_config = ifc_get_third_party_export_config_by_model(
                 ifc_version=rdb.IFCVersion.IFC2x2,
-                ifc_settings=""
+                ifc_settings=ifc_export_settings
             )
             # get ifc export config (shared coords, no view id == model export)
             test_data = setup_ifc_export_option(
@@ -91,7 +177,7 @@ class ExportModelToIFC(revit_test.RevitTest):
                 action_return_value = res.Result()
                 try:
                     result = export_model_to_ifc(
-                        doc=self.document,
+                        doc=doc,
                         ifc_export_option=test_data,
                         directory_path=self.tmp_dir,
                         file_name=IFC_TEST_FILE_NAME

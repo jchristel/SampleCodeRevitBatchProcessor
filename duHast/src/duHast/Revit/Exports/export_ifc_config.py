@@ -489,80 +489,80 @@ def _setup_config_from_settings_2022(ifc_export_config, ifc_settings):
 
     ifc_export_config.Name = ifc_settings.name
     # set up IFC version
-    if(ifc_settings.ifcVersion == 'IFCBCA'):
+    if(ifc_settings.ifc_version == 'IFCBCA'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFCBCA
-    elif(ifc_settings.ifcVersion == 'IFC2x2'):
+    elif(ifc_settings.ifc_version == 'IFC2x2'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x2
-    elif(ifc_settings.ifcVersion == 'IFC2x3'):
+    elif(ifc_settings.ifc_version == 'IFC2x3'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3
-    elif(ifc_settings.ifcVersion == 'IFCCOBIE'):
+    elif(ifc_settings.ifc_version == 'IFCCOBIE'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFCCOBIE
-    elif(ifc_settings.ifcVersion == 'IFC2x3CV2'):
+    elif(ifc_settings.ifc_version == 'IFC2x3CV2'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3CV2
-    elif(ifc_settings.ifcVersion == 'IFC4'):
+    elif(ifc_settings.ifc_version == 'IFC4'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4
-    elif(ifc_settings.ifcVersion == 'IFC2x3FM'):
+    elif(ifc_settings.ifc_version == 'IFC2x3FM'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3FM
-    elif(ifc_settings.ifcVersion == 'IFC4RV'):
+    elif(ifc_settings.ifc_version == 'IFC4RV'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4RV
-    elif(ifc_settings.ifcVersion == 'IFC4DTV'):
+    elif(ifc_settings.ifc_version == 'IFC4DTV'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC4DTV
-    elif(ifc_settings.ifcVersion == 'IFC2x3BFM'):
+    elif(ifc_settings.ifc_version == 'IFC2x3BFM'):
         ifc_export_config.IFCVersion = rdb.IFCVersion.IFC2x3BFM
     else:
         ifc_export_config.IFCVersion = rdb.IFCVersion.Default
         
-    ifc_export_config.SpaceBoundaries = ifc_settings.spaceBoundaries
-    ifc_export_config.ActivePhaseId = ifc_settings.activePhaseId
-    ifc_export_config.ActiveViewId = ifc_settings.activeViewId
-    ifc_export_config.ExportBaseQuantities = ifc_settings.exportBaseQuantities
-    ifc_export_config.SplitWallsAndColumns = ifc_settings.splitWallsAndColumns
-    ifc_export_config.VisibleElementsOfCurrentView = ifc_settings.visibleElementsOfCurrentView
-    ifc_export_config.Use2DRoomBoundaryForVolume = ifc_settings.use2DRoomBoundaryForVolume
-    ifc_export_config.UseFamilyAndTypeNameForReference = ifc_settings.useFamilyAndTypeNameForReference
-    ifc_export_config.ExportInternalRevitPropertySets = ifc_settings.exportInternalRevitPropertySets
-    ifc_export_config.ExportIFCCommonPropertySets = ifc_settings.exportIFCCommonPropertySets
-    ifc_export_config.Export2DElements = ifc_settings.export2DElements
-    ifc_export_config.ExportPartsAsBuildingElements = ifc_settings.exportPartsAsBuildingElements
-    ifc_export_config.ExportBoundingBox = ifc_settings.exportBoundingBox
-    ifc_export_config.ExportSolidModelRep = ifc_settings.exportSolidModelRep
-    ifc_export_config.ExportSchedulesAsPsets = ifc_settings.exportSchedulesAsPsets
-    ifc_export_config.ExportUserDefinedPsets = ifc_settings.exportUserDefinedPsets
-    ifc_export_config.ExportUserDefinedPsetsFileName = ifc_settings.exportUserDefinedPsetsFileName
-    ifc_export_config.ExportLinkedFiles = ifc_settings.exportLinkedFiles
-    ifc_export_config.IncludeSiteElevation = ifc_settings.includeSiteElevation
-    ifc_export_config.UseActiveViewGeometry = ifc_settings.useActiveViewGeometry
-    ifc_export_config.ExportSpecificSchedules = ifc_settings.exportSpecificSchedules
-    ifc_export_config.TessellationLevelOfDetail = ifc_settings.tessellationLevelOfDetail
-    ifc_export_config.StoreIFCGUID = ifc_settings.storeIFCGUID
-    ifc_export_config.ExportRoomsInView = ifc_settings.exportRoomsInView
-    ifc_export_config.UseOnlyTriangulation = ifc_settings.useOnlyTriangulation
-    ifc_export_config.IncludeSteelElements = ifc_settings.includeSteelElements
-    ifc_export_config.COBieCompanyInfo = ifc_settings.cOBieCompanyInfo
-    ifc_export_config.COBieProjectInfo = ifc_settings.cOBieProjectInfo
-    ifc_export_config.UseTypeNameOnlyForIfcType = ifc_settings.useTypeNameOnlyForIfcType
-    ifc_export_config.UseVisibleRevitNameAsEntityName = ifc_settings.useVisibleRevitNameAsEntityName
+    ifc_export_config.SpaceBoundaries = ifc_settings.space_boundaries
+    ifc_export_config.ActivePhaseId = ifc_settings.active_phase_id
+    ifc_export_config.ActiveViewId = ifc_settings.active_view_id
+    ifc_export_config.ExportBaseQuantities = ifc_settings.export_base_quantities
+    ifc_export_config.SplitWallsAndColumns = ifc_settings.split_walls_and_columns
+    ifc_export_config.VisibleElementsOfCurrentView = ifc_settings.visible_elements_of_current_view
+    ifc_export_config.Use2DRoomBoundaryForVolume = ifc_settings.use2_d_room_boundary_for_volume
+    ifc_export_config.UseFamilyAndTypeNameForReference = ifc_settings.use_family_and_type_name_for_reference
+    ifc_export_config.ExportInternalRevitPropertySets = ifc_settings.export_internal_revit_property_sets
+    ifc_export_config.ExportIFCCommonPropertySets = ifc_settings.export_ifc_common_property_sets
+    ifc_export_config.Export2DElements = ifc_settings.export_2d_elements
+    ifc_export_config.ExportPartsAsBuildingElements = ifc_settings.export_parts_as_building_elements
+    ifc_export_config.ExportBoundingBox = ifc_settings.export_bounding_box
+    ifc_export_config.ExportSolidModelRep = ifc_settings.export_solid_model_rep
+    ifc_export_config.ExportSchedulesAsPsets = ifc_settings.export_schedules_as_psets
+    ifc_export_config.ExportUserDefinedPsets = ifc_settings.export_user_defined_psets
+    ifc_export_config.ExportUserDefinedPsetsFileName = ifc_settings.export_user_defined_psets_file_name
+    ifc_export_config.ExportLinkedFiles = ifc_settings.export_linked_files
+    ifc_export_config.IncludeSiteElevation = ifc_settings.include_site_elevation
+    ifc_export_config.UseActiveViewGeometry = ifc_settings.use_active_view_geometry
+    ifc_export_config.ExportSpecificSchedules = ifc_settings.export_specific_schedules
+    ifc_export_config.TessellationLevelOfDetail = ifc_settings.tessellation_level_of_detail
+    ifc_export_config.StoreIFCGUID = ifc_settings.store_ifc_guid
+    ifc_export_config.ExportRoomsInView = ifc_settings.export_rooms_in_view
+    ifc_export_config.UseOnlyTriangulation = ifc_settings.use_only_triangulation
+    ifc_export_config.IncludeSteelElements = ifc_settings.include_steel_elements
+    ifc_export_config.COBieCompanyInfo = ifc_settings.cobie_company_info
+    ifc_export_config.COBieProjectInfo = ifc_settings.cobie_project_info
+    ifc_export_config.UseTypeNameOnlyForIfcType = ifc_settings.use_type_name_only_for_ifc_type
+    ifc_export_config.UseVisibleRevitNameAsEntityName = ifc_settings.use_visible_revit_name_as_entity_name
         
     # set up site placement
-    if(ifc_settings.sitePlacement == 'shared'):
+    if(ifc_settings.site_placement == 'shared'):
         ifc_export_config.SitePlacement = SiteTransformBasis.Shared
-    elif(ifc_settings.sitePlacement == 'site'):
+    elif(ifc_settings.site_placement == 'site'):
         ifc_export_config.SitePlacement = SiteTransformBasis.Site
-    elif(ifc_settings.sitePlacement == 'project'):
+    elif(ifc_settings.site_placement == 'project'):
         ifc_export_config.SitePlacement = SiteTransformBasis.Project
-    elif(ifc_settings.sitePlacement == 'internal'):
+    elif(ifc_settings.site_placement == 'internal'):
         ifc_export_config.SitePlacement = SiteTransformBasis.Internal
-    elif(ifc_settings.sitePlacement == 'projectInTN'):
+    elif(ifc_settings.site_placement == 'projectInTN'):
         ifc_export_config.SitePlacement = SiteTransformBasis.ProjectInTN
     else:
         ifc_export_config.SitePlacement = SiteTransformBasis.InternalInTN
     
-    ifc_export_config.GeoRefCRSName = ifc_settings.geoRefCRSName
-    ifc_export_config.GeoRefCRSDesc = ifc_settings.geoRefCRSDesc
-    ifc_export_config.GeoRefEPSGCode = ifc_settings.geoRefEPSGCode
-    ifc_export_config.GeoRefGeodeticDatum = ifc_settings.geoRefGeodeticDatum
-    ifc_export_config.GeoRefMapUnit = ifc_settings.geoRefMapUnit
-    ifc_export_config.ExcludeFilter = ifc_settings.excludeFilter
+    ifc_export_config.GeoRefCRSName = ifc_settings.geo_ref_crs_name
+    ifc_export_config.GeoRefCRSDesc = ifc_settings.geo_ref_crs_desc
+    ifc_export_config.GeoRefEPSGCode = ifc_settings.geo_ref_epsg_code
+    ifc_export_config.GeoRefGeodeticDatum = ifc_settings.geo_ref_geodetic_datum
+    ifc_export_config.GeoRefMapUnit = ifc_settings.geo_ref_map_unit
+    ifc_export_config.ExcludeFilter = ifc_settings.exclude_filter
 
     return ifc_export_config
 

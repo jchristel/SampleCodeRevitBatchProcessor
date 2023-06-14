@@ -26,13 +26,20 @@ This module contains a Revit tag instances report function.
 #
 #
 
-from duHast.Revit.Annotation.independent_tags import (
-    get_all_independent_tags,
+import json
+
+from duHast.Revit.Annotation.independent_tags import get_all_independent_tags
+from duHast.Revit.Annotation.independent_tags_elbow_properties import (
+    get_elbow_properties,
     ELBOW_LOCATION,
     LEADER_END,
+    LEADER_REFERENCE,
 )
 
-from duHast.Revit.Annotation.independent_tags_elbow_properties import get_elbow_properties
+from duHast.Revit.Annotation.Reporting import (
+    gen_annotations_instance_report_header as props,
+)
+
 from duHast.Revit.Common.Geometry.geometry import get_point_as_string
 from duHast.Utilities.utility import encode_ascii
 from duHast.Revit.Common.revit_version import get_revit_version_number
@@ -69,31 +76,20 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                         tag_text = tag_instance.TagText
                     except:
                         pass
+
                     # convert elbow properties to string
-                    elbow_properties_as_strings = {ELBOW_LOCATION: [], LEADER_END: []}
+                    # default (no elbows)
+                    elbows = [
+                        {LEADER_REFERENCE: None},
+                        {ELBOW_LOCATION: None},
+                        {LEADER_END: None},
+                    ]
+                    elbow_properties_as_json_strings = ""
                     # get elbow properties
                     if tag_instance.HasLeader:
                         elbows = get_elbow_properties(doc, tag_instance)
-                        for elbow_location in elbows[ELBOW_LOCATION]:
-                            if elbow_location != None:
-                                elbow_properties_as_strings[ELBOW_LOCATION].append(
-                                    get_point_as_string(elbow_location)
-                                )
-                            else:
-                                elbow_properties_as_strings[ELBOW_LOCATION].append(
-                                    "None"
-                                )
-
-                        for leader_end in elbows[LEADER_END]:
-                            if leader_end != None:
-                                elbow_properties_as_strings[LEADER_END].append(
-                                    get_point_as_string(leader_end)
-                                )
-                            else:
-                                elbow_properties_as_strings[LEADER_END].append("None")
-                    else:
-                        elbow_properties_as_strings[ELBOW_LOCATION] = ["None"]
-                        elbow_properties_as_strings[LEADER_END] = ["None"]
+                    # convert to json for report
+                    elbow_properties_as_json_strings = json.dumps(elbows)
 
                     # leader end condition (need to check if there is a leader)
                     leader_end_condition = str(None)
@@ -101,41 +97,52 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                         leader_end_condition = str(tag_instance.LeaderEndCondition)
 
                     # base line revit data
-                    row = [
-                        revit_file_path,
-                        str(tag_instance.Id),
-                        str(tag_instance.HasLeader),  # leader flag
-                        str(tag_instance.IsOrphaned),  # is orphaned tag?
-                        str(tag_instance.IsMaterialTag),  # is a material tag
-                        str(
+                    row = {
+                        props.HOST_FILE: revit_file_path,
+                        props.TAG_ID: str(tag_instance.Id),
+                        props.TAG_HAS_LEADER: str(
+                            tag_instance.HasLeader
+                        ),  # leader flag
+                        props.TAG_IS_ORPHANED: str(
+                            tag_instance.IsOrphaned
+                        ),  # is orphaned tag?
+                        props.TAG_IS_MATERIAL_TAG: str(
+                            tag_instance.IsMaterialTag
+                        ),  # is a material tag
+                        props.IS_MULTICATEGORY_TAG: str(
                             tag_instance.IsMulticategoryTag
                         ),  # is is multi category tag
-                        leader_end_condition,  # attached or free
-                        ",".join(
-                            elbow_properties_as_strings[ELBOW_LOCATION]
-                        ),  # elbow(s) locations
-                        ",".join(
-                            elbow_properties_as_strings[LEADER_END]
-                        ),  # leader end(s) locations
-                        str(tag_instance.MultiReferenceAnnotationId),
-                        tag_text,  # tag text
-                        encode_ascii(
+                        props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
+                        props.LEADER_PROPERTIES: elbow_properties_as_json_strings,  # elbow properties
+                        props.MULTI_REFERENCE_ANNOTATION_ID: str(
+                            tag_instance.MultiReferenceAnnotationId
+                        ),
+                        props.TAG_TEXT: tag_text,  # tag text
+                        props.TAGGED_ELEMENT_NAME: encode_ascii(
                             rdb.Element.Name.GetValue(
                                 doc.GetElement(tag_instance.TaggedLocalElementId)
                             )
                         ),  # tagged element name
-                        get_point_as_string(
+                        props.TAG_HEAD_LOCATION: get_point_as_string(
                             tag_instance.TagHeadPosition
                         ),  # tag location
-                        str(tag_instance.RotationAngle),  # rotation tag
-                        str(tag_instance.TagOrientation),  # horizontal ,vertical, model
-                    ]
+                        props.TAG_ROTATION_ANGLE: str(
+                            tag_instance.RotationAngle
+                        ),  # rotation tag
+                        props.TAG_ORIENTATION: str(
+                            tag_instance.TagOrientation
+                        ),  # horizontal ,vertical, model
+                    }
 
                     # add data for later versions of revit
                     if revit_version >= 2023:
-                        row.append(tag_instance.LeadersPresentationMode)
-                        row.append(str(tag_instance.MergeElbows))
-                    data.append(row)
+                        row[
+                            props.TAG_PRESENTATION_MODE
+                        ]: tag_instance.LeadersPresentationMode
+                        row[props.MERGE_ELBOWS : str(tag_instance.MergeElbows)]
+                    data.append(json.dumps(row))
         except Exception as e:
-            data.append([revit_file_path, str(tag_instance.Id), str(e)])
+            data.append(
+                {props.HOST_FILE: revit_file_path, props.TAG_ID: str(tag_instance.Id)}
+            )
     return data

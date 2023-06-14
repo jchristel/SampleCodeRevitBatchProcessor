@@ -25,51 +25,23 @@ This module contains the header row for any (future) generic annotation reports.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
+# -------------------------------------------- common properties --------------------
 
-from duHast.Revit.Common.revit_version import get_revit_version_number
+HOST_FILE = "HOST_FILE"
+TAG_ID = "TAG_ID"
+TAG_HAS_LEADER = "TAG_HAS_LEADER"
+TAG_IS_ORPHANED = "TAG_IS_ORPHANED"
+TAG_IS_MATERIAL_TAG = "TAG_IS_MATERIAL_TAG"
+IS_MULTICATEGORY_TAG = "IS_MULTICATEGORY_TAG"
+LEADER_END_CONDITION = "LEADER_END_CONDITION"
+LEADER_PROPERTIES = "LEADER_PROPERTIES"
+MULTI_REFERENCE_ANNOTATION_ID = "MULTI_REFERENCE_ANNOTATION_ID"
+TAG_TEXT = "TAG_TEXT"
+TAGGED_ELEMENT_NAME = "TAGGED_ELEMENT_NAME"
+TAG_HEAD_LOCATION = "TAG_HEAD_LOCATION"
+TAG_ROTATION_ANGLE = "TAG_ROTATION_ANGLE"
+TAG_ORIENTATION = "TAG_ORIENTATION"
 
-# -------------------------------------------- common variables --------------------
-#: header used in reports up to revit 2022
-REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER = [
-    "HOST_FILE",
-    "TAG_ID",
-    "TAG_HAS_LEADER",
-    "TAG_IS_ORPHANED",
-    "TAG_IS_MATERIAL_TAG",
-    "IS_MULTICATEGORY_TAG",
-    "LEADER_END_CONDITION",
-    "ELBOW_LOCATION",
-    "LEADER_END",
-    "MULTI_REFERENCE_ANNOTATION_ID",
-    "TAG_TEXT",
-    "TAGGED_ELEMENT_NAME",
-    "TAG_HEAD_LOCATION",
-    "TAG_ROTATION_ANGLE",
-    "TAG_ORIENTATION",
-]
-
-#: header used in reports up to revit 2022
-REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023 = [
-    "TAG_PRESENTATION_MODE",
-    "MERGE_ELBOWS",
-]
-
-
-def get_report_header(doc):
-    """
-    Returns the report header depending on Revit version
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :return: The report headers.
-    :rtype: [str]
-    """
-
-    revit_version = get_revit_version_number(doc)
-    if revit_version <= 2022:
-        return REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER
-    else:
-        return (
-            REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER
-            + REPORT_GENERIC_ANNOTATIONS_INSTANCE_HEADER_2023
-        )
+#: properties used in reports from to revit 2023 onwards
+TAG_PRESENTATION_MODE = "TAG_PRESENTATION_MODE"
+MERGE_ELBOWS = "MERGE_ELBOWS"

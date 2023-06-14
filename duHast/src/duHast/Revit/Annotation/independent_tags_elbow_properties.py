@@ -32,6 +32,7 @@ from duHast.Revit.Common.revit_version import get_revit_version_number
 
 ELBOW_LOCATION = "elbow_location"
 LEADER_END = "leader_end"
+LEADER_REFERENCE = "leader_reference"
 
 
 def get_elbow_properties(doc, tag):
@@ -43,8 +44,8 @@ def get_elbow_properties(doc, tag):
     :param tag: The tag element
     :type tag: Autodesk.Revit.DB.IndependentTag
 
-    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
-    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    :return: A list of dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.
+    :rtype: [{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]
     """
 
     # get the revit version:
@@ -64,24 +65,28 @@ def get_elbow_properties_2021(tag):
     :param tag: The tag element
     :type tag: Autodesk.Revit.DB.IndependentTag
 
-    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
-    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    :return: A list of a single dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.
+    :rtype: [{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]
     """
 
-    data = {}
+    data = []
+    elbow_properties = {}
     try:
         if(tag.HasElbow):
-            data[ELBOW_LOCATION] = [tag.LeaderElbow]
+            elbow_properties[LEADER_REFERENCE]=None
+            elbow_properties[ELBOW_LOCATION] = tag.LeaderElbow
             if(tag.LeaderEndCondition == rdb.LeaderEndCondition.Free):
-                data[LEADER_END] = [tag.LeaderEnd]
+                elbow_properties[LEADER_END] = tag.LeaderEnd
             else:
-                data[LEADER_END]=[None]
+                elbow_properties[LEADER_END]=None
         else:
-            data[ELBOW_LOCATION] = [None]
-            data[LEADER_END] = [None]
+            elbow_properties[ELBOW_LOCATION] = None
+            elbow_properties[LEADER_END] = None
     except:
-        data[ELBOW_LOCATION] = [None]
-        data[LEADER_END] = [None]
+        elbow_properties[ELBOW_LOCATION] = None
+        elbow_properties[LEADER_END] = None
+
+    data.append(elbow_properties)
     return data
 
 
@@ -92,26 +97,27 @@ def get_elbow_properties_2022(tag):
     :param tag: The tag element
     :type tag: Autodesk.Revit.DB.IndependentTag
 
-    :return: a dictionary with 2 keys: ELBOW_LOCATION and LEADER_END. Each of those are lists of XYZ points
-    :rtype: {str:[Autodesk.Revit.DB.XYZ]}
+    :return: A list of dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.
+    :rtype: [{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]
     """
     
-    data = {}
-    data[ELBOW_LOCATION] = []
-    data[LEADER_END] = []
+    data = []
     tagged_references = tag.GetTaggedReferences()
     for tag_ref in tagged_references:
+        elbow_properties = {}
+        elbow_properties[LEADER_REFERENCE]=tag_ref
         try:
             if(tag.HasLeaderElbow(tag_ref)):
-                data[ELBOW_LOCATION].append(tag.GetLeaderElbow(tag_ref))
+                elbow_properties[ELBOW_LOCATION] = tag.GetLeaderElbow(tag_ref)
                 if(tag.LeaderEndCondition == rdb.LeaderEndCondition.Free):
-                    data[LEADER_END].append(tag.GetLeaderEnd(tag_ref))
+                    elbow_properties[LEADER_END]=tag.GetLeaderEnd(tag_ref)
                 else:
-                    data[LEADER_END].append(None)
+                    elbow_properties[LEADER_END]=None
             else:
-                data[ELBOW_LOCATION].append(None)
-                data[LEADER_END].append(None)
+                elbow_properties[ELBOW_LOCATION]=None
+                elbow_properties[LEADER_END]=None
         except:
-            data[ELBOW_LOCATION].append(None)
-            data[LEADER_END].append(None)
+            elbow_properties[ELBOW_LOCATION]=None
+            elbow_properties[LEADER_END]=None
+        data.append(elbow_properties)
     return data

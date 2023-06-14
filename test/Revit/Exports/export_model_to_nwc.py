@@ -94,14 +94,14 @@ class ExportModelToNWC(revit_test.RevitTest):
                         directory_path=self.tmp_dir,
                         file_name=NWC_TEST_FILE_NAME
                     )
-                    action_return_value.append_message('Export model to nwc completed with status: '.format(result.status))
+                    action_return_value.append_message('Export model to nwc completed with status: {} and message: {}'.format(result.status, result.message))
                     assert(result.status == True)
                     # check if file exists
                     file_created = file_exist(full_file_path=os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME))
-                    action_return_value.append_message('NWC file was created: {}'.format(file_created))
+                    action_return_value.append_message('NWC file was created: {} at: {}'.format(file_created, os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME)))
                     assert(file_created==True)
                     action_return_value.update_sep(
-                        True, "Model was exported successfully.")
+                        True, "NWC model was exported successfully.")
                 except Exception as e:
                     action_return_value.update_sep(
                         False,

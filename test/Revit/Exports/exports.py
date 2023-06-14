@@ -28,4 +28,4 @@ This module contains revit wall report tests constants .
 
 
 NWC_TEST_FILE_NAME = "nwc_export.nwc"
-IFC_TEST_FILE_NAME = "ifc_export.nwc"
+IFC_TEST_FILE_NAME = "ifc_export.ifc"

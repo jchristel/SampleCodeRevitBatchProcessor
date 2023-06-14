@@ -32,12 +32,15 @@ from duHast.Revit.Common import transaction as rTran
 from duHast.Revit.Common.revit_version import get_revit_version_number
 from duHast.Utilities import result as res
 from duHast.Revit.Views import views as rView
-from duHast.Revit.Exports import export_ifc_config as ifcCon
 from duHast.Revit.Exports.export import build_export_file_name_from_view
 from duHast.Revit.Exports.Utility.ifc_export_coordinates import IFCCoords
 from duHast.Revit.Exports.Utility.ifc_export_space_boundaries import IFCSpaceBoundaries
-from duHast.Revit.Exports.Utility.export_ifc_config_2023 import ifc_get_third_party_export_config_by_model_2023, ifc_get_third_party_export_config_by_view_2023
 
+from duHast.Revit.Exports.Utility.export_ifc_config_2019 import ifc_get_third_party_export_config_by_model_2019, ifc_get_third_party_export_config_by_view_2019
+from duHast.Revit.Exports.Utility.export_ifc_config_2020 import ifc_get_third_party_export_config_by_model_2020, ifc_get_third_party_export_config_by_view_2020
+from duHast.Revit.Exports.Utility.export_ifc_config_2021 import ifc_get_third_party_export_config_by_model_2021, ifc_get_third_party_export_config_by_view_2021
+from duHast.Revit.Exports.Utility.export_ifc_config_2022 import ifc_get_third_party_export_config_by_model_2022, ifc_get_third_party_export_config_by_view_2022
+from duHast.Revit.Exports.Utility.export_ifc_config_2023 import ifc_get_third_party_export_config_by_model_2023, ifc_get_third_party_export_config_by_view_2023
 
 def ifc_get_export_config_by_view(ifc_version, ifc_space_bounds = IFCSpaceBoundaries.no_boundaries):
     '''
@@ -266,13 +269,13 @@ def ifc_get_third_party_export_config_by_model(doc, ifc_version, ifc_settings = 
     revit_version = get_revit_version_number(doc=doc)
     ifc_config = None
     if (revit_version == 2019):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_model_2019(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_model_2019(ifc_version, ifc_settings)
     elif (revit_version == 2020):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_model_2020(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_model_2020(ifc_version, ifc_settings)
     elif (revit_version == 2021):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_model_2021(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_model_2021(ifc_version, ifc_settings)
     elif (revit_version == 2022):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_model_2022(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_model_2022(ifc_version, ifc_settings)
     elif (revit_version == 2023):
         ifc_config = ifc_get_third_party_export_config_by_model_2023(ifc_version=ifc_version, ifc_settings=ifc_settings)
     else:
@@ -297,13 +300,13 @@ def ifc_get_third_party_export_config_by_view(doc, ifc_version, ifc_settings = N
     revit_version = get_revit_version_number(doc=doc)
     ifc_config = None
     if (revit_version == 2019):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_view_2019(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_view_2019(ifc_version, ifc_settings)
     elif (revit_version == 2020):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_view_2020(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_view_2020(ifc_version, ifc_settings)
     elif (revit_version == 2021):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_view_2021(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_view_2021(ifc_version, ifc_settings)
     elif (revit_version == 2022):
-        ifc_config = ifcCon.ifc_get_third_party_export_config_by_view_2022(ifc_version, ifc_settings)
+        ifc_config = ifc_get_third_party_export_config_by_view_2022(ifc_version, ifc_settings)
     elif(revit_version==2023):
         ifc_config = ifc_get_third_party_export_config_by_view_2023(ifc_version=ifc_version, ifc_settings=ifc_settings)
     else:

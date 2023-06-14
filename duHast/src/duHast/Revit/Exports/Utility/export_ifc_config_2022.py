@@ -1,6 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This module contains a number of helper functions to get the IFCExportConfig in revit versions 2023 of Revit.
+This module contains a number of helper functions to get the IFCExportConfig in varies versions of Revit.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 """
 
@@ -33,14 +33,15 @@ import sys
 
 import Autodesk.Revit.DB as rdb
 
-# -------------------------------------------- IFC EXPORT Revit 2023 -------------------------------------
+
+# -------------------------------------------- IFC EXPORT Revit 2022 -------------------------------------
 # need to check for new features in revit 2022
 
 
 # ifcVersion        which ifc version (2x3 etc...)
-def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
+def ifc_get_third_party_export_config_by_view_2022(ifc_version, ifc_settings):
     """
-    Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk
+    Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
 
     This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.
 
@@ -51,7 +52,7 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\IFCExporterUIOverride.dll"
+    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\IFCExporterUIOverride.dll"
 
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
 
@@ -63,11 +64,11 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
     ifc_export_config = IFCExportConfiguration.CreateDefaultConfiguration()
 
     if ifc_settings == None:
-        ifc_export_config = _setup_config_default_values_2023(
+        ifc_export_config = _setup_config_default_values_2022(
             ifc_export_config, ifc_version, True
         )
     else:
-        ifc_export_config = _setup_config_from_settings_2023(
+        ifc_export_config = _setup_config_from_settings_2022(
             ifc_export_config, ifc_settings
         )
 
@@ -75,9 +76,9 @@ def ifc_get_third_party_export_config_by_view_2023(ifc_version, ifc_settings):
 
 
 # ifcVersion        which ifc version (2x3 etc...)
-def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
+def ifc_get_third_party_export_config_by_model_2022(ifc_version, ifc_settings):
     """
-    Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk
+    Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk
 
     This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.
 
@@ -88,8 +89,8 @@ def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
     """
 
     # load version specific assemblies
-    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\IFCExporterUIOverride.dll"
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\IFCExporterUIOverride.dll"
+    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\Revit.IFC.Common.dll"
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_)
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
 
@@ -101,20 +102,20 @@ def ifc_get_third_party_export_config_by_model_2023(ifc_version, ifc_settings):
     # set up configuration
     ifc_export_config = IFCExportConfiguration.CreateDefaultConfiguration()
     if ifc_settings == None:
-        ifc_export_config = _setup_config_default_values_2023(
+        ifc_export_config = _setup_config_default_values_2022(
             ifc_export_config, ifc_version, False
         )
     else:
-        ifc_export_config = _setup_config_from_settings_2023(
+        ifc_export_config = _setup_config_from_settings_2022(
             ifc_export_config, ifc_settings
         )
 
     return ifc_export_config
 
 
-def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
+def _setup_config_from_settings_2022(ifc_export_config, ifc_settings):
     """
-    Sets up an ifc config object for Revit 2023 based on settings passt in.
+    Sets up an ifc config object for Revit 2022 based on settings passt in.
 
     :param ifc_export_config: An ifc export config object
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
@@ -125,7 +126,7 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
     """
 
-    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2023.bundle\Contents\2023\Revit.IFC.Common.dll"
+    ifc_third_party_folder_path_enums_ = r"C:\ProgramData\Autodesk\ApplicationPlugins\IFC 2022.bundle\Contents\2022\Revit.IFC.Common.dll"
     clr.AddReferenceToFileAndPath(ifc_third_party_folder_path_enums_)
     from Revit.IFC.Common.Enums import SiteTransformBasis
 
@@ -229,9 +230,9 @@ def _setup_config_from_settings_2023(ifc_export_config, ifc_settings):
     return ifc_export_config
 
 
-def _setup_config_default_values_2023(ifc_export_config, ifc_version, export_by_view):
+def _setup_config_default_values_2022(ifc_export_config, ifc_version, export_by_view):
     """
-    Sets up an default ifc config object for Revit 2023.
+    Sets up an default ifc config object for Revit 2022.
 
     :param ifc_export_config: An ifc export config
     :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration

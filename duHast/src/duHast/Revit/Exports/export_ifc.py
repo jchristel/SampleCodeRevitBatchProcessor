@@ -60,10 +60,11 @@ def export_to_ifc(doc, ifc_export_option, directory_path, file_name):
     '''
     Exports to IFC either the entire model or a view only using 3rd party exporter.
     What gets exported is defined in the ifc_export_option.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param ifc_export_option: The settings for the IFC export.
-    :type ifc_export_option: BIM.IFC.Export.UI.IFCExportConfiguration
+    :type ifc_export_option: Autodesk.Revit.DB IFCExportOptions
     :param directory_path: The directory path to where the export is being saved.
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
@@ -236,13 +237,13 @@ def export_model_to_ifc(doc, ifc_export_option, directory_path, file_name, coord
 
     return_value = res.Result()
     # need to create an export option from the export config
-    ex_ifc = rdb.IFCExportOptions()
+    # ex_ifc = rdb.IFCExportOptions()
     # pass in invalid element ID to export entire model
-    ifc_export_option.UpdateOptions(ex_ifc, rdb.ElementId.InvalidElementId)
+    # ifc_export_option.UpdateOptions(ex_ifc, rdb.ElementId.InvalidElementId)
 
     # set the coordinate system to use
-    ex_ifc.AddOption('SitePlacement', coord_option)
-    return_value_by_model = export_to_ifc(doc, ex_ifc, directory_path, file_name)
+    ifc_export_option.AddOption('SitePlacement', coord_option)
+    return_value_by_model = export_to_ifc(doc, ifc_export_option, directory_path, file_name)
     return_value.update(return_value_by_model)
     return return_value
 

@@ -31,7 +31,13 @@ from test.Revit.TestUtils.run_revit_tests import RevitRunTest
 from duHast.Utilities import result as res
 
 # import test classes
-from test.Revit.Exports import export_model_to_nwc, export_model_to_ifc
+from test.Revit.Exports import (
+    export_model_to_nwc,
+    export_view_to_nwc,
+    export_model_to_ifc,
+    export_view_to_ifc,
+)
+
 
 def run_export_tests(doc):
     """
@@ -50,8 +56,10 @@ def run_export_tests(doc):
     # part of ... tests
 
     run_tests = [
-        ['Export model to NWC', export_model_to_nwc.ExportModelToNWC],
-        ['Export model to IFC', export_model_to_ifc.ExportModelToIFC],
+        ["Export model to NWC", export_model_to_nwc.ExportModelToNWC],
+        ["Export view to NWC", export_view_to_nwc.ExportViewToNWC],
+        ["Export model to IFC", export_model_to_ifc.ExportModelToIFC],
+        ["Export view to IFC", export_view_to_ifc.ExportViewToIFC],
     ]
 
     runner = RevitRunTest(run_tests)

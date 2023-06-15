@@ -84,12 +84,12 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                         {ELBOW_LOCATION: None},
                         {LEADER_END: None},
                     ]
-                    elbow_properties_as_json_strings = ""
+                    elbow_properties=None
                     # get elbow properties
                     if tag_instance.HasLeader:
-                        elbows = get_elbow_properties(doc, tag_instance)
-                    # convert to json for report
-                    elbow_properties_as_json_strings = json.dumps(elbows)
+                        elbow_properties = get_elbow_properties(
+                            doc=doc, tag=tag_instance, points_as_double=True
+                        )
 
                     # leader end condition (need to check if there is a leader)
                     leader_end_condition = str(None)
@@ -113,7 +113,7 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                             tag_instance.IsMulticategoryTag
                         ),  # is is multi category tag
                         props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
-                        props.LEADER_PROPERTIES: elbow_properties_as_json_strings,  # elbow properties
+                        props.LEADER_PROPERTIES: elbow_properties,  # elbow properties
                         props.MULTI_REFERENCE_ANNOTATION_ID: str(
                             tag_instance.MultiReferenceAnnotationId
                         ),
@@ -138,11 +138,15 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     if revit_version >= 2023:
                         row[
                             props.TAG_PRESENTATION_MODE
-                        ]: tag_instance.LeadersPresentationMode
-                        row[props.MERGE_ELBOWS : str(tag_instance.MergeElbows)]
+                        ] = tag_instance.LeadersPresentationMode
+                        row[props.MERGE_ELBOWS] = str(tag_instance.MergeElbows)
                     data.append(json.dumps(row))
         except Exception as e:
             data.append(
-                {props.HOST_FILE: revit_file_path, props.TAG_ID: str(tag_instance.Id)}
+                {
+                    props.HOST_FILE: revit_file_path,
+                    props.TAG_ID: str(tag_instance.Id),
+                    "exception": str(e),
+                }
             )
     return data

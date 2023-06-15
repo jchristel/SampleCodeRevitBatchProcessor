@@ -153,8 +153,8 @@ def setup_ifc_export_option(export_config, view_id = rdb.ElementId.InvalidElemen
     :type view_id: Autodesk.Revit.DB.ElementId, optional
     :param coord_option: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
     :type coord_option: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
-    :return: An updated ifc export config instance.
-    :rtype: BIM.IFC.Export.UI.IFCExportConfiguration
+    :return: An updated ifc export option instance.
+    :rtype: Autodesk.Revit.DB.IFCExportOptions
     '''
 
     if(export_config.UseActiveViewGeometry == True):
@@ -171,7 +171,7 @@ def setup_ifc_export_option(export_config, view_id = rdb.ElementId.InvalidElemen
     return ex_ifc
 
 
-def export_3d_views_to_ifc(doc, view_filter, ifc_export_option, directory_path, ifc_coordinates_system = IFCCoords.shared_coordinates, do_something_with_view_name = None):
+def export_3d_views_to_ifc(doc, view_filter, ifc_export_config, directory_path, ifc_coordinates_system = IFCCoords.shared_coordinates, do_something_with_view_name = None):
     '''
     Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
     By default the file name of the export will be same as the name of the view exported.
@@ -179,8 +179,8 @@ def export_3d_views_to_ifc(doc, view_filter, ifc_export_option, directory_path, 
     :type doc: Autodesk.Revit.DB.Document
     :param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
     :type view_filter: str
-    :param ifc_export_option: The IFC export option.
-    :type ifc_export_option: Autodesk.Revit.DB.IFCExportOptions
+    :param ifc_export_config: The IFC export configuration.
+    :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
     :param directory_path: The directory path to where the export is being saved.
     :type directory_path: str
     :param ifc_coordinates_system: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
@@ -208,7 +208,7 @@ def export_3d_views_to_ifc(doc, view_filter, ifc_export_option, directory_path, 
     if(len(views_to_export) > 0):
         for export_view in views_to_export:
             return_value_by_view = res.Result()
-            updated_export_option = setup_ifc_export_option(ifc_export_option, export_view.Id, ifc_coordinates_system)
+            updated_export_option = setup_ifc_export_option(ifc_export_config, export_view.Id, ifc_coordinates_system)
             file_name = build_export_file_name_from_view(export_view.Name, view_filter, '.ifc') if do_something_with_view_name == None else do_something_with_view_name(export_view.Name)
             return_value_by_view = export_to_ifc(doc, updated_export_option, directory_path, file_name)
             return_value.update(return_value_by_view)
@@ -217,19 +217,21 @@ def export_3d_views_to_ifc(doc, view_filter, ifc_export_option, directory_path, 
     return return_value
 
 
-def export_model_to_ifc(doc, ifc_export_option, directory_path, file_name, coord_option = IFCCoords.shared_coordinates):
+def export_model_to_ifc(doc, ifc_export_config, directory_path, file_name, coord_option = IFCCoords.shared_coordinates):
     '''
     Function exporting the entire model to IFC using 3rd party exporter.
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    :param ifc_export_option: The IFC export option.
-    :type ifc_export_option: Autodesk.Revit.DB.IFCExportOptions
+    :param ifc_export_config: The IFC export configuration.
+    :type ifc_export_config: BIM.IFC.Export.UI.IFCExportConfiguration
     :param directory_path: The directory path to where the export is being saved.
     :type directory_path: str
     :param file_name: The file name under which the export is being saved.
     :type file_name: str
     :param coord_option: Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates
     :type coord_option: SampleCodeBatchProcessor.RevitExport.IFCCoords, optional
+    
     :return: 
         Result class instance.
         - Export status returned in result.status. False if an exception occurred, otherwise True.
@@ -242,12 +244,12 @@ def export_model_to_ifc(doc, ifc_export_option, directory_path, file_name, coord
 
     return_value = res.Result()
     # need to create an export option from the export config
-    # ex_ifc = rdb.IFCExportOptions()
-    # pass in invalid element ID to export entire model
-    # ifc_export_option.UpdateOptions(ex_ifc, rdb.ElementId.InvalidElementId)
-
-    # set the coordinate system to use
-    ifc_export_option.AddOption('SitePlacement', coord_option)
+    ifc_export_option = setup_ifc_export_option(
+        export_config=ifc_export_config,
+        view_id=rdb.ElementId.InvalidElementId,
+        coord_option=coord_option
+    )
+    
     return_value_by_model = export_to_ifc(doc, ifc_export_option, directory_path, file_name)
     return_value.update(return_value_by_model)
     return return_value

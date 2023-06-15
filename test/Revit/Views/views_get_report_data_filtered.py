@@ -71,9 +71,16 @@ class GetViewReportDataFiltered(revit_test.RevitTest):
             )
             expected_result = [
                 {
-                    "HOSTFILE":REVIT_TEST_FILE_NAME,
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
                     "Id": "970427",
                     "View Name": "Level 00",
+                    "View Template": "-1",
+                    "Title on Sheet": "None",
+                },
+                {
+                    "HOSTFILE": REVIT_TEST_FILE_NAME,
+                    "Id": "972024",
+                    "View Name": "Export Model",
                     "View Template": "-1",
                     "Title on Sheet": "None",
                 },

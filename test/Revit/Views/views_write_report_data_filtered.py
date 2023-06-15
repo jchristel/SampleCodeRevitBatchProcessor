@@ -91,6 +91,7 @@ class WriteViewReportDataFiltered(revit_test.RevitTest):
                 [REVIT_TEST_FILE_NAME, "21930", "TEST", "None", "-1"],
                 [REVIT_TEST_FILE_NAME, "970427", "Level 00", "None", "-1"],
                 [REVIT_TEST_FILE_NAME, "970637", "Section - Level Test", "None", "-1"],
+                [REVIT_TEST_FILE_NAME, "972024", "Export Model", "None", "-1"],
             ]
             # check file content and perform temp directory clean up
             csv_check = self.test_csv_file(

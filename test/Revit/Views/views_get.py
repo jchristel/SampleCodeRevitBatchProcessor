@@ -73,6 +73,7 @@ class GetViews(revit_test.RevitTest):
                 ["Wall Schedule", rdb.ViewType.Schedule],
                 ["Level 00", rdb.ViewType.FloorPlan],
                 ["Section - Level Test", rdb.ViewType.Section],
+                ["Export Model", rdb.ViewType.ThreeD],
             ]
             # get all views in model (only 1 in test model)
             result = get_views_in_model(self.document, action)

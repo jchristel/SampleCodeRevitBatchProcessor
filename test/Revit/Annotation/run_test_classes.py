@@ -51,7 +51,7 @@ def run_annotation_tests(doc):
     # part of ... tests
 
     run_tests = [
-        ["Independent Tags", independent_tag_get_report_data.GetIndependentTagReportData],
+        ["Independent Tags Get Report Data", independent_tag_get_report_data.GetIndependentTagReportData],
     ]
 
     runner = RevitRunTest(run_tests)

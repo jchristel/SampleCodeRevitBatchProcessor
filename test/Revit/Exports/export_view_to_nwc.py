@@ -45,7 +45,7 @@ class ExportViewToNWC(revit_test.RevitTest):
         # store document in base class
         super(ExportViewToNWC, self).__init__(doc=doc, test_name="export_3d_views_to_nwc",requires_temp_dir=True)
 
-    def view_name(name):
+    def view_name(self,name):
         return NWC_TEST_FILE_NAME
     
     def test(self):

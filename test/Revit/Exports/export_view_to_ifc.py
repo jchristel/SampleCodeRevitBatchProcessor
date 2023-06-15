@@ -41,6 +41,7 @@ from test.Revit.Exports.exports import IFC_TEST_FILE_NAME
 from duHast.Utilities.files_io import file_exist
 
 import Autodesk.Revit.DB as rdb
+from revit_script_util import Output
 
 class ExportViewToIFC(revit_test.RevitTest):
     def __init__(self, doc):
@@ -134,7 +135,7 @@ class ExportViewToIFC(revit_test.RevitTest):
         )
         return ifc_settings_test
 
-    def view_name(name):
+    def view_name(self, name):
         return IFC_TEST_FILE_NAME
     
     def test(self):
@@ -171,12 +172,6 @@ class ExportViewToIFC(revit_test.RevitTest):
                 ifc_version=rdb.IFCVersion.IFC2x2,
                 ifc_settings=ifc_export_settings
             )
-            # get ifc export config (shared coords, no view id == model export)
-            test_data = setup_ifc_export_option(
-                export_config=ifc_config,
-                view_id=None
-            )
-
             # action to be executed in a transaction group so it can be rolled back at end of test
             def action(doc):
                 action_return_value = res.Result()
@@ -184,7 +179,7 @@ class ExportViewToIFC(revit_test.RevitTest):
                     result = export_3d_views_to_ifc(
                         doc=doc,
                         view_filter="Export",
-                        ifc_export_option=test_data,
+                        ifc_export_config=ifc_config,
                         directory_path=self.tmp_dir,
                         do_something_with_view_name=self.view_name
                     )

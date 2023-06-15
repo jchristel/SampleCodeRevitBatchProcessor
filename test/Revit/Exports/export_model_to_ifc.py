@@ -168,18 +168,13 @@ class ExportModelToIFC(revit_test.RevitTest):
                 ifc_version=rdb.IFCVersion.IFC2x2,
                 ifc_settings=ifc_export_settings
             )
-            # get ifc export config (shared coords, no view id == model export)
-            test_data = setup_ifc_export_option(
-                export_config=ifc_config
-            )
-
             # action to be executed in a transaction group so it can be rolled back at end of test
             def action(doc):
                 action_return_value = res.Result()
                 try:
                     result = export_model_to_ifc(
                         doc=doc,
-                        ifc_export_option=test_data,
+                        ifc_export_config=ifc_config,
                         directory_path=self.tmp_dir,
                         file_name=IFC_TEST_FILE_NAME
                     )

@@ -78,10 +78,11 @@ def read_csv_file(filepathCSV, increaseMaxFieldSizeLimit = False):
         csv.field_size_limit(2147483647)
 
     try:
-        with open(filepathCSV) as csvFile:
-            reader = csv.reader(csvFile)
+        with open(filepathCSV) as csv_file:
+            reader = csv.reader(csv_file)
             for row in reader: # each row is a list
                 rowList.append(row)
+            csv_file.close()
     except Exception as e:
         print (str(e))
         rowList = []
@@ -99,11 +100,12 @@ def get_first_row_in_csv_file(filePath):
 
     return_value = []
     try:
-        with open(filePath) as csvFile:
-            reader = csv.reader(csvFile)
+        with open(filePath) as csv_file:
+            reader = csv.reader(csv_file)
             for row in reader: # each row is a list
                 return_value = row
                 break
+            csv_file.close()
     except Exception as e:
         print (str(e))
     return return_value

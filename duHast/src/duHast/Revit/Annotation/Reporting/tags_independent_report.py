@@ -40,8 +40,9 @@ from duHast.Revit.Annotation.Reporting import (
     gen_annotations_instance_report_header as props,
 )
 
-from duHast.Revit.Common.Geometry.geometry import get_point_as_string
+from duHast.Revit.Common.Geometry.geometry import get_point_as_string, get_point_as_doubles
 from duHast.Utilities.utility import encode_ascii
+from duHast.Utilities.files_io import read_text_file_into_list
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
 import Autodesk.Revit.DB as rdb
@@ -84,7 +85,7 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                         {ELBOW_LOCATION: None},
                         {LEADER_END: None},
                     ]
-                    elbow_properties=None
+                    elbow_properties = None
                     # get elbow properties
                     if tag_instance.HasLeader:
                         elbow_properties = get_elbow_properties(
@@ -99,36 +100,36 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     # base line revit data
                     row = {
                         props.HOST_FILE: revit_file_path,
-                        props.TAG_ID: str(tag_instance.Id),
-                        props.TAG_HAS_LEADER: str(
+                        props.TAG_ID: tag_instance.Id.IntegerValue,
+                        props.TAG_HAS_LEADER: 
                             tag_instance.HasLeader
-                        ),  # leader flag
-                        props.TAG_IS_ORPHANED: str(
+                        ,  # leader flag
+                        props.TAG_IS_ORPHANED:
                             tag_instance.IsOrphaned
-                        ),  # is orphaned tag?
-                        props.TAG_IS_MATERIAL_TAG: str(
+                        ,  # is orphaned tag?
+                        props.TAG_IS_MATERIAL_TAG:
                             tag_instance.IsMaterialTag
-                        ),  # is a material tag
-                        props.IS_MULTICATEGORY_TAG: str(
+                        ,  # is a material tag
+                        props.IS_MULTICATEGORY_TAG: 
                             tag_instance.IsMulticategoryTag
-                        ),  # is is multi category tag
+                        ,  # is is multi category tag
                         props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
                         props.LEADER_PROPERTIES: elbow_properties,  # elbow properties
-                        props.MULTI_REFERENCE_ANNOTATION_ID: str(
-                            tag_instance.MultiReferenceAnnotationId
-                        ),
+                        props.MULTI_REFERENCE_ANNOTATION_ID: 
+                            tag_instance.MultiReferenceAnnotationId.IntegerValue
+                        ,
                         props.TAG_TEXT: tag_text,  # tag text
                         props.TAGGED_ELEMENT_NAME: encode_ascii(
                             rdb.Element.Name.GetValue(
                                 doc.GetElement(tag_instance.TaggedLocalElementId)
                             )
                         ),  # tagged element name
-                        props.TAG_HEAD_LOCATION: get_point_as_string(
+                        props.TAG_HEAD_LOCATION: get_point_as_doubles(
                             tag_instance.TagHeadPosition
                         ),  # tag location
-                        props.TAG_ROTATION_ANGLE: str(
+                        props.TAG_ROTATION_ANGLE:
                             tag_instance.RotationAngle
-                        ),  # rotation tag
+                        ,  # rotation tag
                         props.TAG_ORIENTATION: str(
                             tag_instance.TagOrientation
                         ),  # horizontal ,vertical, model
@@ -140,7 +141,7 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                             props.TAG_PRESENTATION_MODE
                         ] = tag_instance.LeadersPresentationMode
                         row[props.MERGE_ELBOWS] = str(tag_instance.MergeElbows)
-                    data.append(json.dumps(row))
+                    data.append(row)
         except Exception as e:
             data.append(
                 {
@@ -150,3 +151,26 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                 }
             )
     return data
+
+
+def read_tag_independent_data_from_file(revit_file_path):
+    """
+    Reads an independent tags report file into a list of dictionaries
+
+    :param revit_file_path: Fully qualified file path of report file.
+    :type revit_file_path: str
+    :return: List of dictionaries where each dictionary contains tag data
+    :rtype: [{}]
+    """
+
+    data = {}
+    try:
+        # Opening JSON file
+        f = open(revit_file_path)
+        # returns JSON object as
+        # a dictionary
+        data = json.load(f)
+    except Exception as e:
+        pass
+    return data
+

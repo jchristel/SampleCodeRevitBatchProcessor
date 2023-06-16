@@ -32,7 +32,11 @@ from duHast.Utilities import result as res
 
 # import test classes
 
-from test.Revit.Annotation import independent_tag_get_report_data
+from test.Revit.Annotation import (
+    independent_tag_get_report_data,
+    independent_tag_read_report_data_from_file,
+)
+
 
 def run_annotation_tests(doc):
     """
@@ -51,7 +55,14 @@ def run_annotation_tests(doc):
     # part of ... tests
 
     run_tests = [
-        ["Independent Tags Get Report Data", independent_tag_get_report_data.GetIndependentTagReportData],
+        [
+            "Independent Tags Get Report Data",
+            independent_tag_get_report_data.GetIndependentTagReportData,
+        ],
+        [
+            "Independent Tags Get Report Data From File",
+            independent_tag_read_report_data_from_file.ReadIndependentTagReportDataFromFile,
+        ],
     ]
 
     runner = RevitRunTest(run_tests)

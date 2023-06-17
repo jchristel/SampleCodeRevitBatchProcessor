@@ -32,7 +32,8 @@ sys.path += [SAMPLES_PATH]
 
 from duHast.Data import process_ceilings_to_rooms as magic
 from duHast.Data.Utils import data_import as dReader
-from duHast.Data.Utils import data_to_file as dFile
+from duHast.Data.Utils.data_to_file import build_json_for_file
+from duHast.Utilities.files_json import write_json_to_file
 
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
@@ -67,9 +68,9 @@ def read_and_write():
         dc.DataCeiling.data_type: allCeilingData,
     }
 
-    dic = dFile.build_json_for_file(dic, MODEL_FILE_PATH)
+    dic = build_json_for_file(dic, MODEL_FILE_PATH)
     # write json objects back to file
-    write_result = dFile.write_json_to_file(dic, DATA_OUT)
+    write_result = write_json_to_file(dic, DATA_OUT)
     
     print(write_result)
 

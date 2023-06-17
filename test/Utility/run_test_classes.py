@@ -54,6 +54,8 @@ from test.Utility import (
     util_pad_single_digit_string,
     util_remove_items,
     util_string_to_bool,
+    file_json_write_data,
+    file_json_read_data,
 )
 
 
@@ -93,9 +95,17 @@ def run_tests():
         ["Read CSV File First Row", file_csv_read_first_row.FileCSVReadFirstRow],
         ["Write CSF File Report", file_csv_write_report.FileCSVWriteReport],
         ["Combine files", file_combine_files.FileCombineFiles],
-        ["Combine files tab varied headers", file_combine_files_tab_independent_headers.FileCombineFilesIndependentHeadersTab],
-        ["Combine files csv varied headers", file_combine_files_csv_independent_headers.FileCombineFilesIndependentHeadersCSV],
+        [
+            "Combine files tab varied headers",
+            file_combine_files_tab_independent_headers.FileCombineFilesIndependentHeadersTab,
+        ],
+        [
+            "Combine files csv varied headers",
+            file_combine_files_csv_independent_headers.FileCombineFilesIndependentHeadersCSV,
+        ],
         ["File append another file", file_append_files.FileAppendFile],
+        ["Write JSON data to file", file_json_write_data.FileJSONWriteData],
+        ["Read JSON data from file", file_json_read_data.FileJSONReadData],
     ]
 
     # run tests

@@ -56,36 +56,3 @@ def build_json_for_file(dic, model_name):
         data_json[key] = item
     
     return data_json
-
-def write_json_to_file (json_data, data_output_file_path):
-    '''
-    Writes collected data to a new json formatted file.
-    
-    :param json_data: A dictionary to be written to file.
-    :type json_data: json object (dictionary)
-    :param data_output_file_path: Fully qualified file path to json data file.
-    :type data_output_file_path: str
-    :return: 
-        Result class instance.
-        - result.status. True if json data file was written successfully, otherwise False.
-        - result.message will confirm path of json data file.
-        - result.result empty list
-        On exception:
-        - result.status (bool) will be False.
-        - result.message will contain exception message.
-        - result.result will be empty
-    :rtype: :class:`.Result`
-    '''
-
-    result = res.Result()
-
-    try:
-        json_object = json.dumps(json_data, indent = None, default=lambda o: o.__dict__)
-        with codecs.open(data_output_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_object)
-            f.close()
-
-        result.update_sep(True, 'Data written to file: {}'.format(data_output_file_path))
-    except  Exception as e:
-        result.update_sep(False, 'Failed to write data to file with exception: {}'.format(e))
-    return result

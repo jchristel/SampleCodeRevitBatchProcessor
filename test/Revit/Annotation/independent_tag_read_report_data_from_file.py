@@ -33,14 +33,13 @@ import Autodesk.Revit.DB as rdb
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Annotation.Reporting.tags_independent_report import (
     get_tag_instances_report_data,
-    read_tag_independent_data_from_file,
 )
 
 # filter imports
 from duHast.Revit.Common import custom_element_filter_actions as elCustomFilterAction
 from duHast.Revit.Common import custom_element_filter_tests as elCustomFilterTest
 from duHast.Revit.Common import custom_element_filter as rCusFilter
-from duHast.Data.Utils.data_to_file import write_json_to_file
+from duHast.Utilities.files_json import write_json_to_file, read_json_data_from_file
 
 from duHast.Utilities import result as res
 from duHast.Utilities.console_out import output
@@ -132,21 +131,18 @@ class ReadIndependentTagReportDataFromFile(revit_test.RevitTest):
                 custom_element_filter=FILTER_TAGS,
             )
 
-            # data_file_name = os.path.join(
-            #    self.tmp_dir, REVIT_INDEPENDENT_TAG_TEST_FILE_NAME
-            # )
             data_file_name = os.path.join(
-                r"C:\Users\jchristel\Desktop\_duHast_test",
-                REVIT_INDEPENDENT_TAG_REPORT_FILE_NAME,
+                self.tmp_dir, REVIT_INDEPENDENT_TAG_TEST_FILE_NAME
             )
+            
             # write data to file
-            write_json_file = write_json_to_file(json_data=tag_data, data_output_file_path=data_file_name)
+            write_json_file_result = write_json_to_file(json_data=tag_data, data_output_file_path=data_file_name)
             return_value.append_message(
-                " writing json file: {}".format(write_json_file.status)
+                " writing json file: {}".format(write_json_file_result.status)
             )
-            assert (write_json_file.status==True)
+            assert (write_json_file_result.status==True)
             # read data back in from file into a list of dictionaries
-            read_data = read_tag_independent_data_from_file(data_file_name)
+            read_data = read_json_data_from_file(data_file_name)
             # check what came back
             return_value.append_message(
                 " result: {} \n expected: {} ".format(sorted(read_data), sorted(tag_data))

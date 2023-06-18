@@ -133,6 +133,13 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971454,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            }
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -144,7 +151,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             }
                         ],
-                        "TAGGED_ELEMENT_NAME": "NoTypeMark",
                         "TAG_HEAD_LOCATION": [
                             6.4491434294134775,
                             18.771160998835541,
@@ -162,6 +168,13 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            }
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -177,7 +190,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             }
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.0765567353468,
                             16.262428207494324,
@@ -195,9 +207,15 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            }
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": None,
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.076556735346795,
                             13.443927435018283,
@@ -215,6 +233,13 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            }
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -226,7 +251,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             }
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.076556735346792,
                             9.956501312416821,
@@ -244,6 +268,13 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            }
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -263,7 +294,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             }
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.0765567353468,
                             18.365894083177334,
@@ -281,6 +311,18 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971958,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -300,7 +342,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             },
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             11.702540987315306,
                             28.500522382310383,
@@ -318,6 +359,23 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "<varies>",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971454,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971958,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -345,7 +403,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             },
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             10.025230182004806,
                             3.3883042773634013,
@@ -363,6 +420,18 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971958,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -386,7 +455,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             },
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             20.890537201597738,
                             25.831832930732823,
@@ -404,6 +472,18 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971958,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -431,7 +511,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             },
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.540629252017276,
                             23.477783473151881,
@@ -449,6 +528,18 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                         "TAG_TEXT": "TypeMark_value",
                         "TAG_ROTATION_ANGLE": 0.0,
                         "TAG_IS_MATERIAL_TAG": False,
+                        "TAGGED_ELEMENT_IDS": [
+                            {
+                                "host_element_id": 971860,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                            {
+                                "host_element_id": 971958,
+                                "link_instance_id": -1,
+                                "link_element_id": -1,
+                            },
+                        ],
                         "HOST_FILE": "independent tags.rvt",
                         "LEADER_PROPERTIES": [
                             {
@@ -484,7 +575,6 @@ class GetIndependentTagReportData(revit_test.RevitTest):
                                 },
                             },
                         ],
-                        "TAGGED_ELEMENT_NAME": "WithTypeMark",
                         "TAG_HEAD_LOCATION": [
                             22.540629252017272,
                             21.318994861757133,

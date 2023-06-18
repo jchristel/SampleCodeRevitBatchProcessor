@@ -68,6 +68,7 @@ def write_json_to_file(json_data, data_output_file_path):
         result.update_sep(
             False, "Failed to write data to file with exception: {}".format(e)
         )
+    return result
 
 def read_json_data_from_file(file_path):
     """
@@ -82,10 +83,11 @@ def read_json_data_from_file(file_path):
     data = {}
     try:
         # Opening JSON file
-        f = open(file_path)
-        # returns JSON object as
-        # a dictionary
-        data = json.load(f)
+        with open (file_path) as f:
+            # returns JSON object as
+            # a dictionary
+            data = json.load(f)
+            f.close()
     except Exception as e:
         pass
     return data

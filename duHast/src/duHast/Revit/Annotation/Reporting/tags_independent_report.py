@@ -31,21 +31,34 @@ import json
 from duHast.Revit.Annotation.independent_tags import get_all_independent_tags
 from duHast.Revit.Annotation.independent_tags_elbow_properties import (
     get_elbow_properties,
-    ELBOW_LOCATION,
-    LEADER_END,
-    LEADER_REFERENCE,
 )
+from duHast.Revit.Annotation.independent_tags_tagged_elements import get_tagged_elements
 
 from duHast.Revit.Annotation.Reporting import (
     gen_annotations_instance_report_header as props,
 )
 
-from duHast.Revit.Common.Geometry.geometry import get_point_as_string, get_point_as_doubles
-from duHast.Utilities.utility import encode_ascii
-from duHast.Utilities.files_io import read_text_file_into_list
+from duHast.Revit.Common.Geometry.geometry import get_point_as_doubles
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
 import Autodesk.Revit.DB as rdb
+
+
+def _convert_tagged_element_ids_to_int(data):
+    """
+    Converts list of dictionaries containing element ids as values to integer values so it can be converted to json
+
+    :param data: A list of dictionaries where values are Element ids
+    :type data: [{str:Autodesk.Revit.DB.ElementId}]
+    :return: A list of dictionaries where values are int
+    :rtype: [{str:int}]
+    """
+
+    for tag_dic in data:
+        for id_entry in tag_dic:
+            if type(tag_dic[id_entry]) == rdb.ElementId:
+                tag_dic[id_entry] = tag_dic[id_entry].IntegerValue
+    return data
 
 
 def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
@@ -78,13 +91,13 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     except:
                         pass
 
-                    # convert elbow properties to string
-                    # default (no elbows)
-                    elbows = [
-                        {LEADER_REFERENCE: None},
-                        {ELBOW_LOCATION: None},
-                        {LEADER_END: None},
-                    ]
+                    # get tagged element ids
+                    tagged_element_ids = get_tagged_elements(doc=doc, tag=tag_instance)
+                    # convert ids to integer value ( to be able to output them to json)
+                    tagged_element_data = _convert_tagged_element_ids_to_int(
+                        tagged_element_ids
+                    )
+                    # get elbow properties
                     elbow_properties = None
                     # get elbow properties
                     if tag_instance.HasLeader:
@@ -101,35 +114,19 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     row = {
                         props.HOST_FILE: revit_file_path,
                         props.TAG_ID: tag_instance.Id.IntegerValue,
-                        props.TAG_HAS_LEADER: 
-                            tag_instance.HasLeader
-                        ,  # leader flag
-                        props.TAG_IS_ORPHANED:
-                            tag_instance.IsOrphaned
-                        ,  # is orphaned tag?
-                        props.TAG_IS_MATERIAL_TAG:
-                            tag_instance.IsMaterialTag
-                        ,  # is a material tag
-                        props.IS_MULTICATEGORY_TAG: 
-                            tag_instance.IsMulticategoryTag
-                        ,  # is is multi category tag
+                        props.TAG_HAS_LEADER: tag_instance.HasLeader,  # leader flag
+                        props.TAG_IS_ORPHANED: tag_instance.IsOrphaned,  # is orphaned tag?
+                        props.TAG_IS_MATERIAL_TAG: tag_instance.IsMaterialTag,  # is a material tag
+                        props.IS_MULTICATEGORY_TAG: tag_instance.IsMulticategoryTag,  # is is multi category tag
                         props.LEADER_END_CONDITION: leader_end_condition,  # attached or free
                         props.LEADER_PROPERTIES: elbow_properties,  # elbow properties
-                        props.MULTI_REFERENCE_ANNOTATION_ID: 
-                            tag_instance.MultiReferenceAnnotationId.IntegerValue
-                        ,
+                        props.MULTI_REFERENCE_ANNOTATION_ID: tag_instance.MultiReferenceAnnotationId.IntegerValue,
                         props.TAG_TEXT: tag_text,  # tag text
-                        props.TAGGED_ELEMENT_NAME: encode_ascii(
-                            rdb.Element.Name.GetValue(
-                                doc.GetElement(tag_instance.TaggedLocalElementId)
-                            )
-                        ),  # tagged element name
+                        props.TAGGED_ELEMENT_IDS: tagged_element_data,  # tagged element ids as integers
                         props.TAG_HEAD_LOCATION: get_point_as_doubles(
                             tag_instance.TagHeadPosition
                         ),  # tag location
-                        props.TAG_ROTATION_ANGLE:
-                            tag_instance.RotationAngle
-                        ,  # rotation tag
+                        props.TAG_ROTATION_ANGLE: tag_instance.RotationAngle,  # rotation tag
                         props.TAG_ORIENTATION: str(
                             tag_instance.TagOrientation
                         ),  # horizontal ,vertical, model
@@ -173,4 +170,3 @@ def read_tag_independent_data_from_file(revit_file_path):
     except Exception as e:
         pass
     return data
-

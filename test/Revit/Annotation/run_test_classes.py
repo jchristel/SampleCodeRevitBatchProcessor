@@ -35,6 +35,7 @@ from duHast.Utilities import result as res
 from test.Revit.Annotation import (
     independent_tag_get_report_data,
     independent_tag_read_report_data_from_file,
+    independent_tag_update_tag_location,
 )
 
 
@@ -62,6 +63,10 @@ def run_annotation_tests(doc):
         [
             "Independent Tags Get Report Data From File",
             independent_tag_read_report_data_from_file.ReadIndependentTagReportDataFromFile,
+        ],
+        [
+            "Modify Tag Location",
+            independent_tag_update_tag_location.IndependentTagUpdateLocation,
         ],
     ]
 

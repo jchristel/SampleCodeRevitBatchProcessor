@@ -27,7 +27,6 @@ Utility functions writing / reading json objects to/ from file.
 #
 
 from duHast.Utilities import result as res
-from duHast.Utilities import date_stamps as dateStamp
 
 import codecs
 import json

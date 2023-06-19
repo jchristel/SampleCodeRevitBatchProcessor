@@ -29,7 +29,6 @@ This module contains revit independent report read data from file tests .
 import os
 
 import revit_script_util
-import Autodesk.Revit.DB as rdb
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Annotation.Reporting.tags_independent_report import (
     get_tag_instances_report_data,
@@ -46,7 +45,6 @@ from duHast.Utilities.console_out import output
 from test.Revit.Annotation.annotations_report import (
     REVIT_INDEPENDENT_TAG_TEST_FILE_NAME,
     MULTI_CATEGORY_TAG_TYPE_NAME,
-    REVIT_INDEPENDENT_TAG_REPORT_FILE_NAME,
 )
 
 
@@ -154,5 +152,11 @@ class ReadIndependentTagReportDataFromFile(revit_test.RevitTest):
                 False,
                 "An exception occurred in function {}: {}".format(self.test_name, e),
             )
-
+        finally:
+            # clean up temp directory
+            clean_up = self.clean_up()
+            return_value.update_sep(
+                clean_up,
+                "Attempted to clean up temp directory with result: {}".format(clean_up),
+            )
         return return_value

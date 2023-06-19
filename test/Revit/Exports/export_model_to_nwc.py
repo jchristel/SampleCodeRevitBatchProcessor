@@ -118,5 +118,12 @@ class ExportModelToNWC(revit_test.RevitTest):
                 False,
                 "An exception occurred in function {}: {}".format(self.test_name, e),
             )
+        finally:
+            # clean up temp directory
+            clean_up = self.clean_up()
+            return_value.update_sep(
+                clean_up,
+                "Attempted to clean up temp directory with result: {}".format(clean_up),
+            )
 
         return return_value

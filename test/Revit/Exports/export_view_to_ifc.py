@@ -43,57 +43,60 @@ from duHast.Utilities.files_io import file_exist
 import Autodesk.Revit.DB as rdb
 from revit_script_util import Output
 
+
 class ExportViewToIFC(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ExportViewToIFC, self).__init__(doc=doc, test_name="export_3d_views_to_ifc",requires_temp_dir=True)
+        super(ExportViewToIFC, self).__init__(
+            doc=doc, test_name="export_3d_views_to_ifc", requires_temp_dir=True
+        )
 
     def _setup_settings(self):
-        name  = 'batch processor sample code'
-        ifcVersion  = 'IFC2x2'
+        name = "batch processor sample code"
+        ifcVersion = "IFC2x2"
         spaceBoundaries = 1
         activePhaseId = -1
         activeViewId = -1
-        exportBaseQuantities = True 
-        splitWallsAndColumns = True 
-        visibleElementsOfCurrentView = False 
+        exportBaseQuantities = True
+        splitWallsAndColumns = True
+        visibleElementsOfCurrentView = False
         use2DRoomBoundaryForVolume = True
-        useFamilyAndTypeNameForReference = False 
+        useFamilyAndTypeNameForReference = False
         exportInternalRevitPropertySets = True
         exportIFCCommonPropertySets = True
         export2DElements = True
         exportPartsAsBuildingElements = True
         exportBoundingBox = False
         exportSolidModelRep = False
-        exportSchedulesAsPsets = False 
-        exportUserDefinedPsets = False 
-        exportUserDefinedPsetsFileName = '' 
-        exportLinkedFiles = False 
-        includeSiteElevation = True  
-        useActiveViewGeometry = False # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
-        exportSpecificSchedules = False 
+        exportSchedulesAsPsets = False
+        exportUserDefinedPsets = False
+        exportUserDefinedPsetsFileName = ""
+        exportLinkedFiles = False
+        includeSiteElevation = True
+        useActiveViewGeometry = False  # setting this value to True will slow down the IFC export considerably (sample: from 8min to 45min!)
+        exportSpecificSchedules = False
         tessellationLevelOfDetail = 0
-        storeIFCGUID = True 
-        exportRoomsInView = True 
+        storeIFCGUID = True
+        exportRoomsInView = True
         useOnlyTriangulation = False
-        includeSteelElements = True 
-        cOBieCompanyInfo = 'n/a'
-        cOBieProjectInfo = 'batch processor sample code'
+        includeSteelElements = True
+        cOBieCompanyInfo = "n/a"
+        cOBieProjectInfo = "batch processor sample code"
         useTypeNameOnlyForIfcType = True
         useVisibleRevitNameAsEntityName = True
-        sitePlacement = 'SiteTransformBasis.Shared'
-        selectedSite = 'sample site'
-        geoRefCRSName = 'geoRefCRSName'
-        geoRefCRSDesc ='geoRefCRSDesc'
-        geoRefEPSGCode ='geoRefEPSGCode'
-        geoRefGeodeticDatum ='geoRefGeodeticDatum'
-        geoRefMapUnit ='geoRefMapUnit'
-        excludeFilter = ''
-        
+        sitePlacement = "SiteTransformBasis.Shared"
+        selectedSite = "sample site"
+        geoRefCRSName = "geoRefCRSName"
+        geoRefCRSDesc = "geoRefCRSDesc"
+        geoRefEPSGCode = "geoRefEPSGCode"
+        geoRefGeodeticDatum = "geoRefGeodeticDatum"
+        geoRefMapUnit = "geoRefMapUnit"
+        excludeFilter = ""
+
         # set up settings class
         ifc_settings_test = IFCSettings(
-            name, 
-            ifcVersion, 
+            name,
+            ifcVersion,
             spaceBoundaries,
             activePhaseId,
             activeViewId,
@@ -131,13 +134,13 @@ class ExportViewToIFC(revit_test.RevitTest):
             geoRefEPSGCode,
             geoRefGeodeticDatum,
             geoRefMapUnit,
-            excludeFilter
+            excludeFilter,
         )
         return ifc_settings_test
 
     def view_name(self, name):
         return IFC_TEST_FILE_NAME
-    
+
     def test(self):
         """
         export_3d_views_to_ifc test
@@ -163,15 +166,15 @@ class ExportViewToIFC(revit_test.RevitTest):
 
         return_value = res.Result()
         try:
-
             # ifc settings
-            ifc_export_settings= self._setup_settings()
+            ifc_export_settings = self._setup_settings()
             # setup an export config by model:
             ifc_config = ifc_get_third_party_export_config_by_view(
                 doc=self.document,
                 ifc_version=rdb.IFCVersion.IFC2x2,
-                ifc_settings=ifc_export_settings
+                ifc_settings=ifc_export_settings,
             )
+
             # action to be executed in a transaction group so it can be rolled back at end of test
             def action(doc):
                 action_return_value = res.Result()
@@ -181,18 +184,29 @@ class ExportViewToIFC(revit_test.RevitTest):
                         view_filter="Export",
                         ifc_export_config=ifc_config,
                         directory_path=self.tmp_dir,
-                        do_something_with_view_name=self.view_name
+                        do_something_with_view_name=self.view_name,
                     )
-                    action_return_value.append_message('Export view to ifc completed with status: {} and message: {}'.format(result.status, result.message))
-                    assert(result.status == True)
-                    
+                    action_return_value.append_message(
+                        "Export view to ifc completed with status: {} and message: {}".format(
+                            result.status, result.message
+                        )
+                    )
+                    assert result.status == True
+
                     # check if file exists
-                    file_created = file_exist(full_file_path=os.path.join(self.tmp_dir, IFC_TEST_FILE_NAME))
-                    action_return_value.append_message('IFC file was created: {} at: {}'.format(file_created, os.path.join(self.tmp_dir, IFC_TEST_FILE_NAME)))
-                    assert(file_created==True)
-                    
+                    file_created = file_exist(
+                        full_file_path=os.path.join(self.tmp_dir, IFC_TEST_FILE_NAME)
+                    )
+                    action_return_value.append_message(
+                        "IFC file was created: {} at: {}".format(
+                            file_created, os.path.join(self.tmp_dir, IFC_TEST_FILE_NAME)
+                        )
+                    )
+                    assert file_created == True
+
                     action_return_value.update_sep(
-                        True, "IFC model was exported successfully.")
+                        True, "IFC model was exported successfully."
+                    )
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
@@ -208,6 +222,13 @@ class ExportViewToIFC(revit_test.RevitTest):
             return_value.update_sep(
                 False,
                 "An exception occurred in function {}: {}".format(self.test_name, e),
+            )
+        finally:
+            # clean up temp directory
+            clean_up = self.clean_up()
+            return_value.update_sep(
+                clean_up,
+                "Attempted to clean up temp directory with result: {}".format(clean_up),
             )
 
         return return_value

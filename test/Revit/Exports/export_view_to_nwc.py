@@ -40,14 +40,17 @@ from duHast.Utilities.files_io import file_exist
 
 import Autodesk.Revit.DB as rdb
 
+
 class ExportViewToNWC(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
-        super(ExportViewToNWC, self).__init__(doc=doc, test_name="export_3d_views_to_nwc",requires_temp_dir=True)
+        super(ExportViewToNWC, self).__init__(
+            doc=doc, test_name="export_3d_views_to_nwc", requires_temp_dir=True
+        )
 
-    def view_name(self,name):
+    def view_name(self, name):
         return NWC_TEST_FILE_NAME
-    
+
     def test(self):
         """
         export_3d_views_to_nwc test
@@ -84,7 +87,7 @@ class ExportViewToNWC(revit_test.RevitTest):
                 export_room_geometry=False,
                 find_missing_materials=False,
                 navis_parameters=rdb.NavisworksParameters.Elements,
-                convert_element_properties=True
+                convert_element_properties=True,
             )
 
             # action to be executed in a transaction group so it can be rolled back at end of test
@@ -96,16 +99,27 @@ class ExportViewToNWC(revit_test.RevitTest):
                         view_filter="export",
                         nwc_export_option=test_data,
                         directory_path=self.tmp_dir,
-                        do_something_with_view_name=self.view_name
+                        do_something_with_view_name=self.view_name,
                     )
-                    action_return_value.append_message('Export view to nwc completed with status: {} and message: {}'.format(result.status, result.message))
-                    assert(result.status == True)
+                    action_return_value.append_message(
+                        "Export view to nwc completed with status: {} and message: {}".format(
+                            result.status, result.message
+                        )
+                    )
+                    assert result.status == True
                     # check if file exists
-                    file_created = file_exist(full_file_path=os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME))
-                    action_return_value.append_message('NWC file was created: {} at: {}'.format(file_created, os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME)))
-                    assert(file_created==True)
+                    file_created = file_exist(
+                        full_file_path=os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME)
+                    )
+                    action_return_value.append_message(
+                        "NWC file was created: {} at: {}".format(
+                            file_created, os.path.join(self.tmp_dir, NWC_TEST_FILE_NAME)
+                        )
+                    )
+                    assert file_created == True
                     action_return_value.update_sep(
-                        True, "NWC model was exported successfully.")
+                        True, "NWC model was exported successfully."
+                    )
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
@@ -121,6 +135,13 @@ class ExportViewToNWC(revit_test.RevitTest):
             return_value.update_sep(
                 False,
                 "An exception occurred in function {}: {}".format(self.test_name, e),
+            )
+        finally:
+            # clean up temp directory
+            clean_up = self.clean_up()
+            return_value.update_sep(
+                clean_up,
+                "Attempted to clean up temp directory with result: {}".format(clean_up),
             )
 
         return return_value

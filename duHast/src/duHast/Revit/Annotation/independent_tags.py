@@ -33,7 +33,7 @@ from duHast.Revit.Common.revit_version import get_revit_version_number
 
 def get_all_independent_tags(doc):
     """
-    Gets all independent tag types in the model.
+    Gets all independent tag instances in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of independent tag elements

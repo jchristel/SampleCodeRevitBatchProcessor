@@ -136,8 +136,8 @@ def get_tag_instances_report_data(doc, revit_file_path, custom_element_filter):
                     if revit_version >= 2023:
                         row[
                             props.TAG_PRESENTATION_MODE
-                        ] = tag_instance.LeadersPresentationMode
-                        row[props.MERGE_ELBOWS] = str(tag_instance.MergeElbows)
+                        ] = str(tag_instance.LeadersPresentationMode)
+                        row[props.MERGE_ELBOWS] = tag_instance.MergeElbows
                     data.append(row)
         except Exception as e:
             data.append(

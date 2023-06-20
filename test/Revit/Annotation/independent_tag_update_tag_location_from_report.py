@@ -51,18 +51,20 @@ from test.Revit.Annotation.annotations_report import (
 from duHast.Revit.Common import custom_element_filter_actions as elCustomFilterAction
 from duHast.Revit.Common import custom_element_filter_tests as elCustomFilterTest
 from duHast.Revit.Common import custom_element_filter as rCusFilter
+
 # utilities
 from duHast.Utilities import result as res
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_json import write_json_to_file
 
 
-
 class IndependentTagUpdateLocationFromReport(revit_test.RevitTest):
     def __init__(self, doc):
         # store document in base class
         super(IndependentTagUpdateLocationFromReport, self).__init__(
-            doc=doc, test_name="update_tag_locations_from_report",requires_temp_dir=True
+            doc=doc,
+            test_name="update_tag_locations_from_report",
+            requires_temp_dir=True,
         )
 
     def action_out(self, message):
@@ -136,60 +138,77 @@ class IndependentTagUpdateLocationFromReport(revit_test.RevitTest):
                 revit_file_path=REVIT_INDEPENDENT_TAG_TEST_FILE_NAME,
                 custom_element_filter=FILTER_TAGS,
             )
-            
+
             # set all report locations to 0,0,0 before writing to file
             for report_tag in report_tags:
-                report_tag[TAG_HEAD_LOCATION]= [0,0,0]
+                report_tag[TAG_HEAD_LOCATION] = [0, 0, 0]
 
             # write data to file
             data_file_name = os.path.join(
                 self.tmp_dir, REVIT_INDEPENDENT_TAG_TEST_FILE_NAME
             )
-                
+
             # write data to file
-            write_json_file_result = write_json_to_file(json_data=report_tags, data_output_file_path=data_file_name)
+            write_json_file_result = write_json_to_file(
+                json_data=report_tags, data_output_file_path=data_file_name
+            )
             return_value.append_message(
                 " writing json file: {}".format(write_json_file_result.status)
             )
-            assert (write_json_file_result.status==True)
+            assert write_json_file_result.status == True
 
-            try:
-                # move tags
-                result_update = update_tag_locations_from_report (doc=self.document, report_file_path=data_file_name,distance_threshold=0)
-                return_value.append_message(
-                    "moved tags with result: {} \n and message: {} ".format(
-                        result_update.status, result_update.message
+            # action to be executed in a transaction group so it can be rolled back at end of test
+            def action(doc):
+                action_return_value = res.Result()
+                try:
+                    # move tags
+                    result_update = update_tag_locations_from_report(
+                        doc=self.document,
+                        report_file_path=data_file_name,
+                        distance_threshold=0,
                     )
-                )
-                assert(result_update.status==True)
-                
-                # read tag data and check they all have moved to 0,0,0
-                # get tag report
-                report_tags = get_tag_instances_report_data(
-                    doc=self.document,
-                    revit_file_path=REVIT_INDEPENDENT_TAG_TEST_FILE_NAME,
-                    custom_element_filter=FILTER_TAGS,
-                )
-
-                # loop over dictionaries and check tag location is 0 ,0,0
-                for entry in report_tags:
-                    return_value.append_message(
-                        "Tag with id: {} is at location: {}".format(
-                            entry[TAG_ID], entry[TAG_HEAD_LOCATION]
+                    action_return_value.append_message(
+                        "moved tags with result: {} \n and message: {} ".format(
+                            result_update.status, result_update.message
                         )
                     )
-                    assert entry[TAG_HEAD_LOCATION] == [0, 0, 0]
+                    assert result_update.status == True
 
-            except Exception as e:
-                return_value.update_sep(
-                    False,
-                    "An exception occurred in function {}: {}".format(self.test_name, e),
-                )
+                    # read tag data and check they all have moved to 0,0,0
+                    # get tag report
+                    report_tags = get_tag_instances_report_data(
+                        doc=self.document,
+                        revit_file_path=REVIT_INDEPENDENT_TAG_TEST_FILE_NAME,
+                        custom_element_filter=FILTER_TAGS,
+                    )
+
+                    # loop over dictionaries and check tag location is 0 ,0,0
+                    for entry in report_tags:
+                        action_return_value.append_message(
+                            "Tag with id: {} is at location: {}".format(
+                                entry[TAG_ID], entry[TAG_HEAD_LOCATION]
+                            )
+                        )
+                        assert entry[TAG_HEAD_LOCATION] == [0, 0, 0]
+
+                except Exception as e:
+                    action_return_value.update_sep(
+                        False,
+                        "An exception occurred in function {}: {}".format(
+                            self.test_name, e
+                        ),
+                    )
+                return action_return_value
+
+            return_value = self.in_transaction_group(action)
+
         except Exception as e:
-                return_value.update_sep(
-                    False,
-                    "An exception occurred in outer block in function {}: {}".format(self.test_name, e),
-                )
+            return_value.update_sep(
+                False,
+                "An exception occurred in outer block in function {}: {}".format(
+                    self.test_name, e
+                ),
+            )
         finally:
             # clean up temp directory
             clean_up = self.clean_up()

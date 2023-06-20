@@ -36,6 +36,7 @@ from test.Revit.Annotation import (
     independent_tag_get_report_data,
     independent_tag_read_report_data_from_file,
     independent_tag_update_tag_location,
+    independent_tag_update_tag_location_from_report,
 )
 
 
@@ -67,6 +68,10 @@ def run_annotation_tests(doc):
         [
             "Modify Tag Location",
             independent_tag_update_tag_location.IndependentTagUpdateLocation,
+        ],
+        [
+            "Modify Tag Location from report",
+            independent_tag_update_tag_location_from_report.IndependentTagUpdateLocationFromReport,
         ],
     ]
 

@@ -43,7 +43,7 @@ Note:
 import os
 
 from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_io as fileIO
 
 def _rename_files(rename_directives):

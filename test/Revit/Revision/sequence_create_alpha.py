@@ -29,7 +29,7 @@ This module contains revit create revision alphanumeric sequence tests .
 from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.sequence import ALPHA_SEQUENCE_NAME
 from duHast.Revit.Revisions.sequence import create_revision_alpha_seq
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class CreateAlphaSequence(revit_test.RevitTest):

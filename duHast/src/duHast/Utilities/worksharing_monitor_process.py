@@ -27,7 +27,7 @@ Helper functions relating to Revit worksharing monitor process.
 #
 
 from duHast.Utilities import files_csv as filesCSV, files_get as fileGet, files_io as fileIO
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities import system_process as sp
 
 

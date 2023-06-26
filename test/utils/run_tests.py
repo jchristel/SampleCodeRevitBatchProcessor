@@ -26,7 +26,7 @@ This module contains test base class .
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 
 class RunTest(base.Base):

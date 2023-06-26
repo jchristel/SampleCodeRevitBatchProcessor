@@ -28,7 +28,8 @@ This module contains a number of helper functions relating to deleting Revit sha
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import result as res, utility as util
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import utility as util
 from duHast.Revit.SharedParameters.shared_parameters import check_whether_shared_parameters_are_in_file, get_all_shared_parameters
 from duHast.Revit.Common import delete as rDel
 

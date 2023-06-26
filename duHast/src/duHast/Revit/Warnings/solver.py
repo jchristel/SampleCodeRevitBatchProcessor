@@ -31,7 +31,7 @@ import System
 import clr
 #from collections import namedtuple
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Warnings import warnings as rWar
 from duHast.Revit.Warnings import solver_room_tag_to_room as rwsRoomTagToRoom
 from duHast.Revit.Warnings import solver_duplicate_mark as rwsDuplicateMark
@@ -39,7 +39,7 @@ from duHast.Revit.Warnings import solver_duplicate_mark as rwsDuplicateMark
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 # a class used to return the value  if any, a message and the status of a method (true if everything is ok or false if something went wrong)
 class RevitWarningsSolver(base.Base):

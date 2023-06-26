@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import transaction as rTran
 from duHast.Revit.Common.revit_version import get_revit_version_number
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Views import views as rView
 from duHast.Revit.Exports.export import build_export_file_name_from_view
 from duHast.Revit.Exports.Utility.ifc_export_coordinates import IFCCoords

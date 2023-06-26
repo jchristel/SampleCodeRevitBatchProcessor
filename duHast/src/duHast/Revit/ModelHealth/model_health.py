@@ -40,7 +40,8 @@ import System
 
 from duHast.Revit.BIM360 import bim_360 as b360
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO, result as res
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import date_stamps as dateStamp, files_io as fileIO
 from duHast.Revit.Common import design_set_options as rDoS
 from duHast.Revit.Warnings import warnings as rWarn
 from duHast.Revit.Common import worksets as rWork

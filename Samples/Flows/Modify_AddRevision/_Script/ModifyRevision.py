@@ -44,7 +44,7 @@ import utilAddRev as utilM  # sets up all commonly used variables and path locat
 # import common library
 from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Revisions import revisions as rRev
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 
 # required in lambda expressions!

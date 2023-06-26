@@ -27,7 +27,7 @@ A class to store file select UI settings.
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 # An item to represent a file name in a row in a grid.
 class FileSelectionSettings(base.Base):

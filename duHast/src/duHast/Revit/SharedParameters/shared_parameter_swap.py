@@ -49,7 +49,7 @@ import System
 
 # import common library modules
 #from duHast.APISamples.Common import RevitCommonAPI as com
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_csv as fileCSV
 from duHast.Revit.SharedParameters import shared_parameter_add as rSharedPAdd
 from duHast.Revit.SharedParameters import shared_parameters_tuple as rSharedT

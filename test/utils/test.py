@@ -31,7 +31,7 @@ Requires python 3
 import os
 import tempfile
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 
 class Test(base.Base):

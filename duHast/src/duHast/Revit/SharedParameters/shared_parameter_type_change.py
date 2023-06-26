@@ -30,7 +30,7 @@ This module contains a number of helper functions relating to changing Revit sha
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import transaction as rTran
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.SharedParameters.shared_parameters import get_family_parameters
 
 

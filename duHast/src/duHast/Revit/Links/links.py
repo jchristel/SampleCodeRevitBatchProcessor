@@ -31,7 +31,7 @@ import System
 
 # import common library modules
 from duHast.Revit.Common import delete as rDel
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Links.Utility.link_path import get_link_path
 
 # import Autodesk

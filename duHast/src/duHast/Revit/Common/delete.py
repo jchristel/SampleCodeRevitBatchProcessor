@@ -29,7 +29,7 @@ Delete elements from model.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import transaction as rTran
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # required for .ToList()
 import clr

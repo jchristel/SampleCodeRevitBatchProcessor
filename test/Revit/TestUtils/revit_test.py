@@ -32,12 +32,12 @@ import os
 import Autodesk.Revit.DB as rdb
 
 import tempfile
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 from duHast.Utilities.directory_io import directory_delete, directory_exists
 from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.files_csv import read_csv_file
 from duHast.Revit.Common.revit_version import get_revit_version_number
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class RevitTest(base.Base):

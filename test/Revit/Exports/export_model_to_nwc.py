@@ -28,7 +28,7 @@ This module contains revit export model to nwc tests .
 
 import os
 from test.Revit.TestUtils import revit_test
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from duHast.Revit.Exports.export_navis import (
     export_model_to_nwc,

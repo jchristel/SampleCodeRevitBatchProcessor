@@ -53,7 +53,7 @@ from duHast.Revit.Common import custom_element_filter_tests as elCustomFilterTes
 from duHast.Revit.Common import custom_element_filter as rCusFilter
 
 # utilities
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_json import write_json_to_file
 

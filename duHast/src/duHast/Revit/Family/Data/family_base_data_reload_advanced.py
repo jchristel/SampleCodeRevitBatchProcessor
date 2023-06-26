@@ -43,8 +43,9 @@ Family Base data analysis module containing functions to build a reload tree.
 #
 
 
-from duHast.Utilities.timer import Timer
-from duHast.Utilities import files_get as fileGet, files_io as fileIO, files_tab as fileTab, result as res
+from duHast.Utilities.Objects.timer import Timer
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import files_get as fileGet, files_io as fileIO, files_tab as fileTab
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDataUtils
 from duHast.Revit.Family.Data import family_reload_advanced_utils as rFamReloadAdvUtils
 

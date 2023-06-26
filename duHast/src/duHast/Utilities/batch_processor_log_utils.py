@@ -58,7 +58,7 @@ import os
 import json
 
 # custom result class from common library
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 # library from common library
 from duHast.Utilities import files_io as fileIO, files_get as fileGet
 

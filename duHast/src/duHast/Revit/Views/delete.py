@@ -29,7 +29,8 @@ This module contains a number of helper functions relating to deleting Revit vie
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import delete as rDel, parameter_get_utils as rParaGet
-from duHast.Utilities import result as res, utility as util
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import utility as util
 from duHast.Revit.Views.views import get_views_not_on_sheet
 
 def delete_views(doc, view_rules, collector_views):

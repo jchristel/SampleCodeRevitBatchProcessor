@@ -28,7 +28,7 @@ This module contains revit levels report data tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Levels.Reporting.levels_report_utils import get_level_report_data
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Levels.levels_report import REVIT_TEST_FILE_NAME
 

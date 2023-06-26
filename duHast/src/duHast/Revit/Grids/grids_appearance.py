@@ -31,7 +31,7 @@ Note: Any grid appearance modification in a view will throw an exception if the 
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 
 

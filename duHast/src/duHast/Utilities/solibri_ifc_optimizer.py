@@ -36,7 +36,8 @@ List of imports:
 import subprocess
 from System.IO import Path
 
-from duHast.Utilities import files_get as fileGet, files_io as fileIO, result as res
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import files_get as fileGet, files_io as fileIO
 
 
 #: The default install path for solibri ifc optimizer.

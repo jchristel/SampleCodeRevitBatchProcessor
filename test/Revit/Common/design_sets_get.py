@@ -29,7 +29,7 @@ This module contains revit design set tests .
 from test.Revit.TestUtils import revit_test
 from test.Revit.Common.design_set_option import DESIGN_OPTION_DATA
 from duHast.Revit.Common.design_set_options import get_design_sets
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

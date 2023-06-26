@@ -43,9 +43,10 @@ Note:
 import clr
 import System
 from collections import namedtuple
-from duHast.Utilities.timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 
-from duHast.Utilities import files_csv as fileCSV, files_get as fileGet, result as res
+from duHast.Utilities import files_csv as fileCSV, files_get as fileGet
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Family.Data import family_base_data_utils as rFamBaseDUtils
 
 

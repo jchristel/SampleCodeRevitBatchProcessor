@@ -70,7 +70,7 @@ from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Views import sheets as rSheetView, views as rView
 from duHast.Revit.Revisions import revisions as rRev
 from duHast.Utilities import compare as comp, files_io as fileIO, utility as util
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

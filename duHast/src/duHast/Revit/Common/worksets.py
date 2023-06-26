@@ -36,7 +36,7 @@ import System
 
 # import common library modules
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 from duHast.Utilities import utility as util
 from duHast.Utilities import files_io as filesIO

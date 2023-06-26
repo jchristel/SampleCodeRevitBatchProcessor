@@ -30,7 +30,7 @@ from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.revision import TEST_DATA_2022, TEST_DATA_2023
 from duHast.Revit.Revisions.revisions import create_revision
 from duHast.Revit.Revisions.revisions import change_revision_sequence_number
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class ChangeRevSeq(revit_test.RevitTest):

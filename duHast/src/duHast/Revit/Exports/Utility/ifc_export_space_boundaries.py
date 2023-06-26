@@ -26,7 +26,7 @@ IFC export space boundaries settings class.
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class IFCSpaceBoundaries(base.Base):
     '''

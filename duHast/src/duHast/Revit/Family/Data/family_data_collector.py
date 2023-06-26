@@ -29,10 +29,10 @@ Family data collector class.
 #
 #
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class RevitFamilyDataCollector(base.Base):
 

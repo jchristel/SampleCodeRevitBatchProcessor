@@ -33,7 +33,7 @@ Data storage base class used for geometry aspects of Revit elements.
 #
 
 import json
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 from duHast.Data.Objects.Properties.Geometry import geometry_polygon
 from duHast.Data.Objects.Properties.Geometry import geometry_topo_cell

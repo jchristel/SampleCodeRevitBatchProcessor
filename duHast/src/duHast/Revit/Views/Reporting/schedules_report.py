@@ -35,7 +35,8 @@ from duHast.Revit.Views.Reporting.views_report_header import (
 from duHast.Revit.Views.views import get_views_of_type
 from duHast.Revit.Views.Reporting.view_property_filter import filter_data_by_properties
 from duHast.Revit.Common import parameter_get_utils as rParaGet
-from duHast.Utilities import files_csv as filesCSV, result as res
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities import files_csv as filesCSV
 from duHast.Revit.Views.Reporting.view_property_utils import convert_view_data_to_list
 
 #: list of schedule types to be reported on.

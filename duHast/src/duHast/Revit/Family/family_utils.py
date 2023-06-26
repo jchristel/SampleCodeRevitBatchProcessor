@@ -42,7 +42,7 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 # utilities
 from duHast.Utilities import files_io as fileIO
 # class used for stats reporting
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 # implementation of Revit API callback required when loading families into a Revit model
 from duHast.Revit.Family import family_load_option as famLoadOpt
 # load everything required from family load call back 

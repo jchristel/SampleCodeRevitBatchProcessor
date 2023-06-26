@@ -30,7 +30,7 @@ from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.sheets_report import (
     get_sheets_report_data_filtered,
 )
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Views.sheets_report import REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
 

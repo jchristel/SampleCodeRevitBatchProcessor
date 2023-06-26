@@ -30,7 +30,7 @@ import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.LinePattern import line_patterns as rPat
 from duHast.Revit.Common import transaction as rTran
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Categories.Utility.category_property_names import PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME, PROPERTY_MATERIAL_ID
 from duHast.Revit.Categories.Utility.category_properties_get_utils import get_saved_category_property_by_name
 

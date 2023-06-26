@@ -27,7 +27,7 @@ Interface for family data storage / processing class.
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 # common data dictionary keys
 ROOT = 'root'

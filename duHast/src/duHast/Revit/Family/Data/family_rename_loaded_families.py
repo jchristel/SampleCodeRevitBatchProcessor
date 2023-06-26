@@ -39,7 +39,7 @@ This helper function expect a folder containing rename directive files. For form
 from duHast.Revit.Family import family_rename_files_utils as rFamRenameUtils
 from duHast.Revit.Family import family_utils as rFamUtils
 from duHast.Revit.Common import transaction as rTran
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk Revit DataBase namespace
 import Autodesk.Revit.DB as rdb

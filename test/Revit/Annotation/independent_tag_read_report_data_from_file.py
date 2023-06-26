@@ -40,7 +40,7 @@ from duHast.Revit.Common import custom_element_filter_tests as elCustomFilterTes
 from duHast.Revit.Common import custom_element_filter as rCusFilter
 from duHast.Utilities.files_json import write_json_to_file, read_json_data_from_file
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 from test.Revit.Annotation.annotations_report import (
     REVIT_INDEPENDENT_TAG_TEST_FILE_NAME,

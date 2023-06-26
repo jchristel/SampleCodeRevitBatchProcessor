@@ -30,7 +30,7 @@ A class used to return the value if any, a message and the status of a method (t
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class Result (base.Base): 
     def __init__(self):

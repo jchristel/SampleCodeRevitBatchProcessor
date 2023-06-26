@@ -26,8 +26,8 @@ This module contains revit test base class .
 #
 #
 
-from duHast.Utilities import result as res
-from duHast.Utilities import base
+from duHast.Utilities.Objects import result as res
+from duHast.Utilities.Objects import base
 from duHast.Utilities.padding import pad_header_no_time_stamp, pad_string
 
 

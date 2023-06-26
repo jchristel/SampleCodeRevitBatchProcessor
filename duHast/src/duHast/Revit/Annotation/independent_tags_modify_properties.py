@@ -30,7 +30,7 @@ A number of functions around Revit independent tags.
 import Autodesk.Revit.DB as rdb
 from collections import namedtuple
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common.transaction import in_transaction
 
 from duHast.Revit.Common.revit_version import get_revit_version_number
@@ -128,7 +128,7 @@ def update_tag_locations_from_report(doc, report_file_path, distance_threshold=5
     """
 
     return_value = res.Result()
-    # read data from file
+    # read data from files
     tag_data_list = read_json_data_from_file(report_file_path)
     tag_updates = []
     for tag_data in tag_data_list:

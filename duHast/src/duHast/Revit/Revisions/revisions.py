@@ -36,7 +36,7 @@ clr.ImportExtensions(Linq)
 # import System
 from collections import namedtuple
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import (
     transaction as rTran,
     revit_version as rRev,

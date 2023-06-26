@@ -38,7 +38,7 @@ from duHast.Revit.Common.custom_element_filter_tests import (
     value_in_element_type_family_name,
     value_is_element_type_family_name,
 )
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

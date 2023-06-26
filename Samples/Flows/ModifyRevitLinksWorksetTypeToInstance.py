@@ -61,7 +61,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 
 # autodesk API

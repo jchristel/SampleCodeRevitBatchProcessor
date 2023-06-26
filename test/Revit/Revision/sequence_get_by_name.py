@@ -32,7 +32,7 @@ from duHast.Revit.Revisions.sequence import (
     create_revision_alpha_seq,
     get_revision_seq_of_name,
 )
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class GetSequenceByName(revit_test.RevitTest):

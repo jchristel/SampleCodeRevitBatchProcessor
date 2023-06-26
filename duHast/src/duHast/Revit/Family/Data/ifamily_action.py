@@ -27,7 +27,7 @@ Interface for family data storage / processing class.
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class IFamilyAction(base.Base):
 

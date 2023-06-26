@@ -34,7 +34,7 @@ import System
 
 # import common library modules
 from duHast.Revit.Common import delete as rDel, parameter_get_utils as rParaGet
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 # import Autodesk

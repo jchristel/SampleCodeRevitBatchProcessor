@@ -28,7 +28,7 @@ This module contains revit grids report data tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Grids.Reporting.grid_report_utils import get_grid_report_data
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Grids.grids_report import REVIT_TEST_FILE_NAME
 

@@ -29,7 +29,7 @@ A class to store file information.
 
 # An item to represent a file name in a row in a grid.
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class MyFileItem(base.Base):
     

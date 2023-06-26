@@ -28,7 +28,7 @@ This module contains revit sheet views report header tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.views_report_header import get_sheets_report_headers
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class GetSheetReportHeaders(revit_test.RevitTest):

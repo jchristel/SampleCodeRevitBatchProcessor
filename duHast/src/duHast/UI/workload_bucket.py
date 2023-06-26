@@ -30,7 +30,7 @@ Workload buckets are used to distribute file processing evenly between parallel 
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 # a class used to store work load items
 class WorkloadBucket(base.Base): 

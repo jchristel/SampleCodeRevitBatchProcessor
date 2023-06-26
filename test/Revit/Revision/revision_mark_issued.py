@@ -29,7 +29,7 @@ This module contains revit revision mark as issued tests .
 from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.revision import TEST_DATA_2022, TEST_DATA_2023
 from duHast.Revit.Revisions.revisions import create_revision, mark_revision_as_issued
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class MarkIssued(revit_test.RevitTest):

@@ -27,7 +27,7 @@ Category override data storage class.
 #
 
 import json
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class DataCategoryOverride(base.Base):
 

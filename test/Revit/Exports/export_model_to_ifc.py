@@ -28,7 +28,7 @@ This module contains revit export model to ifc tests .
 
 import os
 from test.Revit.TestUtils import revit_test
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from duHast.Revit.Exports.export_ifc import (
     export_model_to_ifc,

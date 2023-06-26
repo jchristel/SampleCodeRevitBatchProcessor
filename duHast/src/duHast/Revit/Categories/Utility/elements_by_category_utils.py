@@ -29,7 +29,7 @@ Revit elements to category helper functions.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Links import cad_links_geometry as rCadLinkGeo
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 

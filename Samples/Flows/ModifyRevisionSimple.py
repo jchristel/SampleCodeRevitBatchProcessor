@@ -65,7 +65,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 # import libraries
 from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Revisions import revisions as rRev
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # autodesk API
 import Autodesk.Revit.DB as rdb

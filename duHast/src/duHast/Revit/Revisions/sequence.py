@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to revit revision seq
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 
 def get_revision_seq_of_name(doc, revision_sequence_name):

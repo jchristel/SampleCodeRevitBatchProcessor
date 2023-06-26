@@ -44,7 +44,7 @@ import codecs
 import csv
 
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Data.Objects import data_ceiling as dc
 from duHast.Data.Objects import data_room as dr
 from duHast.Data.Utils import data_import as dReader

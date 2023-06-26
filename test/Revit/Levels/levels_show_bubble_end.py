@@ -30,7 +30,7 @@ from test.Revit.TestUtils import revit_test
 from duHast.Revit.Levels.levels import get_levels_in_model
 from duHast.Revit.Levels.levels_appearance import show_head_end
 from duHast.Revit.Views.views import get_views_in_model
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

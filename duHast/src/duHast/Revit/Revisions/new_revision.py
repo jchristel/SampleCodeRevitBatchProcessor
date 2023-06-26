@@ -28,7 +28,7 @@ This module contains a number of helper functions relating to creating new revit
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Revisions.sequence import get_revision_seq_of_name
 
 

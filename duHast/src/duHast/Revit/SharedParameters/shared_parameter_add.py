@@ -11,7 +11,7 @@ https://thebuildingcoder.typepad.com/blog/2012/04/adding-a-category-to-a-shared-
 import Autodesk.Revit.DB as rdb
 
 # custom result class
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 # import InTransaction from common module
 from duHast.Revit.Common import transaction as rTran
 

@@ -29,7 +29,8 @@ Revit file operations utility functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import files_io as fileIO, result as res
+from duHast.Utilities import files_io as fileIO
+from duHast.Utilities.Objects import result as res
 
 
 def sync_file (

@@ -28,7 +28,7 @@ Revit grids workset modifier functions.
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import worksets as rWork
 from duHast.Revit.Grids import grids as rGrid
 

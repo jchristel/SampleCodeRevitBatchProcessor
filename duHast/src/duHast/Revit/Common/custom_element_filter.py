@@ -38,7 +38,7 @@ module custom_element_filter_tests.
 # import Autodesk
 # import Autodesk.Revit.DB as rdb
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 
 class RevitCustomElementFilter(base.Base):

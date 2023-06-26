@@ -29,7 +29,7 @@ import os
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.views_report import write_view_data_by_property_names
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Views.views_report import (
     REVIT_TEST_FILE_NAME,

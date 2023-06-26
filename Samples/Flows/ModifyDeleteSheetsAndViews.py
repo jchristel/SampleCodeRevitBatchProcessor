@@ -65,7 +65,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 # import from duHast
 from duHast.Revit.Views import delete as rViewDel
 from duHast.Utilities import files_io as fileIO
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities import compare as compare
 from duHast.Revit.Common import file_io as rFileIO
 

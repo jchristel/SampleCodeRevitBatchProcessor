@@ -4,9 +4,9 @@ Purge unit testing
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 '''
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Utilities import files_tab as filesTab
-from duHast.Utilities.timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 
 from duHast.Revit.Purge.purge_unused import PURGE_ACTIONS
 

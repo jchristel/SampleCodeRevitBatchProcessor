@@ -32,7 +32,7 @@ from duHast.Revit.Revisions.revisions import (
     create_revision,
     mark_revision_as_issued_by_revision_id,
 )
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class MarkIssuedById(revit_test.RevitTest):

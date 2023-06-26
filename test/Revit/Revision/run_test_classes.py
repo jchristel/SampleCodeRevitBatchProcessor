@@ -28,7 +28,7 @@ This module runs all revit revision related tests .
 
 
 from test.Revit.TestUtils.run_revit_tests import RevitRunTest
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import test classes
 import test.Revit.Revision.revision_change_seq as change_rev_seq

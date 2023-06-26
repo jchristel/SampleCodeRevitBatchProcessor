@@ -28,7 +28,7 @@ IFC export settings class.
 #
 
 import System
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class IFCSettings(base.Base):
     

@@ -27,7 +27,7 @@ A timer class to measure code performance.
 #
 
 from System.Diagnostics import Stopwatch
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 #: time output formatting 2 digit padding
 PAD_SINGLE_DIGIT_TO_TWO = '%02d'
 #: time output formatting default 3 digit padding

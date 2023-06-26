@@ -26,7 +26,7 @@ Utility functions writing / reading json objects to/ from file.
 #
 #
 
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 import codecs
 import json

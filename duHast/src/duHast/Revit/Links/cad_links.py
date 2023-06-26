@@ -29,7 +29,7 @@ This module contains a number of helper functions relating to CAD links.
 import Autodesk.Revit.DB as rdb
 
 from duHast.Revit.Common import delete as rDel, transaction as rTran
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Links.Utility.link_path import get_link_path
 
 

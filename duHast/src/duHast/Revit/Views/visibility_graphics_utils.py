@@ -33,7 +33,7 @@ import System
 from duHast.Revit.Common import transaction as rTran
 from duHast.Revit.Views import filters as rView
 #from duHast.APISamples.Common import RevitElementParameterGetUtils as rParaGet
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 #from duHast.Utilities import Utility as util
 
 # import Autodesk

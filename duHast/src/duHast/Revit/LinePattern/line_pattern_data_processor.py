@@ -30,7 +30,7 @@ Family line pattern data processor class.
 from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
 from duHast.Revit.LinePattern import line_pattern_data as rLinePatData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 class LinePatternProcessor(IFamilyProcessor):
 

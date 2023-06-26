@@ -28,7 +28,7 @@ This module contains revit schedule report data tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.schedules_report import write_schedule_data
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Views.schedules_report import REVIT_TEST_FILE_NAME, OUTPUT_FILE_NAME
 

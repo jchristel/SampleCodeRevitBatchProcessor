@@ -28,7 +28,7 @@ This module runs all revit grids related tests .
 
 
 from test.Revit.TestUtils.run_revit_tests import RevitRunTest
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import test classes
 from test.Revit.Grids import grids_get_report_data

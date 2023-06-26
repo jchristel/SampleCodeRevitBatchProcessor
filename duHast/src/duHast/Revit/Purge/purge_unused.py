@@ -46,7 +46,7 @@ import clr
 import System
 
 from duHast.Utilities import files_io as fileIO
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from duHast.Revit.Annotation import spot_dimensions as rAnnoSpot
 from duHast.Revit.Annotation import generic_annotation as rGAnno
@@ -122,7 +122,7 @@ from duHast.Revit.Ramps import purge_unused_ramp_types as rRampPurge
 from duHast.Revit.Roofs import roofs as rRoof
 from duHast.Revit.Roofs import purge_unused_roof_types as rRoofPurge
 
-from duHast.Utilities.timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Purge import purge_action as pA
 
 import Autodesk.Revit.DB as rdb

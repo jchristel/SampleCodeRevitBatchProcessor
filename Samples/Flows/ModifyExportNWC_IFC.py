@@ -58,7 +58,7 @@ import sys
 sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 
 # import libraries
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Exports import export_navis as rExNavis
 from duHast.Revit.Exports import export_ifc as rExIFC
 from duHast.Revit.Exports.Utility import  ifc_export_coordinates, ifc_export_space_boundaries

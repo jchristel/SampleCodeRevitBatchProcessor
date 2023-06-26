@@ -28,7 +28,7 @@ This module contains revit walls report data tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Walls.Reporting.walls_report import get_wall_report_data
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Walls.walls_report import REVIT_TEST_FILE_NAME
 

@@ -30,7 +30,7 @@ from test.Revit.TestUtils import revit_test
 from test.Revit.Revision.revision import TEST_DATA_2022, TEST_DATA_2023
 from duHast.Revit.Revisions.revisions import create_revision
 from duHast.Revit.Revisions.revisions import re_order_revisions
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

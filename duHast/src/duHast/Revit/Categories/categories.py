@@ -32,7 +32,7 @@ import System
 from System.Collections.Generic import List
 
 from duHast.Revit.Common import delete as rDel
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import transaction as rTran
 
 import Autodesk.Revit.DB as rdb

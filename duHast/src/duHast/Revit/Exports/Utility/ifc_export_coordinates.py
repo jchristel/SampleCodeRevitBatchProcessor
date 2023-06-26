@@ -29,7 +29,7 @@ IFC export Coordinate system settings class.
 
 #-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class IFCCoords(base.Base):
     '''

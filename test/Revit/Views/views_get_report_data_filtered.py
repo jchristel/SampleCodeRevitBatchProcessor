@@ -28,7 +28,7 @@ This module contains revit views report data filtered tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.views_report import get_views_report_data_filtered
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 from test.Revit.Views.views_report import REVIT_TEST_FILE_NAME, VIEW_DATA_FILTERS
 

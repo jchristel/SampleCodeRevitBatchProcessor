@@ -28,7 +28,7 @@ This module contains revit schedule views report header tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.Reporting.schedules_report import get_schedules_report_headers
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 class GetScheduleReportHeaders(revit_test.RevitTest):

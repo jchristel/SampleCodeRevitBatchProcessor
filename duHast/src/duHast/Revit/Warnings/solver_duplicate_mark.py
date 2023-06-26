@@ -29,12 +29,12 @@ Duplicate mark warnings solver class.
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Common import parameter_set_utils as rParaSet
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 
 class RevitWarningsSolverDuplicateMark(base.Base):

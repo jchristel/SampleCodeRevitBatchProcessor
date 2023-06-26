@@ -27,7 +27,7 @@ Data base class for Revit object properties.
 #
 #
 
-from duHast.Utilities import base
+from duHast.Utilities.Objects import base
 
 class DataBase(base.Base):
 

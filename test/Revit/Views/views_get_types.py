@@ -28,7 +28,7 @@ This module contains revit view types tests .
 
 from test.Revit.TestUtils import revit_test
 from duHast.Revit.Views.views import get_view_types
-from duHast.Utilities import result as res
+from duHast.Utilities.Objects import result as res
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb

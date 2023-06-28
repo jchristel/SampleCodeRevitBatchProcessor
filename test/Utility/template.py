@@ -9,14 +9,7 @@ SAMPLES_PATH = (
 )
 sys.path += [SAMPLES_PATH]
 
-'''
-from duHast.Utilities.date_stamps import (
-    get_date_stamped_file_name,
-    get_file_date_stamp,
-    get_folder_date_stamp,
-)
-'''
-
+from test.Data.data_read_file import DataReadFromFile
 
 def run_tests(output):
     """
@@ -32,8 +25,8 @@ def run_tests(output):
 
     # lists of tests to be executed
     tests = [
-        ["test_get_date_stamped_file_name", test_get_date_stamped_file_name],
-        ["test_get_folder_date_stamp", test_get_folder_date_stamp],
+        ["test_get_date_stamped_file_name", DataReadFromFile.test],
+        #["test_get_folder_date_stamp", test_get_folder_date_stamp],
     ]
 
     # execute tests

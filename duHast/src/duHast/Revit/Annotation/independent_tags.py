@@ -31,6 +31,7 @@ import Autodesk.Revit.DB as rdb
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Common.revit_version import get_revit_version_number
 
+
 def get_all_independent_tags(doc):
     """
     Gets all independent tag instances in the model.

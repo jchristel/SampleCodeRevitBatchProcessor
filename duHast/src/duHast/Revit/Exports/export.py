@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of functions around exporting from Revit to varies file formats.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,10 +26,10 @@ This module contains a number of functions around exporting from Revit to varies
 #
 #
 
-# 
+#
 # doSomethingWithViewName method will accept view name as arg only
 def build_export_file_name_from_view(view_name, view_filter_rule, file_extension):
-    '''
+    """
     Function modifying the past in view name and returns a file name.
 
     :param view_name: The view name to be used as file name.
@@ -40,18 +40,15 @@ def build_export_file_name_from_view(view_name, view_filter_rule, file_extension
     :type file_extension: str
     :return: A file name.
     :rtype: str
-    '''
+    """
 
     # check if file extension is not none
-    if (file_extension is None):
-        file_extension = '.tbc'
+    if file_extension is None:
+        file_extension = ".tbc"
     # check the filter rule
-    if (view_filter_rule is None):
+    if view_filter_rule is None:
         new_file_name = view_name + file_extension
     else:
-        new_file_name = view_name[len(view_filter_rule):] + file_extension
+        new_file_name = view_name[len(view_filter_rule) :] + file_extension
         new_file_name = new_file_name.strip()
     return new_file_name
-
-
-

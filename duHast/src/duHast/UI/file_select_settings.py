@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A class to store file select UI settings.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,9 +31,15 @@ from duHast.Utilities.Objects import base
 
 # An item to represent a file name in a row in a grid.
 class FileSelectionSettings(base.Base):
-    
-    def __init__(self, inputDirectory, include_sub_dirs_in_search, output_directory, output_file_number, revitFileExtension):
-        '''
+    def __init__(
+        self,
+        inputDirectory,
+        include_sub_dirs_in_search,
+        output_directory,
+        output_file_number,
+        revitFileExtension,
+    ):
+        """
         Class constructor
 
         :param inputDirectory: A fully qualified directory path containing files to be shown in UI.
@@ -46,7 +52,7 @@ class FileSelectionSettings(base.Base):
         :type output_file_number: int
         :param revitFileExtension: A file extension filter applied to directory search.
         :type revitFileExtension: str
-        '''
+        """
 
         self.input_directory = inputDirectory
         self.incl_sub_dirs = include_sub_dirs_in_search
@@ -55,4 +61,4 @@ class FileSelectionSettings(base.Base):
         self.revit_file_extension = revitFileExtension
 
         # ini super class to allow multi inheritance in children!
-        super(FileSelectionSettings, self).__init__() 
+        super(FileSelectionSettings, self).__init__()

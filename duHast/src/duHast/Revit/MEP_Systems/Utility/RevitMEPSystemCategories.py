@@ -1,13 +1,13 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit MEP built-in categories. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - useful for filtering out families which can be used in MEP system types
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,43 +34,44 @@ import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
 
-CATS_LOADABLE_DUCTS = List[rdb.BuiltInCategory] ([
-    rdb.BuiltInCategory.OST_DuctAccessory,
-    rdb.BuiltInCategory.OST_DuctTerminal,
-    rdb.BuiltInCategory.OST_DuctFitting
-])
+CATS_LOADABLE_DUCTS = List[rdb.BuiltInCategory](
+    [
+        rdb.BuiltInCategory.OST_DuctAccessory,
+        rdb.BuiltInCategory.OST_DuctTerminal,
+        rdb.BuiltInCategory.OST_DuctFitting,
+    ]
+)
 
 
 #: List of loadable built in family categories for cable tray related elements.
-CATS_LOADABLE_CABLE_TRAYS = List[rdb.BuiltInCategory] ([
-    rdb.BuiltInCategory.OST_CableTrayFitting
-])
+CATS_LOADABLE_CABLE_TRAYS = List[rdb.BuiltInCategory](
+    [rdb.BuiltInCategory.OST_CableTrayFitting]
+)
 
 
 #: List of loadable built in family categories for conduit related elements.
-CATS_LOADABLE_CONDUITS = List[rdb.BuiltInCategory] ([
-    rdb.BuiltInCategory.OST_ConduitFitting
-])
+CATS_LOADABLE_CONDUITS = List[rdb.BuiltInCategory](
+    [rdb.BuiltInCategory.OST_ConduitFitting]
+)
 
 
 #: List of loadable built in family categories for pipe related elements.
-CATS_LOADABLE_PIPES = List[rdb.BuiltInCategory] ([
-    rdb.BuiltInCategory.OST_PipeAccessory,
-    rdb.BuiltInCategory.OST_PipeFitting
-])
+CATS_LOADABLE_PIPES = List[rdb.BuiltInCategory](
+    [rdb.BuiltInCategory.OST_PipeAccessory, rdb.BuiltInCategory.OST_PipeFitting]
+)
 
 
 #: List of routing reference rule group types
 ROUTING_PREF_RULE_GROUP_TYPES = [
-  rdb.RoutingPreferenceRuleGroupType.Segments,
-  rdb.RoutingPreferenceRuleGroupType.Elbows,
-  rdb.RoutingPreferenceRuleGroupType.Junctions,
-  rdb.RoutingPreferenceRuleGroupType.Crosses,
-  rdb.RoutingPreferenceRuleGroupType.Transitions,
-  rdb.RoutingPreferenceRuleGroupType.Unions,
-  rdb.RoutingPreferenceRuleGroupType.MechanicalJoints,
-  rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,
-  rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,
-  rdb.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,
-  rdb.RoutingPreferenceRuleGroupType.Caps
+    rdb.RoutingPreferenceRuleGroupType.Segments,
+    rdb.RoutingPreferenceRuleGroupType.Elbows,
+    rdb.RoutingPreferenceRuleGroupType.Junctions,
+    rdb.RoutingPreferenceRuleGroupType.Crosses,
+    rdb.RoutingPreferenceRuleGroupType.Transitions,
+    rdb.RoutingPreferenceRuleGroupType.Unions,
+    rdb.RoutingPreferenceRuleGroupType.MechanicalJoints,
+    rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,
+    rdb.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,
+    rdb.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,
+    rdb.RoutingPreferenceRuleGroupType.Caps,
 ]

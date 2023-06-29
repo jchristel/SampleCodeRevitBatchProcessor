@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit railing built in family names (ENG). 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,20 +27,20 @@ Revit railing built in family names (ENG).
 #
 
 #: Built in railing family name for railing
-RAILING_FAMILY_NAME = 'Railing'
+RAILING_FAMILY_NAME = "Railing"
 
 
 #: Built in railing family name for top rail
-TOP_RAIL_FAMILY_NAME = 'Top Rail Type'
+TOP_RAIL_FAMILY_NAME = "Top Rail Type"
 
 
 #: Built in railing family name for hand rail
-HAND_RAIL_FAMILY_NAME = 'Handrail Type'
+HAND_RAIL_FAMILY_NAME = "Handrail Type"
 
 
 #: List of all Built in railing family names
 BUILTIN_RAILING_TYPE_FAMILY_NAMES = [
     RAILING_FAMILY_NAME,
     TOP_RAIL_FAMILY_NAME,
-    HAND_RAIL_FAMILY_NAME
+    HAND_RAIL_FAMILY_NAME,
 ]

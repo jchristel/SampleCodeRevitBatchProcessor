@@ -100,7 +100,9 @@ class RevitWarningsSolverDuplicateMark(base.Base):
                         except Exception as e:
                             return_value.update_sep(
                                 False,
-                                "Failed to solve warning duplicate mark with exception: {}".format(e),
+                                "Failed to solve warning duplicate mark with exception: {}".format(
+                                    e
+                                ),
                             )
                     else:
                         return_value.update_sep(

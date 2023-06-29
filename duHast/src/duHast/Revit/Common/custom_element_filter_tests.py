@@ -88,6 +88,7 @@ def value_in_family_name(value, element):
 
     return value in rdb.Element.Name.GetValue(element.Symbol.Family)
 
+
 def value_in_element_type_family_name(value, element):
     """
     Check if provided value is part of the element type Family name.
@@ -118,6 +119,7 @@ def value_is_family_name(value, element):
     """
 
     return value == rdb.Element.Name.GetValue(element.Symbol.Family)
+
 
 def value_is_element_type_family_name(value, element):
     """

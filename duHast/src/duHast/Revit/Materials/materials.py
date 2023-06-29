@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit materials helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -36,8 +36,9 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
-def get_all_materials(doc): 
-    '''
+
+def get_all_materials(doc):
+    """
     Gets all materials in a model.
 
     Filter by class.
@@ -47,13 +48,14 @@ def get_all_materials(doc):
 
     :return: A filtered element collector of materials
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.Material)
     return collector
 
+
 def get_material_by_id(doc, id):
-    '''
+    """
     Gets a material element based on a material id.
 
     :param doc: Current Revit model document.
@@ -63,15 +65,16 @@ def get_material_by_id(doc, id):
 
     :return: A material if matching id was found. Otherwise nothing gets returned!
     :rtype: Autodesk.Revit.DB.Material
-    '''
+    """
 
     mats = get_all_materials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
             return m
 
+
 def get_material_name_by_id(doc, id):
-    '''
+    """
     Gets a material name based on a material id.
 
     :param doc: Current Revit model document.
@@ -81,12 +84,12 @@ def get_material_name_by_id(doc, id):
 
     :return: The material name if matching id was found or the default value: '<By Category>'
     :rtype: str
-    '''
+    """
 
-    name = '<By Category>'
+    name = "<By Category>"
     mats = get_all_materials(doc)
     for m in mats:
         if m.Id.IntegerValue == id.IntegerValue:
             m_name = rdb.Element.Name.GetValue(m)
-            name = '' if m_name == None else m_name
+            name = "" if m_name == None else m_name
     return name

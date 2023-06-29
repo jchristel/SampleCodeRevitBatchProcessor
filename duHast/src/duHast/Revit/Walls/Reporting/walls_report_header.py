@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any wall reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,4 +28,12 @@ This module contains the header row for any wall reports.
 
 # -------------------------------------------- common variables --------------------
 #: Header used in reports
-REPORT_WALLS_HEADER = ['HOSTFILE', 'WALLTYPEID', 'WALLTYPENAME', 'FUNCTION', 'LAYERWIDTH', 'LAYERMATERIALNAME', 'LAYERMATERIALMARK']
+REPORT_WALLS_HEADER = [
+    "HOSTFILE",
+    "WALLTYPEID",
+    "WALLTYPENAME",
+    "FUNCTION",
+    "LAYERWIDTH",
+    "LAYERMATERIALNAME",
+    "LAYERMATERIALMARK",
+]

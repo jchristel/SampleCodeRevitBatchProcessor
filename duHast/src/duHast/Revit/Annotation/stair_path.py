@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to stair path annotation. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,24 +34,27 @@ from duHast.Revit.Annotation import arrow_heads as rArrow
 
 
 def get_all_stair_path_types(doc):
-    '''
+    """
     Gets all stairs path types in the model/
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of stair path types
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of stair path types
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
 
+
 def get_stairs_path_arrow_head_ids(doc):
-    '''
+    """
     Gets all arrow head symbol ids used in stairs path types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_stair_path_types, rArrow.ARROWHEAD_PARAS_STAIRS_PATH)
+    used_ids = rArrow.get_arrow_head_ids_from_type(
+        doc, get_all_stair_path_types, rArrow.ARROWHEAD_PARAS_STAIRS_PATH
+    )
     return used_ids

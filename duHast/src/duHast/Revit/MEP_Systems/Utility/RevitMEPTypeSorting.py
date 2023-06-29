@@ -1,13 +1,13 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to building MEP ype dictionaries.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 TODO: similar function exists in Walls module. Consider more generic function.
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,8 +29,9 @@ TODO: similar function exists in Walls module. Consider more generic function.
 #
 #
 
+
 def build_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
 
     TODO: similar function exists in Walls module. Consider more generic function.
@@ -42,19 +43,20 @@ def build_type_dictionary(collector, dic):
 
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
+        if dic.has_key(c.FamilyName):
             # todo : check WallKind Enum???
-            if(c.Id not in dic[c.FamilyName]):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
     return dic
 
+
 def sort_types_by_family_name(doc, type_getter):
-    '''
+    """
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param doc: Current Revit model document.
@@ -63,7 +65,7 @@ def sort_types_by_family_name(doc, type_getter):
     :type type_getter: func(doc) -> Autodesk.Revit.DB.FilteredElementCollector
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     # get all Wall Type Elements
     wts = type_getter(doc)

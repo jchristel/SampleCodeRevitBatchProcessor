@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit category property names.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -25,49 +25,49 @@ Revit category property names.
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
-#-------------------------- get category properties ---------------------------------
+# -------------------------- get category properties ---------------------------------
 
 #: category properties dictionary key names and default values
 #: material name
-PROPERTY_MATERIAL_NAME = 'MaterialName'
+PROPERTY_MATERIAL_NAME = "MaterialName"
 
 
 #: material name default value
-PROPERTY_MATERIAL_NAME_VALUE_DEFAULT = 'None'
+PROPERTY_MATERIAL_NAME_VALUE_DEFAULT = "None"
 
 
 #: material id
-PROPERTY_MATERIAL_ID = 'MaterialId'
+PROPERTY_MATERIAL_ID = "MaterialId"
 
 
 #: line weight projection name
-PROPERTY_LINE_WEIGHT_PROJECTION_NAME = 'LineWeightProjection'
+PROPERTY_LINE_WEIGHT_PROJECTION_NAME = "LineWeightProjection"
 
 
 #: line weight cut name
-PROPERTY_LINE_WEIGHT_CUT_NAME = 'LineWeightCut'
+PROPERTY_LINE_WEIGHT_CUT_NAME = "LineWeightCut"
 
 
 #: line colour red name
-PROPERTY_LINE_COLOUR_RED_NAME = 'Red'
+PROPERTY_LINE_COLOUR_RED_NAME = "Red"
 
 
 #: line colour green name
-PROPERTY_LINE_COLOUR_GREEN_NAME = 'Green'
+PROPERTY_LINE_COLOUR_GREEN_NAME = "Green"
 
 
 #: line colour blue name
-PROPERTY_LINE_COLOUR_BLUE_NAME = 'Blue'
+PROPERTY_LINE_COLOUR_BLUE_NAME = "Blue"
 
 
 #: graphic styles used for elements in families
 #: graphic style projection name
-CATEGORY_GRAPHIC_STYLE_PROJECTION = 'Projection'
+CATEGORY_GRAPHIC_STYLE_PROJECTION = "Projection"
 
 
 #: graphic style cut name
-CATEGORY_GRAPHIC_STYLE_CUT = 'Cut'
+CATEGORY_GRAPHIC_STYLE_CUT = "Cut"
 
 
 #: graphic style 3D name
-CATEGORY_GRAPHIC_STYLE_3D = '3D'
+CATEGORY_GRAPHIC_STYLE_3D = "3D"

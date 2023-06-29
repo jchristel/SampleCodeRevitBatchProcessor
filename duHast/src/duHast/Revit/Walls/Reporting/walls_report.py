@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit walls properties report function. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,8 +35,9 @@ import duHast.Utilities.unit_conversion
 
 import Autodesk.Revit.DB as rdb
 
+
 def get_wall_report_data(doc, revit_file_path):
-    '''
+    """
     Gets wall data to be written to report file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -44,7 +45,7 @@ def get_wall_report_data(doc, revit_file_path):
     :type revit_file_path: str
     :return: list of list of sheet properties.
     :rtype: list of list of str
-    '''
+    """
 
     data = []
     wall_types = get_all_wall_types_by_category(doc)
@@ -54,38 +55,45 @@ def get_wall_report_data(doc, revit_file_path):
             cs = wt.GetCompoundStructure()
             if cs != None:
                 cs_layers = cs.GetLayers()
-                #print(len(cs_layers))
+                # print(len(cs_layers))
                 for cs_layer in cs_layers:
                     layer_mat = doc.GetElement(cs_layer.MaterialId)
-                    material_mark = material_name = 'N/A'
+                    material_mark = material_name = "N/A"
                     # not all layers may have assigned a material (could be Default)
-                    if (layer_mat is not None):
-                            material_mark = com.get_element_mark(layer_mat)
-                            material_name = rMat.get_material_name_by_id(doc, cs_layer.MaterialId)
+                    if layer_mat is not None:
+                        material_mark = com.get_element_mark(layer_mat)
+                        material_name = rMat.get_material_name_by_id(
+                            doc, cs_layer.MaterialId
+                        )
                     layer_function = str(cs_layer.Function)
-                    layer_width = str(duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm(cs_layer.Width)) # conversion from imperial to metric
-                    data.append([
+                    layer_width = str(
+                        duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm(
+                            cs_layer.Width
+                        )
+                    )  # conversion from imperial to metric
+                    data.append(
+                        [
+                            revit_file_path,
+                            str(wt.Id),
+                            util.encode_ascii(wall_type_name),
+                            layer_function,
+                            layer_width,
+                            util.encode_ascii(material_name),
+                            util.encode_ascii(material_mark),
+                        ]
+                    )
+            else:
+                data.append(
+                    [
                         revit_file_path,
                         str(wt.Id),
                         util.encode_ascii(wall_type_name),
-                        layer_function,
-                        layer_width,
-                        util.encode_ascii(material_name),
-                        util.encode_ascii(material_mark)
-                        ])
-            else:
-                data.append([
-                    revit_file_path,
-                    str(wt.Id),
-                    util.encode_ascii(wall_type_name),
-                    'no layers - in place family or curtain wall',
-                    str(0.0),
-                    'NA',
-                    'NA'
-                ])
+                        "no layers - in place family or curtain wall",
+                        str(0.0),
+                        "NA",
+                        "NA",
+                    ]
+                )
         except:
-            data.append([
-                revit_file_path,
-                str(wt.Id)
-            ])
+            data.append([revit_file_path, str(wt.Id)])
     return data

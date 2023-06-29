@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit roofs. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -38,8 +38,9 @@ from duHast.Revit.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 
 # --------------------------------------------- utility functions ------------------
 
+
 def get_all_roof_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all roof types in the model.
 
     - Basic Roof
@@ -51,13 +52,14 @@ def get_all_roof_types_by_category(doc):
 
     :return: A filtered element collector containing roof types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rRoofFilter._get_all_roof_types_by_category(doc)
     return collector
 
+
 def get_all_roof_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Roof types in the model:
 
     - Basic Roof
@@ -70,15 +72,17 @@ def get_all_roof_types_by_class(doc):
 
     :return: A filtered element collector containing roof types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rRoofFilter._get_roof_types_by_class(doc)
-    return  collector
+    return collector
+
 
 # -------------------------------- none in place Roof types -------------------------------------------------------
 
+
 def get_all_roof_instances_by_category(doc):
-    '''
+    """
     Gets all Roof elements placed in model...ignores in place families (to be confirmed!)
 
     :param doc: Current Revit model document.
@@ -86,12 +90,17 @@ def get_all_roof_instances_by_category(doc):
 
     :return: A filtered element collector containing roof instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsNotElementType()
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Roofs)
+        .WhereElementIsNotElementType()
+    )
+
 
 def get_all_roof_instances_by_class(doc):
-    '''
+    """
     Gets all Roof elements placed in model...ignores roof soffits(???)
 
     :param doc: Current Revit model document.
@@ -99,12 +108,17 @@ def get_all_roof_instances_by_class(doc):
 
     :return: A filtered element collector containing roof instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.Roof).WhereElementIsNotElementType()
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfClass(rdb.Roof)
+        .WhereElementIsNotElementType()
+    )
+
 
 def get_all_roof_type_ids_by_category(doc):
-    '''
+    """
     Gets all Roof element type ids available in model.
 
     :param doc: Current Revit model document.
@@ -112,15 +126,16 @@ def get_all_roof_type_ids_by_category(doc):
 
     :return: List of element ids of roof types.
     :rtype: List Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col_cat = get_all_roof_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (col_cat)
+    ids = com.get_ids_from_element_collector(col_cat)
     return ids
 
+
 def get_all_roof_type_ids_by_class(doc):
-    '''
+    """
     Gets all Roof element type ids available in model.
 
     :param doc: _description_
@@ -128,17 +143,19 @@ def get_all_roof_type_ids_by_class(doc):
 
     :return: List of element ids of roof types.
     :rtype: List Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col_class = get_all_roof_types_by_class(doc)
     ids = com.get_ids_from_element_collector(col_class)
     return ids
 
+
 # -------------------------------- In place Roof types -------------------------------------------------------
 
+
 def get_in_place_roof_family_instances(doc):
-    '''
+    """
     Gets all instances of in place families of category roof in the model.
 
     :param doc: Current Revit model document.
@@ -146,13 +163,18 @@ def get_in_place_roof_family_instances(doc):
 
     :return: A filtered element collector containing roof family instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
-    
+    """
+
     filter = rdb.ElementCategoryFilter(rdb.BuiltInCategory.OST_Roofs)
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.FamilyInstance).WherePasses(filter)
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfClass(rdb.FamilyInstance)
+        .WherePasses(filter)
+    )
+
 
 def get_all_in_place_roof_type_ids(doc):
-    '''
+    """
     Gets type ids off all available in place families of category roof in the model.
 
     :param doc: Current Revit model document.
@@ -160,7 +182,9 @@ def get_all_in_place_roof_type_ids(doc):
 
     :return: List of element ids of in place roof types.
     :rtype: List Autodesk.Revit.DB.ElementId
-    '''
+    """
 
-    ids = rFam.get_all_in_place_type_ids_in_model_of_category(doc, rdb.BuiltInCategory.OST_Roofs)
+    ids = rFam.get_all_in_place_type_ids_in_model_of_category(
+        doc, rdb.BuiltInCategory.OST_Roofs
+    )
     return ids

@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IFC export Coordinate system settings class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,20 +27,22 @@ IFC export Coordinate system settings class.
 #
 #
 
-#-------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
+# -------------------------------------------- IFC EXPORT 3rd Party -------------------------------------
 
 from duHast.Utilities.Objects import base
 
+
 class IFCCoords(base.Base):
-    '''
+    """
     Using enum class for IFC coordinates options.
-    '''
-    shared_coordinates = '0'
-    site_survey_point = '1'
-    project_base_point = '2'
-    internal_coordinates = '3'
-    project_internal = '4',
-    internal_internal = '5'
+    """
+
+    shared_coordinates = "0"
+    site_survey_point = "1"
+    project_base_point = "2"
+    internal_coordinates = "3"
+    project_internal = ("4",)
+    internal_internal = "5"
 
     def __init__(self):
-        super(IFCCoords, self).__init__()  
+        super(IFCCoords, self).__init__()

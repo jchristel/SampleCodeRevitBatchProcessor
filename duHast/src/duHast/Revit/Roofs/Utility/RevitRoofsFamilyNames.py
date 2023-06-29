@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit roofs built in family names (ENG). 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,15 +27,12 @@ Revit roofs built in family names (ENG).
 #
 
 #: Built in roof family name for basic roof
-BASIC_ROOF_FAMILY_NAME = 'Basic Roof'
+BASIC_ROOF_FAMILY_NAME = "Basic Roof"
 
 
 #: Built in roof family name for sloped glazing
-SLOPED_GLAZING_FAMILY_NAME = 'Sloped Glazing'
+SLOPED_GLAZING_FAMILY_NAME = "Sloped Glazing"
 
 
 #: List of all Built in roof family names
-BUILTIN_ROOF_TYPE_FAMILY_NAMES = [
-    BASIC_ROOF_FAMILY_NAME,
-    SLOPED_GLAZING_FAMILY_NAME
-]
+BUILTIN_ROOF_TYPE_FAMILY_NAMES = [BASIC_ROOF_FAMILY_NAME, SLOPED_GLAZING_FAMILY_NAME]

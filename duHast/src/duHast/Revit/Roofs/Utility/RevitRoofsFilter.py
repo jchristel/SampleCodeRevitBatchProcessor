@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit roofs utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,8 +29,9 @@ This module contains a Revit roofs utility functions.
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
+
 def _get_all_roof_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all roof types in the model.
 
     - Basic Roof
@@ -42,13 +43,18 @@ def _get_all_roof_types_by_category(doc):
 
     :return: A filtered element collector containing roof types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Roofs).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Roofs)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def _get_roof_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Roof types in the model:
 
     - Basic Roof
@@ -61,7 +67,7 @@ def _get_roof_types_by_class(doc):
 
     :return: A filtered element collector containing roof types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.RoofType)
-    return  collector
+    return collector

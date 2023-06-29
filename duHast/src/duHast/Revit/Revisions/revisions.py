@@ -229,44 +229,45 @@ def add_revisions_to_sheet(doc, sheet, revision_ids):
 
 
 def get_issued_revisions(doc):
-    '''
+    """
     Get all issued revisions in a model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: list of revision objects
     :rtype: [Autodesk.Revit.DB.Revision]
-    '''
+    """
 
     issued_revisions = []
     # get all revisions in file
     revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
     for revision_id in revisions_in_model:
         rev = doc.GetElement(revision_id)
-        if (rev.Issued == True):
+        if rev.Issued == True:
             issued_revisions.append(rev)
     return issued_revisions
 
+
 def get_last_issued_revision(doc):
-    '''
+    """
     Get the last issued revision from a model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A revision object or None if no issued revision in the model
     :rtype: Autodesk.Revit.DB.Revision or None
-    '''
+    """
 
     issued_revs = get_issued_revisions(doc)
-    if(len(issued_revs) > 0):
-        issued_revs.sort(key = lambda x: x.SequenceNumber)
+    if len(issued_revs) > 0:
+        issued_revs.sort(key=lambda x: x.SequenceNumber)
         return issued_revs[-1]
     else:
         return None
 
 
 def change_revision_sequence_number(doc, revision, new_sequence_number):
-    '''
+    """
     Updates the revision sequence number of a revision.
 
     Pop the revision from its current index in the revision sequence list.
@@ -290,18 +291,18 @@ def change_revision_sequence_number(doc, revision, new_sequence_number):
 
         - result.status (bool) will be False.
         - result.message will contain the exception message.
-    '''
-    
+    """
+
     return_value = res.Result()
     try:
         # note revision sequence list starts with 1 with internal revision id index list starts at 0!
         new_sequence_number = new_sequence_number - 1
         revision_id = revision.Id
         revisions_in_model = rdb.Revision.GetAllRevisionIds(doc)
-        if (revision_id in revisions_in_model):
+        if revision_id in revisions_in_model:
             # this is a c# list: List[ElementId] hence .IndexOf
             current_index = revisions_in_model.IndexOf(revision_id)
-            if(new_sequence_number != current_index):
+            if new_sequence_number != current_index:
                 # remove the revision at the current index
                 # this is a c# list: List[ElementId] hence .RemoveAt
                 revisions_in_model.RemoveAt(current_index)
@@ -311,12 +312,26 @@ def change_revision_sequence_number(doc, revision, new_sequence_number):
                 # update the revision sequence in the model
                 return_value.update(re_order_revisions(doc, revisions_in_model))
             else:
-                return_value.update_sep(True, 'New sequence number: {} is identical to current sequence number: {}.'.format(new_sequence_number, current_index))
+                return_value.update_sep(
+                    True,
+                    "New sequence number: {} is identical to current sequence number: {}.".format(
+                        new_sequence_number, current_index
+                    ),
+                )
         else:
-            return_value.update_sep(False, 'Invalid revision provided. Id {} does not exist in model revision sequence'.format(revision_id))
+            return_value.update_sep(
+                False,
+                "Invalid revision provided. Id {} does not exist in model revision sequence".format(
+                    revision_id
+                ),
+            )
     except Exception as e:
-        return_value.update_sep(False, "An exception occurred in change revision sequence number: {}".format(e))
+        return_value.update_sep(
+            False,
+            "An exception occurred in change revision sequence number: {}".format(e),
+        )
     return return_value
+
 
 def re_order_revisions(doc, revision_sequence):
     """
@@ -327,7 +342,7 @@ def re_order_revisions(doc, revision_sequence):
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param revision_sequence: List of revision element ids describing the new sequence.
-    :type revision_sequence: IList<ElementId> 
+    :type revision_sequence: IList<ElementId>
     :return:
         Result class instance.
 
@@ -344,6 +359,7 @@ def re_order_revisions(doc, revision_sequence):
     """
 
     return_value = res.Result()
+
     def action():
         action_return_value = res.Result()
         try:
@@ -355,11 +371,12 @@ def re_order_revisions(doc, revision_sequence):
                 False, "Failed to re-order revision(s) with exception: {}".format(e)
             )
         return action_return_value
+
     transaction = rdb.Transaction(doc, "Re-ordering revisions in model.")
     return_value = rTran.in_transaction(transaction, action)
     return return_value
 
-    
+
 # ---------------------------------------- deleting revisions --------------------------------------------
 
 

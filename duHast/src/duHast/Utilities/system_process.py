@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions relating to system processes.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,50 +32,51 @@ from duHast.Utilities import date_stamps as dateStamp
 
 
 def get_all_running_processes():
-    '''
+    """
     Retrieves a list of all currently running processes.
 
     :return: a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
-    :rtype: list of list 
-    '''
+    :rtype: list of list
+    """
 
     # traverse the software list
-    Data = subprocess.check_output(['wmic', 'process', 'list', 'brief'])
+    Data = subprocess.check_output(["wmic", "process", "list", "brief"])
     a = str(Data)
     #  arrange the string
     processUnfiltered = []
     # list of all processes running... process ID is at index 3
     processFiltered = []
     try:
-        processUnfiltered = a.split('\r\r\n')
+        processUnfiltered = a.split("\r\r\n")
         counter = 0
         columnNumber = 0
         for i in range(len(processUnfiltered)):
-            if (counter == 0):
-                counter =+ 1
+            if counter == 0:
+                counter = +1
                 columnNumber = len(processUnfiltered[i].split())
             else:
                 dummyList = processUnfiltered[i].split()
-                if (len(dummyList) == columnNumber):
+                if len(dummyList) == columnNumber:
                     processFiltered.append(dummyList)
                 else:
                     dif = len(dummyList) - columnNumber
-                    processName = ''
-                    for i in range(dif+1):
-                        processName = processName + ' ' + dummyList[i+1]
+                    processName = ""
+                    for i in range(dif + 1):
+                        processName = processName + " " + dummyList[i + 1]
                     fixedProcessData = []
                     fixedProcessData.append(dummyList[0])
-                    fixedProcessData.append(processName) 
-                    for i in range(dif + 2, len(dummyList),1):
+                    fixedProcessData.append(processName)
+                    for i in range(dif + 2, len(dummyList), 1):
                         fixedProcessData.append(dummyList[i])
                     processFiltered.append(fixedProcessData)
     except IndexError as e:
-        #print ('Got all running processes')
+        # print ('Got all running processes')
         pass
     return processFiltered
 
-def filter_by_process_name (processNames, processList, returnMatch = True):
-    '''
+
+def filter_by_process_name(processNames, processList, returnMatch=True):
+    """
     Filters a provided list of processes by process name
 
     :param processNames: List of names to filter by
@@ -84,74 +85,77 @@ def filter_by_process_name (processNames, processList, returnMatch = True):
     :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     :param returnMatch: If true only matches will be returned, if false any non matches will be returned, defaults to True
     :type returnMatch: bool, optional
-    
+
     :return: List of processes
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
-    '''
+    """
 
     processFilteredByName = []
-    for process in  processList:
+    for process in processList:
         match = False
         for processName in processNames:
-            if(process[1] == processName):
+            if process[1] == processName:
                 match = True
                 break
-        if (returnMatch == True and match == True):
+        if returnMatch == True and match == True:
             processFilteredByName.append(process)
-        if (returnMatch == False and match == False):
+        if returnMatch == False and match == False:
             processFilteredByName.append(process)
     return processFilteredByName
 
-def filter_by_process_ids (processIds, processList, returnMatch = True):
-    '''
+
+def filter_by_process_ids(processIds, processList, returnMatch=True):
+    """
     Filters a provided list of processes by process ids
 
     :param processIds: List of ids to filter by
     :type processIds: _type_
-    :param processList: List of processes running 
+    :param processList: List of processes running
     :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
     :param returnMatch: If true only matches will be returned, if false any non matches will be returned, defaults to True
     :type returnMatch: bool, optional
     :return: List of processes
     :rtype: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
-    '''
+    """
 
     processFilteredByName = []
-    for process in  processList:
+    for process in processList:
         match = False
         for processId in processIds:
-            if(process[3] == processId):
+            if process[3] == processId:
                 match = True
                 break
-        if (returnMatch == True and match == True):
+        if returnMatch == True and match == True:
             processFilteredByName.append(process)
-        if (returnMatch == False and match == False):
+        if returnMatch == False and match == False:
             processFilteredByName.append(process)
     return processFilteredByName
 
+
 def kill_processes(processList):
-    '''
+    """
     Kills all processes in list provided
 
     :param processList: List of processes to be killed.
     :type processList: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]
-    
+
     :return: True if all past in processes have been killed, otherwise False.
     :rtype: bool
-    '''
+    """
 
     status = True
-    for process in  processList:
+    for process in processList:
         try:
             os.kill(int(process[3]), signal.SIGTERM)
-            print (str(process[1]) + ' ' + str(process[3]) + ' killed')
+            print(str(process[1]) + " " + str(process[3]) + " killed")
         except Exception as e:
             status = False
-            print (e)
+            print(e)
     return status
 
+
 def write_out_process_data(directoryPath, processList, fileName, fileExtension):
-    '''
+    """
     Writes out process data to file
 
     :param directoryPath: The directory path to where the export is being saved.
@@ -165,15 +169,21 @@ def write_out_process_data(directoryPath, processList, fileName, fileExtension):
 
     :return: True if the process data was written to file without an exception, otherwise False.
     :rtype: bool
-    '''
+    """
 
     status = True
     # setup file name
-    filePath = directoryPath + '\\' + dateStamp.get_file_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC) + fileName + fileExtension
+    filePath = (
+        directoryPath
+        + "\\"
+        + dateStamp.get_file_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC)
+        + fileName
+        + fileExtension
+    )
     try:
         f = open(filePath, "w")
         for p in processList:
-            f.writelines(','.join(p))
+            f.writelines(",".join(p))
         f.close()
     except:
         status = False

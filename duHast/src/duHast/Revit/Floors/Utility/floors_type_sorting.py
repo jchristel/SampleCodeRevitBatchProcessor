@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit floor utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,8 +28,9 @@ This module contains a Revit floor utility functions.
 
 from duHast.Revit.Floors.Utility import floors_filter as rFloorsFilter
 
+
 def build_floor_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in floor family type names.
     TODO: This code repeats across a number of modules. Use generic instead!
@@ -39,18 +40,19 @@ def build_floor_type_dictionary(collector, dic):
     :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
     :return: A dictionary containing key: built in floor type family name, value: list of ids belonging to that type.
     :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
     return dic
 
+
 def sort_floor_types_by_family_name(doc):
-    '''
+    """
     Returns a dictionary containing all floor types in the model.
     Key values are as per BUILTIN_FLOOR_TYPE_FAMILY_NAMES.
     TODO: This code repeats across a number of modules. Use generic instead!
@@ -58,7 +60,7 @@ def sort_floor_types_by_family_name(doc):
     :type doc: Autodesk.Revit.DB.Document
     :return: A dictionary containing key: floor type family name, value: list of ids.
     :rtype: dic { str: [Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     # get all floor Type Elements
     wts = rFloorsFilter._get_floor_types_by_class(doc)

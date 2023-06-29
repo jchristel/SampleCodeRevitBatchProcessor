@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Utility functions writing data objects to file.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,8 +32,9 @@ from duHast.Utilities import date_stamps as dateStamp
 import codecs
 import json
 
+
 def build_json_for_file(dic, model_name):
-    '''
+    """
     Adds two header keys to json output to be saved to file.
 
     - file name
@@ -46,13 +47,15 @@ def build_json_for_file(dic, model_name):
 
     :return: A dictionary
     :rtype: {str:[]}
-    '''
+    """
 
     data_json = {
         "file name": model_name,
-        "date processed": dateStamp.get_date_stamp(dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC),
+        "date processed": dateStamp.get_date_stamp(
+            dateStamp.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC
+        ),
     }
-    for key,item in dic.items():
+    for key, item in dic.items():
         data_json[key] = item
-    
+
     return data_json

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Utility functions exporting revit geometry to data objects.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,8 +35,9 @@ from duHast.Data.Objects import data_room as dr
 
 # -------------------------------- write data to file -------------------------------------------------------
 
+
 def get_data_from_model(doc):
-    '''
+    """
     Gets element data from the model. This is currently limited to
 
     - rooms
@@ -47,7 +48,7 @@ def get_data_from_model(doc):
 
     :return: A dictionary in format {file name: str, date processed : str, room:[], ceiling:[]}
     :rtype: {}
-    '''
+    """
 
     # get data
     allRoomData = rRoom.get_all_room_data(doc)

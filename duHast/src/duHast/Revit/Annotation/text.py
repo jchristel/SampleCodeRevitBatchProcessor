@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to text. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,24 +33,25 @@ from duHast.Revit.Annotation import arrow_heads as rArrow
 
 
 def get_all_text_types(doc):
-    '''
+    """
     Gets all text types in the model
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of text element types
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of text element types
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
 
+
 def get_all_text_type_ids(doc):
-    '''
+    """
     Gets all text type ids in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing text types
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.TextElementType)
@@ -59,23 +60,26 @@ def get_all_text_type_ids(doc):
 
 
 def get_all_text_annotation_elements(doc):
-    '''
+    """
     Gets all text annotation elements in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of text elements
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of text elements
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.TextElement)
 
+
 def get_text_type_arrow_head_ids(doc):
-    '''
+    """
     Gets all arrow head ids used in text types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
-    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_text_types, rArrow.ARROWHEAD_PARAS_TEXT)
+    """
+    used_ids = rArrow.get_arrow_head_ids_from_type(
+        doc, get_all_text_types, rArrow.ARROWHEAD_PARAS_TEXT
+    )
     return used_ids

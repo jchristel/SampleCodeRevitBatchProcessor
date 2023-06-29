@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,42 +29,45 @@ Geometry data storage class.
 import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 
-class DataPolygon(geometry_base.DataGeometryBase):
-    data_type = 'polygon'
 
-    def __init__(self, j = {}):
-        '''
+class DataPolygon(geometry_base.DataGeometryBase):
+    data_type = "polygon"
+
+    def __init__(self, j={}):
+        """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
-        '''
+        """
 
         # store data type  in base class
         super(DataPolygon, self).__init__(DataPolygon.data_type, j)
-        
+
         # check if any data was past in with constructor!
-        if(j != None and len(j) > 0 ):
-            # check type of data that came in: 
-            if(type(j) == str):
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
                 # a string
                 j = json.loads(j)
-            elif(type(j) == dict):
+            elif type(j) == dict:
                 # no action required
                 pass
             else:
-                raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('outer_loop' in j ):
-                self.outer_loop = j['outer_loop']
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
+
+            if "outer_loop" in j:
+                self.outer_loop = j["outer_loop"]
             else:
                 self.outer_loop = []
 
-            if('inner_loops' in j ):
-                self.inner_loops = j['inner_loops']
+            if "inner_loops" in j:
+                self.inner_loops = j["inner_loops"]
             else:
                 self.inner_loops = []
         else:
             # set default values
-            self.outer_loop = []        
+            self.outer_loop = []
             self.inner_loops = []

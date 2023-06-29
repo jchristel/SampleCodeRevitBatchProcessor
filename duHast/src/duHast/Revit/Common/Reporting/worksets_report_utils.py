@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains utility function(s) for workset reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,7 +31,7 @@ from duHast.Revit.Common.worksets import get_worksets_from_collector
 
 
 def get_workset_report_data(doc, revit_file_path):
-    '''
+    """
     Gets workset data ready for being written to file.
     - HOSTFILE
     - ID
@@ -43,14 +43,17 @@ def get_workset_report_data(doc, revit_file_path):
     :type revit_file_path: str
     :return: The workset data in a nested list of string
     :rtype: list of list of str
-    '''
+    """
 
     data = []
     worksets = get_worksets_from_collector(doc)
     for ws in worksets:
-        data.append([
-            revit_file_path,
-            str(ws.Id.IntegerValue),
-            util.encode_ascii(ws.Name),
-            str(ws.IsVisibleByDefault)])
+        data.append(
+            [
+                revit_file_path,
+                str(ws.Id.IntegerValue),
+                util.encode_ascii(ws.Name),
+                str(ws.IsVisibleByDefault),
+            ]
+        )
     return data

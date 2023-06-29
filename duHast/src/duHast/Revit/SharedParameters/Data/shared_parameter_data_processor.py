@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Family shared parameter data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,12 +31,12 @@ from duHast.Revit.SharedParameters import shared_parameter_data as rSharedData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 
-class SharedParameterProcessor(IFamilyProcessor):
 
-    def __init__(self,pre_actions = None, post_actions = None):
-        '''
+class SharedParameterProcessor(IFamilyProcessor):
+    def __init__(self, pre_actions=None, post_actions=None):
+        """
         Class constructor.
-        '''
+        """
 
         # setup report header
         string_report_headers = [
@@ -48,30 +48,30 @@ class SharedParameterProcessor(IFamilyProcessor):
             rSharedData.PARAMETER_GUID,
             rSharedData.PARAMETER_ID,
             IFamData.USAGE_COUNTER,
-            IFamData.USED_BY
+            IFamData.USED_BY,
         ]
 
         # store data type  in base class
         super(SharedParameterProcessor, self).__init__(
-            pre_actions=pre_actions, 
-            post_actions=[self._post_action_update_used_shared_parameters], 
-            data_type='SharedParameter', 
-            string_report_headers=string_report_headers
+            pre_actions=pre_actions,
+            post_actions=[self._post_action_update_used_shared_parameters],
+            data_type="SharedParameter",
+            string_report_headers=string_report_headers,
         )
 
-        #self.data = []
-        #self.dataType = 'SharedParameter'
-        #self.preActions = preActions
-        # set default post action to updated shared parameters used in root processor with any shared parameters found in nested 
+        # self.data = []
+        # self.dataType = 'SharedParameter'
+        # self.preActions = preActions
+        # set default post action to updated shared parameters used in root processor with any shared parameters found in nested
         # families
-        #self.postActions = [self._postActionUpdateUsedSharedParameters]
+        # self.postActions = [self._postActionUpdateUsedSharedParameters]
         # add any other post actions
-        if (post_actions != None):
+        if post_actions != None:
             for post_action in post_actions:
                 self.post_actions.append(post_action)
 
     def process(self, doc, root_path, root_category_path):
-        '''
+        """
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
         :param doc: Current family document.
@@ -82,17 +82,23 @@ class SharedParameterProcessor(IFamilyProcessor):
         :param rootCategoryPath: The categroy path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
-        '''
+        """
 
-        dummy = rSharedData.SharedParameterData(root_path, root_category_path, self.data_type)
+        dummy = rSharedData.SharedParameterData(
+            root_path, root_category_path, self.data_type
+        )
         dummy.process(doc)
         self.data.append(dummy)
-    
 
-    def _is_shared_parameter_present(self,root_family_data, nested_family_line_pattern):
+    def _is_shared_parameter_present(
+        self, root_family_data, nested_family_line_pattern
+    ):
         match = None
         for root_fam in root_family_data:
-            if (root_fam[rSharedData.PARAMETER_GUID] == nested_family_line_pattern[rSharedData.PARAMETER_GUID]):
+            if (
+                root_fam[rSharedData.PARAMETER_GUID]
+                == nested_family_line_pattern[rSharedData.PARAMETER_GUID]
+            ):
                 match = root_fam
                 break
         return match
@@ -101,29 +107,40 @@ class SharedParameterProcessor(IFamilyProcessor):
         # loop over nested family data
         for nested_item in nested_families_data:
             # check if item is already in root family
-            matching_root_fam_pattern = self._is_shared_parameter_present(root_family_data, nested_item)
-            if(matching_root_fam_pattern != None):
+            matching_root_fam_pattern = self._is_shared_parameter_present(
+                root_family_data, nested_item
+            )
+            if matching_root_fam_pattern != None:
                 # update used by list
                 # TODO: this check looks odd!! ( guid vs a dictionary?)
-                if(nested_item[rSharedData.PARAMETER_GUID] not in matching_root_fam_pattern[IFamData.USED_BY]):
+                if (
+                    nested_item[rSharedData.PARAMETER_GUID]
+                    not in matching_root_fam_pattern[IFamData.USED_BY]
+                ):
                     # add the root path to the used by list for ease of identification of the origin of this shared parameter
                     matching_root_fam_pattern[IFamData.USED_BY].append(
-                        { 
-                            rSharedData.PARAMETER_GUID : nested_item[rSharedData.PARAMETER_GUID],
-                            rSharedData.PARAMETER_NAME : nested_item[rSharedData.PARAMETER_NAME],
-                            IFamData.ROOT : nested_item[IFamData.ROOT]
+                        {
+                            rSharedData.PARAMETER_GUID: nested_item[
+                                rSharedData.PARAMETER_GUID
+                            ],
+                            rSharedData.PARAMETER_NAME: nested_item[
+                                rSharedData.PARAMETER_NAME
+                            ],
+                            IFamData.ROOT: nested_item[IFamData.ROOT],
                         }
                     )
                     # update used by counter
-                    matching_root_fam_pattern[IFamData.USAGE_COUNTER] = matching_root_fam_pattern[IFamData.USAGE_COUNTER] + 1
+                    matching_root_fam_pattern[IFamData.USAGE_COUNTER] = (
+                        matching_root_fam_pattern[IFamData.USAGE_COUNTER] + 1
+                    )
             else:
                 pass
-                # nothing to do if that shared parameter has not been reported to start off with 
+                # nothing to do if that shared parameter has not been reported to start off with
 
     def _get_used_shared_parameters(self, data):
         used_shared_paras = []
         for d in data:
-            if(d[IFamData.USAGE_COUNTER] > 0):
+            if d[IFamData.USAGE_COUNTER] > 0:
                 used_shared_paras.append(d)
         return used_shared_paras
 
@@ -133,12 +150,22 @@ class SharedParameterProcessor(IFamilyProcessor):
             # find all shared parameters of nested families
             nested_family_data = self._find_nested_families_data()
             # get used shared parameters from nested data
-            nested_family_shared_parameters = self._get_used_shared_parameters(nested_family_data)
+            nested_family_shared_parameters = self._get_used_shared_parameters(
+                nested_family_data
+            )
             # update root family data only
             rootFamilyData = self._find_root_family_data()
             # update root processor data as required
-            self._update_root_family_data(rootFamilyData, nested_family_shared_parameters)
-            return_value.update_sep(True, 'Post Action Update shared parameters data successful completed.')
+            self._update_root_family_data(
+                rootFamilyData, nested_family_shared_parameters
+            )
+            return_value.update_sep(
+                True, "Post Action Update shared parameters data successful completed."
+            )
         except Exception as e:
-            return_value.update_sep(False, 'Post Action Update shared parameters data failed with exception: ' + str(e))
+            return_value.update_sep(
+                False,
+                "Post Action Update shared parameters data failed with exception: "
+                + str(e),
+            )
         return return_value

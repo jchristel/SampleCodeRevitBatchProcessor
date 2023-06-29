@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a helper functions to merge two lists into a unique list.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,9 +6,9 @@ This module contains a helper functions to merge two lists into a unique list.
 There are build in python function(s) to do this... 
 
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,8 +30,9 @@ There are build in python function(s) to do this...
 #
 #
 
+
 def merge_into_unique_list(list_source, list_merge):
-    '''
+    """
     Merges the second list into the first by adding elements from second list which are not already in first list.
     TODO: Consider more generic code!
     :param list_source: List to add unique values to.
@@ -40,9 +41,9 @@ def merge_into_unique_list(list_source, list_merge):
     :type list_merge: list var
     :return: List of unique objects.
     :rtype: list var
-    '''
+    """
 
     for i in list_merge:
-        if (i not in list_source):
+        if i not in list_source:
             list_source.append(i)
     return list_source

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Geometry data storage class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,31 +29,34 @@ Geometry data storage class.
 import json
 from duHast.Data.Objects.Properties.Geometry import geometry_base
 
-class DataTopologyCell(geometry_base.DataGeometryBase):
-    data_type = 'topology cell'
 
-    def __init__(self, j = {}):
-        '''
+class DataTopologyCell(geometry_base.DataGeometryBase):
+    data_type = "topology cell"
+
+    def __init__(self, j={}):
+        """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
-        '''
+        """
 
         # store data type  in base class
         super(DataTopologyCell, self).__init__(DataTopologyCell.data_type, j)
-        
+
         # check if any data was past in with constructor!
-        if(j != None and len(j) > 0 ):
-            # check type of data that came in: 
-            if(type(j) == str):
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
                 # a string
                 j = json.loads(j)
-            elif(type(j) == dict):
+            elif type(j) == dict:
                 # no action required
                 pass
             else:
-                raise  ValueError ('Argument supplied must be of type string or type dictionary')
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
         else:
             # set default values
             pass

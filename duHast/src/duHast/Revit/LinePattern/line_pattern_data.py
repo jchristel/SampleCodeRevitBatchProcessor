@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Family line pattern data class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -37,13 +37,13 @@ from duHast.Revit import RevitLevels as rLevel
 import Autodesk.Revit.DB as rdb
 
 # data dictionary key values specific to this class
-PATTERN_NAME = 'patternName'
-PATTERN_ID = 'patternId'
+PATTERN_NAME = "patternName"
+PATTERN_ID = "patternId"
+
 
 class LinePatternData(IFamData.IFamilyData):
-    
     def __init__(self, root_path=None, root_category_path=None, data_type=None):
-        '''
+        """
         Class constructor
 
         :param rootPath: The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo\
@@ -51,11 +51,15 @@ class LinePatternData(IFamData.IFamilyData):
         :type rootPath: str
         :param dataType: Human readable data type descriptor
         :type dataType: str
-        '''
+        """
 
-        super(LinePatternData, self).__init__(root_path=root_path, root_category_path=root_category_path, data_type=data_type)
+        super(LinePatternData, self).__init__(
+            root_path=root_path,
+            root_category_path=root_category_path,
+            data_type=data_type,
+        )
         # super(CategoryData, self).__init__(rootPath, dataType)
-        '''
+        """
         self.data = []
         
         if(dataType != None):
@@ -72,10 +76,10 @@ class LinePatternData(IFamData.IFamilyData):
             self.rootCategoryPath = rootCategoryPath
         else:
             self.rootCategoryPath = '-'
-        '''
+        """
 
     def _add_category_to_dic(self, line_pattern_ids, pattern_id, category):
-        '''
+        """
         Adds a category to a dictionary using the line pattern ID as value
 
         :param linePatternIds: dictionary in format: Key: line Pattern Id, value list of categories using that line pattern
@@ -84,15 +88,15 @@ class LinePatternData(IFamData.IFamilyData):
         :type patternId: Autodesk.Revit.DB.ElementId
         :param category: the category using the line pattern
         :type category: Autodesk.Revit.DB.Category
-        '''
+        """
 
-        if(pattern_id in line_pattern_ids):
+        if pattern_id in line_pattern_ids:
             line_pattern_ids[pattern_id].append(category)
         else:
             line_pattern_ids[pattern_id] = [category]
 
     def _get_line_pattern_from_categories(self, doc):
-        '''
+        """
         Loops over all family categories and sub categories and any other categories and sub categories with a positive Id (custom sub category) and
         returns a dictionary of line pattern ids to categories using them.
 
@@ -100,51 +104,68 @@ class LinePatternData(IFamData.IFamilyData):
         :type doc: Autodesk.Revit.DB.Document
         :return: a dictionary in format: Key: line Pattern Id, value list of categories using that line pattern
         :rtype: {ElementId:[Autodesk.revit.DB.Category]}
-        '''
+        """
 
         line_pattern_ids_to_categories = {}
 
         # get any line pattern added to the family category itself
         main_cat = rCats.get_family_category(doc)
         for m_cat_name in main_cat:
-            l_style = rPat.GetLinePatternFromCategory (main_cat[m_cat_name], doc)
+            l_style = rPat.GetLinePatternFromCategory(main_cat[m_cat_name], doc)
             # update dictionary
-            self._add_category_to_dic(line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], main_cat[m_cat_name])
-        
+            self._add_category_to_dic(
+                line_pattern_ids_to_categories,
+                l_style[rPat.PROPERTY_PATTERN_ID],
+                main_cat[m_cat_name],
+            )
+
         # get line patterns from sub categories of the family category
         main_cats = rCats.get_main_sub_categories(doc)
         for m_cat_name in main_cats:
-            l_style = rPat.GetLinePatternFromCategory (main_cats[m_cat_name], doc)
+            l_style = rPat.GetLinePatternFromCategory(main_cats[m_cat_name], doc)
             # update dictionary
-            self._add_category_to_dic(line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], main_cats[m_cat_name])
-        
+            self._add_category_to_dic(
+                line_pattern_ids_to_categories,
+                l_style[rPat.PROPERTY_PATTERN_ID],
+                main_cats[m_cat_name],
+            )
+
         # get line pattern from unrelated sub categories
         sub_cats_other = rCats.get_other_sub_categories(doc)
         for s_cat_name in sub_cats_other:
             for s_cat_item in sub_cats_other[s_cat_name]:
                 # only use custom categories not build in ones (id smaller then 0)
-                if(sub_cats_other[s_cat_name][s_cat_item].Id.IntegerValue > 0):
-                    l_style = rPat.GetLinePatternFromCategory (sub_cats_other[s_cat_name][s_cat_item], doc)
+                if sub_cats_other[s_cat_name][s_cat_item].Id.IntegerValue > 0:
+                    l_style = rPat.GetLinePatternFromCategory(
+                        sub_cats_other[s_cat_name][s_cat_item], doc
+                    )
                     # update dictionary
-                    self._add_category_to_dic(line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], sub_cats_other[s_cat_name][s_cat_item])
-        
+                    self._add_category_to_dic(
+                        line_pattern_ids_to_categories,
+                        l_style[rPat.PROPERTY_PATTERN_ID],
+                        sub_cats_other[s_cat_name][s_cat_item],
+                    )
+
         # get line pattern from reference lines and planes categories import in families main cat
         other_cats = rCats.get_category_by_built_in_def_name(
-            doc, [
-            rdb.BuiltInCategory.OST_ReferenceLines, # reference lines
-            rdb.BuiltInCategory.OST_CLines,     # reference planes
-            rdb.BuiltInCategory.OST_ImportObjectStyles] # import in families
+            doc,
+            [
+                rdb.BuiltInCategory.OST_ReferenceLines,  # reference lines
+                rdb.BuiltInCategory.OST_CLines,  # reference planes
+                rdb.BuiltInCategory.OST_ImportObjectStyles,
+            ],  # import in families
         )
         for o_cat in other_cats:
-            l_style = rPat.GetLinePatternFromCategory (o_cat, doc)
+            l_style = rPat.GetLinePatternFromCategory(o_cat, doc)
             # update dictionary
-            self._add_category_to_dic(line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], o_cat)
-        
+            self._add_category_to_dic(
+                line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], o_cat
+            )
+
         return line_pattern_ids_to_categories
 
-
     def _get_pattern_from_level_element(self, doc):
-        '''
+        """
         Gets the pattern data from all level types in document.
 
         :param doc: Current family document
@@ -152,86 +173,95 @@ class LinePatternData(IFamData.IFamilyData):
 
         :return: a dictionary in format: Key: line Pattern Id, value list of levels using that line pattern
         :rtype: {ElementId:[Autodesk.revit.DB.Category]}
-        '''
-        
+        """
+
         level_pattern_data = {}
         levels = rLevel.GetLevelsListAscending(doc)
         for level in levels:
             pattern_data = rPat.GetLinePatternFromLevelElement(doc, level)
-            self._add_category_to_dic(level_pattern_data, pattern_data[rPat.PROPERTY_PATTERN_ID], level)
+            self._add_category_to_dic(
+                level_pattern_data, pattern_data[rPat.PROPERTY_PATTERN_ID], level
+            )
         return level_pattern_data
 
     def _get_pattern_name(self, element):
-        '''
+        """
         Get the element name.
 
         :param element: _description_
         :type element: _type_
         :return: Element name, or exception stating name is not unicode
         :rtype: str
-        '''
+        """
 
-        element_name = 'unknown_notUnicode'
-        try:   
+        element_name = "unknown_notUnicode"
+        try:
             element_name = util.encode_ascii(rdb.Element.Name.GetValue(element))
         except Exception as ex:
-            element_name = element_name + ' Exception: ' + str(ex)
+            element_name = element_name + " Exception: " + str(ex)
         return element_name
 
     def _get_pattern_usage_data_from_categories(self, line_pattern_ids, element):
-        '''
+        """
         Returns how often and on which category a line pattern is used
 
         :param linePatternIds: a dictionary in format: Key: line Pattern Id, value list of categories using that line pattern
         :type linePatternIds: {ElementId:[Autodesk.revit.DB.Category]}
         :param element: The line pattern element.
         :type element: _type_
-        
+
         :return: counter and  a list of dictionaries in format {categoryId: int, categoryName: str}
         :rtype: int, [{categoryId:int, categoryName:str}]
-        '''
+        """
 
         counter = 0
         pattern_names = []
         # how often used
-        if (element.Id in line_pattern_ids):
+        if element.Id in line_pattern_ids:
             counter = len(line_pattern_ids[element.Id])
-            for pat in  line_pattern_ids[element.Id]:
-                pattern_names.append({"categoryId" : pat.Id.IntegerValue, "categoryName" : pat.Name})
+            for pat in line_pattern_ids[element.Id]:
+                pattern_names.append(
+                    {"categoryId": pat.Id.IntegerValue, "categoryName": pat.Name}
+                )
         return counter, pattern_names
 
     def _get_pattern_usage_data_from_level(self, line_pattern_ids, element):
-        '''
+        """
         Returns how often and on which Level type a line pattern is used
 
-        :param linePatternIds: 
+        :param linePatternIds:
         :type linePatternIds: {ElementId:[Autodesk.revit.DB.Category]}
         :param element: The line pattern element.
         :type element: _type_
-        
+
         :return: counter and  a list of dictionaries in format {categoryId: int, categoryName: str}
         :rtype: int, [{categoryId:int, categoryName:str}]
-        '''
+        """
 
         counter = 0
         pattern_names = []
 
         # how often used
-        if (element.Id in line_pattern_ids):
+        if element.Id in line_pattern_ids:
             counter = len(line_pattern_ids[element.Id])
-            for pat in  line_pattern_ids[element.Id]:
-                pattern_names.append({"levelId" : pat.Id.IntegerValue, "levelTypeName" : rdb.Element.Name.GetValue(pat)})
+            for pat in line_pattern_ids[element.Id]:
+                pattern_names.append(
+                    {
+                        "levelId": pat.Id.IntegerValue,
+                        "levelTypeName": rdb.Element.Name.GetValue(pat),
+                    }
+                )
         return counter, pattern_names
 
     def process(self, doc):
-        '''
+        """
         Collects all line pattern data from the document and stores it in the class property .data
 
         :param doc: Current family document
         :type doc: Autodesk.Revit.DB.Document
-        '''
+        """
 
-        # get all line patterns used in categories (includes sub categories of family category and any custom subcategories of non family category present, includes also 
+        # get all line patterns used in categories (includes sub categories of family category and any custom subcategories of non family category present, includes also
         # ref planes , ref lines, import styles)
         line_pattern_ids_by_category = self._get_line_pattern_from_categories(doc)
         # get line pattern used on level element
@@ -242,10 +272,17 @@ class LinePatternData(IFamData.IFamilyData):
             # just in case parameter name is not unicode
             element_name = self._get_pattern_name(element)
             # get usage data from categories
-            counter, pattern_names = self._get_pattern_usage_data_from_categories(line_pattern_ids_by_category, element)
+            counter, pattern_names = self._get_pattern_usage_data_from_categories(
+                line_pattern_ids_by_category, element
+            )
             # get usage data from levels
-            counter_level, pattern_names_level = self._get_pattern_usage_data_from_level(line_pattern_ids_by_from_level, element)
-            
+            (
+                counter_level,
+                pattern_names_level,
+            ) = self._get_pattern_usage_data_from_level(
+                line_pattern_ids_by_from_level, element
+            )
+
             # get overall count
             counter = counter + counter_level
             # get overall usage data
@@ -254,16 +291,16 @@ class LinePatternData(IFamData.IFamilyData):
             # build data
             self.data.append(
                 {
-                    IFamData.ROOT : self.root_path,
-                    IFamData.ROOT_CATEGORY : self.root_category_path,
-                    IFamData.FAMILY_NAME : self._strip_file_extension(doc.Title),
-                    IFamData.FAMILY_FILE_PATH : doc.PathName,
-                    IFamData.USAGE_COUNTER : counter,
-                    IFamData.USED_BY : usage_all,
-                    PATTERN_NAME : element_name,
-                    PATTERN_ID : element.Id.IntegerValue
+                    IFamData.ROOT: self.root_path,
+                    IFamData.ROOT_CATEGORY: self.root_category_path,
+                    IFamData.FAMILY_NAME: self._strip_file_extension(doc.Title),
+                    IFamData.FAMILY_FILE_PATH: doc.PathName,
+                    IFamData.USAGE_COUNTER: counter,
+                    IFamData.USED_BY: usage_all,
+                    PATTERN_NAME: element_name,
+                    PATTERN_ID: element.Id.IntegerValue,
                 }
             )
-    
+
     def get_data(self):
         return self.data

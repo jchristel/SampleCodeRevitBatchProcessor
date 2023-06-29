@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Family warnings data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,12 +31,12 @@ from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
 from duHast.Revit.Warnings import RevitWarningsData as rWarnData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 
-class WarningsProcessor(IFamilyProcessor):
 
-    def __init__(self,pre_actions = None, post_actions = None):
-        '''
+class WarningsProcessor(IFamilyProcessor):
+    def __init__(self, pre_actions=None, post_actions=None):
+        """
         Class constructor.
-        '''
+        """
 
         # setup report header
         string_report_headers = [
@@ -47,19 +47,19 @@ class WarningsProcessor(IFamilyProcessor):
             rWarnData.WARNING_TEXT,
             rWarnData.WARNING_GUID,
             rWarnData.WARNING_RELATED_IDS,
-            rWarnData.WARNING_OTHER_IDS
+            rWarnData.WARNING_OTHER_IDS,
         ]
 
         # store data type  in base class
         super(WarningsProcessor, self).__init__(
-            pre_actions=pre_actions, 
-            post_actions=post_actions, 
-            data_type='Warnings', 
-            string_report_headers=string_report_headers
+            pre_actions=pre_actions,
+            post_actions=post_actions,
+            data_type="Warnings",
+            string_report_headers=string_report_headers,
         )
 
     def process(self, doc, root_path, root_category_path):
-        '''
+        """
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
         :param doc: Current family document.
@@ -70,8 +70,8 @@ class WarningsProcessor(IFamilyProcessor):
         :param rootCategoryPath: The category path of the nested family in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
-        '''
-         
+        """
+
         dummy = rWarnData.WarningsData(root_path, root_category_path, self.data_type)
         dummy.process(doc)
         self.data.append(dummy)

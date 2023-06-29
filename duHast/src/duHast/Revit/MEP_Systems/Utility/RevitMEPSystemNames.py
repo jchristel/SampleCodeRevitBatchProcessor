@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit MEP systems names (ENG). 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,60 +28,58 @@ Revit MEP systems names (ENG).
 
 # Duct types are split into three major families
 #: Built in family name for oval ducting
-DUCT_OVAL_FAMILY_NAME = 'Oval Duct'
+DUCT_OVAL_FAMILY_NAME = "Oval Duct"
 #: Built in family name for round ducting
-DUCT_ROUND_FAMILY_NAME = 'Round Duct'
+DUCT_ROUND_FAMILY_NAME = "Round Duct"
 #: Built in family name for rectangular ducting
-DUCT_RECTANGULAR_FAMILY_NAME = 'Rectangular Duct'
+DUCT_RECTANGULAR_FAMILY_NAME = "Rectangular Duct"
 
 #: List of all Built in ducting family names
 BUILTIN_DUCT_TYPE_FAMILY_NAMES = [
     DUCT_OVAL_FAMILY_NAME,
     DUCT_ROUND_FAMILY_NAME,
-    DUCT_RECTANGULAR_FAMILY_NAME
+    DUCT_RECTANGULAR_FAMILY_NAME,
 ]
 
 # flex duct types are split into two major families
 #: Built in family name for rectangular flex ducting
-FLEX_DUCT_REC_FAMILY_NAME = 'Flex Duct Rectangular'
+FLEX_DUCT_REC_FAMILY_NAME = "Flex Duct Rectangular"
 #: Built in family name for round flex ducting
-FLEX_DUCT_ROUND_FAMILY_NAME = 'Flex Duct Round'
+FLEX_DUCT_ROUND_FAMILY_NAME = "Flex Duct Round"
 
 #: List of all Built in flex ducting family names
 BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES = [
     FLEX_DUCT_REC_FAMILY_NAME,
-    FLEX_DUCT_ROUND_FAMILY_NAME
+    FLEX_DUCT_ROUND_FAMILY_NAME,
 ]
 
 # conduits types are split into two major families
 #: Built in family name for conduits with fittings
-CONDUIT_WITH_FITTING_FAMILY_NAME = 'Conduit with Fittings'
+CONDUIT_WITH_FITTING_FAMILY_NAME = "Conduit with Fittings"
 #: Built in family name for conduits without fittings
-CONDUIT_WITHOUT_FITTING_FAMILY_NAME = 'Conduit without Fittings'
+CONDUIT_WITHOUT_FITTING_FAMILY_NAME = "Conduit without Fittings"
 
 #: List of all Built in conduit family names
 BUILTIN_CONDUIT_TYPE_FAMILY_NAMES = [
     CONDUIT_WITH_FITTING_FAMILY_NAME,
-    CONDUIT_WITHOUT_FITTING_FAMILY_NAME
+    CONDUIT_WITHOUT_FITTING_FAMILY_NAME,
 ]
 
 # cable tray types are split into two major families
 #: Built in family name for cable tray with fittings
-CABLE_TRAY_WITH_FITTING_FAMILY_NAME = 'Cable Tray with Fittings'
+CABLE_TRAY_WITH_FITTING_FAMILY_NAME = "Cable Tray with Fittings"
 #: Built in family name for cable tray without fittings
-CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME = 'Cable Tray without Fittings'
+CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME = "Cable Tray without Fittings"
 
 #: List of all Built in cable tray family names
 BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES = [
     CABLE_TRAY_WITH_FITTING_FAMILY_NAME,
-    CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME
+    CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME,
 ]
 
 # pipe types exist in one major families
 #: Built in family name for pipes
-PIPE_FAMILY_NAME = 'Pipe Types'
+PIPE_FAMILY_NAME = "Pipe Types"
 
 #: List of all Built in pipe family names
-BUILTIN_PIPE_TYPE_FAMILY_NAMES = [
-    PIPE_FAMILY_NAME
-]
+BUILTIN_PIPE_TYPE_FAMILY_NAMES = [PIPE_FAMILY_NAME]

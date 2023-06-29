@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit ramps utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,8 +29,9 @@ This module contains a Revit ramps utility functions.
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
+
 def _get_all_ramp_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all Ramp types in the model.
 
     :param doc: _description_
@@ -38,7 +39,11 @@ def _get_all_ramp_types_by_category(doc):
 
     :return: A filtered element collector containing ramp types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ramps).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Ramps)
+        .WhereElementIsElementType()
+    )
     return collector

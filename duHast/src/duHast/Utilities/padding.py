@@ -39,6 +39,7 @@ from duHast.Utilities import date_stamps
 #: how long is a padded row
 DEFAULT_PADDING_LENGTH = 90
 
+
 def pad_header_no_time_stamp(header_name, padding_length=DEFAULT_PADDING_LENGTH):
     """
     Pads a header string to be centred in a row of dashes of a given length.

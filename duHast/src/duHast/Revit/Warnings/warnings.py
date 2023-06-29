@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit warnings. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,12 +31,19 @@ import System
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_WARNINGS_HEADER = ['HOSTFILE','ID', 'NAME', 'WARNING TYPE', 'NUMBER OF WARNINGS']
+REPORT_WARNINGS_HEADER = [
+    "HOSTFILE",
+    "ID",
+    "NAME",
+    "WARNING TYPE",
+    "NUMBER OF WARNINGS",
+]
 
 # --------------------------------------------- utility functions ------------------
 
+
 def get_warnings(doc):
-    '''
+    """
     Returns a list of warnings from the model
 
     :param doc: Current Revit model document.
@@ -44,27 +51,27 @@ def get_warnings(doc):
 
     :return: List of all failure messages in model.
     :rtype: list of Autodesk.Revit.DB.FailureMessage
-    '''
+    """
 
     return doc.GetWarnings()
 
+
 def get_warnings_by_guid(doc, guid):
-    '''
+    """
     Returns all failure message objects where failure definition has matching GUID
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param guid: Filter: Identifying a specific failure of which the corresponding messages are to be returned.
     :type guid: Autodesk.Revit.DB.Guid
-    
+
     :return: list of all failure messages with matching guid
     :rtype: list of Autodesk.Revit.DB.FailureMessage
-    '''
+    """
 
     filtered_warnings = []
     warnings = doc.GetWarnings()
     for warning in warnings:
-        if(str(warning.GetFailureDefinitionId().Guid) == guid):
+        if str(warning.GetFailureDefinitionId().Guid) == guid:
             filtered_warnings.append(warning)
     return filtered_warnings
-

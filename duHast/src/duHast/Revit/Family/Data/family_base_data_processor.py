@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Family base data processor class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,18 +31,19 @@ from duHast.Revit.Family.Data import family_base_data as rFamData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import util_batch_p as uBP
 
-class FamilyBaseProcessor(IFamilyProcessor):
 
-    def __init__(self, 
-        reference_file_path = None, 
-        family_out_directory_path = None, 
-        session_id = None,
-        pre_actions = None, 
-        post_actions = None
-        ):
-        '''
+class FamilyBaseProcessor(IFamilyProcessor):
+    def __init__(
+        self,
+        reference_file_path=None,
+        family_out_directory_path=None,
+        session_id=None,
+        pre_actions=None,
+        post_actions=None,
+    ):
+        """
         Class constructor.
-        '''
+        """
 
         # store data type  in base class
         string_report_headers = [
@@ -50,31 +51,31 @@ class FamilyBaseProcessor(IFamilyProcessor):
             IFamData.ROOT_CATEGORY,
             IFamData.FAMILY_NAME,
             IFamData.FAMILY_FILE_PATH,
-            rFamData.CATEGORY_NAME
+            rFamData.CATEGORY_NAME,
         ]
 
         # store data type  in base class
         super(FamilyBaseProcessor, self).__init__(
-            data_type = 'FamilyBase',
-            pre_actions=pre_actions, 
+            data_type="FamilyBase",
+            pre_actions=pre_actions,
             post_actions=post_actions,
-            string_report_headers=string_report_headers
+            string_report_headers=string_report_headers,
         )
 
-        #self.data = []
-        #self.dataType = 'FamilyBase'
+        # self.data = []
+        # self.dataType = 'FamilyBase'
         self.reference_file_path = reference_file_path
         self.family_out_directory_path = family_out_directory_path
-        if(session_id != None):
+        if session_id != None:
             self.session_id = uBP.adjust_session_id_for_directory_name(session_id)
         else:
             self.session_id = session_id
 
-        #self.preActions = preActions
-        #self.postActions = postActions
+        # self.preActions = preActions
+        # self.postActions = postActions
 
     def process(self, doc, root_path, root_category_path):
-        '''
+        """
         Calls processor instance with the document and root path provided and adds processor instance to class property .data
 
         :param doc: Current family document.
@@ -85,8 +86,13 @@ class FamilyBaseProcessor(IFamilyProcessor):
         :param rootCategoryPath: The path of the nested family in in terms of category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory\
             This includes the actual family category as the last node.
         :type rootCategoryPath: str
-        '''
+        """
 
         dummy = rFamData.FamilyBaseData(root_path, root_category_path, self.data_type)
-        dummy.process(doc, self.reference_file_path, self.family_out_directory_path, self.session_id)
+        dummy.process(
+            doc,
+            self.reference_file_path,
+            self.family_out_directory_path,
+            self.session_id,
+        )
         self.data.append(dummy)

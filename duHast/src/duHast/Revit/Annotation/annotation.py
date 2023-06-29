@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A number of functions around Revit annotation objects.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -38,8 +38,9 @@ import Autodesk.Revit.DB.Architecture as rdbA
 
 # ----------------------------------------------
 
+
 def get_all_anno_symbol_types(doc):
-    '''
+    """
     Gets all annotation symbol types, area tag types, room tag types in the model
 
     :param doc: Current Revit model document.
@@ -47,17 +48,22 @@ def get_all_anno_symbol_types(doc):
 
     :return: list of types
     :rtype: list
-    '''
+    """
 
     types = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.FamilySymbol)
     for c in col:
-        if (c.GetType() == rdb.AnnotationSymbolType or c.GetType == rdb.AreaTagType or c.GetType() == rdbA.RoomTagType):
+        if (
+            c.GetType() == rdb.AnnotationSymbolType
+            or c.GetType == rdb.AreaTagType
+            or c.GetType() == rdbA.RoomTagType
+        ):
             types.append(c)
     return types
 
+
 def get_anno_symbol_arrow_head_ids(doc):
-    '''
+    """
     Gets all arrow head ids used in annotation symbol types, area tag types, room tag types in the model.
 
     :param doc: Current Revit model document.
@@ -65,7 +71,9 @@ def get_anno_symbol_arrow_head_ids(doc):
 
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT)
+    used_ids = rArrow.get_arrow_head_ids_from_type(
+        doc, get_all_anno_symbol_types, rArrow.ARROWHEAD_PARAS_TEXT
+    )
     return used_ids

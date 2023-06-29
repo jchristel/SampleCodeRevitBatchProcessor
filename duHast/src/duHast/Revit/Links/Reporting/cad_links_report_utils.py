@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains utility function(s) for CAD link reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,7 +33,7 @@ from duHast.Utilities import files_io as fileIO
 
 
 def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
-    '''
+    """
     Extract the file path from CAD link type.
     :param cad_link_name: The cad link name
     :type cad_link_name: str
@@ -44,17 +44,21 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
     :return: The fully qualified file path if the cad link type is a valid external reference.\
         Otherwise it will return 'unknown'.
     :rtype: str
-    '''
+    """
 
-    #default values
-    model_path = 'unknown'
+    # default values
+    model_path = "unknown"
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.CADLinkType):
-        if (rdb.Element.Name.GetValue(p) == cad_link_name):
+        if rdb.Element.Name.GetValue(p) == cad_link_name:
             try:
                 ex_file_ref = p.GetExternalFileReference()
-                if(ex_file_ref.IsValidExternalFileReference(ex_file_ref)):
-                    model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(ex_file_ref.GetPath())
-                    model_path = fileIO.convert_relative_path_to_full_path(model_path, revit_file_path)
+                if ex_file_ref.IsValidExternalFileReference(ex_file_ref):
+                    model_path = rdb.ModelPathUtils.ConvertModelPathToUserVisiblePath(
+                        ex_file_ref.GetPath()
+                    )
+                    model_path = fileIO.convert_relative_path_to_full_path(
+                        model_path, revit_file_path
+                    )
                 break
             except Exception as e:
                 model_path = str(e)
@@ -62,7 +66,7 @@ def get_cad_link_type_data_by_name(cad_link_name, doc, revit_file_path):
 
 
 def get_cad_report_data(doc, revit_file_path):
-    '''
+    """
     Gets CAD link data to be written to report file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -70,7 +74,7 @@ def get_cad_report_data(doc, revit_file_path):
     :type revit_file_path: str
     :return: list of list of cad link properties.
     :rtype: list of list of str
-    '''
+    """
 
     data = []
     collector = get_all_cad_link_instances(doc)
@@ -85,18 +89,23 @@ def get_cad_report_data(doc, revit_file_path):
         l_draw_layer_param = c.get_Parameter(rdb.BuiltInParameter.IMPORT_BACKGROUND)
         # get shared location?
         # lSharedParam = cadLink.get_Parameter(BuiltInParameter.GEO_LOCATION)
-        is_view_specific= c.ViewSpecific
+        is_view_specific = c.ViewSpecific
         owner_view_id = c.OwnerViewId
-        link_type_data = get_cad_link_type_data_by_name(l_name_param.AsString(), doc, revit_file_path)
-        data.append([
-            revit_file_path,
-            str(c.Id),
-            str(l_name_param.AsString()),
-            str(is_view_specific),
-            str(owner_view_id),
-            str(ws_param.AsValueString()),
-            str(do_param.AsString()),
-            str(c.Pinned),
-            str(l_draw_layer_param.AsValueString()),
-            link_type_data])
+        link_type_data = get_cad_link_type_data_by_name(
+            l_name_param.AsString(), doc, revit_file_path
+        )
+        data.append(
+            [
+                revit_file_path,
+                str(c.Id),
+                str(l_name_param.AsString()),
+                str(is_view_specific),
+                str(owner_view_id),
+                str(ws_param.AsValueString()),
+                str(do_param.AsString()),
+                str(c.Pinned),
+                str(l_draw_layer_param.AsValueString()),
+                link_type_data,
+            ]
+        )
     return data

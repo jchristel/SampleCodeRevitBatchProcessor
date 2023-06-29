@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A class used to return status, messages and objects back to a caller.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,9 +6,9 @@ A class used to return status, messages and objects back to a caller.
 
 A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,97 +32,98 @@ A class used to return the value if any, a message and the status of a method (t
 
 from duHast.Utilities.Objects import base
 
-class Result (base.Base): 
+
+class Result(base.Base):
     def __init__(self):
-        '''
+        """
         Class constructor.
 
         - message default value is -
         - status default value is True
         - result default value is []
-        
-        '''
 
-        super(Result, self).__init__()  
+        """
 
-        self.message = '-'
+        super(Result, self).__init__()
+
+        self.message = "-"
         self.status = True
         self.result = []
-    
+
     def append_message(self, message):
-        '''
+        """
         Appends a new line and new message string to the existing message.
 
         First message appended will replace the default value of -
 
         :param message: The new message to be appended.
         :type message: str
-        '''
+        """
         try:
-            if(self.message == '-'):
+            if self.message == "-":
                 self.message = message
             else:
-                self.message = self.message + '\n' + message
+                self.message = self.message + "\n" + message
         except Exception as e:
-            print (str(e))
+            print(str(e))
             pass
 
     def update(self, otherResult):
-        '''
+        """
         Will use the past in result instance to update the instance.
 
-        - .status is using a logical AND 
+        - .status is using a logical AND
         - .message is using append (unless other message is default '-')
         - .result is looping over past in result and adding it one by one to this .result list (ignores None)
 
         :param otherResult: Another result class instance.
         :type otherResult: SampleBatchProcessorCode.Result
-        '''
+        """
         try:
             # check if default message string, if so do not update
-            if(otherResult.message != '-'):
+            if otherResult.message != "-":
                 self.append_message(otherResult.message)
             self.status = self.status & otherResult.status
             # check if result property that was passed in has values
-            if(otherResult.result is not None and len(otherResult.result)>0):
+            if otherResult.result is not None and len(otherResult.result) > 0:
                 for item in otherResult.result:
                     self.result.append(item)
         except Exception as e:
-            print (str(e))
+            print(str(e))
             pass
-    
-    def update_sep (self, status, message):
-        '''
+
+    def update_sep(self, status, message):
+        """
         Updates the .status and .message property only.
-        
-        - .status is using a logical AND 
+
+        - .status is using a logical AND
         - .message is using append (unless other message is default '-')
-        
+
         :param status: The status to be added.
         :type status: bool
         :param message: The message to be appended.
         :type message: str
-        '''
-        
+        """
+
         try:
             self.append_message(message)
             # self.message = self.message + '\n' + message
             self.status = self.status & status
         except Exception as e:
-            print (str(e))
+            print(str(e))
             pass
 
     def update_status(self, status):
-        '''
+        """
         Update .status only.
 
-        - .status is using a logical AND 
+        - .status is using a logical AND
 
         :param status: The status to be added.
         :type status: bool
-        '''
+        """
         try:
             self.status = self.status & status
         except Exception as e:
-            print (str(e))
+            print(str(e))
             pass

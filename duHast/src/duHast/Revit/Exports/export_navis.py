@@ -105,14 +105,14 @@ def setup_nwc_default_export_option_shared_by_view():
     """
 
     return setup_nwc_custom_export_option(
-        using_shared_coordinates=True, 
-        export_entire_model=False, 
-        export_links=False, 
-        split_model_by_level=True, 
+        using_shared_coordinates=True,
+        export_entire_model=False,
+        export_links=False,
+        split_model_by_level=True,
         export_parts=True,
-        export_room_as_attributes=False, 
-        export_room_geometry=False, 
-        find_missing_materials=False
+        export_room_as_attributes=False,
+        export_room_geometry=False,
+        find_missing_materials=False,
     )
 
 

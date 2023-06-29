@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to sorting Revit building pads by types. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,10 +26,13 @@ This module contains a number of helper functions relating to sorting Revit buil
 #
 #
 
-from duHast.Revit.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
+from duHast.Revit.BuildingPads.Utility import (
+    RevitBuildingPadsFilter as rBuildingPadFilter,
+)
+
 
 def build_building_pad_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in building pad family type names.
     TODO: Use more generic code.
@@ -39,11 +42,11 @@ def build_building_pad_type_dictionary(collector, dic):
     :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
     :return: A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.
     :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
@@ -51,14 +54,14 @@ def build_building_pad_type_dictionary(collector, dic):
 
 
 def sort_building_pad_types_by_family_name(doc):
-    '''
+    """
     Returns a dictionary of all building pad types in the model where key is the build in wall family name, values are ids of associated wall types.
     TODO: Use more generic code.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A dictionary containing key: built in building pad type family name, value: list of ids belonging to that type.
     :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
-    '''
+    """
 
     # get all building pad Type Elements
     wts = rBuildingPadFilter._get_building_pad_types_by_class(doc)

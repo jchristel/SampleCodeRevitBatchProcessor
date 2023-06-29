@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit ramps utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,7 +30,7 @@ from duHast.Revit.Ramps.ramps import get_all_ramp_types_by_category
 
 
 def build_ramp_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param collector: A filtered element collector containing ramp type elements of family symbols representing in place families
@@ -39,11 +39,11 @@ def build_ramp_type_dictionary(collector, dic):
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
@@ -51,14 +51,14 @@ def build_ramp_type_dictionary(collector, dic):
 
 
 def sort_ramp_types_by_family_name(doc):
-    '''
+    """
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     # get all ramp types including in place ramp families
     wts_two = get_all_ramp_types_by_category(doc)

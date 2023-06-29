@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Purge action storage class for Revit purge unused.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,21 +27,22 @@ Purge action storage class for Revit purge unused.
 #
 
 
-#import System
-#import clr
+# import System
+# import clr
 
 from duHast.Utilities.Objects import base
 
-class PurgeAction(base.Base): 
+
+class PurgeAction(base.Base):
     def __init__(
-        self, 
-        purgeTransactionName, # the function which returns all element ids to be purged
-        purgeIdsGetter, # the function which returns all element ids to be purged
-        purgeReportHeader, # human readable report header for each test action
-        testReportHeader, # human readable report header for each test action
-        testIdsGetter # functions which returns all available type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
-    ): 
-        '''
+        self,
+        purgeTransactionName,  # the function which returns all element ids to be purged
+        purgeIdsGetter,  # the function which returns all element ids to be purged
+        purgeReportHeader,  # human readable report header for each test action
+        testReportHeader,  # human readable report header for each test action
+        testIdsGetter,  # functions which returns all available type ids in model of same category as purge action. To be used to compare ids before and after coded purge with ids before and after revit built in purge
+    ):
+        """
         Class constructor.
 
         :param purgeTransactionName: The name of the transaction to purge elements under.
@@ -55,11 +56,11 @@ class PurgeAction(base.Base):
         :param testIdsGetter: functions which returns all available type ids in model of same category as purge action.\
             To be used to compare ids before and after code purge with ids before and after revit built in purge
         :type testIdsGetter: func
-        '''
+        """
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(PurgeAction, self).__init__() 
+        super(PurgeAction, self).__init__()
 
         self.purge_transaction_name = purgeTransactionName
         self.purge_ids_getter = purgeIdsGetter

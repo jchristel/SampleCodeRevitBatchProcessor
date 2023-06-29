@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A file selection GUI.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,8 +27,9 @@ A file selection GUI.
 #
 
 import clr
-clr.AddReference('System.Windows.Forms')
-clr.AddReference('IronPython.Wpf')
+
+clr.AddReference("System.Windows.Forms")
+clr.AddReference("IronPython.Wpf")
 
 # import WPF creator and base window
 import wpf
@@ -36,9 +37,9 @@ from System import Windows
 import ctypes
 
 # import settings class
-#from duHast.UI import FileSelectSettings as set
+# from duHast.UI import FileSelectSettings as set
 def Mbox(title, text, style):
-    '''
+    """
     A simple win forms message box.
 
     :param title: The title of the message box.
@@ -51,14 +52,15 @@ def Mbox(title, text, style):
 
     :return: A win form message box.
     :rtype: _type_
-    '''
+    """
 
     return ctypes.windll.user32.MessageBoxW(0, text, title, style)
-    
+
+
 # UI class
-class MyWindow (Windows.Window):
+class MyWindow(Windows.Window):
     def __init__(self, xaml_full_file_name, revitFiles, settings):
-        '''
+        """
         Class constructor
 
         :param xaml_full_file_name: Fully qualified file path to wpf XAML file.
@@ -67,9 +69,9 @@ class MyWindow (Windows.Window):
         :type revitFiles: [str]
         :param settings: A settings object.
         :type settings: :class:`.FileSelectionSettings`
-        '''
-        
-        wpf.LoadComponent(self,xaml_full_file_name)
+        """
+
+        wpf.LoadComponent(self, xaml_full_file_name)
 
         # populate fields
         self.selectedFiles = []
@@ -80,9 +82,9 @@ class MyWindow (Windows.Window):
         self.tbFileType.Text = settings.revit_file_extension
         self.tbNoOfFiles.Text = str(settings.output_file_num)
         self.cbInclSubDirs.IsChecked = settings.incl_sub_dirs
-        
+
     def BtnOK(self, sender, EventArgs):
-        '''
+        """
         Ok button event handler.
 
         Gets the selected rows of files and adds them to .selectedFiles property
@@ -92,26 +94,26 @@ class MyWindow (Windows.Window):
         :type sender: _type_
         :param EventArgs: _description_
         :type EventArgs: _type_
-        '''
+        """
 
         # get selected items
         rows = self.files.SelectedItems
-        if(rows != None and len(rows) > 0):
+        if rows != None and len(rows) > 0:
             self.selectedFiles = []
             for row in rows:
                 # get the original file element
                 for o_rev in self.revitfiles:
-                    if(o_rev.name == row.name):
+                    if o_rev.name == row.name:
                         self.selectedFiles.append(o_rev)
                         break
             # Mbox('ok',str(len(self.selectedFiles)), 1)
             self.DialogResult = True
             self.Close()
         else:
-            Mbox('Attention','No files selected', 1)
-    
+            Mbox("Attention", "No files selected", 1)
+
     def BtnCancel(self, sender, EventArgs):
-        '''
+        """
         Cancel button event handler.
         Sets the dialogue result value to False.
 
@@ -119,8 +121,8 @@ class MyWindow (Windows.Window):
         :type sender: _type_
         :param EventArgs: _description_
         :type EventArgs: _type_
-        '''
-        
-        #print('cancel')
+        """
+
+        # print('cancel')
         self.DialogResult = False
         self.Close()

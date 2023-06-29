@@ -1,12 +1,12 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit API utility functions to set parameter values.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,22 +32,24 @@ from duHast.Utilities.Objects import result as res
 
 # import everything from Autodesk Revit DataBase namespace (Revit API)
 import Autodesk.Revit.DB as rdb
+
 # utilities
 from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Revit.Common import transaction as rTran
 
 # type checker
-#from typing import List, Callable
+# from typing import List, Callable
 
-#----------------------------------------parameters value setters -----------------------------------------------
+# ----------------------------------------parameters value setters -----------------------------------------------
+
 
 def set_parameter_value(
-    para, 
-    value_as_string, # type: str
+    para,
+    value_as_string,  # type: str
     doc,
-    in_transaction = rTran.in_transaction
-    ):
-    '''
+    in_transaction=rTran.in_transaction,
+):
+    """
     Sets the parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
     Changing a parameter value requires this action to run inside a transaction.
@@ -65,26 +67,26 @@ def set_parameter_value(
 
     ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters
 
-    :return: 
+    :return:
         Result class instance.
 
         - Set parameter status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
-        
+
         On exception:
-        
+
         - Set parameter.status (bool) will be False.
         - Set parameter.message will contain the exception message.
 
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     old_value = rParaGet.get_parameter_value(para)
-    transaction_name = 'Update to parameter value'
+    transaction_name = "Update to parameter value"
     # different parameter storage types will require different actions due to value type past in is a string which will need converting
     # first before applied to the parameter
-    if(para.StorageType == rdb.StorageType.ElementId):
+    if para.StorageType == rdb.StorageType.ElementId:
         new_id = rdb.ElementId(int(value_as_string))
         # changing parameter value is required to run inside a transaction
         def action():
@@ -92,16 +94,23 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.Set(new_id)
-                action_return_value.message = 'Changed parameter value of type Id.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
+                action_return_value.message = (
+                    "Changed parameter value of type Id.[ {} ] from: {} to: {}".format(
+                        para.Definition.Name, old_value, value_as_string
+                    )
+                )
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(
+                    False, "Failed with exception: {}".format(e)
+                )
             return action_return_value
-        transaction = rdb.Transaction(doc,transaction_name)
+
+        transaction = rdb.Transaction(doc, transaction_name)
         return_value = in_transaction(transaction, action)
-    elif(para.StorageType == rdb.StorageType.Double):
+    elif para.StorageType == rdb.StorageType.Double:
         # THIS IS THE KEY:  Use SetValueString instead of Set.  Set requires your data to be in
-        # whatever internal units of measure Revit uses. SetValueString expects your value to 
-        # be in whatever the current DisplayUnitType (units of measure) the document is set to 
+        # whatever internal units of measure Revit uses. SetValueString expects your value to
+        # be in whatever the current DisplayUnitType (units of measure) the document is set to
         # for the UnitType associated with the parameter.
         #
         # So SetValueString is basically how the Revit GUI works.
@@ -109,47 +118,68 @@ def set_parameter_value(
             action_return_value = res.Result()
             try:
                 para.SetValueString(value_as_string)
-                action_return_value.message = 'Changed parameter value of type double.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
+                action_return_value.message = "Changed parameter value of type double.[ {} ] from: {} to: {}".format(
+                    para.Definition.Name, old_value, value_as_string
+                )
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(
+                    False, "Failed with exception: {}".format(e)
+                )
             return action_return_value
-        transaction = rdb.Transaction(doc,transaction_name)
+
+        transaction = rdb.Transaction(doc, transaction_name)
         return_value = in_transaction(transaction, action)
-    elif (para.StorageType == rdb.StorageType.Integer):
+    elif para.StorageType == rdb.StorageType.Integer:
+
         def action():
             action_return_value = res.Result()
             try:
                 para.Set(int(value_as_string))
-                action_return_value.message = 'Changed parameter value of type integer.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
+                action_return_value.message = "Changed parameter value of type integer.[ {} ] from: {} to: {}".format(
+                    para.Definition.Name, old_value, value_as_string
+                )
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(
+                    False, "Failed with exception: {}".format(e)
+                )
             return action_return_value
-        transaction = rdb.Transaction(doc,transaction_name)
+
+        transaction = rdb.Transaction(doc, transaction_name)
         return_value = in_transaction(transaction, action)
-    elif (para.StorageType == rdb.StorageType.String):
+    elif para.StorageType == rdb.StorageType.String:
+
         def action():
             action_return_value = res.Result()
             try:
                 para.Set(value_as_string)
-                action_return_value.message = 'Changed parameter value of type string.[ {} ] from: {} to: {}'.format(para.Definition.Name ,old_value ,value_as_string)
+                action_return_value.message = "Changed parameter value of type string.[ {} ] from: {} to: {}".format(
+                    para.Definition.Name, old_value, value_as_string
+                )
             except Exception as e:
-                action_return_value.update_sep(False, 'Failed with exception: {}'.format(e))
+                action_return_value.update_sep(
+                    False, "Failed with exception: {}".format(e)
+                )
             return action_return_value
-        transaction = rdb.Transaction(doc,transaction_name)
+
+        transaction = rdb.Transaction(doc, transaction_name)
         return_value = in_transaction(transaction, action, doc)
-    else:  
+    else:
         # dead end
-        return_value.update_sep(False, 'Dont know what to do with this storage type: {}'.format(para.StorageType))
+        return_value.update_sep(
+            False,
+            "Dont know what to do with this storage type: {}".format(para.StorageType),
+        )
     return return_value
 
+
 def set_built_in_parameter_value(
-    doc, 
-    element, 
-    built_in_parameter_def, 
-    value_as_string, # type: str
-    parameter_value_setter = set_parameter_value
-    ):
-    '''
+    doc,
+    element,
+    built_in_parameter_def,
+    value_as_string,  # type: str
+    parameter_value_setter=set_parameter_value,
+):
+    """
     Sets the built-in parameter value by trying to convert the past in string representing the value into the appropriate value type.
 
     Changing a parameter value requires this action to run inside a transaction.
@@ -165,30 +195,30 @@ def set_built_in_parameter_value(
     :param parameter_value_setter:
         The function which takes the parameter as an argument and changes it's value to.
         The function needs to accept these args: parameter, new parameter value as string, document
-    :type parameter_value_setter: function 
+    :type parameter_value_setter: function
     :raise: As per value setter method.
-    
+
     ToDo: This needs updating for Revit 2022+ to take into account changes in Revit API: Forge Parameters
 
-    :return: 
+    :return:
         Result class instance.
 
         - Set parameter status (bool) returned in result.status. False if an exception occurred, or parameter does not exist on element, otherwise True.
         - Result.message property updated in format: Changed parameter value of type x ['parameter name'] : 'old value' to: 'new value'.
-        
+
         On exception:
-        
+
         - Set parameter.status (bool) will be False.
         - Set parameter.message will contain the exception message.
-        
+
     :rtype: :class:`.Result`
-    '''
-    
+    """
+
     return_value = res.Result()
-    return_value.update_sep(False, 'Parameter not found')
+    return_value.update_sep(False, "Parameter not found")
     paras = element.GetOrderedParameters()
     for para in paras:
-        if(para.Definition.BuiltInParameter == built_in_parameter_def):
+        if para.Definition.BuiltInParameter == built_in_parameter_def:
             return_value = parameter_value_setter(para, value_as_string, doc)
             break
     return return_value

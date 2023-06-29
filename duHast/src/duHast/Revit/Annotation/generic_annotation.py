@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit generic annotation helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -39,30 +39,35 @@ import Autodesk.Revit.DB as rdb
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
 def get_all_generic_annotation_types_by_category(doc):
-    '''
+    """
     This will return a filtered element collector of all GenericAnnotation types in the model.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: _description_
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_GenericAnnotation).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_GenericAnnotation)
+        .WhereElementIsElementType()
+    )
     return collector
+
 
 # returns all  GenericAnnotation types in a model
 # doc:   current model document
 def get_all_generic_annotation_type_ids_by_category(doc):
-    '''
+    """
     This will return a list of all GenericAnnotation types (symbols) id's in the model excluding shared families.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    
+
     :return: _description_
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col = get_all_generic_annotation_types_by_category(doc)
@@ -70,12 +75,14 @@ def get_all_generic_annotation_type_ids_by_category(doc):
         parameter_match = False
         # get the family object to check whether it is a shared family
         fam = c.Family
-        id =  rParaGet.get_built_in_parameter_value(fam, rdb.BuiltInParameter.FAMILY_SHARED)
-        if(id != None):
+        id = rParaGet.get_built_in_parameter_value(
+            fam, rdb.BuiltInParameter.FAMILY_SHARED
+        )
+        if id != None:
             parameter_match = True
-            if(id == 'No' and c.Id not in ids):
+            if id == "No" and c.Id not in ids:
                 ids.append(c.Id)
-        if(parameter_match == False):
+        if parameter_match == False:
             # family cant be of type shared...
             ids.append(c.Id)
     return ids

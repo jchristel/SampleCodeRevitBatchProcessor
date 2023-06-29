@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of base element filter functions relating to Revit building pads. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,12 +29,13 @@ This module contains a number of base element filter functions relating to Revit
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
+
 def _get_all_building_pad_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all BuildingPad types in the model.
-    
+
     - Basic BuildingPad
-    
+
     Filters by category.
 
     :param doc: Current Revit model document.
@@ -42,17 +43,22 @@ def _get_all_building_pad_types_by_category(doc):
 
     :return: A filtered element collector containing building pad types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_BuildingPad)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def _get_building_pad_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all building pad types in the model:
 
     - Basic BuildingPad
-    
+
     Filters by class.
     Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.
 
@@ -61,6 +67,6 @@ def _get_building_pad_types_by_class(doc):
 
     :return: A filtered element collector containing building pad types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPadType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPadType)

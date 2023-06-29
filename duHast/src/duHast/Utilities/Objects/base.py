@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Base class for objects.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,10 +8,10 @@ This class provides some utility functions to all child classes:
 - __repr__() a way of providing detailed debug output through print
 _ to_json() A json formatted dump of the class
 
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,33 +35,36 @@ _ to_json() A json formatted dump of the class
 
 import json
 
-class Base(object):
 
+class Base(object):
     def __init__(self, **kwargs):
-        '''
+        """
         Class constructor
-        '''
+        """
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(Base, self).__init__(**kwargs)  
-        
+        super(Base, self).__init__(**kwargs)
+
     def __repr__(self):
-        '''
+        """
         Enables detailed debug output of all class properties using: rep(obj)
 
         :return: A string listing class properties and their respective values.
         :rtype: string
-        '''
+        """
 
-        return '{}({})'.format(self.__class__.__name__, ', '.join('{}={!r}'.format(k, v) for k, v in self.__dict__.items()))
-    
+        return "{}({})".format(
+            self.__class__.__name__,
+            ", ".join("{}={!r}".format(k, v) for k, v in self.__dict__.items()),
+        )
+
     def to_json(self):
-        '''
+        """
         Convert the instance of this class to json.
-        
+
         :return: A Json object.
         :rtype: json
-        '''
+        """
 
-        return json.dumps(self, indent = None, default=lambda o: o.__dict__)
+        return json.dumps(self, indent=None, default=lambda o: o.__dict__)

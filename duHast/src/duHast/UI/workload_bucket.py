@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A work load bucket.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,9 +6,9 @@ A work load bucket.
 Workload buckets are used to distribute file processing evenly between parallel running batch processor\
     sessions based on Revit file size.
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,9 +33,9 @@ Workload buckets are used to distribute file processing evenly between parallel 
 from duHast.Utilities.Objects import base
 
 # a class used to store work load items
-class WorkloadBucket(base.Base): 
-    def __init__(self): 
-        '''
+class WorkloadBucket(base.Base):
+    def __init__(self):
+        """
         Class constructor.
 
         Initializes this class with:
@@ -43,37 +43,43 @@ class WorkloadBucket(base.Base):
         - .workload_value = 0
         - .items = []
 
-        '''
-        
+        """
+
         # ini super class to allow multi inheritance in children!
-        super(WorkloadBucket, self).__init__() 
+        super(WorkloadBucket, self).__init__()
 
         self.workload_value = 0
         self.items = []
-    
+
     def set_workload_value(self, value):
-        '''
+        """
         Sets the buckets overall workload value.
 
         :param value: An integer representing the workload value of this bucket.
         :type value: int
-        '''
+        """
 
         try:
             self.workload_value = value
         except Exception as e:
-            print ('Failed to set workload value: {} with exception: {}'.format(value, e))
+            print(
+                "Failed to set workload value: {} with exception: {}".format(value, e)
+            )
             pass
-    
+
     def add_item(self, value):
-        '''
+        """
         Adds an item to the workload list.
 
         :param value: Adds an item to the workload list.
         :type value: foo
-        '''
+        """
         try:
             self.items.append(value)
         except Exception as e:
-            print ('Failed to add item: {} to workload bucket with exception: {}'.format(value, e))
+            print(
+                "Failed to add item: {} to workload bucket with exception: {}".format(
+                    value, e
+                )
+            )
             pass

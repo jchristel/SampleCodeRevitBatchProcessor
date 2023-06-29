@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit stair run elements. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,31 +32,31 @@ import Autodesk.Revit.DB.Architecture as rdbA
 from duHast.Revit.Common import common as com
 
 #: list of built in parameters for stair run type
-STAIR_RUN_TYPE_PARAS = [
-    rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE
-]
+STAIR_RUN_TYPE_PARAS = [rdb.BuiltInParameter.STAIRSTYPE_RUN_TYPE]
+
 
 def get_stair_run_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Stair run types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing stair run types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsRunType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsRunType)
+
 
 def get_stair_run_types_ids_by_class(doc):
-    '''
+    """
     Gets all Stair run element type ids available in model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing stair run types.
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
-    col_class = get_stair_run_types_by_class (doc)
-    ids = com.get_ids_from_element_collector (col_class)
+    col_class = get_stair_run_types_by_class(doc)
+    ids = com.get_ids_from_element_collector(col_class)
     return ids

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a base helper functions relating to Revit view types. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,13 +31,13 @@ import Autodesk.Revit.DB as rdb
 
 
 def _get_view_types(doc):
-    '''
+    """
     Returns all view family types in a model
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.ViewFamilyType)
     return collector

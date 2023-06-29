@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any Revit railing reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,4 +28,4 @@ This module contains the header row for any Revit railing reports.
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_RAILINGS_HEADER = ['HOSTFILE', 'RAILINGTYPEID', 'RAILINGTYPENAME']
+REPORT_RAILINGS_HEADER = ["HOSTFILE", "RAILINGTYPEID", "RAILINGTYPENAME"]

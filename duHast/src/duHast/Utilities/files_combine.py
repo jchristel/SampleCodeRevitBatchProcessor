@@ -87,10 +87,10 @@ def combine_files(
             file_counter += 1
 
 
-def append_to_file(source_file, append_file, ignore_first_row = False):
+def append_to_file(source_file, append_file, ignore_first_row=False):
     """
     Appends one text file to another. Assumes same number of headers (columns) in both files.
-    
+
     :param source_file: The fully qualified file path of the file to which the other file will be appended.
     :type source_file: str
     :param append_file: The fully qualified file path of the file to be appended.
@@ -108,19 +108,19 @@ def append_to_file(source_file, append_file, ignore_first_row = False):
         lines = fp.readlines()
         fp.close()
         with codecs.open(source_file, "a", encoding="utf-8") as f:
-            if(ignore_first_row == False):
+            if ignore_first_row == False:
                 for line in lines:
                     f.write(line)
             else:
                 # check if only a header row in file?
-                if(len(lines)> 1):
+                if len(lines) > 1:
                     for x in range(1, len(lines)):
                         f.write(lines[x])
                         # get out to avoid out of index exception
-                        # if I change the for loop to be 
+                        # if I change the for loop to be
                         # for x in range(1, len(lines)-1):
                         # it will not process files with two rows only ( a header and a single data row! )
-                        if(x == len(lines)-1):
+                        if x == len(lines) - 1:
                             break
 
     except Exception:

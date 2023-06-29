@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any (future) detail items reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,4 +28,4 @@ This module contains the header row for any (future) detail items reports.
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_GROUPS_HEADER = ['HOSTFILE','ID', 'ITEM TYPE']
+REPORT_GROUPS_HEADER = ["HOSTFILE", "ID", "ITEM TYPE"]

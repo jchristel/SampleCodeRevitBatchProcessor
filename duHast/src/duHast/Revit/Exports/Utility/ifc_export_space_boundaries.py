@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IFC export space boundaries settings class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,13 +28,15 @@ IFC export space boundaries settings class.
 
 from duHast.Utilities.Objects import base
 
+
 class IFCSpaceBoundaries(base.Base):
-    '''
+    """
     Using enum class for IFC space boundary options.
-    '''
+    """
+
     no_boundaries = 0
     first_level = 1
     second_level = 2
 
     def __init__(self):
-        super(IFCSpaceBoundaries, self).__init__()  
+        super(IFCSpaceBoundaries, self).__init__()

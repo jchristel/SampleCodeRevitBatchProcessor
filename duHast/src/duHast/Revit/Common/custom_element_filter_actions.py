@@ -63,7 +63,7 @@ def action_element_property_contains_any_of_values(test_values, test, output):
         try:
             element = doc.GetElement(element_id)
             for value in test_values:
-                if (test(value, element)):
+                if test(value, element):
                     flag = True
                     break
         except Exception as e:

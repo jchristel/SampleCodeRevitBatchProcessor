@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any Revit shared parameter reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,4 +29,10 @@ This module contains the header row for any Revit shared parameter reports.
 
 # -------------------------------------------- common variables --------------------
 #: headers used in reports
-REPORT_SHARED_PARAMETERS_HEADER = ['HOSTFILE', 'GUID', 'ID', 'NAME', 'PARAMETERBINDINGS']
+REPORT_SHARED_PARAMETERS_HEADER = [
+    "HOSTFILE",
+    "GUID",
+    "ID",
+    "NAME",
+    "PARAMETERBINDINGS",
+]

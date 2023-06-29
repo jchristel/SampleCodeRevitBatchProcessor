@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a tuple used to store settings retrieved from a file.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,4 +30,4 @@ from collections import namedtuple
 
 
 # tuples containing base family data read from file
-PARAMETER_DATA = namedtuple('parameterData', 'name isInstance builtInParameterGroup')
+PARAMETER_DATA = namedtuple("parameterData", "name isInstance builtInParameterGroup")

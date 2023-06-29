@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data storage class for Revit design option properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,48 +29,51 @@ Data storage class for Revit design option properties.
 import json
 from duHast.Data.Utils import data_base
 
-class DataDesignSetOption(data_base.DataBase):
-    data_type = 'design_set'
 
-    def __init__(self, j = {}):
-        '''
+class DataDesignSetOption(data_base.DataBase):
+    data_type = "design_set"
+
+    def __init__(self, j={}):
+        """
         Class constructor.
 
         :param j: A json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
-        '''
+        """
 
         # store data type  in base class
         super(DataDesignSetOption, self).__init__(DataDesignSetOption.data_type)
 
         # check if any data was past in with constructor!
-        if(j != None and len(j) > 0 ):
-            # check type of data that came in: 
-            if(type(j) == str):
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
                 # a string
                 j = json.loads(j)
-            elif(type(j) == dict):
+            elif type(j) == dict:
                 # no action required
                 pass
             else:
-                raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('designSetName' in j ):
-                self.set_name = j['designSetName']
-            else:
-                self.set_name = '-'
-        
-            if('designOptionName' in j ):
-                self.option_name = j['designOptionName']
-            else:
-                self.option_name = '-'
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
 
-            if('isPrimary' in j ):
-                self.is_primary = j['isPrimary']
+            if "designSetName" in j:
+                self.set_name = j["designSetName"]
+            else:
+                self.set_name = "-"
+
+            if "designOptionName" in j:
+                self.option_name = j["designOptionName"]
+            else:
+                self.option_name = "-"
+
+            if "isPrimary" in j:
+                self.is_primary = j["isPrimary"]
             else:
                 self.is_primary = True
         else:
             # set default values
-            self.set_name = '-'
-            self.option_name = '-'
+            self.set_name = "-"
+            self.option_name = "-"
             self.is_primary = True

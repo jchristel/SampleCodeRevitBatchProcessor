@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains utility function(s) for level reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,7 +35,7 @@ from duHast.Utilities.unit_conversion import convert_imperial_feet_to_metric_mm
 
 
 def get_level_report_data(doc, revitFilePath):
-    '''
+    """
     Gets level data ready for being printed to file.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -43,14 +43,19 @@ def get_level_report_data(doc, revitFilePath):
     :type revitFilePath: str
     :return: list of list of revit level properties.
     :rtype: list of list of str
-    '''
+    """
 
     data = []
     for p in rdb.FilteredElementCollector(doc).OfClass(rdb.Level):
-        data.append([
-            revitFilePath,
-            str(p.Id.IntegerValue),
-            util.encode_ascii(p.Name),
-            util.encode_ascii(rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)),
-            str(convert_imperial_feet_to_metric_mm(p.Elevation))])
+        data.append(
+            [
+                revitFilePath,
+                str(p.Id.IntegerValue),
+                util.encode_ascii(p.Name),
+                util.encode_ascii(
+                    rWork.get_workset_name_by_id(doc, p.WorksetId.IntegerValue)
+                ),
+                str(convert_imperial_feet_to_metric_mm(p.Elevation)),
+            ]
+        )
     return data

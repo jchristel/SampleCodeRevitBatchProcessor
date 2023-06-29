@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions to process Revit BatchProcessor log files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,14 +35,14 @@ Helper functions to process Revit BatchProcessor log files.
 # process log file:
 #   - find files processed:
 #            11/12/2020 18:01:40 : Processing Revit file (1 of 1) in Revit 2020 session.
-#            11/12/2020 18:01:40 : 
+#            11/12/2020 18:01:40 :
 #            11/12/2020 18:01:40 : 	P:\something\FileName.rvt
 #            ....
 #            25/11/2020 09:37:34 : 	- Operation completed.
 #   - check whether an exception occurred when processing any of the above files:
-#       - file(s) not found 
+#       - file(s) not found
 #           "WARNING: The following Revit Files do not exist"
-#       - .net exception 
+#       - .net exception
 #           "ERROR: An error occurred while executing the task script!"
 #       - timed out occurred and revit process got killed
 #           "WARNING: Timed-out"
@@ -59,6 +59,7 @@ import json
 
 # custom result class from common library
 from duHast.Utilities.Objects import result as res
+
 # library from common library
 from duHast.Utilities import files_io as fileIO, files_get as fileGet
 
@@ -67,21 +68,21 @@ debug_mode_ = False
 
 #: Message snippets which indicate processing of a file went bad
 EXCEPTION_MESSAGES = [
-    'ERROR: An error occurred while executing the task script! Operation', # revit batch p message when script is buggy
-    'WARNING: Timed-out', # revit batch p message when revit times out
-    'Exception: [Exception]', # Revit Batch P message when an exception occurs
-    '\t- \tMessage: An unrecoverable error has occurred.  The program will now be terminated.', # Revit message when it crashes out
-    'Script Exception:' # custom script message...something the script was meant to do failed
+    "ERROR: An error occurred while executing the task script! Operation",  # revit batch p message when script is buggy
+    "WARNING: Timed-out",  # revit batch p message when revit times out
+    "Exception: [Exception]",  # Revit Batch P message when an exception occurs
+    "\t- \tMessage: An unrecoverable error has occurred.  The program will now be terminated.",  # Revit message when it crashes out
+    "Script Exception:",  # custom script message...something the script was meant to do failed
 ]
 
 # output...
-def output(message = ''):
+def output(message=""):
     if debug_mode_:
-        print (message)
+        print(message)
 
 
 def delete_log_data_files(directory_path):
-    '''
+    """
     Deletes all log marker files in a directory.
 
     :param directory_path: The directory path containing marker files to be deleted.
@@ -89,19 +90,20 @@ def delete_log_data_files(directory_path):
 
     :return: True if all files where deleted successfully, otherwise False.
     :rtype: bool
-    '''
+    """
 
     status = True
     # get files in directory
-    files_to_delete = fileGet.get_files_with_filter(directory_path,".txt")
-    if(len(files_to_delete) > 0):
+    files_to_delete = fileGet.get_files_with_filter(directory_path, ".txt")
+    if len(files_to_delete) > 0:
         status_delete = True
         for file in files_to_delete:
             status_delete = status_delete and fileIO.file_delete(file)
     return status
 
+
 def adjust_session_id_for_file_name(id):
-    '''
+    """
     Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it\
         can be used in a file name.
 
@@ -110,16 +112,17 @@ def adjust_session_id_for_file_name(id):
 
     :return: Re-formatted session id.
     :rtype: str
-    '''
+    """
 
     # remove colons
-    session_id_changed = id.replace(':','_')
+    session_id_changed = id.replace(":", "_")
     # remove chevrons
     session_id_changed = session_id_changed[1:-1]
     return session_id_changed
 
+
 def adjust_session_id_file_name_back(file_name_id):
-    '''
+    """
     Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a\
         file name using a batch processor supplied id.
 
@@ -128,18 +131,19 @@ def adjust_session_id_file_name_back(file_name_id):
 
     :return: A session id.
     :rtype: str
-    '''
+    """
 
     # re-instate colons
-    session_id_changed = file_name_id.replace('_',':')
+    session_id_changed = file_name_id.replace("_", ":")
     # remove chevrons
-    session_id_changed = '<' + session_id_changed + '>'
+    session_id_changed = "<" + session_id_changed + ">"
     return session_id_changed
 
+
 def write_session_id_marker_file(folder_path, session_id):
-    '''
-    Writes out an empty marker file in given directory. 
-    
+    """
+    Writes out an empty marker file in given directory.
+
     - File is of type .txt
     - File name is the batch processor session_id used to identify the log file belonging to this process.
 
@@ -150,9 +154,9 @@ def write_session_id_marker_file(folder_path, session_id):
 
     :return: True if marker file was written successfully, otherwise False.
     :rtype: bool
-    '''
+    """
 
-    file_name = os.path.join(folder_path, str(session_id)+'.txt')
+    file_name = os.path.join(folder_path, str(session_id) + ".txt")
     status = True
     try:
         f = open(file_name, "w")
@@ -161,8 +165,9 @@ def write_session_id_marker_file(folder_path, session_id):
         status = False
     return status
 
+
 def get_current_session_ids(folder_path):
-    '''
+    """
     Returns file names of all text files in a given directory representing session Ids.
 
     Files will be deleted immediately after reading
@@ -172,22 +177,25 @@ def get_current_session_ids(folder_path):
 
     :return: A list of ids in string format.
     :rtype: [str]
-    '''
+    """
     ids = []
-    file_list = glob.glob(folder_path + '\\*' + '.txt')
+    file_list = glob.glob(folder_path + "\\*" + ".txt")
     # delete marker files
     result_delete = True
     for fd in file_list:
-        if(debug_mode_ == False):
+        if debug_mode_ == False:
             result_delete = result_delete & fileIO.file_delete(fd)
-    if(not result_delete):
-        output ('Failed to delete a marker file!')
+    if not result_delete:
+        output("Failed to delete a marker file!")
     for f in file_list:
-        ids.append(adjust_session_id_file_name_back(Path.GetFileNameWithoutExtension(f)))
+        ids.append(
+            adjust_session_id_file_name_back(Path.GetFileNameWithoutExtension(f))
+        )
     return ids
 
+
 def get_log_files(list_of_session_ids):
-    '''
+    """
     Returns a list of fully qualified filepath to log files matching the provided session Ids.
 
     :param list_of_session_ids: List of session ids.
@@ -195,11 +203,13 @@ def get_log_files(list_of_session_ids):
 
     :return: List of fully qualified file path.
     :rtype: [str]
-    '''
+    """
 
     # save the current file in epoch
     time_now = time.time()
-    file_list = glob.glob(os.path.join(os.getenv('LOCALAPPDATA'),'BatchRvt') + '\\*' + '.log')
+    file_list = glob.glob(
+        os.path.join(os.getenv("LOCALAPPDATA"), "BatchRvt") + "\\*" + ".log"
+    )
     log_files = []
     if len(file_list) > 0:
         for l in file_list:
@@ -216,11 +226,12 @@ def get_log_files(list_of_session_ids):
                     if id_to_match == id_string:
                         log_files.append(l)
             else:
-                output('File is to old: ' + str(l))
+                output("File is to old: " + str(l))
     return log_files
 
+
 def get_session_id_from_log_file(file_path):
-    '''
+    """
     Reads the first two rows of a log file to get the session Id used.
 
     :param file_path: Fully qualified file path to log file
@@ -228,13 +239,13 @@ def get_session_id_from_log_file(file_path):
 
     :return: The session id, or if not not a log file: an empty string.
     :rtype: str
-    '''
+    """
 
     row_counter = 0
-    retrieved_id = ''
-    for line in open( file_path, 'r' ):
+    retrieved_id = ""
+    for line in open(file_path, "r"):
         # read row 2 only
-        if(row_counter == 1):
+        if row_counter == 1:
             data = json.loads(line)
             message = get_message_from_json(data)
             retrieved_id = get_id_from_row(message)
@@ -242,15 +253,16 @@ def get_session_id_from_log_file(file_path):
         row_counter += 1
     return retrieved_id
 
+
 def get_id_from_row(row):
-    '''
+    """
     Extracts the session Id from logfile row.
 
-    sample: 
+    sample:
     {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:27","utc":"05:49:27"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Session ID: <2020-12-17T05:49:27.559Z>"}}
 
     Note: There are two session id fields in thi string!
-    
+
     TODO: Do some error handling!
 
     :param row: A json formatted string with the session id in chevrons.
@@ -258,15 +270,16 @@ def get_id_from_row(row):
 
     :return: The session id.
     :rtype: str
-    '''
+    """
 
-    first = '<'
-    last = '>'
+    first = "<"
+    last = ">"
     t = get_text_between(row, first, last)
     return first + t + last
 
+
 def get_text_between(text, first, last):
-    '''
+    """
     Returns text in between characters
 
     :param text: Text to parse
@@ -278,17 +291,18 @@ def get_text_between(text, first, last):
 
     :return: string in between start and end.
     :rtype: str
-    '''
+    """
 
     start = text.index(first) + len(first)
     end = text.index(last, start)
     return text[start:end]
 
+
 def get_message_from_json(data):
-    '''
+    """
     Returns the outer message string from json formatted message field in log file.
 
-    sample: 
+    sample:
     {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:27","utc":"05:49:27"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Session ID: <2020-12-17T05:49:27.559Z>"}}
 
     This includes leading tab characters
@@ -298,14 +312,15 @@ def get_message_from_json(data):
 
     :return: The message string
     :rtype: str
-    '''
-    outer_message = data['message']
-    return outer_message['message']
+    """
+    outer_message = data["message"]
+    return outer_message["message"]
+
 
 def process_log_file(file_path):
-    '''
+    """
     Process revit batch processor session log file.
-    
+
     - find Revit files processed:
     - check whether an exception occurred when processing any of the above files.
 
@@ -315,7 +330,7 @@ def process_log_file(file_path):
     :return: returns list of arrays in format:
         [[processed Revit file name, status of processing (true or false), message]]
     :rtype: [[str]]
-    '''
+    """
 
     files_process_status = []
     # get all files processed
@@ -326,26 +341,29 @@ def process_log_file(file_path):
             files_not_found = get_files_not_found(files_processed)
             try:
                 # filter files_processed by files not found
-                files_to_check = filter_files_not_found(files_processed, files_not_found)
+                files_to_check = filter_files_not_found(
+                    files_processed, files_not_found
+                )
                 # check for exceptions during file processing
                 for file_to_check in files_to_check:
                     try:
                         status, message = get_process_status(file_to_check, file_path)
                     except Exception as e:
-                        output ('GetProcessStatus: ' + str(e))
+                        output("GetProcessStatus: " + str(e))
                     dummy = [file_to_check, status, message]
                     files_process_status.append(dummy)
                 # add files not found
                 for f in files_not_found:
-                    dummy = [f[0], False, ['File not found']]
+                    dummy = [f[0], False, ["File not found"]]
                     files_process_status.append(dummy)
             except Exception as e:
-                output ('FileToCheck: ' + str(e))
+                output("FileToCheck: " + str(e))
         except Exception as e:
-            output ('GetFilesNotFound: ' + str(e))
+            output("GetFilesNotFound: " + str(e))
     except Exception as e:
-        output ('GetFilesProcessed: ' + str(e))
+        output("GetFilesProcessed: " + str(e))
     return files_process_status
+
 
 # filtering files not found from overall file list
 #
@@ -354,18 +372,19 @@ def process_log_file(file_path):
 # returns a list of fully qualified file path (of files marked as found)
 def filter_files_not_found(files_processed, files_not_found):
     filtered_list = []
-    for file_name,status in files_processed:
+    for file_name, status in files_processed:
         flag = False
         for fn, fnStatus in files_not_found:
-            if(fn == file_name):
+            if fn == file_name:
                 flag = True
                 break
-        if (not flag):
+        if not flag:
             filtered_list.append(file_name)
     return filtered_list
 
+
 def get_process_status(file_to_check, log_file_path):
-    '''
+    """
     Reads a log file and checks whether any exception occurred when processing a specific revit file.
 
     :param file_to_check: Fully qualified file path of Revit file which was processed
@@ -379,22 +398,32 @@ def get_process_status(file_to_check, log_file_path):
         - message: the exception message recorded in the log file.
 
     :rtype: bool, str
-    '''
+    """
 
-    message = ['Found no match in log file']
+    message = ["Found no match in log file"]
     # flag indicating whether we managed to retrieve processing data for a file
     found_match = False
     json_data = read_log_file(log_file_path)
     # get data block showing how each file was processed
-    unformatted_revit_file_process_messages = get_log_blocks(json_data, '\t- Processing file (', ['\t- Task script operation completed.','\t- Operation aborted.'], True)
+    unformatted_revit_file_process_messages = get_log_blocks(
+        json_data,
+        "\t- Processing file (",
+        ["\t- Task script operation completed.", "\t- Operation aborted."],
+        True,
+    )
     process_status = True
     # loop over messages in this block and check for time out, and exception messages
-    for message_block in  unformatted_revit_file_process_messages:
+    for message_block in unformatted_revit_file_process_messages:
         # check if right file the file name
         # todo
         file_name = get_file_name_from_data_block(message_block)
-        if(file_name == file_to_check):
-            output('file to check: ' +str(file_to_check + '     file found: '+file_name) +'    is match '  +str(file_name == file_to_check))
+        if file_name == file_to_check:
+            output(
+                "file to check: "
+                + str(file_to_check + "     file found: " + file_name)
+                + "    is match "
+                + str(file_name == file_to_check)
+            )
             found_match = True
             # flag to show whether logs show any issues
             found_problem = False
@@ -402,22 +431,23 @@ def get_process_status(file_to_check, log_file_path):
                 output(m)
                 # check for exceptions
                 for exception_message in EXCEPTION_MESSAGES:
-                    if(exception_message in m):
+                    if exception_message in m:
                         process_status = False
                         found_problem = True
                         message = [m.strip()]
                         break
-            if (found_problem == False):
-                message = '[ok]'
+            if found_problem == False:
+                message = "[ok]"
                 process_status = True
     # check if a match for given file was found in log data
-    if(found_match == False):
+    if found_match == False:
         process_status = False
-        message = '[Failed to retrieve processing data for file.]'
+        message = "[Failed to retrieve processing data for file.]"
     return process_status, message
-        
+
+
 def get_file_name_from_data_block(message_block):
-    '''
+    """
     Extracts the file name from a process message block.
 
     :param message_block: list of json formatted rows representing all messages received during file process
@@ -425,30 +455,31 @@ def get_file_name_from_data_block(message_block):
 
     :return: The fully qualified file path of the file processed
     :rtype: str
-    '''
+    """
 
     # check if this is a cloud model
-    if('CLOUD MODEL' in message_block[0]):
-        #['\t- Processing file (1 of 1): CLOUD MODEL', '\t- ', '\t- \tProject ID: GUID', '\t- \tModel ID: GUID',...]
-        message_starter = '\t- \t'
-        file_name = message_block[3].Trim()[len(message_starter)-1:]
+    if "CLOUD MODEL" in message_block[0]:
+        # ['\t- Processing file (1 of 1): CLOUD MODEL', '\t- ', '\t- \tProject ID: GUID', '\t- \tModel ID: GUID',...]
+        message_starter = "\t- \t"
+        file_name = message_block[3].Trim()[len(message_starter) - 1 :]
     else:
         # ["\t- Processing file (x of y): file path"}},...]
-        message_starter = '\t- Processing file (x of y): '
-        file_name = message_block[0].Trim()[len(message_starter)-1:]
+        message_starter = "\t- Processing file (x of y): "
+        file_name = message_block[0].Trim()[len(message_starter) - 1 :]
     return file_name
 
+
 def get_files_processed(file_path):
-    '''
+    """
     Reads a batch processor logfile and extracts all file names of files processed.
-    
+
     :param file_path: The fully qualified file path to log file.
     :type file_path: str
 
     :return: a list lists containing The fully qualified file path for each file processed and their process status. True for no exception encountered, otherwise false.
         [[filepath, status]]
     :rtype: [[str, bool]]
-    '''
+    """
     # log file structure:
     # start of file list (file server):
     #   {"date":{"local":"17/12/2020","utc":"17/12/2020"},"time":{"local":"16:49:28","utc":"05:49:28"},"sessionId":"235e2180-dc33-4d61-8773-1005a59344c0","message":{"msgId":"","message":"Revit Files for processing (1):"}}
@@ -473,36 +504,47 @@ def get_files_processed(file_path):
     json_data = read_log_file(file_path)
     # get data block showing which files are to be processed
     # there should just be one ...
-    log_blocks = get_log_blocks(json_data, 'Revit Files for processing', ['Starting batch operation...'], False)
-    if(len(log_blocks) > 0):
+    log_blocks = get_log_blocks(
+        json_data, "Revit Files for processing", ["Starting batch operation..."], False
+    )
+    if len(log_blocks) > 0:
         unformatted_revit_file_process_messages = log_blocks[0]
         # parse data block and get list of files and file exists status
         # each file block is proceeded by an empty message row
         # last entry is also an empty message block!
         for x in range(len(unformatted_revit_file_process_messages)):
-            # check for start of data block 
+            # check for start of data block
             # Output('unformatted messages '+str(unformatted_revit_file_process_messages))
-            if(unformatted_revit_file_process_messages[x] == '' and x + 3 <= len(unformatted_revit_file_process_messages)):
+            if unformatted_revit_file_process_messages[x] == "" and x + 3 <= len(
+                unformatted_revit_file_process_messages
+            ):
                 # check whether cloud model or file server model
-                if('CLOUD MODEL' in unformatted_revit_file_process_messages[x + 1]):
+                if "CLOUD MODEL" in unformatted_revit_file_process_messages[x + 1]:
                     # get file data from next two rows
                     # substitute file name with file GUID, fake the status always exists
-                    dummy = [unformatted_revit_file_process_messages[x + 3],'File exists: YES']
+                    dummy = [
+                        unformatted_revit_file_process_messages[x + 3],
+                        "File exists: YES",
+                    ]
                 else:
                     # get file data from next two rows
-                    dummy = [unformatted_revit_file_process_messages[x + 1],unformatted_revit_file_process_messages[x + 2]]
+                    dummy = [
+                        unformatted_revit_file_process_messages[x + 1],
+                        unformatted_revit_file_process_messages[x + 2],
+                    ]
                 list_of_files.append(get_file_data(dummy))
     return list_of_files
+
 
 # method parsing two rows of json formatted data
 #
 # data list of 2 rows of Json formatted data
 # sample of file system:
-#18/05/2021 15:57:53 : 	File exists: YES
-#18/05/2021 15:57:53 : 	File size: 199.38MB
+# 18/05/2021 15:57:53 : 	File exists: YES
+# 18/05/2021 15:57:53 : 	File size: 199.38MB
 # sample of BIM360:
-#18/05/2021 15:37:23 : 	Project ID: a valid guid
-#18/05/2021 15:37:23 : 	Model ID: a valid guid
+# 18/05/2021 15:37:23 : 	Project ID: a valid guid
+# 18/05/2021 15:37:23 : 	Model ID: a valid guid
 # note: when processing BIM360 files batch processor is not checking whether the file exists upfront!
 # returns list in format
 # [filename, file exists status as bool]
@@ -510,14 +552,15 @@ def get_file_data(data):
     # trim white spaces from file name
     file_name = data[0].Trim()
     file_status = False
-    # check whether file status contains a YES or whether this is a cloud model 
+    # check whether file status contains a YES or whether this is a cloud model
     # (RBP does not check upfront whether a cloud model exists!)
-    if ('YES' in data[1] or 'Project ID' in data[1]):
+    if "YES" in data[1] or "Project ID" in data[1]:
         file_status = True
-    return [file_name,file_status]  
+    return [file_name, file_status]
+
 
 def get_files_not_found(files_processed):
-    '''
+    """
     Filters list of all files meant to be processed and returns the ones flagged as file not found.
 
     :param files_processed: array of lists in format: [[filename, status as bool],[filename, status as bool],...]
@@ -525,16 +568,17 @@ def get_files_not_found(files_processed):
 
     :return: array of lists in format: [[filename, status as bool],[filename, status as bool],...]
     :rtype: [[str, bool]]
-    '''
+    """
 
     file_not_found = []
     for f in files_processed:
-        if f[1]==False:
+        if f[1] == False:
             file_not_found.append(f)
     return file_not_found
 
+
 def get_log_blocks(json_data, start_marker, end_markers, multiple_blocks):
-    '''
+    """
     Reads json formatted data into blocks per files processed.
 
     Returns the message sections per row entry only.
@@ -550,14 +594,14 @@ def get_log_blocks(json_data, start_marker, end_markers, multiple_blocks):
 
     :return: List of list of str
     :rtype: [[str]]
-    '''
+    """
 
     unformatted_block_data = []
     data_block = []
-    message_string = ''
+    message_string = ""
     # extract rows belonging to blocks
     file_block = False
-    #Output('json data: ' + str(json_data))
+    # Output('json data: ' + str(json_data))
     for data in json_data:
         message_string = get_message_from_json(data)
         if message_string.startswith(start_marker) and file_block == False:
@@ -573,32 +617,33 @@ def get_log_blocks(json_data, start_marker, end_markers, multiple_blocks):
                 file_block = False
                 match = True
                 break
-        if(not multiple_blocks and match):
+        if not multiple_blocks and match:
             break
-        if (file_block):
+        if file_block:
             data_block.append(message_string)
     # check for open block
-    if (file_block == True and match_end_block == False):
+    if file_block == True and match_end_block == False:
         # append this data...hopefully there is an exception message in there!!
         unformatted_block_data.append(data_block)
-        output('Added open data block')
+        output("Added open data block")
         output(data_block)
-        output('')
+        output("")
     return unformatted_block_data
 
+
 def read_log_file(file_path):
-    '''
+    """
     Reads batch processor log file into lists of json objects.
-    
+
     Sample row:
         {'sessionId': '778e87a5-4b94-4552-9e7e-c9ed38b5caee', 'time': {'local': '09:35:45', 'utc': '22:35:45'}, 'date': {'local': '25/11/2020', 'utc': '24/11/2020'}, 'message': {'msgId': '', 'message': ''}}
-    
+
     :param file_path: The fully qualified file path to log file in json format
     :type file_path: str
 
     :return: list of json objects
     :rtype: [json]
-    '''
+    """
 
     data = []
     with open(file_path) as f:
@@ -606,8 +651,9 @@ def read_log_file(file_path):
             data.append(json.loads(line))
     return data
 
-def process_log_files(folder_path, debug = False):
-    '''
+
+def process_log_files(folder_path, debug=False):
+    """
     Loops over log files and checks whether any exceptions occurred during revit files processing.
 
     :param folder_path: Fully qualified directory path where marker files are stored.
@@ -618,7 +664,7 @@ def process_log_files(folder_path, debug = False):
     :return: List of lists of revit files processed in format:
         [logId,[processed Revit file name, status of processing (true or false), message]]
     :rtype: [str,[str, bool, str]]
-    '''
+    """
 
     return_value = res.Result()
     debug_mode_ = debug
@@ -626,43 +672,58 @@ def process_log_files(folder_path, debug = False):
     try:
         # get all marker files
         marker_file_ids = get_current_session_ids(folder_path)
-        if(debug_mode_):
-            return_value.append_message('Found marker file(s): {}'.format(len(marker_file_ids)))
-        if(len(marker_file_ids) > 0):
+        if debug_mode_:
+            return_value.append_message(
+                "Found marker file(s): {}".format(len(marker_file_ids))
+            )
+        if len(marker_file_ids) > 0:
             # find log files matching markers
             log_files = get_log_files(marker_file_ids)
-            if(debug_mode_):
-                return_value.append_message('Found log file(s): {}'.format(len(log_files)))
-            if(len(log_files) == len(marker_file_ids)):
+            if debug_mode_:
+                return_value.append_message(
+                    "Found log file(s): {}".format(len(log_files))
+                )
+            if len(log_files) == len(marker_file_ids):
                 data = []
                 for lf in log_files:
                     # debug output
-                    message = 'Processing log file(s): {}'.format(lf)
-                    #return_value.AppendMessage('Processing log files: ' + lf)
+                    message = "Processing log file(s): {}".format(lf)
+                    # return_value.AppendMessage('Processing log files: ' + lf)
                     try:
                         data = process_log_file(lf)
-                        if (len(data) > 0):
-                            message ='{} [Got processed Revit file(s) data: {}]'.format( message, len(data))
+                        if len(data) > 0:
+                            message = (
+                                "{} [Got processed Revit file(s) data: {}]".format(
+                                    message, len(data)
+                                )
+                            )
                         else:
                             # dummy run no files processed!
-                            message = '{} [No Revit file(s) processed!]'.format(message)
+                            message = "{} [No Revit file(s) processed!]".format(message)
                     except Exception as e:
-                        message = '{} [An exception occurred: {}]'.format(message, e)
-                    if(debug_mode_):
+                        message = "{} [An exception occurred: {}]".format(message, e)
+                    if debug_mode_:
                         return_value.append_message(message)
                     for d in data:
                         logfile_results.append(d)
-                return_value.append_message('\n')
-                return_value.append_message('Processed file(s) results:')
+                return_value.append_message("\n")
+                return_value.append_message("Processed file(s) results:")
                 # store results in return object
                 for lf_results in logfile_results:
-                    list_to_str = '\t'.join(map(str, lf_results)) 
+                    list_to_str = "\t".join(map(str, lf_results))
                     return_value.append_message(list_to_str)
                 return_value.status = True
             else:
-                return_value.update_sep(False,'Number of log files [{}] does not match required number: {}'.format(len(log_files),len(marker_file_ids))) 
+                return_value.update_sep(
+                    False,
+                    "Number of log files [{}] does not match required number: {}".format(
+                        len(log_files), len(marker_file_ids)
+                    ),
+                )
         else:
-            return_value.update_sep(False,'No marker files found in location: {}'.format(folder_path))
+            return_value.update_sep(
+                False, "No marker files found in location: {}".format(folder_path)
+            )
     except Exception as e:
-        return_value.update_sep(False, 'Terminated with Exception: {}'.format(e))    
+        return_value.update_sep(False, "Terminated with Exception: {}".format(e))
     return return_value

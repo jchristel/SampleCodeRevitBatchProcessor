@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A timer class to measure code performance.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,15 +28,18 @@ A timer class to measure code performance.
 
 from System.Diagnostics import Stopwatch
 from duHast.Utilities.Objects import base
+
 #: time output formatting 2 digit padding
-PAD_SINGLE_DIGIT_TO_TWO = '%02d'
+PAD_SINGLE_DIGIT_TO_TWO = "%02d"
 #: time output formatting default 3 digit padding
-PAD_SINGLE_DIGIT_TO_THREE = '%03d'
+PAD_SINGLE_DIGIT_TO_THREE = "%03d"
+
 
 class TimerError(Exception):
-    '''
+    """
     A custom exception used to report errors in use of Timer class
-    '''
+    """
+
 
 class Timer(base.Base):
     def __init__(self):
@@ -44,13 +47,12 @@ class Timer(base.Base):
 
         super(Timer, self).__init__()
 
-
     def start(self):
-        '''
+        """
         Start a new timer
 
         :raises TimerError: When timer is running already.
-        '''
+        """
 
         if self._stop_watch is not None:
             raise TimerError("Timer is running. Use .stop() to stop it")
@@ -59,18 +61,28 @@ class Timer(base.Base):
         self._stop_watch.Start()
 
     def stop(self):
-        '''
+        """
         Stop the timer, and report the elapsed time.
 
         :raises TimerError: When timer is not running yet.
         :return: The elapsed time since the timer has started.
-        
+
         :rtype: str
-        '''
+        """
 
         if self._stop_watch is None:
             raise TimerError("Timer is not running. Use .start() to start it")
         self._stop_watch.Stop()
         time_span = self._stop_watch.Elapsed
         self._stop_watch = None
-        return ('Elapsed time: ' + str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Hours) + 'h.'+ str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Minutes) + 'm.' + str(PAD_SINGLE_DIGIT_TO_TWO%time_span.Seconds) + 's.' + str(PAD_SINGLE_DIGIT_TO_THREE%time_span.Milliseconds) + 'ms')
+        return (
+            "Elapsed time: "
+            + str(PAD_SINGLE_DIGIT_TO_TWO % time_span.Hours)
+            + "h."
+            + str(PAD_SINGLE_DIGIT_TO_TWO % time_span.Minutes)
+            + "m."
+            + str(PAD_SINGLE_DIGIT_TO_TWO % time_span.Seconds)
+            + "s."
+            + str(PAD_SINGLE_DIGIT_TO_THREE % time_span.Milliseconds)
+            + "ms"
+        )

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit building pads helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,19 +30,22 @@ import clr
 import System
 
 from duHast.Revit.Common import common as com
-from duHast.Revit.BuildingPads.Utility import RevitBuildingPadsFilter as rBuildingPadFilter
+from duHast.Revit.BuildingPads.Utility import (
+    RevitBuildingPadsFilter as rBuildingPadFilter,
+)
 
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
+
 def get_all_building_pad_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all BuildingPad types in the model.
-    
+
     - Basic BuildingPad
-    
+
     Filters by category.
 
     :param doc: Current Revit model document.
@@ -50,17 +53,18 @@ def get_all_building_pad_types_by_category(doc):
 
     :return: A filtered element collector containing building pad types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rBuildingPadFilter._get_all_building_pad_types_by_category(doc)
     return collector
 
+
 def get_building_pad_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all building pad types in the model:
 
     - Basic BuildingPad
-    
+
     Filters by class.
     Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.
 
@@ -69,15 +73,17 @@ def get_building_pad_types_by_class(doc):
 
     :return: A filtered element collector containing building pad types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector =  rBuildingPadFilter._get_building_pad_types_by_class(doc)
-    return  collector
+    collector = rBuildingPadFilter._get_building_pad_types_by_class(doc)
+    return collector
+
 
 # -------------------------------- none in place BuildingPad types -------------------------------------------------------
 
+
 def get_all_building_pad_instances_in_model_by_category(doc):
-    '''
+    """
     Gets all building pad elements placed in model.
 
     Filters by category.
@@ -87,12 +93,17 @@ def get_all_building_pad_instances_in_model_by_category(doc):
 
     :return: A filtered element collector containing ceiling instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
-    
-    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_BuildingPad).WhereElementIsNotElementType()
-    
+    """
+
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_BuildingPad)
+        .WhereElementIsNotElementType()
+    )
+
+
 def get_all_building_pad_instances_in_model_by_class(doc):
-    '''
+    """
     Gets all building pad elements placed in model.
 
     Filters by class.
@@ -103,12 +114,17 @@ def get_all_building_pad_instances_in_model_by_class(doc):
 
     :return: A filtered element collector containing ceiling instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
-   
-    return rdb.FilteredElementCollector(doc).OfClass(rdb.BuildingPad).WhereElementIsNotElementType()
+    """
+
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfClass(rdb.BuildingPad)
+        .WhereElementIsNotElementType()
+    )
+
 
 def get_all_building_pad_type_ids_in_model_by_category(doc):
-    '''
+    """
     Gets all building pad element type ids available in model.
 
     Filters by category.
@@ -118,15 +134,16 @@ def get_all_building_pad_type_ids_in_model_by_category(doc):
 
     :return: A filtered element collector containing building pad type ids.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     ids = []
     col_cat = get_all_building_pad_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (col_cat)
+    ids = com.get_ids_from_element_collector(col_cat)
     return ids
 
+
 def get_all_building_pad_type_ids_in_model_by_class(doc):
-    '''
+    """
     Gets all building pad element type ids available in model.
 
     Filters by class.
@@ -134,12 +151,12 @@ def get_all_building_pad_type_ids_in_model_by_class(doc):
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    
+
     :return: A filtered element collector containing building pad type ids.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     ids = []
     col_class = get_building_pad_types_by_class(doc)
-    ids = com.get_ids_from_element_collector (col_class)
+    ids = com.get_ids_from_element_collector(col_class)
     return ids

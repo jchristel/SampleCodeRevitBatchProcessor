@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit views. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -39,37 +39,38 @@ from duHast.Revit.Views.sheets import get_all_sheets
 import Autodesk.Revit.DB as rdb
 
 
-
 def get_view_types(doc):
-    '''
+    """
     Returns all view family types in a model
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector =  _get_view_types(doc)
+    collector = _get_view_types(doc)
     return collector
 
+
 def get_view_type_ids(doc):
-    '''
+    """
     Returns all view family type ids in a model
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    
+
     :return: ids of view family types
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col = get_view_types(doc)
     ids = com.get_ids_from_element_collector(col)
     return ids
 
+
 def get_views_of_type(doc, view_type):
-    '''
+    """
     Gets all views in a model of a given type. Excludes templates.
 
     :param doc: Current Revit model document.
@@ -79,19 +80,21 @@ def get_views_of_type(doc, view_type):
 
     :return: list of views
     :rtype: list of Autodesk.Revit.DB.View
-    '''
+    """
 
-    views=[]
+    views = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
-        if(v.ViewType == view_type and v.IsTemplate == False):
+        if v.ViewType == view_type and v.IsTemplate == False:
             views.append(v)
     return views
 
+
 # ----------------------------------------------------------------------------------------
 
+
 def get_viewport_on_sheets(doc, sheets):
-    '''
+    """
     Get all view ports on sheets provided.
 
     :param doc: Current Revit model document.
@@ -101,22 +104,23 @@ def get_viewport_on_sheets(doc, sheets):
 
     :return: list of view ports
     :rtype: list of Autodesk.Revit.DB.Viewport
-    '''
+    """
 
     view_ports = []
     for sheet in sheets:
         try:
             viewport_ids = sheet.GetAllViewports()
-            if(viewport_ids != None):
+            if viewport_ids != None:
                 for viewport_id in viewport_ids:
                     viewport = doc.GetElement(viewport_id)
                     view_ports.append(viewport)
         except Exception as e:
-            print('Get view ports on sheet: {} threw exception: {}'.format(sheet, e))
+            print("Get view ports on sheet: {} threw exception: {}".format(sheet, e))
     return view_ports
 
+
 def get_views_in_model(doc, filter):
-    '''
+    """
     Gets all views in a model which are matching a filter and are:
 
     - not template views
@@ -125,7 +129,7 @@ def get_views_in_model(doc, filter):
     - not undefined
     - not Internal
     - not sheets
-   
+
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -134,23 +138,27 @@ def get_views_in_model(doc, filter):
 
     :return: list of views
     :rtype: list of Autodesk.Revit.DB.View
-    '''
+    """
 
     views = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
     for v in col:
-        #filter out browser organization and other views which cant be deleted
-        if(v.IsTemplate == False and filter(v) == True and 
-        v.ViewType != rdb.ViewType.SystemBrowser and 
-        v.ViewType != rdb.ViewType.ProjectBrowser and 
-        v.ViewType != rdb.ViewType.Undefined and 
-        v.ViewType != rdb.ViewType.Internal and 
-        v.ViewType != rdb.ViewType.DrawingSheet):
+        # filter out browser organization and other views which cant be deleted
+        if (
+            v.IsTemplate == False
+            and filter(v) == True
+            and v.ViewType != rdb.ViewType.SystemBrowser
+            and v.ViewType != rdb.ViewType.ProjectBrowser
+            and v.ViewType != rdb.ViewType.Undefined
+            and v.ViewType != rdb.ViewType.Internal
+            and v.ViewType != rdb.ViewType.DrawingSheet
+        ):
             views.append(v)
     return views
 
+
 def get_views_not_on_sheet(doc):
-    '''
+    """
     Gets all views not placed on a sheet. (Excludes schedules)
 
     :param doc: Current Revit model document.
@@ -158,7 +166,7 @@ def get_views_not_on_sheet(doc):
 
     :return: A list of views which are currently not placed on a sheet.
     :rtype: list of Autodesk.Revit.DB.View
-    '''
+    """
 
     views_not_on_sheet = []
     # get all sheets
@@ -171,9 +179,9 @@ def get_views_not_on_sheet(doc):
     for view_in_model in views_in_model:
         match = False
         for view_ports_on_sheet in view_ports_on_sheets:
-            if(view_ports_on_sheet.ViewId == view_in_model.Id):
+            if view_ports_on_sheet.ViewId == view_in_model.Id:
                 match = True
                 break
-        if(match == False):
+        if match == False:
             views_not_on_sheet.append(view_in_model)
     return views_not_on_sheet

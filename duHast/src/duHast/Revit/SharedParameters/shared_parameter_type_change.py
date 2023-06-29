@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to changing Revit shared parameters to family parameters and vise versa.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,8 +34,8 @@ from duHast.Utilities.Objects import result as res
 from duHast.Revit.SharedParameters.shared_parameters import get_family_parameters
 
 
-def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_'):
-    '''
+def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix="_"):
+    """
     Changes a shared family parameter to a standard family parameter.
 
     :param doc: Current Revit model document.
@@ -44,7 +44,7 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_
     :type parameter_name: str
     :param prefix: Revit requires the new parameter to have a different name to the shard parameter, therefore a prefix to the name is applied, defaults to '_'
     :type prefix: str, optional
-    :return: 
+    :return:
         Result class instance.
         - Parameter change status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the shared parameter and the new family parameter name.
@@ -54,7 +54,7 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_
         - result.message will contain generic exception message.
         - result.status will be an empty list
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     # get the family manager
@@ -65,8 +65,9 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_
     changed_parameter = False
     # check whether any parameter in family requires changing
     for p in paras:
-        if (p.Definition.Name == parameter_name):
+        if p.Definition.Name == parameter_name:
             para_old_name = p.Definition.Name
+
             def action():
                 action_return_value = res.Result()
                 try:
@@ -75,25 +76,43 @@ def change_shared_parameter_to_family_parameter(doc, parameter_name, prefix = '_
                         p,
                         prefix + para_old_name,
                         p.Definition.ParameterGroup,
-                        p.IsInstance
-                        )
+                        p.IsInstance,
+                    )
 
-                    action_return_value.update_sep(True, para_old_name + ': Successfully changed shared parameter to family parameter: ' + prefix + para_old_name)
+                    action_return_value.update_sep(
+                        True,
+                        para_old_name
+                        + ": Successfully changed shared parameter to family parameter: "
+                        + prefix
+                        + para_old_name,
+                    )
                     action_return_value.result.append(parameter_new)
                 except Exception as e:
-                    action_return_value.update_sep(False, para_old_name + ': Failed to change shared parameter to family parameter: ' + str(e))
+                    action_return_value.update_sep(
+                        False,
+                        para_old_name
+                        + ": Failed to change shared parameter to family parameter: "
+                        + str(e),
+                    )
                 return action_return_value
+
             transaction = rdb.Transaction(doc, "change to family parameter")
             return_value = rTran.in_transaction(transaction, action)
             changed_parameter = return_value.status
-    if(changed_parameter == False):
+    if changed_parameter == False:
         return_value.status = False
-        return_value.message = 'No parameter matching: ' + parameter_name + ' was found. No shared parameter was changed.'
+        return_value.message = (
+            "No parameter matching: "
+            + parameter_name
+            + " was found. No shared parameter was changed."
+        )
     return return_value
 
 
-def change_family_parameter_to_shared_parameter(doc, parameter_name, parameter_data, parameter_def):
-    '''
+def change_family_parameter_to_shared_parameter(
+    doc, parameter_name, parameter_data, parameter_def
+):
+    """
     Changes a family parameter to a shared parameter.
 
     :param doc: Current Revit model document.
@@ -104,7 +123,7 @@ def change_family_parameter_to_shared_parameter(doc, parameter_name, parameter_d
     :type parameter_data: RevitSharedParametersTuple.parameterData
     :param parameter_def: The external definition of the shared parameter.
     :type parameter_def: Autodesk.Revit.DB.ExternalDefinition
-    :return: 
+    :return:
         Result class instance.
         - Parameter change status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name of the family parameter and the new shared parameter name.
@@ -114,7 +133,7 @@ def change_family_parameter_to_shared_parameter(doc, parameter_name, parameter_d
         - result.message will contain generic exception message.
         - result.status will be an empty list
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     # get the family manager
@@ -125,7 +144,8 @@ def change_family_parameter_to_shared_parameter(doc, parameter_name, parameter_d
     changed_parameter = False
     # check whether any parameter in family requires changing
     for p in paras:
-        if (p.Definition.Name  == parameter_name):
+        if p.Definition.Name == parameter_name:
+
             def action():
                 action_return_value = res.Result()
                 try:
@@ -134,18 +154,32 @@ def change_family_parameter_to_shared_parameter(doc, parameter_name, parameter_d
                         p,
                         parameter_def,
                         parameter_data.builtInParameterGroup,
-                        parameter_data.isInstance
-                        )
+                        parameter_data.isInstance,
+                    )
 
-                    action_return_value.update_sep(True, parameter_name+': Changed family parameter to shared parameter: ' + parameter_data.name)
+                    action_return_value.update_sep(
+                        True,
+                        parameter_name
+                        + ": Changed family parameter to shared parameter: "
+                        + parameter_data.name,
+                    )
                     action_return_value.result.append(parameter_new)
                 except Exception as e:
-                    action_return_value.update_sep(False, parameter_name+': Failed to change family parameter to shared parameter.')
+                    action_return_value.update_sep(
+                        False,
+                        parameter_name
+                        + ": Failed to change family parameter to shared parameter.",
+                    )
                 return action_return_value
+
             transaction = rdb.Transaction(doc, "change to shared parameter")
             return_value = rTran.in_transaction(transaction, action)
             changed_parameter = return_value.status
-    if(changed_parameter == False):
+    if changed_parameter == False:
         return_value.status = False
-        return_value.message = 'No parameter matching: ' + parameter_name + ' was found. No family parameter was changed.'
+        return_value.message = (
+            "No parameter matching: "
+            + parameter_name
+            + " was found. No family parameter was changed."
+        )
     return return_value

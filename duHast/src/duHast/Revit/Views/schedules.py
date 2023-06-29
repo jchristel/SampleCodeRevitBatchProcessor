@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit view schedules. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,15 +32,15 @@ from duHast.Revit.Views.Utility.view_types import _get_view_types
 
 
 def get_schedule_ids_on_sheets(doc):
-    '''
+    """
     Gets view ids of all schedules with instances placed on a sheet
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List containing schedule Id's.
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
-    ids=[]
+    ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ScheduleSheetInstance)
     for s in col:
         if s.ScheduleId not in ids:
@@ -49,7 +49,7 @@ def get_schedule_ids_on_sheets(doc):
 
 
 def filter_revision_schedules(view):
-    '''
+    """
     Checks whether a view is a revision schedule.
     (not required...schedules have a property flag!!)
 
@@ -57,22 +57,22 @@ def filter_revision_schedules(view):
     :type view: Autodesk.Revit.DB.View
     :return: True if the view name starts with '<', otherwise False
     :rtype: bool
-    '''
+    """
 
-    if(view.Name.startswith('<')):
+    if view.Name.startswith("<"):
         return False
     else:
         return True
 
 
 def get_schedules_not_on_sheets(doc):
-    '''
+    """
     Gets all schedules without an instance placed on a sheet.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: list of schedules without a sheet schedule instance.
     :rtype: list of Autodesk.Revit.DB.View
-    '''
+    """
 
     schedules_not_on_sheets = []
     # get schedules on sheets
@@ -81,6 +81,6 @@ def get_schedules_not_on_sheets(doc):
     schedules_in_model = _get_view_types(doc, rdb.ViewType.Schedule)
     # loop and filter out schedules not on sheets
     for schedule in schedules_in_model:
-        if(schedule.Id not in ids_on_sheets):
+        if schedule.Id not in ids_on_sheets:
             schedules_not_on_sheets.append(schedule)
     return schedules_not_on_sheets

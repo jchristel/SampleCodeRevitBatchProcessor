@@ -1,11 +1,11 @@
 # import Autodesk
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit ceilings utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,8 +29,9 @@ This module contains a Revit ceilings utility functions.
 
 import Autodesk.Revit.DB as rdb
 
+
 def _get_all_ceiling_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all ceiling types in the model:
 
     - Compound Ceiling
@@ -45,13 +46,18 @@ def _get_all_ceiling_types_by_category(doc):
 
     :return: A filtered element collector containing ceiling types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ceilings).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Ceilings)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def _get_ceiling_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all ceiling types in the model:
 
     - Roof Soffit
@@ -66,6 +72,6 @@ def _get_ceiling_types_by_class(doc):
 
     :return: A filtered element collector containing ceiling types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdb.CeilingType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.CeilingType)

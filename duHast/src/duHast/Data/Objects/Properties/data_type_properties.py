@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data storage class for Revit element type properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,49 +29,52 @@ Data storage class for Revit element type properties.
 import json
 from duHast.Data.Utils import data_base
 
+
 class DataTypeProperties(data_base.DataBase):
 
-    data_type = 'type_properties'
-    
-    def __init__(self, j = {}):
-        '''
+    data_type = "type_properties"
+
+    def __init__(self, j={}):
+        """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
-        '''
+        """
 
         # store data type  in base class
         super(DataTypeProperties, self).__init__(DataTypeProperties.data_type)
-        
+
         # check if any data was past in with constructor!
-        if(j != None and len(j) > 0 ):
-            # check type of data that came in: 
-            if(type(j) == str):
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
                 # a string
                 j = json.loads(j)
-            elif(type(j) == dict):
+            elif type(j) == dict:
                 # no action required
                 pass
             else:
-                raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('name' in j ):
-                self.name = j['name']
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
+
+            if "name" in j:
+                self.name = j["name"]
             else:
-                self.name = '-'
-            
-            if('id' in j ):
-                self.id = j['id']
+                self.name = "-"
+
+            if "id" in j:
+                self.id = j["id"]
             else:
                 self.id = -1
-            
-            if('properties' in j ):
-                self.properties = j['properties']
+
+            if "properties" in j:
+                self.properties = j["properties"]
             else:
                 self.properties = {}
 
         else:
-            self.name = '-'
+            self.name = "-"
             self.id = -1
             self.properties = {}

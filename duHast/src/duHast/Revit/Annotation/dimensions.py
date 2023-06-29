@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to dimensions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -35,24 +35,25 @@ from duHast.Revit.Annotation import arrow_heads as rArrow
 
 
 def get_dim_types(doc):
-    '''
+    """
     Gets all dimension types in a model
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of Dimension Types
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of DimensionType
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
 
+
 def get_dim_type_ids(doc):
-    '''
+    """
     Gets all dimension type ids in a model
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing Dimension Types
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.DimensionType)
@@ -61,42 +62,47 @@ def get_dim_type_ids(doc):
 
 
 def get_all_dimension_elements(doc):
-    '''
+    """
     Gets all dimension elements placed in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of Dimensions
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of Dimension
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.Dimension)
 
+
 def get_symbol_ids_from_dim_types(doc):
-    '''
+    """
     Gets all family symbol ids used as centre line symbol from all dim styles in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing family symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     dim_ts = get_dim_types(doc)
     for t in dim_ts:
-        id = rParaGet.get_built_in_parameter_value (t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL)
-        if(id not in ids and id != rdb.ElementId.InvalidElementId and id != None):
+        id = rParaGet.get_built_in_parameter_value(
+            t, rdb.BuiltInParameter.DIM_STYLE_CENTERLINE_SYMBOL
+        )
+        if id not in ids and id != rdb.ElementId.InvalidElementId and id != None:
             ids.append(id)
     return ids
 
 
 def get_dim_type_arrow_head_ids(doc):
-    '''
+    """
     Gets all arrow head symbol ids used in dim types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing arrow head symbols
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
-    used_ids = rArrow.get_arrow_head_ids_from_type(doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM)
+    used_ids = rArrow.get_arrow_head_ids_from_type(
+        doc, get_dim_types, rArrow.ARROWHEAD_PARAS_DIM
+    )
     return used_ids

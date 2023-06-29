@@ -33,9 +33,12 @@ from duHast.Utilities.Objects import result as res
 
 # required for .ToList()
 import clr
+
 clr.AddReference("System.Core")
 from System import Linq
+
 clr.ImportExtensions(Linq)
+
 
 def delete_by_element_ids(
     doc,
@@ -69,7 +72,7 @@ def delete_by_element_ids(
             action_return_value.message = "Deleted {} {}".format(len(ids), element_name)
         except Exception as e:
             action_return_value.update_sep(
-                False, "Failed to delete {} with exception: {}".format(element_name,e)
+                False, "Failed to delete {} with exception: {}".format(element_name, e)
             )
         return action_return_value
 
@@ -115,7 +118,7 @@ def delete_by_element_ids_one_by_one(
             except Exception as e:
                 action_return_value.update_sep(
                     False,
-                    "Failed to delete {} [{}] with exception: {}".format(n,id, e)
+                    "Failed to delete {} [{}] with exception: {}".format(n, id, e),
                 )
             return action_return_value
 

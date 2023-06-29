@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit stair stringers and carriage elements. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,31 +34,37 @@ from duHast.Revit.Common import common as com
 STAIR_SUPPORT_TYPE_PARAS = [
     rdb.BuiltInParameter.STAIRSTYPE_LEFT_SIDE_SUPPORT_TYPE,
     rdb.BuiltInParameter.STAIRSTYPE_INTERMEDIATE_SUPPORT_TYPE,
-    rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE
+    rdb.BuiltInParameter.STAIRSTYPE_RIGHT_SIDE_SUPPORT_TYPE,
 ]
 
+
 def get_all_stair_stringers_carriage_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all stair stringers and carriage types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing stair stringers and carriage types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsStringerCarriage).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_StairsStringerCarriage)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def get_all_stair_stringers_carriage_type_ids_by_category(doc):
-    '''
+    """
     Get all Stair stringers and carriage element type ids available in model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing stair stringer and carriage types.
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
-    col_cat = get_all_stair_stringers_carriage_by_category (doc)
-    ids = com.get_ids_from_element_collector (col_cat)
+    col_cat = get_all_stair_stringers_carriage_by_category(doc)
+    ids = com.get_ids_from_element_collector(col_cat)
     return ids

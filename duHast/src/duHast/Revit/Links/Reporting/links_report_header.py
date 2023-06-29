@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any revit link reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,16 +28,16 @@ This module contains the header row for any revit link reports.
 
 #: revit links header used in reports
 REPORT_REVIT_LINKS_HEADER = [
-    'HOSTFILE',
-    'ID',
-    'LINKNAME',
-    'ISLOADED',
-    'TYPEWORKSET',
-    'ISFROMLOCALPATH',
-    'PATHTYPE',
-    'FILEPATH',
-    'SHAREDSITE',
-    'SHAREDSITENAME',
-    'INSTANCEWORKSET',
-    'DESIGNOPTION',
+    "HOSTFILE",
+    "ID",
+    "LINKNAME",
+    "ISLOADED",
+    "TYPEWORKSET",
+    "ISFROMLOCALPATH",
+    "PATHTYPE",
+    "FILEPATH",
+    "SHAREDSITE",
+    "SHAREDSITENAME",
+    "INSTANCEWORKSET",
+    "DESIGNOPTION",
 ]

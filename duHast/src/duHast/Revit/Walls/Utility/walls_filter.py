@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit walls utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,26 +28,32 @@ This module contains a Revit walls utility functions.
 
 import Autodesk.Revit.DB as rdb
 
+
 def _get_all_wall_types_by_class(doc):
-    '''
+    """
     This will return a filtered element collector of all wall types by class in the model
     It will therefore not return any in place wall types since revit treats those as families...
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing wall types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdb.WallType)
+
 
 def _get_all_wall_types_by_category(doc):
-    '''
+    """
     Gets all wall types in a model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing wall types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Walls).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Walls)
+        .WhereElementIsElementType()
+    )
     return collector

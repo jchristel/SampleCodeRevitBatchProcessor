@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains utility function(s) for material reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,8 +32,9 @@ from duHast.Revit.Common import parameter_get_utils as rParaGet
 from duHast.Utilities import files_io as fileIO, utility as util
 from duHast.Revit.Materials.materials import get_all_materials
 
+
 def get_material_report_data(doc, revit_file_path):
-    '''
+    """
     Gets material data ready for being written to file.
     - HOSTFILE
     - ID
@@ -45,7 +46,7 @@ def get_material_report_data(doc, revit_file_path):
     :type revit_file_path: str
     :return: The material data in a nested list of string
     :rtype: list of list of str
-    '''
+    """
 
     data = []
     mats = get_all_materials(doc)
@@ -56,16 +57,20 @@ def get_material_report_data(doc, revit_file_path):
                 para_name = p.Definition.Name
                 p_value = rParaGet.get_parameter_value(p)
                 data.append(
-                    [revit_file_path,
-                    str(mat.Id),
-                    util.encode_ascii(rdb.Element.Name.GetValue(mat)),
-                    util.encode_ascii(para_name),
-                    util.encode_ascii(p_value)]
+                    [
+                        revit_file_path,
+                        str(mat.Id),
+                        util.encode_ascii(rdb.Element.Name.GetValue(mat)),
+                        util.encode_ascii(para_name),
+                        util.encode_ascii(p_value),
+                    ]
                 )
         except Exception:
-            data.append([
-                fileIO.get_file_name_without_ext(revit_file_path),
-                str(mat.Id),
-                util.encode_ascii(rdb.Element.Name.GetValue(mat))
-            ])
+            data.append(
+                [
+                    fileIO.get_file_name_without_ext(revit_file_path),
+                    str(mat.Id),
+                    util.encode_ascii(rdb.Element.Name.GetValue(mat)),
+                ]
+            )
     return data

@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Model phase functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,41 +29,42 @@ Model phase functions.
 
 
 def get_all_phases(doc):
-    '''
+    """
     Returns a dictionary where key is the id and value is the name of the phase.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
-    
+
     :return: A dictionary where key is the id and value is the name of the phase. Dictionary will be empty if no phases exist (family doc?)
     :rtype: dic{key Autodesk.Revit.DB.ElementId: value str}
-    '''
+    """
 
     return_value = {}
     phases = doc.Phases
-    if (phases.Size > 0):
+    if phases.Size > 0:
         for phase in phases:
             return_value[phase.Id] = phase.Name
     return return_value
 
+
 def get_phase_name_by_id(doc, phase_id):
-    '''
+    """
     Returns the name of a phase by Id
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param phase_id: The phase element id.
     :type phase_id: Autodesk.Revit.DB.ElementId
-    
+
     :return: Name of the phase, otherwise 'No phase in document' if no phase exists or 'Invalid phase id.' if no phase matching the id was found.
     :rtype: str
-    '''
+    """
 
-    return_value = 'No phase in document'
+    return_value = "No phase in document"
     phases = get_all_phases(doc)
-    if(len(phases) > 0):
+    if len(phases) > 0:
         if phase_id in phases:
             return_value = phases[phase_id]
         else:
-            return_value = 'Invalid phase id.'
+            return_value = "Invalid phase id."
     return return_value

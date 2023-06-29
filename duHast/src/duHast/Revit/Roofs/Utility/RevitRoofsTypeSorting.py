@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit roofs utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,7 +30,7 @@ from duHast.Revit.Roofs.Utility import RevitRoofsFilter as rRoofFilter
 
 
 def build_roof_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param collector: A filtered element collector containing roof type elements of family symbols
@@ -39,11 +39,11 @@ def build_roof_type_dictionary(collector, dic):
     :type dic: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
@@ -51,14 +51,14 @@ def build_roof_type_dictionary(collector, dic):
 
 
 def sort_roof_types_by_family_name(doc):
-    '''
+    """
     Returns a dictionary where key is the family name and values are ids of types belonging to that family.
     TODO: similar function exists in Walls module. Consider more generic function.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A dictionary where key is the family name and values are ids of types belonging to that family.
     :rtype: Dictionary {str:[Autodesk.Revit.DB.ElementId]}
-    '''
+    """
 
     # get all Roof Type Elements
     rts = rRoofFilter._get_roof_types_by_class(doc)

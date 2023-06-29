@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit rooms tags. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,13 +32,13 @@ from duHast.Utilities.Objects import result as res
 
 
 def move_tag_to_room(doc, tag_id):
-    '''
+    """
     Moves a room tag to the associated rooms location point.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param tag_id: The element id of the tag to be moved to the room.
     :type tag_id: Autodesk.Revit.DB.ElementId
-    :return: 
+    :return:
         Result class instance.
         - Tag moving status returned in result.status. False if an exception occurred, otherwise True.
         - result.message will contain the name and number of the room.
@@ -46,22 +46,29 @@ def move_tag_to_room(doc, tag_id):
         - result.status (bool) will be False.
         - result.message will contain the name and number of the room and the exception message.
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     rt = doc.GetElement(tag_id)
     room_tag_point = rt.Location.Point
     room_location_point = rt.Room.Location.Point
-    room_data = str(rt.Room.Number) + ' ' + str(rdb.Element.Name.GetValue(rt.Room))
-    translation =  room_location_point - room_tag_point
+    room_data = str(rt.Room.Number) + " " + str(rdb.Element.Name.GetValue(rt.Room))
+    translation = room_location_point - room_tag_point
+
     def action():
         action_return_value = res.Result()
         try:
             rt.Location.Move(translation)
-            action_return_value.message = 'Moved tag to room: {}'.format(room_data)
+            action_return_value.message = "Moved tag to room: {}".format(room_data)
         except Exception as e:
-            action_return_value.update_sep(False, 'Failed to move tag to room: {} with exception: {}'.format( room_data,e))
+            action_return_value.update_sep(
+                False,
+                "Failed to move tag to room: {} with exception: {}".format(
+                    room_data, e
+                ),
+            )
         return action_return_value
-    transaction = rdb.Transaction(doc, 'Moving room tag to room : {}'.format(room_data))
+
+    transaction = rdb.Transaction(doc, "Moving room tag to room : {}".format(room_data))
     return_value.update(rTran.in_transaction(transaction, action))
     return return_value

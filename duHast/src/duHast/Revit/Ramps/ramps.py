@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit ramps.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -37,8 +37,9 @@ from duHast.Revit.Ramps.Utility import RevitRampsFilter as rRampFilter
 
 # --------------------------------------------- utility functions ------------------
 
+
 def get_all_ramp_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all Ramp types in the model.
 
     :param doc: _description_
@@ -46,15 +47,17 @@ def get_all_ramp_types_by_category(doc):
 
     :return: A filtered element collector containing ramp types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rRampFilter._get_all_ramp_types_by_category(doc)
     return collector
 
+
 # -------------------------------- none in place Ramp types -------------------------------------------------------
 
+
 def get_all_ramp_instances_by_category(doc):
-    '''
+    """
     Gets all ramp elements placed in model...ignores in place families (to be confirmed!)
 
     :param doc: Current Revit model document.
@@ -62,12 +65,17 @@ def get_all_ramp_instances_by_category(doc):
 
     :return: A filtered element collector containing ramp instances.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Ramps).WhereElementIsNotElementType()
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Ramps)
+        .WhereElementIsNotElementType()
+    )
+
 
 def get_all_ramp_types_ids_by_category(doc):
-    '''
+    """
     Gets all ramp element type ids available in model.
 
     :param doc: Current Revit model document.
@@ -75,9 +83,9 @@ def get_all_ramp_types_ids_by_category(doc):
 
     :return: List of element ids of ramp types.
     :rtype: List Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col_cat = get_all_ramp_types_by_category(doc)
-    ids = com.get_ids_from_element_collector (col_cat)
+    ids = com.get_ids_from_element_collector(col_cat)
     return ids

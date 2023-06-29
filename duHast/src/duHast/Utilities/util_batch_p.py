@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to batch processor.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,8 +26,9 @@ This module contains a number of helper functions relating to batch processor.
 #
 #
 
+
 def adjust_session_id_for_file_name(id):
-    '''
+    """
     Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it\
         can be used in a file name.
 
@@ -36,16 +37,17 @@ def adjust_session_id_for_file_name(id):
 
     :return: Re-formatted session id.
     :rtype: str
-    '''
+    """
 
     # remove colons
-    session_id_changed = id.replace(':','_')
+    session_id_changed = id.replace(":", "_")
     # remove chevrons
     session_id_changed = session_id_changed[1:-1]
     return session_id_changed
 
+
 def adjust_session_id_file_name_back(file_name_id):
-    '''
+    """
     Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a\
         file name using a batch processor supplied id.
 
@@ -54,16 +56,17 @@ def adjust_session_id_file_name_back(file_name_id):
 
     :return: A session id.
     :rtype: str
-    '''
+    """
 
     # re-instate colons
-    session_id_changed = file_name_id.replace('_',':')
+    session_id_changed = file_name_id.replace("_", ":")
     # remove chevrons
-    session_id_changed = '<' + session_id_changed + '>'
+    session_id_changed = "<" + session_id_changed + ">"
     return session_id_changed
 
+
 def adjust_session_id_for_directory_name(id):
-    '''
+    """
     Removes chevrons and replace colons, full stops, dashes with underscores in session id supplied by revit batch processor so it\
         can be used in a folder name.
 
@@ -72,17 +75,17 @@ def adjust_session_id_for_directory_name(id):
 
     :return: Re-formatted session id.
     :rtype: str
-    '''
+    """
 
     # remove colons
-    session_id_changed = id.replace(':','_')
+    session_id_changed = id.replace(":", "_")
     # remove spaces
-    session_id_changed = session_id_changed.replace(' ','_')
+    session_id_changed = session_id_changed.replace(" ", "_")
     # remove full stops
-    session_id_changed = session_id_changed.replace('.','_')
+    session_id_changed = session_id_changed.replace(".", "_")
     # remove dashes
-    session_id_changed = session_id_changed.replace('-','_')
+    session_id_changed = session_id_changed.replace("-", "_")
     # remove chevrons
-    session_id_changed = session_id_changed.replace('<','')
-    session_id_changed = session_id_changed.replace('>','')
+    session_id_changed = session_id_changed.replace("<", "")
+    session_id_changed = session_id_changed.replace(">", "")
     return session_id_changed

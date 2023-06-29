@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to CAD link geometry.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,40 +32,40 @@ from duHast.Revit.Links.cad_links import get_all_cad_link_instances
 
 
 def get_cad_import_instance_geometry(import_instance):
-    '''
+    """
     Returns a list of geometry elements from an import instance
     :param import_instance: A import instance
     :type import_instance: AutoDesk.Revit.DB.ImportInstance
     :return: A list of geometry objects. Can return an empty list!
     :rtype: [Autodesk.Revit.DB GeometryObject]
-    '''
+    """
 
     geo = []
     # default geometry option
     opt = rdb.Options()
     geo_elem_level1 = import_instance.get_Geometry(opt)
-    if (geo_elem_level1 != None):
+    if geo_elem_level1 != None:
         for geo_instance in geo_elem_level1:
-            if(geo_instance!= None):
+            if geo_instance != None:
                 geo_elem_level2 = geo_instance.GetInstanceGeometry()
-                if(geo_elem_level2 !=None):
+                if geo_elem_level2 != None:
                     for item in geo_elem_level2:
                         geo.append(item)
     return geo
 
 
 def get_all_cad_import_instances_geometry(doc):
-    '''
+    """
     Returns a list of geometry elements from all import instances in the document.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of geometry objects. Can return an empty list!
     :rtype: [Autodesk.Revit.DB GeometryObject]
-    '''
+    """
     instances_geometry = []
     all_import_instances = get_all_cad_link_instances(doc)
     for import_instance in all_import_instances:
         geometry_instances = get_cad_import_instance_geometry(import_instance)
-        if (len(geometry_instances) > 0):
+        if len(geometry_instances) > 0:
             instances_geometry += geometry_instances
     return instances_geometry

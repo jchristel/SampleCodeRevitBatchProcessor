@@ -26,6 +26,7 @@ This module contains the view property utilities.
 #
 #
 
+
 def convert_view_data_to_list(view_data, headers):
     """
     Converts a list of dictionaries of view properties names and values to a list of properties only.

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of base element filter functions relating to Revit stairs. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,8 +30,9 @@ This module contains a number of base element filter functions relating to Revit
 import Autodesk.Revit.DB as rdb
 import Autodesk.Revit.DB.Architecture as rdbA
 
+
 def _get_all_stair_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all Stair types in the model.
 
     Return includes:
@@ -40,19 +41,24 @@ def _get_all_stair_types_by_category(doc):
     - Precast Stair
     - Cast-In-Place Stair
     - In place families or loaded families
-   
+
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
 
     :return: A filtered element collector containing stair types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Stairs).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Stairs)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def _get_stair_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Stair types in the model.
 
     Return includes:
@@ -68,6 +74,6 @@ def _get_stair_types_by_class(doc):
 
     :return: A filtered element collector containing stair types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsType)

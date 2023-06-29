@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit ceilings utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,7 +30,7 @@ from duHast.Revit.Ceilings.Utility import ceilings_filter as rCeilingsFilter
 
 
 def build_ceiling_type_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     Keys are built in ceiling family type names.
     TODO: Use more generic code.
@@ -40,11 +40,11 @@ def build_ceiling_type_dictionary(collector, dic):
     :type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
     :return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
     :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
@@ -52,17 +52,17 @@ def build_ceiling_type_dictionary(collector, dic):
 
 
 def sort_ceiling_types_by_family_name(doc):
-    '''
+    """
     Returns a dictionary of all ceiling types in the model where key is the build in wall family name, values are ids of associated wall types.
     TODO: Use more generic code.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
     :rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
-    '''
+    """
 
     # get all ceiling Type Elements
-    wts =  rCeilingsFilter._get_ceiling_types_by_class(doc)
+    wts = rCeilingsFilter._get_ceiling_types_by_class(doc)
     # get all ceiling types including in place ceiling families
     wts_two = rCeilingsFilter._get_all_ceiling_types_by_category(doc)
     usedWts = {}

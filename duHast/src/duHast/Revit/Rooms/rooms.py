@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit rooms. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,6 +30,7 @@ import clr
 
 clr.AddReference("System.Core")
 from System import Linq
+
 clr.ImportExtensions(Linq)
 import System
 
@@ -38,8 +39,9 @@ import Autodesk.Revit.DB as rdb
 
 # --------------------------------------------- utility functions ------------------
 
+
 def get_all_rooms(doc):
-    '''
+    """
     Gets a list of rooms from the model.
 
     :param doc: Current Revit model document.
@@ -47,12 +49,17 @@ def get_all_rooms(doc):
 
     :return: All the rooms in the model as a list.
     :rtype: List Autodesk.Revit.DB.Architecture.Room
-    '''
+    """
 
-    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms).ToList()
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Rooms)
+        .ToList()
+    )
+
 
 def get_unplaced_rooms(doc):
-    '''
+    """
     Gets a list of unplaced rooms from the model.
 
     :param doc: Current Revit model document.
@@ -60,17 +67,18 @@ def get_unplaced_rooms(doc):
 
     :return: All the unplaced rooms in the model as a list.
     :rtype: List Autodesk.Revit.DB.Architecture.Room
-    '''
+    """
 
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     for r in coll:
-        if(r.Location == None):
+        if r.Location == None:
             unplaced.append(r)
     return unplaced
 
+
 def get_not_enclosed_rooms(doc):
-    '''
+    """
     Gets a list of not enclosed rooms from the model.
 
     :param doc: Current Revit model document.
@@ -78,19 +86,24 @@ def get_not_enclosed_rooms(doc):
 
     :return: All the unenclosed rooms in the model as a list.
     :rtype: List Autodesk.Revit.DB.Architecture.Room
-    '''
+    """
 
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     boundary_option = rdb.SpatialElementBoundaryOptions()
     for r in coll:
         boundary_segments = r.GetBoundarySegments(boundary_option)
-        if(r.Area == 0.0 and r.Location != None and (boundary_segments == None or len(boundary_segments)) == 0):
+        if (
+            r.Area == 0.0
+            and r.Location != None
+            and (boundary_segments == None or len(boundary_segments)) == 0
+        ):
             unplaced.append(r)
     return unplaced
 
+
 def get_redundant_rooms(doc):
-    '''
+    """
     Gets a list of redundant rooms from the model.
 
     :param doc: Current Revit model document.
@@ -98,13 +111,13 @@ def get_redundant_rooms(doc):
 
     :return: All the redundant rooms in the model as a list.
     :rtype: List Autodesk.Revit.DB.Architecture.Room
-    '''
+    """
 
     coll = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Rooms)
     unplaced = []
     boundary_option = rdb.SpatialElementBoundaryOptions()
     for r in coll:
         boundary_segments = r.GetBoundarySegments(boundary_option)
-        if(r.Area == 0.0 and(boundary_segments != None and len(boundary_segments) > 0)):
+        if r.Area == 0.0 and (boundary_segments != None and len(boundary_segments) > 0):
             unplaced.append(r)
     return unplaced

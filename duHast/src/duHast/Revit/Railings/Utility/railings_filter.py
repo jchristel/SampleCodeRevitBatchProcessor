@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit railings utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,13 +27,14 @@ This module contains a Revit railings utility functions.
 #
 
 import Autodesk.Revit.DB as rdb
-'''
+
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit railings utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -59,8 +60,9 @@ import Autodesk.Revit.DB.Architecture as rdbA
 
 from duHast.Revit.Railings.Utility.railing_categories import RAILING_CATEGORY_FILTER
 
+
 def _get_all_railing_types_by_category(doc):
-    '''
+    """
     Gets a filtered element collector of all Railing types in the model.
 
     Collector will include types of:
@@ -76,16 +78,21 @@ def _get_all_railing_types_by_category(doc):
 
     :return: A filtered element collector of railing related types
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     multi_cat_filter = rdb.ElementMulticategoryFilter(RAILING_CATEGORY_FILTER)
-    collector = rdb.FilteredElementCollector(doc).WherePasses(multi_cat_filter).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .WherePasses(multi_cat_filter)
+        .WhereElementIsElementType()
+    )
     return collector
 
+
 def _get_railing_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Railing types in the model:
-    
+
     Collector will include types of:
     - Railing
 
@@ -96,6 +103,6 @@ def _get_railing_types_by_class(doc):
 
     :return: A filtered element collector of railing types
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.RailingType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.RailingType)

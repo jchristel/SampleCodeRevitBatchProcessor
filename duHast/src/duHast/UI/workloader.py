@@ -1,14 +1,14 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions to sort task evenly into workload buckets.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A bucket contains a number of files which will eventually be written into task files to be processed by batch processor.
 The below function attempt to fill these buckets evenly measured on file size.
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,14 +31,17 @@ The below function attempt to fill these buckets evenly measured on file size.
 #
 
 import clr
+
 clr.AddReference("System.Core")
 from System import Linq
+
 clr.ImportExtensions(Linq)
 
 from duHast.UI import workload_bucket as wb
 
-def distribute_workload (number_of_buckets, items, getWorkloadSize):
-    '''
+
+def distribute_workload(number_of_buckets, items, getWorkloadSize):
+    """
     Distributes a given number of items evenly by workload size into workload buckets.
 
     :param numberOfBuckets: The number of buckets items are to be distributed to
@@ -47,29 +50,31 @@ def distribute_workload (number_of_buckets, items, getWorkloadSize):
     :type items: [foo]
     :param getWorkloadSize: A function returning the workload size from an item.
     :type getWorkloadSize: func(foo) -> int
-    
+
     :return: A list of workload bucket objects containing items.
     :rtype: list[ :class:`.WorkloadBucket`]
-    '''
-    
+    """
+
     workload_buckets = []
     try:
         # ini bucket list
         for x in range(number_of_buckets):
             workload_buckets.append(wb.WorkloadBucket())
         itemToWorkLoadValues = []
-        
+
         # build key value list of items and their workload value
         for item in items:
             itemToWorkLoadValues.append([item, getWorkloadSize(item)])
-        
+
         # sort list by workload size in descending order (biggest item first)
         itemToWorkLoadValues = sort(itemToWorkLoadValues)
-        
+
         # load up with buckets
         for bucket in itemToWorkLoadValues:
             # find bucket with smallest work load value
-            lowBucket = min(workload_buckets, key=lambda work_bucket: work_bucket.workload_value)
+            lowBucket = min(
+                workload_buckets, key=lambda work_bucket: work_bucket.workload_value
+            )
             # add new item to bucket list
             lowBucket.add_item(bucket[0])
             # increase work bucket size by size of item added
@@ -81,8 +86,9 @@ def distribute_workload (number_of_buckets, items, getWorkloadSize):
     # send loaded buckets back
     return workload_buckets
 
-def sort(sub_li): 
-    '''
+
+def sort(sub_li):
+    """
     Python code to sort the tuples using second element of sublist. Inplace way to sort using sort().
 
     Note: not sure a one liner warrants a method...?
@@ -91,9 +97,9 @@ def sort(sub_li):
     :type sub_li: _type_
     :return: _description_
     :rtype: _type_
-    '''
-    # reverse = None (Sorts in Ascending order) 
-    # key is set to sort using second element of  
-    # sublist lambda has been used 
-    sub_li.sort(key = lambda x: x[1], reverse = True) 
-    return sub_li 
+    """
+    # reverse = None (Sorts in Ascending order)
+    # key is set to sort using second element of
+    # sublist lambda has been used
+    sub_li.sort(key=lambda x: x[1], reverse=True)
+    return sub_li

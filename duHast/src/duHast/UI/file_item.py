@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 A class to store file information.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,10 +31,17 @@ A class to store file information.
 
 from duHast.Utilities.Objects import base
 
+
 class MyFileItem(base.Base):
-    
-    def __init__(self, name, size,  bim360_project_guid = None , bim360_file_guid = None, bim360_revit_version = '-'):
-        '''
+    def __init__(
+        self,
+        name,
+        size,
+        bim360_project_guid=None,
+        bim360_file_guid=None,
+        bim360_revit_version="-",
+    ):
+        """
         Class constructor.
 
         :param name: The fully qualified file path.
@@ -47,13 +54,13 @@ class MyFileItem(base.Base):
         :type bim360_file_guid: str, optional
         :param bim360_revit_version: The revit file version (year only), defaults to '-'
         :type bim360_revit_version: str, optional
-        '''
+        """
 
         # ini super class to allow multi inheritance in children!
-        super(MyFileItem, self).__init__() 
-        
+        super(MyFileItem, self).__init__()
+
         self.name = name
         self.size = size
-        self.bim_360_project_guid =  bim360_project_guid
+        self.bim_360_project_guid = bim360_project_guid
         self.bim_360_file_guid = bim360_file_guid
         self.bim_360_revit_version = bim360_revit_version

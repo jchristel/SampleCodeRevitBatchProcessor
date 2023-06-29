@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any Revit roofs reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,4 +28,4 @@ This module contains the header row for any Revit roofs reports.
 
 # -------------------------------------------- common variables --------------------
 #: header used in reports
-REPORT_ROOFS_HEADER = ['HOSTFILE', 'ROOFTYPEID', 'ROOFTYPENAME']
+REPORT_ROOFS_HEADER = ["HOSTFILE", "ROOFTYPEID", "ROOFTYPENAME"]

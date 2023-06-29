@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data storage class for Revit element phasing properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,42 +29,45 @@ Data storage class for Revit element phasing properties.
 import json
 from duHast.Data.Utils import data_base
 
-class DataPhasing(data_base.DataBase):
-    
-    data_type = 'phasing'
 
-    def __init__(self, j = {}):
-        '''
+class DataPhasing(data_base.DataBase):
+
+    data_type = "phasing"
+
+    def __init__(self, j={}):
+        """
         Class constructor
 
         :param j:  json formatted dictionary of this class, defaults to {}
         :type j: dict, optional
-        '''
+        """
 
         # store data type  in base class
         super(DataPhasing, self).__init__(DataPhasing.data_type)
-        
+
         # check if any data was past in with constructor!
-        if(j != None and len(j) > 0 ):
-            # check type of data that came in: 
-            if(type(j) == str):
+        if j != None and len(j) > 0:
+            # check type of data that came in:
+            if type(j) == str:
                 # a string
                 j = json.loads(j)
-            elif(type(j) == dict):
+            elif type(j) == dict:
                 # no action required
                 pass
             else:
-                raise  ValueError ('Argument supplied must be of type string or type dictionary')
-        
-            if('created' in j ):
-                self.created = j['created']
+                raise ValueError(
+                    "Argument supplied must be of type string or type dictionary"
+                )
+
+            if "created" in j:
+                self.created = j["created"]
             else:
-                self.created = '-'
-            
-            if('demolished' in j ):
-                self.demolished = j['demolished']
+                self.created = "-"
+
+            if "demolished" in j:
+                self.demolished = j["demolished"]
             else:
-                self.demolished = '-'
+                self.demolished = "-"
         else:
-            self.created = '-'     
-            self.demolished = '-'
+            self.created = "-"
+            self.demolished = "-"

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit floors utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,7 +31,7 @@ import Autodesk.Revit.DB as rdb
 
 # doc:   current model document
 def _get_all_floor_types_by_category(doc):
-    '''
+    """
     Function returning a filtered element collector of all floor types in the model.
 
     This uses builtinCategory as filter. Return types includes:
@@ -45,14 +45,19 @@ def _get_all_floor_types_by_category(doc):
 
     :return: A filtered element collector of floor types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    collector = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_Floors).WhereElementIsElementType()
+    collector = (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_Floors)
+        .WhereElementIsElementType()
+    )
     return collector
+
 
 # doc   current model document
 def _get_floor_types_by_class(doc):
-    '''
+    """
     Function returning a filtered element collector of all floor types in the model.
 
     - Floor
@@ -65,7 +70,7 @@ def _get_floor_types_by_class(doc):
 
     :return: A filtered element collector of floor types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     collector = rdb.FilteredElementCollector(doc).OfClass(rdb.FloorType)
-    return  collector
+    return collector

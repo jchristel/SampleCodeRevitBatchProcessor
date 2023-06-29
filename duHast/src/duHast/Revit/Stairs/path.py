@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to Revit stair path elements. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -31,40 +31,45 @@ import Autodesk.Revit.DB.Architecture as rdbA
 
 from duHast.Revit.Common import common as com
 
+
 def get_stair_path_types_by_class(doc):
-    '''
+    """
     Gets a filtered element collector of all Stair path types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing stair path types.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return  rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
+    return rdb.FilteredElementCollector(doc).OfClass(rdbA.StairsPathType)
 
 
 def get_stair_path_types_ids_by_class(doc):
-    '''
+    """
     Gets all Stair path element type ids available in model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing stair path types.
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col_class = get_stair_path_types_by_class(doc)
-    ids = com.get_ids_from_element_collector (col_class)
+    ids = com.get_ids_from_element_collector(col_class)
     return ids
 
 
 def get_all_stair_path_instances(doc):
-    '''
+    """
     Gets a filtered element collector of all Stair path elements in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector containing stair path elements.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
-    return rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_StairsPaths).WhereElementIsNotElementType()
+    return (
+        rdb.FilteredElementCollector(doc)
+        .OfCategory(rdb.BuiltInCategory.OST_StairsPaths)
+        .WhereElementIsNotElementType()
+    )

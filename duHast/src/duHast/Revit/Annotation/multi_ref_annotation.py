@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a number of helper functions relating to multi reference annotation. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,24 +32,25 @@ from duHast.Revit.Common import common as com
 
 
 def get_all_multi_ref_annotation_types(doc):
-    '''
+    """
     Gets all multi reference annotation types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of MultiReferenceAnnotationType
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotationType
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
 
+
 def get_all_multi_ref_annotation_type_ids(doc):
-    '''
+    """
     Gets all multi reference annotation type ids in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: List of element ids representing multi reference Annotation Types
     :rtype: list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     ids = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotationType)
@@ -58,24 +59,27 @@ def get_all_multi_ref_annotation_type_ids(doc):
 
 
 def get_all_multi_ref_annotation_elements(doc):
-    '''
+    """
     Gets all multi reference annotation elements in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A filtered element collector of MultiReferenceAnnotation
     :rtype: Autodesk.Revit.DB.FilteredElementCollector of MultiReferenceAnnotation
-    '''
+    """
 
     return rdb.FilteredElementCollector(doc).OfClass(rdb.MultiReferenceAnnotation)
 
+
 def get_all_similar_multi_reference_anno_types(doc):
-    '''
+    """
     Gets all multi reference annotation types using get similar types in the model.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: list in format [[multi refType, [element ids of similar multi ref types, ...]]]
     :rtype: List [[Autodesk.Revit.DB.ElementType, Autodesk.Revit.DB.ElementId, Autodesk.Revit.DB.ElementId,...],]
-    '''
+    """
 
-    multi_reference_anno_types = com.get_similar_type_families_by_type(doc, get_all_multi_ref_annotation_types)
+    multi_reference_anno_types = com.get_similar_type_families_by_type(
+        doc, get_all_multi_ref_annotation_types
+    )
     return multi_reference_anno_types

@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IFC export settings class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,35 +30,36 @@ IFC export settings class.
 import System
 from duHast.Utilities.Objects import base
 
+
 class IFCSettings(base.Base):
-    
+
     supported_ifc_versions = {
-            'Default' : 'The Autodesk Revit applications default export format. Note that this may change as the defaults change in the Revit user interface.',
-            'IFCBCA' : 'IFC BCA file format. This is a certified variant of IFC 2x2 used for submitting files to the Singapore BCA ePlan Check Server.',
-            'IFC2x2' : 'IFC 2x2 file format.',
-            'IFC2x3' : 'IFC 2x3 file format.',
-            'IFCCOBIE' : 'IFC GSA COBIE 2010 file format. This is a variant of IFC 2x3 used for submitting files that are COBIE 2010-complaint.',
-            'IFC2x3CV2' : 'IFC 2x3 Coordination View 2.0 file format. This is a variant of IFC 2x3 used for exporting files using the Coordination View 2.0 model view.',
-            'IFC4' : 'IFC 4 file format.',
-            'IFC2x3FM' : 'IFC2x3 Extended FM Handover View',
-            'IFC4RV' : 'IFC4 Reference View',
-            'IFC4DTV' : 'IFC4 Design Transfer View',
-            'IFC2x3BFM' : 'IFC2x3 Basic FM Handover View'
-        }
-    
+        "Default": "The Autodesk Revit applications default export format. Note that this may change as the defaults change in the Revit user interface.",
+        "IFCBCA": "IFC BCA file format. This is a certified variant of IFC 2x2 used for submitting files to the Singapore BCA ePlan Check Server.",
+        "IFC2x2": "IFC 2x2 file format.",
+        "IFC2x3": "IFC 2x3 file format.",
+        "IFCCOBIE": "IFC GSA COBIE 2010 file format. This is a variant of IFC 2x3 used for submitting files that are COBIE 2010-complaint.",
+        "IFC2x3CV2": "IFC 2x3 Coordination View 2.0 file format. This is a variant of IFC 2x3 used for exporting files using the Coordination View 2.0 model view.",
+        "IFC4": "IFC 4 file format.",
+        "IFC2x3FM": "IFC2x3 Extended FM Handover View",
+        "IFC4RV": "IFC4 Reference View",
+        "IFC4DTV": "IFC4 Design Transfer View",
+        "IFC2x3BFM": "IFC2x3 Basic FM Handover View",
+    }
+
     site_placement_options = {
-        'SiteTransformBasis.Shared' :'shared', 
-        'SiteTransformBasis.Site' : 'site', 
-        'SiteTransformBasis.Project' : 'project',
-        'SiteTransformBasis.Internal' : 'internal', 
-        'SiteTransformBasis.ProjectInTN' : 'projectInTN',
-        'SiteTransformBasis.InternalInTN' : 'internalInTN'
+        "SiteTransformBasis.Shared": "shared",
+        "SiteTransformBasis.Site": "site",
+        "SiteTransformBasis.Project": "project",
+        "SiteTransformBasis.Internal": "internal",
+        "SiteTransformBasis.ProjectInTN": "projectInTN",
+        "SiteTransformBasis.InternalInTN": "internalInTN",
     }
 
     def __init__(
-        self, 
-        name, 
-        ifc_version, 
+        self,
+        name,
+        ifc_version,
         space_boundaries,
         active_phase_id,
         active_view_id,
@@ -96,10 +97,10 @@ class IFCSettings(base.Base):
         geo_ref_epsg_code,
         geo_ref_geodetic_datum,
         geo_ref_map_unit,
-        exclude_filter
-        ):
+        exclude_filter,
+    ):
 
-        '''
+        """
         _summary_
 
         :param name: The name of the configuration.
@@ -184,19 +185,19 @@ class IFCSettings(base.Base):
         :type excludeFilter: str
 
         :raises Exception: _description_
-        '''
+        """
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(IFCSettings, self).__init__()  
+        super(IFCSettings, self).__init__()
 
         self.name = name
 
         # check the IFC version
-        if(ifc_version in self.supported_ifc_versions):
+        if ifc_version in self.supported_ifc_versions:
             self.ifc_version = ifc_version
         else:
-            raise Exception('Unsupported IFC version:' + ifc_version)
+            raise Exception("Unsupported IFC version:" + ifc_version)
 
         self.space_boundaries = space_boundaries
         self.active_phase_id = active_phase_id
@@ -205,7 +206,9 @@ class IFCSettings(base.Base):
         self.split_walls_and_columns = split_walls_and_columns
         self.visible_elements_of_current_view = visible_elements_of_current_view
         self.use2_d_room_boundary_for_volume = use2_d_room_boundary_for_volume
-        self.use_family_and_type_name_for_reference = use_family_and_type_name_for_reference
+        self.use_family_and_type_name_for_reference = (
+            use_family_and_type_name_for_reference
+        )
         self.export_internal_revit_property_sets = export_internal_revit_property_sets
         self.export_ifc_common_property_sets = export_ifc_common_property_sets
         self.export_2d_elements = export_2d_elements
@@ -226,15 +229,17 @@ class IFCSettings(base.Base):
         self.include_steel_elements = include_steel_elements
         self.cobie_company_info = cobie_company_info
         self.cobie_project_info = cobie_project_info
-        self.use_type_name_only_for_ifc_type = use_type_name_only_for_ifc_type,
-        self.use_visible_revit_name_as_entity_name = use_visible_revit_name_as_entity_name
-        
+        self.use_type_name_only_for_ifc_type = (use_type_name_only_for_ifc_type,)
+        self.use_visible_revit_name_as_entity_name = (
+            use_visible_revit_name_as_entity_name
+        )
+
         # check site placement option
-        if(site_placement in self.site_placement_options):
-            self.site_placement =  self.site_placement_options[site_placement]
+        if site_placement in self.site_placement_options:
+            self.site_placement = self.site_placement_options[site_placement]
         else:
-            raise Exception('Unsupported site placement option:' + site_placement)
-        
+            raise Exception("Unsupported site placement option:" + site_placement)
+
         self.selected_site = selected_site
         self.geo_ref_crs_name = geo_ref_crs_name
         self.geo_ref_crs_desc = geo_ref_crs_desc

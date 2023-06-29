@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data base class for Revit object properties.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,28 +29,28 @@ Data base class for Revit object properties.
 
 from duHast.Utilities.Objects import base
 
-class DataBase(base.Base):
 
+class DataBase(base.Base):
     def __init__(self, data_type, **kwargs):
-        '''
+        """
         Class constructor
 
         :param data_type: human readable data type
         :type data_type: str
-        '''
+        """
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(DataBase, self).__init__(**kwargs)  
+        super(DataBase, self).__init__(**kwargs)
         self.data_type = data_type
-    
+
     @property
     def DataType(self):
-        '''
+        """
         Property: returns the data type of this class.
 
         :return: 'ceiling'
         :rtype: str
-        '''
+        """
 
         return self.data_type

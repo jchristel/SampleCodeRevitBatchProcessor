@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit grids workset modifier functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,8 +33,8 @@ from duHast.Revit.Common import worksets as rWork
 from duHast.Revit.Grids import grids as rGrid
 
 
-def modify_grid_worksets_default (doc, worksetRules):
-    '''
+def modify_grid_worksets_default(doc, worksetRules):
+    """
     Workset modifier method. Moves all grids to one workset
     rules format:
     ['Model name',[
@@ -48,18 +48,20 @@ def modify_grid_worksets_default (doc, worksetRules):
     :type worksetRules: _type_
     :return: returns a result object
     :rtype: _type_
-    '''
+    """
     gridsResults = res.Result()
     collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
     for rule in worksetRules:
         for defaultWorksetName in rule:
-            grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
+            grids = rWork.modify_element_workset(
+                doc, defaultWorksetName, collectorGrids, "grids"
+            )
             gridsResults.update(grids)
     return gridsResults
 
 
 def modify_grid_worksets_by_type_name(doc, worksetRules):
-    '''
+    """
     Workset modifier method. Moves grids matching type condition to a particular workset
     defaultWorksetTypeRules_ = [
         ['model name',[
@@ -77,22 +79,32 @@ def modify_grid_worksets_by_type_name(doc, worksetRules):
     :type worksetRules: _type_
     :return: returns a result object
     :rtype: _type_
-    '''
+    """
 
     gridsResults = res.Result()
     # loop over grid type filter and address one at the time
     # get all grids matching type name filter
-    for defaultWorksetName, typeNameCondition, typeName,  in worksetRules:
+    for (
+        defaultWorksetName,
+        typeNameCondition,
+        typeName,
+    ) in worksetRules:
         # get the grid type id from the type name
         typeId = rGrid.get_grid_type_id_by_name(doc, typeName)
-        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
-        grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
+        collectorGrids = (
+            rdb.FilteredElementCollector(doc)
+            .OfClass(rdb.Grid)
+            .Where(lambda e: typeNameCondition(e.GetTypeId(), typeId))
+        )
+        grids = rWork.modify_element_workset(
+            doc, defaultWorksetName, collectorGrids, "grids"
+        )
         gridsResults.update(grids)
     return gridsResults
 
 
 def modify_grid_worksets_by_parameter_value(doc, worksetRules):
-    '''
+    """
     Workset modifier method. Moves grids matching parameter condition to a particular workset
     #defaultWorksetRulesNames_ = [
         ['model name',[
@@ -109,20 +121,30 @@ def modify_grid_worksets_by_parameter_value(doc, worksetRules):
     :type worksetRules: _type_
     :return: returns a result object
     :rtype: _type_
-    '''
+    """
 
     gridsResults = res.Result()
     # loop over grid parameter filter and address one at the time
     # get all grids matching filter
-    for defaultWorksetName, paraCondition, paraName, conditionValue  in worksetRules:
-        collectorGrids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid).Where(lambda e: rGrid.grid_check_parameter_value(e, paraName, paraCondition, conditionValue))
-        grids = rWork.modify_element_workset(doc, defaultWorksetName, collectorGrids, 'grids')
+    for defaultWorksetName, paraCondition, paraName, conditionValue in worksetRules:
+        collectorGrids = (
+            rdb.FilteredElementCollector(doc)
+            .OfClass(rdb.Grid)
+            .Where(
+                lambda e: rGrid.grid_check_parameter_value(
+                    e, paraName, paraCondition, conditionValue
+                )
+            )
+        )
+        grids = rWork.modify_element_workset(
+            doc, defaultWorksetName, collectorGrids, "grids"
+        )
         gridsResults.update(grids)
     return gridsResults
 
 
 def modify_grids_worksets(doc, revitFileName, worksetRules):
-    '''
+    """
     Modifies worksets of grids as per workset rules
     rules format:
     defaultWorksetRulesAll_ = [
@@ -142,17 +164,17 @@ def modify_grids_worksets(doc, revitFileName, worksetRules):
     :type worksetRules: _type_
     :return: returns a result object
     :rtype: _type_
-    '''
+    """
 
     gridsResults = res.Result()
     foundMatch = False
     for fileName, worksetModifierList in worksetRules:
-        if (revitFileName.startswith(fileName)):
+        if revitFileName.startswith(fileName):
             foundMatch = True
             for worksetModifier, rules in worksetModifierList:
                 grids = worksetModifier(doc, rules)
                 gridsResults.update(grids)
             break
     if foundMatch == False:
-        gridsResults.update_sep(False, 'No grid rules found for file: ' + revitFileName)
+        gridsResults.update_sep(False, "No grid rules found for file: " + revitFileName)
     return gridsResults

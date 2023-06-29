@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit Geometry to data geometry conversion helper functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,8 +30,9 @@ from duHast.Data.Objects.Properties.Geometry import geometry_polygon as dGeometr
 from duHast.Revit.Common.Geometry import geometry as rGeo
 from collections import namedtuple
 
+
 def convert_xyz_in_data_geometry_polygons(doc, dgObject):
-    '''
+    """
     Converts Revit XYZ objects stored in a data geometry object into groups of doubles for inner and outer loops\
         and stores them in new data geometry object. It also populates translation and rotation matrix data of\
             coordinate system information.
@@ -41,7 +42,7 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     :type dgObject: :class:`.DataGeometryPolygon`
     :return: A data geometry object.
     :rtype: :class:`.DataGeometryPolygon`
-    '''
+    """
 
     data_geometry = dGeometryPoly.DataPolygon()
     outer_loop = []
@@ -58,11 +59,15 @@ def convert_xyz_in_data_geometry_polygons(doc, dgObject):
     data_geometry.outer_loop = outer_loop
     data_geometry.inner_loops = inner_loops
     # add coordinate system translation and rotation data
-    data_geometry.rotation_coord, data_geometry.translation_coord = rGeo.get_coordinate_system_translation_and_rotation(doc)
+    (
+        data_geometry.rotation_coord,
+        data_geometry.translation_coord,
+    ) = rGeo.get_coordinate_system_translation_and_rotation(doc)
     return data_geometry
 
+
 def convert_solid_to_flattened_2d_points(solid):
-    '''
+    """
     Converts a solid into a 2D polygon by projecting it onto a plane.( Removes Z values...)
     First nested list is the outer loop, any other following lists describe holes within the area of the polygon defined be points in first list.
     Arcs, circles will be tessellated to polygons.
@@ -70,9 +75,9 @@ def convert_solid_to_flattened_2d_points(solid):
     :type solid: Autodesk.Revit.DB.Solid
     :return: A list of data geometry instances.
     :rtype: list of :class:`.DataGeometryPolygon`
-    '''
+    """
 
-    '''
+    """
     sample for a sold with multiple sketches:
     [
         [
@@ -94,7 +99,7 @@ def convert_solid_to_flattened_2d_points(solid):
     group all edges of the above face which form a closed loop (first loop of edges to describe the extend of that face, any secondary loops define holes in face)
     - > sort all edges by their connections (need to be connected by a point) so they describe a loop <- seems to be ok as revit provides them
     extract points of edges
-    '''
+    """
 
     ceilingGeos = []
     # sort faces by size
@@ -106,12 +111,12 @@ def convert_solid_to_flattened_2d_points(solid):
         edgeLoops = rGeo.convert_edge_arrays_into_list_of_points(hf.EdgeLoops)
         # convert in UV coordinates
         edgeLoopsFlattened = rGeo.flatten_xyz_point_list_of_lists(edgeLoops)
-        #set up a named tuple to store data in it
+        # set up a named tuple to store data in it
         uvLoops = []
-        uvLoop = namedtuple('uvLoop', 'loop area id threeDPoly')
+        uvLoop = namedtuple("uvLoop", "loop area id threeDPoly")
         counter = 0
         for edgeLoopFlat in edgeLoopsFlattened:
-            areaLoop = rGeo.get_signed_polygon_area( edgeLoopFlat )
+            areaLoop = rGeo.get_signed_polygon_area(edgeLoopFlat)
             uvTuple = uvLoop(edgeLoopFlat, abs(areaLoop), counter, edgeLoops[counter])
             uvLoops.append(uvTuple)
             counter += 1
@@ -120,14 +125,14 @@ def convert_solid_to_flattened_2d_points(solid):
         loopDic = rGeo.build_loops_dictionary(uvLoops)
         for key in loopDic:
             dataGeometry = dGeometryPoly.DataPolygon()
-            keyList =[]
+            keyList = []
             # find matching loop by id
             for x in uvLoops:
                 if x.id == key:
                     keyList = x
                     break
             dataGeometry.outer_loop = keyList.threeDPoly
-            if(len(loopDic[key])>0):
+            if len(loopDic[key]) > 0:
                 for hole in loopDic[key]:
                     dataGeometry.inner_loops.append(hole.threeDPoly)
             else:

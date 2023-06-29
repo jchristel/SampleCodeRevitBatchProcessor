@@ -1,4 +1,4 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions relating to comparing:. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -6,9 +6,9 @@ Helper functions relating to comparing:.
 - two values
 - whether a text value starts or does not start with a given text value
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,8 +30,9 @@ Helper functions relating to comparing:.
 #
 #
 
-def does_not_equal (valueOne, valueTwo):
-    '''
+
+def does_not_equal(valueOne, valueTwo):
+    """
     Returns True if valueOne does not match valueTwo.
     :param valueOne: a value
     :type valueOne: var
@@ -39,16 +40,16 @@ def does_not_equal (valueOne, valueTwo):
     :type valueTwo: var
     :return: True if valueOne does not match valueTwo, otherwise False
     :rtype: bool
-    '''
+    """
 
-    if (valueOne != valueTwo):
+    if valueOne != valueTwo:
         return True
     else:
         return False
 
 
-def does_equal (valueOne, valueTwo):
-    '''
+def does_equal(valueOne, valueTwo):
+    """
     Returns True if valueOne does match valueTwo.
     :param valueOne: a value
     :type valueOne: var
@@ -56,16 +57,16 @@ def does_equal (valueOne, valueTwo):
     :type valueTwo: var
     :return: True if valueOne does match valueTwo, otherwise False
     :rtype: bool
-    '''
+    """
 
-    if (valueOne == valueTwo):
+    if valueOne == valueTwo:
         return True
     else:
         return False
 
 
-def one_start_with_two (valueOne, valueTwo):
-    '''
+def one_start_with_two(valueOne, valueTwo):
+    """
     Returns True if valueOne starts with valueTwo.
     :param valueOne: a value
     :type valueOne: str
@@ -73,16 +74,16 @@ def one_start_with_two (valueOne, valueTwo):
     :type valueTwo: str
     :return: True if valueOne starts with valueTwo, otherwise False
     :rtype: bool
-    '''
+    """
 
-    if (valueOne.startswith(valueTwo)):
+    if valueOne.startswith(valueTwo):
         return True
     else:
         return False
 
 
-def two_does_not_start_with_one (valueOne, valueTwo):
-    '''
+def two_does_not_start_with_one(valueOne, valueTwo):
+    """
     Returns True if valueTwo does not starts with valueOne.
     :param valueOne: a value
     :type valueOne: str
@@ -90,9 +91,9 @@ def two_does_not_start_with_one (valueOne, valueTwo):
     :type valueTwo: str
     :return: True if valueTwo does not starts with valueOne, otherwise False
     :rtype: bool
-    '''
+    """
 
-    if (valueTwo.startswith(valueOne)):
+    if valueTwo.startswith(valueOne):
         return False
     else:
         return True

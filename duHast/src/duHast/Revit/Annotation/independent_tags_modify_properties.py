@@ -76,20 +76,23 @@ def update_tag_location(doc, tag_data):
             for move_data in tag_data:
                 try:
                     move_data.tag.Location.Move(
-                        move_data.new_location
-                        - move_data.old_location
+                        move_data.new_location - move_data.old_location
                     )
-                    action_return_value.update_sep(True, "Moved tag: {}".format(move_data.tag.Id))
+                    action_return_value.update_sep(
+                        True, "Moved tag: {}".format(move_data.tag.Id)
+                    )
                     action_return_value.result.append(move_data.tag)
                 except Exception as e:
                     action_return_value.update_sep(
                         False,
-                        "Failed to move tag: {} with exception: {}".format(move_data.tag.Id, e),
+                        "Failed to move tag: {} with exception: {}".format(
+                            move_data.tag.Id, e
+                        ),
                     )
         except Exception as e:
             action_return_value.update_sep(
                 False,
-                "Failed to move tag with exception: {}".format( e),
+                "Failed to move tag with exception: {}".format(e),
             )
         return action_return_value
 
@@ -153,11 +156,13 @@ def update_tag_locations_from_report(doc, report_file_path, distance_threshold=5
                 )
                 if tag_distance > distance_threshold:
                     # build a list of tags to move in one transaction
-                    tag_updates.append(move_tag(
-                        tag=tag_in_model,
-                        new_location=head_location_data_as_xyz,
-                        old_location=tag_in_model.TagHeadPosition,
-                    ))
+                    tag_updates.append(
+                        move_tag(
+                            tag=tag_in_model,
+                            new_location=head_location_data_as_xyz,
+                            old_location=tag_in_model.TagHeadPosition,
+                        )
+                    )
         except Exception as e:
             return_value.update_sep(
                 False, "An exception occurred when gathering tag data: {}".format(e)

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Room tag not in room warnings solver class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -33,23 +33,23 @@ from duHast.Revit.Rooms.room_tags import move_tag_to_room
 import Autodesk.Revit.DB as rdb
 from duHast.Utilities.Objects import base
 
-class RevitWarningsSolverRoomTagToRoom(base.Base):
 
+class RevitWarningsSolverRoomTagToRoom(base.Base):
     def __init__(self):
-        '''
+        """
         Empty constructor this solver does not take any further arguments.
-        '''
+        """
 
         # ini super class to allow multi inheritance in children!
-        super(RevitWarningsSolverRoomTagToRoom, self).__init__() 
-        self.filter_name = 'Room tag outside of room.'
+        super(RevitWarningsSolverRoomTagToRoom, self).__init__()
+        self.filter_name = "Room tag outside of room."
 
     # --------------------------- room tag not in room ---------------------------
     #: guid identifying this specific warning
-    GUID = '4f0bba25-e17f-480a-a763-d97d184be18a'
-    
+    GUID = "4f0bba25-e17f-480a-a763-d97d184be18a"
+
     def solve_warnings(self, doc, warnings):
-        '''
+        """
         Solver moving room tags to room location point.
 
         :param doc: Current Revit model document.
@@ -57,22 +57,24 @@ class RevitWarningsSolverRoomTagToRoom(base.Base):
         :param warnings: List of warnings to be solved.
         :type warnings: Autodesk.Revit.DB.FailureMessage
 
-        :return: 
+        :return:
             Result class instance.
-            
+
             - .result = True if all room tags within warnings could be moved to room location point. Otherwise False.
             - .message will be 'moved tag to room xyz'
-        
+
         :rtype: :class:`.Result`
-        '''
+        """
 
         return_value = res.Result()
-        if(len(warnings) > 0 ):
+        if len(warnings) > 0:
             for warning in warnings:
                 element_ids = warning.GetFailingElements()
                 for el_id in element_ids:
                     result = move_tag_to_room(doc, el_id)
                     return_value.update(result)
         else:
-            return_value.update_sep(True,'No warnings of type: room tag outside of room in model.')
-        return  return_value
+            return_value.update_sep(
+                True, "No warnings of type: room tag outside of room in model."
+            )
+        return return_value

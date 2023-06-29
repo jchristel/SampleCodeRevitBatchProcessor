@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit category report headers.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,14 +30,25 @@ Revit category report headers.
 # -------------------------------------------- common variables --------------------
 #: Header used in report files
 from duHast.Revit.LinePattern import RevitLineStylesPatterns as rPat
-from duHast.Revit.Categories.Utility.category_property_names import CATEGORY_GRAPHIC_STYLE_3D, CATEGORY_GRAPHIC_STYLE_CUT, CATEGORY_GRAPHIC_STYLE_PROJECTION, PROPERTY_LINE_COLOUR_BLUE_NAME, PROPERTY_LINE_COLOUR_GREEN_NAME, PROPERTY_LINE_COLOUR_RED_NAME, PROPERTY_LINE_WEIGHT_CUT_NAME, PROPERTY_LINE_WEIGHT_PROJECTION_NAME,PROPERTY_MATERIAL_ID, PROPERTY_MATERIAL_NAME
+from duHast.Revit.Categories.Utility.category_property_names import (
+    CATEGORY_GRAPHIC_STYLE_3D,
+    CATEGORY_GRAPHIC_STYLE_CUT,
+    CATEGORY_GRAPHIC_STYLE_PROJECTION,
+    PROPERTY_LINE_COLOUR_BLUE_NAME,
+    PROPERTY_LINE_COLOUR_GREEN_NAME,
+    PROPERTY_LINE_COLOUR_RED_NAME,
+    PROPERTY_LINE_WEIGHT_CUT_NAME,
+    PROPERTY_LINE_WEIGHT_PROJECTION_NAME,
+    PROPERTY_MATERIAL_ID,
+    PROPERTY_MATERIAL_NAME,
+)
 
 REPORT_CATEGORIES_HEADER = [
-    'HOSTFILE',
-    'FAMILY CATEGORY',
-    'MAINCATEGORYNAME',
-    'SUBCATEGORYNAME',
-    'CATEGORYID',
+    "HOSTFILE",
+    "FAMILY CATEGORY",
+    "MAINCATEGORYNAME",
+    "SUBCATEGORYNAME",
+    "CATEGORYID",
     PROPERTY_MATERIAL_NAME.upper(),
     PROPERTY_MATERIAL_ID.upper(),
     rPat.PROPERTY_PATTERN_NAME.upper(),
@@ -49,5 +60,5 @@ REPORT_CATEGORIES_HEADER = [
     PROPERTY_LINE_COLOUR_BLUE_NAME.upper(),
     CATEGORY_GRAPHIC_STYLE_3D.upper(),
     CATEGORY_GRAPHIC_STYLE_PROJECTION.upper(),
-    CATEGORY_GRAPHIC_STYLE_CUT.upper()
+    CATEGORY_GRAPHIC_STYLE_CUT.upper(),
 ]

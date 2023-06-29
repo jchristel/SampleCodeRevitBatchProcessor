@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit families helper functions to change the reference type of reference planes and curve based elements.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,13 +29,18 @@ Revit families helper functions to change the reference type of reference planes
 
 import Autodesk.Revit.DB as rdb
 
-from duHast.Revit.Common import parameter_get_utils as rParaGet, parameter_set_utils as rParaSet
+from duHast.Revit.Common import (
+    parameter_get_utils as rParaGet,
+    parameter_set_utils as rParaSet,
+)
 from duHast.Utilities.Objects import result as res
-from duHast.Revit.Family.family_element_utils import get_all_curve_based_elements_in_family
+from duHast.Revit.Family.family_element_utils import (
+    get_all_curve_based_elements_in_family,
+)
 
 
 def set_ref_planes_to_not_a_reference(doc):
-    ''' 
+    """
     This will set any reference plane with reference type 'weak' within a family to reference type 'not a reference'.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -45,9 +50,9 @@ def set_ref_planes_to_not_a_reference(doc):
         - result.message: one row entry per reference plane requiring reference type change
         - result.result: not used
     :rtype: :class:`.Result`
-    '''
+    """
 
-    '''    
+    """    
     Revit API reference types and their int value:
     ('ref name ', 'Left', ' reference type as int ', 0, ' reference type as string ', 'Left')
     ('ref name ', 'Center (Left/Right)', ' reference type as int ', 1, ' reference type as string ', 'Center (Left/Right)')
@@ -61,37 +66,35 @@ def set_ref_planes_to_not_a_reference(doc):
     ('ref name ', 'Reference Plane', ' reference type as int ', 12, ' reference type as string ', 'Not a Reference')
     ('ref name ', 'Reference Plane', ' reference type as int ', 13, ' reference type as string ', 'Strong Reference')
     ('ref name ', 'Reference Plane', ' reference type as int ', 14, ' reference type as string ', 'Weak Reference')
-    '''
+    """
 
     result = res.Result()
-    result.update_sep(True, 'Changing reference status of reference planes...')
+    result.update_sep(True, "Changing reference status of reference planes...")
     match_at_all = False
     collector_ref_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     for ref_p in collector_ref_planes:
         value_int = rParaGet.get_built_in_parameter_value(
             ref_p,
             rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
-            rParaGet.get_parameter_value_as_integer)
+            rParaGet.get_parameter_value_as_integer,
+        )
         # check if an update is required (id is greater then 12)
-        if (value_int > 13):
+        if value_int > 13:
             result_change = rParaSet.set_built_in_parameter_value(
-                doc,
-                ref_p,
-                rdb.BuiltInParameter.ELEM_REFERENCE_NAME,
-                '12'
-                )
+                doc, ref_p, rdb.BuiltInParameter.ELEM_REFERENCE_NAME, "12"
+            )
             # set overall flag to indicate that at least one element was changed
-            if(result_change.status == True and match_at_all == False):
+            if result_change.status == True and match_at_all == False:
                 match_at_all = True
             result.update(result_change)
-    if(match_at_all == False):
+    if match_at_all == False:
         result.status = False
-        result.message = 'No reference planes found requiring reference type update'
+        result.message = "No reference planes found requiring reference type update"
     return result
 
 
 def set_symbolic_and_model_lines_to_not_a_reference(doc):
-    ''' 
+    """
     This will set any model or symbolic curve in a family with reference type 'weak' to reference type 'not a reference'.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -101,9 +104,9 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
         - result.message: one row entry per curve element requiring reference type change
         - result.result: not used
     :rtype: :class:`.Result`
-    '''
+    """
 
-    '''
+    """
     Revit API
     ('ref name ', 'Model Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
     ('ref name ', 'Model Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
@@ -111,10 +114,10 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
     ('ref name ', 'Symbolic Lines', ' reference type as int ', 0, ' reference type as string ', 'Not a Reference')
     ('ref name ', 'Symbolic Lines', ' reference type as int ', 1, ' reference type as string ', 'Weak Reference')
     ('ref name ', 'Symbolic Lines', ' reference type as int ', 2, ' reference type as string ', 'Strong Reference')
-    '''
+    """
 
     result = res.Result()
-    result.update_sep(True, 'Changing reference status of model and symbolic curves...')
+    result.update_sep(True, "Changing reference status of model and symbolic curves...")
     match_at_all = False
     curves = get_all_curve_based_elements_in_family(doc)
     for curve in curves:
@@ -122,20 +125,18 @@ def set_symbolic_and_model_lines_to_not_a_reference(doc):
         value_int = rParaGet.get_built_in_parameter_value(
             curve,
             rdb.BuiltInParameter.ELEM_IS_REFERENCE,
-            rParaGet.get_parameter_value_as_integer)
+            rParaGet.get_parameter_value_as_integer,
+        )
         # check if an update is required (id equals 1)
-        if (value_int == 1):
+        if value_int == 1:
             result_change = rParaSet.set_built_in_parameter_value(
-                doc,
-                curve,
-                rdb.BuiltInParameter.ELEM_IS_REFERENCE,
-                '0'
-                )
+                doc, curve, rdb.BuiltInParameter.ELEM_IS_REFERENCE, "0"
+            )
             # set overall flag to indicate that at least one element was changed
-            if(result_change.status == True and match_at_all == False):
+            if result_change.status == True and match_at_all == False:
                 match_at_all = True
             result.update(result_change)
-    if(match_at_all == False):
+    if match_at_all == False:
         result.status = False
-        result.message = 'No curve elements found requiring reference type update'
+        result.message = "No curve elements found requiring reference type update"
     return result

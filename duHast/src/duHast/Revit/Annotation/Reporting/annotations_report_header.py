@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains the header row for any (future) annotation reports. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -28,8 +28,8 @@ This module contains the header row for any (future) annotation reports.
 
 # -------------------------------------------- common variables --------------------
 #: header used in dimensions reports
-REPORT_DIMENSIONS_HEADER = ['HOSTFILE','ID', 'NAME']
+REPORT_DIMENSIONS_HEADER = ["HOSTFILE", "ID", "NAME"]
 
 
 #: header used in text reports
-REPORT_TEXT_HEADER = ['HOSTFILE','ID', 'NAME']
+REPORT_TEXT_HEADER = ["HOSTFILE", "ID", "NAME"]

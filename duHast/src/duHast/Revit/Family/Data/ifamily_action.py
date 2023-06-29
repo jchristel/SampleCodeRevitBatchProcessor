@@ -1,11 +1,11 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Interface for family data storage / processing class.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -29,20 +29,20 @@ Interface for family data storage / processing class.
 
 from duHast.Utilities.Objects import base
 
-class IFamilyAction(base.Base):
 
+class IFamilyAction(base.Base):
     def __init__(self, action_type, **kwargs):
 
         # forwards all unused arguments
         # ini super class to allow multi inheritance in children!
-        super(IFamilyAction, self).__init__(**kwargs) 
+        super(IFamilyAction, self).__init__(**kwargs)
 
         self.data = []
-        
-        if(action_type != None):
+
+        if action_type != None:
             self.data_type = action_type
         else:
-            self.data_type = 'not declared'
+            self.data_type = "not declared"
 
     def process(self, doc):
         pass

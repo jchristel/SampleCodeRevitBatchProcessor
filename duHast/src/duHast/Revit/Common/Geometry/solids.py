@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit solids helper functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,8 +30,9 @@ Revit solids helper functions
 import Autodesk.Revit.DB as rdb
 from duHast.Data.Objects.Properties.Geometry import from_revit_conversion as rCon
 
+
 def get_2d_points_from_solid(element):
-    '''
+    """
     Returns a list of lists of data geometry instances representing the flattened (2D geometry) of the Element
     List of Lists because an element can be made up of multiple solids. Each nested list represents one element solid.
     Does not work with in place elements.
@@ -41,7 +42,7 @@ def get_2d_points_from_solid(element):
 
     :return: A list of data geometry instances.
     :rtype: list of :class:`.DataGeometry`
-    '''
+    """
 
     all_element_points = []
     # get geometry from element
@@ -51,14 +52,14 @@ def get_2d_points_from_solid(element):
     # check geometry for Solid elements
     # todo check for FamilyInstance geometry ( in place families!)
     for item in fr1_geom:
-        if(type(item) is rdb.Solid):
+        if type(item) is rdb.Solid:
             solids.append(item)
 
-    # process solids to points 
+    # process solids to points
     # in place families may have more then one solid
     for s in solids:
         points_per_solid = rCon.convert_solid_to_flattened_2d_points(s)
-        if(len(points_per_solid) > 0):
+        if len(points_per_solid) > 0:
             for points_lists in points_per_solid:
                 all_element_points.append(points_lists)
     return all_element_points

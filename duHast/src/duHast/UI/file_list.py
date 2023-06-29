@@ -1,13 +1,13 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Helper functions for the file selection GUI.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -38,6 +38,7 @@ import os
 
 # import file item class
 from duHast.UI import file_item as fi
+
 # import workloader utils
 from duHast.UI import workloader as wl
 
@@ -48,8 +49,9 @@ from duHast.Utilities.Objects import result as res
 # my code here:
 # -------------
 
+
 def get_revit_files(directory, file_extension):
-    '''
+    """
     Returns files in a given directory and of a given file extension.
 
     :param directory: The fully qualified directory path.
@@ -59,24 +61,25 @@ def get_revit_files(directory, file_extension):
 
     :return: List of file items
     :rtype: [:class:`.FileItem`]
-    '''
+    """
 
     files = []
     list_of_files = os.listdir(directory)
     for f in list_of_files:
         # check for file extension match
-        if(f.lower().endswith(file_extension.lower())):
+        if f.lower().endswith(file_extension.lower()):
             # check if this is a back up file
-            if(is_back_up_file(f) == False):
+            if is_back_up_file(f) == False:
                 # Use join to get full file path.
                 location = os.path.join(directory, f)
                 # Get size and add to list of files.
                 size = os.path.getsize(location)
-                files.append(fi.MyFileItem(location,size))
+                files.append(fi.MyFileItem(location, size))
     return files
 
+
 def get_revit_files_incl_sub_dirs(directory, file_extension):
-    '''
+    """
     Returns files in a given directory and its sub directories of a given file extension.
 
     :param directory: The fully qualified directory path.
@@ -86,7 +89,7 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
 
     :return: List of file items
     :rtype: [:class:`.FileItem`]
-    '''
+    """
 
     files = []
     # Get the list of all files in directory tree at given path
@@ -95,46 +98,47 @@ def get_revit_files_incl_sub_dirs(directory, file_extension):
         list_of_files += [os.path.join(dirpath, file) for file in filenames]
     for f in list_of_files:
         # check for file extension match
-        if(f.lower().endswith(file_extension.lower())):
-            # check if this is a back up file, 
-            if(is_back_up_file(f) == False):
+        if f.lower().endswith(file_extension.lower()):
+            # check if this is a back up file,
+            if is_back_up_file(f) == False:
                 # Get size and add to list of files.
                 size = os.path.getsize(f)
-                files.append(fi.MyFileItem(f,size))
+                files.append(fi.MyFileItem(f, size))
     return files
 
+
 def is_back_up_file(file_path):
-    '''
+    """
     Checks whether a file is a Revit back up file.
-    
+
     Backup files are usually in format 'filename.01234.ext'
-    
+
     Method of checking:
 
     - splitting file name at every full stop
     - check whether a list with more more then 2 entries came back ?
-    
-        - no: 
+
+        - no:
             - not a back up
-        - yes: 
+        - yes:
             - check last list entry whether it is 4 characters in length and can it be convert it into an integer?
-        
-                - yes: 
+
+                - yes:
                     - backup file
                 - no
                     - normal file
-    
+
     :param file_path: A fully qualified file path.
     :type file_path: str
 
     :return: True if a back up file, otherwise False.
     :rtype: bool
-    '''
+    """
 
     is_backup = False
-    chunks = file_path.split('.')
-    if(len(chunks)>2):
-        last_chunk = chunks[len(chunks)-2]
+    chunks = file_path.split(".")
+    if len(chunks) > 2:
+        last_chunk = chunks[len(chunks) - 2]
         try:
             converted_num = int(last_chunk)
             is_backup = True
@@ -142,8 +146,9 @@ def is_back_up_file(file_path):
             pass
     return is_backup
 
+
 def get_file_size(item):
-    '''
+    """
     Helper used to define workload size (same as file size)
 
     :param item: A file item object instance.
@@ -151,12 +156,13 @@ def get_file_size(item):
 
     :return: The file size.
     :rtype: int
-    '''
+    """
 
     return item.size
 
+
 def bucket_to_task_list_file_system(item):
-    '''
+    """
     Default task list content for files on a file server location.
 
     :param item: A file item object instance.
@@ -164,12 +170,13 @@ def bucket_to_task_list_file_system(item):
 
     :return: The item name.(fully qualified file path)
     :rtype: str
-    '''
+    """
 
     return item.name
 
+
 def bucket_to_task_list_bim_360(item):
-    '''
+    """
     Default task list content for files on a BIM 360 cloud drive.
 
     :param item: A file item object instance.
@@ -177,12 +184,15 @@ def bucket_to_task_list_bim_360(item):
 
     :return: The revit version, project guid, file guid separated by a space ' '
     :rtype: str
-    '''
+    """
 
-    return ' '.join([item.bim_360_revit_version, item.bim_360_project_guid, item.bim_360_file_guid])
+    return " ".join(
+        [item.bim_360_revit_version, item.bim_360_project_guid, item.bim_360_file_guid]
+    )
 
-def write_revit_task_file(file_name, bucket, get_data = bucket_to_task_list_file_system):
-    '''
+
+def write_revit_task_file(file_name, bucket, get_data=bucket_to_task_list_file_system):
+    """
     Writes out a task list file.
 
     :param file_name: Fully qualified file path of the task file name including extension.
@@ -192,44 +202,55 @@ def write_revit_task_file(file_name, bucket, get_data = bucket_to_task_list_file
     :param get_data: Returns data from file item object to be written to file, defaults to BucketToTaskListFileSystem
     :type get_data: func(:class:`.FileItem`) -> str, optional
 
-    :return: 
+    :return:
         Result class instance.
 
         - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property contains fully qualified file path to task list file.
-        
+
         On exception:
-        
+
         - .status (bool) will be False.
         - .message will contain the exception message.
 
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     try:
-        f = open(file_name, 'w')
+        f = open(file_name, "w")
         row_counter = 0
         for p in bucket.items:
             data = get_data(p)
             # check whether first row
-            if(row_counter != 0):
+            if row_counter != 0:
                 # if not first row add line feed character before data written
-                data = '\n' + data
+                data = "\n" + data
             else:
                 row_counter += 1
             # this looks horrible: but:
             # string.encode('utf-8') returns a byte string b''
             # so it needs to be converted to an actual string again
-            f.write(data.encode('utf-8').decode('utf-8'))
+            f.write(data.encode("utf-8").decode("utf-8"))
         f.close()
-        return_value.append_message('wrote task list: {} [TRUE]'.format(file_name))
+        return_value.append_message("wrote task list: {} [TRUE]".format(file_name))
     except Exception as e:
-        return_value.update_sep(False, 'Failed to write task list: {} with exception {}'.format(file_name ,e))
+        return_value.update_sep(
+            False,
+            "Failed to write task list: {} with exception {}".format(file_name, e),
+        )
     return return_value
 
-def write_file_list(directory_path, file_extension, task_list_directory, task_files_number, file_getter, file_data_processor = bucket_to_task_list_file_system):
-    '''
+
+def write_file_list(
+    directory_path,
+    file_extension,
+    task_list_directory,
+    task_files_number,
+    file_getter,
+    file_data_processor=bucket_to_task_list_file_system,
+):
+    """
     Writes out all task list(s) to file(s).
 
     :param directory_path: Fully qualified directory path containing files to be added to task lists.
@@ -244,20 +265,20 @@ def write_file_list(directory_path, file_extension, task_list_directory, task_fi
     :type file_getter: func(str, str) -> :class:`.FileItem`
     :param file_data_processor: Function processing file item and returns a string to be written to task list file, defaults to BucketToTaskListFileSystem
     :type file_data_processor: func(:class:`.FileItem`) -> str, optional
-    
-    :return: 
+
+    :return:
         Result class instance.
 
         - Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.
         - Result.message property contains fully qualified file path for each task list file.
-        
+
         On exception:
-        
+
         - .status (bool) will be False.
         - .message will contain the exception message.
 
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
     return_value.status = True
@@ -269,11 +290,13 @@ def write_file_list(directory_path, file_extension, task_list_directory, task_fi
         # write out file lists
         counter = 0
         for bucket in buckets:
-            file_name =  os.path.join(task_list_directory, 'Tasklist_' + str(counter)+ '.txt')
+            file_name = os.path.join(
+                task_list_directory, "Tasklist_" + str(counter) + ".txt"
+            )
             status_write = write_revit_task_file(file_name, bucket, file_data_processor)
             return_value.update(status_write)
             counter += 1
-        return_value.append_message('Finished writing out task files')
+        return_value.append_message("Finished writing out task files")
     except Exception as e:
-        return_value.update_sep(False, 'Failed to save file list! '  + str(e))
+        return_value.update_sep(False, "Failed to save file list! " + str(e))
     return return_value

@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit families helper functions retrieving elements from a family.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -30,27 +30,27 @@ Revit families helper functions retrieving elements from a family.
 import Autodesk.Revit.DB as rdb
 
 LINE_NAMES = [
-    'Model Lines', # 3D families
-    'Symbolic Lines', # 3D families
-    'Line' # annotation (tag) families
-    ]
+    "Model Lines",  # 3D families
+    "Symbolic Lines",  # 3D families
+    "Line",  # annotation (tag) families
+]
 
 
 def get_all_generic_forms_in_family(doc):
-    '''
+    """
     Filters all generic forms (3D extrusions) in family.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A collector of Autodesk.Revit.DB.GenericForm.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.GenericForm)
     return col
 
 
 def get_all_curve_based_elements_in_family(doc):
-    '''
+    """
     Filters all curve based elements in family.
     These are:
         - Symbolic Lines
@@ -59,37 +59,37 @@ def get_all_curve_based_elements_in_family(doc):
     :type doc: Autodesk.Revit.DB.Document
     :return: A list of Autodesk.Revit.DB.CurveElement.
     :rtype: list Autodesk.Revit.DB.CurveElement
-    '''
+    """
 
     elements = []
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.CurveElement)
     for c in col:
-        if(rdb.Element.Name.GetValue(c) in LINE_NAMES):
+        if rdb.Element.Name.GetValue(c) in LINE_NAMES:
             elements.append(c)
     return elements
 
 
 def get_all_model_text_elements_in_family(doc):
-    '''
+    """
     Filters all model text elements in family.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A collector of Autodesk.Revit.DB.ModelText.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ModelText)
     return col
 
 
 def get_all_reference_planes_in_family(doc):
-    '''
+    """
     Filters all reference planes in family.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :return: A collector of Autodesk.Revit.DB.ReferencePlane.
     :rtype: Autodesk.Revit.DB.FilteredElementCollector
-    '''
+    """
 
     col = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
     return col

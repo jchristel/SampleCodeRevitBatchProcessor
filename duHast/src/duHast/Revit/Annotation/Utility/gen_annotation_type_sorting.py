@@ -1,10 +1,10 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module contains a Revit generic annotation utility functions. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -26,11 +26,13 @@ This module contains a Revit generic annotation utility functions.
 #
 #
 
-from duHast.Revit.Annotation.generic_annotation import get_all_generic_annotation_types_by_category
+from duHast.Revit.Annotation.generic_annotation import (
+    get_all_generic_annotation_types_by_category,
+)
 
 
 def build_generic_annotation_types_dictionary(collector, dic):
-    '''
+    """
     Returns the dictionary past in with keys and or values added retrieved from collector past in.
     :param collector: Filtered element collector containing GenericAnnotation type elements of family symbols.
     :type collector: Autodesk.Revit.DB.FilteredElementCollector
@@ -38,11 +40,11 @@ def build_generic_annotation_types_dictionary(collector, dic):
     :type dic: dic: key str, values list of Autodesk.Revit.DB.ElementId
     :return: Past in expanded by values from collector. Dictionary the key is the Family name and the value a list of element ids.
     :rtype: dic: key str, values list of Autodesk.Revit.DB.ElementId
-    '''
+    """
 
     for c in collector:
-        if(dic.has_key(c.FamilyName)):
-            if(c.Id not in dic[c.FamilyName]):
+        if dic.has_key(c.FamilyName):
+            if c.Id not in dic[c.FamilyName]:
                 dic[c.FamilyName].append(c.Id)
         else:
             dic[c.FamilyName] = [c.Id]
@@ -50,7 +52,7 @@ def build_generic_annotation_types_dictionary(collector, dic):
 
 
 def sort_generic_annotation_types_by_family_name(doc):
-    '''
+    """
     Returns the dictionary keys is autodesk.revit.db element type as string and values are elements of that type.
 
     :param doc: Current Revit model document.
@@ -60,7 +62,7 @@ def sort_generic_annotation_types_by_family_name(doc):
 
     :return: Dictionary where key is the element type as string and value is a list of all elements belonging to the element type.
     :rtype: dic{str:list[Autodesk.Revit.DB.Element]}
-    '''
+    """
 
     wts_two = get_all_generic_annotation_types_by_category(doc)
     usedWts = {}

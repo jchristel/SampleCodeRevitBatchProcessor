@@ -1,13 +1,13 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Revit railings built-in categories. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - useful for filtering out families which can be used in MEP system types
 
-'''
+"""
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -34,7 +34,8 @@ import Autodesk.Revit.DB as rdb
 from System.Collections.Generic import List
 
 
-RAILING_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
+RAILING_CATEGORY_FILTER = List[rdb.BuiltInCategory](
+    [
         rdb.BuiltInCategory.OST_Railings,
         rdb.BuiltInCategory.OST_RailingBalusterRail,
         rdb.BuiltInCategory.OST_RailingHandRail,
@@ -42,4 +43,5 @@ RAILING_CATEGORY_FILTER = List[rdb.BuiltInCategory] ([
         rdb.BuiltInCategory.OST_RailingSystem,
         rdb.BuiltInCategory.OST_RailingTermination,
         rdb.BuiltInCategory.OST_RailingTopRail,
-    ])
+    ]
+)

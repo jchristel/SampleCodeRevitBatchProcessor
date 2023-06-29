@@ -1,12 +1,12 @@
-'''
+"""
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Varies Element filter / check functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-'''
+"""
 
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -32,7 +32,7 @@ import Autodesk.Revit.DB as rdb
 
 
 def is_element_of_built_in_category(doc, element_id, builtin_categories):
-    '''
+    """
     Checks whether an element is of the built in categories past in.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -42,20 +42,20 @@ def is_element_of_built_in_category(doc, element_id, builtin_categories):
     :type builtin_categories: Autodesk.Revit.DB.Definition
     :return: True if element's builtin category does equals the test category, otherwise False.
     :rtype: bool
-    '''
+    """
 
     match = False
     el = doc.GetElement(element_id)
     enum_category_id = el.Category.Id.IntegerValue.ToString()
     for bic in builtin_categories:
-        if (enum_category_id == bic.value__.ToString()):
+        if enum_category_id == bic.value__.ToString():
             match = True
             break
     return match
 
 
 def is_element_not_of_built_in_category(doc, element_id, builtin_categories):
-    '''
+    """
     Checks whether an element is not of the built in categories past in.
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -65,13 +65,13 @@ def is_element_not_of_built_in_category(doc, element_id, builtin_categories):
     :type builtin_categories: Autodesk.Revit.DB.Definition
     :return: True if element's builtin category does not equals the test category, otherwise False.
     :rtype: bool
-    '''
+    """
 
     match = True
     el = doc.GetElement(element_id)
     enum_category_id = el.Category.Id.IntegerValue.ToString()
     for bic in builtin_categories:
-        if (enum_category_id == bic.value__.ToString()):
+        if enum_category_id == bic.value__.ToString():
             match = False
             break
     return match
@@ -79,11 +79,11 @@ def is_element_not_of_built_in_category(doc, element_id, builtin_categories):
 
 def is_family_name_from_instance(
     doc,
-    family_name, # type: str
-    element_id
-    ):
+    family_name,  # type: str
+    element_id,
+):
 
-    '''
+    """
     Checks whether the family name of a given family instance matches filter value.
 
     :param doc: Current Revit model document.
@@ -94,12 +94,12 @@ def is_family_name_from_instance(
     :type element_id: Autodesk.Revit.DB.ElementId
     :return: True if family equals the test string, otherwise False.
     :rtype: bool
-    '''
+    """
 
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if(rdb.Element.Name.GetValue(el.Symbol.Family) != family_name):
+        if rdb.Element.Name.GetValue(el.Symbol.Family) != family_name:
             flag = False
     except Exception:
         flag = False
@@ -108,11 +108,11 @@ def is_family_name_from_instance(
 
 def is_family_name_from_instance_contains(
     doc,
-    contains_value, # type: str
-    element_id
-    ):
+    contains_value,  # type: str
+    element_id,
+):
     # type: (...) -> bool
-    '''
+    """
     Checks whether the family name of a given family instance contains filter value.
 
     :param doc: Current Revit model document.
@@ -123,12 +123,12 @@ def is_family_name_from_instance_contains(
     :type element_id:  Autodesk.Revit.DB.ElementId
     :return: True if family name does contain the test string, otherwise False.
     :rtype: bool
-    '''
+    """
 
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if(contains_value not in rdb.Element.Name.GetValue(el.Symbol.Family)):
+        if contains_value not in rdb.Element.Name.GetValue(el.Symbol.Family):
             flag = False
     except Exception:
         flag = False
@@ -137,11 +137,11 @@ def is_family_name_from_instance_contains(
 
 def is_family_name_from_instance_does_not_contains(
     doc,
-    contains_value, # type: str
-    element_id
-    ):
+    contains_value,  # type: str
+    element_id,
+):
     # type: (...) -> bool
-    '''
+    """
     Checks whether the family name of a given family instance does not contains filter value.
 
     :param doc: Current Revit model document.
@@ -152,12 +152,12 @@ def is_family_name_from_instance_does_not_contains(
     :type element_id: Autodesk.Revit.DB.ElementId
     :return: True if family name does not contain the test string, otherwise False.
     :rtype: bool
-    '''
+    """
 
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if(contains_value in rdb.Element.Name.GetValue(el.Symbol.Family)):
+        if contains_value in rdb.Element.Name.GetValue(el.Symbol.Family):
             flag = False
     except Exception:
         flag = False
@@ -166,11 +166,11 @@ def is_family_name_from_instance_does_not_contains(
 
 def is_symbol_name_from_instance_contains(
     doc,
-    contains_value, # type: str
-    element_id
-    ):
+    contains_value,  # type: str
+    element_id,
+):
     # type: (...) -> bool
-    '''
+    """
     Checks whether the family symbol name of a given family instance contains filter value.
 
     :param doc: Current Revit model document.
@@ -181,12 +181,12 @@ def is_symbol_name_from_instance_contains(
     :type element_id: Autodesk.Revit.DB.ElementId
     :return: : True if family name does contain the test string, otherwise False.
     :rtype: bool
-    '''
+    """
 
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if(contains_value not in rdb.Element.Name.GetValue(el.Symbol)):
+        if contains_value not in rdb.Element.Name.GetValue(el.Symbol):
             flag = False
     except Exception:
         flag = False
@@ -195,12 +195,12 @@ def is_symbol_name_from_instance_contains(
 
 def is_symbol_name_from_instance_does_not_contains(
     doc,
-    contains_value, # type: str
-    element_id
-    ):
+    contains_value,  # type: str
+    element_id,
+):
     # type: (...) -> bool
 
-    '''
+    """
     Checks whether the family symbol name of a given family instance does not contains filter value.
 
     :param doc: Current Revit model document.
@@ -211,12 +211,12 @@ def is_symbol_name_from_instance_does_not_contains(
     :type element_id: Autodesk.Revit.DB.ElementId
     :return: True if symbol name does not contain the test string, otherwise False.
     :rtype: bool
-    '''
+    """
 
     el = doc.GetElement(element_id)
     flag = True
     try:
-        if(contains_value in rdb.Element.Name.GetValue(el.Symbol)):
+        if contains_value in rdb.Element.Name.GetValue(el.Symbol):
             flag = False
     except Exception:
         flag = False

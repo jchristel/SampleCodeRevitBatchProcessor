@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Family.Data.family_rename_find_host_families module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.Data.family_rename_find_host_families module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../../_sources/duHast/Revit/Family/Data/family_rename_find_host_families.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Family.Data.family_rename_find_host_families">
+<span id="duhast-revit-family-data-family-rename-find-host-families-module"></span><h1>duHast.Revit.Family.Data.family_rename_find_host_families module<a class="headerlink" href="#module-duHast.Revit.Family.Data.family_rename_find_host_families" title="Permalink to this heading">¶</a></h1>
+<section id="finds-host-families-of-nested-families-requiring-to-be-renamed">
+<h2>Finds host families of nested families requiring to be renamed.<a class="headerlink" href="#finds-host-families-of-nested-families-requiring-to-be-renamed" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>read file rename change list:</p></li>
+<li><p>text file (tab separated) with columns: currentFamilyName   currentFamilyFilePath   categoryName newFamilyName</p></li>
+<li><p>note: current family file path could be blank in situations where just a rename of a nested family is required…</p></li>
+<li><p>read base data file processing list (created by RevitFamilyBaseDataProcessor module)</p></li>
+<li><p>extract all root families (no :: in root path)</p></li>
+<li><p>extract all nested families ( :: in root path)</p></li>
+<li><dl class="simple">
+<dt>loop over nested families and find any family where:</dt><dd><ul>
+<li><p>family at first nesting level is in rename list by name and category</p></li>
+<li><p>extract root family name and add to identified host family list</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>loop over root families</p></li>
+<li><p>find match in identified host families</p></li>
+<li><p>write out root family date: family file path, family name, category</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.family_rename_find_host_families.find_host_families_with_nested_families_requiring_rename">
+<span class="sig-name descname"><span class="pre">find_host_families_with_nested_families_requiring_rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.family_rename_find_host_families.find_host_families_with_nested_families_requiring_rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds all host families in data set containing nested families needing to be renamed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_directory_path</strong> (<em>str</em>) – Fully qualified directory path containing rename directives and family base data report.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: True if any host families are found with nested families needing renaming, otherwise False.</p></li>
+<li><p>result.message: processing steps with time stamps</p></li>
+<li><p>result.result: [rootFamily]</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain an exception message</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Family.Data.family_rename_find_host_families module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../../_static/js/toc.js"></script>
+  </body>
+</html>

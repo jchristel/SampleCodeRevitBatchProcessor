@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Utilities.utility module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Utilities.utility module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/duHast/Utilities/utility.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Utilities.utility">
+<span id="duhast-utilities-utility-module"></span><h1>duHast.Utilities.utility module<a class="headerlink" href="#module-duHast.Utilities.utility" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-helper-functions">
+<h2>This module contains a number of helper functions<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_local_app_data_path">
+<span class="sig-name descname"><span class="pre">get_local_app_data_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_local_app_data_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>return directory path to local app data folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Path to local app data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_current_user_name">
+<span class="sig-name descname"><span class="pre">get_current_user_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_current_user_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current user name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the user name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.parse_string_to_bool">
+<span class="sig-name descname"><span class="pre">parse_string_to_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.parse_string_to_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a string to lower case and then to bool. Will throw an exception if it fails to do so.</p>
+<p>( ‘true’ = True, ‘false’ = False)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The string representing a bool.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – If string to bool conversion fails the ‘String cant be converted to bool’ exception will be raised.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True or False</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_TWO">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_TWO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%02d'</span></em><a class="headerlink" href="#duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_TWO" title="Permalink to this definition">¶</a></dt>
+<dd><p>two digit padding</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_THREE">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_THREE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%03d'</span></em><a class="headerlink" href="#duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_THREE" title="Permalink to this definition">¶</a></dt>
+<dd><p>three digit padding</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.pad_single_digit_numeric_string">
+<span class="sig-name descname"><span class="pre">pad_single_digit_numeric_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numericString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%02d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.pad_single_digit_numeric_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pads a single digit integer (past in as a string) with a leading zero (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numericString</strong> (<em>str</em>) – Integer as string.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The integer padding format, defaults to PAD_SINGLE_DIGIT_TO_TWO</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The padded integer as string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.encode_ascii">
+<span class="sig-name descname"><span class="pre">encode_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.encode_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a string as ascii and replaces all non ascii characters</p>
+<p>If a non string is past in the value will be returned unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to be ascii encoded.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ascii encoded string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_first">
+<span class="sig-name descname"><span class="pre">get_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the first value in a list matching condition. If no value found returns the specified default value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterable</strong> (<em>iterable</em>) – the list to be searched.</p></li>
+<li><p><strong>default</strong> (<em>var</em>) – The default value</p></li>
+<li><p><strong>condition</strong> (<em>_type_</em><em>, </em><em>optional</em>) – The condition to be checked, defaults to lambda x:True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>First value matching condition, otherwise default value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.index_of">
+<span class="sig-name descname"><span class="pre">index_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.index_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the index of item in list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list</strong> (<em>list</em>) – The list</p></li>
+<li><p><strong>item</strong> (<em>var</em>) – The item of which to return the index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The index of the item in the list, if no match -1 will be returned</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.remove_items_from_list">
+<span class="sig-name descname"><span class="pre">remove_items_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourceList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removeIdsList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.remove_items_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper removes items from a source list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sourceList</strong> (<em>list var</em>) – The list containing items</p></li>
+<li><p><strong>removeIdsList</strong> (<em>list var</em>) – the list containing items to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The filtered source list.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flattens a dictionary as per stack overflow</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys/6027615#6027615">https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys/6027615#6027615</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>parent_key</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘’</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘_’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Utilities.utility module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

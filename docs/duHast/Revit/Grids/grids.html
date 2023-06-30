@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Grids.grids module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Grids.grids module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Grids/grids.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Grids.grids">
+<span id="duhast-revit-grids-grids-module"></span><h1>duHast.Revit.Grids.grids module<a class="headerlink" href="#module-duHast.Revit.Grids.grids" title="Permalink to this heading">¶</a></h1>
+<section id="revit-grids-helper-functions">
+<h2>Revit grids helper functions.<a class="headerlink" href="#revit-grids-helper-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grids_in_model">
+<span class="sig-name descname"><span class="pre">get_grids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grids_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all grids in model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector with all grids in model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_heads_by_category">
+<span class="sig-name descname"><span class="pre">get_all_grid_heads_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_heads_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid head types in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid head types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_types_by_category">
+<span class="sig-name descname"><span class="pre">get_all_grid_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid types in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid types</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_type_ids_by_category">
+<span class="sig-name descname"><span class="pre">get_all_grid_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all grid types ids in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector with grid type ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_names">
+<span class="sig-name descname"><span class="pre">get_grid_type_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all valid grid types, based on a past in grid, available in model.</p>
+<p>Uses grid.GetValidTypes() to get the grid types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A nested set of lists containing grid type id and grid type name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of lists [[GridTypeId as Revit ElementId, grid type name as string],[…]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_name">
+<span class="sig-name descname"><span class="pre">get_grid_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type name of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The grid type name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_grid_type_id_by_name">
+<span class="sig-name descname"><span class="pre">get_grid_type_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_grid_type_id_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the grid type Id based on it’s name, if no match found it returns the Revit Invalid Element Id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>grid_type_name</strong> (<em>str</em>) – The grid type name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The grids type Id or if not match is found Autodesk.Revit.DB.ElementId.InvalidElementId</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.grid_check_parameter_value">
+<span class="sig-name descname"><span class="pre">grid_check_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.grid_check_parameter_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if a given parameter on a grid has a value meeting the parameter condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p></li>
+<li><p><strong>para_name</strong> (<em>str</em>) – A parameter Name.</p></li>
+<li><p><strong>para_condition</strong> (<em>func</em><em>(</em><em>arg1</em><em>,</em><em>arg2</em><em>)</em>) – A function evaluating the parameter value. First argument is the value to be checked against. Second argument is the actual parameter value.</p></li>
+<li><p><strong>condition_value</strong> (<em>var</em>) – The value to be checked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if parameter value is evaluated to True otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_max_extent_as_string">
+<span class="sig-name descname"><span class="pre">get_max_extent_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_max_extent_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maximum extent of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string in format [maxX,maxY,maxZ]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_min_extent_as_string">
+<span class="sig-name descname"><span class="pre">get_min_extent_as_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_min_extent_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the minimum extent of a grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>g</strong> (<em>Autodesk.Revit.DB.Grid</em>) – A grid.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string in format [minX,minY,minZ]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids">
+<span class="sig-name descname"><span class="pre">get_all_grid_head_family_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Grids.grids.get_all_grid_head_family_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>This will return all ids grid head family types in the model</p>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Grids.grids module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

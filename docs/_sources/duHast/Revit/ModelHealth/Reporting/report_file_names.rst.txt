@@ -1,0 +1,7 @@
+duHast.Revit.ModelHealth.Reporting.report\_file\_names module
+=============================================================
+
+.. automodule:: duHast.Revit.ModelHealth.Reporting.report_file_names
+   :members:
+   :undoc-members:
+   :show-inheritance:

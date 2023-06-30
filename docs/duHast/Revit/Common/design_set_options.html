@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Common.design_set_options module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Common.design_set_options module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Common/design_set_options.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Common.design_set_options">
+<span id="duhast-revit-common-design-set-options-module"></span><h1>duHast.Revit.Common.design_set_options module<a class="headerlink" href="#module-duHast.Revit.Common.design_set_options" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options">
+<h2>This module contains a number of functions around Revit Design Sets and Design Options.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-revit-design-sets-and-design-options" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.REPORT_DESIGNSET_HEADER">
+<span class="sig-name descname"><span class="pre">REPORT_DESIGNSET_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME',</span> <span class="pre">'PRIMARY</span> <span class="pre">OPTION',</span> <span class="pre">'OTHER</span> <span class="pre">OPTIONS']</span></em><a class="headerlink" href="#duHast.Revit.Common.design_set_options.REPORT_DESIGNSET_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_options">
+<span class="sig-name descname"><span class="pre">get_design_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all design options in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design options in current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_sets">
+<span class="sig-name descname"><span class="pre">get_design_sets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the design sets in a model,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Design sets in the current model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.is_design_option_primary">
+<span class="sig-name descname"><span class="pre">is_design_option_primary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_set_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_option_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.is_design_option_primary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a design option is the primary option within a design set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>design_set_name</strong> (<em>str</em>) – The name of the design set the option belongs to,</p></li>
+<li><p><strong>design_option_name</strong> (<em>str</em>) – The name of the design option to be checked,</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if this option is primary otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.design_set_options.get_design_set_option_info">
+<span class="sig-name descname"><span class="pre">get_design_set_option_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.design_set_options.get_design_set_option_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the design set, design option information of an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element</strong> (<em>Autodesk.Revit.DB.Element</em>) – The element of which the design set/option data is to be returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary
+Design Set Name: (can be either Main Model or the design set name)
+designOptionName:    Design Option Name (empty string if Main Model
+isPrimary:           Indicating whether design option is primary (true also if Main Model)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dictionary
+designSetName:str
+designOptionName:str
+isPrimary:bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Common.design_set_options module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

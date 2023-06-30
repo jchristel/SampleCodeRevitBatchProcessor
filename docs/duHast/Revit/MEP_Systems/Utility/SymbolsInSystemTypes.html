@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../../_sources/duHast/Revit/MEP_Systems/Utility/SymbolsInSystemTypes.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes">
+<span id="duhast-revit-mep-systems-utility-symbolsinsystemtypes-module"></span><h1>duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes module<a class="headerlink" href="#module-duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-helper-functions-around-families-used-in-system-types">
+<h2>This module contains a number of helper functions around families used in system types.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-around-families-used-in-system-types" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id">
+<span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of unique symbol ids used in a single system type property.
+List can be empty if an exception during processing occurred.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param system_type_id: MEP system type id (pipe, conduit, duct, cable tray)
+:type system_type_id: Autodesk.Revit.DB.ElementId
+:return: List of unique ids representing family symbols used in a system.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids">
+<span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of unique symbol ids used in these MEP system type properties:
+- Cross
+- Elbow
+- MultiShapeTransition
+- Tap
+- Tee
+- Transition
+- Union
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param system_type_ids: List of MEP system type id belonging to pipe, conduit, duct or cable tray.
+:type system_type_ids: List Autodesk.Revit.DB.ElementId
+:return: List of unique ids representing family symbols used in mep systems.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types">
+<span class="sig-name descname"><span class="pre">get_symbol_ids_of_mep_system_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets list of symbol ids belonging to provided categories loaded in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param category_list: List of built in categories to filter symbols by.
+:type category_list: list Autodesk.Revit.DB.BuiltInCategory
+:param system_type_name: Used in exception message to identify the mep system
+:type system_type_name: str
+:return: List of ids representing family symbols.
+:rtype: list  Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../../_static/js/toc.js"></script>
+  </body>
+</html>

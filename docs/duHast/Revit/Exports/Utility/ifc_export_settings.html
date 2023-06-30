@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Exports.Utility.ifc_export_settings module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Exports.Utility.ifc_export_settings module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../../_sources/duHast/Revit/Exports/Utility/ifc_export_settings.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Exports.Utility.ifc_export_settings">
+<span id="duhast-revit-exports-utility-ifc-export-settings-module"></span><h1>duHast.Revit.Exports.Utility.ifc_export_settings module<a class="headerlink" href="#module-duHast.Revit.Exports.Utility.ifc_export_settings" title="Permalink to this heading">¶</a></h1>
+<section id="ifc-export-settings-class">
+<h2>IFC export settings class.<a class="headerlink" href="#ifc-export-settings-class" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IFCSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_phase_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_view_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_base_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_walls_and_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible_elements_of_current_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use2_d_room_boundary_for_volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_family_and_type_name_for_reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_internal_revit_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_ifc_common_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_2d_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts_as_building_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_solid_model_rep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_schedules_as_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_linked_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_site_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_active_view_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_specific_schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation_level_of_detail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_ifc_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_rooms_in_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_only_triangulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_steel_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_company_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_project_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type_name_only_for_ifc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_visible_revit_name_as_entity_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_placement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_site</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_epsg_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_geodetic_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_map_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../../Utilities/Objects/base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the configuration.</p></li>
+<li><p><strong>ifcVersion</strong> – The IFCFileFormat of the configuration.</p></li>
+<li><p><strong>spaceBoundaries</strong> – The level of space boundaries of the configuration.</p></li>
+<li><p><strong>activePhaseId</strong> – The phase of the document to export.</p></li>
+<li><p><strong>exportBaseQuantities</strong> – Whether or not to include base quantities for model elements in the export data. Base quantities are generated from model geometry to reflect actual physical quantity values, independent of measurement rules or methods.</p></li>
+<li><p><strong>splitWallsAndColumns</strong> – Whether or not to split walls and columns by building stories.</p></li>
+<li><p><strong>visibleElementsOfCurrentView</strong> – True to export only the visible elements of the current view (based on filtering and/or element and category hiding). False to export the entire model.</p></li>
+<li><p><strong>use2DRoomBoundaryForVolume</strong> – True to use a simplified approach to calculation of room volumes (based on extrusion of 2D room boundaries) which is also the default when exporting to IFC 2x2. False to use the Revit calculated room geometry to represent the room volumes (which is the default when exporting to IFC 2x3).</p></li>
+<li><p><strong>useFamilyAndTypeNameForReference</strong> – True to use the family and type name for references. False to use the type name only.</p></li>
+<li><p><strong>exportInternalRevitPropertySets</strong> – True to include the Revit-specific property sets based on parameter groups. False to exclude them.</p></li>
+<li><p><strong>exportIFCCommonPropertySets</strong> – True to include the IFC common property sets. False to exclude them.</p></li>
+<li><p><strong>export2DElements</strong> – True to include 2D elements supported by IFC export (notes and filled regions). False to exclude them.</p></li>
+<li><p><strong>exportPartsAsBuildingElements</strong> – True to export the parts as independent building elements. False to export the parts with host element.</p></li>
+<li><p><strong>exportBoundingBox</strong> – True to export bounding box. False to exclude them.</p></li>
+<li><p><strong>exportSolidModelRep</strong> – True to allow exports of solid models when possible. False to exclude them.</p></li>
+<li><p><strong>exportSchedulesAsPsets</strong> – True to allow exports of schedules as custom property sets. False to exclude them.</p></li>
+<li><p><strong>exportUserDefinedPsets</strong> – True to allow user defined property sets to be exported. False to ignore them</p></li>
+<li><p><strong>exportUserDefinedPsetsFileName</strong> – The name of the file containing the user defined Parameter Mapping Table to be exported.</p></li>
+<li><p><strong>exportLinkedFiles</strong> – True to include links in export, otherwise False.</p></li>
+<li><p><strong>includeSiteElevation</strong> – True to include IFCSITE elevation in the site local placement origin.</p></li>
+<li><p><strong>useActiveViewGeometry</strong> – True to use the active view when generating geometry. False to use default export options.</p></li>
+<li><p><strong>exportSpecificSchedules</strong> – True to export specific schedules</p></li>
+<li><p><strong>tessellationLevelOfDetail</strong> – Value indicating the level of detail to be used by tessellation. Valid values is between 0 to 1</p></li>
+<li><p><strong>storeIFCGUID</strong> – True to store the IFC GUID in the file after the export.  This will require manually saving the file to keep the parameter.</p></li>
+<li><p><strong>exportRoomsInView</strong> – True to export rooms if their bounding box intersect with the section box. If the section box isn’t visible, then all the rooms are exported if this option is set.</p></li>
+<li><p><strong>useOnlyTriangulation</strong> – Value indicating whether tessellated geometry should be kept only as triangulation. (Note: in IFC4_ADD2 IfcPolygonalFaceSet is introduced that can simplify the coplanar triangle faces into a polygonal face. This option skip this)</p></li>
+<li><p><strong>includeSteelElements</strong> – Value indicating whether steel elements should be exported.</p></li>
+<li><p><strong>cOBieCompanyInfo</strong> – COBie specific company information (from a dedicated tab)</p></li>
+<li><p><strong>cOBieProjectInfo</strong> – COBie specific project information (from a dedicated tab)</p></li>
+<li><p><strong>activeViewId</strong> (<em>int</em>) – Id of the active view.</p></li>
+<li><p><strong>useTypeNameOnlyForIfcType</strong> (<em>bool</em>) – Value indicating whether only the Type name will be used to name the IfcTypeObject</p></li>
+<li><p><strong>useVisibleRevitNameAsEntityName</strong> (<em>bool</em>) – Value indicating whether the IFC Entity Name will use visible Revit Name</p></li>
+<li><p><strong>selectedSite</strong> (<em>str</em>) – Selected Site name</p></li>
+<li><p><strong>sitePlacement</strong> (<em>str: SiteTransformBasis.Shared</em><em>, </em><em>SiteTransformBasis.Site</em><em>, </em><em>SiteTransformBasis.Project</em><em>, </em><em>SiteTransformBasis.Internal</em><em>, </em><em>SiteTransformBasis.ProjectInTN</em><em>, </em><em>SiteTransformBasis.InternalInTN</em>) – The origin of the exported file: either shared coordinates (Site Survey Point), Project Base Point, or internal coordinates.</p></li>
+<li><p><strong>geoRefCRSName</strong> (<em>str</em>) – Projected Coordinate System Name</p></li>
+<li><p><strong>geoRefCRSDesc</strong> (<em>str</em>) – Projected Coordinate System Description</p></li>
+<li><p><strong>geoRefEPSGCode</strong> (<em>str</em>) – EPSG Code for the Projected CRS</p></li>
+<li><p><strong>geoRefGeodeticDatum</strong> (<em>str</em>) – The geodetic datum of the ProjectedCRS</p></li>
+<li><p><strong>geoRefMapUnit</strong> (<em>str</em>) – The Map Unit of the ProjectedCRS</p></li>
+<li><p><strong>excludeFilter</strong> (<em>str</em>) – Exclude filter string (element list in an array, separated with semicolon ‘;’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – _description_</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings.supported_ifc_versions">
+<span class="sig-name descname"><span class="pre">supported_ifc_versions</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Default':</span> <span class="pre">'The</span> <span class="pre">Autodesk</span> <span class="pre">Revit</span> <span class="pre">applications</span> <span class="pre">default</span> <span class="pre">export</span> <span class="pre">format.</span> <span class="pre">Note</span> <span class="pre">that</span> <span class="pre">this</span> <span class="pre">may</span> <span class="pre">change</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">defaults</span> <span class="pre">change</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">Revit</span> <span class="pre">user</span> <span class="pre">interface.',</span> <span class="pre">'IFC2x2':</span> <span class="pre">'IFC</span> <span class="pre">2x2</span> <span class="pre">file</span> <span class="pre">format.',</span> <span class="pre">'IFC2x3':</span> <span class="pre">'IFC</span> <span class="pre">2x3</span> <span class="pre">file</span> <span class="pre">format.',</span> <span class="pre">'IFC2x3BFM':</span> <span class="pre">'IFC2x3</span> <span class="pre">Basic</span> <span class="pre">FM</span> <span class="pre">Handover</span> <span class="pre">View',</span> <span class="pre">'IFC2x3CV2':</span> <span class="pre">'IFC</span> <span class="pre">2x3</span> <span class="pre">Coordination</span> <span class="pre">View</span> <span class="pre">2.0</span> <span class="pre">file</span> <span class="pre">format.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">IFC</span> <span class="pre">2x3</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">exporting</span> <span class="pre">files</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">Coordination</span> <span class="pre">View</span> <span class="pre">2.0</span> <span class="pre">model</span> <span class="pre">view.',</span> <span class="pre">'IFC2x3FM':</span> <span class="pre">'IFC2x3</span> <span class="pre">Extended</span> <span class="pre">FM</span> <span class="pre">Handover</span> <span class="pre">View',</span> <span class="pre">'IFC4':</span> <span class="pre">'IFC</span> <span class="pre">4</span> <span class="pre">file</span> <span class="pre">format.',</span> <span class="pre">'IFC4DTV':</span> <span class="pre">'IFC4</span> <span class="pre">Design</span> <span class="pre">Transfer</span> <span class="pre">View',</span> <span class="pre">'IFC4RV':</span> <span class="pre">'IFC4</span> <span class="pre">Reference</span> <span class="pre">View',</span> <span class="pre">'IFCBCA':</span> <span class="pre">'IFC</span> <span class="pre">BCA</span> <span class="pre">file</span> <span class="pre">format.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">certified</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">IFC</span> <span class="pre">2x2</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">submitting</span> <span class="pre">files</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">Singapore</span> <span class="pre">BCA</span> <span class="pre">ePlan</span> <span class="pre">Check</span> <span class="pre">Server.',</span> <span class="pre">'IFCCOBIE':</span> <span class="pre">'IFC</span> <span class="pre">GSA</span> <span class="pre">COBIE</span> <span class="pre">2010</span> <span class="pre">file</span> <span class="pre">format.</span> <span class="pre">This</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">IFC</span> <span class="pre">2x3</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">submitting</span> <span class="pre">files</span> <span class="pre">that</span> <span class="pre">are</span> <span class="pre">COBIE</span> <span class="pre">2010-complaint.'}</span></em><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings.supported_ifc_versions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings.site_placement_options">
+<span class="sig-name descname"><span class="pre">site_placement_options</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'SiteTransformBasis.Internal':</span> <span class="pre">'internal',</span> <span class="pre">'SiteTransformBasis.InternalInTN':</span> <span class="pre">'internalInTN',</span> <span class="pre">'SiteTransformBasis.Project':</span> <span class="pre">'project',</span> <span class="pre">'SiteTransformBasis.ProjectInTN':</span> <span class="pre">'projectInTN',</span> <span class="pre">'SiteTransformBasis.Shared':</span> <span class="pre">'shared',</span> <span class="pre">'SiteTransformBasis.Site':</span> <span class="pre">'site'}</span></em><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings.site_placement_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Exports.Utility.ifc_export_settings module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../../_static/js/toc.js"></script>
+  </body>
+</html>

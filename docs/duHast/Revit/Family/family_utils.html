@@ -1,0 +1,381 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Family.family_utils module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.family_utils module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Family/family_utils.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Family.family_utils">
+<span id="duhast-revit-family-family-utils-module"></span><h1>duHast.Revit.Family.family_utils module<a class="headerlink" href="#module-duHast.Revit.Family.family_utils" title="Permalink to this heading">¶</a></h1>
+<section id="revit-families-helper-functions">
+<h2>Revit families helper functions.<a class="headerlink" href="#revit-families-helper-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.load_family">
+<span class="sig-name descname"><span class="pre">load_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.load_family" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads or reloads a single family into a Revit document.</p>
+<p>Will load/ reload family provided in in path. By default the parameter values in the project file will be overwritten
+with parameter values in family.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>family_file_path</strong> (<em>str</em>) – The fully qualified file path of the family to be loaded.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raise</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Reload status (bool) returned in result.status.</p></li>
+<li><p>Reload status returned from Revit in result.message property.</p></li>
+<li><p>Return family reference stored in result.result property on successful reload only</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_symbols">
+<span class="sig-name descname"><span class="pre">get_family_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family symbols (Revit family types) of given built in categories from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>ICollection
+:cats sample: cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_by_built_in_categories">
+<span class="sig-name descname"><span class="pre">get_family_instances_by_built_in_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_built_in_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of given built in categories from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>ICollection
+:cats sample: cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_of_built_in_category">
+<span class="sig-name descname"><span class="pre">get_family_instances_of_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtin_cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_of_built_in_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of a single given built in category from the Revit model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>builtin_cat</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – single revit builtInCategory Enum value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_loadable_families">
+<span class="sig-name descname"><span class="pre">get_all_loadable_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all families in revit model by whether it is not an InPlace family.</p>
+<p>Note: slow filter due to use of lambda and cast to list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of families matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.Family</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_loadable_family_ids_through_types">
+<span class="sig-name descname"><span class="pre">get_all_loadable_family_ids_through_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_family_ids_through_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all loadable family ids in file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of family ids</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_in_place_families">
+<span class="sig-name descname"><span class="pre">get_all_in_place_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all families in revit model by whether it is an InPlace family.</p>
+<p>Note: slow filter due to use of lambda and cast to list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of families matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.Family</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_family_instances">
+<span class="sig-name descname"><span class="pre">get_all_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_family_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family instances in document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector with all family instances in document.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Collector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven">
+<span class="sig-name descname"><span class="pre">is_any_nested_family_instance_label_driven</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether any family isntance in document is driven by the ‘Label’ property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if at least one instance is driven by label property. Othewise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_symbols_from_type">
+<span class="sig-name descname"><span class="pre">get_symbols_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_symbols_from_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all family types belonging to the same family as types past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – <ul>
+<li><p>list of element id’s representing family symbols (family types)</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary:
+where key is the family id as Autodesk.Revit.DB.ElementId
+value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId belonging to the family</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic {Autodesk.Revit.DB.ElementId: list[Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_by_symbol_type_id">
+<span class="sig-name descname"><span class="pre">get_family_instances_by_symbol_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_symbol_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all family instances of a single given family symbol (type).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>type_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The symbol (type) id</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_in_place_type_ids_in_model_of_category">
+<span class="sig-name descname"><span class="pre">get_all_in_place_type_ids_in_model_of_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_type_ids_in_model_of_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbol (type) ids off all available in place families of single given built in category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>fam_built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – built in revit category</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_symbols_ids">
+<span class="sig-name descname"><span class="pre">get_family_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbols belonging to list of built in categories past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>cats</strong> (<em>cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_non_shared_family_symbol_ids">
+<span class="sig-name descname"><span class="pre">get_all_non_shared_family_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_non_shared_family_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Family.family_utils module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

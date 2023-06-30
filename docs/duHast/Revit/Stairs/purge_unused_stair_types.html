@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Stairs.purge_unused_stair_types module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Stairs.purge_unused_stair_types module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Stairs/purge_unused_stair_types.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Stairs.purge_unused_stair_types">
+<span id="duhast-revit-stairs-purge-unused-stair-types-module"></span><h1>duHast.Revit.Stairs.purge_unused_stair_types module<a class="headerlink" href="#module-duHast.Revit.Stairs.purge_unused_stair_types" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-stairs-and-stair-sub-element-types">
+<h2>This module contains a number of helper functions relating to purging Revit stairs and stair sub element types.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-purging-revit-stairs-and-stair-sub-element-types" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.BASIC_STAIR_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">BASIC_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Stair'</span></em><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.BASIC_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for basic stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.ASSEMBLED_STAIR_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">ASSEMBLED_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Assembled</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.ASSEMBLED_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for assembled stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.PRECAST_STAIR_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">PRECAST_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Precast</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.PRECAST_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for precast stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.CAST_IN_PLACE_STAIR_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CAST_IN_PLACE_STAIR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cast-In-Place</span> <span class="pre">Stair'</span></em><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.CAST_IN_PLACE_STAIR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in stair family name for cast in place stairs</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.BUILTIN_STAIR_TYPE_FAMILY_NAMES">
+<span class="sig-name descname"><span class="pre">BUILTIN_STAIR_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Stair',</span> <span class="pre">'Assembled</span> <span class="pre">Stair',</span> <span class="pre">'Precast</span> <span class="pre">Stair',</span> <span class="pre">'Cast-In-Place</span> <span class="pre">Stair']</span></em><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.BUILTIN_STAIR_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Built in stair family names</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_used_stair_type_ids">
+<span class="sig-name descname"><span class="pre">get_used_stair_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_used_stair_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used in Stair type ids.
+Used: at least one instance of this type is placed in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing stair types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.family_no_types_in_use">
+<span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two lists of ids. True if any id is not in un_used_type_ids.
+TODO: check for more generic list comparison and remove this function.
+:param fam_type_ids: List of family type ids to check.
+:type fam_type_ids: List of Autodesk.Revit.DB.ElementId
+:param un_used_type_ids: Reference list of ids.
+:type un_used_type_ids: List of Autodesk.Revit.DB.ElementId
+:return: True if any id from amTypeIds is not in un_used_type_ids.
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_non_in_place_stair_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_non_in_place_stair_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_non_in_place_stair_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair type ids for.
+Included are:
+- Stair Soffit
+- Compound Stair
+- Basic Stair
+It will therefore not return any in place family types.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids representing unused stair types.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_used_sub_type_ids_from_stair_type">
+<span class="sig-name descname"><span class="pre">get_used_sub_type_ids_from_stair_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stair_type_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_used_sub_type_ids_from_stair_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the id of types making up a stair.
+These could be stair landing types, stringer and carriage types etc.
+Types returned depend on parameter definitions past in.
+Refer to:
+- STAIR_LANDING_TYPE_PARAS,
+- STAIR_CUTMARK_TYPE_PARAS,
+- STAIR_SUPPORT_TYPE_PARAS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>stair_type_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – An element id representing a stair type.</p></li>
+<li><p><strong>paras</strong> (<em>list Autodesk.Revit.DB.BuiltInParameterDefinition</em>) – Parameters containing a type making up a stair.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing stair types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_all_similar_type_ids">
+<span class="sig-name descname"><span class="pre">get_all_similar_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_all_similar_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unique ids of similar types of element ids passed in.
+TODO: check for similar function elsewhere!
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param ids: list of type ids to be added to.
+:type ids: list of Autodesk.Revit.ElementIds
+:return: List of unique ids of similar types.
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.build_system_family_dictionary">
+<span class="sig-name descname"><span class="pre">build_system_family_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.build_system_family_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns dictionary where key is the system family name and values list of available type ids of that system family.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param ids: List of system family ids.
+:type ids: list of Autodesk.Revit.ElementIds
+:return: Dictionary of unique ids of similar types.
+:rtype: dictionary {str: list of Autodesk.Revit.ElementIds }</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.check_system_families">
+<span class="sig-name descname"><span class="pre">check_system_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leave_one_behind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.check_system_families" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether a list of ids of system family is the entire list of types available in the model. If so it will remove one    type id per system family to allow safe purging.
+Revit requires at least one type definition per system family to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param ids: List of ids to check
+:type ids: list of Autodesk.Revit.ElementIds
+:param leave_one_behind: True: at least one type will be omitted from list.
+:type leave_one_behind: bool
+:return: List of unique ids of similar types.
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_used_sub_types">
+<span class="sig-name descname"><span class="pre">get_used_sub_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">available_ids_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paras</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leave_one_behind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_used_sub_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of type ids which are not used in any stair types.
+Type ids are provided via an id getter function
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param available_ids_getter: function returning available type ids
+:type available_ids_getter: func(doc)
+:param paras: list of built in parameters attached to a stair type for given sub types (stringers, path, run, landing)
+:type paras: list of Autodesk.Revit.DB.BuiltInParameter
+:param leave_one_behind: _description_, defaults to True
+:type leave_one_behind: bool, optional
+:return: List of element ids
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_path_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_stair_path_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_path_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair path ids to purge, will omit on path type id per system family if none are used.
+This method can be used to safely delete unused stair path types. In the case that no stair        path instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair path type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids 
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_landing_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_stair_landing_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_landing_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair landing type ids.
+This method can be used to safely delete unused stair landing types. In the case that no stair        landing instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair landing type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids 
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_run_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_stair_run_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_run_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair run type ids.
+This method can be used to safely delete unused stair run types. In the case that no stair        run instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair run type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids 
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_cut_mark_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_stair_cut_mark_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_cut_mark_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair cut mark type ids.
+This method can be used to safely delete unused stair cut mark types. In the case that no stair        cut mark instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stair cut mark type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids 
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_stringers_carriage_type_ids_to_purge">
+<span class="sig-name descname"><span class="pre">get_unused_stair_stringers_carriage_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_stair_stringers_carriage_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused Stair stringer / carriage type ids.
+This method can be used to safely delete unused stair stringer / carriage types. In the case that no stair        string carriage instance using any of the types is placed, this will return all but one type id since        Revit requires at least one stringer carriage type definition to be in the model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids 
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_used_in_place_stair_type_ids">
+<span class="sig-name descname"><span class="pre">get_used_in_place_stair_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_used_in_place_stair_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all used in place stair type ids.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_in_place_stair_type_ids">
+<span class="sig-name descname"><span class="pre">get_unused_in_place_stair_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_in_place_stair_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all unused in place stair type ids.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Stairs.purge_unused_stair_types.get_unused_in_place_stair_type_ids_for_purge">
+<span class="sig-name descname"><span class="pre">get_unused_in_place_stair_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Stairs.purge_unused_stair_types.get_unused_in_place_stair_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets symbol (type) ids and family ids (when no type is in use) of in place Stair families which can be purged.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: List of element ids
+:rtype: list of Autodesk.Revit.ElementIds</p>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Stairs.purge_unused_stair_types module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

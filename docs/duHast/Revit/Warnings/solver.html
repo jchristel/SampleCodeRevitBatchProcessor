@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Warnings.solver module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Warnings.solver module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Warnings/solver.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Warnings.solver">
+<span id="duhast-revit-warnings-solver-module"></span><h1>duHast.Revit.Warnings.solver module<a class="headerlink" href="#module-duHast.Revit.Warnings.solver" title="Permalink to this heading">¶</a></h1>
+<section id="warnings-solver-utility-class">
+<h2>Warnings solver utility class.<a class="headerlink" href="#warnings-solver-utility-class" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RevitWarningsSolver</span></span><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../Utilities/Objects/base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Constructor: assigns the default element filter (pass all)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.default_filter_return_all">
+<span class="sig-name descname"><span class="pre">default_filter_return_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.default_filter_return_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default filter for elements past into solver…returns True for any element past in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True always.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.solver_room_tag_to_room">
+<span class="sig-name descname"><span class="pre">solver_room_tag_to_room</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">RevitWarningsSolverRoomTagToRoom(filter_name='Room</span> <span class="pre">tag</span> <span class="pre">outside</span> <span class="pre">of</span> <span class="pre">room.')</span></em><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.solver_room_tag_to_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>default solver classes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.solver_same_mark">
+<span class="sig-name descname"><span class="pre">solver_same_mark</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">RevitWarningsSolverDuplicateMark(filter=&lt;function</span> <span class="pre">RevitWarningsSolver.default_filter_return_all&gt;,</span> <span class="pre">filter_values=[],</span> <span class="pre">filter_name='Duplicate</span> <span class="pre">mark</span> <span class="pre">value.')</span></em><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.solver_same_mark" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.AVAILABLE_SOLVERS">
+<span class="sig-name descname"><span class="pre">AVAILABLE_SOLVERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'4f0bba25-e17f-480a-a763-d97d184be18a':</span> <span class="pre">RevitWarningsSolverRoomTagToRoom(filter_name='Room</span> <span class="pre">tag</span> <span class="pre">outside</span> <span class="pre">of</span> <span class="pre">room.'),</span> <span class="pre">'6e1efefe-c8e0-483d-8482-150b9f1da21a':</span> <span class="pre">RevitWarningsSolverDuplicateMark(filter=&lt;function</span> <span class="pre">RevitWarningsSolver.default_filter_return_all&gt;,</span> <span class="pre">filter_values=[],</span> <span class="pre">filter_name='Duplicate</span> <span class="pre">mark</span> <span class="pre">value.')}</span></em><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.AVAILABLE_SOLVERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>solver dictionary of available warning solvers by guid</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.set_same_mark_filter_and_filter_solver">
+<span class="sig-name descname"><span class="pre">set_same_mark_filter_and_filter_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">same_mark_filter_solver</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.set_same_mark_filter_and_filter_solver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method allowing to override the default filter function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>same_mark_filter_solver</strong> (<em>func</em><em>(</em><em>document</em><em>, </em><em>elementId</em><em>, </em><em>list</em><em> of </em><em>filter values</em><em>)</em>) – A function to filter elements in warnings by</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Warnings.solver.RevitWarningsSolver.solve_warnings">
+<span class="sig-name descname"><span class="pre">solve_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Warnings.solver.RevitWarningsSolver.solve_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to solve some warning in a revit model using available warnings solver.</p>
+<p>It will get all warnings in model, filter them by available solver GUIDs and finally will attempt to solve the warnings matched up with a solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>.result = True if all warnings could be solved. Otherwise False.</p></li>
+<li><p>.message will contain all messages solver returned.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Warnings.solver module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

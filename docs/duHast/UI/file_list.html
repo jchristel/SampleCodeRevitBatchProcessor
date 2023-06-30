@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.UI.file_list module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.UI.file_list module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/duHast/UI/file_list.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.UI.file_list">
+<span id="duhast-ui-file-list-module"></span><h1>duHast.UI.file_list module<a class="headerlink" href="#module-duHast.UI.file_list" title="Permalink to this heading">¶</a></h1>
+<section id="helper-functions-for-the-file-selection-gui">
+<h2>Helper functions for the file selection GUI.<a class="headerlink" href="#helper-functions-for-the-file-selection-gui" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.get_revit_files">
+<span class="sig-name descname"><span class="pre">get_revit_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.get_revit_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns files in a given directory and of a given file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The fully qualified directory path.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em>) – The file extension filter in format ‘.ext’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of file items</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.get_revit_files_incl_sub_dirs">
+<span class="sig-name descname"><span class="pre">get_revit_files_incl_sub_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.get_revit_files_incl_sub_dirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns files in a given directory and its sub directories of a given file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The fully qualified directory path.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em>) – The file extension filter in format ‘.ext’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of file items</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.is_back_up_file">
+<span class="sig-name descname"><span class="pre">is_back_up_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.is_back_up_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a file is a Revit back up file.</p>
+<p>Backup files are usually in format ‘filename.01234.ext’</p>
+<p>Method of checking:</p>
+<ul>
+<li><p>splitting file name at every full stop</p></li>
+<li><p>check whether a list with more more then 2 entries came back ?</p>
+<blockquote>
+<div><ul>
+<li><dl class="simple">
+<dt>no:</dt><dd><ul class="simple">
+<li><p>not a back up</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>yes:</dt><dd><ul>
+<li><p>check last list entry whether it is 4 characters in length and can it be convert it into an integer?</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>yes:</dt><dd><ul>
+<li><p>backup file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>no</dt><dd><ul>
+<li><p>normal file</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – A fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if a back up file, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.get_file_size">
+<span class="sig-name descname"><span class="pre">get_file_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.get_file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper used to define workload size (same as file size)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) – A file item object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file size.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.bucket_to_task_list_file_system">
+<span class="sig-name descname"><span class="pre">bucket_to_task_list_file_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.bucket_to_task_list_file_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default task list content for files on a file server location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) – A file item object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The item name.(fully qualified file path)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.bucket_to_task_list_bim_360">
+<span class="sig-name descname"><span class="pre">bucket_to_task_list_bim_360</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.bucket_to_task_list_bim_360" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default task list content for files on a BIM 360 cloud drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>item</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) – A file item object instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The revit version, project guid, file guid separated by a space ‘ ‘</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.write_revit_task_file">
+<span class="sig-name descname"><span class="pre">write_revit_task_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bucket</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_data=&lt;function</span> <span class="pre">bucket_to_task_list_file_system&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.write_revit_task_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out a task list file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_name</strong> (<em>str</em>) – Fully qualified file path of the task file name including extension.</p></li>
+<li><p><strong>bucket</strong> (<a class="reference internal" href="workload_bucket.html#duHast.UI.workload_bucket.WorkloadBucket" title="duHast.UI.workload_bucket.WorkloadBucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">WorkloadBucket</span></code></a>) – Workload bucket object instance.</p></li>
+<li><p><strong>get_data</strong> (func(<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) -&gt; str, optional) – Returns data from file item object to be written to file, defaults to BucketToTaskListFileSystem</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Result.message property contains fully qualified file path to task list file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>.status (bool) will be False.</p></li>
+<li><p>.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.UI.file_list.write_file_list">
+<span class="sig-name descname"><span class="pre">write_file_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_list_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_files_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data_processor=&lt;function</span> <span class="pre">bucket_to_task_list_file_system&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.UI.file_list.write_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out all task list(s) to file(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified directory path containing files to be added to task lists.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em>) – A file extension filter in format ‘.ext’</p></li>
+<li><p><strong>task_list_directory</strong> (<em>str</em>) – The fully qualified directory path where the task files will be written .</p></li>
+<li><p><strong>task_files_number</strong> (<em>int</em>) – The number of task files to be written.</p></li>
+<li><p><strong>file_getter</strong> (func(str, str) -&gt; <code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) – Function accepting a directory and file extension filter and returns file items from directory.</p></li>
+<li><p><strong>file_data_processor</strong> (func(<code class="xref py py-class docutils literal notranslate"><span class="pre">FileItem</span></code>) -&gt; str, optional) – Function processing file item and returns a string to be written to task list file, defaults to BucketToTaskListFileSystem</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Write file status (bool) returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>Result.message property contains fully qualified file path for each task list file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>.status (bool) will be False.</p></li>
+<li><p>.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.UI.file_list module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Categories.categories module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Categories.categories module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Categories/categories.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Categories.categories">
+<span id="duhast-revit-categories-categories-module"></span><h1>duHast.Revit.Categories.categories module<a class="headerlink" href="#module-duHast.Revit.Categories.categories" title="Permalink to this heading">¶</a></h1>
+<section id="revit-category-helper-functions">
+<h2>Revit category helper functions.<a class="headerlink" href="#revit-category-helper-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.CAT_RENAMING">
+<span class="sig-name descname"><span class="pre">CAT_RENAMING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Clearance</span> <span class="pre">Zones':</span> <span class="pre">'AMAZING'}</span></em><a class="headerlink" href="#duHast.Revit.Categories.categories.CAT_RENAMING" title="Permalink to this definition">¶</a></dt>
+<dd><p>subcategory renaming sampled dictionary
+key is the current subcategory name, value is the new subcategory name</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.ELEMENTS_PARAS_SUB">
+<span class="sig-name descname"><span class="pre">ELEMENTS_PARAS_SUB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_CURVE_GSTYLE_PLUS_INVISIBLE_MINUS_ANALYTICAL,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.FAMILY_ELEM_SUBCATEGORY,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.CLINE_SUBCATEGORY]</span></em><a class="headerlink" href="#duHast.Revit.Categories.categories.ELEMENTS_PARAS_SUB" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of built in parameters attached to family elements containing subcategory ids</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_main_sub_categories">
+<span class="sig-name descname"><span class="pre">get_main_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_main_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns all subcategories of the family category in a dictionary where        key: sub category name</dt><dd><p>value: sub category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.does_main_sub_category_exists">
+<span class="sig-name descname"><span class="pre">does_main_sub_category_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.does_main_sub_category_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a given subcategory exists in the family.</p>
+<p>Note: Only subcategory directly belonging to the family category will be checked for a match.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>sub_cat_name</strong> (<em>str</em>) – The name of the subcategory to be checked against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if subcategory exists in family, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.delete_main_sub_category">
+<span class="sig-name descname"><span class="pre">delete_main_sub_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_cat_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.delete_main_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a given subcategory from the family.</p>
+<p>Note: Only subcategory directly belonging to the family category will be checked for a match.</p>
+<p>::param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param sub_cat_name: The name of the subcategory to be deleted.
+:type sub_cat_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if subcategory exists in family and was deleted successfully, otherwise False</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_family_category">
+<span class="sig-name descname"><span class="pre">get_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Gets the family category in a dictionary where        key: category name</dt><dd><p>value: category</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: Autodesk.Revit.DB.Category}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_sub_categories">
+<span class="sig-name descname"><span class="pre">get_other_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family subcategories which do not belong to the actual family category.</p>
+<p>key: category name
+value: dictionary : key sub cat name, value: subcategory</p>
+<p>Note: custom subcategories have an Id greater 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: {str:Autodesk.Revit.DB.Category} }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_custom_sub_categories">
+<span class="sig-name descname"><span class="pre">get_other_custom_sub_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_custom_sub_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family custom subcategories which do not belong to the actual family category.
+Custom categories have an Id greater then 0.</p>
+<p>key: category name
+value: dictionary : key sub cat name, value: subcategory</p>
+<p>Note: custom subcategories have an Id greater 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary {str: {str:Autodesk.Revit.DB.Category} }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_other_categories">
+<span class="sig-name descname"><span class="pre">get_other_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_other_categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all family pre defined categories which do not belong to the actual family category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of categories.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Category]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.get_category_by_built_in_def_name">
+<span class="sig-name descname"><span class="pre">get_category_by_built_in_def_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">built_in_defs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.get_category_by_built_in_def_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns categories by their built in definition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>built_in_defs</strong> (<em>[</em><em>Autodesk.Revit.DB.BuiltInCategory</em><em>]</em>) – list of BuiltInCategory Enumeration values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of categories</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Category]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.categories.set_family_category">
+<span class="sig-name descname"><span class="pre">set_family_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_category_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.categories.set_family_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the family category to new one specified by name. (this will not re-instate any custom sub categories created under the new family category)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
+<li><p><strong>new_category_name</strong> (<em>str</em>) – The name of the new family category.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True only if the category was changed successfully. Any other case False! (That includes situations when the family is already of the new category)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Categories.categories module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

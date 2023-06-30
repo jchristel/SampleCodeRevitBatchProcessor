@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Common.purge_utils module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Common.purge_utils module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Common/purge_utils.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Common.purge_utils">
+<span id="duhast-revit-common-purge-utils-module"></span><h1>duHast.Revit.Common.purge_utils module<a class="headerlink" href="#module-duHast.Revit.Common.purge_utils" title="Permalink to this heading">¶</a></h1>
+<section id="revit-purge-utility-functions">
+<h2>Revit purge utility functions.<a class="headerlink" href="#revit-purge-utility-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.build_category_dictionary">
+<span class="sig-name descname"><span class="pre">build_category_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.build_category_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds a dictionary from elementId s past in.
+Dictionary key is the element category and values are all the elements of that category.
+If no category can be found the key ‘invalid category’ will be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.ElementId</em>) – List of element id of which to build the dictionary from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary key is the element category and values are all the elements of that category.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary, key is string, value is list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.check_whether_dependent_elements_are_multiple_orphaned_legend_components">
+<span class="sig-name descname"><span class="pre">check_whether_dependent_elements_are_multiple_orphaned_legend_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.check_whether_dependent_elements_are_multiple_orphaned_legend_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if element are orphaned legend components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_ids</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.ElementId</em>) – List of elements to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all but one element are orphaned legend components.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.filter_out_warnings">
+<span class="sig-name descname"><span class="pre">filter_out_warnings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependent_elements</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.filter_out_warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to filter out any warnings from ids supplied by checking the workset name
+of each element for ‘Reviewable Warnings’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>dependent_elements</strong> (<em>list</em><em> of </em><em>AutoDesk.Revit.DB.Element</em>) – List of elements to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of elements id where the workset name of the element is not ‘Reviewable Warnings’</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of AutoDesk.Revit.DB.Element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.has_dependent_elements">
+<span class="sig-name descname"><span class="pre">has_dependent_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">el</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.has_dependent_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether an element has dependent elements.
+The dependent elements are collected via Element.GetDependentElements(filter).
+This also includes a check as to whether elements returned as dependent are orphaned. (for lack of better words)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>el</strong> (<em>AutoDesk.Revit.DB.Element</em>) – The element to be checked for dependent elements.</p></li>
+<li><p><strong>filter</strong> (<em>Autodesk.Revit.DB.ElementFilter</em><em> , </em><em>optional</em>) – What type of dependent elements to filter, defaults to None which will return all dependent elements</p></li>
+<li><p><strong>threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of how many dependant elements an element can have but still be considered not used, defaults to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns 0 for no dependent elements, 1, for other elements depend on it, -1 if an exception occurred</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Common.purge_utils.get_used_unused_type_ids">
+<span class="sig-name descname"><span class="pre">get_used_unused_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.purge_utils.get_used_unused_type_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets either the used or not used type Ids provided by typeIdGetter.
+Whether the used or unused type ids depends on the useType value.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param type_id_getter: Function returning type ids
+:type type_id_getter: list of Autodesk.Revit.DB.ElementId
+:param use_type: 0, no dependent elements; 1: has dependent elements, defaults to 0
+:type use_type: int, optional
+:param threshold: The number of how many dependant elements an element can have but still be considered not used, defaults to 2
+:type threshold: int, optional
+:return: A list of either all used or unused element ids. Depends on useType.
+:rtype: list of Autodesk.Revit.DB.ElementId</p>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Common.purge_utils module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

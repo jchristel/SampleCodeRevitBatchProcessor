@@ -1,0 +1,474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Utilities.batch_processor_log_utils module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/adctheme.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Utilities.batch_processor_log_utils module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../_sources/duHast/Utilities/batch_processor_log_utils.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Utilities.batch_processor_log_utils">
+<span id="duhast-utilities-batch-processor-log-utils-module"></span><h1>duHast.Utilities.batch_processor_log_utils module<a class="headerlink" href="#module-duHast.Utilities.batch_processor_log_utils" title="Permalink to this heading">¶</a></h1>
+<section id="helper-functions-to-process-revit-batchprocessor-log-files">
+<h2>Helper functions to process Revit BatchProcessor log files.<a class="headerlink" href="#helper-functions-to-process-revit-batchprocessor-log-files" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.debug_mode_">
+<span class="sig-name descname"><span class="pre">debug_mode_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.debug_mode_" title="Permalink to this definition">¶</a></dt>
+<dd><p>global variable controlling debug output</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.EXCEPTION_MESSAGES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_MESSAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ERROR:</span> <span class="pre">An</span> <span class="pre">error</span> <span class="pre">occurred</span> <span class="pre">while</span> <span class="pre">executing</span> <span class="pre">the</span> <span class="pre">task</span> <span class="pre">script!</span> <span class="pre">Operation',</span> <span class="pre">'WARNING:</span> <span class="pre">Timed-out',</span> <span class="pre">'Exception:</span> <span class="pre">[Exception]',</span> <span class="pre">'\t-</span> <span class="pre">\tMessage:</span> <span class="pre">An</span> <span class="pre">unrecoverable</span> <span class="pre">error</span> <span class="pre">has</span> <span class="pre">occurred.</span>&#160; <span class="pre">The</span> <span class="pre">program</span> <span class="pre">will</span> <span class="pre">now</span> <span class="pre">be</span> <span class="pre">terminated.',</span> <span class="pre">'Script</span> <span class="pre">Exception:']</span></em><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.EXCEPTION_MESSAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message snippets which indicate processing of a file went bad</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.delete_log_data_files">
+<span class="sig-name descname"><span class="pre">delete_log_data_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.delete_log_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all log marker files in a directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path containing marker files to be deleted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all files where deleted successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.adjust_session_id_for_file_name">
+<span class="sig-name descname"><span class="pre">adjust_session_id_for_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.adjust_session_id_for_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it        can be used in a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Re-formatted session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.adjust_session_id_file_name_back">
+<span class="sig-name descname"><span class="pre">adjust_session_id_file_name_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.adjust_session_id_file_name_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a        file name using a batch processor supplied id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name_id</strong> (<em>str</em>) – A file name containing a session id with all illegal characters replaced.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.write_session_id_marker_file">
+<span class="sig-name descname"><span class="pre">write_session_id_marker_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.write_session_id_marker_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out an empty marker file in given directory.</p>
+<ul class="simple">
+<li><p>File is of type .txt</p></li>
+<li><p>File name is the batch processor session_id used to identify the log file belonging to this process.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Directory of where the file will be written to.</p></li>
+<li><p><strong>session_id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if marker file was written successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_current_session_ids">
+<span class="sig-name descname"><span class="pre">get_current_session_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_current_session_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns file names of all text files in a given directory representing session Ids.</p>
+<p>Files will be deleted immediately after reading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> (<em>str</em>) – Directory of where test files are located</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids in string format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_log_files">
+<span class="sig-name descname"><span class="pre">get_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_session_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_log_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of fully qualified filepath to log files matching the provided session Ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_session_ids</strong> (<em>[</em><em>str</em><em>]</em>) – List of session ids.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of fully qualified file path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_session_id_from_log_file">
+<span class="sig-name descname"><span class="pre">get_session_id_from_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_session_id_from_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first two rows of a log file to get the session Id used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id, or if not not a log file: an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_id_from_row">
+<span class="sig-name descname"><span class="pre">get_id_from_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_id_from_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the session Id from logfile row.</p>
+<p>sample:
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>Note: There are two session id fields in thi string!</p>
+<p>TODO: Do some error handling!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>str</em>) – A json formatted string with the session id in chevrons.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_text_between">
+<span class="sig-name descname"><span class="pre">get_text_between</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_text_between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns text in between characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to parse</p></li>
+<li><p><strong>first</strong> (<em>str</em>) – String indicating start</p></li>
+<li><p><strong>last</strong> (<em>str</em>) – String indicating end</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string in between start and end.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_message_from_json">
+<span class="sig-name descname"><span class="pre">get_message_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_message_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the outer message string from json formatted message field in log file.</p>
+<p>sample:
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>This includes leading tab characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – json formatted row of logfile</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The message string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_file">
+<span class="sig-name descname"><span class="pre">process_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process revit batch processor session log file.</p>
+<ul class="simple">
+<li><p>find Revit files processed:</p></li>
+<li><p>check whether an exception occurred when processing any of the above files.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to json formatted log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns list of arrays in format:
+[[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.filter_files_not_found">
+<span class="sig-name descname"><span class="pre">filter_files_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files_processed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_not_found</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.filter_files_not_found" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_process_status">
+<span class="sig-name descname"><span class="pre">get_process_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_process_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a log file and checks whether any exception occurred when processing a specific revit file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_to_check</strong> (<em>str</em>) – Fully qualified file path of Revit file which was processed</p></li>
+<li><p><strong>log_file_path</strong> (<em>str</em>) – The fully qualified batch processor session log file path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A process status and a message.</p>
+<ul class="simple">
+<li><p>process status: True if no exception occurred during revit file processing, otherwise false</p></li>
+<li><p>message: the exception message recorded in the log file.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool, str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_file_name_from_data_block">
+<span class="sig-name descname"><span class="pre">get_file_name_from_data_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_file_name_from_data_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the file name from a process message block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message_block</strong> (<em>[</em><em>str</em><em>]</em>) – list of json formatted rows representing all messages received during file process</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fully qualified file path of the file processed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_files_processed">
+<span class="sig-name descname"><span class="pre">get_files_processed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_files_processed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a batch processor logfile and extracts all file names of files processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to log file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list lists containing The fully qualified file path for each file processed and their process status. True for no exception encountered, otherwise false.
+[[filepath, status]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_file_data">
+<span class="sig-name descname"><span class="pre">get_file_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_file_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_files_not_found">
+<span class="sig-name descname"><span class="pre">get_files_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files_processed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_files_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters list of all files meant to be processed and returns the ones flagged as file not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files_processed</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>bool</em><em>]</em><em>]</em>) – array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_log_blocks">
+<span class="sig-name descname"><span class="pre">get_log_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_blocks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_log_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads json formatted data into blocks per files processed.</p>
+<p>Returns the message sections per row entry only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_data</strong> (<em>[</em><em>str</em><em>]</em>) – List of logfile rows in json data format</p></li>
+<li><p><strong>start_marker</strong> (<em>str</em>) – String in messages indicating start of block.</p></li>
+<li><p><strong>end_markers</strong> (<em>str</em>) – String in messages indicating end of block.</p></li>
+<li><p><strong>multiple_blocks</strong> (<em>bool</em>) – Flag indicating whether there are multiple data block in log file to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of list of str</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.read_log_file">
+<span class="sig-name descname"><span class="pre">read_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.read_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads batch processor log file into lists of json objects.</p>
+<dl class="simple">
+<dt>Sample row:</dt><dd><p>{‘sessionId’: ‘778e87a5-4b94-4552-9e7e-c9ed38b5caee’, ‘time’: {‘local’: ‘09:35:45’, ‘utc’: ‘22:35:45’}, ‘date’: {‘local’: ‘25/11/2020’, ‘utc’: ‘24/11/2020’}, ‘message’: {‘msgId’: ‘’, ‘message’: ‘’}}</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to log file in json format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of json objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[json]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_files">
+<span class="sig-name descname"><span class="pre">process_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops over log files and checks whether any exceptions occurred during revit files processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Fully qualified directory path where marker files are stored.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of revit files processed in format:
+[logId,[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str,[str, bool, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Utilities.batch_processor_log_utils module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../_static/js/toc.js"></script>
+  </body>
+</html>

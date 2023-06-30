@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Utilities.Objects.result module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Utilities.Objects.result module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Utilities/Objects/result.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Utilities.Objects.result">
+<span id="duhast-utilities-objects-result-module"></span><h1>duHast.Utilities.Objects.result module<a class="headerlink" href="#module-duHast.Utilities.Objects.result" title="Permalink to this heading">¶</a></h1>
+<section id="a-class-used-to-return-status-messages-and-objects-back-to-a-caller">
+<h2>A class used to return status, messages and objects back to a caller.<a class="headerlink" href="#a-class-used-to-return-status-messages-and-objects-back-to-a-caller" title="Permalink to this heading">¶</a></h2>
+<p>A class used to return the value if any, a message and the status of a method (true if everything is ok or false if something went wrong).</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Result</span></span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor.</p>
+<ul class="simple">
+<li><p>message default value is -</p></li>
+<li><p>status default value is True</p></li>
+<li><p>result default value is []</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.append_message">
+<span class="sig-name descname"><span class="pre">append_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.append_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a new line and new message string to the existing message.</p>
+<p>First message appended will replace the default value of -</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – The new message to be appended.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">otherResult</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Will use the past in result instance to update the instance.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+<li><p>.message is using append (unless other message is default ‘-‘)</p></li>
+<li><p>.result is looping over past in result and adding it one by one to this .result list (ignores None)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>otherResult</strong> (<em>SampleBatchProcessorCode.Result</em>) – Another result class instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.update_sep">
+<span class="sig-name descname"><span class="pre">update_sep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.update_sep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the .status and .message property only.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+<li><p>.message is using append (unless other message is default ‘-‘)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status</strong> (<em>bool</em>) – The status to be added.</p></li>
+<li><p><strong>message</strong> (<em>str</em>) – The message to be appended.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.result.Result.update_status">
+<span class="sig-name descname"><span class="pre">update_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.result.Result.update_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update .status only.</p>
+<ul class="simple">
+<li><p>.status is using a logical AND</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>status</strong> (<em>bool</em>) – The status to be added.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Utilities.Objects.result module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

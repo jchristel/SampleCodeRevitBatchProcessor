@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Annotation.independent_tags_tagged_elements module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Annotation.independent_tags_tagged_elements module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Annotation/independent_tags_tagged_elements.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Annotation.independent_tags_tagged_elements">
+<span id="duhast-revit-annotation-independent-tags-tagged-elements-module"></span><h1>duHast.Revit.Annotation.independent_tags_tagged_elements module<a class="headerlink" href="#module-duHast.Revit.Annotation.independent_tags_tagged_elements" title="Permalink to this heading">¶</a></h1>
+<section id="a-number-of-functions-around-revit-independent-tags-elements-tagged-properties">
+<h2>A number of functions around Revit independent tags elements tagged properties.<a class="headerlink" href="#a-number-of-functions-around-revit-independent-tags-elements-tagged-properties" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements">
+<span class="sig-name descname"><span class="pre">get_tagged_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns tagged element(s) depending on revit version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A list of dictionaries representing the tagged object(s).</p>
+<p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
+If an exception occurs it will return a dictionary with same keys but None values.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId}]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2021">
+<span class="sig-name descname"><span class="pre">get_tagged_elements_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2021" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get tagged element Id in revit versions up to revit 2022</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A list with a single dictionary representing the tagged object.</p>
+<p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
+If an exception occurs it will return a dictionary with same keys but None values.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId}]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2022">
+<span class="sig-name descname"><span class="pre">get_tagged_elements_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2022" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get elbow properties in revit versions from revit 2023 onwards</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A list of dictionaries representing the tagged object(s).</p>
+<p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
+If an exception occurs it will return a dictionary with same keys but None values.</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId},]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Annotation.independent_tags_tagged_elements module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

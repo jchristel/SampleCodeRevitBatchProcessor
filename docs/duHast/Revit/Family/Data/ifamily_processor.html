@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Family.Data.ifamily_processor module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Family.Data.ifamily_processor module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../../_sources/duHast/Revit/Family/Data/ifamily_processor.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Family.Data.ifamily_processor">
+<span id="duhast-revit-family-data-ifamily-processor-module"></span><h1>duHast.Revit.Family.Data.ifamily_processor module<a class="headerlink" href="#module-duHast.Revit.Family.Data.ifamily_processor" title="Permalink to this heading">¶</a></h1>
+<section id="interface-for-family-processing-class">
+<h2>Interface for family processing class.<a class="headerlink" href="#interface-for-family-processing-class" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IFamilyProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'not</span> <span class="pre">declared'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_report_headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../../Utilities/Objects/base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.pre_process_actions">
+<span class="sig-name descname"><span class="pre">pre_process_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.pre_process_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actions any pre processing before family data will be collected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.process">
+<span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather data on the root family and any nested families</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p></li>
+<li><p><strong>root_path</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
+<li><p><strong>root_category_path</strong> (<em>str</em>) – The path of the nested family category in a tree: rootFamilyCategory::nestedFamilyOneCategory::nestedFamilyTwoCategory            This includes the actual family category as the last node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.post_process_actions">
+<span class="sig-name descname"><span class="pre">post_process_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.post_process_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Actions any post processing after family data has been collected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The family document.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns list of flattened dictionaries. One dictionary for each document processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of dictionaries.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[{}]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_json">
+<span class="sig-name descname"><span class="pre">get_data_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns data objects as JSON formatted strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>JSON formatted string.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_string_list">
+<span class="sig-name descname"><span class="pre">get_data_string_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor.get_data_string_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns data objects as list of strings in order of headers list of this class.</p>
+<ul class="simple">
+<li><p>Strings are UTF 8 encoded</p></li>
+<li><p>Unknown header values are marked as ‘null’</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of string.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Family.Data.ifamily_processor module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Common.custom_element_filter module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Common.custom_element_filter module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Common/custom_element_filter.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Common.custom_element_filter">
+<span id="duhast-revit-common-custom-element-filter-module"></span><h1>duHast.Revit.Common.custom_element_filter module<a class="headerlink" href="#module-duHast.Revit.Common.custom_element_filter" title="Permalink to this heading">¶</a></h1>
+<section id="customizable-element-filter-class">
+<h2>Customizable element filter class.<a class="headerlink" href="#customizable-element-filter-class" title="Permalink to this heading">¶</a></h2>
+<p>This class takes as constructor arguments</p>
+<ul class="simple">
+<li><p>a number of filter actions</p></li>
+<li><p>a boolean indicating whether filters are logical and or OR filters</p></li>
+</ul>
+<p>Filter actions checks whether a property matches or does not match provided values. Refer to module: custom_element_filter_actions. The actual property test is undertaken by another function. Samples of those can be found in
+module custom_element_filter_tests.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RevitCustomElementFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_logical_and_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../Utilities/Objects/base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Constructor: This takes a list of element filters and a flag whether this class instance is a logical AND filter (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element_filters</strong> (<em>list</em><em> of </em><em>functions</em><em>, </em><em>optional</em>) – List of element filter functions which will need to accept document and elementId as their arguments, defaults to []</p></li>
+<li><p><strong>is_logical_and_filter</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether list of filters are logical AND filters or logical OR, defaults to True (logical AND)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter.check_element">
+<span class="sig-name descname"><span class="pre">check_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Common.custom_element_filter.RevitCustomElementFilter.check_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter checking whether element meets criteria.</p>
+<p>This function will loop over all the filters past in through the class constructor and test the element for each filter.
+Depending on whether these filters are logical and filters it will return True if all of them evaluate to True or, if logical or filter
+it will return True if one of them evaluates to True, otherwise False will be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>element_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The id of the element to be checked against the filter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it matches the filter(s), otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Common.custom_element_filter module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

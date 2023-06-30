@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Utilities.Objects.timer module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Utilities.Objects.timer module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Utilities/Objects/timer.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Utilities.Objects.timer">
+<span id="duhast-utilities-objects-timer-module"></span><h1>duHast.Utilities.Objects.timer module<a class="headerlink" href="#module-duHast.Utilities.Objects.timer" title="Permalink to this heading">¶</a></h1>
+<section id="a-timer-class-to-measure-code-performance">
+<h2>A timer class to measure code performance.<a class="headerlink" href="#a-timer-class-to-measure-code-performance" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_TWO">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_TWO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%02d'</span></em><a class="headerlink" href="#duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_TWO" title="Permalink to this definition">¶</a></dt>
+<dd><p>time output formatting 2 digit padding</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_THREE">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_THREE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%03d'</span></em><a class="headerlink" href="#duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_THREE" title="Permalink to this definition">¶</a></dt>
+<dd><p>time output formatting default 3 digit padding</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.TimerError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TimerError</span></span><a class="headerlink" href="#duHast.Utilities.Objects.timer.TimerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>A custom exception used to report errors in use of Timer class</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Timer</span></span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
+<p>Class constructor</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start a new timer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When timer is running already.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="duHast.Utilities.Objects.timer.Timer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.Objects.timer.Timer.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the timer, and report the elapsed time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#duHast.Utilities.Objects.timer.TimerError" title="duHast.Utilities.Objects.timer.TimerError"><strong>TimerError</strong></a> – When timer is not running yet.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The elapsed time since the timer has started.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Utilities.Objects.timer module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

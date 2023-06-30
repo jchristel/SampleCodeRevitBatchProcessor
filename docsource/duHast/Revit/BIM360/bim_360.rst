@@ -1,0 +1,7 @@
+duHast.Revit.BIM360.bim\_360 module
+===================================
+
+.. automodule:: duHast.Revit.BIM360.bim_360
+   :members:
+   :undoc-members:
+   :show-inheritance:

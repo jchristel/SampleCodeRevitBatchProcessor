@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Links.cad_links module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Links.cad_links module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Links/cad_links.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Links.cad_links">
+<span id="duhast-revit-links-cad-links-module"></span><h1>duHast.Revit.Links.cad_links module<a class="headerlink" href="#module-duHast.Revit.Links.cad_links" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-cad-links">
+<h2>This module contains a number of helper functions relating to CAD links.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-cad-links" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_types">
+<span class="sig-name descname"><span class="pre">get_all_cad_link_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CAD link types in a model.
+Filters by class.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of CAD link types
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_instances">
+<span class="sig-name descname"><span class="pre">get_all_cad_link_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CAD link instances in a model.
+Filters by class.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A filtered element collector of import instances
+:rtype: Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_cad_type_imports_only">
+<span class="sig-name descname"><span class="pre">get_cad_type_imports_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_cad_type_imports_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CAD imports in a model.
+Filters by class and check whether the element is an external file reference (True its a link, False it is an import)
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A list of all CAD imports in a model.
+:rtype: list Autodesk.Revit.DB.CADLinkType</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.sort_cad_link_types_by_model_or_view_specific">
+<span class="sig-name descname"><span class="pre">sort_cad_link_types_by_model_or_view_specific</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.sort_cad_link_types_by_model_or_view_specific" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns two lists: First one: cad links types linked by view (2D) , second one cad link types linked into model (3D).
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: Two lists of cad link types.
+:rtype: list Autodesk.Revit.DB.CADLinkType, list Autodesk.Revit.DB.CADLinkType</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_type_by_view_only">
+<span class="sig-name descname"><span class="pre">get_all_cad_link_type_by_view_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_by_view_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CAD links by view in a model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: Lists of cad link types.
+:rtype: list Autodesk.Revit.DB.CADLinkType</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_type_in_model_only">
+<span class="sig-name descname"><span class="pre">get_all_cad_link_type_in_model_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_in_model_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CAD links by model in a model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: Lists of cad link types.
+:rtype: list Autodesk.Revit.DB.CADLinkType</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.delete_cad_links">
+<span class="sig-name descname"><span class="pre">delete_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.delete_cad_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all CAD links in a model.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- .result = True if all CAD links got deleted. Otherwise False.
+- .message will contain status of deletion.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.reload_cad_links">
+<span class="sig-name descname"><span class="pre">reload_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.reload_cad_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reloads CAD links from a given file location based on the original link type name (starts with comparison)
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param link_locations: A list of directories where CAD files can be located.
+:type link_locations: list str
+:param host_name_formatted: Not used yet
+:type host_name_formatted: TBC
+:param do_something_with_link_name: A function which amends the link name prior search for a match in folders.        I.e. can be used to truncate the link name i.e. the revision details of a link
+:type do_something_with_link_name: func(str) -&gt; str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- .result = True if all CAD links got reloaded successfully. Otherwise False.
+- .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Links.cad_links module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Walls.curtain_wall_elements module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Walls.curtain_wall_elements module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Walls/curtain_wall_elements.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Walls.curtain_wall_elements">
+<span id="duhast-revit-walls-curtain-wall-elements-module"></span><h1>duHast.Revit.Walls.curtain_wall_elements module<a class="headerlink" href="#module-duHast.Revit.Walls.curtain_wall_elements" title="Permalink to this heading">¶</a></h1>
+<section id="revit-curtain-walls-helper-functions">
+<h2>Revit curtain walls helper functions.<a class="headerlink" href="#revit-curtain-walls-helper-functions" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.REPORT_CURTAINWALL_ELEMENTS_HEADER">
+<span class="sig-name descname"><span class="pre">REPORT_CURTAINWALL_ELEMENTS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'CURTAINWALL_ELEMENT_TYPEID',</span> <span class="pre">'ReplaceMeTYPENAME']</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.REPORT_CURTAINWALL_ELEMENTS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_PANEL_EMPTY_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_PANEL_EMPTY_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Empty</span> <span class="pre">System</span> <span class="pre">Panel'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_PANEL_EMPTY_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for empty system panel</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_PANEL_SYSTEM_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_PANEL_SYSTEM_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Empty</span> <span class="pre">System</span> <span class="pre">Panel'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_PANEL_SYSTEM_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for empty system panel</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_V_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_V_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'V</span> <span class="pre">Corner</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_V_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for V-shaped mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_CIRCULAR_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_CIRCULAR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Circular</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_CIRCULAR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for circular mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_QUAD_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_QUAD_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Quad</span> <span class="pre">Corner</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_QUAD_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for quad corner mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_L_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_L_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'L</span> <span class="pre">Corner</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_L_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for L-shaped corner mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_RECT_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_RECT_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rectangular</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_RECT_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for rectangular mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_TRAPEZ_FAMILY_NAME">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_MULLION_TRAPEZ_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Trapezoid</span> <span class="pre">Corner</span> <span class="pre">Mullion'</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_MULLION_TRAPEZ_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>Built in family name for trapezoid corner mullion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_ELEMENTS_CATEGORY_FILTER">
+<span class="sig-name descname"><span class="pre">CURTAINWALL_ELEMENTS_CATEGORY_FILTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallMullions]</span></em><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.CURTAINWALL_ELEMENTS_CATEGORY_FILTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>category filter for all element filters by category</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category">
+<span class="sig-name descname"><span class="pre">get_all_curtain_wall_element_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a filtered element collector of all curtain wall element types in the model:</p>
+<p>Filters by multiple categories.</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+<li><p>in place family symbols!</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing curtain wall element types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.build_curtain_wall_element_type_dictionary">
+<span class="sig-name descname"><span class="pre">build_curtain_wall_element_type_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.build_curtain_wall_element_type_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dictionary past in with keys and or values added retrieved from collector past in.</p>
+<p>Keys are built in curtain wall element type names.
+TODO: this code repeats across a number of modules. Use generic instead!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing curtain wall element types.</p></li>
+<li><p><strong>dic</strong> (<em>dictionary</em><em> (</em><em>key str</em><em>, </em><em>value list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em><em>)</em>) – A dictionary containing key: curtain wall element type name, value: list of ids belonging to that type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: built in curtain wall element type  name, value: list of ids belonging to that type.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.sort_curtain_wall_element_types_by_family_name">
+<span class="sig-name descname"><span class="pre">sort_curtain_wall_element_types_by_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.sort_curtain_wall_element_types_by_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary containing all curtain wall element types in the model.</p>
+<p>Key values are as per BUILTIN_TYPE_FAMILY_NAMES.
+TODO: This code repeats across a number of modules. Use generic instead!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing key: curtain wall element type family name, value: list of ids.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dic { str: [Autodesk.Revit.DB.ElementId]}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_curtain_wall_element_instances_by_category">
+<span class="sig-name descname"><span class="pre">get_curtain_wall_element_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_curtain_wall_element_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all CurtainWallElement elements instances placed in model.</p>
+<p>Includes:</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A filtered element collector containing curtain wall element types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_type_ids_by_category">
+<span class="sig-name descname"><span class="pre">get_all_curtain_wall_element_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Curtain Wall Element element type ids available in model.</p>
+<p>Includes:</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing curtain wall element types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category_excl_in_place">
+<span class="sig-name descname"><span class="pre">get_all_curtain_wall_element_types_by_category_excl_in_place</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_types_by_category_excl_in_place" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Curtain Wall Element element type available in model. Excludes in place family symbols.</p>
+<p>Includes:</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of curtain wall element types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_type_ids_by_category_excl_symbols">
+<span class="sig-name descname"><span class="pre">get_all_curtain_wall_element_type_ids_by_category_excl_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_element_type_ids_by_category_excl_symbols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all Curtain Wall Element element type ids available in model. Excludes in place family symbols.</p>
+<p>Includes:</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing curtain wall element types.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_non_shared_symbol_ids_by_category">
+<span class="sig-name descname"><span class="pre">get_all_curtain_wall_non_shared_symbol_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Walls.curtain_wall_elements.get_all_curtain_wall_non_shared_symbol_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of all loadable, non shared, family symbols (types) in the model of categories:</p>
+<ul class="simple">
+<li><p>curtain wall panels</p></li>
+<li><p>curtain wall mullions</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of element ids representing curtain wall family symbols.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Walls.curtain_wall_elements module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

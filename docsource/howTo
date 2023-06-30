@@ -1,9 +1,0 @@
-to build the html output:
-
-- browse to \SampleCodeRevitBatchProcessor
-- run: sphinx-build docsource/source/ docsource/build/
-
-to build auto docs:
-
-- browse to: \SampleCodeRevitBatchProcessor
-- run: sphinx-nested-apidoc -o docsource/source/ duHast/src/duHast/

@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Exports.export_navis module &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/adctheme.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../../../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../../../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Exports.export_navis module</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../../../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../../../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../../../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../../../_sources/duHast/Revit/Exports/export_navis.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../../../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="module-duHast.Revit.Exports.export_navis">
+<span id="duhast-revit-exports-export-navis-module"></span><h1>duHast.Revit.Exports.export_navis module<a class="headerlink" href="#module-duHast.Revit.Exports.export_navis" title="Permalink to this heading">¶</a></h1>
+<section id="this-module-contains-a-number-of-functions-around-exporting-from-revit-to-nwc-file-format">
+<h2>This module contains a number of functions around exporting from Revit to nwc file format.<a class="headerlink" href="#this-module-contains-a-number-of-functions-around-exporting-from-revit-to-nwc-file-format" title="Permalink to this heading">¶</a></h2>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.setup_nwc_custom_export_option">
+<span class="sig-name descname"><span class="pre">setup_nwc_custom_export_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using_shared_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_entire_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_model_by_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_as_attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_missing_materials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navis_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.NavisworksParameters.All</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_element_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_custom_export_option" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NWC Export Options object as per values past oin.
+:param using_shared_coordinates: True shared coordinates will be used, otherwise project internal
+:type using_shared_coordinates: bool
+:param export_entire_model: True entire model will be exported, otherwise specific view.
+:type export_entire_model: bool
+:param export_links: True: Revit links will also be exported, otherwise not.
+:type export_links: bool
+:param split_model_by_level: True: model elements will be split by level, otherwise not.
+:type split_model_by_level: bool
+:param export_parts: True parts will be exported, otherwise not.
+:type export_parts: bool
+:param export_room_as_attributes: True room properties will be exported (can be slow!), otherwise not.
+:type export_room_as_attributes: bool
+:param export_room_geometry: True room geometry will be exported, otherwise not.
+:type export_room_geometry: bool
+:param find_missing_materials: True exporter will attempt to find missing materials, otherwise not
+:type find_missing_materials: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>navis_parameters</strong> (<em>Autodesk.Revit.DB.NavisworksParameters</em>) – Options which specifies the parameter conversion of Navisworks Exporter. Default value is All.</p></li>
+<li><p><strong>convert_element_properties</strong> (<em>bool</em>) – True to convert element properties, false otherwise. Default value is false.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A Navisworks .nwc export option.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.setup_nwc_default_export_option_shared_by_view">
+<span class="sig-name descname"><span class="pre">setup_nwc_default_export_option_shared_by_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_default_export_option_shared_by_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an NWC Export Options object with shared coordinates, export by View.
+:return: A Navisworks .nwc export option.
+:rtype: Autodesk.Revit.DB.NavisworksExportOptions</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_to_nwc">
+<span class="sig-name descname"><span class="pre">export_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_to_nwc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting either entire model or view to NWC
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param nwc_export_option: A Navisworks .nwc export option.
+:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
+:param directory_path: The directory path to where the export is being saved.
+:type directory_path: str
+:param file_name: The file name under which the export is being saved.
+:type file_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Export status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the fully qualified file path of the exported file.
+On exception:
+- result.status (bool) will be False.
+- result.message will contain the exception message.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_model_to_nwc">
+<span class="sig-name descname"><span class="pre">export_model_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_model_to_nwc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting the entire model to NWC.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param nwc_export_option: A Navisworks .nwc export option.
+:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
+:param directory_path: The directory path to where the export is being saved.
+:type directory_path: str
+:param file_name: The file name under which the export is being saved.
+:type file_name: str
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Export status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the fully qualified file path of the exported file.
+On exception:
+- result.status (bool) will be False.
+- result.message will contain the exception message.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_3d_views_to_nwc">
+<span class="sig-name descname"><span class="pre">export_3d_views_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_3d_views_to_nwc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function exporting 3D views matching a filter (view starts with) to NWC.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:param view_filter: String the view name is to start with if it is to be exported. (Both view name and string are set to lower at comparison)
+:type view_filter: str
+:param nwc_export_option: A Navisworks .nwc export option.
+:type nwc_export_option: Autodesk.Revit.DB.NavisworksExportOptions
+:param directory_path: The directory path to where the export is being saved.
+:type directory_path: str
+:param do_something_with_view_name: A function which takes as an argument the view name and does something with it. The modified view name is afterwards used as the actual file name, defaults to None which uses the view name unchanged as the export file name.
+:type do_something_with_view_name: function , optional
+:return:</p>
+<blockquote>
+<div><p>Result class instance.
+- Export status returned in result.status. False if an exception occurred, otherwise True.
+- result.message will contain the fully qualified file path of the exported file.
+On exception:
+- result.status (bool) will be False.
+- result.message will contain the exception message.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../Utilities/Objects/result.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Exports.export_navis module
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../../../_static/js/toc.js"></script>
+  </body>
+</html>

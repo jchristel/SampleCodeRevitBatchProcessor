@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Annotation.Reporting package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Annotation.Reporting package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Annotation.Reporting.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-annotation-reporting-package">
+<h1>duHast.Revit.Annotation.Reporting package<a class="headerlink" href="#duhast-revit-annotation-reporting-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Annotation.Reporting.annotations_report_header">
+<span id="duhast-revit-annotation-reporting-annotations-report-header-module"></span><h2>duHast.Revit.Annotation.Reporting.annotations_report_header module<a class="headerlink" href="#module-duHast.Revit.Annotation.Reporting.annotations_report_header" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-the-header-row-for-any-future-annotation-reports">
+<h3>This module contains the header row for any (future) annotation reports.<a class="headerlink" href="#this-module-contains-the-header-row-for-any-future-annotation-reports" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.annotations_report_header.REPORT_DIMENSIONS_HEADER">
+<span class="sig-name descname"><span class="pre">REPORT_DIMENSIONS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME']</span></em><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.annotations_report_header.REPORT_DIMENSIONS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in dimensions reports</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.annotations_report_header.REPORT_TEXT_HEADER">
+<span class="sig-name descname"><span class="pre">REPORT_TEXT_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'NAME']</span></em><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.annotations_report_header.REPORT_TEXT_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in text reports</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.Reporting.gen_annotations_instance_report_header">
+<span id="duhast-revit-annotation-reporting-gen-annotations-instance-report-header-module"></span><h2>duHast.Revit.Annotation.Reporting.gen_annotations_instance_report_header module<a class="headerlink" href="#module-duHast.Revit.Annotation.Reporting.gen_annotations_instance_report_header" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-the-header-row-for-any-future-generic-annotation-reports">
+<h3>This module contains the header row for any (future) generic annotation reports.<a class="headerlink" href="#this-module-contains-the-header-row-for-any-future-generic-annotation-reports" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.gen_annotations_instance_report_header.TAG_PRESENTATION_MODE">
+<span class="sig-name descname"><span class="pre">TAG_PRESENTATION_MODE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TAG_PRESENTATION_MODE'</span></em><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.gen_annotations_instance_report_header.TAG_PRESENTATION_MODE" title="Permalink to this definition">¶</a></dt>
+<dd><p>properties used in reports from to revit 2023 onwards</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.Reporting.gen_annotations_report_header">
+<span id="duhast-revit-annotation-reporting-gen-annotations-report-header-module"></span><h2>duHast.Revit.Annotation.Reporting.gen_annotations_report_header module<a class="headerlink" href="#module-duHast.Revit.Annotation.Reporting.gen_annotations_report_header" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains the header row for any (future) generic annotation reports.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.gen_annotations_report_header.REPORT_GENERIC_ANNOTATIONS_HEADER">
+<span class="sig-name descname"><span class="pre">REPORT_GENERIC_ANNOTATIONS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'GENERICANNOTATIONTYPEID',</span> <span class="pre">'GENERICANNOTATIONTYPENAME']</span></em><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.gen_annotations_report_header.REPORT_GENERIC_ANNOTATIONS_HEADER" title="Permalink to this definition">¶</a></dt>
+<dd><p>header used in reports</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.Reporting.tags_independent_report">
+<span id="duhast-revit-annotation-reporting-tags-independent-report-module"></span><h2>duHast.Revit.Annotation.Reporting.tags_independent_report module<a class="headerlink" href="#module-duHast.Revit.Annotation.Reporting.tags_independent_report" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-revit-tag-instances-report-function">
+<h3>This module contains a Revit tag instances report function.<a class="headerlink" href="#this-module-contains-a-revit-tag-instances-report-function" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.tags_independent_report.get_tag_instances_report_data">
+<span class="sig-name descname"><span class="pre">get_tag_instances_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_element_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.tags_independent_report.get_tag_instances_report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets tag instances data to be written to report file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revit_file_path</strong> (<em>str</em>) – The file hostname, which is added to data returned.</p></li>
+<li><p><strong>custom_element_filter</strong> (class:<cite>.RevitCustomElementFilter</cite>) – allows to filter tags by specific tag properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of sheet properties.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Annotation.Reporting.tags_independent_report.read_tag_independent_data_from_file">
+<span class="sig-name descname"><span class="pre">read_tag_independent_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.Reporting.tags_independent_report.read_tag_independent_data_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an independent tags report file into a list of dictionaries</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>revit_file_path</strong> (<em>str</em>) – Fully qualified file path of report file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of dictionaries where each dictionary contains tag data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[{}]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Annotation.Reporting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Annotation.Reporting" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Annotation.Reporting package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

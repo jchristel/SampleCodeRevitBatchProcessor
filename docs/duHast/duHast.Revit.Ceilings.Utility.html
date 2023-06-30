@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Ceilings.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Ceilings.Utility package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Ceilings.Utility.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-ceilings-utility-package">
+<h1>duHast.Revit.Ceilings.Utility package<a class="headerlink" href="#duhast-revit-ceilings-utility-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Ceilings.Utility.ceilings_filter">
+<span id="duhast-revit-ceilings-utility-ceilings-filter-module"></span><h2>duHast.Revit.Ceilings.Utility.ceilings_filter module<a class="headerlink" href="#module-duHast.Revit.Ceilings.Utility.ceilings_filter" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-revit-ceilings-utility-functions">
+<h3>This module contains a Revit ceilings utility functions.<a class="headerlink" href="#this-module-contains-a-revit-ceilings-utility-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.Ceilings.Utility.ceilings_type_sorting">
+<span id="duhast-revit-ceilings-utility-ceilings-type-sorting-module"></span><h2>duHast.Revit.Ceilings.Utility.ceilings_type_sorting module<a class="headerlink" href="#module-duHast.Revit.Ceilings.Utility.ceilings_type_sorting" title="Permalink to this heading">¶</a></h2>
+<section id="id1">
+<h3>This module contains a Revit ceilings utility functions.<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.Utility.ceilings_type_sorting.build_ceiling_type_dictionary">
+<span class="sig-name descname"><span class="pre">build_ceiling_type_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Utility.ceilings_type_sorting.build_ceiling_type_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the dictionary past in with keys and or values added retrieved from collector past in.
+Keys are built in ceiling family type names.
+TODO: Use more generic code.
+:param collector: A filtered element collector containing ceiling types.
+:type collector: Autodesk.Revit.DB.FilteredElementCollector
+:param dic: A dictionary containing key: ceiling type family name, value: list of ids belonging to that type.
+:type dic: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)
+:return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
+:rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Ceilings.Utility.ceilings_type_sorting.sort_ceiling_types_by_family_name">
+<span class="sig-name descname"><span class="pre">sort_ceiling_types_by_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Utility.ceilings_type_sorting.sort_ceiling_types_by_family_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all ceiling types in the model where key is the build in wall family name, values are ids of associated wall types.
+TODO: Use more generic code.
+:param doc: Current Revit model document.
+:type doc: Autodesk.Revit.DB.Document
+:return: A dictionary containing key: built in ceiling type family name, value: list of ids belonging to that type.
+:rtype: dictionary (key str, value list of Autodesk.Revit.DB.ElementId)</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Ceilings.Utility">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Ceilings.Utility" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Ceilings.Utility package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

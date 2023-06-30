@@ -1,0 +1,479 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Revisions package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Revisions package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Revisions.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-revisions-package">
+<h1>duHast.Revit.Revisions package<a class="headerlink" href="#duhast-revit-revisions-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Revisions.new_revision">
+<span id="duhast-revit-revisions-new-revision-module"></span><h2>duHast.Revit.Revisions.new_revision module<a class="headerlink" href="#module-duHast.Revit.Revisions.new_revision" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-creating-new-revit-revisions">
+<h3>This module contains a number of helper functions relating to creating new revit revisions.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-creating-new-revit-revisions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.new_revision.new_revision_action_2022">
+<span class="sig-name descname"><span class="pre">new_revision_action_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2022" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new revision in a revit document up to version 2022.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list with single entry: the new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.new_revision.new_revision_action_2023">
+<span class="sig-name descname"><span class="pre">new_revision_action_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2023" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new revision in a revit document version 2023 and onwards.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list with single entry: the new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Revisions.revisions">
+<span id="duhast-revit-revisions-revisions-module"></span><h2>duHast.Revit.Revisions.revisions module<a class="headerlink" href="#module-duHast.Revit.Revisions.revisions" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-revisions">
+<h3>This module contains a number of helper functions relating to Revit revisions.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-revisions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.REVISION_DATA">
+<span class="sig-name descname"><span class="pre">REVISION_DATA</span></span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.REVISION_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.create_revision">
+<span class="sig-name descname"><span class="pre">create_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.create_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a revision in the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision created successfully.</p></li>
+<li><p>result.result: will contain list with single entry: the new revision created</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.mark_revision_as_issued">
+<span class="sig-name descname"><span class="pre">mark_revision_as_issued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a revision status to ‘Issued’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision</strong> (<em>Autodesk.REvit.DB.Revision</em>) – The revision</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision marked as issued successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.mark_revision_as_issued_by_revision_id">
+<span class="sig-name descname"><span class="pre">mark_revision_as_issued_by_revision_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued_by_revision_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a revision, identified by its id, status to ‘Issued’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The Id of the revision.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision marked as issued status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision marked as issued successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.add_revisions_to_sheet">
+<span class="sig-name descname"><span class="pre">add_revisions_to_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.add_revisions_to_sheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds revisions to single sheet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.SheetView</em>) – The sheet to add the revision to.</p></li>
+<li><p><strong>revision_ids</strong> (<em>[</em><em>Autodesk.Revit.ElementId</em><em>]</em>) – List of revision ids</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision adding to sheet status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision added to sheet  successfully.</p></li>
+<li><p>result.result: empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.get_issued_revisions">
+<span class="sig-name descname"><span class="pre">get_issued_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_issued_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all issued revisions in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of revision objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[Autodesk.Revit.DB.Revision]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.get_last_issued_revision">
+<span class="sig-name descname"><span class="pre">get_last_issued_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_last_issued_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the last issued revision from a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A revision object or None if no issued revision in the model</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.Revision or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.change_revision_sequence_number">
+<span class="sig-name descname"><span class="pre">change_revision_sequence_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sequence_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.change_revision_sequence_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the revision sequence number of a revision.</p>
+<p>Pop the revision from its current index in the revision sequence list.
+Insert it again at the new index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision</strong> (<em>Autodesk.Revit.DB.Revision</em>) – the revision</p></li>
+<li><p><strong>new_sequence_number</strong> (<em>int</em>) – The new index (sequence number ) of the revision. 1 based!!</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision re-ordered successfully.</p></li>
+<li><p>result.result: new revision sequence list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.re_order_revisions">
+<span class="sig-name descname"><span class="pre">re_order_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.re_order_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to replace the current revision sequence with the one past in.</p>
+<p>Note: both sequences must contain the same revisions…just in a different order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_sequence</strong> (<em>IList&lt;ElementId&gt;</em>) – List of revision element ids describing the new sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the message revision re-ordered successfully.</p></li>
+<li><p>result.result: new revision sequence list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.delete_all_revisions_in_model">
+<span class="sig-name descname"><span class="pre">delete_all_revisions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_description_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.delete_all_revisions_in_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all revision in file passing filter in one transaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>revision_description_filter</strong> (<em>list</em><em>, </em><em>optional</em>) – list of filters, defaults to []</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status. True if all possible revisions where deleted successfully, otherwise False.</p></li>
+<li><p>result.message will contain the name(s) of the revisions excluded by filter and number of revisions deleted.</p></li>
+<li><p>result.result empty list</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+<li><p>result.result will be empty</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Revisions.sequence">
+<span id="duhast-revit-revisions-sequence-module"></span><h2>duHast.Revit.Revisions.sequence module<a class="headerlink" href="#module-duHast.Revit.Revisions.sequence" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-revit-revision-sequences">
+<h3>This module contains a number of helper functions relating to revit revision sequences.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-revit-revision-sequences" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.sequence.get_revision_seq_of_name">
+<span class="sig-name descname"><span class="pre">get_revision_seq_of_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.get_revision_seq_of_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a revision sequence by its name. If no match is found None is returned!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_sequence_name</strong> (<em>str</em>) – The sequence name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The matching sequence or None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.RevisionNumberingSequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Revisions.sequence.create_revision_alpha_seq">
+<span class="sig-name descname"><span class="pre">create_revision_alpha_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.AlphanumericRevisionSettings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.create_revision_alpha_seq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a revision sequence with provided name and settings.</p>
+<p>Will throw an exception if sequence creation failed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
+<li><p><strong>revision_sequence_name</strong> (<em>str</em>) – The name of the sequence</p></li>
+<li><p><strong>alpha_settings</strong> (<em>Autodesk.Revit.DB.AlphanumericRevisionSettings</em><em>, </em><em>optional</em>) – Custom settings, defaults to rdb.AlphanumericRevisionSettings()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The new sequence.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Autodesk.Revit.DB.RevisionNumberingSequence</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Revisions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Revisions" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Revisions package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

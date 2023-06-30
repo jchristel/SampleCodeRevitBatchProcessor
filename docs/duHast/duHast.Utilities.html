@@ -1,0 +1,2208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Utilities package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Utilities package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Utilities.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-utilities-package">
+<h1>duHast.Utilities package<a class="headerlink" href="#duhast-utilities-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="duHast.Utilities.Objects.html">duHast.Utilities.Objects package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.base">duHast.Utilities.Objects.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#base-class-for-objects">Base class for objects.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base"><code class="docutils literal notranslate"><span class="pre">Base</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base.to_json"><code class="docutils literal notranslate"><span class="pre">Base.to_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.result">duHast.Utilities.Objects.result module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#a-class-used-to-return-status-messages-and-objects-back-to-a-caller">A class used to return status, messages and objects back to a caller.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result"><code class="docutils literal notranslate"><span class="pre">Result</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result.append_message"><code class="docutils literal notranslate"><span class="pre">Result.append_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result.update"><code class="docutils literal notranslate"><span class="pre">Result.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result.update_sep"><code class="docutils literal notranslate"><span class="pre">Result.update_sep()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result.update_status"><code class="docutils literal notranslate"><span class="pre">Result.update_status()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects.timer">duHast.Utilities.Objects.timer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#a-timer-class-to-measure-code-performance">A timer class to measure code performance.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_TWO"><code class="docutils literal notranslate"><span class="pre">PAD_SINGLE_DIGIT_TO_TWO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.PAD_SINGLE_DIGIT_TO_THREE"><code class="docutils literal notranslate"><span class="pre">PAD_SINGLE_DIGIT_TO_THREE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.TimerError"><code class="docutils literal notranslate"><span class="pre">TimerError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.Timer"><code class="docutils literal notranslate"><span class="pre">Timer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.Timer.start"><code class="docutils literal notranslate"><span class="pre">Timer.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.timer.Timer.stop"><code class="docutils literal notranslate"><span class="pre">Timer.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="duHast.Utilities.Objects.html#module-duHast.Utilities.Objects">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Utilities.batch_processor_log_utils">
+<span id="duhast-utilities-batch-processor-log-utils-module"></span><h2>duHast.Utilities.batch_processor_log_utils module<a class="headerlink" href="#module-duHast.Utilities.batch_processor_log_utils" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-to-process-revit-batchprocessor-log-files">
+<h3>Helper functions to process Revit BatchProcessor log files.<a class="headerlink" href="#helper-functions-to-process-revit-batchprocessor-log-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.debug_mode_">
+<span class="sig-name descname"><span class="pre">debug_mode_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.debug_mode_" title="Permalink to this definition">¶</a></dt>
+<dd><p>global variable controlling debug output</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.EXCEPTION_MESSAGES">
+<span class="sig-name descname"><span class="pre">EXCEPTION_MESSAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['ERROR:</span> <span class="pre">An</span> <span class="pre">error</span> <span class="pre">occurred</span> <span class="pre">while</span> <span class="pre">executing</span> <span class="pre">the</span> <span class="pre">task</span> <span class="pre">script!</span> <span class="pre">Operation',</span> <span class="pre">'WARNING:</span> <span class="pre">Timed-out',</span> <span class="pre">'Exception:</span> <span class="pre">[Exception]',</span> <span class="pre">'\t-</span> <span class="pre">\tMessage:</span> <span class="pre">An</span> <span class="pre">unrecoverable</span> <span class="pre">error</span> <span class="pre">has</span> <span class="pre">occurred.</span>&#160; <span class="pre">The</span> <span class="pre">program</span> <span class="pre">will</span> <span class="pre">now</span> <span class="pre">be</span> <span class="pre">terminated.',</span> <span class="pre">'Script</span> <span class="pre">Exception:']</span></em><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.EXCEPTION_MESSAGES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Message snippets which indicate processing of a file went bad</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.delete_log_data_files">
+<span class="sig-name descname"><span class="pre">delete_log_data_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.delete_log_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all log marker files in a directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path containing marker files to be deleted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all files where deleted successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.adjust_session_id_for_file_name">
+<span class="sig-name descname"><span class="pre">adjust_session_id_for_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.adjust_session_id_for_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it        can be used in a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Re-formatted session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.adjust_session_id_file_name_back">
+<span class="sig-name descname"><span class="pre">adjust_session_id_file_name_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.adjust_session_id_file_name_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a        file name using a batch processor supplied id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name_id</strong> (<em>str</em>) – A file name containing a session id with all illegal characters replaced.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.write_session_id_marker_file">
+<span class="sig-name descname"><span class="pre">write_session_id_marker_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.write_session_id_marker_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out an empty marker file in given directory.</p>
+<ul class="simple">
+<li><p>File is of type .txt</p></li>
+<li><p>File name is the batch processor session_id used to identify the log file belonging to this process.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Directory of where the file will be written to.</p></li>
+<li><p><strong>session_id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if marker file was written successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_current_session_ids">
+<span class="sig-name descname"><span class="pre">get_current_session_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_current_session_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns file names of all text files in a given directory representing session Ids.</p>
+<p>Files will be deleted immediately after reading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> (<em>str</em>) – Directory of where test files are located</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ids in string format.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_log_files">
+<span class="sig-name descname"><span class="pre">get_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_of_session_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_log_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of fully qualified filepath to log files matching the provided session Ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>list_of_session_ids</strong> (<em>[</em><em>str</em><em>]</em>) – List of session ids.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of fully qualified file path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_session_id_from_log_file">
+<span class="sig-name descname"><span class="pre">get_session_id_from_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_session_id_from_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first two rows of a log file to get the session Id used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id, or if not not a log file: an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_id_from_row">
+<span class="sig-name descname"><span class="pre">get_id_from_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_id_from_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the session Id from logfile row.</p>
+<p>sample:
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>Note: There are two session id fields in thi string!</p>
+<p>TODO: Do some error handling!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>str</em>) – A json formatted string with the session id in chevrons.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_text_between">
+<span class="sig-name descname"><span class="pre">get_text_between</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_text_between" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns text in between characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to parse</p></li>
+<li><p><strong>first</strong> (<em>str</em>) – String indicating start</p></li>
+<li><p><strong>last</strong> (<em>str</em>) – String indicating end</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string in between start and end.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_message_from_json">
+<span class="sig-name descname"><span class="pre">get_message_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_message_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the outer message string from json formatted message field in log file.</p>
+<p>sample:
+{“date”:{“local”:”17/12/2020”,”utc”:”17/12/2020”},”time”:{“local”:”16:49:27”,”utc”:”05:49:27”},”sessionId”:”235e2180-dc33-4d61-8773-1005a59344c0”,”message”:{“msgId”:””,”message”:”Session ID: &lt;2020-12-17T05:49:27.559Z&gt;”}}</p>
+<p>This includes leading tab characters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – json formatted row of logfile</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The message string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_file">
+<span class="sig-name descname"><span class="pre">process_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process revit batch processor session log file.</p>
+<ul class="simple">
+<li><p>find Revit files processed:</p></li>
+<li><p>check whether an exception occurred when processing any of the above files.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to json formatted log file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns list of arrays in format:
+[[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.filter_files_not_found">
+<span class="sig-name descname"><span class="pre">filter_files_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files_processed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_not_found</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.filter_files_not_found" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_process_status">
+<span class="sig-name descname"><span class="pre">get_process_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_process_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a log file and checks whether any exception occurred when processing a specific revit file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_to_check</strong> (<em>str</em>) – Fully qualified file path of Revit file which was processed</p></li>
+<li><p><strong>log_file_path</strong> (<em>str</em>) – The fully qualified batch processor session log file path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A process status and a message.</p>
+<ul class="simple">
+<li><p>process status: True if no exception occurred during revit file processing, otherwise false</p></li>
+<li><p>message: the exception message recorded in the log file.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool, str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_file_name_from_data_block">
+<span class="sig-name descname"><span class="pre">get_file_name_from_data_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_file_name_from_data_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the file name from a process message block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message_block</strong> (<em>[</em><em>str</em><em>]</em>) – list of json formatted rows representing all messages received during file process</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The fully qualified file path of the file processed</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_files_processed">
+<span class="sig-name descname"><span class="pre">get_files_processed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_files_processed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a batch processor logfile and extracts all file names of files processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to log file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list lists containing The fully qualified file path for each file processed and their process status. True for no exception encountered, otherwise false.
+[[filepath, status]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_file_data">
+<span class="sig-name descname"><span class="pre">get_file_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_file_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_files_not_found">
+<span class="sig-name descname"><span class="pre">get_files_not_found</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files_processed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_files_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters list of all files meant to be processed and returns the ones flagged as file not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files_processed</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>bool</em><em>]</em><em>]</em>) – array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of lists in format: [[filename, status as bool],[filename, status as bool],…]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str, bool]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.get_log_blocks">
+<span class="sig-name descname"><span class="pre">get_log_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_marker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiple_blocks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.get_log_blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads json formatted data into blocks per files processed.</p>
+<p>Returns the message sections per row entry only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_data</strong> (<em>[</em><em>str</em><em>]</em>) – List of logfile rows in json data format</p></li>
+<li><p><strong>start_marker</strong> (<em>str</em>) – String in messages indicating start of block.</p></li>
+<li><p><strong>end_markers</strong> (<em>str</em>) – String in messages indicating end of block.</p></li>
+<li><p><strong>multiple_blocks</strong> (<em>bool</em>) – Flag indicating whether there are multiple data block in log file to be returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of list of str</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.read_log_file">
+<span class="sig-name descname"><span class="pre">read_log_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.read_log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads batch processor log file into lists of json objects.</p>
+<dl class="simple">
+<dt>Sample row:</dt><dd><p>{‘sessionId’: ‘778e87a5-4b94-4552-9e7e-c9ed38b5caee’, ‘time’: {‘local’: ‘09:35:45’, ‘utc’: ‘22:35:45’}, ‘date’: {‘local’: ‘25/11/2020’, ‘utc’: ‘24/11/2020’}, ‘message’: {‘msgId’: ‘’, ‘message’: ‘’}}</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path to log file in json format</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of json objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[json]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.batch_processor_log_utils.process_log_files">
+<span class="sig-name descname"><span class="pre">process_log_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.batch_processor_log_utils.process_log_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops over log files and checks whether any exceptions occurred during revit files processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Fully qualified directory path where marker files are stored.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of revit files processed in format:
+[logId,[processed Revit file name, status of processing (true or false), message]]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str,[str, bool, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.compare">
+<span id="duhast-utilities-compare-module"></span><h2>duHast.Utilities.compare module<a class="headerlink" href="#module-duHast.Utilities.compare" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-comparing">
+<h3>Helper functions relating to comparing:.<a class="headerlink" href="#helper-functions-relating-to-comparing" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>two values</p></li>
+<li><p>whether a text value starts or does not start with a given text value</p></li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.compare.does_not_equal">
+<span class="sig-name descname"><span class="pre">does_not_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valueOne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueTwo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.compare.does_not_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if valueOne does not match valueTwo.
+:param valueOne: a value
+:type valueOne: var
+:param valueTwo: another value
+:type valueTwo: var
+:return: True if valueOne does not match valueTwo, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.compare.does_equal">
+<span class="sig-name descname"><span class="pre">does_equal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valueOne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueTwo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.compare.does_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if valueOne does match valueTwo.
+:param valueOne: a value
+:type valueOne: var
+:param valueTwo: another value
+:type valueTwo: var
+:return: True if valueOne does match valueTwo, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.compare.one_start_with_two">
+<span class="sig-name descname"><span class="pre">one_start_with_two</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valueOne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueTwo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.compare.one_start_with_two" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if valueOne starts with valueTwo.
+:param valueOne: a value
+:type valueOne: str
+:param valueTwo: another value
+:type valueTwo: str
+:return: True if valueOne starts with valueTwo, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.compare.two_does_not_start_with_one">
+<span class="sig-name descname"><span class="pre">two_does_not_start_with_one</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valueOne</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valueTwo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.compare.two_does_not_start_with_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if valueTwo does not starts with valueOne.
+:param valueOne: a value
+:type valueOne: str
+:param valueTwo: another value
+:type valueTwo: str
+:return: True if valueTwo does not starts with valueOne, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.console_out">
+<span id="duhast-utilities-console-out-module"></span><h2>duHast.Utilities.console_out module<a class="headerlink" href="#module-duHast.Utilities.console_out" title="Permalink to this heading">¶</a></h2>
+<section id="a-function-used-to-output-messages-to-a-console">
+<h3>A function used to output messages to a console.<a class="headerlink" href="#a-function-used-to-output-messages-to-a-console" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.console_out.default_out_print">
+<span class="sig-name descname"><span class="pre">default_out_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.console_out.default_out_print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default pip out method: print to console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>) – A message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.console_out.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_out=&lt;function</span> <span class="pre">default_out_print&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.console_out.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print message to pipe.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>If message is not a string it will convert it to a string.</p></li>
+<li><p>Multi line strings will pe printed line by line.</p></li>
+<li><p>strings containing [true] ot [false] will be padded to have [true] or [false] to the right hand side.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.console_out.output_with_time_stamp">
+<span class="sig-name descname"><span class="pre">output_with_time_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_out=&lt;function</span> <span class="pre">default_out_print&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.console_out.output_with_time_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print message to console.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>The message will be prefixed with a date stamp in format ‘2022-08-09 19_09_19 :’</p></li>
+<li><p>If message is not a string it will convert it to a string.</p></li>
+<li><p>Multi line strings will pe printed line by line</p></li>
+<li><p>strings containing [true] ot [false] will be padded to have [true] or [false] to the right hand side.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.console_out.output_header">
+<span class="sig-name descname"><span class="pre">output_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_out=&lt;function</span> <span class="pre">default_out_print&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.console_out.output_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints header message to pipe.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>If message is not a string it will convert it to a string.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.console_out.output_header_with_time_stamp">
+<span class="sig-name descname"><span class="pre">output_header_with_time_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_out=&lt;function</span> <span class="pre">default_out_print&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.console_out.output_header_with_time_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints header message to pipe.</p>
+<p>Note:</p>
+<ul class="simple">
+<li><p>If message is not a string it will convert it to a string.</p></li>
+<li><p>The header will be prefixed with a date stamp in format ‘2022-08-09 19_09_19 :’</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – The message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.date_stamps">
+<span id="duhast-utilities-date-stamps-module"></span><h2>duHast.Utilities.date_stamps module<a class="headerlink" href="#module-duHast.Utilities.date_stamps" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to">
+<h3>This module contains a number of helper functions relating to:<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to" title="Permalink to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>date stamps (with varies formatting options)</p></li>
+</ul>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYMMDD_SPACE">
+<span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYMMDD_SPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%y</span> <span class="pre">%m</span> <span class="pre">%d'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYMMDD_SPACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>file stamp date format using spaces as delimiter: 21 03 01</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYYMMDD_SPACE">
+<span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYYMMDD_SPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y</span> <span class="pre">%m</span> <span class="pre">%d'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYYMMDD_SPACE" title="Permalink to this definition">¶</a></dt>
+<dd><p>file stamp date format using spaces as delimiter: 2021 03 01</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD">
+<span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYY_MM_DD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y_%m_%d'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD" title="Permalink to this definition">¶</a></dt>
+<dd><p>file stamp date format using underscores as delimiter: 2021_03_01</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC">
+<span class="sig-name descname"><span class="pre">FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y_%m_%d_%H_%M_%S'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FILE_DATE_STAMP_YYYY_MM_DD_HH_MM_SEC" title="Permalink to this definition">¶</a></dt>
+<dd><p>file stamp date time format using underscores as delimiter: 2021_03_01_18_59_59</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON">
+<span class="sig-name descname"><span class="pre">TIME_STAMP_HHMMSEC_COLON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%H:%M:%S'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.TIME_STAMP_HHMMSEC_COLON" title="Permalink to this definition">¶</a></dt>
+<dd><p>time stamp using colons: 18:59:59</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_file_date_stamp">
+<span class="sig-name descname"><span class="pre">get_file_date_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%y_%m_%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_file_date_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted suitable for a file name.
+:param format: The date stamp format, defaults to FILE_DATE_STAMP_YY_MM_DD
+:type format: str, optional
+:return: datetime.now() string formatted using supplied format string
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYMMDD">
+<span class="sig-name descname"><span class="pre">FOLDER_DATE_STAMP_YYMMDD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%y%m%d'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYMMDD" title="Permalink to this definition">¶</a></dt>
+<dd><p>folder date format: no delimiter 210301</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYYYMMDD">
+<span class="sig-name descname"><span class="pre">FOLDER_DATE_STAMP_YYYYMMDD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y%m%d'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYYYMMDD" title="Permalink to this definition">¶</a></dt>
+<dd><p>folder date format: no delimiter 20210301</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYYY">
+<span class="sig-name descname"><span class="pre">FOLDER_DATE_STAMP_YYYY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y'</span></em><a class="headerlink" href="#duHast.Utilities.date_stamps.FOLDER_DATE_STAMP_YYYY" title="Permalink to this definition">¶</a></dt>
+<dd><p>folder date format: no delimiter 2021</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_folder_date_stamp">
+<span class="sig-name descname"><span class="pre">get_folder_date_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%Y%m%d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_folder_date_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted suitable for a folder name.
+:param format: The date stamp format, defaults to FOLDER_DATE_STAMP_YYYYMMDD
+:type format: str, optional
+:return: datetime.now() string formatted using supplied format string
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_date_stamp">
+<span class="sig-name descname"><span class="pre">get_date_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_date_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a date stamp formatted using past in format string.
+:param format: The date stamp format
+:type format: str
+:return: datetime.now() string formatted using supplied format string
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.date_stamps.get_date_stamped_file_name">
+<span class="sig-name descname"><span class="pre">get_date_stamped_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.date_stamps.get_date_stamped_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a time stamped output file name based on the past in file name and file extension.
+:param file_path: Fully qualified file path to file
+:type file_path: str
+:param file_extension: File extension needs to include ‘.’, defaults to ‘.txt’
+:type file_extension: str, optional
+:param file_suffix: File suffix will be appended after the name but before the file extension, defaults to ‘’
+:type file_suffix: str, optional
+:return: File name.
+:rtype: str</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.directory_io">
+<span id="duhast-utilities-directory-io-module"></span><h2>duHast.Utilities.directory_io module<a class="headerlink" href="#module-duHast.Utilities.directory_io" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-directory-io">
+<h3>Helper functions relating to directory IO .<a class="headerlink" href="#helper-functions-relating-to-directory-io" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.directory_empty_delete">
+<span class="sig-name descname"><span class="pre">directory_empty_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.directory_empty_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes an empty directory
+:param full_directory_path: Path to directory
+:type full_directory_path: str
+:return: True directory deleted, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.directory_delete">
+<span class="sig-name descname"><span class="pre">directory_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.directory_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a directory (even if it contains files)
+:param full_directory_path: Path to directory
+:type full_directory_path: str
+:return: True directory deleted, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.get_child_directories">
+<span class="sig-name descname"><span class="pre">get_child_directories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.get_child_directories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the immediate subdirectories of directory
+:param full_directory_path: Path to directory
+:type full_directory_path: str
+:return: any sub directories, empty list if none exist
+:rtype: list of str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.get_parent_directory">
+<span class="sig-name descname"><span class="pre">get_parent_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.get_parent_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parent directory of directory, or empty string if invalid directory
+:param full_directory_path: Path to directory
+:type full_directory_path: str
+:return: parent directory, or empty string
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.create_directory">
+<span class="sig-name descname"><span class="pre">create_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.create_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a folder.
+:param root: Directory path in which the new folder is to be created
+:type root: str
+:param folder_name: New folder name.
+:type folder_name: str
+:return: True if folder is created, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.create_target_directory">
+<span class="sig-name descname"><span class="pre">create_target_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.create_target_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a folder.
+Checks whether folder exists and if not attempts to create it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<em>str</em>) – Directory path in which the new folder is to be created</p></li>
+<li><p><strong>folder_name</strong> (<em>str</em>) – New folder name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if folder is created, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.directory_io.directory_exists">
+<span class="sig-name descname"><span class="pre">directory_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.directory_io.directory_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a given directory exists
+:param directory_path: Fully qualified directory path
+:type directory_path: str
+:return: True if directory exists, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_combine">
+<span id="duhast-utilities-files-combine-module"></span><h2>duHast.Utilities.files_combine module<a class="headerlink" href="#module-duHast.Utilities.files_combine" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-combining-text-files">
+<h3>Helper functions relating to combining text files.<a class="headerlink" href="#helper-functions-relating-to-combining-text-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files">
+<span class="sig-name descname"><span class="pre">combine_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix=''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension='.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name='result.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_getter=&lt;function</span> <span class="pre">get_files_single_directory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines multiple text files into a single new file.
+Assumes:</p>
+<ul class="simple">
+<li><p>files have a header row followed by data rows</p></li>
+<li><p>same number of headers (columns) in each files.</p></li>
+<li><p>files have the same header names per column</p></li>
+</ul>
+<p>The new file will be saved into the same folder as the original files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
+<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
+<li><p><strong>file_getter</strong> (<em>func</em><em>(</em><em>folder_path</em><em>, </em><em>file_prefix</em><em>, </em><em>file_suffix</em><em>, </em><em>file_extension</em><em>)</em><em>, </em><em>optional</em>) – Function returning list of files to be combined, defaults to GetFilesSingleFolder</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_combine.append_to_file">
+<span class="sig-name descname"><span class="pre">append_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_first_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.append_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends one text file to another. Assumes same number of headers (columns) in both files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_file</strong> (<em>str</em>) – The fully qualified file path of the file to which the other file will be appended.</p></li>
+<li><p><strong>append_file</strong> (<em>str</em>) – The fully qualified file path of the file to be appended.</p></li>
+<li><p><strong>ignore_first_row</strong> (<em>bool</em>) – If True, first row of append file will not be appended to source file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If True file was appended without an exception, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_header_independent">
+<span class="sig-name descname"><span class="pre">combine_files_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_header_independent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
+<p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
+File need to use &lt;tab&gt; character as column separator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
+<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.txt’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_combine.combine_files_csv_header_independent">
+<span class="sig-name descname"><span class="pre">combine_files_csv_header_independent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.txt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_put_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'result.csv'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_combine.combine_files_csv_header_independent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to combine report files into one file, files may have different number / named columns.</p>
+<p>Columns which are unique to some files will have as a value ‘N/A’ in files where those columns do not exist.
+File need to use &lt;,&gt; character as column separator. (.CSV)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files to be combined and to which the combined file will be saved.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
+<li><p><strong>out_put_file_name</strong> (<em>str</em><em>, </em><em>optional</em>) – The file name of the combined file, defaults to ‘result.csv’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_csv">
+<span id="duhast-utilities-files-csv-module"></span><h2>duHast.Utilities.files_csv module<a class="headerlink" href="#module-duHast.Utilities.files_csv" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-comma-separated-text-files">
+<h3>Helper functions relating to comma separated text files.<a class="headerlink" href="#helper-functions-relating-to-comma-separated-text-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.get_unique_headers">
+<span class="sig-name descname"><span class="pre">get_unique_headers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.get_unique_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of alphabetically sorted headers retrieved from text files.
+Assumes:</p>
+<ul class="simple">
+<li><p>first row in each file is the header row</p></li>
+<li><p>headers are separated by &lt;tab&gt; character</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files</strong> (<em>list</em><em> of </em><em>str</em>) – List of file path from which the headers are to be returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of headers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.read_csv_file">
+<span class="sig-name descname"><span class="pre">read_csv_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepathCSV</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increaseMaxFieldSizeLimit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.read_csv_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a csv file into a list of rows, where each row is another list.
+:param filepathCSV: The fully qualified file path to the csv file.
+:type filepathCSV: str
+:return: A list of list of strings representing the data in each row.
+:rtype: list of list of str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.get_first_row_in_csv_file">
+<span class="sig-name descname"><span class="pre">get_first_row_in_csv_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.get_first_row_in_csv_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first line of a csv text file and returns it as a list of strings
+:param filePath: The fully qualified file path.
+:type filePath: str
+:return: The first row of a text file.
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_csv.write_report_data_as_csv">
+<span class="sig-name descname"><span class="pre">write_report_data_as_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_csv.write_report_data_as_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function writing out report information as CSV file.
+:param file_name: The reports fully qualified file path.
+:type file_name: str
+:param header: list of column headers
+:type header: list of str
+:param data: list of list of strings representing row data
+:type data: [[str,str,..]]
+:param write_type: Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’
+:type write_type: str, optional</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_get">
+<span id="duhast-utilities-files-get-module"></span><h2>duHast.Utilities.files_get module<a class="headerlink" href="#module-duHast.Utilities.files_get" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-retrieving-file-information">
+<h3>Helper functions relating to retrieving file information.<a class="headerlink" href="#helper-functions-relating-to-retrieving-file-information" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_single_directory">
+<span class="sig-name descname"><span class="pre">get_files_single_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_single_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get files from a folder filtered by file prefix, file suffix, file extension
+:param folder_path: Folder path from which to get files.
+:type folder_path: str
+:param file_prefix: Filter: File name starts with this value.
+:type file_prefix: str
+:param file_suffix: Filter: File name ends with this value.
+:type file_suffix: str
+:param file_extension: Filter: File needs to have this file extension
+:type file_extension: str, format ‘.extension’
+:return: A list of all the files matching the supplied filters.
+:rtype: list str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_from_directory_walker_with_filters">
+<span class="sig-name descname"><span class="pre">get_files_from_directory_walker_with_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_from_directory_walker_with_filters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all files in directory and nested sub directories where file name matches filters value.
+:param folder_path: Root folder path from which to get files.
+:type folder_path: str
+:param file_prefix: Filter: File name starts with this value
+:type file_prefix: str
+:param file_suffix: Filter: File name ends with this value.
+:type file_suffix: str
+:param file_extension: Filter: File needs to have this file extension
+:type file_extension: str, format ‘.extension’
+:return: A list of all the files matching the supplied filters.
+:rtype: list str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_from_directory_walker_with_filters_simple">
+<span class="sig-name descname"><span class="pre">get_files_from_directory_walker_with_filters_simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_from_directory_walker_with_filters_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all files in directory and nested subdirectories where file name matches file extension filter value
+:param folder_path: Root folder path from which to get files.
+:type folder_path: str
+:param file_extension: Filter: File needs to have this file extension
+:type file_extension: str, format ‘.extension’
+:return: A list of all the files matching the supplied filters.
+:rtype: list str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.files_as_dictionary">
+<span class="sig-name descname"><span class="pre">files_as_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_suffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.files_as_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all files in directory and nested subdirectories where file name contains filter value.
+- key file name without extension
+- values: list of directories where this file occurs (based on file name only!)
+Use case: check for duplicates by file name only</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Root folder path from which to get files.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – Filter: File name starts with this value</p></li>
+<li><p><strong>file_suffix</strong> (<em>str</em>) – Filter: File name ends with this value.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>format '.extension'</em>) – Filter: File needs to have this file extension</p></li>
+<li><p><strong>include_sub_dirs</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True subdirectories will be included in search for files, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary where the key is the file name without the file extension. Value is a list of fully qualified file path to instances of that file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dictionary
+key: str
+value: lit of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files">
+<span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of files from a given folder with a given file extension
+:param folder_path: Folder path from which to get files to be combined and to which the combined file will be saved.
+:type folder_path: str
+:param file_extension: Filter: File needs to have this file extension, defaults to ‘.rvt’
+:type file_extension: str, optional
+:return: List of file path
+:rtype: list of str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_with_filter">
+<span class="sig-name descname"><span class="pre">get_files_with_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.rvt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'*'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_with_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of files from a given folder with a given file extension and a matching a file name filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>folder_path</strong> (<em>str</em>) – Folder path from which to get files.</p></li>
+<li><p><strong>file_extension</strong> (<em>str</em><em>, </em><em>optional</em>) – Filter: File needs to have this file extension, defaults to ‘.rvt’</p></li>
+<li><p><strong>filter</strong> (<em>str</em><em>, </em><em>optional</em>) – File name filter (‘something*’), defaults to ‘*’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of file path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_get.get_files_from_directory_walker">
+<span class="sig-name descname"><span class="pre">get_files_from_directory_walker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_get.get_files_from_directory_walker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all files in directory and nested subdirectories where file name contains filter value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Folder path from which to get files.</p></li>
+<li><p><strong>filter</strong> (<em>str</em>) – File name filter (‘something’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of file path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_io">
+<span id="duhast-utilities-files-io-module"></span><h2>duHast.Utilities.files_io module<a class="headerlink" href="#module-duHast.Utilities.files_io" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-file-io-operations">
+<h3>Helper functions relating to file IO operations.<a class="headerlink" href="#helper-functions-relating-to-file-io-operations" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.file_exist">
+<span class="sig-name descname"><span class="pre">file_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.file_exist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a file exists
+:param full_file_path: Fully qualified file path
+:type full_file_path: str
+:return: True file exists, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.file_delete">
+<span class="sig-name descname"><span class="pre">file_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.file_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>full_file_path</strong> (<em>str</em>) – Fully qualified file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if deleted, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.get_directory_path_from_file_path">
+<span class="sig-name descname"><span class="pre">get_directory_path_from_file_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.get_directory_path_from_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts directory from file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – A fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If no exception occurs : A fully qualified directory path,else an empty string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.rename_file">
+<span class="sig-name descname"><span class="pre">rename_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.rename_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renames a file.
+:param old_name: Fully qualified file path to file to be renamed.
+:type old_name: str
+:param new_name: Fully qualified new file name.
+:type new_name: str
+:return: True file renamed, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.copy_file">
+<span class="sig-name descname"><span class="pre">copy_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.copy_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies a file
+:param old_name: Fully qualified file path to file to be copied.
+:type old_name: str
+:param new_name: Fully qualified path to new file location and name.
+:type new_name: str
+:return: True file copied, otherwise False
+:rtype: bool</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.FILE_SIZE_IN_KB">
+<span class="sig-name descname"><span class="pre">FILE_SIZE_IN_KB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#duHast.Utilities.files_io.FILE_SIZE_IN_KB" title="Permalink to this definition">¶</a></dt>
+<dd><p>file size in KB conversion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.FILE_SIZE_IN_MB">
+<span class="sig-name descname"><span class="pre">FILE_SIZE_IN_MB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1048576</span></em><a class="headerlink" href="#duHast.Utilities.files_io.FILE_SIZE_IN_MB" title="Permalink to this definition">¶</a></dt>
+<dd><p>file size in MB conversion</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.FILE_SIZE_IN_GB">
+<span class="sig-name descname"><span class="pre">FILE_SIZE_IN_GB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1073741824</span></em><a class="headerlink" href="#duHast.Utilities.files_io.FILE_SIZE_IN_GB" title="Permalink to this definition">¶</a></dt>
+<dd><p>file size in GB conversion</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.get_file_size">
+<span class="sig-name descname"><span class="pre">get_file_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.get_file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the file size in given units (default is MB)
+:param file_path: Fully qualified file path
+:type file_path: str
+:param unit: the file size unit, defaults to FILE_SIZE_IN_MB
+:type unit: int
+:return: The file size.
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.convert_relative_path_to_full_path">
+<span class="sig-name descname"><span class="pre">convert_relative_path_to_full_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relative_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.convert_relative_path_to_full_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>removes ‘../..’ or ‘../’ from relative file path string and replaces it with full path derived path past in sample path.
+- relative path sample: ‘C:/temp/../myfile.ext’
+- full file path sample: ‘C:/temp/Sample/someOtherFile.ext’
+- returns: ‘C:/temp/Sample/myfile.ext’
+:param relative_file_path: String containing relative file path annotation.
+:type relative_file_path: str
+:param full_file_path: A fully qualified file path of which the relative file path is a sub set.
+:type full_file_path: str
+:return: A fully qualified file path.
+:rtype: str</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.get_file_name_without_ext">
+<span class="sig-name descname"><span class="pre">get_file_name_without_ext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.get_file_name_without_ext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the file name without the file extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Fully qualified file path to file</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The file name.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.read_text_file">
+<span class="sig-name descname"><span class="pre">read_text_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.read_text_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a text file and returns its content as a single string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of a text file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.read_text_file_into_list">
+<span class="sig-name descname"><span class="pre">read_text_file_into_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.read_text_file_into_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a text file and returns its content as a list of string.</p>
+<p>It will return</p>
+<ul class="simple">
+<li><p>one string per row</p></li>
+<li><p>removed line break characters</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of a text file. Can be an empty list if an exception occurred during file read.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.get_first_row_in_file">
+<span class="sig-name descname"><span class="pre">get_first_row_in_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.get_first_row_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the first line of a text file and returns it as a single string with any leading or trailing white spaces stripped!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – The fully qualified file path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The first row of a text file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_io.get_first_row_in_file_no_strip">
+<span class="sig-name descname"><span class="pre">get_first_row_in_file_no_strip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_io.get_first_row_in_file_no_strip" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Reads the first line of a text file and returns it as a single string.</p>
+<p>Note this may contain a new line character at the end! (’</p>
+</div></blockquote>
+<p>‘)</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param file_path</dt>
+<dd class="field-odd"><p>The fully qualified file path.</p>
+</dd>
+<dt class="field-even">type file_path</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">return</dt>
+<dd class="field-odd"><p>The first row of a text file.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_json">
+<span id="duhast-utilities-files-json-module"></span><h2>duHast.Utilities.files_json module<a class="headerlink" href="#module-duHast.Utilities.files_json" title="Permalink to this heading">¶</a></h2>
+<section id="utility-functions-writing-reading-json-objects-to-from-file">
+<h3>Utility functions writing / reading json objects to/ from file.<a class="headerlink" href="#utility-functions-writing-reading-json-objects-to-from-file" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_json.write_json_to_file">
+<span class="sig-name descname"><span class="pre">write_json_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_output_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_json.write_json_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes collected data to a new json formatted file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_data</strong> (<em>json object</em><em> (</em><em>dictionary</em><em>)</em>) – A dictionary to be written to file.</p></li>
+<li><p><strong>data_output_file_path</strong> (<em>str</em>) – Fully qualified file path to json data file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Result class instance.
+- result.status. True if json data file was written successfully, otherwise False.
+- result.message will confirm path of json data file.
+- result.result empty list
+On exception:
+- result.status (bool) will be False.
+- result.message will contain exception message.
+- result.result will be empty</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_json.read_json_data_from_file">
+<span class="sig-name descname"><span class="pre">read_json_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_json.read_json_data_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads json from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>revit_file_path</strong> – Fully qualified file path of report file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{}</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.files_tab">
+<span id="duhast-utilities-files-tab-module"></span><h2>duHast.Utilities.files_tab module<a class="headerlink" href="#module-duHast.Utilities.files_tab" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-tab-separated-text-files">
+<h3>Helper functions relating to tab separated text files.<a class="headerlink" href="#helper-functions-relating-to-tab-separated-text-files" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_tab.get_unique_headers">
+<span class="sig-name descname"><span class="pre">get_unique_headers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_tab.get_unique_headers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a list of alphabetically sorted headers retrieved from text files.
+Assumes:</p>
+<ul class="simple">
+<li><p>first row in each file is the header row</p></li>
+<li><p>headers are separated by &lt;tab&gt; character</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>files</strong> (<em>list</em><em> of </em><em>str</em>) – List of file path from which the headers are to be returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of headers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_tab.write_report_data">
+<span class="sig-name descname"><span class="pre">write_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_tab.write_report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function writing out report information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_name</strong> (<em>str</em>) – The reports fully qualified file path.</p></li>
+<li><p><strong>header</strong> (<em>list</em><em> of </em><em>str</em>) – list of column headers</p></li>
+<li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>,</em><em>str</em><em>,</em><em>..</em><em>]</em><em>]</em>) – list of list of strings representing row data</p></li>
+<li><p><strong>write_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Flag indicating whether existing report file is to be overwritten ‘w’ or appended to ‘a’, defaults to ‘w’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.files_tab.read_tab_separated_file">
+<span class="sig-name descname"><span class="pre">read_tab_separated_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">increase_max_field_size_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.files_tab.read_tab_separated_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a tab separated text file into a list of rows, where each row is another list.
+:param file_path: The fully qualified file path to the tab separated text file.
+:type file_path: str
+:return:  A list of list of strings representing the data in each row.
+:rtype: list of list of str</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.padding">
+<span id="duhast-utilities-padding-module"></span><h2>duHast.Utilities.padding module<a class="headerlink" href="#module-duHast.Utilities.padding" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-string-padding-functions-for-message-formatting">
+<h3>This module contains string padding functions for message formatting.<a class="headerlink" href="#this-module-contains-string-padding-functions-for-message-formatting" title="Permalink to this heading">¶</a></h3>
+<p>Sample output without a time stamp:</p>
+<p>——————————header——————————</p>
+<p>or with a time stamp:</p>
+<p>23-04-30 20_31_07 : —————–header————————</p>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.padding.DEFAULT_PADDING_LENGTH">
+<span class="sig-name descname"><span class="pre">DEFAULT_PADDING_LENGTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">90</span></em><a class="headerlink" href="#duHast.Utilities.padding.DEFAULT_PADDING_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>how long is a padded row</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.padding.pad_header_no_time_stamp">
+<span class="sig-name descname"><span class="pre">pad_header_no_time_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.padding.pad_header_no_time_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pads a header string to be centred in a row of dashes of a given length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header_name</strong> (<em>str</em>) – The header</p></li>
+<li><p><strong>padding_length</strong> (<em>int</em><em>, </em><em>optional</em>) – the length of the padded header excluding time stamp, defaults to 70</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A padded header row.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.padding.pad_header_with_time_stamp">
+<span class="sig-name descname"><span class="pre">pad_header_with_time_stamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.padding.pad_header_with_time_stamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pads a header string to be centred in a row of dashes of a given length.</p>
+<p>Will also add a time stamp to the beginning of the message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header_name</strong> (<em>str</em>) – The header</p></li>
+<li><p><strong>padding_length</strong> (<em>int</em><em>, </em><em>optional</em>) – the length of the padded header excluding time stamp, defaults to 70</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A padded header row.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.padding.pad_string">
+<span class="sig-name descname"><span class="pre">pad_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.padding.pad_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pads a string message to be formatted: left hand side message, right hand side status (if any)
+Maximum length 70 characters (excludes time stamp!)
+If message is longer then 70-2 characters it will be returned un-changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – The message to be padded</p></li>
+<li><p><strong>padding_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Length of message string after padding, defaults to 70</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Padded message</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.solibri_ifc_optimizer">
+<span id="duhast-utilities-solibri-ifc-optimizer-module"></span><h2>duHast.Utilities.solibri_ifc_optimizer module<a class="headerlink" href="#module-duHast.Utilities.solibri_ifc_optimizer" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-solibri-ifc-optimizer">
+<h3>Helper functions relating to Solibri IFC optimizer.<a class="headerlink" href="#helper-functions-relating-to-solibri-ifc-optimizer" title="Permalink to this heading">¶</a></h3>
+<p>List of imports:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p></li>
+<li><dl class="field-list simple">
+<dt class="field-odd">module</dt>
+<dd class="field-odd"><p>Utility</p>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.solibri_ifc_optimizer.solibri_install_path_">
+<span class="sig-name descname"><span class="pre">solibri_install_path_</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C:\\Program</span> <span class="pre">Files\\Solibri\\IFCOptimizer\\Solibri</span> <span class="pre">IFC</span> <span class="pre">Optimizer.exe'</span></em><a class="headerlink" href="#duHast.Utilities.solibri_ifc_optimizer.solibri_install_path_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default install path for solibri ifc optimizer.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.solibri_ifc_optimizer.optimize_all_ifc_files_in_directory">
+<span class="sig-name descname"><span class="pre">optimize_all_ifc_files_in_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.solibri_ifc_optimizer.optimize_all_ifc_files_in_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function applying third party IFC optimizer to all ifc files in a given folder.</p>
+<p>Original files will be deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path where IFC files are located</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.solibri_ifc_optimizer.optimize_ifc_files_in_list">
+<span class="sig-name descname"><span class="pre">optimize_ifc_files_in_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.solibri_ifc_optimizer.optimize_ifc_files_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will optimize all IFC files in a given list of fully qualified file path to ifc files.</p>
+<p>Will check whether Solibri IFC optimizer is installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifc_files</strong> (<em>list</em><em> of </em><em>str</em>) – List containing fully qualified file path of ifc files to be optimized.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – Directory of where the optimized IFC file(s) are to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.solibri_ifc_optimizer.process_ifc_files">
+<span class="sig-name descname"><span class="pre">process_ifc_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.solibri_ifc_optimizer.process_ifc_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will optimize all IFC files in a given list of fully qualified file path to ifc files.</p>
+<p>Will not check whether Solibri IFC optimizer is installed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifc_files</strong> (<em>list</em><em> of </em><em>str</em>) – List containing fully qualified file path of ifc files to be optimized.</p></li>
+<li><p><strong>directory_path</strong> (<em>str</em>) – Directory of where the optimized IFC file(s) are to be saved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Optimizer status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path(s) of the optimized file(s).</p></li>
+</ul>
+<p>On exception (handled by optimizer itself!):</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain generic exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.system_process">
+<span id="duhast-utilities-system-process-module"></span><h2>duHast.Utilities.system_process module<a class="headerlink" href="#module-duHast.Utilities.system_process" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-system-processes">
+<h3>Helper functions relating to system processes.<a class="headerlink" href="#helper-functions-relating-to-system-processes" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.system_process.get_all_running_processes">
+<span class="sig-name descname"><span class="pre">get_all_running_processes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.system_process.get_all_running_processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a list of all currently running processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list in format: [[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.system_process.filter_by_process_name">
+<span class="sig-name descname"><span class="pre">filter_by_process_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnMatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.system_process.filter_by_process_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters a provided list of processes by process name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processNames</strong> (<em>list</em><em> of </em><em>str</em>) – List of names to filter by</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes running.</p></li>
+<li><p><strong>returnMatch</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true only matches will be returned, if false any non matches will be returned, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.system_process.filter_by_process_ids">
+<span class="sig-name descname"><span class="pre">filter_by_process_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnMatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.system_process.filter_by_process_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters a provided list of processes by process ids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processIds</strong> (<em>_type_</em>) – List of ids to filter by</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes running</p></li>
+<li><p><strong>returnMatch</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true only matches will be returned, if false any non matches will be returned, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of processes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.system_process.kill_processes">
+<span class="sig-name descname"><span class="pre">kill_processes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.system_process.kill_processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kills all processes in list provided</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes to be killed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all past in processes have been killed, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.system_process.write_out_process_data">
+<span class="sig-name descname"><span class="pre">write_out_process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directoryPath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileExtension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.system_process.write_out_process_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out process data to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directoryPath</strong> (<em>str</em>) – The directory path to where the export is being saved.</p></li>
+<li><p><strong>processList</strong> (<em>[</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of processes to be written to file.</p></li>
+<li><p><strong>fileName</strong> (<em>str</em>) – The file name under which the export is being saved (excluding file extension).</p></li>
+<li><p><strong>fileExtension</strong> (<em>str</em>) – in format ‘.extension’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the process data was written to file without an exception, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.unit_conversion">
+<span id="duhast-utilities-unit-conversion-module"></span><h2>duHast.Utilities.unit_conversion module<a class="headerlink" href="#module-duHast.Utilities.unit_conversion" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-unit-conversion-functions">
+<h3>This module contains a number of unit conversion functions<a class="headerlink" href="#this-module-contains-a-number-of-unit-conversion-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm">
+<span class="sig-name descname"><span class="pre">convert_imperial_feet_to_metric_mm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.unit_conversion.convert_imperial_feet_to_metric_mm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts feet and inches to mm
+:param value: The value in feet to be converted
+:type value: float
+:return: The converted value
+:rtype: float</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.unit_conversion.convert_imperial_square_feet_to_metric_square_metre">
+<span class="sig-name descname"><span class="pre">convert_imperial_square_feet_to_metric_square_metre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.unit_conversion.convert_imperial_square_feet_to_metric_square_metre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts square feet and inches to square m</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>float</em>) – The value in square feet to be converted</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.unit_conversion.convert_imperial_cubic_feet_to_metric_cubic_metre">
+<span class="sig-name descname"><span class="pre">convert_imperial_cubic_feet_to_metric_cubic_metre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.unit_conversion.convert_imperial_cubic_feet_to_metric_cubic_metre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts cubic feet and inches to cubic m</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>float</em>) – The value in cubic feet to be converted</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The converted value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.util_batch_p">
+<span id="duhast-utilities-util-batch-p-module"></span><h2>duHast.Utilities.util_batch_p module<a class="headerlink" href="#module-duHast.Utilities.util_batch_p" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions-relating-to-batch-processor">
+<h3>This module contains a number of helper functions relating to batch processor.<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions-relating-to-batch-processor" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.util_batch_p.adjust_session_id_for_file_name">
+<span class="sig-name descname"><span class="pre">adjust_session_id_for_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.util_batch_p.adjust_session_id_for_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes chevrons and replace colons with underscores in session id supplied by revit batch processor so it        can be used in a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Re-formatted session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.util_batch_p.adjust_session_id_file_name_back">
+<span class="sig-name descname"><span class="pre">adjust_session_id_file_name_back</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.util_batch_p.adjust_session_id_file_name_back" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-introduces chevrons and replaces underscores with colons to match session Id format used in batch processor to a        file name using a batch processor supplied id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name_id</strong> (<em>str</em>) – A file name containing a session id with all illegal characters replaced.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.util_batch_p.adjust_session_id_for_directory_name">
+<span class="sig-name descname"><span class="pre">adjust_session_id_for_directory_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.util_batch_p.adjust_session_id_for_directory_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes chevrons and replace colons, full stops, dashes with underscores in session id supplied by revit batch processor so it        can be used in a folder name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>str</em>) – Session id supplied by revit batch processor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Re-formatted session id.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.utility">
+<span id="duhast-utilities-utility-module"></span><h2>duHast.Utilities.utility module<a class="headerlink" href="#module-duHast.Utilities.utility" title="Permalink to this heading">¶</a></h2>
+<section id="this-module-contains-a-number-of-helper-functions">
+<h3>This module contains a number of helper functions<a class="headerlink" href="#this-module-contains-a-number-of-helper-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_local_app_data_path">
+<span class="sig-name descname"><span class="pre">get_local_app_data_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_local_app_data_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>return directory path to local app data folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Path to local app data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_current_user_name">
+<span class="sig-name descname"><span class="pre">get_current_user_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_current_user_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current user name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the user name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.parse_string_to_bool">
+<span class="sig-name descname"><span class="pre">parse_string_to_bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.parse_string_to_bool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a string to lower case and then to bool. Will throw an exception if it fails to do so.</p>
+<p>( ‘true’ = True, ‘false’ = False)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The string representing a bool.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – If string to bool conversion fails the ‘String cant be converted to bool’ exception will be raised.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True or False</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_TWO">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_TWO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%02d'</span></em><a class="headerlink" href="#duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_TWO" title="Permalink to this definition">¶</a></dt>
+<dd><p>two digit padding</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_THREE">
+<span class="sig-name descname"><span class="pre">PAD_SINGLE_DIGIT_TO_THREE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%03d'</span></em><a class="headerlink" href="#duHast.Utilities.utility.PAD_SINGLE_DIGIT_TO_THREE" title="Permalink to this definition">¶</a></dt>
+<dd><p>three digit padding</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.pad_single_digit_numeric_string">
+<span class="sig-name descname"><span class="pre">pad_single_digit_numeric_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numericString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'%02d'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.pad_single_digit_numeric_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pads a single digit integer (past in as a string) with a leading zero (default)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numericString</strong> (<em>str</em>) – Integer as string.</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – The integer padding format, defaults to PAD_SINGLE_DIGIT_TO_TWO</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The padded integer as string.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.encode_ascii">
+<span class="sig-name descname"><span class="pre">encode_ascii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.encode_ascii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode a string as ascii and replaces all non ascii characters</p>
+<p>If a non string is past in the value will be returned unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – The string to be ascii encoded.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ascii encoded string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.get_first">
+<span class="sig-name descname"><span class="pre">get_first</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.get_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the first value in a list matching condition. If no value found returns the specified default value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterable</strong> (<em>iterable</em>) – the list to be searched.</p></li>
+<li><p><strong>default</strong> (<em>var</em>) – The default value</p></li>
+<li><p><strong>condition</strong> (<em>_type_</em><em>, </em><em>optional</em>) – The condition to be checked, defaults to lambda x:True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>First value matching condition, otherwise default value</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.index_of">
+<span class="sig-name descname"><span class="pre">index_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.index_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the index of item in list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>list</strong> (<em>list</em>) – The list</p></li>
+<li><p><strong>item</strong> (<em>var</em>) – The item of which to return the index.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The index of the item in the list, if no match -1 will be returned</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.remove_items_from_list">
+<span class="sig-name descname"><span class="pre">remove_items_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourceList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removeIdsList</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.remove_items_from_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper removes items from a source list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sourceList</strong> (<em>list var</em>) – The list containing items</p></li>
+<li><p><strong>removeIdsList</strong> (<em>list var</em>) – the list containing items to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The filtered source list.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list var</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.utility.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.utility.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flattens a dictionary as per stack overflow</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys/6027615#6027615">https://stackoverflow.com/questions/6027558/flatten-nested-dictionaries-compressing-keys/6027615#6027615</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>parent_key</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘’</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – _description_, defaults to ‘_’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities.worksharing_monitor_process">
+<span id="duhast-utilities-worksharing-monitor-process-module"></span><h2>duHast.Utilities.worksharing_monitor_process module<a class="headerlink" href="#module-duHast.Utilities.worksharing_monitor_process" title="Permalink to this heading">¶</a></h2>
+<section id="helper-functions-relating-to-revit-worksharing-monitor-process">
+<h3>Helper functions relating to Revit worksharing monitor process.<a class="headerlink" href="#helper-functions-relating-to-revit-worksharing-monitor-process" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.get_work_sharing_monitor_processes">
+<span class="sig-name descname"><span class="pre">get_work_sharing_monitor_processes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.get_work_sharing_monitor_processes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all currently running worksharing monitor processes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>_description_</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.write_out_wsm_data_to_file">
+<span class="sig-name descname"><span class="pre">write_out_wsm_data_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.write_out_wsm_data_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes out all running worksharing monitor processes data to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where the marker file is to be saved.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Export status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will contain the fully qualified file path of the exported file.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.delete_wsm_data_files">
+<span class="sig-name descname"><span class="pre">delete_wsm_data_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.delete_wsm_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes all WSM marker files in a directory.</p>
+<p>WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path containing marker files to be deleted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all files where deleted successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.read_wsm_data_from_file">
+<span class="sig-name descname"><span class="pre">read_wsm_data_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.read_wsm_data_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads all worksharing monitor processes data from marker file(s) in a given directory</p>
+<p>WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where marker files are to be read from.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of list of str</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.get_wsm_sessions_to_delete">
+<span class="sig-name descname"><span class="pre">get_wsm_sessions_to_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ws_ms_to_keep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.get_wsm_sessions_to_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Worksharing monitor process sessions filtered by provided list (not in list)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ws_ms_to_keep</strong> (<em>List</em><em> of </em><em>list</em><em> of </em><em>str in format:</em><em> [</em><em>[</em><em>HandleCount</em><em>, </em><em>Name</em><em>, </em><em>Priority</em><em>, </em><em>ProcessId</em><em>, </em><em>ThreadCount</em><em>, </em><em>WorkingSetSize</em><em>]</em><em>]</em>) – List of worksharing monitor sessions to filter by. WSM included in this list will be removed from past in list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Filtered list of list of str of worksharing monitor sessions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[[HandleCount, Name, Priority, ProcessId, ThreadCount, WorkingSetSize]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.clean_up_wsm_data_files">
+<span class="sig-name descname"><span class="pre">clean_up_wsm_data_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.clean_up_wsm_data_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all wsm data marker files in a given directory.</p>
+<p>WSM marker files got a specific file extension: Check: PROCESS_MARKER_FILE_EXTENSION.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – The directory path containing the marker files to be deleted.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Delete status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will confirm successful deletion of all files.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Utilities.worksharing_monitor_process.die_wsm_die">
+<span class="sig-name descname"><span class="pre">die_wsm_die</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_marker_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Utilities.worksharing_monitor_process.die_wsm_die" title="Permalink to this definition">¶</a></dt>
+<dd><p>Kills all worksharing monitor processes currently active.</p>
+<p>Unless marker files are used. In that case only worksharing monitor sessions identified in marker files will be killed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory_path</strong> (<em>str</em>) – The directory path to where marker files are to be read from.</p></li>
+<li><p><strong>ignore_marker_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – True no marker file data will be read and all WSM sessions running will be killed., defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>Kill status returned in result.status. False if an exception occurred, otherwise True.</p></li>
+<li><p>result.message will confirm successful killing of all WSM processes.</p></li>
+</ul>
+<p>On exception:</p>
+<ul class="simple">
+<li><p>result.status (bool) will be False.</p></li>
+<li><p>result.message will contain the exception message.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Utilities">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Utilities" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Utilities package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

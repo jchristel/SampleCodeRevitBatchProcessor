@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>duHast.Revit.Categories.Reporting package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
+    <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
+  </head><body>
+<div id="docstitle">
+    <p>Sample Code Revit Batch Processor 0.0.7 documentation</p>
+</div>
+<div id="header">
+    <div id="title"><h1>duHast.Revit.Categories.Reporting package</h1></div>
+    <ul id="headerButtons">
+        <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
+        <li id="page_buttons">
+            <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
+        </li>
+    </ul>
+</div>
+
+<div id="sphinxsidebar">
+  <div class="sphinxsidebarwrapper">
+        <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
+        
+      <h3>This Page</h3>
+      <ul class="this-page-menu">
+        <li><a href="../_sources/duHast/duHast.Revit.Categories.Reporting.rst.txt"
+               rel="nofollow">Show Source</a></li>
+      </ul>
+    <div id="searchbox" style="display: none">
+        <form class="search" action="../search.html" method="get">
+                        <div class="search-wrapper">
+                        <input type="submit" value="" class="search-left"/>
+                        <input class="prettysearch" type="text" name="q" size="18" title="Enter search terms or a module, class or function name."/>
+                        <span class="search-right">&nbsp;</span>
+                        </div>
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </form>
+    </div>
+    <script type="text/javascript">$('#searchbox').show(0);</script>
+  </div>
+</div>
+
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <section id="duhast-revit-categories-reporting-package">
+<h1>duHast.Revit.Categories.Reporting package<a class="headerlink" href="#duhast-revit-categories-reporting-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-duHast.Revit.Categories.Reporting.categories_report_header">
+<span id="duhast-revit-categories-reporting-categories-report-header-module"></span><h2>duHast.Revit.Categories.Reporting.categories_report_header module<a class="headerlink" href="#module-duHast.Revit.Categories.Reporting.categories_report_header" title="Permalink to this heading">¶</a></h2>
+<section id="revit-category-report-headers">
+<h3>Revit category report headers.<a class="headerlink" href="#revit-category-report-headers" title="Permalink to this heading">¶</a></h3>
+</section>
+</section>
+<section id="module-duHast.Revit.Categories.Reporting.categories_report_utils">
+<span id="duhast-revit-categories-reporting-categories-report-utils-module"></span><h2>duHast.Revit.Categories.Reporting.categories_report_utils module<a class="headerlink" href="#module-duHast.Revit.Categories.Reporting.categories_report_utils" title="Permalink to this heading">¶</a></h2>
+<section id="revit-category-report-functions">
+<h3>Revit category report functions .<a class="headerlink" href="#revit-category-report-functions" title="Permalink to this heading">¶</a></h3>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Reporting.categories_report_utils.build_report_data_by_category">
+<span class="sig-name descname"><span class="pre">build_report_data_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_cat_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Reporting.categories_report_utils.build_report_data_by_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats category properties into lists for reports
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param dic: dictionary containing category properties
+:type dic: _type_
+:param family_cat: The family category name.
+:type family_cat: str
+:param main_cat_name: A hard coded revit category name. Can be the same as familyCat.
+:type main_cat_name: str
+:param doc_file_path: The fully qualified family file path.
+:type doc_file_path: str
+:return: A list of list of strings. Each row represents one category.
+:rtype: list[list[str]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="duHast.Revit.Categories.Reporting.categories_report_utils.get_report_data">
+<span class="sig-name descname"><span class="pre">get_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Categories.Reporting.categories_report_utils.get_report_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reports all categories, their properties and all elements belonging to them.
+:param doc: Current Revit family document.
+:type doc: Autodesk.Revit.DB.Document
+:param revit_file_path: The fully qualified family file path.
+:type revit_file_path: str
+:return: A list of list of strings. Each row represents one category.
+:rtype: list[list[str]]</p>
+</dd></dl>
+
+</section>
+<section id="module-duHast.Revit.Categories.Reporting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-duHast.Revit.Categories.Reporting" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div> 
+        </div>
+      </div>
+    <div class="footer">
+    <p>
+      &copy; Copyright 2023, Jan Christel.
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+    (Revision )
+        </p>
+    </div>
+      <div class="clearer"></div>
+    </div>
+        <div id="breadcrumbs">
+                duHast.Revit.Categories.Reporting package
+        </div>
+        <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>
+  </body>
+</html>

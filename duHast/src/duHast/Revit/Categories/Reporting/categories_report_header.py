@@ -29,7 +29,8 @@ Revit category report headers.
 
 # -------------------------------------------- common variables --------------------
 #: Header used in report files
-from duHast.Revit.LinePattern import RevitLineStylesPatterns as rPat
+from duHast.Revit.LinePattern.line_patterns import PROPERTY_PATTERN_NAME, PROPERTY_PATTERN_ID
+
 from duHast.Revit.Categories.Utility.category_property_names import (
     CATEGORY_GRAPHIC_STYLE_3D,
     CATEGORY_GRAPHIC_STYLE_CUT,
@@ -51,8 +52,8 @@ REPORT_CATEGORIES_HEADER = [
     "CATEGORYID",
     PROPERTY_MATERIAL_NAME.upper(),
     PROPERTY_MATERIAL_ID.upper(),
-    rPat.PROPERTY_PATTERN_NAME.upper(),
-    rPat.PROPERTY_PATTERN_ID.upper(),
+    PROPERTY_PATTERN_NAME.upper(),
+    PROPERTY_PATTERN_ID.upper(),
     PROPERTY_LINE_WEIGHT_PROJECTION_NAME.upper(),
     PROPERTY_LINE_WEIGHT_CUT_NAME.upper(),
     PROPERTY_LINE_COLOUR_RED_NAME.upper(),

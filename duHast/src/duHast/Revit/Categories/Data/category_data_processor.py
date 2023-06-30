@@ -27,7 +27,7 @@ Family category data processor class.
 #
 
 from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
-from duHast.Revit.Categories import category_data as rCatData
+from duHast.Revit.Categories.Data import category_data as rCatData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Categories.Utility import category_property_names as rCatPropNames

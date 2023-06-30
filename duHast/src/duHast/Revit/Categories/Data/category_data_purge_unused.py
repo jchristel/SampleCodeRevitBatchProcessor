@@ -35,7 +35,7 @@ This will delete all subcategories which are user created ( id greater then 0) a
 from duHast.Utilities.Objects import result as res
 from duHast.Revit.Common import delete as rDel
 from duHast.Revit.Family.Data import ifamily_data as IFamData
-from duHast.Revit.Categories import category_data as rCatData
+from duHast.Revit.Categories.Data import category_data as rCatData
 
 import Autodesk.Revit.DB as rdb
 

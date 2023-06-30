@@ -27,7 +27,12 @@ Revit category report functions .
 #
 
 
-from duHast.Revit.LinePattern import RevitLineStylesPatterns as rPat
+from duHast.Revit.LinePattern.line_patterns import (
+    get_line_pattern_from_category,
+    PROPERTY_PATTERN_NAME,
+    PROPERTY_PATTERN_ID,
+)
+
 from duHast.Revit.Categories.categories import (
     get_family_category,
     get_main_sub_categories,
@@ -88,9 +93,9 @@ def build_report_data_by_category(doc, dic, family_cat, main_cat_name, doc_file_
         row.append(str(dic_material[PROPERTY_MATERIAL_NAME]).encode("utf-8"))
         row.append(str(dic_material[PROPERTY_MATERIAL_ID]).encode("utf-8"))
         # line pattern
-        dic_pattern = rPat.GetLinePatternFromCategory(dic[key], doc)
-        row.append(str(dic_pattern[rPat.PROPERTY_PATTERN_NAME]).encode("utf-8"))
-        row.append(str(dic_pattern[rPat.PROPERTY_PATTERN_ID]).encode("utf-8"))
+        dic_pattern = get_line_pattern_from_category(dic[key], doc)
+        row.append(str(dic_pattern[PROPERTY_PATTERN_NAME]).encode("utf-8"))
+        row.append(str(dic_pattern[PROPERTY_PATTERN_ID]).encode("utf-8"))
         # line weights
         dic_line_weights = get_category_line_weights(dic[key])
         row.append(

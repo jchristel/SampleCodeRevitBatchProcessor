@@ -29,8 +29,12 @@ Family line pattern data class.
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 from duHast.Utilities import utility as util
 from duHast.Revit.Categories import categories as rCats
-from duHast.Revit.LinePattern import RevitLineStylesPatterns as rPat
-from duHast.Revit import RevitLevels as rLevel
+from duHast.Revit.LinePattern.line_patterns import (
+    get_line_pattern_from_category,
+    get_line_pattern_from_level_element,
+    PROPERTY_PATTERN_ID,
+)
+from duHast.Revit.Levels.levels import get_levels_list_ascending
 
 
 # import Autodesk
@@ -111,22 +115,22 @@ class LinePatternData(IFamData.IFamilyData):
         # get any line pattern added to the family category itself
         main_cat = rCats.get_family_category(doc)
         for m_cat_name in main_cat:
-            l_style = rPat.GetLinePatternFromCategory(main_cat[m_cat_name], doc)
+            l_style = get_line_pattern_from_category(main_cat[m_cat_name], doc)
             # update dictionary
             self._add_category_to_dic(
                 line_pattern_ids_to_categories,
-                l_style[rPat.PROPERTY_PATTERN_ID],
+                l_style[PROPERTY_PATTERN_ID],
                 main_cat[m_cat_name],
             )
 
         # get line patterns from sub categories of the family category
         main_cats = rCats.get_main_sub_categories(doc)
         for m_cat_name in main_cats:
-            l_style = rPat.GetLinePatternFromCategory(main_cats[m_cat_name], doc)
+            l_style = get_line_pattern_from_category(main_cats[m_cat_name], doc)
             # update dictionary
             self._add_category_to_dic(
                 line_pattern_ids_to_categories,
-                l_style[rPat.PROPERTY_PATTERN_ID],
+                l_style[PROPERTY_PATTERN_ID],
                 main_cats[m_cat_name],
             )
 
@@ -136,13 +140,13 @@ class LinePatternData(IFamData.IFamilyData):
             for s_cat_item in sub_cats_other[s_cat_name]:
                 # only use custom categories not build in ones (id smaller then 0)
                 if sub_cats_other[s_cat_name][s_cat_item].Id.IntegerValue > 0:
-                    l_style = rPat.GetLinePatternFromCategory(
+                    l_style = get_line_pattern_from_category(
                         sub_cats_other[s_cat_name][s_cat_item], doc
                     )
                     # update dictionary
                     self._add_category_to_dic(
                         line_pattern_ids_to_categories,
-                        l_style[rPat.PROPERTY_PATTERN_ID],
+                        l_style[PROPERTY_PATTERN_ID],
                         sub_cats_other[s_cat_name][s_cat_item],
                     )
 
@@ -156,10 +160,10 @@ class LinePatternData(IFamData.IFamilyData):
             ],  # import in families
         )
         for o_cat in other_cats:
-            l_style = rPat.GetLinePatternFromCategory(o_cat, doc)
+            l_style = get_line_pattern_from_category(o_cat, doc)
             # update dictionary
             self._add_category_to_dic(
-                line_pattern_ids_to_categories, l_style[rPat.PROPERTY_PATTERN_ID], o_cat
+                line_pattern_ids_to_categories, l_style[PROPERTY_PATTERN_ID], o_cat
             )
 
         return line_pattern_ids_to_categories
@@ -176,11 +180,11 @@ class LinePatternData(IFamData.IFamilyData):
         """
 
         level_pattern_data = {}
-        levels = rLevel.GetLevelsListAscending(doc)
+        levels = get_levels_list_ascending(doc)
         for level in levels:
-            pattern_data = rPat.GetLinePatternFromLevelElement(doc, level)
+            pattern_data = get_line_pattern_from_level_element(doc, level)
             self._add_category_to_dic(
-                level_pattern_data, pattern_data[rPat.PROPERTY_PATTERN_ID], level
+                level_pattern_data, pattern_data[PROPERTY_PATTERN_ID], level
             )
         return level_pattern_data
 

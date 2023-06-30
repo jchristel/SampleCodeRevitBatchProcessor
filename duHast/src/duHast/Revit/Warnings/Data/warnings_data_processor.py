@@ -28,7 +28,7 @@ Family warnings data processor class.
 
 
 from duHast.Revit.Family.Data.ifamily_processor import IFamilyProcessor
-from duHast.Revit.Warnings import RevitWarningsData as rWarnData
+from duHast.Revit.Warnings.Data import warnings_data as rWarnData
 from duHast.Revit.Family.Data import ifamily_data as IFamData
 
 

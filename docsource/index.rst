@@ -11,6 +11,7 @@ Welcome to duHast's documentation!
    :caption: Contents:
 
    duHast/modules
+   flows/modules
 
 
 Indices and tables

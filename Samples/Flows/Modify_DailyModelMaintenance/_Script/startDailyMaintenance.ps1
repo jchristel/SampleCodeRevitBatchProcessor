@@ -3,16 +3,16 @@ Param (
     [string]$UI #indication whether a UI (yes) is needed to select files or all files (no) are to be processed
 )
 # load util functions
-. "\\bvn\Data\studio\infotech\standards\Scripts\PowerShell\BatchProcessorUtils.ps1"
+. "C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
 
 Write-ToLogAndConsole -Message "Argument 1: $UI"
 
 Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
 # Define the paths to your batch processor settings as a list
 $settings_step_one = @(
-    "BatchRvt.2022.DailyModelMaintenanceOneA.NBH.Settings.json", 
-    "BatchRvt.2022.DailyModelMaintenanceOneB.NBH.Settings.json",
-    "BatchRvt.2022.DailyModelMaintenanceOneC.NBH.Settings.json"
+    "BatchRvt.2022.DailyModelMaintenanceOneA.Settings.json", 
+    "BatchRvt.2022.DailyModelMaintenanceOneB.Settings.json",
+    "BatchRvt.2022.DailyModelMaintenanceOneC.Settings.json"
 ) 
 
 $user_name = $env:USERNAME.ToLower()
@@ -37,7 +37,7 @@ $file_select_path = "`"$root_flow_directory`"\_Script\Pre_ModifyDailyModelMainte
 # display path to no UI file selection script
 Write-ToLogAndConsole -Message "File selection script, no uI: $file_select_path"
 # directory path from which python UI is going to show revit files
-$ui_input_directory = '"P:\19\1906009.000\Design\BIM\_Revit\1.0 Project Files"'
+$ui_input_directory = '"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles"'
 Write-ToLogAndConsole -Message "UI input directory: $ui_input_directory"
 # directory path into which the python UI will write the task files into
 $ui_output_directory = ($root_flow_directory, "\_TaskList") -join ""

@@ -5,7 +5,7 @@
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -119,12 +119,12 @@ def action_family_name_riser_placeholder(doc, element_id):
     :param element_id: id of element to be checked against condition
     :type element_id: Autodesk.Revit.DB.ElementId
 
-    :return: True if element family name does equal "SP-Room-Riser_10" or "SP_Room_Riser_10", otherwise False
+    :return: True if element family name does equal "placeholder one" or "placeholder two", otherwise False
     :rtype: bool
     """
 
     test = elCustomFilterAction.action_element_property_contains_any_of_values(
-        ["SP-Room-Riser_10", "SP_Room_Riser_10"],
+        ["placeholder one", "placeholder two"],
         elCustomFilterTest.value_is_family_name,
         action_out,
     )
@@ -304,7 +304,7 @@ FILTER_WALL_TYPES_FACADE = rCusFilter.RevitCustomElementFilter(
 
 def action_symbol_name_contains_structure(doc, element_id):
     """
-    Set up a function checking whether floor types contains 'CONCRETE', 'Concrete', 'HOB'.
+    Set up a function checking whether floor types contains 'Sample 1', 'Sample 2', 'Sample 3'.
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -316,27 +316,9 @@ def action_symbol_name_contains_structure(doc, element_id):
     """
 
     test = elCustomFilterAction.action_element_property_contains_any_of_values(
-        ["CONCRETE", "Concrete", "HOB"], elCustomFilterTest.value_in_name, action_out
-    )
-    flag = test(doc, element_id)
-    return flag
-
-
-def action_symbol_name_contains_finishes(doc, element_id):
-    """
-    Set up a function checking whether wall types contain FLVY, or FLGE
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param element_id: id of element to be checked against condition
-    :type element_id: Autodesk.Revit.DB.ElementId
-
-    :return: True if element name contain 'FLVY' or FLGE'', otherwise False
-    :rtype: bool
-    """
-
-    test = elCustomFilterAction.action_element_property_contains_any_of_values(
-        ["FLVY", "FLGE"], elCustomFilterTest.value_in_name, action_out
+        ["Sample 1", "Sample 2", "Sample 3"],
+        elCustomFilterTest.value_in_name,
+        action_out,
     )
     flag = test(doc, element_id)
     return flag
@@ -346,11 +328,6 @@ def action_symbol_name_contains_finishes(doc, element_id):
 FILTER_FLOOR_TYPES_STRUCTURAL = rCusFilter.RevitCustomElementFilter(
     [action_symbol_name_contains_structure]
 )
-# class instance of custom filter filtering out structural wall instances
-FILTER_FLOOR_TYPES_FINISHES = rCusFilter.RevitCustomElementFilter(
-    [action_symbol_name_contains_finishes]
-)
-
 
 # ------------- Structural columns -------------
 
@@ -369,48 +346,25 @@ def get_structural_columns(doc):
 
 def action_symbol_name_does_not_contain_ffe_names(doc, element_id):
     """
-    Set up a function checking whether family does not contain riser placer holder
+    Set up a function checking whether family does not contain any of the test values
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
     :param element_id: id of element to be checked against condition
     :type element_id: Autodesk.Revit.DB.ElementId
 
-    :return: True if element family name does equal "Riser_Placeholder", "SP-Room-Riser_10","SP_Room_Riser_10" or "Cubicle System_GEN" , otherwise False
+    :return: True if element family name does equal sample values provided , otherwise False
     :rtype: bool
     """
 
     test = elCustomFilterAction.action_element_property_does_not_contains_any_of_values(
         [
-            "Riser_Placeholder",
-            "SP-Room-Riser_10",
-            "SP_Room_Riser_10",
-            "Cubicle System_GEN",
+            "Sample 1",
+            "Sample 2",
+            "Sample 3",
+            "Sample 4",
         ],
         elCustomFilterTest.value_is_family_name,
-        action_out,
-    )
-    flag = test(doc, element_id)
-    return flag
-
-
-def action_is_not_on_workset_ffe_in_progress(doc, element_id):
-    """
-    Set up a function checking whether ffe elements are not on FFE in progress workset:
-
-
-    :param doc: Current Revit model document.
-    :type doc: Autodesk.Revit.DB.Document
-    :param element_id: id of element to be checked against condition
-    :type element_id: Autodesk.Revit.DB.ElementId
-
-    :return: true if not on workset, false if it is on workset
-    :rtype: bool
-    """
-
-    test = elCustomFilterAction.action_element_property_does_not_contains_any_of_values(
-        ["40_FF&E IN PROGRESS"],
-        elCustomFilterTest.value_equals_workset_name,
         action_out,
     )
     flag = test(doc, element_id)
@@ -421,7 +375,6 @@ def action_is_not_on_workset_ffe_in_progress(doc, element_id):
 FILTER_FFE = rCusFilter.RevitCustomElementFilter(
     [
         action_symbol_name_does_not_contain_ffe_names,
-        action_is_not_on_workset_ffe_in_progress,
     ]
 )
 
@@ -464,90 +417,73 @@ workset_action = namedtuple(
 
 # list of all workset actions
 WORKSET_ACTIONS_BY_FILE = {
-    "NHR-BVN-MOD-ARC": [  # actions for all models
+    "Revit": [  # actions for all models
         workset_action(
             get_room_separation_lines,
             FILTER_ALWAYS_TRUE,
-            "30_INTERIOR",
+            "INTERIOR",
             "Move room separation lines",
         ),
         workset_action(get_all_rooms, FILTER_ALWAYS_TRUE, "30_INTERIOR", "Move rooms"),
         workset_action(
             get_scope_boxes,
             FILTER_ALWAYS_TRUE,
-            "99_LEVELS AND GRIDS",
+            "Shared Levels and Grids",
             "Move scope boxes",
         ),
         workset_action(
-            get_grids_in_model, FILTER_ALWAYS_TRUE, "99_LEVELS AND GRIDS", "Move grids"
+            get_grids_in_model,
+            FILTER_ALWAYS_TRUE,
+            "Shared Levels and Grids",
+            "Move grids",
         ),
         workset_action(
             get_levels_in_model,
             FILTER_ALWAYS_TRUE,
-            "99_LEVELS AND GRIDS",
+            "Shared Levels and Grids",
             "Move levels",
         ),
         workset_action(
             get_all_basic_wall_instances,
             FILTER_WALL_TYPES_STRUCTURAL,
-            "10_STRUCTURE",
+            "STRUCTURE",
             "Move walls",
         ),
         workset_action(
             get_structural_columns,
             FILTER_ALWAYS_TRUE,
-            "10_STRUCTURE",
+            "STRUCTURE",
             "Move structural columns",
         ),
         workset_action(
             get_all_floor_instances_in_model_by_category,
             FILTER_FLOOR_TYPES_STRUCTURAL,
-            "10_STRUCTURE",
+            "STRUCTURE",
             "Move structual floors",
-        ),
-        workset_action(
-            get_all_floor_instances_in_model_by_category,
-            FILTER_FLOOR_TYPES_FINISHES,
-            "31_INFILL FLOORS",
-            "Move floor finishes floor",
         ),
         workset_action(
             get_all_basic_wall_instances,
             FILTER_WALL_TYPES_FACADE,
-            "00_FACADE",
+            "FACADE",
             "Move walls facade",
         ),
     ],
-    "NHR-BVN-MOD-ARC-TB2-00M-0": [  # actions for all base build models
+    "Revit": [  # actions for all base build models
         workset_action(
-            get_doors, FILTER_DOORS_DOOR_PROTECTION, "30_INTERIOR", "Move doors"
+            get_doors, FILTER_DOORS_DOOR_PROTECTION, "INTERIOR", "Move doors"
         ),
         workset_action(
             get_all_basic_wall_instances,
             FILTER_WALL_TYPES_INTERNAL,
-            "30_INTERIOR",
+            "INTERIOR",
             "Move interior walls",
         ),
         workset_action(
             get_all_ceiling_instances_in_model_by_category,
             FILTER_ALWAYS_TRUE,
-            "30_INTERIOR",
+            "INTERIOR",
             "Move interior ceilings",
         ),
-        workset_action(get_ffe, FILTER_FFE, "40_FF&E", "Move ff and e"),
-    ],
-    "NHR-BVN-MOD-ARC-TB2-00M-NL00200": [  # actions for structural model
-        workset_action(
-            get_riser_placeholders,
-            FILTER_HYD_STACK_PLACEHOLDERS,
-            "70_SHAFT COORDINATION",
-            "Move hyd stack place holders",
-        ),
-        workset_action(
-            get_arch_column_instances,
-            FILTER_RISER_PLACEHOLDERS,
-            "30_INTERIOR",
-            "Move riser place holders",
-        ),
+        workset_action(get_ffe, FILTER_FFE, "FF&E", "Move ff and e"),
     ],
 }

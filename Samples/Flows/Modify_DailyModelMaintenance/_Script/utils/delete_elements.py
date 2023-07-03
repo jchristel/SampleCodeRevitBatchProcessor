@@ -44,7 +44,7 @@ def delete_line_pattern_starting_with_import(doc, revit_file_path, output):
     return return_value
 
 
-def delete_bvn_duplicate_patterns(doc, revit_file_path, output):
+def delete_sample_duplicate_patterns(doc, revit_file_path, output):
     """
     Deletes all line patterns ending on BVN1* to BVN9*
 
@@ -53,10 +53,10 @@ def delete_bvn_duplicate_patterns(doc, revit_file_path, output):
     """
 
     return_value = res.Result()
-    output("Deleting line pattern where names ends with BVN1* to BVN9*...start")
+    output("Deleting line pattern where names ends with sample1* to sample9*...start")
     # loop over integers 1 to 10 to get all duplicates
     for x in range(1, 10):
-        task_value = delete_line_patterns_contains(doc, "BVN" + str(x))
+        task_value = delete_line_patterns_contains(doc, "sample" + str(x))
         return_value.update(task_value)
     return return_value
 

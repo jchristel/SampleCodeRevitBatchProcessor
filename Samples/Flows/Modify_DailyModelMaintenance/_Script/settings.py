@@ -74,20 +74,20 @@ FILE_EXTENSION_OF_FILES_TO_PROCESS = ".rvt"
 
 
 #: the project directory
-PROJECT_DIRECTORY = r"P:\19\1903020.000\Design\BIM\_Revit"
+PROJECT_DIRECTORY = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_sampleFiles"
 
 # files to process directory
-PATH_TO_FILES_TO_PROCESS = PROJECT_DIRECTORY + r"\1.0 Project Files"
+PATH_TO_FILES_TO_PROCESS = PROJECT_DIRECTORY + r"\Project Files"
 
 # path to workset default visibility settings
 WORKSET_DEFAULT_VISIBILITY_SETTINGS = FLOW_DIRECTORY + r"\ProjectsWorksets.txt"
 
 # path to library folders
-PATH_TO_CLINICAL_LIBRARY = PROJECT_DIRECTORY + r"\2.0 Project Library\__ClinicalLibrary"
+PATH_TO_CLINICAL_LIBRARY = PROJECT_DIRECTORY + r"\Project Library\__Clinical"
 PATH_TO_BESPOKE_JOINERY_LIBRARY = (
-    PROJECT_DIRECTORY + r"\2.0 Project Library\__BespokeJoinery"
+    PROJECT_DIRECTORY + r"\Project Library\__BespokeJoinery"
 )
-PATH_TO_UNIONS_LIBRARY = PROJECT_DIRECTORY + r"\2.0 Project Library\__Unions"
+PATH_TO_UNIONS_LIBRARY = PROJECT_DIRECTORY + r"\Project Library\__Unions"
 
 # reports by file extensions used
 REPORT_EXTENSION_LEVELS = "_Levels"
@@ -117,7 +117,7 @@ COMBINED_REPORT_NAME_VIEWS = "Views.csv"
 COMBINED_REPORT_NAME_WALL_TYPES = "Wall_Types.csv"
 
 # list containing default worksets for levels grids, scope boxes per project file
-DEFAULT_WORKSETS = [["NHR-", ["99_LEVELS AND GRIDS"]]]
+DEFAULT_WORKSETS = [["Revit", ["Shared Levels and Grids"]]]
 
 # file containing unwanted shared parameters which will get auto deleted
 # in format name <tab> GUID
@@ -141,15 +141,15 @@ LOG_FILE_NAME_PREFIX = "LogFile"
 # put more specific rules to front of list!!
 VIEW_KEEP_RULES = [
     [
-        "NHR-BVN-MOD-ARC",
+        "Revit",
         [
-            ["Design Stage", does_not_equal, "WORKING"],
+            ["MyViewParameter", does_not_equal, "my parameter value"],
         ],
     ]
 ]
 
 # list containing names of files in which no family reload is to be undertaken
-EXCLUDE_FILES_FROM_FAMILY_RELOAD = ["NHR-BVN-MOD-ARC-EBL-00M-NL00001"]
+EXCLUDE_FILES_FROM_FAMILY_RELOAD = ["NONE"]
 
 # These are the properties to be reported on in filtered views reports
 VIEW_DATA_FILTERS = [

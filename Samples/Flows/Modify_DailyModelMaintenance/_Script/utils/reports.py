@@ -366,16 +366,16 @@ def report_families(doc, revit_file_path, output):
     for family_symbol in family_symbols:
         row_data = []
         if family_symbol.Family.IsInPlace == False:
-            parameter_item_code = get_parameter_value_by_name(family_symbol, "ItemCode")
+            parameter_item_code = get_parameter_value_by_name(family_symbol, "SampleParameterOne")
             if parameter_item_code == None:
                 parameter_item_code = "NA"
             parameter_item_description = get_parameter_value_by_name(
-                family_symbol, "ItemDescription"
+                family_symbol, "SampleParameterTwo"
             )
             if parameter_item_description == None:
                 parameter_item_description = "NA"
             parameter_item_group = get_parameter_value_by_name(
-                family_symbol, "ItemGroup"
+                family_symbol, "SampleParameterThree"
             )
             if parameter_item_group == None:
                 parameter_item_group = "NA"
@@ -404,9 +404,9 @@ def report_families(doc, revit_file_path, output):
                 "Family Name",
                 "Family Category",
                 "Family Type Name",
-                "ItemCode",
-                "ItemDescription",
-                "ItemGroup",
+                "SampleParameterOne",
+                "SampleParameterTwo",
+                "SampleParameterThree",
                 "Number of Instances Placed",
             ],
             data,

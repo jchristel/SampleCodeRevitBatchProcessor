@@ -43,13 +43,6 @@ Module executed as the task script in Revit batch processor.
 # syncs to central with compact central file option enabled
 
 
-# TODO:
-# - check all reports have a header row since combine files expects files with a header row
-# - reports as CSV files
-# - check any combine action works with csv file output
-# - all action functions need to accept the file path in addition to the document
-
-
 # debug mode revit project file name
 DEBUG_REVIT_FILE_NAME = r"C:\Users\jchristel\Documents\Temp\Debug.rvt"
 
@@ -113,7 +106,7 @@ ACTIONS = [
     update_model_health_tracer_fam,
     write_model_health_data,
     delElements.delete_line_pattern_starting_with_import,
-    delElements.delete_bvn_duplicate_patterns,
+    delElements.delete_sample_duplicate_patterns,
     delElements.delete_unused_elev_view_markers,
     delElements.delete_unwanted_shared_parameters,
     delElements.delete_duplicate_line_pattern_names,

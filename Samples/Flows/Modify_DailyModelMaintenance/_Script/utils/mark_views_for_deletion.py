@@ -41,7 +41,7 @@ import sys, os
 
 debug = True
 if debug:
-    SCRIPT_DIRECTORY = r"P:\19\1903020.000\Design\BIM\_Revit\5.0 Project Resources\01 Scripts\04 BatchP\ModifyDailyModelMaintenance\_Script"
+    SCRIPT_DIRECTORY = r"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_DailyModelMaintenance\_Script"
     sys.path += [SCRIPT_DIRECTORY]
 
 # import common library

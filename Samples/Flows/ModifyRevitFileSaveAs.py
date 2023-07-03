@@ -67,7 +67,7 @@ sys.path += [COMMON_LIBRARY_LOCATION, SCRIPT_LOCATION]
 from duHast.Revit.Common import file_io as rFileIO
 
 # flag whether this runs in debug or not
-DEBUG = False
+DEBUG = True
 
 # Add batch processor scripting references
 if not DEBUG:

@@ -41,7 +41,7 @@ Module containing post processing script which runs outside the revit batch proc
 # Imports
 # --------------------------
 
-import utilAddRev as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logUtils
@@ -53,15 +53,15 @@ from duHast.Utilities.console_out import output
 # main:
 # -------------
 
-PROCESSING_RESULTS = logUtils.process_log_files(utilM.LOG_MARKER_DIRECTORY)
+PROCESSING_RESULTS = logUtils.process_log_files(settings.LOG_MARKER_DIRECTORY)
 output("Log results.... message(s): \n[{}]".format(PROCESSING_RESULTS.status))
 output(PROCESSING_RESULTS.message)
 # remove old log marker files
-flag_delete_log_markers = logUtils.delete_log_data_files(utilM.LOG_MARKER_DIRECTORY)
+flag_delete_log_markers = logUtils.delete_log_data_files(settings.LOG_MARKER_DIRECTORY)
 output("Log marker deletion.: [{}]".format(flag_delete_log_markers))
 
 # WSMP marker files clean up
-cleanUpWSMFiles_ = wsmp.clean_up_wsm_data_files(utilM.WSM_MARKER_DIRECTORY)
+cleanUpWSMFiles_ = wsmp.clean_up_wsm_data_files(settings.WSM_MARKER_DIRECTORY)
 output(
     "WSM files clean up.... status: [{}]\nWSM files clean up.... message: {}".format(
         cleanUpWSMFiles_.status, cleanUpWSMFiles_.message

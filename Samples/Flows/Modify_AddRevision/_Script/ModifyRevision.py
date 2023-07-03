@@ -39,7 +39,7 @@ import clr
 import System
 import datetime
 
-import utilAddRev as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import common library
 from duHast.Revit.Common import file_io as rFileIO
@@ -80,7 +80,7 @@ def get_splash_sheet(doc):
     collector = (
         rdb.FilteredElementCollector(doc)
         .OfClass(rdb.View)
-        .Where(lambda e: e.Name == utilM.SPLASH_SCREEN_SHEET_NAME)
+        .Where(lambda e: e.Name == settings.SPLASH_SCREEN_SHEET_NAME)
     )
     results = collector.ToList()
     return results

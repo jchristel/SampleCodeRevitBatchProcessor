@@ -41,8 +41,7 @@ Module executed as a pre process script within the batch processor environment.
 
 import script_util
 
-# import flow specific utils
-import utilAddRev as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import log utils
 from duHast.Utilities import batch_processor_log_utils as logutils
@@ -58,19 +57,19 @@ status_marker_ = False
 
 # logfile marker creation status
 status_marker_ = logutils.write_session_id_marker_file(
-    utilM.LOG_MARKER_DIRECTORY,
+    settings.LOG_MARKER_DIRECTORY,
     uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
 )
 
-wsm_marker_ = wsmp.write_out_wsm_data_to_file(utilM.WSM_MARKER_DIRECTORY)
+wsm_marker_ = wsmp.write_out_wsm_data_to_file(settings.WSM_MARKER_DIRECTORY)
 
 # -------------
 # my code here:
 # -------------
 
-output("Script directory: {}".format(utilM.SCRIPT_DIRECTORY), script_util.Output)
-output("flow directory: {}".format(utilM.FLOW_DIRECTORY), script_util.Output)
-output("duHast directory: {}".format(utilM.DU_HAST_DIRECTORY), script_util.Output)
+output("Script directory: {}".format(settings.SCRIPT_DIRECTORY), script_util.Output)
+output("flow directory: {}".format(settings.FLOW_DIRECTORY), script_util.Output)
+output("duHast directory: {}".format(settings.DU_HAST_DIRECTORY), script_util.Output)
 
 # -------------
 # main:

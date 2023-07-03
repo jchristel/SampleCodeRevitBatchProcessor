@@ -36,7 +36,7 @@ Module executed as a post process script within the batch processor environment.
 # Imports
 # --------------------------
 
-import utilAddRev as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
@@ -54,7 +54,7 @@ from duHast.Utilities.console_out import output
 # -------------
 
 # kill off all WSM sessions
-statusWSMKill_ = wsmp.die_wsm_die(utilM.WSM_MARKER_DIRECTORY, True)
+statusWSMKill_ = wsmp.die_wsm_die(settings.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
 output(

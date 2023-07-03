@@ -61,6 +61,7 @@ from duHast.Revit.Common import file_io as rFileIO
 from duHast.Revit.Common import worksets as rWork
 from duHast.Utilities import utility as util
 from duHast.Utilities.Objects import result as res
+from duHast.Utilities.files_io import get_file_name_without_ext
 
 # autodesk API
 import Autodesk.Revit.DB as rdb
@@ -131,7 +132,7 @@ def modify(doc, revit_file_path, grid_data):
     '''
 
     return_value = res.Result()
-    revit_file_name = str(rFileIO.GetFileNameWithoutExt(revit_file_path))
+    revit_file_name = str(get_file_name_without_ext(revit_file_path))
     flag = False
     for file_name, default_workset_name in grid_data:
         if (revit_file_name.startswith(file_name)):

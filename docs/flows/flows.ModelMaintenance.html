@@ -49,7 +49,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Flows</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="flows.AddRevision.html">Add Revision</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Model Maintenance</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model Maintenance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#actions-overview">Actions Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="flows.FilesIn.html">FilesIn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.FilesOut.html">FilesOut</a></li>
 </ul>
@@ -85,6 +92,249 @@
             
   <section id="model-maintenance">
 <h1>Model Maintenance<a class="headerlink" href="#model-maintenance" title="Permalink to this heading">¶</a></h1>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
+<p>The ‘Model Maintenance’ flow ia aimed at a QA process where one has the requirement to regularly:</p>
+<ol class="arabic">
+<li><p>report on given categories:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>links (revit and cad)</p></li>
+<li><p>wall properties</p></li>
+<li><p>grids and levels</p></li>
+<li><p>worksets</p></li>
+<li><p>model health parameters</p></li>
+<li><p>sheets and sheets abbreviated</p></li>
+<li><p>shared parameters</p></li>
+<li><p>families in model and placement count</p></li>
+<li><p>views (abbreviated)</p></li>
+<li><p>rooms and ceilings geometry (which can be processed further -&gt; i.e. which ceiling is in which room)</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>reload families</p></li>
+<li><p>fix worksets of given categories</p></li>
+<li><p>fix some warnings</p></li>
+<li><p>remove duplicated line styles</p></li>
+<li><p>remove unwanted shared parameters</p></li>
+<li><p>rename loaded families</p></li>
+<li><p>Enforce view naming policy</p></li>
+</ol>
+<section id="actions-overview">
+<h3>Actions Overview<a class="headerlink" href="#actions-overview" title="Permalink to this heading">¶</a></h3>
+<p>This flow is run through a powershell script which executes:</p>
+<ol class="arabic">
+<li><p>A pre-processing script collecting all Revit files in a given directory.</p></li>
+<li><p>No 3 off parallel running sessions of Revit Batch Processor processing the selected files.</p></li>
+<li><p>A post process which</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>processes the log files of the above sessions and searches for any exceptions messages therein.</p></li>
+<li><p>collates report files into combined files</p></li>
+<li><p>And finally cleans up any marker files (log and work sharing monitor).</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<p>This chapter describes the flow directory setup.</p>
+<section id="directory-structure">
+<h4>Directory structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading">¶</a></h4>
+<p>This flow expects the following directory structure to be in place:</p>
+<p>├───_docs</p>
+<p>├───_LogMarker</p>
+<p>├───_Output</p>
+<p>├───_sampleFiles</p>
+<p>├───_Script</p>
+<p>│   └───logs</p>
+<p>├───_SessionData</p>
+<p>├───_settings</p>
+<p>└───_TaskList</p>
+</section>
+<section id="docs">
+<h4>_docs<a class="headerlink" href="#docs" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing flow related documentation.</p>
+</section>
+<section id="logmarker">
+<h4>_LogMarker<a class="headerlink" href="#logmarker" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing log marker files. Those will be deleted at the end of each flow run.</p>
+</section>
+<section id="output">
+<h4>_Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing any flow output.</p>
+<ol class="arabic simple">
+<li><p>A report file per revit file processed and category reported on.</p></li>
+<li><p>A combined report file which contains all the reports per a single categories for all files.</p></li>
+</ol>
+</section>
+<section id="samplefiles">
+<h4>_sampleFiles<a class="headerlink" href="#samplefiles" title="Permalink to this heading">¶</a></h4>
+<p>Any sample files provided.</p>
+</section>
+<section id="script">
+<h4>_Script<a class="headerlink" href="#script" title="Permalink to this heading">¶</a></h4>
+<p>The python and powershell scripts of the flow.</p>
+<ul class="simple">
+<li><p>ModifyRevision.py</p></li>
+<li><p>Post_AddRevision.py</p></li>
+<li><p>Post_AddRevisionKillWSM.py</p></li>
+<li><p>Pre_AddRevision.py</p></li>
+<li><p>utilAddRev.py</p></li>
+<li><p>startAddRevision.ps1</p></li>
+</ul>
+<p>Report files used for some scripts:</p>
+<ul>
+<li><p>UnwantedSharedParameters.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>First column: shared parameter name</p></li>
+<li><p>second column: shared parameter GUID</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>ProjectsWorksets.csv</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>First column: host file path</p></li>
+<li><p>Second column: Workset Id</p></li>
+<li><p>Third column: Workset name</p></li>
+<li><p>Fourth column: is workset visible by default (TRUE/FALSE)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>RenameDirective.csv</p>
+<blockquote>
+<div><p>Note: There can be multiple of the files. They all need to start with “RenameDirective” and need to be of file type “.csv”</p>
+<ul class="simple">
+<li><p>First column: old family name</p></li>
+<li><p>Second column: host file path (can be empty )</p></li>
+<li><p>Third column: the family category</p></li>
+<li><p>Fourth column: the new family name</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="script-logs">
+<h4>_Script/logs<a class="headerlink" href="#script-logs" title="Permalink to this heading">¶</a></h4>
+<p>Log files which cover script outputs outside of Revit Batch Processor log files</p>
+</section>
+<section id="script-utils">
+<h4>_Script/utils<a class="headerlink" href="#script-utils" title="Permalink to this heading">¶</a></h4>
+<p>A number of utility scripts executed in the main script.</p>
+<ul>
+<li><p>check_tag_locations.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Moves tags to their location as per report. (use case: In case a family reload moves a tag, this will move the tag back to its original location, since the tag location was recorded prior the family reload.)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>cleanup_actions.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Set’s up filters required to moves items to specified worksets.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>delete_elements.py</p>
+<blockquote>
+<div><ul>
+<li><p>Deletes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Unwanted shared parameters</p></li>
+<li><p>Line styles starting with “IMPORT”</p></li>
+<li><p>Line pattern duplicates ( keeps the one with the lowest Id -&gt; oldest)</p></li>
+<li><p>Un-used elevation markers</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>families.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Reloads family from a given location</p></li>
+<li><p>Renames families as per re-name directives</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>geometry_data.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Exports room data (properties and geometry) and ceiling data (properties and geometry) for post processing</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>mark_views_for_deletion.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Marks any views ending on copy x for deletion. (Prefixed view name with DELETE and a time stamp)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>model_health.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Updates model health tracker family in model with model health values.</p></li>
+<li><p>Writes model health data to file.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>reports.py</p>
+<blockquote>
+<div><p>Created the following reports:</p>
+<ul class="simple">
+<li><p>links (revit and cad)</p></li>
+<li><p>wall properties</p></li>
+<li><p>grids and levels</p></li>
+<li><p>worksets</p></li>
+<li><p>sheets and sheets abbreviated</p></li>
+<li><p>shared parameters</p></li>
+<li><p>families in model and placement count</p></li>
+<li><p>views (abbreviated)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>warnings_solver.py</p>
+<blockquote>
+<div><p>Solves the following warnings:</p>
+<ul class="simple">
+<li><p>Duplicate mark warnings.</p></li>
+<li><p>Room tags outside of room warnings.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>worksets.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Modify element worksets</p></li>
+<li><p>Restores worksets default visibility as per report file.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="settings">
+<h4>_settings<a class="headerlink" href="#settings" title="Permalink to this heading">¶</a></h4>
+<p>Location of Revit Batch Processor settings files.</p>
+<p>For this flow there are 3 settings files in this folder, one for each session of Revit Batch Processor.</p>
+</section>
+<section id="sessiondata">
+<h4>_SessionData<a class="headerlink" href="#sessiondata" title="Permalink to this heading">¶</a></h4>
+<p>Directory containing Revit Batch Processor session data files. (This sample flow has session data files disabled.)</p>
+</section>
+<section id="tasklist">
+<h4>_TaskList<a class="headerlink" href="#tasklist" title="Permalink to this heading">¶</a></h4>
+<p>Location of task list files processed by Revit Batch Processor.</p>
+<p>For this flow there are 3 task list files in this folder, one for each session of Revit Batch Processor.</p>
+</section>
+</section>
+</section>
 </section>
 
 

@@ -1,0 +1,28 @@
+test.Revit package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   test.Revit.Annotation
+   test.Revit.Common
+   test.Revit.Exports
+   test.Revit.Grids
+   test.Revit.Levels
+   test.Revit.Purge
+   test.Revit.Revision
+   test.Revit.SharedParameters
+   test.Revit.TestUtils
+   test.Revit.Views
+   test.Revit.Walls
+
+Module contents
+---------------
+
+.. automodule:: test.Revit
+   :members:
+   :undoc-members:
+   :show-inheritance:

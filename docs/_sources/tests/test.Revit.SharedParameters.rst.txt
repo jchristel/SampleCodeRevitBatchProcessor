@@ -1,0 +1,37 @@
+test.Revit.SharedParameters package
+===================================
+
+Submodules
+----------
+
+test.Revit.SharedParameters.run\_test\_classes module
+-----------------------------------------------------
+
+.. automodule:: test.Revit.SharedParameters.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.SharedParameters.shared\_parameters\_get\_report\_data module
+------------------------------------------------------------------------
+
+.. automodule:: test.Revit.SharedParameters.shared_parameters_get_report_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.SharedParameters.shared\_parameters\_report module
+-------------------------------------------------------------
+
+.. automodule:: test.Revit.SharedParameters.shared_parameters_report
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.SharedParameters
+   :members:
+   :undoc-members:
+   :show-inheritance:

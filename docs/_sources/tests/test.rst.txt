@@ -1,0 +1,22 @@
+test package
+============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   test.Data
+   test.Revit
+   test.UI
+   test.Utility
+   test.utils
+
+Module contents
+---------------
+
+.. automodule:: test
+   :members:
+   :undoc-members:
+   :show-inheritance:

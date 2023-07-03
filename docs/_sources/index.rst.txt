@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
+
 Welcome to duHast's documentation!
 ==================================
 
@@ -11,8 +13,7 @@ Welcome to duHast's documentation!
    :caption: Contents:
 
    duHast/modules
-   flows/modules
-
+   flows/index
 
 Indices and tables
 ==================

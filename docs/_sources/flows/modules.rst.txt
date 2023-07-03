@@ -1,7 +1,7 @@
 Flows
-=====
+======
 
 .. toctree::
    :maxdepth: 4
 
-   Flows
+    flows.AddRevision

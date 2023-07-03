@@ -19,8 +19,6 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="top" title="Sample Code Revit Batch Processor 0.0.7 documentation" href="../index.html" />
-    <link rel="up" title="Flows" href="modules.html" />
-    <link rel="prev" title="Flows" href="modules.html" />
     <link media="only screen and (max-device-width: 480px)" href="../_static/css/mobile.css" type="text/css" rel="stylesheet" /> 
   </head><body>
 <div id="docstitle">
@@ -33,7 +31,6 @@
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
             <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
-            <div class="headerButton"><a href="modules.html" title="Flows" accesskey="P">previous</a></div>
         </li>
     </ul>
 </div>
@@ -42,38 +39,8 @@
   <div class="sphinxsidebarwrapper">
         <ul><li class="toctree-l1"><a href="../index.html">Main Page</a></li></ul>
         <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../duHast/modules.html">duHast</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Flows</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Flows package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyaddsharedparas-module">Flows.ModifyAddSharedParas module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifydeletesheetsandviews-module">Flows.ModifyDeleteSheetsAndViews module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyexportnwc-ifc-module">Flows.ModifyExportNWC_IFC module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifylevelgridscopeboxworsket-module">Flows.ModifyLevelGridScopeboxWorsket module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifymodelmilestone-module">Flows.ModifyModelMilestone module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifymodelreloadlinks-module">Flows.ModifyModelReloadLinks module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrenameloaded-module">Flows.ModifyRenameLoaded module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevisionandapplytosheets-module">Flows.ModifyRevisionAndApplyToSheets module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevisionsimple-module">Flows.ModifyRevisionSimple module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevitfilesaveas-module">Flows.ModifyRevitFileSaveAs module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevitlinksworksetbylist-module">Flows.ModifyRevitLinksWorksetByList module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevitlinksworksetinstancetotype-module">Flows.ModifyRevitLinksWorksetInstanceToType module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-modifyrevitlinksworksettypetoinstance-module">Flows.ModifyRevitLinksWorksetTypeToInstance module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-post-autofiling-module">Flows.Post_AutoFiling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-post-combinereports-module">Flows.Post_CombineReports module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-pre-buildfilelist-module">Flows.Pre_BuildFileList module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportgridslevels-module">Flows.ReportGridsLevels module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportlinks-module">Flows.ReportLinks module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportmatts-module">Flows.ReportMatts module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportsharedparameters-module">Flows.ReportSharedParameters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportwallsdetails-module">Flows.ReportWallsDetails module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#flows-reportworksets-module">Flows.ReportWorksets module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
       <h3>This Page</h3>
@@ -108,8 +75,76 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="flows-modifyaddsharedparas-module">
-<h2>Flows.ModifyAddSharedParas module<a class="headerlink" href="#flows-modifyaddsharedparas-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-Flows.ModifyAddSharedParas">
+<span id="flows-modifyaddsharedparas-module"></span><h2>Flows.ModifyAddSharedParas module<a class="headerlink" href="#module-Flows.ModifyAddSharedParas" title="Permalink to this heading">¶</a></h2>
+<section id="add-shared-parameters-to-project-files">
+<h3>Add shared parameters to project files.<a class="headerlink" href="#add-shared-parameters-to-project-files" title="Permalink to this heading">¶</a></h3>
+<p>This flow demonstrates how to add any number of shared parameters to workshared Revit project files.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.ModifyAddSharedParas.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.ModifyAddSharedParas.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.ModifyAddSharedParas.update_parameters">
+<span class="sig-name descname"><span class="pre">update_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.ModifyAddSharedParas.update_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bind parameters to category</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
+<li><p><strong>data</strong> (<em>[</em><em>[</em><em>str</em><em>, </em><em>str</em><em>, </em><em>ParameterType</em><em>, </em><em>bool</em><em>,</em><em>[</em><em>BuiltInCategory</em><em>]</em><em>,</em><em>BuiltInParameterGroup</em><em>, </em><em>bool</em><em>]</em><em>,</em><em>...</em><em>]</em>) – List describing shared parameter to be added. Refer to <cite>listOfParameters_</cite> below</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Result class instance.</p>
+<ul class="simple">
+<li><p>result.status: Parameters binding status returned in result.status. False if an exception occurred or a parameter bind failed, otherwise True.</p></li>
+<li><p>result.message will contain the names of the shared parameters added.</p></li>
+<li><p>result.result will be an empty list</p></li>
+</ul>
+<p>On exception</p>
+<ul class="simple">
+<li><p>Reload.status (bool) will be False</p></li>
+<li><p>Reload.message will contain the exception message</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../duHast/duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="Flows.ModifyAddSharedParas.SHARED_PARAMETER_FILE_PATH">
+<span class="sig-name descname"><span class="pre">SHARED_PARAMETER_FILE_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'C:\\temp\\Shared</span> <span class="pre">Parameters.txt'</span></em><a class="headerlink" href="#Flows.ModifyAddSharedParas.SHARED_PARAMETER_FILE_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fully qualified path to shared parameter file</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="Flows.ModifyAddSharedParas.LIST_OF_PARAMETERS">
+<span class="sig-name descname"><span class="pre">LIST_OF_PARAMETERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[['ParameterOne',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Length,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Ceilings],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_GEOMETRY,</span> <span class="pre">True],</span> <span class="pre">['ParameterTwo',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.YesNo,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Windows,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_CurtainWallPanels,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_Walls],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True],</span> <span class="pre">['ParameterThree',</span> <span class="pre">'Exported</span> <span class="pre">Parameters',</span> <span class="pre">Autodesk.Revit.DB.ParameterType.Text,</span> <span class="pre">True,</span> <span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_Rooms],</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameterGroup.PG_IDENTITY_DATA,</span> <span class="pre">True]]</span></em><a class="headerlink" href="#Flows.ModifyAddSharedParas.LIST_OF_PARAMETERS" title="Permalink to this definition">¶</a></dt>
+<dd><p>List containing the parameters to be added and their properties</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Parameter Name,</p></li>
+<li><p>parameter group name ( in shared parameter file),</p></li>
+<li><p>the parameter storage type as rdb.ParameterType</p></li>
+<li><p>a list of all categories as rdb.BuiltInCategory the parameter is to be added to</p></li>
+<li><p>the property group the parameter is to be added to as rdb.BuiltInParameterGroup</p></li>
+<li><p>True if parameter is an instance parameter, False if it is a type parameter</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
 </section>
 <section id="flows-modifydeletesheetsandviews-module">
 <h2>Flows.ModifyDeleteSheetsAndViews module<a class="headerlink" href="#flows-modifydeletesheetsandviews-module" title="Permalink to this heading">¶</a></h2>
@@ -147,14 +182,158 @@
 <section id="flows-modifyrevitlinksworksettypetoinstance-module">
 <h2>Flows.ModifyRevitLinksWorksetTypeToInstance module<a class="headerlink" href="#flows-modifyrevitlinksworksettypetoinstance-module" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="flows-post-autofiling-module">
-<h2>Flows.Post_AutoFiling module<a class="headerlink" href="#flows-post-autofiling-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-Flows.Post_AutoFiling">
+<span id="flows-post-autofiling-module"></span><h2>Flows.Post_AutoFiling module<a class="headerlink" href="#module-Flows.Post_AutoFiling" title="Permalink to this heading">¶</a></h2>
+<section id="automated-filing">
+<h3>Automated filing.<a class="headerlink" href="#automated-filing" title="Permalink to this heading">¶</a></h3>
+<p>This flow demonstrates how to file incoming models into as given folder structure and keep a record of date and revision of files received.</p>
+<p>The given folder structure includes a NavisWorks federated model folder where all .nwc files are stored. In order to replace existing files in that location, incoming files are stripped of their revision information contained within the file name.</p>
+<p>This script can be used when:</p>
+<ul>
+<li><p>multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up</p></li>
+<li><p>single session of Revit Batch Processor is used</p></li>
+<li><p>this can either be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>started from a batch file after Revit Batch Processor is finished</p></li>
+<li><p>started as a post - process script in the Revit Batch Processor UI</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
 </section>
-<section id="flows-post-combinereports-module">
-<h2>Flows.Post_CombineReports module<a class="headerlink" href="#flows-post-combinereports-module" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Post_AutoFiling.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Post_AutoFiling.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Post_AutoFiling.create_target_directory">
+<span class="sig-name descname"><span class="pre">create_target_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Post_AutoFiling.create_target_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up dated model incoming folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_location</strong> (<em>str</em>) – Directory in which to create a new folder</p></li>
+<li><p><strong>directory_name</strong> (<em>str</em>) – New folder name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if folder was created successfully, otherwise False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Post_AutoFiling.move_files">
+<span class="sig-name descname"><span class="pre">move_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Post_AutoFiling.move_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move files into incoming folder(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_data</strong> (<em>_type_</em>) – _description_</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if all files where moved successfully, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Post_AutoFiling.save_files_received_list">
+<span class="sig-name descname"><span class="pre">save_files_received_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Post_AutoFiling.save_files_received_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves out a file where each row contains the dates a file was received last.</p>
+<p>Note:
+This reads the previously written received file and only overwrites the date of files a match was found for/</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if everything went well, otherwise False.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="flows-pre-buildfilelist-module">
-<h2>Flows.Pre_BuildFileList module<a class="headerlink" href="#flows-pre-buildfilelist-module" title="Permalink to this heading">¶</a></h2>
+<section id="module-Flows.Post_CombineReports">
+<span id="flows-post-combinereports-module"></span><h2>Flows.Post_CombineReports module<a class="headerlink" href="#module-Flows.Post_CombineReports" title="Permalink to this heading">¶</a></h2>
+<section id="combines-reports">
+<h3>Combines reports.<a class="headerlink" href="#combines-reports" title="Permalink to this heading">¶</a></h3>
+<p>This flow demonstrates how to combine multiple report files written per Revit project file into a single file per report type.</p>
+<p>This script can be used when:</p>
+<ul>
+<li><p>multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up</p></li>
+<li><p>single session of Revit Batch Processor is used</p></li>
+<li><p>this can either be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>started from a batch file after Revit Batch Processor is finished</p></li>
+<li><p>started as a post - process script in the Revit Batch Processor UI</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Post_CombineReports.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Post_CombineReports.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-Flows.Pre_BuildFileList">
+<span id="flows-pre-buildfilelist-module"></span><h2>Flows.Pre_BuildFileList module<a class="headerlink" href="#module-Flows.Pre_BuildFileList" title="Permalink to this heading">¶</a></h2>
+<section id="write-files-to-task-lists">
+<h3>Write files to task lists.<a class="headerlink" href="#write-files-to-task-lists" title="Permalink to this heading">¶</a></h3>
+<p>This flow demonstrates how to write files in a given directory to an arbitrary number of task lists for Revit Batch Processor.</p>
+<p>Note:</p>
+<p>This code below will:</p>
+<ul class="simple">
+<li><p>filter files in a given directory by their file extension</p></li>
+<li><p>add them to task lists depending on their file size in an attempt to create an equal workload for all Revit Batch Processor sessions to be spun up.</p></li>
+</ul>
+<p>This script can be used when:</p>
+<ul>
+<li><p>multiple sessions of Revit Batch Processor are to be run in parallel using a batch script set up and</p></li>
+<li><p>the number and / or names of files to processed are likely to change.</p></li>
+<li><p>this can either be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>started from a batch file before Revit Batch Processor is started</p></li>
+<li><p>started as a pre - process script in the first session of Revit Batch Processor</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Flows.Pre_BuildFileList.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Flows.Pre_BuildFileList.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output messages either to batch processor (debug = False) or console (debug = True)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – the message, defaults to ‘’</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="flows-reportgridslevels-module">
 <h2>Flows.ReportGridsLevels module<a class="headerlink" href="#flows-reportgridslevels-module" title="Permalink to this heading">¶</a></h2>
@@ -174,8 +353,8 @@
 <section id="flows-reportworksets-module">
 <h2>Flows.ReportWorksets module<a class="headerlink" href="#flows-reportworksets-module" title="Permalink to this heading">¶</a></h2>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
+<section id="module-Flows">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Flows" title="Permalink to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -193,7 +372,6 @@
       <div class="clearer"></div>
     </div>
         <div id="breadcrumbs">
-                <a href="modules.html" accesskey="U">Flows</a><img src="../_static/img/triangle_closed.png" height="9" width="9" alt="&gt;">
                 Flows package
         </div>
         <script type="text/javascript" charset="utf-8" src="../_static/js/toc.js"></script>

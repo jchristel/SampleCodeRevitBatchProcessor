@@ -1,0 +1,29 @@
+test.Revit.TestUtils package
+============================
+
+Submodules
+----------
+
+test.Revit.TestUtils.revit\_test module
+---------------------------------------
+
+.. automodule:: test.Revit.TestUtils.revit_test
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.TestUtils.run\_revit\_tests module
+---------------------------------------------
+
+.. automodule:: test.Revit.TestUtils.run_revit_tests
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.TestUtils
+   :members:
+   :undoc-members:
+   :show-inheritance:

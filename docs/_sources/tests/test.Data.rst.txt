@@ -1,0 +1,37 @@
+test.Data package
+=================
+
+Submodules
+----------
+
+test.Data.Shapely\_CeilingsToRooms module
+-----------------------------------------
+
+.. automodule:: test.Data.Shapely_CeilingsToRooms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Data.data module
+---------------------
+
+.. automodule:: test.Data.data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Data.data\_read\_file module
+---------------------------------
+
+.. automodule:: test.Data.data_read_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Data
+   :members:
+   :undoc-members:
+   :show-inheritance:

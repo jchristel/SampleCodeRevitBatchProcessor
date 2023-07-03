@@ -1,0 +1,69 @@
+test.Revit.Common package
+=========================
+
+Submodules
+----------
+
+test.Revit.Common.custom\_element\_filter\_action\_contains\_any\_of\_values module
+-----------------------------------------------------------------------------------
+
+.. automodule:: test.Revit.Common.custom_element_filter_action_contains_any_of_values
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.custom\_element\_filter\_action\_does\_not\_contain\_values module
+------------------------------------------------------------------------------------
+
+.. automodule:: test.Revit.Common.custom_element_filter_action_does_not_contain_values
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.design\_options\_get module
+---------------------------------------------
+
+.. automodule:: test.Revit.Common.design_options_get
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.design\_set\_option module
+--------------------------------------------
+
+.. automodule:: test.Revit.Common.design_set_option
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.design\_sets\_get module
+------------------------------------------
+
+.. automodule:: test.Revit.Common.design_sets_get
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.revit\_version module
+---------------------------------------
+
+.. automodule:: test.Revit.Common.revit_version
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+test.Revit.Common.run\_test\_classes module
+-------------------------------------------
+
+.. automodule:: test.Revit.Common.run_test_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: test.Revit.Common
+   :members:
+   :undoc-members:
+   :show-inheritance:

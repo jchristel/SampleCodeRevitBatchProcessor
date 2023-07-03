@@ -77,11 +77,31 @@ _Script
 The python and powershell scripts of the flow.
 
 - ModifyRevision.py
+
+    - the task script executed by each Revit Batch Processor session
+
 - Post_AddRevision.py
+
+    - the post script executed by the flow after all Revit Batch Processor sessions have finished
+
 - Post_AddRevisionKillWSM.py
+
+    - the post process script executed by each Revit Batch Processor session
+
 - Pre_AddRevision.py
-- utilAddRev.py
+
+    - the pre process script executed by each Revit Batch Processor session
+
+- settings.py
+
+    - a module containing global variables / settings for this flow
+
 - startAddRevision.ps1
+
+    - The powershell script executing:
+        - pre Revit Batch Processor scripts
+        - concurrent Revit Batch Processor sessions
+        - post Revit Batch Processor scripts
 
 _Script/logs
 ^^^^^^^^^^^^^^^^^^^
@@ -106,4 +126,3 @@ _TaskList
 Location of task list files processed by Revit Batch Processor.
 
 For this flow there are 3 task list files in this folder, one for each session of Revit Batch Processor.
-

@@ -66,6 +66,8 @@ This flow expects the following directory structure to be in place:
 
 │   └───logs
 
+│   └───utils
+
 ├───_SessionData
 
 ├───_settings
@@ -101,12 +103,36 @@ _Script
 
 The python and powershell scripts of the flow.
 
-- ModifyRevision.py
-- Post_AddRevision.py
+- ModifyDailyModelMaintenance.py
+
+    - the task script executed by each Revit Batch Processor session
+
+- Post_DailyModelMaintenance.py
+
+    - the post script executed by the flow after all Revit Batch Processor sessions have finished
+
 - Post_AddRevisionKillWSM.py
-- Pre_AddRevision.py
-- utilAddRev.py
-- startAddRevision.ps1
+
+    - the post process script executed by each Revit Batch Processor session
+
+- Pre_ModifyDailyModelMaintenanceStandAlone.py
+
+    - the pre script executed by the flow before any Revit Batch Processor sessions are started
+    
+- Pre_ModifyDailyModelMaintenance.py
+
+    - the pre process script executed by each Revit Batch Processor session
+
+- settings.py
+
+    - a module containing global variables / settings for this flow
+
+- startDailyMaintenance.ps1
+
+- The powershell script executing:
+        - pre Revit Batch Processor scripts
+        - concurrent Revit Batch Processor sessions
+        - post Revit Batch Processor scripts
 
 Report files used for some scripts:
 

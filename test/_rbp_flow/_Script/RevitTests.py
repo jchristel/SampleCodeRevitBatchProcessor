@@ -35,7 +35,7 @@ Module running Revit related tests as the main script within batch processor flo
 # Imports
 # --------------------------
 import os.path
-import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # get document and import revit batch processor
 from test.utils.rbp_setup import add_rbp_ref
@@ -84,7 +84,7 @@ TESTS = [
 output_header("Executing tests.... start", revit_script_util.Output)
 #: test log file
 file_name = os.path.join(
-    utilM.OUTPUT_FOLDER, get_file_name_without_ext(doc.Title) + ".csv"
+    settings.OUTPUT_FOLDER, get_file_name_without_ext(doc.Title) + ".csv"
 )
 #: overwrite previous test date at log file open
 write_mode = "w"

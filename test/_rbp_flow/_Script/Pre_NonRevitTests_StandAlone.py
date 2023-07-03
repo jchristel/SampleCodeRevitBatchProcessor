@@ -42,7 +42,7 @@ Module executed as a pre process script outside the batch processor environment.
 
 import sys
 import datetime
-import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.console_out import output
 from test.Utility import run_test_classes as run_util_tests

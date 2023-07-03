@@ -42,7 +42,7 @@ Module executed as a pre process script outside the batch processor environment.
 # default file path locations
 # --------------------------
 import sys, os
-import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 from duHast.Utilities.files_get import get_files
 from duHast.Utilities.console_out import output
@@ -68,7 +68,7 @@ def write_file_list(source_directory):
         if files != None and len(files) > 0:
             f = open(
                 os.path.join(
-                    utilM.TASK_LIST_DIRECTORY, REVIT_VERSION + ".txt"
+                    settings.TASK_LIST_DIRECTORY, REVIT_VERSION + ".txt"
                 ),
                 "w",
             )
@@ -88,7 +88,7 @@ def write_file_list(source_directory):
 # -------------
 
 #: contains the revit version. this is used to identify which files to process
-REVIT_VERSION = utilM.DEFAULT_REVIT_VERSION
+REVIT_VERSION = settings.DEFAULT_REVIT_VERSION
 # check if a folder path was past in from calling powershell script...otherwise go with default
 if len(sys.argv) == 2:
     # build file path
@@ -100,8 +100,8 @@ else:
     output("Setting Revit version to default value: {}".format(REVIT_VERSION))
 
 # write task file list
-output("Collecting files from: {}".format(utilM.SAMPLE_FILES_DIRECTORY))
-status_write_tasks = write_file_list(utilM.SAMPLE_FILES_DIRECTORY)
+output("Collecting files from: {}".format(settings.SAMPLE_FILES_DIRECTORY))
+status_write_tasks = write_file_list(settings.SAMPLE_FILES_DIRECTORY)
 output("Collecting files completed with status: {}".format(status_write_tasks))
 
 # make sure the calling powershell script knows if something went wrong

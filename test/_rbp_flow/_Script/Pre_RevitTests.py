@@ -42,8 +42,7 @@ Module executed as a pre process script within the batch processor environment.
 
 import script_util
 
-# import flow specific utils
-import utilRevitTests as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import common library (in this case the post lib since it got the methods we are after)
 # import log utils
@@ -58,11 +57,11 @@ from duHast.Utilities import worksharing_monitor_process as wsmp
 
 # logfile marker creation status
 status_marker_ = logUtils.write_session_id_marker_file(
-    utilM.LOG_MARKER_DIRECTORY,
+    settings.LOG_MARKER_DIRECTORY,
     uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
 )
 
-wsm_marker_ = wsmp.write_out_wsm_data_to_file(utilM.WSM_MARKER_DIRECTORY)
+wsm_marker_ = wsmp.write_out_wsm_data_to_file(settings.WSM_MARKER_DIRECTORY)
 
 # -------------
 # my code here:
@@ -83,7 +82,7 @@ def write_file_list(source_directory):
     try:
         files = get_files(source_directory)
         if files != None and len(files) > 0:
-            f = open(utilM.FULL_TASK_FILE_PATH, "w")
+            f = open(settings.FULL_TASK_FILE_PATH, "w")
             for file in files:
                 # only collect revit 2022 files
                 if "Revit_2022" in file:
@@ -101,16 +100,16 @@ def write_file_list(source_directory):
 # main:
 # -------------
 
-output("Script directory: {}".format(utilM.SCRIPT_DIRECTORY), script_util.Output)
-output("flow directory: {}".format(utilM.FLOW_DIRECTORY), script_util.Output)
-output("duHast directory: {}".format(utilM.DU_HAST_DIRECTORY), script_util.Output)
+output("Script directory: {}".format(settings.SCRIPT_DIRECTORY), script_util.Output)
+output("flow directory: {}".format(settings.FLOW_DIRECTORY), script_util.Output)
+output("duHast directory: {}".format(settings.DU_HAST_DIRECTORY), script_util.Output)
 output(
-    "duHast test directory: {}".format(utilM.DU_HAST_TEST_DIRECTORY), script_util.Output
+    "duHast test directory: {}".format(settings.DU_HAST_TEST_DIRECTORY), script_util.Output
 )
 
 '''
 output("Writing file Data.... start", script_util.Output)
-result_ = write_file_list(utilM.SAMPLE_FILES_DIRECTORY)
+result_ = write_file_list(settings.SAMPLE_FILES_DIRECTORY)
 output("Writing file Data.... status: [{}]".format(result_), script_util.Output)
 '''
 # show WSM marker status

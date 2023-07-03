@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+
 
 # PyBuilder
 target/
@@ -190,8 +190,10 @@ x64/
 /docsource/build
 /docs/doctrees
 docs/.buildinfo
+docs/.doctrees
 #Sphinx build output
 /docsource/C*
+docs/_build/
 
 # test processing logs
 /test/_rbp_flow/_Script/logs/*.log

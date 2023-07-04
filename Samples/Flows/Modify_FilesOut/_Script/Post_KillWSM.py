@@ -1,12 +1,21 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a post process script within the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- kills all running revit work sharing monitor sessions
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
 #
-# Copyright (c) 2020  Jan Christel
+# Copyright (c) 2023  Jan Christel
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,34 +36,30 @@
 # Imports
 # --------------------------
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
+
 # import WSM kill utils
-from duHast.Utilities import WorksharingMonitorProcess as wsmp
+from duHast.Utilities import worksharing_monitor_process as wsmp
 
-# flag whether this runs in debug or not
-debug_ = False
-
-# Add batch processor scripting references
-if not debug_:
-    import script_util
+# import script_util
+import script_util
+from duHast.Utilities.console_out import output
 
 # -------------
 # my code here:
 # -------------
-
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print (message)
 
 # -------------
 # main:
 # -------------
 
 # kill off all WSM sessions
-status_wsm_kill_ = wsmp.DieWSMDie(utilM.WSM_MARKER_DIRECTORY, True)
+statusWSMKill_ = wsmp.die_wsm_die(settings.WSM_MARKER_DIRECTORY, True)
 
 # show WSM kill status
-Output('WSM result: {} :: [{}]'.format(status_wsm_kill_.message, status_wsm_kill_.status))
+output(
+    "WSM Kill status: ....{} [{}]".format(
+        statusWSMKill_.message, statusWSMKill_.status
+    ),
+    script_util.Output,
+)

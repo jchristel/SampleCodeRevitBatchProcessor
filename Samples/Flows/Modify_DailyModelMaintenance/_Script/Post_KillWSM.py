@@ -10,7 +10,7 @@ Module executed as a post process script within the batch processor environment.
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -36,7 +36,7 @@ Module executed as a post process script within the batch processor environment.
 # Imports
 # --------------------------
 
-import settings as settings # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
@@ -48,7 +48,6 @@ from duHast.Utilities.console_out import output
 # -------------
 # my code here:
 # -------------
-
 
 # -------------
 # main:

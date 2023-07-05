@@ -33,8 +33,8 @@ import os.path
 from System.IO import Path
 
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
-import utils as utilLocal
+import settings as settings # sets up all commonly used variables and path locations!
+from utils import utils as utilLocal
 
 # import common library
 from duHast.Utilities import Utility as util
@@ -66,7 +66,7 @@ def write_new_file_data(doc_files):
         if (match == False):
             doc_files_sorted.append(cfd)
     data = convert_class_to_string(doc_files_sorted)
-    flag = write_new_data(utilM.REVISION_DATA_FILEPATH, data)
+    flag = write_new_data(settings.REVISION_DATA_FILEPATH, data)
     return flag, doc_files_sorted
 
 # write new revision data out to file
@@ -87,7 +87,7 @@ def convert_class_to_string(doc_files):
 
 def write_meta_data():
     aconex_meta_data = []
-    header = utilM.ACONEX_METADATA_HEADER
+    header = settings.ACONEX_METADATA_HEADER
     aconex_meta_data.append(header)
     flag = True
     # get files in todays output folder
@@ -106,15 +106,15 @@ def write_meta_data():
                     row.append(docs.AconexDocNumber)
                     row.append(str(docs.revision))
                     row.append(docs.AconexDocName)
-                    row.append(utilM.ACONEX_METADATA_DOC_TYPE)
-                    row.append(utilM.ACONEX_METADATA_DOC_STATUS)
-                    row.append(utilM.ACONEX_METADATA_DISCIPLINE)
-                    row.append(utilM.ACONEX_METADATA_PROJECT_PHASE)
+                    row.append(settings.ACONEX_METADATA_DOC_TYPE)
+                    row.append(settings.ACONEX_METADATA_DOC_STATUS)
+                    row.append(settings.ACONEX_METADATA_DISCIPLINE)
+                    row.append(settings.ACONEX_METADATA_PROJECT_PHASE)
                     row.append(str(file_name)+str(file_extension))
-                    row.append(utilM.ACONEX_METADATA_NOT_APPLICABLE)
+                    row.append(settings.ACONEX_METADATA_NOT_APPLICABLE)
                     row.append('')
-                    row.append(util.GetDateStamp(utilM.ACONEX_METADATA_DATE_FORMAT))
-                    row.append(utilM.ACONEX_METADATA_COMPANY)
+                    row.append(util.GetDateStamp(settings.ACONEX_METADATA_DATE_FORMAT))
+                    row.append(settings.ACONEX_METADATA_COMPANY)
                     row.append('')
                     row.append('')
                     row.append('')
@@ -130,15 +130,15 @@ def write_meta_data():
                     row.append(docs.AconexDocNumber)
                     row.append(str(docs.revision))
                     row.append(docs.AconexDocName)
-                    row.append(utilM.ACONEX_METADATA_DOC_TYPE)
-                    row.append(utilM.ACONEX_METADATA_DOC_STATUS)
-                    row.append(utilM.ACONEX_METADATA_DISCIPLINE)
-                    row.append(utilM.ACONEX_METADATA_PROJECT_PHASE)
+                    row.append(settings.ACONEX_METADATA_DOC_TYPE)
+                    row.append(settings.ACONEX_METADATA_DOC_STATUS)
+                    row.append(settings.ACONEX_METADATA_DISCIPLINE)
+                    row.append(settings.ACONEX_METADATA_PROJECT_PHASE)
                     row.append(str(file_name)+str(file_extension))
-                    row.append(utilM.ACONEX_METADATA_NOT_APPLICABLE)
+                    row.append(settings.ACONEX_METADATA_NOT_APPLICABLE)
                     row.append('')
-                    row.append(util.GetDateStamp(utilM.ACONEX_METADATA_DATE_FORMAT))
-                    row.append(utilM.ACONEX_METADATA_COMPANY)
+                    row.append(util.GetDateStamp(settings.ACONEX_METADATA_DATE_FORMAT))
+                    row.append(settings.ACONEX_METADATA_COMPANY)
                     row.append('')
                     row.append('')
                     row.append('')
@@ -146,7 +146,7 @@ def write_meta_data():
                     aconex_meta_data.append(row)
                     docs.NewRevision = True
     # write out aconex list
-    flag = write_new_data(root_path_ + '\\' + utilM.ACONEX_METADATA_FILE_NAME, aconex_meta_data)
+    flag = write_new_data(root_path_ + '\\' + settings.ACONEX_METADATA_FILE_NAME, aconex_meta_data)
     return flag
 
 # deletes back up folders and revit project files
@@ -154,7 +154,7 @@ def clean_up_export_folder():
     status = True
     # delete sub directories
     try:
-        sub_dirs = util.GetChildDirectories(utilM.ROOT_PATH_EXPORT)
+        sub_dirs = util.GetChildDirectories(settings.ROOT_PATH_EXPORT)
         if(len(sub_dirs)>0):
             for d in sub_dirs:
                 status = status & util.DirectoryDelete(d)
@@ -163,7 +163,7 @@ def clean_up_export_folder():
         status = status & False
     try:
         # delete rvt files
-        revit_files = util.GetFilesWithFilter(utilM.ROOT_PATH_EXPORT)
+        revit_files = util.GetFilesWithFilter(settings.ROOT_PATH_EXPORT)
         if(len(revit_files)>0):
             for f in revit_files:
                 status = status & util.FileDelete(f)
@@ -173,7 +173,7 @@ def clean_up_export_folder():
     
     try:
         # delete txt marker files
-        text_files = util.GetFilesWithFilter(root_path_, utilM.MARKER_FILE_EXTENSION, '*')
+        text_files = util.GetFilesWithFilter(root_path_, settings.MARKER_FILE_EXTENSION, '*')
         if(len(text_files)>0):
             for f in text_files:
                 status = status & util.FileDelete(f)
@@ -198,15 +198,15 @@ def clean_up_export_folder():
 # -------------
 
 # store output here:
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 
 # file data
 doc_files_ = []
 # read current file data
-doc_files_ = utilLocal.read_current_file(utilM.REVISION_DATA_FILEPATH)
+doc_files_ = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
 
 # build out directory location
-root_path_ = root_path_ + '\\' + utilM.MODEL_OUT_FOLDER_NAME
+root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 # read file data from revit files processed
 marker_file_data_=[]
@@ -228,9 +228,9 @@ flag_export_clean_up = clean_up_export_folder()
 Output('Clean up:...[{}]'.format(flag_export_clean_up))
 
 # process logs
-processing_results_ = logutils.ProcessLogFiles(utilM.LOG_MARKER_DIRECTORY)
+processing_results_ = logutils.ProcessLogFiles(settings.LOG_MARKER_DIRECTORY)
 Output('Log result: {} :: [{}]'.format(processing_results_.message, processing_results_.status))
 
 # WSMP marker files clean up
-clean_up_wsm_files_ = wsmp.CleanUpWSMDataFiles(utilM.WSM_MARKER_DIRECTORY)
+clean_up_wsm_files_ = wsmp.CleanUpWSMDataFiles(settings.WSM_MARKER_DIRECTORY)
 Output('WSM result: {} :: [{}]'.format(clean_up_wsm_files_.message, clean_up_wsm_files_.status))

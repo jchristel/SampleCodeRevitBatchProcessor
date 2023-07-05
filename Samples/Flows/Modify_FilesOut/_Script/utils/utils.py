@@ -22,7 +22,7 @@
 #
 #
 
-import utilModifyBVN as utilM  # sets up all commonly used variables and path locations!
+import settings as settings  # sets up all commonly used variables and path locations!
 import docFile as df
 
 # import common library
@@ -54,7 +54,7 @@ def read_marker_files_from_revit_processed(marker_dir_path):
     return_value = res.Result()
     marker_file_data = []
     # get all text files in location
-    marker_files = util.GetFiles(marker_dir_path, utilM.MARKER_FILE_EXTENSION)
+    marker_files = util.GetFiles(marker_dir_path, settings.MARKER_FILE_EXTENSION)
     if(len(marker_files)>0):
         try:
             for mf in marker_files:
@@ -76,7 +76,7 @@ def create_bim360_out_folder(targetFolder):
     :rtype: bool
     '''
 
-    flag = util.CreateTargetFolder(targetFolder, utilM.BIM360_FOLDER_NAME)
+    flag = util.CreateTargetFolder(targetFolder, settings.BIM360_FOLDER_NAME)
     return flag
 
 
@@ -93,12 +93,12 @@ def get_export_file_name_without_revision(file_name):
 
     # strip file extension (in all 3 cases 4 characters long)
     # if not an ifc, nwc or revit file, return name unchanged.
-    if(file_name.endswith(utilM.NWC_FILE_EXTENSION) or file_name.endswith(utilM.IFC_FILE_EXTENSION) or file_name.endswith(utilM.RVT_FILE_EXTENSION)):
+    if(file_name.endswith(settings.NWC_FILE_EXTENSION) or file_name.endswith(settings.IFC_FILE_EXTENSION) or file_name.endswith(settings.RVT_FILE_EXTENSION)):
         file_name = file_name[0:-4]
         # check if file name contains revision (format is: [xx])
-        if(utilM.REVISION_PREFIX in file_name and utilM.REVISION_SUFFIX in file_name):
-            index_rev_start = file_name.find(utilM.REVISION_PREFIX)
-            index_rev_end = file_name.find(utilM.REVISION_SUFFIX)
+        if(settings.REVISION_PREFIX in file_name and settings.REVISION_SUFFIX in file_name):
+            index_rev_start = file_name.find(settings.REVISION_PREFIX)
+            index_rev_end = file_name.find(settings.REVISION_SUFFIX)
             file_name = file_name[0:index_rev_start] + file_name[index_rev_end + 1:]
         else:
             # just remove extension

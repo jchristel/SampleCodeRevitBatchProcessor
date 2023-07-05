@@ -30,7 +30,7 @@
 # --------------------------
 
 # import flow specific utils
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings # sets up all commonly used variables and path locations!
 # import common library (in this case the post lib since it got the methods we are after)
 from duHast.Utilities import Utility as util
 # import log utils
@@ -52,8 +52,8 @@ wsm_marker_ = False
 # Add batch processor scripting references
 if not debug_:
     import script_util
-    status_marker_ = logutils.WriteSessionIdMarkerFile(utilM.LOG_MARKER_DIRECTORY , uBP.AdjustSessionIdForFileName(script_util.GetSessionId()))
-    wsm_marker_ = wsmp.WriteOutWSMDataToFile(utilM.WSM_MARKER_DIRECTORY)
+    status_marker_ = logutils.WriteSessionIdMarkerFile(settings.LOG_MARKER_DIRECTORY , uBP.AdjustSessionIdForFileName(script_util.GetSessionId()))
+    wsm_marker_ = wsmp.WriteOutWSMDataToFile(settings.WSM_MARKER_DIRECTORY)
 # -------------
 # my code here:
 # -------------
@@ -74,9 +74,9 @@ Output('Wrote log marker: ....[{}]'.format(status_marker_))
 Output('WSM marker result: {} :: [{}]'.format(wsm_marker_.message , wsm_marker_.status))
 
 # store output here:
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 
 #create Model out folder
 Output('Creating model out folder.... start')
-result_ = util.CreateTargetFolder(root_path_, utilM.MODEL_OUT_FOLDER_NAME)
+result_ = util.CreateTargetFolder(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 Output('Creating model out folder.... status: {}'.format(result_))

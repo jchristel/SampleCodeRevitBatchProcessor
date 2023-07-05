@@ -27,8 +27,8 @@
 # Imports
 # --------------------------
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
-import utils as utilLocal
+import settings as settings # sets up all commonly used variables and path locations!
+from utils import utils as utilLocal
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities import Utility as util
 
@@ -88,9 +88,9 @@ def get_revit_file_names(revit_file_directory):
 # -------------
 
 # store output here:
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 # build out directory location
-root_path_ = root_path_ + '\\' + utilM.MODEL_OUT_FOLDER_NAME
+root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 # set up BIM 360 NWC folder
 set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(root_path_)
@@ -99,12 +99,12 @@ if(set_up_bim360_folder_flag_):
     # set up a result class object with data from marker files
     export_revit_status = get_revit_file_names(root_path_)
     # build the full folder path to where files are to be copied to
-    revit_export_path = root_path_+ '\\' + utilM.BIM360_FOLDER_NAME
+    revit_export_path = root_path_+ '\\' + settings.BIM360_FOLDER_NAME
     # duplicate revit files (but strip their revision information)
     flag_copy_revit_ = utilLocal.copy_exports(
         export_revit_status, 
-        root_path_ + '\\' + utilM.BIM360_FOLDER_NAME, 
-        utilM.RVT_FILE_EXTENSION
+        root_path_ + '\\' + settings.BIM360_FOLDER_NAME, 
+        settings.RVT_FILE_EXTENSION
     )
     Output('{} :: [{}]'.format(flag_copy_revit_.message, flag_copy_revit_.status))
 else:

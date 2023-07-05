@@ -27,7 +27,7 @@
 # default file path locations
 # --------------------------
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings # sets up all commonly used variables and path locations!
 # import common library (in this case the post lib since it got the methods we are after)
 from duHast.Utilities import Utility as util
 # import log utils
@@ -45,7 +45,7 @@ status_marker_ = False
 # Add batch processor scripting references
 if not debug_:
     import script_util
-    status_marker_ = logutils.WriteSessionIdMarkerFile(utilM.LOG_MARKER_DIRECTORY , uBP.AdjustSessionIdForFileName(script_util.GetSessionId()))
+    status_marker_ = logutils.WriteSessionIdMarkerFile(settings.LOG_MARKER_DIRECTORY , uBP.AdjustSessionIdForFileName(script_util.GetSessionId()))
 # -------------
 # my code here:
 # -------------
@@ -64,17 +64,17 @@ def Output(message = ''):
 Output('Wrote log marker: ....[{}]'.format(status_marker_))
 
 # store output here:
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 
-root_path_ = root_path_ + '\\' + utilM.MODEL_OUT_FOLDER_NAME
+root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 Output ('Collecting files from: {}'.format(root_path_))
 # get file data
 Output('Writing file Data.... start')
 result_ = fl.WriteFileList(
     root_path_ ,
-    utilM.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
-    utilM.ROOT_PATH_EXPORT, 
-    utilM.TASK_FILE_NO, 
+    settings.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
+    settings.ROOT_PATH_EXPORT, 
+    settings.TASK_FILE_NO, 
     fl.getRevitFiles
     )
 Output (result_.message)

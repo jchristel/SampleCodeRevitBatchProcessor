@@ -3,7 +3,7 @@ Param (
     [string]$exo #indication whether step 2 (export only) should be run
 )
 # load util functions
-. "\\bvn\Data\studio\infotech\standards\Scripts\PowerShell\BatchProcessorUtils.ps1"
+. "C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
 
 Write-ToLogAndConsole -Message "Argument 1: $exo"
 
@@ -11,16 +11,16 @@ Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True
 
 # Define the paths to your batch processor settings as a list
 $settings_step_one = @(
-    "BatchRvt.2022.ModifyBVNFilesParallelOneA.NBH.Settings.json", 
-    "BatchRvt.2022.ModifyBVNFilesParallelOneB.NBH.Settings.json",
-    "BatchRvt.2022.ModifyBVNFilesParallelOneC.NBH.Settings.json"
+    "BatchRvt.2022.ModifyFilesOutOneA.Settings.json", 
+    "BatchRvt.2022.ModifyFilesOutOneB.Settings.json",
+    "BatchRvt.2022.ModifyFilesOutOneC.Settings.json"
 )
 
 # Define the paths to your batch processor settings as a list
 $settings_step_two = @(
-    "BatchRvt.2022.ModifyBVNFilesParallelTwoA.NBH.Settings.json", 
-    "BatchRvt.2022.ModifyBVNFilesParallelTwoB.NBH.Settings.json",
-    "BatchRvt.2022.ModifyBVNFilesParallelTwoC.NBH.Settings.json"
+    "BatchRvt.2022.ModifyFilesOutTwoA.Settings.json", 
+    "BatchRvt.2022.ModifyFilesOutTwoB.Settings.json",
+    "BatchRvt.2022.ModifyFilesOutTwoC.Settings.json"
 ) 
 
 $user_name = $env:USERNAME.ToLower()
@@ -36,11 +36,11 @@ Write-ToLogAndConsole -Message "flow root directory: $root_flow_directory"
 $iron_python_path = "C:\Program Files (x86)\IronPython 2.7\ipy64.exe"
 # Display batch processor path
 Write-ToLogAndConsole -Message "Iron python file path: $iron_python_path"
-$ui_file_select_path='"\\bvn\Data\studio\infotech\standards\Scripts\Revit Python\RBP\SampleCodeRevitBatchProcessor\UI\script.py"'
+$ui_file_select_path='"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\duHast\src\duHast\UI\script.py"'
 # Display theui fiole select path
 Write-ToLogAndConsole -Message "UI File select path: $ui_file_select_path"
 # directory path from which python UI is going to show revit files
-$ui_input_directory = '"P:\19\1906009.000\Design\BIM\_Revit\1.0 Project Files"'
+$ui_input_directory = '"C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\Flows\Modify_FilesOut\_sampleFiles"'
 Write-ToLogAndConsole -Message "UI input directory: $ui_input_directory"
 # directory path into which the python UI will write the task files into
 $ui_output_directory = ($root_flow_directory, "\_TaskList") -join ""
@@ -56,10 +56,10 @@ $settings_directory = $root_flow_directory + "\_settings\"
 # Display the settings directory
 Write-ToLogAndConsole -Message "settings directory: $settings_directory"
 # file path to post step one script
-$_post_step_one_script = "`"$root_flow_directory`"\_Script\Post_BVNRevitFileSaveAs_StepOne.py"
+$_post_step_one_script = "`"$root_flow_directory`"\_Script\Post_FilesOut_StepOne.py"
 Write-ToLogAndConsole -Message "post step one script file path: $_post_step_one_script"
 # file path to clean up script run at the very end
-$clean_up_script_path = "`"$root_flow_directory`"\_Script\Post_BVNRevitFileSaveAs.py"
+$clean_up_script_path = "`"$root_flow_directory`"\_Script\Post_FilesOut.py"
 Write-ToLogAndConsole -Message "Final clean up script file path: $clean_up_script_path"
 
 Write-ToLogAndConsole -Message "-"

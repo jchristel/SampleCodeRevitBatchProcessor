@@ -27,9 +27,9 @@
 # --------------------------
 import clr
 
-import utilModifyBVN as utilM # sets up all commonly used variables and path locations!
+import settings as settings # sets up all commonly used variables and path locations!
 import RevitExportIFCConfigSpecific as rexIFC
-import utils as utilLocal
+from utils import utils as utilLocal
 
 # import common library
 from duHast.APISamples import RevitCommonAPI as com
@@ -55,7 +55,7 @@ if not debug_:
     revit_file_path_ = revit_script_util.GetRevitFilePath()
 else:
     #get default revit file name
-    revit_file_path_ = utilM.DEBUG_REVIT_FILE_NAME
+    revit_file_path_ = settings.DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
@@ -71,7 +71,7 @@ def Output(message = ''):
 # the revision of the current Revit model (as per splash screen)
 current_file_revision_ = '-'
 # store output here, using separate variable since its value is getting changed
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 
 def write_out_export_file_data(export_status, message, extension):
     if(export_status.status == True):
@@ -86,7 +86,7 @@ def write_out_export_file_data(export_status, message, extension):
                     file_name = root_path_  + \
                         '\\' + export_file_name + \
                         export_extension + \
-                        utilM.MARKER_FILE_EXTENSION
+                        settings.MARKER_FILE_EXTENSION
                     status, message_marker = utilLocal.write_rev_marker_file(file_name, data)
                     Output(message_marker + ' :: ' + str(status))
                 else:
@@ -128,7 +128,7 @@ def get_file_data(export_file_name, extension):
 def build_default_file_list():
     flag = True
     # read current files
-    file_list = utilLocal.read_current_file(utilM.REVISION_DATA_FILEPATH)
+    file_list = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
     if(file_list is not None and len(file_list) > 0):
         # Output('got file data objects')
         for f in file_list:
@@ -163,7 +163,7 @@ def optimize_ifc_files (export_status):
 # checks whether view names starts with ETN (navis) 00 STC and 99 STC (model start view)
 def check_name(view):
     value = True
-    for prefix in utilM.VIEWS_TO_KEEP_FOR_EXPORT:
+    for prefix in settings.VIEWS_TO_KEEP_FOR_EXPORT:
         if(view.Name.lower().startswith(prefix.lower())):
             value = False
             break
@@ -200,7 +200,7 @@ def export_views_to_ifc(doc):
     #fileName = BuildExportFileNameIFC()
     return_value = rex.Export3DViewsToIFC(
         doc, 
-        utilM.EXPORT_IFC_VIEW_PREFIX, 
+        settings.EXPORT_IFC_VIEW_PREFIX, 
         ifc_export_option, 
         root_path_, 
         rex.IFCCoords.SharedCoordinates, 
@@ -224,15 +224,15 @@ def build_export_file_name_from_view_ifc(view_name):
     '''
 
     # return newFileName
-    if(view_name.startswith(utilM.EXPORT_IFC_VIEW_PREFIX)):
-        lenPrefix = len(utilM.EXPORT_IFC_VIEW_PREFIX)
+    if(view_name.startswith(settings.EXPORT_IFC_VIEW_PREFIX)):
+        lenPrefix = len(settings.EXPORT_IFC_VIEW_PREFIX)
         view_name = view_name[lenPrefix:]
 
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
-            if(fd.existingFileName == view_name and fd.fileExtension == utilM.IFC_FILE_EXTENSION):
+            if(fd.existingFileName == view_name and fd.fileExtension == settings.IFC_FILE_EXTENSION):
                 # may need to update the revision info!
-                if(utilM.EXPORT_FILES_USE_REVIT_REVISION):
+                if(settings.EXPORT_FILES_USE_REVIT_REVISION):
                     Output('IFC using sheet revision: {}'.format(current_file_revision_))
                     # update the revision to the current revit file revision
                     fd.revision = current_file_revision_
@@ -244,7 +244,7 @@ def build_export_file_name_from_view_ifc(view_name):
                 Output('IFC: view name new: {}'.format(view_name))
                 break
             
-    return view_name + utilM.IFC_FILE_EXTENSION
+    return view_name + settings.IFC_FILE_EXTENSION
 
 def set_up_nwc_default_export_option():
     '''
@@ -268,7 +268,7 @@ def export_views_to_nwc(doc):
 
     return_value = res.Result()
     nwc_export_option = set_up_nwc_default_export_option()
-    return_value = rex.Export3DViewsToNWC(doc, utilM.EXPORT_NWC_VIEW_PREFIX, nwc_export_option,  root_path_, build_export_file_name_from_view_nwc)
+    return_value = rex.Export3DViewsToNWC(doc, settings.EXPORT_NWC_VIEW_PREFIX, nwc_export_option,  root_path_, build_export_file_name_from_view_nwc)
     return return_value
 
 def build_export_file_name_from_view_nwc(view_name):
@@ -285,15 +285,15 @@ def build_export_file_name_from_view_nwc(view_name):
     :rtype: str
     '''
 
-    len_prefix = len(utilM.EXPORT_NWC_VIEW_PREFIX)
+    len_prefix = len(settings.EXPORT_NWC_VIEW_PREFIX)
     #check if view name starts with NWC_
-    if(view_name.startswith(utilM.EXPORT_NWC_VIEW_PREFIX)):
+    if(view_name.startswith(settings.EXPORT_NWC_VIEW_PREFIX)):
         view_name = view_name[len_prefix:]
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
-            if(fd.existingFileName == view_name and fd.fileExtension == utilM.NWC_FILE_EXTENSION):
+            if(fd.existingFileName == view_name and fd.fileExtension == settings.NWC_FILE_EXTENSION):
                 # may need to update the revision info!
-                if(utilM.EXPORT_FILES_USE_REVIT_REVISION):
+                if(settings.EXPORT_FILES_USE_REVIT_REVISION):
                     # update the revision to the current revit file revision
                     fd.revision = current_file_revision_
                 else:
@@ -301,7 +301,7 @@ def build_export_file_name_from_view_nwc(view_name):
                     fd.upDateNumericalRev()
                 view_name = fd.getNewFileName()
                 break
-    return view_name + utilM.NWC_FILE_EXTENSION
+    return view_name + settings.NWC_FILE_EXTENSION
 
 # -------------
 # main:
@@ -310,7 +310,7 @@ def build_export_file_name_from_view_nwc(view_name):
 # list containing the default file names:
 # [[revit host file name before save, revit host file name after save]]
 defaultFileNamesStepTwo_ = [
-    [util.GetFileNameWithoutExt(revit_file_path_), str(util.GetFolderDateStamp(util.FOLDER_DATE_STAMP_YYMMDD)) + utilM.REVIT_FILE_NAME_PREFIX_EXPORT + str(util.GetFileNameWithoutExt(revit_file_path_))]
+    [util.GetFileNameWithoutExt(revit_file_path_), str(util.GetFolderDateStamp(util.FOLDER_DATE_STAMP_YYMMDD)) + settings.REVIT_FILE_NAME_PREFIX_EXPORT + str(util.GetFileNameWithoutExt(revit_file_path_))]
 ]
 
 # save revit file to new location
@@ -320,9 +320,9 @@ Output('Modifying Revit File.... start')
 file_data_ = []
 
 # set path to models will be saved to
-root_path_ = root_path_ + '\\' + utilM.MODEL_OUT_FOLDER_NAME
+root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 # get the current model revision recorded on sheet splash screen
-current_file_revision_ = com.GetSheetRevByName(doc, utilM.SPLASH_SCREEN_SHEET_NAME)
+current_file_revision_ = com.GetSheetRevByName(doc, settings.SPLASH_SCREEN_SHEET_NAME)
 # the current file name
 revitFileName_ = util.GetFileNameWithoutExt(revit_file_path_)
 
@@ -331,7 +331,7 @@ build_default_file_list()
 
 # just check for debug flag
 if (debug_ == False):
-    result_ = com.SaveAs(doc, utilM.ROOT_PATH_EXPORT , revit_file_path_, defaultFileNamesStepTwo_)
+    result_ = com.SaveAs(doc, settings.ROOT_PATH_EXPORT , revit_file_path_, defaultFileNamesStepTwo_)
     Output('{} :: [{}]'.format(result_.message,result_.status))
 
     # delete all sheets left in model
@@ -348,15 +348,15 @@ if (debug_ == False):
     # export to NWC...
     flagExportNWC_ = export_views_to_nwc(doc)
     Output('{} :: [{}]'.format(flagExportNWC_.message, flagExportNWC_.status))
-    write_out_export_file_data(flagExportNWC_, 'NWC Export', utilM.NWC_FILE_EXTENSION)
+    write_out_export_file_data(flagExportNWC_, 'NWC Export', settings.NWC_FILE_EXTENSION)
     
     # export to IFC file format
     flagExportIFC_ = export_views_to_ifc(doc)
     Output('{} :: [{}]'.format(flagExportIFC_.message, flagExportIFC_.status))
-    write_out_export_file_data(flagExportIFC_, 'IFC export', utilM.IFC_FILE_EXTENSION)
+    write_out_export_file_data(flagExportIFC_, 'IFC export', settings.IFC_FILE_EXTENSION)
     
     # duplicate NWC's
-    flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, utilM.ROOT_PATH_NWC, utilM.NWC_FILE_EXTENSION)
+    flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, settings.ROOT_PATH_NWC, settings.NWC_FILE_EXTENSION)
     Output('{} :: [{}]'.format(flagCopyNWCs_.message, flagCopyNWCs_.status))
     
     # optimize IFC's prior to copying
@@ -364,15 +364,15 @@ if (debug_ == False):
     Output('{} :: [{}]'.format(flagIFCOptimized_.message, flagIFCOptimized_.status))
 
     # duplicate IFC's
-    flagCopyIFCs_ = utilLocal.copy_exports(flagExportIFC_, utilM.ROOT_PATH_IFC, utilM.IFC_FILE_EXTENSION)
+    flagCopyIFCs_ = utilLocal.copy_exports(flagExportIFC_, settings.ROOT_PATH_IFC, settings.IFC_FILE_EXTENSION)
     Output('{} :: [{}]'.format(flagCopyIFCs_.message, flagCopyIFCs_.status))
     
      # set up BIM 360 NWC folder
     setUpBIM360FolderFlag_ = utilLocal.create_bim360_out_folder(root_path_)
     if(setUpBIM360FolderFlag_):
-        nwcExportPath = root_path_ + '\\' + utilM.BIM360_FOLDER_NAME
+        nwcExportPath = root_path_ + '\\' + settings.BIM360_FOLDER_NAME
         # duplicate NWC's
-        flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, nwcExportPath, utilM.NWC_FILE_EXTENSION)
+        flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, nwcExportPath, settings.NWC_FILE_EXTENSION)
         Output('{} :: [{}]'.format(flagCopyNWCs_.message, flagCopyNWCs_.status))
     else:
         Output('failed to set up BIM 360 out folder')

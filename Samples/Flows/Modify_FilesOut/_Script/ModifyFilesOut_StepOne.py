@@ -29,8 +29,8 @@
 
 import clr
 
-import utilModifyBVN as utilM  # sets up all commonly used variables and path locations!
-import utils as utilLocal
+import settings as settings  # sets up all commonly used variables and path locations!
+from utils import utils as utilLocal
 
 # import common library
 from duHast.APISamples import RevitCommonAPI as com
@@ -57,7 +57,7 @@ if not debug_:
     revitFilePath_ = revit_script_util.GetRevitFilePath()
 else:
     # get default revit file name in debug mode
-    revitFilePath_ = utilM.DEBUG_REVIT_FILE_NAME
+    revitFilePath_ = settings.DEBUG_REVIT_FILE_NAME
 
 # -------------
 # my code here:
@@ -173,17 +173,17 @@ def build_default_file_list():
     :rtype: _type_
     '''
 
-    rev = com.GetSheetRevByName(doc, utilM.SPLASH_SCREEN_SHEET_NAME)
+    rev = com.GetSheetRevByName(doc, settings.SPLASH_SCREEN_SHEET_NAME)
     flag = True
     match = False
     # read current files
-    file_list = utilLocal.read_current_file(utilM.REVISION_DATA_FILEPATH)
+    file_list = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
     if(file_list is not None and len(file_list) > 0):
         # loop over file data objects and search for match
         print('looking for match:'.format(revit_file_name_))
         for f in file_list:
             print('starts with {}'.format(f.existingFileName))
-            if (revit_file_name_.startswith(f.existingFileName) and f.fileExtension == utilM.RVT_FILE_EXTENSION):
+            if (revit_file_name_.startswith(f.existingFileName) and f.fileExtension == settings.RVT_FILE_EXTENSION):
                 match = True
                 f.revision = rev # update with latest revision from sheet
                 # pad revision out to three digits if required
@@ -217,8 +217,8 @@ def write_rev_marker_file():
         # add revit file extension to marker file name
         file_name = root_path_  + \
             '\\' + revit_file_name_ + \
-            utilM.RVT_FILE_EXTENSION + \
-            utilM.MARKER_FILE_EXTENSION
+            settings.RVT_FILE_EXTENSION + \
+            settings.MARKER_FILE_EXTENSION
         status, messageMarker = utilLocal.write_rev_marker_file(file_name, file_data_[0])
         Output(messageMarker)
     else:
@@ -231,7 +231,7 @@ def write_rev_marker_file():
 # -------------
 
 # store output here:
-root_path_ = utilM.ROOT_PATH
+root_path_ = settings.ROOT_PATH
 
 # list containing the default file names:
 # populated from text file located in script folder
@@ -243,7 +243,7 @@ file_data_ = []
 revit_file_name_ = util.GetFileNameWithoutExt(revitFilePath_)
 
 # model out location including dated folder stamp
-root_path_ = root_path_ + '\\' + utilM.MODEL_OUT_FOLDER_NAME
+root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 #save revit file to new location
 Output('Modifying Revit File.... start')
@@ -264,15 +264,15 @@ if(save_file):
         Output('Not Saving Revit File!!!')
 
     #make further changes as required....
-    flagModifyWorkSets_ = modify(doc, utilM.DEFAULT_WORKSETS)
+    flagModifyWorkSets_ = modify(doc, settings.DEFAULT_WORKSETS)
     Output('{} :: [{}]'.format(flagModifyWorkSets_.message, flagModifyWorkSets_.status))
 
     # delete views
-    resultDeleteViews_ = modify_views(doc, utilM.VIEW_KEEP_RULES)
+    resultDeleteViews_ = modify_views(doc, settings.VIEW_KEEP_RULES)
     Output('{} :: [{}]'.format(resultDeleteViews_.message, resultDeleteViews_.status))
  
     # delete sheets
-    resultDeleteSheets_ = modify_sheets(doc, utilM.SHEET_KEEP_RULES)
+    resultDeleteSheets_ = modify_sheets(doc, settings.SHEET_KEEP_RULES)
     Output('{} :: [{}]'.format(resultDeleteSheets_.message,resultDeleteSheets_.status))
 
     # delete revit links

@@ -22,7 +22,7 @@
 #
 #
 
-import settings as settings  # sets up all commonly used variables and path locations!
+from _Script import settings as settings  # sets up all commonly used variables and path locations!
 import docFile as df
 
 # import common library

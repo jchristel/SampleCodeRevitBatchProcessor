@@ -66,7 +66,7 @@ from utils.warnings_solver import solve_warnings
 from utils.check_tag_locations import check_ffe_tags_locations
 
 from duHast.Utilities.console_out import output
-from duHast.Utilities.timer import Timer
+from duHast.Utilities.Objects.timer import Timer
 from duHast.Revit.Common.file_io import sync_file
 
 

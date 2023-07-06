@@ -26,45 +26,45 @@
 class docFile: 
     def __init__(self, data): 
         try:
-            self.existingFileName = data[0]
-            self.fileExtension = data[4]
-            self.fileNameNewParts = []
-            self.fileNameNewParts.append(data[1])
+            self.existing_file_name = data[0]
+            self.file_extension = data[4]
+            self.file_name_new_parts = []
+            self.file_name_new_parts.append(data[1])
             if(len(data[3]) > 0):
-                self.fileNameNewParts.append(data[3])
+                self.file_name_new_parts.append(data[3])
             if(len(data[2]) > 0):
                 self.revision = data[2]
             else:
                 self.revision = '-'
-            self.AconexDocNumber = data[5]
-            self.AconexDocName = data[6]
-            self.NewRevision = False
+            self.aconex_doc_number = data[5]
+            self.aconex_doc_name = data[6]
+            self.new_revision = False
         except Exception as e:
             print (str(e))
             pass
 
-    def getNewFileName(self):
+    def get_new_file_name(self):
         suffix =''
-        if(len(self.fileNameNewParts)>1):
-            suffix = self.fileNameNewParts[1]
-        return self.fileNameNewParts[0] + self.revision + suffix # ignore revision brackets
+        if(len(self.file_name_new_parts)>1):
+            suffix = self.file_name_new_parts[1]
+        return self.file_name_new_parts[0] + self.revision + suffix # ignore revision brackets
 
     # returns a list of all property values of this class
-    def getData(self):
-        returnvalue = []
-        returnvalue.append(self.existingFileName)
-        returnvalue.append(self.fileNameNewParts[0])
-        returnvalue.append(self.revision)
-        if(len(self.fileNameNewParts)>1):
-            returnvalue.append(self.fileNameNewParts[1])
+    def get_data(self):
+        return_value = []
+        return_value.append(self.existing_file_name)
+        return_value.append(self.file_name_new_parts[0])
+        return_value.append(self.revision)
+        if(len(self.file_name_new_parts)>1):
+            return_value.append(self.file_name_new_parts[1])
         else:
-            returnvalue.append('')
-        returnvalue.append(self.fileExtension)
-        returnvalue.append(self.AconexDocNumber)
-        returnvalue.append(self.AconexDocName)
-        return returnvalue
+            return_value.append('')
+        return_value.append(self.file_extension)
+        return_value.append(self.aconex_doc_number)
+        return_value.append(self.aconex_doc_name)
+        return return_value
 
-    def upDateNumericalRev(self):
+    def update_numerical_rev(self):
         try:
             # default start value
             rev = 1

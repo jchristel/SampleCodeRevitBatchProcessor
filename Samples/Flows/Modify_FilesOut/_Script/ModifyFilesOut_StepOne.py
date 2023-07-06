@@ -32,14 +32,18 @@ import clr
 import settings as settings  # sets up all commonly used variables and path locations!
 from utils import utils as utilLocal
 
-# import common library
-from duHast.APISamples import RevitCommonAPI as com
-from duHast.APISamples import RevitViews as rView
-from duHast.APISamples import RevitLinks as rLink
-from duHast.APISamples import RevitWorksets as rWork
-from duHast.APISamples import RevitPurgeUnusedeTransmit as LePurger
+from duHast.Revit.Common.file_io import enable_worksharing, save_as, sync_file
+from duHast.Revit.Common.worksets import modify_element_workset
+from duHast.Revit.Links.links import delete_revit_links
+from duHast.Revit.Purge.purge_unused_e_transmit import purge_unused_e_transmit
+from duHast.Revit.Views.delete import delete_views, delete_sheets
+from duHast.Revit.Views.sheets import get_all_sheets, get_sheet_rev_by_sheet_name
+from duHast.Revit.Views.views import get_views_in_model
+from duHast.Utilities.utility import pad_single_digit_numeric_string
+from duHast.Utilities.files_io import get_file_name_without_ext
+from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities import Utility as util
+
 
 import Autodesk.Revit.DB as rdb
 
@@ -63,13 +67,6 @@ else:
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        revit_script_util.Output(str(message))
-    else:
-        print (message)
-
 #------------------ workset related
 
 def modify(doc, grid_data):
@@ -91,27 +88,27 @@ def modify(doc, grid_data):
             found_match = True
             #fix uyp grids
             collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
-            grids_result = rWork.ModifyElementWorkset(doc, default_workset_name, collector_grids, 'grids')
+            grids_result = modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
             return_value.Update(grids_result)
 
             #fix up levels
             collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
-            levels_result = rWork.ModifyElementWorkset(doc, default_workset_name, collector_levels, 'levels')
+            levels_result = modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
             return_value.Update(levels_result)
 
             #fix up scope boxes
             collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
-            scope_boxes_result = rWork.ModifyElementWorkset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
+            scope_boxes_result = modify_element_workset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
             return_value.Update(scope_boxes_result)
 
             #fix up ref planes
             collector_reference_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-            reference_planes_result = rWork.ModifyElementWorkset(doc, default_workset_name, collector_reference_planes,  'reference planes')
+            reference_planes_result = modify_element_workset(doc, default_workset_name, collector_reference_planes,  'reference planes')
             return_value.Update(reference_planes_result)
 
             break
     if (found_match == False):
-        return_value.UpdateSep(False, 'No grid data provided for current Revit file '.format( revit_file_name_))
+        return_value.update_sep(False, 'No grid data provided for current Revit file '.format( revit_file_name_))
     return return_value
 
 #------------------ workset related end-----------------------
@@ -132,12 +129,18 @@ def modify_views(doc, view_data):
     match = False
     for file_name, view_rules in view_data:
         if (revit_file_name_.startswith(file_name)):
-            collector_views = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            return_value = rView.DeleteViews(doc, view_rules, collector_views)
+
+            # default view filter (returning true for any view past in)
+            def view_filter(view):
+                return True
+            # get views in model
+            collector_views = get_views_in_model(doc, view_filter)
+            rdb.FilteredElementCollector(doc).OfClass(rdb.View)
+            return_value = delete_views(doc, view_rules, collector_views)
             match = True
             break
     if (match == False):
-        return_value.UpdateSep(False,'No view filter rule(s) for this file found!')
+        return_value.update_sep(False,'No view filter rule(s) for this file found!')
     return return_value
 
 def modify_sheets(doc, sheets):
@@ -157,12 +160,12 @@ def modify_sheets(doc, sheets):
     match = False
     for file_name, sheet_rules in sheets:
         if (revit_file_name_.startswith(file_name)):
-            collectorSheets = rdb.FilteredElementCollector(doc).OfClass(rdb.View)
-            return_value = rView.DeleteSheets(doc, sheet_rules, collectorSheets)
+            collectorSheets = get_all_sheets(doc)
+            return_value = delete_sheets(doc, sheet_rules, collectorSheets)
             match = True
             break
     if (match == False):
-        return_value.UpdateSep(False,'No sheet filter rule(s) for this file found!')
+        return_value.update_sep(False,'No sheet filter rule(s) for this file found!')
     return return_value
 
 def build_default_file_list():
@@ -173,27 +176,27 @@ def build_default_file_list():
     :rtype: _type_
     '''
 
-    rev = com.GetSheetRevByName(doc, settings.SPLASH_SCREEN_SHEET_NAME)
+    rev = get_sheet_rev_by_sheet_name(doc, settings.SPLASH_SCREEN_SHEET_NAME)
     flag = True
     match = False
     # read current files
     file_list = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
     if(file_list is not None and len(file_list) > 0):
         # loop over file data objects and search for match
-        print('looking for match:'.format(revit_file_name_))
+        output('looking for match:'.format(revit_file_name_), revit_script_util.Output)
         for f in file_list:
-            print('starts with {}'.format(f.existingFileName))
-            if (revit_file_name_.startswith(f.existingFileName) and f.fileExtension == settings.RVT_FILE_EXTENSION):
+            output('starts with {}'.format(f.existing_file_name), revit_script_util.Output)
+            if (revit_file_name_.startswith(f.existing_file_name) and f.file_extension == settings.RVT_FILE_EXTENSION):
                 match = True
                 f.revision = rev # update with latest revision from sheet
-                # pad revision out to three digits if required
-                f.revision = util.PadSingleDigitNumericString(f.revision, util.PAD_SINGLE_DIGIT_TO_TWO)
+                # pad revision out to two digits if required
+                f.revision = pad_single_digit_numeric_string(f.revision)
                 # store updated file data to be written to marker file
-                file_data_.append(f.getData())
+                file_data_.append(f.get_data())
                 # get new file name for saving as
-                new_file_name = f.getNewFileName()
+                new_file_name = f.get_new_file_name()
                 row_default_new = []
-                row_default_new.append(f.existingFileName)
+                row_default_new.append(f.existing_file_name)
                 row_default_new.append(new_file_name)
                 default_file_names_.append(row_default_new)
         # check whether we found a match
@@ -220,10 +223,10 @@ def write_rev_marker_file():
             settings.RVT_FILE_EXTENSION + \
             settings.MARKER_FILE_EXTENSION
         status, messageMarker = utilLocal.write_rev_marker_file(file_name, file_data_[0])
-        Output(messageMarker)
+        output(messageMarker, revit_script_util.Output)
     else:
         status = False
-        Output('Failed to write marker file: No file data found for: {}'.format(revit_file_name_))
+        output('Failed to write marker file: No file data found for: {}'.format(revit_file_name_), revit_script_util.Output)
     return status
 
 # -------------
@@ -240,13 +243,13 @@ default_file_names_ = []
 # array to contain file information read from text file
 file_data_ = []
 # the current file name
-revit_file_name_ = util.GetFileNameWithoutExt(revitFilePath_)
+revit_file_name_ = get_file_name_without_ext(revitFilePath_)
 
 # model out location including dated folder stamp
 root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 #save revit file to new location
-Output('Modifying Revit File.... start')
+output('Modifying Revit File.... start', revit_script_util.Output)
 
 #flag indicating whether the file can be saved
 save_file = build_default_file_list()
@@ -254,46 +257,46 @@ save_file = build_default_file_list()
 if(save_file):
     #check if worksharing needs to be enabled
     if (doc.IsWorkshared == False):
-        save_file = com.EnableWorksharing(doc)
-        Output('Enabled worksharing.... status: [{}]' .format(save_file.status))
+        save_file = enable_worksharing(doc)
+        output('Enabled worksharing.... status: [{}]' .format(save_file.status), revit_script_util.Output)
 
     if save_file:
-        result_ = com.SaveAs(doc, root_path_, revitFilePath_, default_file_names_)
-        Output('{} :: [{}]'.format(result_.message, result_.status))
+        result_ = save_as(doc, root_path_, revitFilePath_, default_file_names_)
+        output('{} :: [{}]'.format(result_.message, result_.status), revit_script_util.Output)
     else:
-        Output('Not Saving Revit File!!!')
+        output('Not Saving Revit File!!!', revit_script_util.Output)
 
     #make further changes as required....
     flagModifyWorkSets_ = modify(doc, settings.DEFAULT_WORKSETS)
-    Output('{} :: [{}]'.format(flagModifyWorkSets_.message, flagModifyWorkSets_.status))
+    output('{} :: [{}]'.format(flagModifyWorkSets_.message, flagModifyWorkSets_.status), revit_script_util.Output)
 
     # delete views
     resultDeleteViews_ = modify_views(doc, settings.VIEW_KEEP_RULES)
-    Output('{} :: [{}]'.format(resultDeleteViews_.message, resultDeleteViews_.status))
+    output('{} :: [{}]'.format(resultDeleteViews_.message, resultDeleteViews_.status), revit_script_util.Output)
  
     # delete sheets
     resultDeleteSheets_ = modify_sheets(doc, settings.SHEET_KEEP_RULES)
-    Output('{} :: [{}]'.format(resultDeleteSheets_.message,resultDeleteSheets_.status))
+    output('{} :: [{}]'.format(resultDeleteSheets_.message,resultDeleteSheets_.status), revit_script_util.Output)
 
     # delete revit links
-    if(revit_file_name_.startswith('NHR-BVN-MOD-ARC-NBL-00M-NL00002 - NORTHBLOCK') == False):
-        flagDeleteRevitLinks_ = rLink.DeleteRevitLinks(doc)
-        Output('{} :: [{}]'.format(flagDeleteRevitLinks_.message,flagDeleteRevitLinks_.status))
+    if(revit_file_name_.startswith('Sample file name') == False):
+        flagDeleteRevitLinks_ = delete_revit_links(doc)
+        output('{} :: [{}]'.format(flagDeleteRevitLinks_.message,flagDeleteRevitLinks_.status), revit_script_util.Output)
     else:
-        Output ('Kept Revit Links')
+        output ('Kept Revit Links', revit_script_util.Output)
 
     # purge unused:
-    flag_purge_unused_ = LePurger.PurgeUnusedETransmit(doc)
-    Output('{} :: [{}]'.format(flag_purge_unused_.message, flag_purge_unused_.status))
+    flag_purge_unused_ = purge_unused_e_transmit(doc)
+    output('{} :: [{}]'.format(flag_purge_unused_.message, flag_purge_unused_.status), revit_script_util.Output)
 
     # sync changes back to central
     if (doc.IsWorkshared and debug_ == False):
-        Output('Syncing to Central: start')
-        syncing_ = com.SyncFile (doc)
-        Output('{} :: [{}]'.format(syncing_.message,syncing_.status))
+        output('Syncing to Central: start', revit_script_util.Output)
+        syncing_ = sync_file (doc)
+        output('{} :: [{}]'.format(syncing_.message,syncing_.status), revit_script_util.Output)
     else:
-        Output('Not Saving Revit File!!!')
+        output('Not Saving Revit File!!!', revit_script_util.Output)
 else:
-    Output('Failed to read revision data file. Exiting!!!')
+    output('Failed to read revision data file. Exiting!!!', revit_script_util.Output)
 
-Output('Modifying Revit File.... finished ')
+output('Modifying Revit File.... finished ', revit_script_util.Output)

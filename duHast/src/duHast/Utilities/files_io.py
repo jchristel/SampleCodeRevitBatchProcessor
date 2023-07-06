@@ -193,6 +193,23 @@ def get_file_name_without_ext(file_path):
     return name
 
 
+def get_file_extension(file_path):
+    """
+    Returns the file extension of give file name.
+
+    :param file_path: The file name. Can be just the file name or also the fully qualified file path.
+    :type file_path: str
+    :return: The file extension in format '.extension'
+    :rtype: str
+    """
+
+    # this will return a tuple of root and extension
+    split_tup = os.path.splitext(file_path)
+    # extract the file extension
+    file_extension = split_tup[1]
+    return file_extension
+
+
 def read_text_file(file_path):
     """
     Reads a text file and returns its content as a single string.

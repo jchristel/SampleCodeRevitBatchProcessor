@@ -44,24 +44,24 @@ from duHast.Utilities.files_io import get_file_name_without_ext
 from duHast.Utilities.console_out import output
 from duHast.Utilities.Objects import result as res
 
+from duHast.Revit.Grids.grids import get_grids_in_model
+from duhast.revit.Levels.levels import get_levels_in_model
+
+# required in lambda expressions!
+clr.AddReference("System.Core")
+clr.ImportExtensions(System.Linq)
 
 import Autodesk.Revit.DB as rdb
 
-# flag whether this runs in debug or not
-debug_ = False
+import revit_script_util
+import revit_file_util
 
-# Add batch processor scripting references
-if not debug_:
-    import revit_script_util
-    import revit_file_util
-    clr.AddReference('RevitAPI')
-    clr.AddReference('RevitAPIUI')
-     # NOTE: these only make sense for batch Revit file processing mode.
-    doc = revit_script_util.GetScriptDocument()
-    revitFilePath_ = revit_script_util.GetRevitFilePath()
-else:
-    # get default revit file name in debug mode
-    revitFilePath_ = settings.DEBUG_REVIT_FILE_NAME
+clr.AddReference("RevitAPI")
+clr.AddReference("RevitAPIUI")
+
+# NOTE: these only make sense for batch Revit file processing mode.
+doc = revit_script_util.GetScriptDocument()
+REVIT_FILE_PATH = revit_script_util.GetRevitFilePath()
 
 # -------------
 # my code here:
@@ -87,12 +87,12 @@ def modify(doc, grid_data):
         if (revit_file_name_.startswith(file_name)):
             found_match = True
             #fix uyp grids
-            collector_grids = rdb.FilteredElementCollector(doc).OfClass(rdb.Grid)
+            collector_grids = get_grids_in_model(doc)
             grids_result = modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
             return_value.Update(grids_result)
 
             #fix up levels
-            collector_levels = rdb.FilteredElementCollector(doc).OfClass(rdb.Level)
+            collector_levels = get_levels_in_model(doc)
             levels_result = modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
             return_value.Update(levels_result)
 
@@ -279,7 +279,7 @@ if(save_file):
     output('{} :: [{}]'.format(resultDeleteSheets_.message,resultDeleteSheets_.status), revit_script_util.Output)
 
     # delete revit links
-    if(revit_file_name_.startswith('Sample file name') == False):
+    if(revit_file_name_.startswith('NHR-BVN-MOD-ARC-NBL-00M-NL00002 - NORTHBLOCK') == False):
         flagDeleteRevitLinks_ = delete_revit_links(doc)
         output('{} :: [{}]'.format(flagDeleteRevitLinks_.message,flagDeleteRevitLinks_.status), revit_script_util.Output)
     else:

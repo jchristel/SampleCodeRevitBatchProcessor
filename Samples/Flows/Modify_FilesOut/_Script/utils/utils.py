@@ -105,6 +105,12 @@ def get_export_file_name_without_revision(
 
     :param file_name: The file name including extension. i.e 'sample[12].ifc'
     :type file_name: str
+    :param file_extensions: The file extension. i.e 'sample[12].ifc'
+    :type file_extensions: [str]
+    :param revision_prefix: the character proceeding the revision information
+    :type revision_prefix: str
+    :param revision_suffix: the character following the revision information
+    :type revision_suffix: str
 
     :return: The file name without the revision and extension. i.e. 'sample'
     :rtype: str
@@ -127,11 +133,12 @@ def get_export_file_name_without_revision(
     return file_name
 
 
-# copies new Exports into specified folder and strips away the revision information
-# used to maintain a current NWC and IFC file set
-def copy_exports(export_status, target_folder, file_extension):
+def copy_exports(export_status, target_folder, file_extension, revision_prefix, revision_suffix):
     """
     Copies files into a give folder.
+
+    Copies new Exports into specified folder and strips away the revision information
+    Used to maintain a current NWC and IFC file set
 
     :param export_status: Result class instance containing file path information.
     :type export_status:  :class:`.Result`
@@ -139,6 +146,10 @@ def copy_exports(export_status, target_folder, file_extension):
     :type target_folder: str
     :param file_extension: The file extension of files to be copied in format '.extension'
     :type file_extension: str
+    :param revision_prefix: the character proceeding the revision information
+    :type revision_prefix: str
+    :param revision_suffix: the character following the revision information
+    :type revision_suffix: str
 
     :return:
         Result class instance.
@@ -164,7 +175,12 @@ def copy_exports(export_status, target_folder, file_extension):
                 current_full_file_name = export_name[0] + "\\" + export_name[1]
                 # Output('current file name from status: ' + currentFullFileName)
                 if file_exist(current_full_file_name):
-                    new_name = get_export_file_name_without_revision(export_name[1])
+                    new_name = get_export_file_name_without_revision(
+                        file_name = export_name[1],
+                        file_extensions = [file_extension],
+                        revision_prefix = revision_prefix, 
+                        revision_suffix = revision_suffix
+                        )
                     new_file_name = target_folder + "\\" + new_name + file_extension
                     flagCopy = copy_file(current_full_file_name, new_file_name)
                     if flagCopy:

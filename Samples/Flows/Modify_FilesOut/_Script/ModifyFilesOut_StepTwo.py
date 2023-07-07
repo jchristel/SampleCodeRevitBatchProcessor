@@ -150,14 +150,14 @@ def optimize_ifc_files (export_status):
                 if(util.FileExist(current_full_file_name)):
                     ifcFiles.append(current_full_file_name)
                 else:
-                    return_value.AppendMessage('File not found: {}'.format(current_full_file_name))
+                    return_value.append_message('File not found: {}'.format(current_full_file_name))
             # start the optimization, save files in same directory
             ifc_optimize_status = sol.OptimizeIFCFilesInList(ifcFiles, root_path_)
             return_value.Update(ifc_optimize_status)
         else:
-            return_value.UpdateSep(True, 'No IFC files optimized since nothing was exported')    
+            return_value.update_sep(True, 'No IFC files optimized since nothing was exported')    
     else:
-        return_value.UpdateSep(True, 'No IFC files optimized since nothing was exported')
+        return_value.update_sep(True, 'No IFC files optimized since nothing was exported')
     return return_value
 
 # checks whether view names starts with ETN (navis) 00 STC and 99 STC (model start view)
@@ -356,7 +356,14 @@ if (debug_ == False):
     write_out_export_file_data(flagExportIFC_, 'IFC export', settings.IFC_FILE_EXTENSION)
     
     # duplicate NWC's
-    flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, settings.ROOT_PATH_NWC, settings.NWC_FILE_EXTENSION)
+    flagCopyNWCs_ = utilLocal.copy_exports(
+        export_status = flagExportNWC_, 
+        target_folder = settings.ROOT_PATH_NWC, 
+        file_extension = settings.NWC_FILE_EXTENSION,
+        revision_prefix = settings.REVISION_PREFIX,
+        revision_suffix = settings.REVISION_SUFFIX
+    )
+    
     Output('{} :: [{}]'.format(flagCopyNWCs_.message, flagCopyNWCs_.status))
     
     # optimize IFC's prior to copying
@@ -364,7 +371,14 @@ if (debug_ == False):
     Output('{} :: [{}]'.format(flagIFCOptimized_.message, flagIFCOptimized_.status))
 
     # duplicate IFC's
-    flagCopyIFCs_ = utilLocal.copy_exports(flagExportIFC_, settings.ROOT_PATH_IFC, settings.IFC_FILE_EXTENSION)
+    flagCopyIFCs_ = utilLocal.copy_exports(
+        export_status = flagExportIFC_, 
+        target_folder = settings.ROOT_PATH_IFC, 
+        file_extension = settings.IFC_FILE_EXTENSION,
+        revision_prefix = settings.REVISION_PREFIX,
+        revision_suffix = settings.REVISION_SUFFIX
+    )
+
     Output('{} :: [{}]'.format(flagCopyIFCs_.message, flagCopyIFCs_.status))
     
      # set up BIM 360 NWC folder
@@ -372,7 +386,14 @@ if (debug_ == False):
     if(setUpBIM360FolderFlag_):
         nwcExportPath = root_path_ + '\\' + settings.BIM360_FOLDER_NAME
         # duplicate NWC's
-        flagCopyNWCs_ = utilLocal.copy_exports(flagExportNWC_, nwcExportPath, settings.NWC_FILE_EXTENSION)
+        flagCopyNWCs_ = utilLocal.copy_exports(
+            export_status = flagExportNWC_, 
+            target_folder = nwcExportPath, 
+            file_extension = settings.NWC_FILE_EXTENSION,
+            revision_prefix = settings.REVISION_PREFIX,
+            revision_suffix = settings.REVISION_SUFFIX
+        )
+        
         Output('{} :: [{}]'.format(flagCopyNWCs_.message, flagCopyNWCs_.status))
     else:
         Output('failed to set up BIM 360 out folder')

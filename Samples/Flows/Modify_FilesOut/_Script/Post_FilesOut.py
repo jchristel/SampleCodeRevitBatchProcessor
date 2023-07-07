@@ -210,7 +210,7 @@ root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 # read file data from revit files processed
 marker_file_data_=[]
-marker_file_data_result = utilLocal.read_marker_files_from_revit_processed(root_path_)
+marker_file_data_result = utilLocal.read_marker_files_from_revit_processed(root_path_, settings.MARKER_FILE_EXTENSION)
 if(marker_file_data_result.status):
     marker_file_data_ = marker_file_data_result.result
     # writes out new file data file in script location

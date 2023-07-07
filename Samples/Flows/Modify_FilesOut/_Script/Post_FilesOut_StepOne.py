@@ -77,10 +77,10 @@ def get_revit_file_names(revit_file_directory):
                 revit_file[len(directory_path) + 1 :]
             ]
             copy_data.append(row)
-        return_value.UpdateSep(True, 'Got Revit files.')
+        return_value.update_sep(True, 'Got Revit files.')
         return_value.result = copy_data
     else:
-        return_value.UpdateSep(False, 'Failed to get any Revit files.')
+        return_value.update_sep(False, 'Failed to get any Revit files.')
     return return_value
 
 # -------------
@@ -93,7 +93,7 @@ root_path_ = settings.ROOT_PATH
 root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
 
 # set up BIM 360 NWC folder
-set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(root_path_)
+set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(root_path_, settings.BIM360_FOLDER_NAME)
 # if wqe have a BIM 360 folder copy revit files into it
 if(set_up_bim360_folder_flag_):
     # set up a result class object with data from marker files

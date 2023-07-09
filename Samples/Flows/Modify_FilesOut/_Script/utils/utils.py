@@ -27,58 +27,11 @@ import docFile as df
 
 # import from library
 from duHast.Utilities.files_io import get_file_extension, copy_file, file_exist
-from duHast.Utilities.files_get import get_files
-from duHast.Utilities.files_csv import read_csv_file, write_report_data_as_csv
+from duHast.Utilities.files_csv import read_csv_file
 from duHast.Utilities.directory_io import create_directory
+from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
+from duHast.Utilities.utility import pad_single_digit_numeric_string
 from duHast.Utilities.Objects import result as res
-
-
-def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extension):
-    """
-    Reads marker files into docfile objects.
-
-    :param marker_dir_path: Fully qualified directory path containing marker files.
-    :type marker_dir_path: str
-    :param marker_file_extension: marker file extension in format ".ext"
-    :type marker_file_extension: str
-
-    :return:
-        Result class instance.
-
-        - Read status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain 'Read marker file(s)'.
-        - result.result will contain list of docFile objects
-
-        On exception:
-
-        - result.status (bool) will be False.
-        - result.message will contain the exception message.
-        - result.result will be an empty list.
-
-    :rtype: :class:`.Result`
-    """
-
-    return_value = res.Result()
-    marker_file_data = []
-    # get all text files in location
-    marker_files = get_files(marker_dir_path, marker_file_extension)
-    if len(marker_files) > 0:
-        try:
-            for mf in marker_files:
-                rows = read_csv_file(mf)
-                for row in rows:  # each row is a list
-                    # read information into class
-                    marker_file_data.append(df.docFile(row))
-        except Exception as e:
-            return_value.update_sep(
-                False,
-                "Failed to read marker file from Revit export with exception: {}".format(
-                    e
-                ),
-            )
-    return_value.update_sep(True, "Read marker file(s)")
-    return_value.result = marker_file_data
-    return return_value
 
 
 def create_bim360_out_folder(target_directory, new_subdirectory_name):
@@ -133,7 +86,9 @@ def get_export_file_name_without_revision(
     return file_name
 
 
-def copy_exports(export_status, target_folder, file_extension, revision_prefix, revision_suffix):
+def copy_exports(
+    export_status, target_folder, file_extension, revision_prefix, revision_suffix
+):
     """
     Copies files into a give folder.
 
@@ -176,11 +131,11 @@ def copy_exports(export_status, target_folder, file_extension, revision_prefix, 
                 # Output('current file name from status: ' + currentFullFileName)
                 if file_exist(current_full_file_name):
                     new_name = get_export_file_name_without_revision(
-                        file_name = export_name[1],
-                        file_extensions = [file_extension],
-                        revision_prefix = revision_prefix, 
-                        revision_suffix = revision_suffix
-                        )
+                        file_name=export_name[1],
+                        file_extensions=[file_extension],
+                        revision_prefix=revision_prefix,
+                        revision_suffix=revision_suffix,
+                    )
                     new_file_name = target_folder + "\\" + new_name + file_extension
                     flagCopy = copy_file(current_full_file_name, new_file_name)
                     if flagCopy:
@@ -232,20 +187,32 @@ def read_current_file(revision_data_path):
     return reference_list
 
 
-def write_rev_marker_file(fully_qualified_path, file_data):
+def build_default_file_list(
+    doc,
+    revision_data_file_path,
+    revit_file_name,
+    splash_screen_name,
+    revit_file_extension,
+):
     """
-    Writes out revision marker file
+    Reads file data from file and stores it in a global list.
 
-    :param fully_qualified_path: Fully qualified file path of revision marker file.
-    :type fully_qualified_path: str
-    :param file_data: File data to be written to file.
-    :type file_data: [str]
+    :param doc: Current Revit model document.
+    :type doc: Autodesk.Revit.DB.Document
+    :param revision_data_file_path: _description_
+    :type revision_data_file_path: _type_
+    :param revit_file_name: _description_
+    :type revit_file_name: _type_
+    :param splash_screen_name: _description_
+    :type splash_screen_name: _type_
+    :param revit_file_extension: _description_
+    :type revit_file_extension: _type_
 
     :return:
         Result class instance.
 
-        - Write status returned in result.status. False if an exception occurred, otherwise True.
-        - result.message will contain message(s) in format: 'Successfully wrote marker file: marker file name'
+        - Read status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain message(s) in format: 'Copied: currentFullFileName to newFileName'
         - result.result will be an empty list.
 
         On exception:
@@ -258,17 +225,46 @@ def write_rev_marker_file(fully_qualified_path, file_data):
     """
 
     return_value = res.Result()
-    if len(file_data) > 0:
-        try:
-            write_report_data_as_csv(fully_qualified_path, [], [file_data])
-            return_value.append_message = "Successfully wrote marker file: {}".format(
-                fully_qualified_path
+
+    # will contain the old file name and the new file name (with revision data)
+    matched_file_data = []
+    marker_file_data = None
+    # get the revision from title sheet
+    rev = get_sheet_rev_by_sheet_name(doc, splash_screen_name)
+    match = False
+    # read current files
+    file_list = read_current_file(revision_data_file_path)
+    if file_list is not None and len(file_list) > 0:
+        # loop over file data objects and search for match
+        return_value.append_message("looking for match:".format(revit_file_name))
+        for file_data in file_list:
+            return_value.append_message(
+                "starts with {}".format(file_data.existing_file_name)
             )
-        except Exception as e:
-            return_value.update_sep(
-                False,
-                "Failed to write data file! {} with exception: {}".format(
-                    fully_qualified_path, e
-                ),
-            )
-    return return_value
+            if (
+                revit_file_name.startswith(file_data.existing_file_name)
+                and file_data.file_extension == revit_file_extension
+            ):
+                return_value.append_message("Found match!")
+                match = True
+                file_data.revision = rev  # update with latest revision from sheet
+                # pad revision out to two digits if required
+                file_data.revision = pad_single_digit_numeric_string(file_data.revision)
+                # store updated file data to be written to marker file
+                marker_file_data = file_data.get_data()
+
+                # get new file name for saving as
+                new_file_name = file_data.get_new_file_name()
+
+                # build revision file name
+                row_default_new = []
+                row_default_new.append(file_data.existing_file_name)
+                row_default_new.append(new_file_name)
+                matched_file_data.append(row_default_new)
+
+        if match == False:
+            # check whether we found a match
+            return_value.update_sep(False, "No file name match found in file list.")
+    else:
+        return_value.update_sep(False, "File data list is empty!")
+    return return_value, matched_file_data, marker_file_data

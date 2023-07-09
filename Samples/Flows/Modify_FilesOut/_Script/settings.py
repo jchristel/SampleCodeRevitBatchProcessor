@@ -185,3 +185,8 @@ VIEW_KEEP_RULES = [
         ],
     ]
 ]
+
+# list containing file names of files in which not delete revit links from
+DO_NOT_DELETE_LINKS = [
+    "sample Revit file name",
+]

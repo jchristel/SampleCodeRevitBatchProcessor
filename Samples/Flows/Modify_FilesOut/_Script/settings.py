@@ -44,6 +44,7 @@ sys.path += [DU_HAST_DIRECTORY]
 from duHast.Utilities.files_io import get_directory_path_from_file_path
 from duHast.Utilities.directory_io import get_parent_directory
 from duHast.Utilities.compare import does_not_equal
+from duHast.Utilities.date_stamps import get_folder_date_stamp
 
 # import common library
 from duHast.Utilities import Utility as util
@@ -128,7 +129,7 @@ ACONEX_METADATA_PROJECT_PHASE = "your project phase"
 
 # model out folder name
 MODEL_OUT_FOLDER_NAME = (
-    util.GetFolderDateStamp(util.FOLDER_DATE_STAMP_YYMMDD) + "_MODEL_WEEKLY ISSUE"
+    get_folder_date_stamp() + "_MODEL_WEEKLY ISSUE"
 )
 # marker file extension
 MARKER_FILE_EXTENSION = ".txt"

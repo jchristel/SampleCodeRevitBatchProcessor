@@ -134,13 +134,9 @@ def write_rev_marker_file_writer(fully_qualified_path, file_data):
     return return_value
 
 
-<<<<<<< HEAD
 def write_rev_marker_file(
     file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension
 ):
-=======
-def write_rev_marker_file(file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension):
->>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
     """
     Writes out a revision marker file containing the new file revision.
 
@@ -166,15 +162,9 @@ def write_rev_marker_file(file_data, root_path, revit_file_name, revit_file_exte
         file_name = os.path.join(
             root_path, revit_file_name + revit_file_extension + marker_file_extension
         )
-<<<<<<< HEAD
         status, message_marker = write_rev_marker_file(file_name, file_data[0])
         return_value.update_sep(status, message_marker)
-=======
-        status, message_marker = write_rev_marker_file_writer(
-            file_name, file_data[0]
-        )
-        return_value.update_sep(status,message_marker)
->>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
+
     else:
         return_value.update_sep(
             False,

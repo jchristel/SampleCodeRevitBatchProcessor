@@ -1,5 +1,6 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD
 This module contains a custom helper functions for marker files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -7,6 +8,15 @@ This module contains a custom helper functions for marker files.
 - export file name
 - copy export files
 - read the current file list in docFile objects
+=======
+Module containing utility functions around directories.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- BIM360 out folder
+- copy exports
+- create export file names
+- export revit file name list reader
+>>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
 
 """
 
@@ -175,12 +185,12 @@ def copy_exports(
     return return_value
 
 
-# common stuff
+# file data related code
 
 
 def read_current_file(revision_data_path):
     """
-    Read the current revision data file located in script location
+    Read the current revision data file list located in script location.
 
     :param revision_data_path: fully qualified file path to revision data file
     :type revision_data_path: str
@@ -207,7 +217,13 @@ def build_default_file_list(
     revit_file_extension,
 ):
     """
-    Reads file data from file and stores it in a global list.
+    Reads file data from file and stores it in a global list. 
+
+    This list contains: 
+
+    - the current file name(s) 
+    - the file name after the export.
+    - document management system number and name
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document
@@ -263,6 +279,7 @@ def build_default_file_list(
                 # pad revision out to two digits if required
                 file_data.revision = pad_single_digit_numeric_string(file_data.revision)
                 # store updated file data to be written to marker file
+     
                 marker_file_data = file_data.get_data()
 
                 # get new file name for saving as

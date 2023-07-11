@@ -1,7 +1,15 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD
 Module containing revision marker files related functions.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=======
+Module containing utility functions around revision marker files.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These files are used to rename exports (ifc , nwc) with the right revision information
+
+>>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
 """
 
 #!/usr/bin/python
@@ -84,7 +92,7 @@ def read_marker_files_from_revit_processed(marker_dir_path, marker_file_extensio
     return return_value
 
 
-def write_rev_marker_file(fully_qualified_path, file_data):
+def write_rev_marker_file_writer(fully_qualified_path, file_data):
     """
     Writes out revision marker file
 
@@ -126,14 +134,30 @@ def write_rev_marker_file(fully_qualified_path, file_data):
     return return_value
 
 
+<<<<<<< HEAD
 def write_rev_marker_file(
     file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension
 ):
+=======
+def write_rev_marker_file(file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension):
+>>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
     """
     Writes out a revision marker file containing the new file revision.
 
-    :return: _description_
-    :rtype: _type_
+    :return:
+        Result class instance.
+
+        - Write status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain message(s) in format: 'Successfully wrote marker file: marker file name'
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.status will be an empty list.
+
+    :rtype: :class:`.Result`
     """
 
     return_value = res.Result()
@@ -142,8 +166,15 @@ def write_rev_marker_file(
         file_name = os.path.join(
             root_path, revit_file_name + revit_file_extension + marker_file_extension
         )
+<<<<<<< HEAD
         status, message_marker = write_rev_marker_file(file_name, file_data[0])
         return_value.update_sep(status, message_marker)
+=======
+        status, message_marker = write_rev_marker_file_writer(
+            file_name, file_data[0]
+        )
+        return_value.update_sep(status,message_marker)
+>>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
     else:
         return_value.update_sep(
             False,

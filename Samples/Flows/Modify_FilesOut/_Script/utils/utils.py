@@ -1,6 +1,5 @@
 """
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<< HEAD
 This module contains a custom helper functions for marker files.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -8,15 +7,6 @@ This module contains a custom helper functions for marker files.
 - export file name
 - copy export files
 - read the current file list in docFile objects
-=======
-Module containing utility functions around directories.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- BIM360 out folder
-- copy exports
-- create export file names
-- export revit file name list reader
->>>>>>> 5647806f51c06f9a06925741321662e0bc184be9
 
 """
 

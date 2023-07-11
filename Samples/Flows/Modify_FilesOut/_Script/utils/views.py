@@ -1,7 +1,17 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a view related helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- delete views not required to be retained
+- delete sheets not required to be retained
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -36,8 +46,9 @@ from duHast.Revit.Views.sheets import get_all_sheets
 
 import Autodesk.Revit.DB as rdb
 
+
 def modify_views(doc, view_data, revit_file_name):
-    '''
+    """
     Deletes views no longer required.
 
     :param doc: Current Revit model document.
@@ -49,27 +60,28 @@ def modify_views(doc, view_data, revit_file_name):
 
     :return: _description_
     :rtype: _type_
-    '''
+    """
     return_value = res.Result()
     match = False
     for file_name, view_rules in view_data:
-        if (revit_file_name.startswith(file_name)):
-
+        if revit_file_name.startswith(file_name):
             # default view filter (returning true for any view past in)
             def view_filter(view):
                 return True
+
             # get views in model
             collector_views = get_views_in_model(doc, view_filter)
             rdb.FilteredElementCollector(doc).OfClass(rdb.View)
             return_value = delete_views(doc, view_rules, collector_views)
             match = True
             break
-    if (match == False):
-        return_value.update_sep(False,'No view filter rule(s) for this file found!')
+    if match == False:
+        return_value.update_sep(False, "No view filter rule(s) for this file found!")
     return return_value
 
+
 def modify_sheets(doc, sheets, revit_file_name):
-    '''
+    """
     Deletes sheets no longer required.
 
     :param doc: Current Revit model document.
@@ -81,16 +93,16 @@ def modify_sheets(doc, sheets, revit_file_name):
 
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     return_value = res.Result()
     match = False
     for file_name, sheet_rules in sheets:
-        if (revit_file_name.startswith(file_name)):
+        if revit_file_name.startswith(file_name):
             collectorSheets = get_all_sheets(doc)
             return_value = delete_sheets(doc, sheet_rules, collectorSheets)
             match = True
             break
-    if (match == False):
-        return_value.update_sep(False,'No sheet filter rule(s) for this file found!')
+    if match == False:
+        return_value.update_sep(False, "No sheet filter rule(s) for this file found!")
     return return_value

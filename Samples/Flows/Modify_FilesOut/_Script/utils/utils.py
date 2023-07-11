@@ -1,3 +1,15 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a custom helper functions for marker files.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- bim 360 folder
+- export file name
+- copy export files
+- read the current file list in docFile objects
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # License:
@@ -90,9 +102,9 @@ def copy_exports(
     export_status, target_folder, file_extension, revision_prefix, revision_suffix
 ):
     """
-    Copies files into a give folder.
+    Copies files into a given directory.
 
-    Copies new Exports into specified folder and strips away the revision information
+    Copies new Exports into specified folder and removes the revision information from the file name.
     Used to maintain a current NWC and IFC file set
 
     :param export_status: Result class instance containing file path information.

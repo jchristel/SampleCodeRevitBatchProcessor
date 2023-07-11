@@ -1,3 +1,9 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module containing revision marker files related functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # License:
@@ -22,6 +28,7 @@
 #
 #
 
+import os
 import docFile as df
 
 from duHast.Utilities.files_get import get_files
@@ -119,7 +126,9 @@ def write_rev_marker_file(fully_qualified_path, file_data):
     return return_value
 
 
-def write_rev_marker_file(file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension, output):
+def write_rev_marker_file(
+    file_data, root_path, revit_file_name, revit_file_extension, marker_file_extension
+):
     """
     Writes out a revision marker file containing the new file revision.
 
@@ -130,17 +139,16 @@ def write_rev_marker_file(file_data, root_path, revit_file_name, revit_file_exte
     return_value = res.Result()
     if file_data != None and len(file_data) > 0:
         # add revit file extension to marker file name
-        file_name = (
-            root_path
-            + "\\"
-            + revit_file_name
-            + revit_file_extension
-            + marker_file_extension
+        file_name = os.path.join(
+            root_path, revit_file_name + revit_file_extension + marker_file_extension
         )
-        status, message_marker = write_rev_marker_file(
-            file_name, file_data[0]
-        )
-        return_value.update_sep(status,message_marker)
+        status, message_marker = write_rev_marker_file(file_name, file_data[0])
+        return_value.update_sep(status, message_marker)
     else:
-        return_value.update_sep(False,"Failed to write marker file: No file data found for: {}".format(revit_file_name))
+        return_value.update_sep(
+            False,
+            "Failed to write marker file: No file data found for: {}".format(
+                revit_file_name
+            ),
+        )
     return return_value

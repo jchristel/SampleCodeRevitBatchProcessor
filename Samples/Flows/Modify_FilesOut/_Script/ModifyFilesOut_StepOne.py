@@ -1,3 +1,35 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as the first step in exporting models within the  batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- saves a working copy of the revit project file into the designated export directory
+
+    - file has revision information added to the file name
+    - file will be saved as a workshared file ( even if not set up as a workshared file)
+
+- the following elements are placed on a designated workset:
+
+    - levels
+    - grids
+    - scope boxes
+    - reference planes
+
+- deletes sheets and views depending on properties filter defined in settings file
+
+    - some projects require a set of sheets and views to be retained in the shared model
+
+- removes all revit links:
+    
+    - in step 1 files are opened with all worksets closed to speed up the process (links are therefore not opened)
+    - in step 2 files are opened with all worksets opened ( revit links are deleted at that point)
+
+- purge unused elements
+
+    - requires eTransmit to be installed (!)
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
@@ -28,6 +60,7 @@
 # --------------------------
 
 import clr
+import os
 
 import settings as settings  # sets up all commonly used variables and path locations!
 from utils import utils as utilLocal
@@ -83,31 +116,31 @@ file_data_ = []
 revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 
 # model out location including dated folder stamp
-root_path_ = root_path_ + "\\" + settings.MODEL_OUT_FOLDER_NAME
+root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
-# save revit file to new location
+
 output("Modifying Revit File.... start", revit_script_util.Output)
 
 # flag indicating whether the file can be saved
 save_file, default_file_names_, marker_file_data_ = build_default_file_list(
-    doc, 
-    settings.REVISION_DATA_FILEPATH, 
-    revit_file_name_, 
-    settings.SPLASH_SCREEN_SHEET_NAME, 
-    settings.RVT_FILE_EXTENSION
+    doc=doc,
+    revision_data_file_path=settings.REVISION_DATA_FILEPATH,
+    revit_file_name=revit_file_name_,
+    splash_screen_name=settings.SPLASH_SCREEN_SHEET_NAME,
+    revit_file_extension=settings.RVT_FILE_EXTENSION,
 )
 
 if save_file.status:
     # store retrieved marker file data
-    file_data_.append(marker_file_data_)
+    file_data_ = marker_file_data_
 
     # write out marker file
     flag_status = write_rev_marker_file(
-        file_data_,
-        root_path_,
-        revit_file_name_,
-        settings.RVT_FILE_EXTENSION,
-        settings.MARKER_FILE_EXTENSION
+        file_data=file_data_,
+        root_path=root_path_,
+        revit_file_name=revit_file_name_,
+        revit_file_extension=settings.RVT_FILE_EXTENSION,
+        marker_file_extension=settings.MARKER_FILE_EXTENSION,
     )
     output(flag_status.message, revit_script_util.Output)
 
@@ -119,8 +152,14 @@ if save_file.status:
             revit_script_util.Output,
         )
 
-    if save_file:
-        result_ = save_as(doc, root_path_, REVIT_FILE_PATH, default_file_names_)
+    # save revit file to new location
+    if save_file.status:
+        result_ = save_as(
+            doc=doc,
+            target_directory_path=root_path_,
+            current_full_file_name=REVIT_FILE_PATH,
+            name_data=default_file_names_,
+        )
         output(
             "{} :: [{}]".format(result_.message, result_.status),
             revit_script_util.Output,
@@ -129,40 +168,43 @@ if save_file.status:
         output("Not Saving Revit File!!!", revit_script_util.Output)
 
     # make further changes as required....
-    flagModifyWorkSets_ = modify(
+    # move elements to worksets
+    result_modify_worksets_ = modify(
         doc=doc, grid_data=settings.DEFAULT_WORKSETS, revit_file_name=revit_file_name_
     )
     output(
-        "{} :: [{}]".format(flagModifyWorkSets_.message, flagModifyWorkSets_.status),
+        "{} :: [{}]".format(
+            result_modify_worksets_.message, result_modify_worksets_.status
+        ),
         revit_script_util.Output,
     )
 
-    # delete views
-    resultDeleteViews_ = modify_views(
+    # delete views as per filter
+    result_delete_views_ = modify_views(
         doc=doc, view_data=settings.VIEW_KEEP_RULES, revit_file_name=revit_file_name_
     )
     output(
-        "{} :: [{}]".format(resultDeleteViews_.message, resultDeleteViews_.status),
+        "{} :: [{}]".format(result_delete_views_.message, result_delete_views_.status),
         revit_script_util.Output,
     )
 
-    # delete sheets
-    resultDeleteSheets_ = modify_sheets(
+    # delete sheets as per filter
+    result_delete_sheets_ = modify_sheets(
         doc=doc, sheets=settings.SHEET_KEEP_RULES, revit_file_name=revit_file_name_
     )
     output(
-        "{} :: [{}]".format(resultDeleteSheets_.message, resultDeleteSheets_.status),
+        "{} :: [{}]".format(
+            result_delete_sheets_.message, result_delete_sheets_.status
+        ),
         revit_script_util.Output,
     )
 
     # delete revit links
-    if (
-        revit_file_name_ not in utilLocal.DO_NOT_DELETE_LINKS
-    ):
-        flagDeleteRevitLinks_ = delete_revit_links(doc)
+    if revit_file_name_ not in utilLocal.DO_NOT_DELETE_LINKS:
+        result_delete_revit_links_ = delete_revit_links(doc)
         output(
             "{} :: [{}]".format(
-                flagDeleteRevitLinks_.message, flagDeleteRevitLinks_.status
+                result_delete_revit_links_.message, result_delete_revit_links_.status
             ),
             revit_script_util.Output,
         )
@@ -177,7 +219,7 @@ if save_file.status:
     )
 
     # sync changes back to central
-    if doc.IsWorkshared == False:
+    if doc.IsWorkshared:
         output("Syncing to Central: start", revit_script_util.Output)
         syncing_ = sync_file(doc)
         output(
@@ -185,7 +227,10 @@ if save_file.status:
             revit_script_util.Output,
         )
     else:
-        output("Not Saving Revit File!!!", revit_script_util.Output)
+        output(
+            "Revit file is not a workshared document. Not saving Revit file!",
+            revit_script_util.Output,
+        )
 else:
     output("Failed to read revision data file. Exiting!!!", revit_script_util.Output)
 

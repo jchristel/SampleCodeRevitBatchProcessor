@@ -1,7 +1,16 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module contains a worksets related helper functions.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- move some objects to a specified worksets
+
+"""
+
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -36,8 +45,9 @@ from duHast.Utilities.Objects import result as res
 
 import Autodesk.Revit.DB as rdb
 
+
 def modify(doc, grid_data, revit_file_name):
-    '''
+    """
     Updates worksets of reference planes, levels, grids, scope boxes
 
     :param doc: _description_
@@ -46,34 +56,52 @@ def modify(doc, grid_data, revit_file_name):
     :type grid_data: _type_
     :return: _description_
     :rtype: _type_
-    '''
+    """
 
     found_match = False
     return_value = res.Result()
     for file_name, default_workset_name in grid_data:
-        if (revit_file_name.startswith(file_name)):
+        if revit_file_name.startswith(file_name):
             found_match = True
-            #fix uyp grids
+            # fix uyp grids
             collector_grids = get_grids_in_model(doc)
-            grids_result = modify_element_workset(doc, default_workset_name, collector_grids, 'grids')
+            grids_result = modify_element_workset(
+                doc, default_workset_name, collector_grids, "grids"
+            )
             return_value.Update(grids_result)
 
-            #fix up levels
+            # fix up levels
             collector_levels = get_levels_in_model(doc)
-            levels_result = modify_element_workset(doc, default_workset_name, collector_levels, 'levels')
+            levels_result = modify_element_workset(
+                doc, default_workset_name, collector_levels, "levels"
+            )
             return_value.Update(levels_result)
 
-            #fix up scope boxes
-            collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(rdb.BuiltInCategory.OST_VolumeOfInterest)
-            scope_boxes_result = modify_element_workset(doc, default_workset_name, collector_scope_boxes, 'scope boxes')
+            # fix up scope boxes
+            collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(
+                rdb.BuiltInCategory.OST_VolumeOfInterest
+            )
+            scope_boxes_result = modify_element_workset(
+                doc, default_workset_name, collector_scope_boxes, "scope boxes"
+            )
             return_value.Update(scope_boxes_result)
 
-            #fix up ref planes
-            collector_reference_planes = rdb.FilteredElementCollector(doc).OfClass(rdb.ReferencePlane)
-            reference_planes_result = modify_element_workset(doc, default_workset_name, collector_reference_planes,  'reference planes')
+            # fix up ref planes
+            collector_reference_planes = rdb.FilteredElementCollector(doc).OfClass(
+                rdb.ReferencePlane
+            )
+            reference_planes_result = modify_element_workset(
+                doc,
+                default_workset_name,
+                collector_reference_planes,
+                "reference planes",
+            )
             return_value.Update(reference_planes_result)
 
             break
-    if (found_match == False):
-        return_value.update_sep(False, 'No grid data provided for current Revit file '.format( revit_file_name))
+    if found_match == False:
+        return_value.update_sep(
+            False,
+            "No grid data provided for current Revit file ".format(revit_file_name),
+        )
     return return_value

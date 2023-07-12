@@ -3,7 +3,8 @@
 Module executed as a pre process script within the batch processor environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This module is run as a pre process on the second and following batch processor session started in step one and two only!
+This module is only run as a pre process on the first batch processor session (OneA) started in step one!
+
 
 - populates task list files for revit batch processor
 - writes marker files to identify log files used in this process
@@ -46,19 +47,20 @@ import script_util
 import settings as settings  # sets up all commonly used variables and path locations!
 
 # import log utils
-from duHast.Utilities import batch_processor_log_utils as logUtils
+from duHast.Utilities import batch_processor_log_utils as logutils
 from duHast.Utilities import util_batch_p as uBP
 
 # import WSM kill utils
 from duHast.Utilities import worksharing_monitor_process as wsmp
 from duHast.Utilities.console_out import output
+from duHast.Utilities.directory_io import create_target_directory
 
 
 # logfile marker creation status
 status_marker_ = False
 
 # logfile marker creation status
-status_marker_ = logUtils.write_session_id_marker_file(
+status_marker_ = logutils.write_session_id_marker_file(
     settings.LOG_MARKER_DIRECTORY,
     uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
 )
@@ -88,5 +90,16 @@ output(
 # show log marker status
 output(
     "Wrote log marker: ....[{}]".format(status_marker_),
+    script_util.Output,
+)
+
+# create Model out folder
+output(
+    "Creating model out folder.... start",
+    script_util.Output,
+)
+result_ = create_target_directory(settings.ROOT_PATH, settings.MODEL_OUT_FOLDER_NAME)
+output(
+    "Creating model out folder.... status: {}".format(result_),
     script_util.Output,
 )

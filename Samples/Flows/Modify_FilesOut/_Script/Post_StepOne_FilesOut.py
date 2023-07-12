@@ -1,7 +1,23 @@
+"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a post process script outside the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This module is run after all batch processor sessions for step one have completed.
+
+It:
+
+    - creates a bim360 out directory in given location
+    - copies Revit files created in step one into bim360 folder:
+
+        - as files are copied into BIM360 folder, the revision information is stripped from the files so they can be uploaded to BIM360 directly
+
+
+"""
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-#License:
+# License:
 #
 #
 # Revit Batch Processor Sample Code
@@ -27,25 +43,24 @@
 # Imports
 # --------------------------
 
-import settings as settings # sets up all commonly used variables and path locations!
+import os
+import settings as settings  # sets up all commonly used variables and path locations!
 from utils import utils as utilLocal
 from duHast.Utilities.Objects import result as res
-from duHast.Utilities import Utility as util
+from duHast.Utilities.console_out import output
+from duHast.Utilities.files_io import get_directory_path_from_file_path
+from duHast.Utilities.files_get import get_files_with_filter
 
 # -------------
 # my code here:
 # -------------
 
-# output messages
-def Output(message = ''):
-    print (message)
-
 
 def get_revit_file_names(revit_file_directory):
-    '''
+    """
     Get Revit file data from output folder.
-    
-    :return: 
+
+    :return:
         Result class instance.
 
         - False if no Revit files where found, otherwise True.
@@ -59,29 +74,25 @@ def get_revit_file_names(revit_file_directory):
         - result.result will be an empty list.
 
     :rtype: :class:`.Result`
-    '''
+    """
 
     return_value = res.Result()
 
     # get revit files in folder
-    revit_files = util.GetFilesWithFilter(
-        revit_file_directory
-       )
+    revit_files = get_files_with_filter(revit_file_directory)
 
     copy_data = []
-    if(len(revit_files) > 0):
+    if len(revit_files) > 0:
         for revit_file in revit_files:
-            directory_path = util.GetFolderPathFromFile(revit_file)
-            row = [
-                directory_path,
-                revit_file[len(directory_path) + 1 :]
-            ]
+            directory_path = get_directory_path_from_file_path(revit_file)
+            row = [directory_path, revit_file[len(directory_path) + 1 :]]
             copy_data.append(row)
-        return_value.update_sep(True, 'Got Revit files.')
+        return_value.update_sep(True, "Got Revit files.")
         return_value.result = copy_data
     else:
-        return_value.update_sep(False, 'Failed to get any Revit files.')
+        return_value.update_sep(False, "Failed to get any Revit files.")
     return return_value
+
 
 # -------------
 # main:
@@ -90,22 +101,26 @@ def get_revit_file_names(revit_file_directory):
 # store output here:
 root_path_ = settings.ROOT_PATH
 # build out directory location
-root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
+root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
 # set up BIM 360 NWC folder
-set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(root_path_, settings.BIM360_FOLDER_NAME)
+set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(
+    root_path_, settings.BIM360_FOLDER_NAME
+)
 # if wqe have a BIM 360 folder copy revit files into it
-if(set_up_bim360_folder_flag_):
+if set_up_bim360_folder_flag_:
     # set up a result class object with data from marker files
     export_revit_status = get_revit_file_names(root_path_)
     # build the full folder path to where files are to be copied to
-    revit_export_path = root_path_+ '\\' + settings.BIM360_FOLDER_NAME
+    revit_export_path = os.path.join(root_path_, settings.BIM360_FOLDER_NAME)
     # duplicate revit files (but strip their revision information)
     flag_copy_revit_ = utilLocal.copy_exports(
-        export_revit_status, 
-        root_path_ + '\\' + settings.BIM360_FOLDER_NAME, 
-        settings.RVT_FILE_EXTENSION
+        export_status=export_revit_status,
+        target_folder=os.path.join(root_path_, settings.BIM360_FOLDER_NAME),
+        file_extension=settings.RVT_FILE_EXTENSION,
+        revision_prefix=settings.REVISION_PREFIX,
+        revision_suffix=settings.REVISION_SUFFIX,
     )
-    Output('{} :: [{}]'.format(flag_copy_revit_.message, flag_copy_revit_.status))
+    output("{} :: [{}]".format(flag_copy_revit_.message, flag_copy_revit_.status))
 else:
-    Output('failed to set up BIM 360 out folder')
+    output("failed to set up BIM 360 out folder")

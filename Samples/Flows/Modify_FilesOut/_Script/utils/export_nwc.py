@@ -50,7 +50,7 @@ def set_up_nwc_default_export_option():
     return setup_nwc_default_export_option_shared_by_view()
 
 
-def export_views_to_nwc(doc, export_view_prefix, export_directory):
+def export_views_to_nwc(doc, export_view_prefix, export_directory, view_name_modifier):
     """
     Exports 3D views to nwc where the view name has a particular prefix.
 
@@ -68,49 +68,6 @@ def export_views_to_nwc(doc, export_view_prefix, export_directory):
         export_view_prefix,
         nwc_export_option,
         export_directory,
-        build_export_file_name_from_view_nwc,
+        do_something_with_view_name=view_name_modifier,
     )
     return return_value
-
-
-def build_export_file_name_from_view_nwc(
-    view_name,
-    export_view_prefix,
-    file_data,
-    nwc_file_extension,
-    use_revit_file_revision,
-    current_revit_file_revision,
-):
-    """
-    Creates the nwc file name based on the view the file gets exported from.
-
-    - Includes revision information
-    - If view starts with predefined Prefix, that prefix will be removed from the name
-
-    :param view_name: The view name.
-    :type view_name: str
-
-    :return: The file name based on the view name.
-    :rtype: str
-    """
-
-    len_prefix = len(export_view_prefix)
-    # check if view name starts with NWC_
-    if view_name.startswith(export_view_prefix):
-        view_name = view_name[len_prefix:]
-        # this is required since the view name does not match the file name required at end of export
-        for fd in file_data:
-            if (
-                fd.existingFileName == view_name
-                and fd.fileExtension == nwc_file_extension
-            ):
-                # may need to update the revision info!
-                if use_revit_file_revision:
-                    # update the revision to the current revit file revision
-                    fd.revision = current_revit_file_revision
-                else:
-                    # increase rev counter for this file
-                    fd.upDateNumericalRev()
-                view_name = fd.getNewFileName()
-                break
-    return view_name + nwc_file_extension

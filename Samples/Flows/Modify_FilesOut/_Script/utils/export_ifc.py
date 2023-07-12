@@ -137,7 +137,7 @@ def get_ifc_third_party_export_config(doc):
     return ifc_get_third_party_export_config_by_view_2022(doc=doc)
 
 
-def export_views_to_ifc(doc, export_view_prefix, export_directory):
+def export_views_to_ifc(doc, export_view_prefix, export_directory, view_name_modifier):
     """
     Exports 3D views to ifc where the view name has a particular prefix.
 
@@ -147,6 +147,8 @@ def export_views_to_ifc(doc, export_view_prefix, export_directory):
     :type export_view_prefix: str
     :param export_directory: The fully qualified directory path to save the export to.
     :type export_directory: str
+    :param view_name_modifier: A function taking the view name, making some modifications to it and returning it (i.e. as the file name to be used)
+    :type view_name_modifier: func(view_name)
 
     :return:
         Result class instance.
@@ -172,55 +174,6 @@ def export_views_to_ifc(doc, export_view_prefix, export_directory):
         ifc_export_config=ifc_export_config,
         directory_path=export_directory,
         ifc_coordinates_system=IFCCoords.SharedCoordinates,
-        do_something_with_view_name=build_export_file_name_from_view_ifc,
+        do_something_with_view_name=view_name_modifier,
     )
     return return_value
-
-
-def build_export_file_name_from_view_ifc(
-    view_name,
-    export_view_prefix,
-    file_data,
-    ifc_file_extension,
-    use_revit_file_revision,
-    current_revit_file_revision,
-):
-    """
-    Creates the ifc file name based on the view the file gets exported from.
-
-    - Includes revision information
-    - If view starts with predefined Prefix, that prefix will be removed from the name
-
-    :param view_name: The view name.
-    :type view_name: str
-
-    :return: The file name based on the view name.
-    :rtype: str
-    """
-
-    # return newFileName
-    if view_name.startswith(
-        export_view_prefix,
-    ):
-        lenPrefix = len(
-            export_view_prefix,
-        )
-        view_name = view_name[lenPrefix:]
-
-        # this is required since the view name does not match the file name required at end of export
-        for fd in file_data:
-            if (
-                fd.existingFileName == view_name
-                and fd.fileExtension == ifc_file_extension
-            ):
-                # may need to update the revision info!
-                if use_revit_file_revision:
-                    # update the revision to the current revit file revision
-                    fd.revision = current_revit_file_revision
-                else:
-                    # increase rev counter for this file
-                    fd.upDateNumericalRev()
-                view_name = fd.getNewFileName()
-                break
-
-    return view_name + ifc_file_extension

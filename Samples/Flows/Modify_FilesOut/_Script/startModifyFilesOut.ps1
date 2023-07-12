@@ -56,7 +56,7 @@ $settings_directory = $root_flow_directory + "\_settings\"
 # Display the settings directory
 Write-ToLogAndConsole -Message "settings directory: $settings_directory"
 # file path to post step one script
-$_post_step_one_script = "`"$root_flow_directory`"\_Script\Post_FilesOut_StepOne.py"
+$_post_step_one_script = "`"$root_flow_directory`"\_Script\Post_StepOne_FilesOut.py"
 Write-ToLogAndConsole -Message "post step one script file path: $_post_step_one_script"
 # file path to clean up script run at the very end
 $clean_up_script_path = "`"$root_flow_directory`"\_Script\Post_FilesOut.py"

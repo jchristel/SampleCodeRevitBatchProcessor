@@ -83,6 +83,85 @@ current_file_revision_ = "-"
 # store output here, using separate variable since its value is getting changed
 models_out_path_ = settings.ROOT_PATH
 
+
+# this  function needs to be in this module due to the use of global variables!
+def build_export_file_name_from_view_ifc(view_name):
+    """
+    Creates the ifc file name based on the view the file gets exported from.
+
+    - Includes revision information
+    - If view starts with predefined Prefix, that prefix will be removed from the name
+
+    :param view_name: The view name.
+    :type view_name: str
+
+    :return: The file name based on the view name.
+    :rtype: str
+    """
+
+    # return newFileName
+    if view_name.startswith(settings.EXPORT_IFC_VIEW_PREFIX):
+        lenPrefix = len(settings.EXPORT_IFC_VIEW_PREFIX)
+        view_name = view_name[lenPrefix:]
+
+        # this is required since the view name does not match the file name required at end of export
+        for fd in file_data_:
+            if (
+                fd.existingFileName == view_name
+                and fd.fileExtension == settings.IFC_FILE_EXTENSION
+            ):
+                # may need to update the revision info!
+                if settings.EXPORT_FILES_USE_REVIT_REVISION:
+                    # update the revision to the current revit file revision
+                    fd.revision = current_file_revision_
+                else:
+                    # increase rev counter for this file
+                    fd.upDateNumericalRev()
+                view_name = fd.getNewFileName()
+                break
+
+    return view_name + settings.IFC_FILE_EXTENSION
+
+
+# this  function needs to be in this module due to the use of global variables!
+def build_export_file_name_from_view_nwc(view_name):
+    """
+    Creates the nwc file name based on the view the file gets exported from.
+
+    - Includes revision information
+    - If view starts with predefined Prefix, that prefix will be removed from the name
+
+    :param view_name: The view name.
+    :type view_name: str
+
+    :return: The file name based on the view name.
+    :rtype: str
+    """
+
+    len_prefix = len(settings.EXPORT_NWC_VIEW_PREFIX)
+    # check if view name starts with NWC_
+    if view_name.startswith(settings.EXPORT_NWC_VIEW_PREFIX):
+        # remove the prefix from the view name
+        view_name = view_name[len_prefix:]
+
+        # this is required since the view name does not match the file name required at end of export
+        for fd in file_data_:
+            if (
+                fd.existingFileName == view_name
+                and fd.fileExtension == settings.NWC_FILE_EXTENSION
+            ):
+                # may need to update the revision info!
+                if settings.EXPORT_FILES_USE_REVIT_REVISION:
+                    # update the revision to the current revit file revision
+                    fd.revision = current_file_revision_
+                else:
+                    # increase rev counter for this file
+                    fd.upDateNumericalRev()
+                view_name = fd.getNewFileName()
+                break
+    return view_name + settings.NWC_FILE_EXTENSION
+
+
 # -------------
 # main:
 # -------------
@@ -150,6 +229,7 @@ result_export_NWC_ = export_views_to_nwc(
     doc=doc,
     export_view_prefix=settings.EXPORT_NWC_VIEW_PREFIX,
     export_directory=models_out_path_,
+    view_name_modifier=build_export_file_name_from_view_nwc,
 )
 output(
     "{} :: [{}]".format(result_export_NWC_.message, result_export_NWC_.status),
@@ -176,6 +256,7 @@ result_export_IFC_ = export_views_to_ifc(
     doc=doc,
     export_view_prefix=settings.EXPORT_IFC_VIEW_PREFIX,
     export_directory=models_out_path_,
+    view_name_modifier=build_export_file_name_from_view_ifc,
 )
 output(
     "{} :: [{}]".format(result_export_IFC_.message, result_export_IFC_.status),

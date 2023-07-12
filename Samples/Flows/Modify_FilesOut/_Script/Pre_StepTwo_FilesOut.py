@@ -1,4 +1,17 @@
-﻿#!/usr/bin/python
+﻿"""
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Module executed as a pre process script inside the batch processor environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This module is only run as a pre process on the first batch processor session (TwoA) started in step two!
+
+It:
+
+    - creates a new set of task files containing the revit files created in step one
+
+"""
+
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 #License:
@@ -27,55 +40,51 @@
 # default file path locations
 # --------------------------
 
+import os
+import script_util
 import settings as settings # sets up all commonly used variables and path locations!
-# import common library (in this case the post lib since it got the methods we are after)
-from duHast.Utilities import Utility as util
-# import log utils
-from duHast.Utilities import BatchProcessorLogUtils as logutils
-from duHast.Utilities import UtilBatchP as uBP
-# import file list module
-from duHast.UI import FileList as fl
 
-# flag whether this runs in debug or not
-debug_ = False
+from duHast.UI import file_list as fl
+from duHast.Utilities.console_out import output
+from duHast.Utilities import batch_processor_log_utils as logUtils
+from duHast.Utilities import util_batch_p as uBP
 
-#logfile marker creation status
-status_marker_ = False
 
-# Add batch processor scripting references
-if not debug_:
-    import script_util
-    status_marker_ = logutils.WriteSessionIdMarkerFile(settings.LOG_MARKER_DIRECTORY , uBP.AdjustSessionIdForFileName(script_util.GetSessionId()))
 # -------------
 # my code here:
 # -------------
 
-# output messages either to batch processor (debug = False) or console (debug = True)
-def Output(message = ''):
-    if not debug_:
-        script_util.Output(str(message))
-    else:
-        print (message)
 
 # -------------
 # main:
 # -------------
+
+
+#logfile marker creation status
+status_marker_ = False
+
+# logfile marker creation status
+status_marker_ = logUtils.write_session_id_marker_file(
+    settings.LOG_MARKER_DIRECTORY,
+    uBP.adjust_session_id_for_file_name(script_util.GetSessionId()),
+)
+
 # show log marker status
-Output('Wrote log marker: ....[{}]'.format(status_marker_))
+output("Wrote log marker: ....[{}]".format(status_marker_))
 
 # store output here:
 root_path_ = settings.ROOT_PATH
+root_path_ = os.path.join(root_path_ , settings.MODEL_OUT_FOLDER_NAME)
+output ('Collecting files from: {}'.format(root_path_))
 
-root_path_ = root_path_ + '\\' + settings.MODEL_OUT_FOLDER_NAME
-Output ('Collecting files from: {}'.format(root_path_))
 # get file data
-Output('Writing file Data.... start')
-result_ = fl.WriteFileList(
-    root_path_ ,
-    settings.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
-    settings.ROOT_PATH_EXPORT, 
-    settings.TASK_FILE_NO, 
-    fl.getRevitFiles
+output('Writing file Data.... start')
+result_ = fl.write_file_list(
+    directory_path=root_path_ ,
+    file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
+    task_list_directory=settings.OUTPUT_FOLDER, 
+    task_files_number=settings.NO_OF_TASK_LIST_FILES, 
+    file_getter=fl.getRevitFiles
     )
-Output (result_.message)
-Output('Writing file Data.... status: {}'.format(result_.status))
+output (result_.message)
+output('Writing file Data.... status: {}'.format(result_.status))

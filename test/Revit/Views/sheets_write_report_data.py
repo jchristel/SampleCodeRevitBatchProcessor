@@ -122,7 +122,7 @@ class WriteSheetReportData(revit_test.RevitTest):
                     "None",
                     "None",
                     "None",
-                    os.path.join("C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles", self.file_name),
+                    os.path.join("C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles", self.file_name),
                     "Approver",
                     "Designer",
                     "Checker",

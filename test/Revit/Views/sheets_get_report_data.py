@@ -73,7 +73,7 @@ class GetSheetReportData(revit_test.RevitTest):
                 {
                     "Current Revision Issued By": "None",
                     "File Path": os.path.join(
-                        "C:\\Users\\jchristel\\Documents\\GitHub\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles",
+                        "C:\\Users\\jchristel\\dev\\SampleCodeRevitBatchProcessor\\test\\_rbp_flow\\_sampleFiles",
                         self.file_name,
                     ),
                     "Designed By": "Designer",

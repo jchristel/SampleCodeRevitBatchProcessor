@@ -13,7 +13,7 @@ Module containing delete elements functions.
 # import Autodesk
 import Autodesk.Revit.DB as rdb
 
-# import common library
+# import settings
 import settings as settings  # sets up all commonly used variables and path locations!
 
 import duHast.Utilities.Objects.result as res

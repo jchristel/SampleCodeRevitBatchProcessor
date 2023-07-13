@@ -1,5 +1,5 @@
 # load util functions
-. "C:\Users\jchristel\Documents\GitHub\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
+. "C:\Users\jchristel\dev\SampleCodeRevitBatchProcessor\Samples\PowerShell\BatchProcessorUtils.ps1"
 
 # output settings header
 Write-ToLogAndConsole -Message "SETTINGS" -IsHeader $True

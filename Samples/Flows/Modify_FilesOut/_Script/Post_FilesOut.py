@@ -48,9 +48,8 @@ from System.IO import Path
 import settings as settings  # sets up all commonly used variables and path locations!
 from utils import utils as utilLocal
 from utils.meta_data import meta_data
-
-# import common library
-from duHast.Utilities import Utility as util
+from utils.post_cleanup import clean_up_export_folder
+from utils.docFile_utils import write_new_file_data
 
 # import log utils
 from duHast.Utilities import BatchProcessorLogUtils as logutils
@@ -64,94 +63,6 @@ from duHast.Utilities import WorksharingMonitorProcess as wsmp
 # output messages
 def Output(message=""):
     print(message)
-
-
-# writes out the document data file back in the script folder
-# with updated revision information retrieved from marker files
-def write_new_file_data(doc_files):
-    flag = False
-    # compare lists
-    doc_files_sorted = []
-    for cfd in doc_files:
-        match = False
-        for nfd in marker_file_data_:
-            if (
-                nfd.existingFileName == cfd.existingFileName
-                and nfd.fileExtension == cfd.fileExtension
-            ):
-                match = True
-                doc_files_sorted.append(nfd)
-                break
-        if match == False:
-            doc_files_sorted.append(cfd)
-    data = convert_class_to_string(doc_files_sorted)
-    flag = write_new_data(settings.REVISION_DATA_FILEPATH, data)
-    return flag, doc_files_sorted
-
-
-# write new revision data out to file
-def write_new_data(path, data):
-    status = True
-    try:
-        util.writeReportDataAsCSV(path, [], data)
-    except Exception as e:
-        status = False
-        Output("Failed to write data file: {} with exception: {}".format(path, e))
-    return status
-
-
-def convert_class_to_string(doc_files):
-    data = []
-    for doc_file in doc_files:
-        data.append(doc_file.getData())
-    return data
-
-
-# deletes back up folders and revit project files
-def clean_up_export_folder():
-    status = True
-    # delete sub directories
-    try:
-        sub_dirs = util.GetChildDirectories(settings.ROOT_PATH_EXPORT)
-        if len(sub_dirs) > 0:
-            for d in sub_dirs:
-                status = status & util.DirectoryDelete(d)
-    except Exception as e:
-        Output("Failed to delete sub directory with exception {}".format(e))
-        status = status & False
-    try:
-        # delete rvt files
-        revit_files = util.GetFilesWithFilter(settings.ROOT_PATH_EXPORT)
-        if len(revit_files) > 0:
-            for f in revit_files:
-                status = status & util.FileDelete(f)
-    except Exception as e:
-        Output("Failed to delete file with exception {}".format(e))
-        status = status & False
-
-    try:
-        # delete txt marker files
-        text_files = util.GetFilesWithFilter(
-            root_path_, settings.MARKER_FILE_EXTENSION, "*"
-        )
-        if len(text_files) > 0:
-            for f in text_files:
-                status = status & util.FileDelete(f)
-    except Exception as e:
-        Output("Failed to delete file with exception {}".format(e))
-        status = status & False
-
-    try:
-        # delete log files
-        text_files = util.GetFilesWithFilter(root_path_, ".log", "*")
-        if len(text_files) > 0:
-            for f in text_files:
-                status = status & util.FileDelete(f)
-    except Exception as e:
-        Output("Failed to delete log file with exception: {}".format(e))
-        status = status & False
-
-    return status
 
 
 # -------------
@@ -177,7 +88,9 @@ marker_file_data_result = utilLocal.read_marker_files_from_revit_processed(
 if marker_file_data_result.status:
     marker_file_data_ = marker_file_data_result.result
     # writes out new file data file in script location
-    flag_write_file_data_, doc_files_ = write_new_file_data(doc_files_)
+    flag_write_file_data_, doc_files_ = write_new_file_data(
+        doc_files=doc_files_, marker_file_data=marker_file_data_
+    )
     Output("Saved new document data file:...[{}]".format(flag_write_file_data_))
 
     # write out metadata file
@@ -191,7 +104,7 @@ else:
     Output("Failed to read marker data:...[{}]".format(marker_file_data_result.message))
 
 # run export folder clean up
-flag_export_clean_up = clean_up_export_folder()
+flag_export_clean_up = clean_up_export_folder(root_path_)
 Output("Clean up:...[{}]".format(flag_export_clean_up))
 
 # process logs

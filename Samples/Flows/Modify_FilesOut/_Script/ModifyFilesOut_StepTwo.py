@@ -48,7 +48,8 @@ import clr
 
 import os
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils import utils as utilLocal
+from utils.utils import copy_exports, create_bim360_out_folder
+from utils.docFile_utils import read_current_file
 from utils.export_nwc import export_views_to_nwc
 from utils.export_ifc import export_views_to_ifc, check_name, optimize_ifc_files
 from utils.export_file_data import write_out_export_file_data
@@ -182,7 +183,7 @@ output("Modifying Revit File.... start", revit_script_util.Output)
 
 # array to contain file information read from text file
 # read default file list info
-file_data_ = utilLocal.read_current_file()
+file_data_ = read_current_file()
 
 # set path to models will be saved to
 models_out_path_ = os.path.join(models_out_path_, settings.MODEL_OUT_FOLDER_NAME)
@@ -279,7 +280,7 @@ output(
 )
 
 # duplicate NWC's into local federated NWC folder
-result_copy_NWCs_ = utilLocal.copy_exports(
+result_copy_NWCs_ = copy_exports(
     export_status=result_export_NWC_,
     target_folder=settings.ROOT_PATH_NWC,
     file_extension=settings.NWC_FILE_EXTENSION,
@@ -301,7 +302,7 @@ output(
 )
 
 # duplicate IFC's into local federated IFC folder
-result_copy_IFCs_ = utilLocal.copy_exports(
+result_copy_IFCs_ = copy_exports(
     export_status=result_export_IFC_,
     target_folder=settings.ROOT_PATH_IFC,
     file_extension=settings.IFC_FILE_EXTENSION,
@@ -314,7 +315,7 @@ output(
 )
 
 # set up BIM 360 NWC folder (contains nwc files with revision data in name)
-setup_BIM360_directory_flag_ = utilLocal.create_bim360_out_folder(
+setup_BIM360_directory_flag_ = create_bim360_out_folder(
     target_directory=models_out_path_,
     new_subdirectory_name=settings.BIM360_FOLDER_NAME,
 )
@@ -322,7 +323,7 @@ setup_BIM360_directory_flag_ = utilLocal.create_bim360_out_folder(
 if setup_BIM360_directory_flag_:
     nwc_export_path = os.path.join(models_out_path_, settings.BIM360_FOLDER_NAME)
     # duplicate NWC's without revision information for bim360 or acc
-    result_copy_NWCs_ = utilLocal.copy_exports(
+    result_copy_NWCs_ = copy_exports(
         export_status=result_export_NWC_,
         target_folder=nwc_export_path,
         file_extension=settings.NWC_FILE_EXTENSION,

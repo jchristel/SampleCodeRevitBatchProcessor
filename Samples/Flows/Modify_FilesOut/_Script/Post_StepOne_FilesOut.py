@@ -45,7 +45,7 @@ It:
 
 import os
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils import utils as utilLocal
+from utils.utils import create_bim360_out_folder, copy_exports
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.console_out import output
 from duHast.Utilities.files_io import get_directory_path_from_file_path
@@ -104,7 +104,7 @@ root_path_ = settings.ROOT_PATH
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
 # set up BIM 360 NWC folder
-set_up_bim360_folder_flag_ = utilLocal.create_bim360_out_folder(
+set_up_bim360_folder_flag_ = create_bim360_out_folder(
     root_path_, settings.BIM360_FOLDER_NAME
 )
 # if wqe have a BIM 360 folder copy revit files into it
@@ -114,7 +114,7 @@ if set_up_bim360_folder_flag_:
     # build the full folder path to where files are to be copied to
     revit_export_path = os.path.join(root_path_, settings.BIM360_FOLDER_NAME)
     # duplicate revit files (but strip their revision information)
-    flag_copy_revit_ = utilLocal.copy_exports(
+    flag_copy_revit_ = copy_exports(
         export_status=export_revit_status,
         target_folder=os.path.join(root_path_, settings.BIM360_FOLDER_NAME),
         file_extension=settings.RVT_FILE_EXTENSION,

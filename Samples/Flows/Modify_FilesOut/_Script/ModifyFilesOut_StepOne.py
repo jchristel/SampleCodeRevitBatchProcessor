@@ -63,7 +63,6 @@ import clr
 import os
 
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils import utils as utilLocal
 
 from duHast.Revit.Common.file_io import enable_worksharing, save_as, sync_file
 
@@ -77,7 +76,7 @@ from duHast.Utilities.Objects import result as res
 from utils.worksets import modify
 from utils.views import modify_sheets, modify_views
 from utils.revision_marker_files import write_rev_marker_file
-from utils.utils import build_default_file_list
+from utils.docFile_utils import build_default_file_list
 
 
 # required in lambda expressions!
@@ -200,7 +199,7 @@ if save_file.status:
     )
 
     # delete revit links
-    if revit_file_name_ not in utilLocal.DO_NOT_DELETE_LINKS:
+    if revit_file_name_ not in settings.DO_NOT_DELETE_LINKS:
         result_delete_revit_links_ = delete_revit_links(doc)
         output(
             "{} :: [{}]".format(

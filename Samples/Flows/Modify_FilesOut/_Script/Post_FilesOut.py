@@ -6,7 +6,10 @@ Module executed as a post process script outside the batch processor environment
 This module is run after all batch processor sessions for step one and two have completed.
 
 It:
-
+    - reads the marker files for each file exported and compiles a meta data file from it
+    - deletes any temp revit files, log files, marker files
+    - processes batch processor log files to checks for any exceptions which may have occurred during processing
+    - removes worksharing monitor marker files
 
 """
 
@@ -41,8 +44,7 @@ It:
 
 # import clr
 # import System
-import os.path
-from System.IO import Path
+import os
 
 
 import settings as settings  # sets up all commonly used variables and path locations!
@@ -50,19 +52,14 @@ from utils import utils as utilLocal
 from utils.meta_data import meta_data
 from utils.post_cleanup import clean_up_export_folder
 from utils.docFile_utils import write_new_file_data
+from duHast.Utilities.console_out import output_with_time_stamp as output
+from duHast.Utilities.batch_processor_log_utils import process_log_files
+from duHast.Utilities.worksharing_monitor_process import clean_up_wsm_data_files
 
-# import log utils
-from duHast.Utilities import BatchProcessorLogUtils as logutils
-from duHast.Utilities import WorksharingMonitorProcess as wsmp
 
 # -------------
 # my code here:
 # -------------
-
-
-# output messages
-def Output(message=""):
-    print(message)
 
 
 # -------------
@@ -78,7 +75,7 @@ doc_files_ = []
 doc_files_ = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
 
 # build out directory location
-root_path_ = root_path_ + "\\" + settings.MODEL_OUT_FOLDER_NAME
+root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
 # read file data from revit files processed
 marker_file_data_ = []
@@ -91,7 +88,7 @@ if marker_file_data_result.status:
     flag_write_file_data_, doc_files_ = write_new_file_data(
         doc_files=doc_files_, marker_file_data=marker_file_data_
     )
-    Output("Saved new document data file:...[{}]".format(flag_write_file_data_))
+    output("Saved new document data file:...[{}]".format(flag_write_file_data_))
 
     # write out metadata file
     flag_meta_data_ = meta_data(
@@ -99,25 +96,25 @@ if marker_file_data_result.status:
         doc_files=doc_files_,
         root_path=root_path_,
     )
-    Output("Saved new Aconex meta data file:...[{}]".format(flag_meta_data_))
+    output("Saved new Aconex meta data file:...[{}]".format(flag_meta_data_.status))
 else:
-    Output("Failed to read marker data:...[{}]".format(marker_file_data_result.message))
+    output("Failed to read marker data:...[{}]".format(marker_file_data_result.message))
 
 # run export folder clean up
 flag_export_clean_up = clean_up_export_folder(root_path_)
-Output("Clean up:...[{}]".format(flag_export_clean_up))
+output("Clean up:...[{}]".format(flag_export_clean_up))
 
 # process logs
-processing_results_ = logutils.ProcessLogFiles(settings.LOG_MARKER_DIRECTORY)
-Output(
+processing_results_ = process_log_files(settings.LOG_MARKER_DIRECTORY)
+output(
     "Log result: {} :: [{}]".format(
         processing_results_.message, processing_results_.status
     )
 )
 
 # WSMP marker files clean up
-clean_up_wsm_files_ = wsmp.CleanUpWSMDataFiles(settings.WSM_MARKER_DIRECTORY)
-Output(
+clean_up_wsm_files_ = clean_up_wsm_data_files(settings.WSM_MARKER_DIRECTORY)
+output(
     "WSM result: {} :: [{}]".format(
         clean_up_wsm_files_.message, clean_up_wsm_files_.status
     )

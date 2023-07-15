@@ -661,9 +661,21 @@ def process_log_files(folder_path, debug=False):
     :param debug: Flag indicating whether this is running in debug mode which will output some debug messages, defaults to False
     :type debug: bool, optional
 
-    :return: List of lists of revit files processed in format:
-        [logId,[processed Revit file name, status of processing (true or false), message]]
-    :rtype: [str,[str, bool, str]]
+    :return:
+        Result class instance.
+
+        - Process status returned in result.status. False if an exception occurred, otherwise True.
+        - result.message will contain message(s) for each revit file found in logs and whether an exception occurred during processing
+        - result.result will be an empty list.
+
+        On exception:
+
+        - result.status (bool) will be False.
+        - result.message will contain the exception message.
+        - result.status will be an empty list.
+
+    :rtype: :class:`.Result`
+
     """
 
     return_value = res.Result()

@@ -111,7 +111,7 @@ def reload_all_families(doc, library_location, include_sub_folders):
                                 result_load.result != None
                                 and len(result_load.result) > 0
                             ):
-                                fam_loaded = result_load.result.First()
+                                fam_loaded = result_load.result[0]
                                 after_load_symbol_ids = fam_loaded.GetFamilySymbolIds()
                                 new_symbol_ids = get_new_symbol_ids(
                                     prior_load_symbol_ids, after_load_symbol_ids

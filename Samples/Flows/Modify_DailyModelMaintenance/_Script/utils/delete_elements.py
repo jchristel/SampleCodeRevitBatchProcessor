@@ -46,7 +46,7 @@ def delete_line_pattern_starting_with_import(doc, revit_file_path, output):
 
 def delete_sample_duplicate_patterns(doc, revit_file_path, output):
     """
-    Deletes all line patterns ending on BVN1* to BVN9*
+    Deletes all line patterns ending on sample1* to sample9*
 
     :param doc: Current Revit model document.
     :type doc: Autodesk.Revit.DB.Document

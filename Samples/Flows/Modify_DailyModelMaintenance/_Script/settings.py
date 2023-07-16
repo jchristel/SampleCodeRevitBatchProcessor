@@ -102,6 +102,8 @@ REPORT_EXTENSION_MARKED_VIEWS = "_MarkedViews"
 REPORT_EXTENSION_VIEWS = "_Views"
 REPORT_EXTENSION_WALL_TYPES = "_Wall_Types"
 REPORT_EXTENSION_FFE_TAG_INSTANCES = "_FFE_Tags"
+REPORT_EXTENSION_CAD_LINKS= "_CAD_Links"
+REPORT_EXTENSION_REVIT_LINKS = "Revit_Links"
 
 # combined report file names
 COMBINED_REPORT_NAME_LEVELS = "ProjectsLevels.csv"
@@ -115,6 +117,8 @@ COMBINED_REPORT_NAME_FAMILIES = "ProjectsFamilies.csv"
 COMBINED_REPORT_NAME_MARKED_VIEWS = "MarkedViews.csv"
 COMBINED_REPORT_NAME_VIEWS = "Views.csv"
 COMBINED_REPORT_NAME_WALL_TYPES = "Wall_Types.csv"
+COMBINED_REPORT_NAME_CAD_LINKS= "CAD_Links.csv"
+COMBINED_REPORT_NAME_REVIT_LINKS = "Revit_Links.csv"
 
 # list containing default worksets for levels grids, scope boxes per project file
 DEFAULT_WORKSETS = [["Revit", ["Shared Levels and Grids"]]]

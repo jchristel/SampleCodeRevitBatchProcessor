@@ -582,8 +582,14 @@ def report_revit_link_data(doc, revit_file_path, output):
     return_value = res.Result()
     output("Reporting revit link data...start")
     try:
+        file_name = os.path.join(
+            settings.OUTPUT_FOLDER,
+            get_file_name_without_ext(revit_file_path)
+            + settings.REPORT_EXTENSION_REVIT_LINKS,
+            + settings.REPORT_FILE_NAME_EXTENSION,
+        )
         write_report_data_as_csv(
-            revit_file_path,
+            file_name,
             rLinkHeader.REPORT_REVIT_LINKS_HEADER,
             rLinkRep.get_revit_link_report_data(doc, revit_file_path),
         )
@@ -626,8 +632,14 @@ def report_cad_link_data(doc, revit_file_path, output):
     return_value = res.Result()
     output("Reporting CAD link data...start")
     try:
+        file_name = os.path.join(
+            settings.OUTPUT_FOLDER,
+            get_file_name_without_ext(revit_file_path)
+            + settings.REPORT_EXTENSION_CAD_LINKS,
+            + settings.REPORT_FILE_NAME_EXTENSION,
+        )
         write_report_data_as_csv(
-            revit_file_path,
+            file_name,
             rLinkCadHeader.REPORT_CAD_LINKS_HEADER,
             rLinkCadRep.get_cad_report_data(doc, revit_file_path),
         )

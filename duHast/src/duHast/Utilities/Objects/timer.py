@@ -86,3 +86,13 @@ class Timer(base.Base):
             + str(PAD_SINGLE_DIGIT_TO_THREE % time_span.Milliseconds)
             + "ms"
         )
+
+    def is_running(self):
+        """
+        Check whether the stop watch running.
+        """
+
+        if (self._stop_watch is None):
+            return False
+        else:
+            return True

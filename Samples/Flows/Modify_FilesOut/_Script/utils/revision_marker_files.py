@@ -156,8 +156,8 @@ def write_rev_marker_file(
         file_name = os.path.join(
             root_path, revit_file_name + revit_file_extension + marker_file_extension
         )
-        status, message_marker = write_rev_marker_file(file_name, file_data[0])
-        return_value.update_sep(status, message_marker)
+        status = write_rev_marker_file_writer(file_name, file_data[0])
+        return_value.update(status)
 
     else:
         return_value.update_sep(

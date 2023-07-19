@@ -44,7 +44,7 @@ from duHast.Utilities.files_csv import read_csv_file
 from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
 from duHast.Utilities.utility import pad_single_digit_numeric_string
 from duHast.Utilities.Objects import result as res
-from duHast.src.duHast.Utilities.files_csv import write_report_data_as_csv
+from duHast.Utilities.files_csv import write_report_data_as_csv
 
 # --------------- read file -------------------
 
@@ -74,7 +74,7 @@ def build_default_file_list(
     revision_data_file_path,
     revit_file_name,
     splash_screen_name,
-    revit_file_extension,
+    revit_file_extension
 ):
     """
     Reads file data from file and stores it in a global list. 

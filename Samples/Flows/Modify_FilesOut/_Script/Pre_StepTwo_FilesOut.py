@@ -84,7 +84,7 @@ result_ = fl.write_file_list(
     file_extension=settings.FILE_EXTENSION_OF_FILES_TO_PROCESS, 
     task_list_directory=settings.OUTPUT_FOLDER, 
     task_files_number=settings.NO_OF_TASK_LIST_FILES, 
-    file_getter=fl.getRevitFiles
+    file_getter=fl.get_revit_files
     )
 output (result_.message)
 output('Writing file Data.... status: {}'.format(result_.status))

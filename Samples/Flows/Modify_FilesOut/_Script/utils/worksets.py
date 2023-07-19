@@ -68,14 +68,14 @@ def modify(doc, grid_data, revit_file_name):
             grids_result = modify_element_workset(
                 doc, default_workset_name, collector_grids, "grids"
             )
-            return_value.Update(grids_result)
+            return_value.update(grids_result)
 
             # fix up levels
             collector_levels = get_levels_in_model(doc)
             levels_result = modify_element_workset(
                 doc, default_workset_name, collector_levels, "levels"
             )
-            return_value.Update(levels_result)
+            return_value.update(levels_result)
 
             # fix up scope boxes
             collector_scope_boxes = rdb.FilteredElementCollector(doc).OfCategory(
@@ -84,7 +84,7 @@ def modify(doc, grid_data, revit_file_name):
             scope_boxes_result = modify_element_workset(
                 doc, default_workset_name, collector_scope_boxes, "scope boxes"
             )
-            return_value.Update(scope_boxes_result)
+            return_value.update(scope_boxes_result)
 
             # fix up ref planes
             collector_reference_planes = rdb.FilteredElementCollector(doc).OfClass(
@@ -96,7 +96,7 @@ def modify(doc, grid_data, revit_file_name):
                 collector_reference_planes,
                 "reference planes",
             )
-            return_value.Update(reference_planes_result)
+            return_value.update(reference_planes_result)
 
             break
     if found_match == False:

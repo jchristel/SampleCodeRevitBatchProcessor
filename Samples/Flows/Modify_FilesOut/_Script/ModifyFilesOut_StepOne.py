@@ -81,6 +81,7 @@ from utils.docFile_utils import build_default_file_list
 
 # required in lambda expressions!
 clr.AddReference("System.Core")
+import System
 clr.ImportExtensions(System.Linq)
 
 import Autodesk.Revit.DB as rdb
@@ -116,6 +117,7 @@ revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 
 # model out location including dated folder stamp
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
+
 
 
 output("Modifying Revit File.... start", revit_script_util.Output)

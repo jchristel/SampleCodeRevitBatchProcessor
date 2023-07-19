@@ -204,5 +204,5 @@ def purge_unused_e_transmit(doc):
         result_value.update_sep(
             False, "Terminated purge unused actions with exception: {}".format(e)
         )
-    result_value.append_message("purge duration: {}".formatOverall.stop())
+    result_value.append_message("purge duration: {}".format(t_overall.stop()))
     return result_value

@@ -26,10 +26,17 @@ This module contains a number of helper functions relating to Revit view sheets.
 #
 #
 
+import clr
+
 import Autodesk.Revit.DB as rdb
 from duHast.Utilities import utility as util
 
 from duHast.Revit.Common import parameter_get_utils as rParaGet
+
+# required in lambda expressions!
+clr.AddReference("System.Core")
+import System
+clr.ImportExtensions(System.Linq)
 
 
 def get_sheets_by_filters(doc, view_rules=None):

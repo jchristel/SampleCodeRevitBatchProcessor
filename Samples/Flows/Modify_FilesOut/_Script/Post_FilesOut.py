@@ -48,10 +48,11 @@ import os
 
 
 import settings as settings  # sets up all commonly used variables and path locations!
-from utils import utils as utilLocal
+from utils.docFile_utils import read_current_file
+from utils.revision_marker_files import read_marker_files_from_revit_processed
 from utils.meta_data import meta_data
 from utils.post_cleanup import clean_up_export_folder
-from utils.docFile_utils import write_new_file_data
+from utils.docFile_write_data import write_new_file_data
 from duHast.Utilities.console_out import output_with_time_stamp as output
 from duHast.Utilities.batch_processor_log_utils import process_log_files
 from duHast.Utilities.worksharing_monitor_process import clean_up_wsm_data_files
@@ -72,14 +73,14 @@ root_path_ = settings.ROOT_PATH
 # file data
 doc_files_ = []
 # read current file data
-doc_files_ = utilLocal.read_current_file(settings.REVISION_DATA_FILEPATH)
+doc_files_ =  read_current_file(settings.REVISION_DATA_FILEPATH)
 
 # build out directory location
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
 # read file data from revit files processed
 marker_file_data_ = []
-marker_file_data_result = utilLocal.read_marker_files_from_revit_processed(
+marker_file_data_result = read_marker_files_from_revit_processed(
     root_path_, settings.MARKER_FILE_EXTENSION
 )
 if marker_file_data_result.status:

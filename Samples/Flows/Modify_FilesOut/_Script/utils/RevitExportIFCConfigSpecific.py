@@ -30,8 +30,8 @@ This module contains a custom helper functions to get the IFCExportConfig for Re
 import clr
 
 import Autodesk.Revit.DB as rdb
-from duHast.APISamples import RevitExport as rex
-from duHast.APISamples.RevitExportIFCSettings import IFCSettings
+from duHast.Revit.Exports.export_ifc import ifc_get_third_party_export_config_by_view
+from duHast.Revit.Exports.Utility.ifc_export_settings import IFCSettings
 
 
 # -------------------------------------------- IFC EXPORT Revit 2022 -------------------------------------
@@ -137,7 +137,7 @@ def ifc_get_third_party_export_config_by_view_2022(doc):
         excludeFilter,
     )
 
-    ifcExportConfig = rex.IFCGetThirdPartyExportConfigByView(doc, None, ifcSettingsTest)
+    ifcExportConfig = ifc_get_third_party_export_config_by_view(doc, None, ifcSettingsTest)
 
     return ifcExportConfig
 

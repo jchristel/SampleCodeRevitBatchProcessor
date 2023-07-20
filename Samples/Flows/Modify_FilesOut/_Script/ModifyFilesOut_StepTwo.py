@@ -51,7 +51,7 @@ import settings as settings  # sets up all commonly used variables and path loca
 from utils.utils import copy_exports, create_bim360_out_folder
 from utils.docFile_utils import read_current_file
 from utils.export_nwc import export_views_to_nwc
-from utils.export_ifc import export_views_to_ifc, check_name, optimize_ifc_files
+from utils.export_ifc import export_views_to_ifc, check_view_name, optimize_ifc_files
 from utils.export_file_data import write_out_export_file_data
 from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
 from duHast.Revit.Views.delete import delete_views_not_on_sheets, delete_all_sheets
@@ -108,8 +108,8 @@ def build_export_file_name_from_view_ifc(view_name):
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
             if (
-                fd.existingFileName == view_name
-                and fd.fileExtension == settings.IFC_FILE_EXTENSION
+                fd.existing_file_name == view_name
+                and fd.file_extension == settings.IFC_FILE_EXTENSION
             ):
                 # may need to update the revision info!
                 if settings.EXPORT_FILES_USE_REVIT_REVISION:
@@ -117,8 +117,8 @@ def build_export_file_name_from_view_ifc(view_name):
                     fd.revision = current_file_revision_
                 else:
                     # increase rev counter for this file
-                    fd.upDateNumericalRev()
-                view_name = fd.getNewFileName()
+                    fd.update_numerical_rev()
+                view_name = fd.get_new_file_name()
                 break
 
     return view_name + settings.IFC_FILE_EXTENSION
@@ -148,8 +148,8 @@ def build_export_file_name_from_view_nwc(view_name):
         # this is required since the view name does not match the file name required at end of export
         for fd in file_data_:
             if (
-                fd.existingFileName == view_name
-                and fd.fileExtension == settings.NWC_FILE_EXTENSION
+                fd.existing_file_name == view_name
+                and fd.file_extension == settings.NWC_FILE_EXTENSION
             ):
                 # may need to update the revision info!
                 if settings.EXPORT_FILES_USE_REVIT_REVISION:
@@ -157,8 +157,8 @@ def build_export_file_name_from_view_nwc(view_name):
                     fd.revision = current_file_revision_
                 else:
                     # increase rev counter for this file
-                    fd.upDateNumericalRev()
-                view_name = fd.getNewFileName()
+                    fd.update_numerical_rev()
+                view_name = fd.get_new_file_name()
                 break
     return view_name + settings.NWC_FILE_EXTENSION
 
@@ -183,7 +183,7 @@ output("Modifying Revit File.... start", revit_script_util.Output)
 
 # array to contain file information read from text file
 # read default file list info
-file_data_ = read_current_file()
+file_data_ = read_current_file(settings.REVISION_DATA_FILEPATH,)
 
 # set path to models will be saved to
 models_out_path_ = os.path.join(models_out_path_, settings.MODEL_OUT_FOLDER_NAME)
@@ -197,7 +197,7 @@ revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 # save a working file in temp location
 result_ = save_as(
     doc=doc,
-    target_directory_path=settings.ROOT_PATH_EXPORT,
+    target_directory_path=settings.OUTPUT_FOLDER,
     current_full_file_name=REVIT_FILE_PATH,
     name_data=default_file_names_step_two_,
 )
@@ -213,7 +213,7 @@ output(
 )
 
 # delete views not on sheets with exception of views to be exported
-result_delete_views_not_on_sheets_ = delete_views_not_on_sheets(doc, check_name)
+result_delete_views_not_on_sheets_ = delete_views_not_on_sheets(doc, check_view_name)
 output(
     "{} :: [{}]".format(
         result_delete_views_not_on_sheets_.message,

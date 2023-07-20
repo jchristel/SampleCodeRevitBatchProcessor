@@ -130,7 +130,7 @@ def build_meta_data(meta_data_header, doc_files, root_path):
     meta_data.append(meta_data_header)
     flag = True
     # get files in todays output folder
-    files = get_files(root_path, fileExtension=".*")
+    files = get_files(root_path, file_extension=".*")
     # loop over files found and build aconex list
     if len(files) > 0:
         for file in files:

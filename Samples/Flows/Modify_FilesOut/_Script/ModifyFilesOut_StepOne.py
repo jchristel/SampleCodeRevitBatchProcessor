@@ -118,8 +118,6 @@ revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 # model out location including dated folder stamp
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
-
-
 output("Modifying Revit File.... start", revit_script_util.Output)
 
 # flag indicating whether the file can be saved

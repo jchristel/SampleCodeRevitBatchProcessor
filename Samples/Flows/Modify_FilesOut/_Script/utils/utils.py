@@ -34,6 +34,7 @@ This module contains a custom helper functions for marker files.
 #
 #
 
+import os
 
 # import from library
 from duHast.Utilities.files_io import get_file_extension, copy_file, file_exist
@@ -78,7 +79,7 @@ def get_export_file_name_without_revision(
 
     # strip file extension (in all 3 cases 4 characters long)
     # if not an ifc, nwc or revit file, return name unchanged.
-    file_extension = get_file_extension(file_extensions)
+    file_extension = get_file_extension(file_name)
 
     if file_extension in file_extensions:
         file_name = file_name[0:-4]
@@ -134,7 +135,7 @@ def copy_exports(
         if export_status.result is not None and len(export_status.result) > 0:
             for export_name in export_status.result:
                 # check if file exists...some files will not be exported if the view is empty!
-                current_full_file_name = export_name[0] + "\\" + export_name[1]
+                current_full_file_name = os.path.join( export_name[0] , export_name[1])
                 # Output('current file name from status: ' + currentFullFileName)
                 if file_exist(current_full_file_name):
                     new_name = get_export_file_name_without_revision(
@@ -143,7 +144,7 @@ def copy_exports(
                         revision_prefix=revision_prefix,
                         revision_suffix=revision_suffix,
                     )
-                    new_file_name = target_folder + "\\" + new_name + file_extension
+                    new_file_name = os.path.join(target_folder , new_name + file_extension)
                     flagCopy = copy_file(current_full_file_name, new_file_name)
                     if flagCopy:
                         return_value.append_message(

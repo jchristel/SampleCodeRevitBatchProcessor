@@ -87,4 +87,4 @@ result_ = fl.write_file_list(
     file_getter=fl.get_revit_files
     )
 output (result_.message)
-output('Writing file Data.... status: {}'.format(result_.status))
+output('Writing file Data.... status: [{}]'.format(result_.status))

@@ -32,6 +32,7 @@ Module containing IFC export functions.
 # Imports
 # --------------------------
 
+import settings as settings  # sets up all commonly used variables and path locations!
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_io import file_exist
 from duHast.Utilities.solibri_ifc_optimizer import optimize_ifc_files_in_list
@@ -39,7 +40,7 @@ from duHast.Revit.Exports.export_ifc import (
     export_3d_views_to_ifc,
 )
 from duHast.Revit.Exports.Utility.ifc_export_coordinates import IFCCoords
-from utils.RevitExportIFCConfigSpecific import (
+from RevitExportIFCConfigSpecific import (
     ifc_get_third_party_export_config_by_view_2022,
 )
 import os
@@ -100,7 +101,7 @@ def optimize_ifc_files(export_status, ifc_file_directory):
     return return_value
 
 
-def check_name(view, view_filter_list):
+def check_view_name(view, view_filter_list=[settings.EXPORT_NWC_VIEW_PREFIX, settings.EXPORT_IFC_VIEW_PREFIX]):
     """
     Checks whether view name starts with a value provided in view filter list.
 
@@ -173,7 +174,7 @@ def export_views_to_ifc(doc, export_view_prefix, export_directory, view_name_mod
         view_filter=export_view_prefix,
         ifc_export_config=ifc_export_config,
         directory_path=export_directory,
-        ifc_coordinates_system=IFCCoords.SharedCoordinates,
+        ifc_coordinates_system=IFCCoords.shared_coordinates,
         do_something_with_view_name=view_name_modifier,
     )
     return return_value

@@ -37,35 +37,12 @@ This module contains a custom helper functions for marker files.
 # import settings
 import settings as settings  # sets up all commonly used variables and path locations!
 
-import docFile as df
-
-# import from library
-from duHast.Utilities.files_csv import read_csv_file
 from duHast.Revit.Views.sheets import get_sheet_rev_by_sheet_name
 from duHast.Utilities.utility import pad_single_digit_numeric_string
 from duHast.Utilities.Objects import result as res
+from docFile_io import read_current_file
 
 # --------------- read file -------------------
-
-def read_current_file(revision_data_path):
-    """
-    Read the current revision data file list located in script location.
-
-    :param revision_data_path: fully qualified file path to revision data file
-    :type revision_data_path: str
-    :return: a list containing current file data
-    :rtype: [docFile]
-    """
-
-    reference_list = []
-    try:
-        rows = read_csv_file(revision_data_path)
-        for row in rows:
-            reference_list.append(df.docFile(row))
-    except Exception as e:
-        print(str(e))
-        reference_list = []
-    return reference_list
 
 
 def build_default_file_list(

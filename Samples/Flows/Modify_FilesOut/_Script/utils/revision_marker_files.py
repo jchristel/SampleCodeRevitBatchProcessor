@@ -114,7 +114,7 @@ def write_rev_marker_file_writer(fully_qualified_path, file_data):
     return_value = res.Result()
     if len(file_data) > 0:
         try:
-            write_report_data_as_csv(fully_qualified_path, [], [[file_data]])
+            write_report_data_as_csv(fully_qualified_path, [], [file_data])
             return_value.append_message = "Successfully wrote marker file: {}".format(
                 fully_qualified_path
             )
@@ -156,7 +156,7 @@ def write_rev_marker_file(
         file_name = os.path.join(
             root_path, revit_file_name + revit_file_extension + marker_file_extension
         )
-        status = write_rev_marker_file_writer(file_name, file_data[0])
+        status = write_rev_marker_file_writer(file_name, file_data)
         return_value.update(status)
 
     else:

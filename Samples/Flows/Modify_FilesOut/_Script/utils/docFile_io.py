@@ -40,6 +40,10 @@ import settings as settings  # sets up all commonly used variables and path loca
 # import from library
 from duHast.Utilities.Objects import result as res
 from duHast.Utilities.files_csv import write_report_data_as_csv
+import docFile as df
+
+# import from library
+from duHast.Utilities.files_csv import read_csv_file
 
 # --------------- write file -------------------
 
@@ -64,6 +68,7 @@ def write_new_file_data(doc_files, marker_file_data):
     for cfd in doc_files:
         match = False
         for nfd in marker_file_data:
+            print("new: {} vs old: {}".format(nfd, cfd))
             if (
                 nfd.existing_file_name == cfd.existing_file_name
                 and nfd.file_extension == cfd.file_extension
@@ -116,3 +121,24 @@ def convert_class_to_string(doc_files):
     for doc_file in doc_files:
         data.append(doc_file.get_data())
     return data
+
+
+def read_current_file(revision_data_path):
+    """
+    Read the current revision data file list located in script location.
+
+    :param revision_data_path: fully qualified file path to revision data file
+    :type revision_data_path: str
+    :return: a list containing current file data
+    :rtype: [docFile]
+    """
+
+    reference_list = []
+    try:
+        rows = read_csv_file(revision_data_path)
+        for row in rows:
+            reference_list.append(df.docFile(row))
+    except Exception as e:
+        print(str(e))
+        reference_list = []
+    return reference_list

@@ -101,7 +101,10 @@ def optimize_ifc_files(export_status, ifc_file_directory):
     return return_value
 
 
-def check_view_name(view, view_filter_list=[settings.EXPORT_NWC_VIEW_PREFIX, settings.EXPORT_IFC_VIEW_PREFIX]):
+def check_view_name(
+    view,
+    view_filter_list=[settings.EXPORT_NWC_VIEW_PREFIX, settings.EXPORT_IFC_VIEW_PREFIX],
+):
     """
     Checks whether view name starts with a value provided in view filter list.
 

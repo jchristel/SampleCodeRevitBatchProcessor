@@ -50,7 +50,7 @@ from duHast.Utilities.date_stamps import get_date_stamp
 from duHast.Utilities.files_csv import write_report_data_as_csv
 
 
-def meta_data(meta_data_header, doc_files, root_path):
+def write_meta_data(meta_data_header, doc_files, root_path):
     """
     Function building meta data of files exported and writing data to file.
 
@@ -86,11 +86,22 @@ def meta_data(meta_data_header, doc_files, root_path):
     if result_meta_data_build.status:
         # attempt to write data to file
         try:
-            meta_data_file_path = os.path.join(root_path,settings.ACONEX_METADATA_FILE_NAME)
-            write_report_data_as_csv(meta_data_file_path, [], result_meta_data_build.result[0])
-            return_value.append_message("Successfully wrote meta data file to: {}".format(meta_data_file_path))
+            meta_data_file_path = os.path.join(
+                root_path, settings.ACONEX_METADATA_FILE_NAME
+            )
+            write_report_data_as_csv(
+                meta_data_file_path, [], result_meta_data_build.result[0]
+            )
+            return_value.append_message(
+                "Successfully wrote meta data file to: {}".format(meta_data_file_path)
+            )
         except Exception as e:
-            return_value.update_sep(False, 'Failed to write data file: {} with exception: {}'.format(meta_data_file_path, e))
+            return_value.update_sep(
+                False,
+                "Failed to write data file: {} with exception: {}".format(
+                    meta_data_file_path, e
+                ),
+            )
     else:
         # no action
         pass

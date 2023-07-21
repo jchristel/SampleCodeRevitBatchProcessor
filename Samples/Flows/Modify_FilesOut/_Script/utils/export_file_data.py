@@ -107,7 +107,7 @@ def write_out_export_file_data(
                     )
                     try:
                         write_report_data_as_csv(
-                            file_name=file_name, header=[], data=data
+                            file_name=file_name, header=[], data=[data]
                         )
                         return_value.append_message(
                             "Successfully wrote export file data to: {}".format(
@@ -188,6 +188,6 @@ def get_file_data_by_file_extension_and_file_name(
             if export_file_name.startswith(fdf.aconex_doc_number):
                 # update revision to match revit file revision before writing out marker file
                 fdf.revision = current_file_revision
-                return_value = fdf.getData()
+                return_value = fdf.get_data()
                 break
     return return_value

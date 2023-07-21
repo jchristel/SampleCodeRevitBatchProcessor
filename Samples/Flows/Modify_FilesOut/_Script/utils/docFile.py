@@ -28,13 +28,19 @@ Class used to store file meta data.
 #
 #
 
+# import settings
+import settings as settings  # sets up all commonly used variables and path locations!
+from duHast.Utilities.Objects import base as base
 
-class docFile:
+
+class docFile(base.Base):
     """
     a class used to store file date for renaming
     """
 
     def __init__(self, data):
+        super(docFile, self).__init__()
+
         try:
             self.existing_file_name = data[0]
             self.file_extension = data[4]

@@ -183,7 +183,9 @@ output("Modifying Revit File.... start", revit_script_util.Output)
 
 # array to contain file information read from text file
 # read default file list info
-file_data_ = read_current_file(settings.REVISION_DATA_FILEPATH,)
+file_data_ = read_current_file(
+    settings.REVISION_DATA_FILEPATH,
+)
 
 # set path to models will be saved to
 models_out_path_ = os.path.join(models_out_path_, settings.MODEL_OUT_FOLDER_NAME)

@@ -118,6 +118,9 @@ revit_file_name_ = get_file_name_without_ext(REVIT_FILE_PATH)
 # model out location including dated folder stamp
 root_path_ = os.path.join(root_path_, settings.MODEL_OUT_FOLDER_NAME)
 
+def out(message):
+    output(message, revit_script_util.Output)
+
 output("Modifying Revit File.... start", revit_script_util.Output)
 
 # flag indicating whether the file can be saved
@@ -126,20 +129,19 @@ save_file, default_file_names_, marker_file_data_ = build_default_file_list(
     revision_data_file_path=settings.REVISION_DATA_FILEPATH,
     revit_file_name=revit_file_name_,
     splash_screen_name=settings.SPLASH_SCREEN_SHEET_NAME,
-    revit_file_extension=settings.RVT_FILE_EXTENSION,
+    revit_file_extension=settings.RVT_FILE_EXTENSION
 )
 
 if save_file.status:
     # store retrieved marker file data
     file_data_ = marker_file_data_
-
     # write out marker file
     flag_status = write_rev_marker_file(
         file_data=file_data_,
         root_path=root_path_,
         revit_file_name=revit_file_name_,
         revit_file_extension=settings.RVT_FILE_EXTENSION,
-        marker_file_extension=settings.MARKER_FILE_EXTENSION,
+        marker_file_extension=settings.MARKER_FILE_EXTENSION
     )
     output(flag_status.message, revit_script_util.Output)
 

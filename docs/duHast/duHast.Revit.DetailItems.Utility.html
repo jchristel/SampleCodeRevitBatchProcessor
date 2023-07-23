@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.DetailItems.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,16 +98,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_detail_type_ids_dictionary">
-<span class="sig-name descname"><span class="pre">build_detail_type_ids_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_detail_type_ids_dictionary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.Utility.detail_items_type_sorting.</span></span><span class="sig-name descname"><span class="pre">build_detail_type_ids_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_detail_type_ids_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the dictionary keys is autodesk.revit.db element type as string and values are available type ids.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing detail component types.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary where key is the element type as string and value is a list of all type ids belonging to the element type.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dic{str:list[Autodesk.Revit.DB.ElementId]}</p>
 </dd>
 </dl>
@@ -118,19 +115,19 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_dependent_elements_dictionary">
-<span class="sig-name descname"><span class="pre">build_dependent_elements_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_dependent_elements_dictionary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.DetailItems.Utility.detail_items_type_sorting.</span></span><span class="sig-name descname"><span class="pre">build_dependent_elements_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.DetailItems.Utility.detail_items_type_sorting.build_dependent_elements_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the dictionary keys is autodesk.revit.db element type as string and values are elements of that type.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing elements.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary where key is the element type as string and value is a list of all elements belonging to the element type.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dic{str:list[Autodesk.Revit.DB.Element]}</p>
 </dd>
 </dl>
@@ -149,7 +146,7 @@
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

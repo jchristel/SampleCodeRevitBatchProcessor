@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Railings package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -150,7 +147,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_balusters_used_in_pattern">
-<span class="sig-name descname"><span class="pre">get_balusters_used_in_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_balusters_used_in_pattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_balusters_used_in_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_balusters_used_in_pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of unique baluster family ids used in a pattern only.
 :param b_pattern: A revit baluster pattern.
 :type b_pattern: Autodesk.Revit.DB.Architecture.BalusterPattern
@@ -160,7 +157,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_used_baluster_post_ids">
-<span class="sig-name descname"><span class="pre">get_used_baluster_post_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_post_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_post_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_post_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_post_pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_post_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of unique baluster posts ids only.
 Includes:
 - CornerPost
@@ -174,7 +171,7 @@ Includes:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_used_baluster_per_tread">
-<span class="sig-name descname"><span class="pre">get_used_baluster_per_tread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_placement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_per_tread" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_per_tread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b_placement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_used_baluster_per_tread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the id of the baluster per stair tread.
 :param b_placement: A baluster placement element.
 :type b_placement: Autodesk.Revit.DB.Architecture.BalusterPlacement
@@ -184,7 +181,7 @@ Includes:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_all_baluster_symbols">
-<span class="sig-name descname"><span class="pre">get_all_baluster_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_all_baluster_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all baluster symbols (fam types) in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -194,7 +191,7 @@ Includes:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_all_baluster_symbols_ids">
-<span class="sig-name descname"><span class="pre">get_all_baluster_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_all_baluster_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_all_baluster_symbols_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all baluster symbol (fam type) ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -204,7 +201,7 @@ Includes:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.balusters.get_baluster_types_from_railings">
-<span class="sig-name descname"><span class="pre">get_baluster_types_from_railings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_baluster_types_from_railings" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.balusters.</span></span><span class="sig-name descname"><span class="pre">get_baluster_types_from_railings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.balusters.get_baluster_types_from_railings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of unique baluster symbol (fam type) ids used in railing types in the model.
 Incl:
 - baluster patterns
@@ -225,7 +222,7 @@ There can be additional baluster symbols in the model. Those belong to loaded fa
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_railing_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_railing_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used Railing element types available in model excluding in place types.
 Used: at least one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -236,7 +233,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.family_no_types_in_use">
-<span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of element ids and returns False if any element id in first list is not in the second list.
 Returns False if any symbols (types) of a family (first list) are in use in a model (second list).
 TODO: repetitive code…Consider generic function!
@@ -250,7 +247,7 @@ TODO: repetitive code…Consider generic function!
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_non_in_place_railing_type_ids_to_purge">
-<span class="sig-name descname"><span class="pre">get_unused_non_in_place_railing_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_non_in_place_railing_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_in_place_railing_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_non_in_place_railing_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused Railing type ids for:
 - Top Rail
 - Rail support
@@ -269,7 +266,7 @@ In the case that no railing instance using any of the types is placed, this will
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_in_place_railing_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used in place railing type ids.
 Used: at least one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -280,7 +277,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_type_ids">
-<span class="sig-name descname"><span class="pre">get_unused_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_railing_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused in place railing type ids.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -290,7 +287,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_ids_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_in_place_railing_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_railing_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_in_place_railing_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use) of in place Railing families which can be purged.
 This method can be used to safely delete unused in place railing types and families.
 :param doc: Current Revit model document.
@@ -301,7 +298,7 @@ This method can be used to safely delete unused in place railing types and famil
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_baluster_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_used_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_used_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used baluster type ids in the model.
 Used: at least one instance of this family symbol (type) is placed in the model.
 :param doc: Current Revit model document.
@@ -312,7 +309,7 @@ Used: at least one instance of this family symbol (type) is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids">
-<span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused baluster type ids in the model.
 Unused: Not one instance of this family symbol (type) is placed in the model.
 :param doc: Current Revit model document.
@@ -323,7 +320,7 @@ Unused: Not one instance of this family symbol (type) is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.purge_unused_railing_and_baluster_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_baluster_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.purge_unused_railing_and_baluster_types.get_unused_baluster_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused baluster type ids in the model.
 Unused: at least one instance of this family symbol (type) is placed in the model.
 This method can be used to safely delete unused baluster families and symbols.
@@ -341,7 +338,7 @@ This method can be used to safely delete unused baluster families and symbols.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_types_by_category">
-<span class="sig-name descname"><span class="pre">get_all_railing_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all Railing types in the model.</p>
 <p>Collector will include types of:
 - Top Rail
@@ -351,13 +348,13 @@ This method can be used to safely delete unused baluster families and symbols.
 - Railing Systems
 - In place families or loaded families</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of railing related types</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -365,7 +362,7 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_types_by_category_excl_in_place">
-<span class="sig-name descname"><span class="pre">get_all_railing_types_by_category_excl_in_place</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category_excl_in_place" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_types_by_category_excl_in_place</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_types_by_category_excl_in_place" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all Railing types in the model.</p>
 <p>Collector will include types of:
 - Top Rail
@@ -376,13 +373,13 @@ This method can be used to safely delete unused baluster families and symbols.
 - loaded families</p>
 <p>Will exclude any inplace families.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list railing related types</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of types</p>
 </dd>
 </dl>
@@ -390,19 +387,19 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_railing_types_by_class">
-<span class="sig-name descname"><span class="pre">get_railing_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_railing_types_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_railing_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_railing_types_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all Railing types in the model:</p>
 <p>Collector will include types of:
 - Railing</p>
 <p>It will therefore not return any top rail or hand rail or in place family types.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of railing types</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -410,16 +407,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_instances_by_category">
-<span class="sig-name descname"><span class="pre">get_all_railing_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Railing elements placed in model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of railing instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -427,16 +424,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_instances_by_class">
-<span class="sig-name descname"><span class="pre">get_all_railing_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_instances_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Railing elements placed in model. Ignores any in place families.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of railing instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -444,16 +441,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_category">
-<span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all railing element type ids available in model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of railing types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -461,16 +458,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class">
-<span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all railing element type ids available in model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of railing types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -478,16 +475,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class_and_category">
-<span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class_and_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class_and_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_all_railing_type_ids_by_class_and_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_all_railing_type_ids_by_class_and_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Railing element types available in model excluding in place types.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of railing types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -495,16 +492,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_in_place_railing_family_instances">
-<span class="sig-name descname"><span class="pre">get_in_place_railing_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_family_instances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_in_place_railing_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_family_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all instances of in place families of category Railing in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of railing instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -512,16 +509,16 @@ This method can be used to safely delete unused baluster families and symbols.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Railings.railings.get_in_place_railing_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_in_place_railing_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Railings.railings.</span></span><span class="sig-name descname"><span class="pre">get_in_place_railing_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Railings.railings.get_in_place_railing_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets type ids off all available in place families of category Railing.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of in place railing types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -540,7 +537,7 @@ This method can be used to safely delete unused baluster families and symbols.
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Links.Reporting package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,7 +98,7 @@
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.cad_links_report_header.REPORT_CAD_LINKS_HEADER">
-<span class="sig-name descname"><span class="pre">REPORT_CAD_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISVIEWSPECIFIC',</span> <span class="pre">'VIEWID',</span> <span class="pre">'WORKSET',</span> <span class="pre">'DESIGNOPTION',</span> <span class="pre">'ISPINNED',</span> <span class="pre">'DRAWLAYER',</span> <span class="pre">'FILEPATH']</span></em><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_header.REPORT_CAD_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.cad_links_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_CAD_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISVIEWSPECIFIC',</span> <span class="pre">'VIEWID',</span> <span class="pre">'WORKSET',</span> <span class="pre">'DESIGNOPTION',</span> <span class="pre">'ISPINNED',</span> <span class="pre">'DRAWLAYER',</span> <span class="pre">'FILEPATH']</span></em><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_header.REPORT_CAD_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>CAD links header used in reports</p>
 </dd></dl>
 
@@ -113,7 +110,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_link_type_data_by_name">
-<span class="sig-name descname"><span class="pre">get_cad_link_type_data_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cad_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_link_type_data_by_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.cad_links_report_utils.</span></span><span class="sig-name descname"><span class="pre">get_cad_link_type_data_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cad_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_link_type_data_by_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the file path from CAD link type.
 :param cad_link_name: The cad link name
 :type cad_link_name: str
@@ -127,7 +124,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_report_data">
-<span class="sig-name descname"><span class="pre">get_cad_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_report_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.cad_links_report_utils.</span></span><span class="sig-name descname"><span class="pre">get_cad_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.cad_links_report_utils.get_cad_report_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets CAD link data to be written to report file.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -145,7 +142,7 @@
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.links_report_header.REPORT_REVIT_LINKS_HEADER">
-<span class="sig-name descname"><span class="pre">REPORT_REVIT_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISLOADED',</span> <span class="pre">'TYPEWORKSET',</span> <span class="pre">'ISFROMLOCALPATH',</span> <span class="pre">'PATHTYPE',</span> <span class="pre">'FILEPATH',</span> <span class="pre">'SHAREDSITE',</span> <span class="pre">'SHAREDSITENAME',</span> <span class="pre">'INSTANCEWORKSET',</span> <span class="pre">'DESIGNOPTION']</span></em><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_header.REPORT_REVIT_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.links_report_header.</span></span><span class="sig-name descname"><span class="pre">REPORT_REVIT_LINKS_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['HOSTFILE',</span> <span class="pre">'ID',</span> <span class="pre">'LINKNAME',</span> <span class="pre">'ISLOADED',</span> <span class="pre">'TYPEWORKSET',</span> <span class="pre">'ISFROMLOCALPATH',</span> <span class="pre">'PATHTYPE',</span> <span class="pre">'FILEPATH',</span> <span class="pre">'SHAREDSITE',</span> <span class="pre">'SHAREDSITENAME',</span> <span class="pre">'INSTANCEWORKSET',</span> <span class="pre">'DESIGNOPTION']</span></em><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_header.REPORT_REVIT_LINKS_HEADER" title="Permalink to this definition">¶</a></dt>
 <dd><p>revit links header used in reports</p>
 </dd></dl>
 
@@ -157,7 +154,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_type_data">
-<span class="sig-name descname"><span class="pre">get_revit_link_type_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_link_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_type_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.links_report_utils.</span></span><span class="sig-name descname"><span class="pre">get_revit_link_type_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_link_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_type_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets Revit Link Type data for reporting.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -169,7 +166,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_report_data">
-<span class="sig-name descname"><span class="pre">get_revit_link_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_report_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.Reporting.links_report_utils.</span></span><span class="sig-name descname"><span class="pre">get_revit_link_report_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revit_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.Reporting.links_report_utils.get_revit_link_report_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets link data ready for being printed to file.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -192,7 +189,7 @@
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Levels package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -123,16 +120,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_levels_in_model">
-<span class="sig-name descname"><span class="pre">get_levels_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_levels_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_levels_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_levels_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all levels in model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector with all levels in model.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -140,17 +137,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_levels_list_ascending">
-<span class="sig-name descname"><span class="pre">get_levels_list_ascending</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_levels_list_ascending" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_levels_list_ascending</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_levels_list_ascending" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all levels in the model ascending by project elevation.</p>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of levels</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -158,17 +155,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_all_level_heads_by_category">
-<span class="sig-name descname"><span class="pre">get_all_level_heads_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_heads_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_all_level_heads_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_heads_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all level head types in the model.</p>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of level heads</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -176,17 +173,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_all_level_types_by_category">
-<span class="sig-name descname"><span class="pre">get_all_level_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_types_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_all_level_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all level types in the model.</p>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of level types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -194,16 +191,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_all_level_type_ids_by_category">
-<span class="sig-name descname"><span class="pre">get_all_level_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_all_level_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of all level type ids in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of all level type ids.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -211,16 +208,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels.get_all_level_head_family_type_ids">
-<span class="sig-name descname"><span class="pre">get_all_level_head_family_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_head_family_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels.</span></span><span class="sig-name descname"><span class="pre">get_all_level_head_family_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels.get_all_level_head_family_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets ids of all level head family symbols (types) in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of symbol ids.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -235,18 +232,18 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.change_levels_2D">
-<span class="sig-name descname"><span class="pre">change_levels_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.change_levels_2D" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">change_levels_2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.change_levels_2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Changes all levels in view to 2D</p>
 <p>Note: Any level past in, which is not visible in the view, will throw an exception when attempting to set to 2D.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
 <li><p><strong>levels</strong> (<em>[</em><em>Autodesk.Revit.DB.Level</em><em>]</em>) – List of levels to be changed to 2D.</p></li>
 <li><p><strong>view</strong> (<em>Autodesk.Revit.DB.View</em>) – The view in which to change the levels</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
 - result.status. True if all levels where set to 2D, otherwise False.
 - result.message will contain the name(s) of the level(s) changed to 2D
@@ -256,7 +253,7 @@ On exception:
 - result.message will contain generic exception message including the level name.
 - result.result will be empty</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -264,10 +261,10 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.show_head_end">
-<span class="sig-name descname"><span class="pre">show_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_head</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">show_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_head</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles level head visibility on specified end for given level.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – The current model document.</p></li>
 <li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – The level of which a heads visibility is to be toggled.</p></li>
@@ -276,7 +273,7 @@ On exception:
 <li><p><strong>show_head</strong> (<em>bool</em>) – True head will switched on, False it will be switched off</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
 - result.status. True if all levels head(s) visibility was set successfully, otherwise False.
 - result.message will contain the name(s) of the level(s) where a head visibility was set.
@@ -286,7 +283,7 @@ On exception:
 - result.message will contain generic exception message including the level name.
 - result.result will be empty</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -294,7 +291,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.hide_both_heads">
-<span class="sig-name descname"><span class="pre">hide_both_heads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.hide_both_heads" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">hide_both_heads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.hide_both_heads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hides both heads of levels in given view.
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -314,7 +311,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -322,7 +319,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.show_head_zero_end">
-<span class="sig-name descname"><span class="pre">show_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_zero_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">show_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_zero_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turns on level heads at zero end in specified view.
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -342,7 +339,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -350,7 +347,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.show_head_one_end">
-<span class="sig-name descname"><span class="pre">show_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_one_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">show_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.show_head_one_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turns on level heads at One end in specified view.
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -370,7 +367,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -378,7 +375,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_end">
-<span class="sig-name descname"><span class="pre">toggle_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles level head visibility on specified end for given level in given views.
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -400,7 +397,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -408,7 +405,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_one_end">
-<span class="sig-name descname"><span class="pre">toggle_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_one_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_one_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_one_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles level head visibility on one end for given levels
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -428,7 +425,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -436,7 +433,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.levels_appearance.toggle_head_zero_end">
-<span class="sig-name descname"><span class="pre">toggle_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_zero_end" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.levels_appearance.</span></span><span class="sig-name descname"><span class="pre">toggle_head_zero_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.levels_appearance.toggle_head_zero_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggles level head visibility on zero end for given levels
 :param doc: The current model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -456,7 +453,7 @@ On exception:
 - result.result will be empty</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -470,7 +467,7 @@ On exception:
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.purge_unused_level_types.get_unused_level_types_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_level_types_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_types_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.purge_unused_level_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_level_types_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_types_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all ids of unused level types in the model.
 Unused: not one instance per level type is placed in the model.
 This method can be used to safely delete unused level types from the model.
@@ -482,7 +479,7 @@ This method can be used to safely delete unused level types from the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families">
-<span class="sig-name descname"><span class="pre">get_unused_level_head_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.purge_unused_level_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_level_head_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all ids of unused family symbols (types) of level head families.
 Unused: not one instance per symbol is placed in the model.
 :param doc: Current Revit model document.
@@ -493,7 +490,7 @@ Unused: not one instance per symbol is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_level_head_families_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Levels.purge_unused_level_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_level_head_families_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Levels.purge_unused_level_types.get_unused_level_head_families_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets ids of all unused level head symbols and families.
 Unused: not one instance per level symbol is placed in the model.
 This method can be used to safely delete unused level symbols or families from the model.
@@ -516,7 +513,7 @@ This method can be used to safely delete unused level symbols or families from t
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

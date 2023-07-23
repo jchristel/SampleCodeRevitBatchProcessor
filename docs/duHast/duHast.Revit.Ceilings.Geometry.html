@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Ceilings.Geometry package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,18 +98,18 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceiling">
-<span class="sig-name descname"><span class="pre">get_2d_points_from_revit_ceiling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ceiling</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceiling" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_ceiling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ceiling</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceiling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
 List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
 Does not work with in place ceilings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ceiling</strong> (<em>Autodesk.Revit.DB.Ceiling</em>) – A revit ceiling instance.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of data geometry instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
 </dd>
 </dl>
@@ -120,18 +117,18 @@ Does not work with in place ceilings.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceilings_in_model">
-<span class="sig-name descname"><span class="pre">get_2d_points_from_revit_ceilings_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceilings_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Ceilings.Geometry.geometry.</span></span><span class="sig-name descname"><span class="pre">get_2d_points_from_revit_ceilings_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Ceilings.Geometry.geometry.get_2d_points_from_revit_ceilings_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of lists of points representing the flattened(2D geometry) of the ceiling
 List of Lists because a ceiling can be made up of multiple sketches. Each nested list represents one ceiling sketch.
 Does not work with in place ceilings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of data geometry instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code></p>
 </dd>
 </dl>
@@ -150,7 +147,7 @@ Does not work with in place ceilings.</p>
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

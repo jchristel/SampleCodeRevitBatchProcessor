@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Add Revision &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -33,7 +30,6 @@
         <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
-            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="flows.MileStone.html" title="Milestone" accesskey="N">next</a></div>
             <div class="headerButton"><a href="index.html" title="Flows" accesskey="P">previous</a></div>
         </li>
@@ -141,13 +137,57 @@ This flow adds a revision to the model and then applies that revision to a nomin
 <section id="script">
 <h4>_Script<a class="headerlink" href="#script" title="Permalink to this heading">¶</a></h4>
 <p>The python and powershell scripts of the flow.</p>
-<ul class="simple">
-<li><p>ModifyRevision.py</p></li>
-<li><p>Post_AddRevision.py</p></li>
-<li><p>Post_AddRevisionKillWSM.py</p></li>
-<li><p>Pre_AddRevision.py</p></li>
-<li><p>utilAddRev.py</p></li>
-<li><p>startAddRevision.ps1</p></li>
+<ul>
+<li><p>ModifyRevision.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the task script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_AddRevision.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post script executed by the flow after all Revit Batch Processor sessions have finished</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Post_AddRevisionKillWSM.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the post process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Pre_AddRevision.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the pre process script executed by each Revit Batch Processor session</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>settings.py</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>a module containing global variables / settings for this flow</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>startAddRevision.ps1</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>The powershell script executing:</dt><dd><ul>
+<li><p>pre Revit Batch Processor scripts</p></li>
+<li><p>concurrent Revit Batch Processor sessions</p></li>
+<li><p>post Revit Batch Processor scripts</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </section>
 <section id="script-logs">
@@ -179,7 +219,7 @@ This flow adds a revision to the model and then applies that revision to a nomin
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Links package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -144,7 +141,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_types">
-<span class="sig-name descname"><span class="pre">get_all_cad_link_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">get_all_cad_link_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all CAD link types in a model.
 Filters by class.
 :param doc: Current Revit model document.
@@ -155,7 +152,7 @@ Filters by class.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_instances">
-<span class="sig-name descname"><span class="pre">get_all_cad_link_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_instances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">get_all_cad_link_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all CAD link instances in a model.
 Filters by class.
 :param doc: Current Revit model document.
@@ -166,7 +163,7 @@ Filters by class.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_cad_type_imports_only">
-<span class="sig-name descname"><span class="pre">get_cad_type_imports_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_cad_type_imports_only" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">get_cad_type_imports_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_cad_type_imports_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all CAD imports in a model.
 Filters by class and check whether the element is an external file reference (True its a link, False it is an import)
 :param doc: Current Revit model document.
@@ -177,7 +174,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.sort_cad_link_types_by_model_or_view_specific">
-<span class="sig-name descname"><span class="pre">sort_cad_link_types_by_model_or_view_specific</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.sort_cad_link_types_by_model_or_view_specific" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">sort_cad_link_types_by_model_or_view_specific</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.sort_cad_link_types_by_model_or_view_specific" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns two lists: First one: cad links types linked by view (2D) , second one cad link types linked into model (3D).
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -187,7 +184,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_type_by_view_only">
-<span class="sig-name descname"><span class="pre">get_all_cad_link_type_by_view_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_by_view_only" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">get_all_cad_link_type_by_view_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_by_view_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all CAD links by view in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -197,7 +194,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.get_all_cad_link_type_in_model_only">
-<span class="sig-name descname"><span class="pre">get_all_cad_link_type_in_model_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_in_model_only" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">get_all_cad_link_type_in_model_only</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.get_all_cad_link_type_in_model_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all CAD links by model in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -207,7 +204,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.delete_cad_links">
-<span class="sig-name descname"><span class="pre">delete_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.delete_cad_links" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">delete_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.delete_cad_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all CAD links in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -218,7 +215,7 @@ Filters by class and check whether the element is an external file reference (Tr
 - .message will contain status of deletion.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -226,7 +223,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links.reload_cad_links">
-<span class="sig-name descname"><span class="pre">reload_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.reload_cad_links" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links.</span></span><span class="sig-name descname"><span class="pre">reload_cad_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links.reload_cad_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads CAD links from a given file location based on the original link type name (starts with comparison)
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -243,7 +240,7 @@ Filters by class and check whether the element is an external file reference (Tr
 - .message will contain status of reload and fully qualified file name. On exception it will also include the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -257,7 +254,7 @@ Filters by class and check whether the element is an external file reference (Tr
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links_geometry.get_cad_import_instance_geometry">
-<span class="sig-name descname"><span class="pre">get_cad_import_instance_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">import_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links_geometry.get_cad_import_instance_geometry" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links_geometry.</span></span><span class="sig-name descname"><span class="pre">get_cad_import_instance_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">import_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links_geometry.get_cad_import_instance_geometry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of geometry elements from an import instance
 :param import_instance: A import instance
 :type import_instance: AutoDesk.Revit.DB.ImportInstance
@@ -267,7 +264,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.cad_links_geometry.get_all_cad_import_instances_geometry">
-<span class="sig-name descname"><span class="pre">get_all_cad_import_instances_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links_geometry.get_all_cad_import_instances_geometry" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.cad_links_geometry.</span></span><span class="sig-name descname"><span class="pre">get_all_cad_import_instances_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.cad_links_geometry.get_all_cad_import_instances_geometry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of geometry elements from all import instances in the document.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -283,7 +280,7 @@ Filters by class and check whether the element is an external file reference (Tr
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_images_types_in_model">
-<span class="sig-name descname"><span class="pre">get_images_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_images_types_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_images_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_images_types_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image link types and image link instances in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -293,7 +290,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_images_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_images_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_images_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_images_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_images_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image link type Ids and image link instance ids in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -303,7 +300,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.sort_image_link_types_by_import_or_linked">
-<span class="sig-name descname"><span class="pre">sort_image_link_types_by_import_or_linked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.sort_image_link_types_by_import_or_linked" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">sort_image_link_types_by_import_or_linked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.sort_image_link_types_by_import_or_linked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns two lists: First one: images linked into model, second one images saved into model from model itself (no external file reference)
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -313,7 +310,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_all_image_link_type_linked_in_model">
-<span class="sig-name descname"><span class="pre">get_all_image_link_type_linked_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_all_image_link_type_linked_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_all_image_link_type_linked_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_all_image_link_type_linked_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image link types which are links (external referenced) in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -323,7 +320,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_all_image_link_type_imported_in_model">
-<span class="sig-name descname"><span class="pre">get_all_image_link_type_imported_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_all_image_link_type_imported_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_all_image_link_type_imported_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_all_image_link_type_imported_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image link types which are imported (not an external reference) in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -333,7 +330,7 @@ Filters by class and check whether the element is an external file reference (Tr
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_image_types_in_model">
-<span class="sig-name descname"><span class="pre">get_image_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_image_types_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_image_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_image_types_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image types in a model.
 Filters by category.
 :param doc: Current Revit model document.
@@ -344,7 +341,7 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.image_links.get_image_instances_in_model">
-<span class="sig-name descname"><span class="pre">get_image_instances_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_image_instances_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.image_links.</span></span><span class="sig-name descname"><span class="pre">get_image_instances_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.image_links.get_image_instances_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image instances placed in a model.
 Filters by category.
 :param doc: Current Revit model document.
@@ -361,17 +358,17 @@ Filters by category.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.get_all_revit_link_instances">
-<span class="sig-name descname"><span class="pre">get_all_revit_link_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_all_revit_link_instances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">get_all_revit_link_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_all_revit_link_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Revit link instances in a model.</p>
 <p>Filters by class.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of revit link instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -379,16 +376,16 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.get_all_revit_link_types">
-<span class="sig-name descname"><span class="pre">get_all_revit_link_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_all_revit_link_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">get_all_revit_link_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_all_revit_link_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Revit link types in a model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of revit link types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -396,19 +393,19 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.get_revit_link_type_from_instance">
-<span class="sig-name descname"><span class="pre">get_revit_link_type_from_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_revit_link_type_from_instance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">get_revit_link_type_from_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.get_revit_link_type_from_instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the Revit link type from a given revit link instance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>link_instance</strong> (<em>Autodesk.Revit.DB.RevitLinkInstance</em>) – The link instance the type of is to be returned</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The matching revit link type.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.RevitLinkType</p>
 </dd>
 </dl>
@@ -416,13 +413,13 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.delete_revit_links">
-<span class="sig-name descname"><span class="pre">delete_revit_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.delete_revit_links" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">delete_revit_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.delete_revit_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all revit links in a file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if all revit links got deleted successfully. Otherwise False.</p></li>
@@ -430,7 +427,7 @@ Filters by category.
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -438,10 +435,10 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.reload_revit_links">
-<span class="sig-name descname"><span class="pre">reload_revit_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.reload_revit_links" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">reload_revit_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.reload_revit_links" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads Revit links from a given file location based on the original link type name (starts with comparison)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>link_locations</strong> (<em>list str</em>) – A list of directories where CAD files can be located.</p></li>
@@ -450,7 +447,7 @@ Filters by category.
 <li><p><strong>workset_config</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously applied workset config use None, otherwise provide custom config.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if all revit links got reloaded successfully. Otherwise False.</p></li>
@@ -458,7 +455,7 @@ Filters by category.
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -466,10 +463,10 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.reload_revit_links_from_list">
-<span class="sig-name descname"><span class="pre">reload_revit_links_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_types_tob_reloaded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.reload_revit_links_from_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">reload_revit_links_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_types_tob_reloaded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_locations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host_name_formatted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_link_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workset_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.reload_revit_links_from_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads Revit links from a given file location based on the original link type name (starts with comparison)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>link_types_tob_reloaded</strong> (<em>list Autodesk.Revit.DB.RevitLinkType</em>) – List of link type elements to be reloaded.</p></li>
@@ -479,7 +476,7 @@ Filters by category.
 <li><p><strong>workset_config</strong> (<em>Autodesk.Revit.DB.WorksetConfiguration</em>) – To use the previously applied workset config use None, otherwise provide custom config.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if all revit links got reloaded successfully. Otherwise False.</p></li>
@@ -487,7 +484,7 @@ Filters by category.
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -495,17 +492,17 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.default_link_name">
-<span class="sig-name descname"><span class="pre">default_link_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.default_link_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">default_link_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.default_link_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default ‘do something with link name’ method. Returns the link name unchanged.</p>
 <p>Could be replaced with something which i.e. truncates the revision…</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The link name.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the link name unchanged.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -513,13 +510,13 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.links.default_workset_config_for_reload">
-<span class="sig-name descname"><span class="pre">default_workset_config_for_reload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.default_workset_config_for_reload" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.links.</span></span><span class="sig-name descname"><span class="pre">default_workset_config_for_reload</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.links.default_workset_config_for_reload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default method returning an ‘open previous worksets’ configuration. (None)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None: which is use the previous workset configuration.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -533,7 +530,7 @@ Filters by category.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_unused_image_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.purge_unused_image_link_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_image_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image types with no instances placed in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -543,7 +540,7 @@ Filters by category.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model_with_group_check">
-<span class="sig-name descname"><span class="pre">get_all_unused_image_type_ids_in_model_with_group_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model_with_group_check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Links.purge_unused_image_link_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_image_type_ids_in_model_with_group_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Links.purge_unused_image_link_types.get_all_unused_image_type_ids_in_model_with_group_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all image types with no instance placed in a model but includes group definition check.
 This only returns valid data if at least one instance of the group is placed in the model!!
 Otherwise images in groups which are not placed will not be flagged by this filter!
@@ -566,7 +563,7 @@ Otherwise images in groups which are not placed will not be flagged by this filt
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

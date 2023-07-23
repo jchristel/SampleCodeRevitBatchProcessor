@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Exports package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -175,20 +172,20 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export.build_export_file_name_from_view">
-<span class="sig-name descname"><span class="pre">build_export_file_name_from_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter_rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export.build_export_file_name_from_view" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export.</span></span><span class="sig-name descname"><span class="pre">build_export_file_name_from_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter_rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export.build_export_file_name_from_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function modifying the past in view name and returns a file name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>view_name</strong> (<em>str</em>) – The view name to be used as file name.</p></li>
 <li><p><strong>view_filter_rule</strong> (<em>str</em>) – A prefix which will be removed from the view name.</p></li>
 <li><p><strong>file_extension</strong> (<em>str</em>) – The file extension to be used. Format is ‘.something’</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A file name.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -202,7 +199,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.ifc_get_export_config_by_view">
-<span class="sig-name descname"><span class="pre">ifc_get_export_config_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_space_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_export_config_by_view" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">ifc_get_export_config_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_space_bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_export_config_by_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an IFC export configuration for the built in IFC exporter.
 :param ifc_version: The ifc version used for the export.
 :type ifc_version: Autodesk.Revit.DB.IFCVersion
@@ -214,11 +211,11 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_to_ifc">
-<span class="sig-name descname"><span class="pre">export_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_to_ifc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_to_ifc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports to IFC either the entire model or a view only using 3rd party exporter.
 What gets exported is defined in the ifc_export_option.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>ifc_export_option</strong> (<em>Autodesk.Revit.DB IFCExportOptions</em>) – The settings for the IFC export.</p></li>
@@ -226,7 +223,7 @@ What gets exported is defined in the ifc_export_option.</p>
 <li><p><strong>file_name</strong> (<em>str</em>) – The file name under which the export is being saved.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
 - Export status returned in result.status. False if an exception occurred, otherwise True.
 - result.message will contain the fully qualified file path of the exported file.
@@ -234,7 +231,7 @@ On exception:
 - result.status (bool) will be False.
 - result.message will contain the exception message.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -242,7 +239,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc_default">
-<span class="sig-name descname"><span class="pre">export_3d_views_to_ifc_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc_default" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_ifc_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc_default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Exports 3D views matching a filter (view starts with) to IFC using the default built in exporter.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -262,7 +259,7 @@ On exception:
 - result.message will contain the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -270,7 +267,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.setup_ifc_export_option">
-<span class="sig-name descname"><span class="pre">setup_ifc_export_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ElementId.InvalidElementId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.setup_ifc_export_option" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">setup_ifc_export_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.ElementId.InvalidElementId</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.setup_ifc_export_option" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function assigning a view Id to export ifc config if it is exporting by view.
 By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead.
 :param export_config: The ifc export configuration used.
@@ -285,7 +282,7 @@ By model export will assign Autodesk.Revit.DB.ElementId.InvalidElementId instead
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc">
-<span class="sig-name descname"><span class="pre">export_3d_views_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_coordinates_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_coordinates_system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_3d_views_to_ifc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function exporting 3D views matching a filter (view starts with) to IFC using 3rd party exporter.
 By default the file name of the export will be same as the name of the view exported.
 :param doc: Current Revit model document.
@@ -310,7 +307,7 @@ On exception:
 - result.message will contain the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -318,10 +315,10 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.export_model_to_ifc">
-<span class="sig-name descname"><span class="pre">export_model_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_model_to_ifc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">export_model_to_ifc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_export_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord_option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.export_model_to_ifc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function exporting the entire model to IFC using 3rd party exporter.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>ifc_export_config</strong> (<em>BIM.IFC.Export.UI.IFCExportConfiguration</em>) – The IFC export configuration.</p></li>
@@ -330,7 +327,7 @@ On exception:
 <li><p><strong>coord_option</strong> (<em>SampleCodeBatchProcessor.RevitExport.IFCCoords</em><em>, </em><em>optional</em>) – Describes the coordinate options used for the export, defaults to IFCCoords.SharedCoordinates</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result class instance.
 - Export status returned in result.status. False if an exception occurred, otherwise True.
 - result.message will contain the fully qualified file path of the exported file.
@@ -338,7 +335,7 @@ On exception:
 - result.status (bool) will be False.
 - result.message will contain the exception message.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -346,7 +343,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_model">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the 3rd party ifc config for export by model depending on revit version.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -359,7 +356,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_view">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_view" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_ifc.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_ifc.ifc_get_third_party_export_config_by_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the 3rd party ifc config for export by view depending on revit version.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -378,7 +375,7 @@ On exception:
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.setup_nwc_custom_export_option">
-<span class="sig-name descname"><span class="pre">setup_nwc_custom_export_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using_shared_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_entire_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_model_by_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_as_attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_missing_materials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navis_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.NavisworksParameters.All</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_element_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_custom_export_option" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">setup_nwc_custom_export_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using_shared_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_entire_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_model_by_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_as_attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_room_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_missing_materials</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">navis_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.NavisworksParameters.All</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_element_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_custom_export_option" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an NWC Export Options object as per values past oin.
 :param using_shared_coordinates: True shared coordinates will be used, otherwise project internal
 :type using_shared_coordinates: bool
@@ -397,16 +394,16 @@ On exception:
 :param find_missing_materials: True exporter will attempt to find missing materials, otherwise not
 :type find_missing_materials: bool</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>navis_parameters</strong> (<em>Autodesk.Revit.DB.NavisworksParameters</em>) – Options which specifies the parameter conversion of Navisworks Exporter. Default value is All.</p></li>
 <li><p><strong>convert_element_properties</strong> (<em>bool</em>) – True to convert element properties, false otherwise. Default value is false.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A Navisworks .nwc export option.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.NavisworksExportOptions</p>
 </dd>
 </dl>
@@ -414,7 +411,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.setup_nwc_default_export_option_shared_by_view">
-<span class="sig-name descname"><span class="pre">setup_nwc_default_export_option_shared_by_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_default_export_option_shared_by_view" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">setup_nwc_default_export_option_shared_by_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.setup_nwc_default_export_option_shared_by_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an NWC Export Options object with shared coordinates, export by View.
 :return: A Navisworks .nwc export option.
 :rtype: Autodesk.Revit.DB.NavisworksExportOptions</p>
@@ -422,7 +419,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_to_nwc">
-<span class="sig-name descname"><span class="pre">export_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_to_nwc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_to_nwc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function exporting either entire model or view to NWC
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -442,7 +439,7 @@ On exception:
 - result.message will contain the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -450,7 +447,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_model_to_nwc">
-<span class="sig-name descname"><span class="pre">export_model_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_model_to_nwc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_model_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_model_to_nwc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function exporting the entire model to NWC.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -470,7 +467,7 @@ On exception:
 - result.message will contain the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -478,7 +475,7 @@ On exception:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.export_navis.export_3d_views_to_nwc">
-<span class="sig-name descname"><span class="pre">export_3d_views_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_3d_views_to_nwc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.export_navis.</span></span><span class="sig-name descname"><span class="pre">export_3d_views_to_nwc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">view_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwc_export_option</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_something_with_view_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.export_navis.export_3d_views_to_nwc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function exporting 3D views matching a filter (view starts with) to NWC.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -500,7 +497,7 @@ On exception:
 - result.message will contain the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -519,7 +516,7 @@ On exception:
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

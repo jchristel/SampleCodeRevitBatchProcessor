@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Rooms package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -142,7 +139,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.room_tags.move_tag_to_room">
-<span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.room_tags.</span></span><span class="sig-name descname"><span class="pre">move_tag_to_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.room_tags.move_tag_to_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves a room tag to the associated rooms location point.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -158,7 +155,7 @@ On exception (handled by optimizer itself!):
 - result.message will contain the name and number of the room and the exception message.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -172,16 +169,16 @@ On exception (handled by optimizer itself!):
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.rooms.get_all_rooms">
-<span class="sig-name descname"><span class="pre">get_all_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_all_rooms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.rooms.</span></span><span class="sig-name descname"><span class="pre">get_all_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_all_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of rooms from the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>All the rooms in the model as a list.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.Architecture.Room</p>
 </dd>
 </dl>
@@ -189,16 +186,16 @@ On exception (handled by optimizer itself!):
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.rooms.get_unplaced_rooms">
-<span class="sig-name descname"><span class="pre">get_unplaced_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_unplaced_rooms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.rooms.</span></span><span class="sig-name descname"><span class="pre">get_unplaced_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_unplaced_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of unplaced rooms from the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>All the unplaced rooms in the model as a list.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.Architecture.Room</p>
 </dd>
 </dl>
@@ -206,16 +203,16 @@ On exception (handled by optimizer itself!):
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.rooms.get_not_enclosed_rooms">
-<span class="sig-name descname"><span class="pre">get_not_enclosed_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_not_enclosed_rooms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.rooms.</span></span><span class="sig-name descname"><span class="pre">get_not_enclosed_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_not_enclosed_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of not enclosed rooms from the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>All the unenclosed rooms in the model as a list.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.Architecture.Room</p>
 </dd>
 </dl>
@@ -223,16 +220,16 @@ On exception (handled by optimizer itself!):
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Rooms.rooms.get_redundant_rooms">
-<span class="sig-name descname"><span class="pre">get_redundant_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_redundant_rooms" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Rooms.rooms.</span></span><span class="sig-name descname"><span class="pre">get_redundant_rooms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Rooms.rooms.get_redundant_rooms" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of redundant rooms from the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>All the redundant rooms in the model as a list.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.Architecture.Room</p>
 </dd>
 </dl>
@@ -251,7 +248,7 @@ On exception (handled by optimizer itself!):
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.LinePattern package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,7 +98,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.fill_patterns.get_all_fill_pattern">
-<span class="sig-name descname"><span class="pre">get_all_fill_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.fill_patterns.get_all_fill_pattern" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.fill_patterns.</span></span><span class="sig-name descname"><span class="pre">get_all_fill_pattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.fill_patterns.get_all_fill_pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all fill pattern elements in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -117,11 +114,11 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_pattern_data.LinePatternData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LinePatternData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data.LinePatternData" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_pattern_data.</span></span><span class="sig-name descname"><span class="pre">LinePatternData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data.LinePatternData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.html#duHast.Revit.Family.Data.ifamily_data.IFamilyData" title="duHast.Revit.Family.Data.ifamily_data.IFamilyData"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyData</span></code></a></p>
 <p>Class constructor</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
 <li><p><strong>dataType</strong> (<em>str</em>) – Human readable data type descriptor</p></li>
@@ -133,7 +130,7 @@
 <span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data.LinePatternData.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Collects all line pattern data from the document and stores it in the class property .data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document</p>
 </dd>
 </dl>
@@ -154,7 +151,7 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LinePatternProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_pattern_data_processor.</span></span><span class="sig-name descname"><span class="pre">LinePatternProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_actions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Revit.Family.Data.html#duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor" title="duHast.Revit.Family.Data.ifamily_processor.IFamilyProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyProcessor</span></code></a></p>
 <p>Class constructor.</p>
 <dl class="py method">
@@ -162,7 +159,7 @@
 <span class="sig-name descname"><span class="pre">process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_category_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data_processor.LinePatternProcessor.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls processor instance with the document and root path provided and adds processor instance to class property .data</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p></li>
 <li><p><strong>rootPath</strong> (<em>str</em>) – The path of the nested family in a tree: rootFamilyName::nestedFamilyNameOne::nestedFamilyTwo            This includes the actual family name as the last node.</p></li>
@@ -186,16 +183,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_pattern_data_purge_unused.purge_unused">
-<span class="sig-name descname"><span class="pre">purge_unused</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data_purge_unused.purge_unused" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_pattern_data_purge_unused.</span></span><span class="sig-name descname"><span class="pre">purge_unused</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_pattern_data_purge_unused.purge_unused" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will delete all line patterns which are not used by any element in the family or nested families.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>processor</strong> (:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>.LinePatternProcessor’) – An LinePatternProcessor object containing all line pattern information of the family document and any nested families.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>True if all unused line patterns where deleted successfully or none needed to be deleted. Otherwise False.</p></li>
@@ -208,7 +205,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -222,37 +219,37 @@
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME">
-<span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternName'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternName'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>pattern name</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME_VALUE_DEFAULT">
-<span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME_VALUE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Solid'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME_VALUE_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_NAME_VALUE_DEFAULT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Solid'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_NAME_VALUE_DEFAULT" title="Permalink to this definition">¶</a></dt>
 <dd><p>pattern name default value, hard coded solid line pattern name</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_ID">
-<span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternId'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_ID" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">PROPERTY_PATTERN_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PatternId'</span></em><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.PROPERTY_PATTERN_ID" title="Permalink to this definition">¶</a></dt>
 <dd><p>pattern id</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_category">
-<span class="sig-name descname"><span class="pre">get_line_pattern_from_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">get_line_pattern_from_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the line pattern properties as a dictionary         where keys are pattern name and pattern id.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cat</strong> (<em>Autodesk.REvit.DB.Category</em>) – A category.</p></li>
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit family document.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dictionary {str: str, str: Autodesk.Revit.DB.ElementId}</p>
 </dd>
 </dl>
@@ -260,19 +257,19 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_level_element">
-<span class="sig-name descname"><span class="pre">get_line_pattern_from_level_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_level_element" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">get_line_pattern_from_level_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_line_pattern_from_level_element" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the line pattern properties as a dictionary         where keys are pattern name and pattern id.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Current Revit family document.</em>) – Current Revit family document.</p></li>
 <li><p><strong>level</strong> (<em>Autodesk.Revit.DB.Level</em>) – a level element</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dictionary {str: str, str: Autodesk.Revit.DB.ElementId}</p>
 </dd>
 </dl>
@@ -280,16 +277,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.delete_line_patterns_contains">
-<span class="sig-name descname"><span class="pre">delete_line_patterns_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_patterns_contains" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">delete_line_patterns_contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_patterns_contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all line patterns where the names contains a provided string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs to contain this string to be deleted.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if line pattern where deleted successfully. Otherwise False.</p></li>
@@ -297,7 +294,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -305,16 +302,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.delete_line_pattern_starts_with">
-<span class="sig-name descname"><span class="pre">delete_line_pattern_starts_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starts_with</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_pattern_starts_with" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">delete_line_pattern_starts_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starts_with</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_pattern_starts_with" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all line patterns where the name starts with provided string.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>starts_with</strong> (<em>str</em>) – Filter: pattern name needs to start with this string to be deleted.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if line pattern where deleted successfully. Otherwise False.</p></li>
@@ -322,7 +319,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -330,16 +327,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.delete_line_patterns_without">
-<span class="sig-name descname"><span class="pre">delete_line_patterns_without</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_patterns_without" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">delete_line_patterns_without</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contains</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_line_patterns_without" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all line patterns where the name does not contain the provided string.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>contains</strong> (<em>str</em>) – Filter: pattern name needs not to contain this string to be deleted.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if line pattern where deleted successfully. Otherwise False.</p></li>
@@ -347,7 +344,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -355,16 +352,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.get_all_line_patterns">
-<span class="sig-name descname"><span class="pre">get_all_line_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_all_line_patterns" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">get_all_line_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.get_all_line_patterns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all line patterns in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of all line pattern elements in model.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.LinePatternElement</p>
 </dd>
 </dl>
@@ -372,16 +369,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.build_patterns_dictionary_by_name">
-<span class="sig-name descname"><span class="pre">build_patterns_dictionary_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.build_patterns_dictionary_by_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">build_patterns_dictionary_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.build_patterns_dictionary_by_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary where line pattern name is key, values are all ids of line patterns with the exact same name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary where line pattern name is key, values are all ids of line patterns with the exact same name</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dictionary(key str, value list of Autodesk.Revit.DB.ElementId)</p>
 </dd>
 </dl>
@@ -389,13 +386,13 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_patterns.delete_duplicate_line_patter_names">
-<span class="sig-name descname"><span class="pre">delete_duplicate_line_patter_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_duplicate_line_patter_names" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_patterns.</span></span><span class="sig-name descname"><span class="pre">delete_duplicate_line_patter_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_patterns.delete_duplicate_line_patter_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all but the first line pattern by Id with the exact same name.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>.result = True if all views where deleted. Otherwise False.</p></li>
@@ -403,7 +400,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -417,7 +414,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_styles.delete_line_styles_starts_with">
-<span class="sig-name descname"><span class="pre">delete_line_styles_starts_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starts_with</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_styles.delete_line_styles_starts_with" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_styles.</span></span><span class="sig-name descname"><span class="pre">delete_line_styles_starts_with</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starts_with</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_styles.delete_line_styles_starts_with" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all line styles where the name starts with provided string
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -430,7 +427,7 @@
 - .message will contain deletion status.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -438,7 +435,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.LinePattern.line_styles.get_all_line_style_ids">
-<span class="sig-name descname"><span class="pre">get_all_line_style_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_styles.get_all_line_style_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.LinePattern.line_styles.</span></span><span class="sig-name descname"><span class="pre">get_all_line_style_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.LinePattern.line_styles.get_all_line_style_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all line styles ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -459,7 +456,7 @@
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

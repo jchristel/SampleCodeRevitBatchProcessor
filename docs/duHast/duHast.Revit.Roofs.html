@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Roofs package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -140,7 +137,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.get_used_roof_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_used_roof_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">get_used_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_used_roof_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used in Roof type ids in the model.
 Used: at least one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -151,7 +148,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.family_no_types_in_use">
-<span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">famTypeIds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unUsedTypeIds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of element ids and returns False if any element id in first list is not in the second list.
 Returns False if any symbols (types) of a family (first lists) are in use in a model (second list).
 TODO: repetitive code…Consider generic function!
@@ -165,7 +162,7 @@ TODO: repetitive code…Consider generic function!
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.get_unused_non_in_place_roof_type_ids_to_purge">
-<span class="sig-name descname"><span class="pre">get_unused_non_in_place_roof_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_non_in_place_roof_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_in_place_roof_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_non_in_place_roof_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused Roof type ids in the model.
 This method can be used to safely delete unused roof types. In the case that no roof        instance using any of the types is placed, this will return all but one type id since        Revit requires at least one roof type definition to be in the model.
 Unused: Not one instance of this type is placed in the model.
@@ -181,7 +178,7 @@ It will therefore not return any in place family types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.get_used_in_place_roof_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_used_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">get_used_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_used_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used in place roof type ids in the model.
 Used: at least one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -192,7 +189,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids">
-<span class="sig-name descname"><span class="pre">get_unused_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused in place roof type ids in the model.
 Unused: Not one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -203,7 +200,7 @@ Unused: Not one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_in_place_roof_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.purge_unused_roof_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_roof_type_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.purge_unused_roof_types.get_unused_in_place_roof_type_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets symbol(type) ids and family ids (when no type is in use of a family) of in place Roof families which can be purged.
 This method can be used to safely delete unused in place roof types.
 :param doc: Current Revit model document.
@@ -220,7 +217,7 @@ This method can be used to safely delete unused in place roof types.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_types_by_category">
-<span class="sig-name descname"><span class="pre">get_all_roof_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_types_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all roof types in the model.</p>
 <ul class="simple">
 <li><p>Basic Roof</p></li>
@@ -228,13 +225,13 @@ This method can be used to safely delete unused in place roof types.
 <li><p>sloped glazing</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing roof types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -242,7 +239,7 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_types_by_class">
-<span class="sig-name descname"><span class="pre">get_all_roof_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_types_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_types_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all Roof types in the model:</p>
 <ul class="simple">
 <li><p>Basic Roof</p></li>
@@ -250,13 +247,13 @@ This method can be used to safely delete unused in place roof types.
 </ul>
 <p>Since this is based of class roof it will therefore not return any in place family types!</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing roof types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -264,16 +261,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_instances_by_category">
-<span class="sig-name descname"><span class="pre">get_all_roof_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_instances_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_instances_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_instances_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Roof elements placed in model…ignores in place families (to be confirmed!)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing roof instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -281,16 +278,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_instances_by_class">
-<span class="sig-name descname"><span class="pre">get_all_roof_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_instances_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_instances_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_instances_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Roof elements placed in model…ignores roof soffits(???)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing roof instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -298,16 +295,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_category">
-<span class="sig-name descname"><span class="pre">get_all_roof_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Roof element type ids available in model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of roof types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -315,16 +312,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_class">
-<span class="sig-name descname"><span class="pre">get_all_roof_type_ids_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_roof_type_ids_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_roof_type_ids_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all Roof element type ids available in model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>_type_</em>) – _description_</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of roof types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -332,16 +329,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_in_place_roof_family_instances">
-<span class="sig-name descname"><span class="pre">get_in_place_roof_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_in_place_roof_family_instances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_in_place_roof_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_in_place_roof_family_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all instances of in place families of category roof in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing roof family instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -349,16 +346,16 @@ This method can be used to safely delete unused in place roof types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Roofs.roofs.get_all_in_place_roof_type_ids">
-<span class="sig-name descname"><span class="pre">get_all_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Roofs.roofs.</span></span><span class="sig-name descname"><span class="pre">get_all_in_place_roof_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Roofs.roofs.get_all_in_place_roof_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets type ids off all available in place families of category roof in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids of in place roof types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -377,7 +374,7 @@ This method can be used to safely delete unused in place roof types.
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.BuildingPads package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -133,20 +130,20 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_all_building_pad_types_by_category">
-<span class="sig-name descname"><span class="pre">get_all_building_pad_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_types_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_all_building_pad_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all BuildingPad types in the model.</p>
 <ul class="simple">
 <li><p>Basic BuildingPad</p></li>
 </ul>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing building pad types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -154,7 +151,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_building_pad_types_by_class">
-<span class="sig-name descname"><span class="pre">get_building_pad_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_building_pad_types_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_building_pad_types_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_building_pad_types_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a filtered element collector of all building pad types in the model:</p>
 <ul class="simple">
 <li><p>Basic BuildingPad</p></li>
@@ -162,13 +159,13 @@
 <p>Filters by class.
 Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing building pad types.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -176,17 +173,17 @@ Since there are no in place families of type building pad possible, this should 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_category">
-<span class="sig-name descname"><span class="pre">get_all_building_pad_instances_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_all_building_pad_instances_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad elements placed in model.</p>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -194,18 +191,18 @@ Since there are no in place families of type building pad possible, this should 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_class">
-<span class="sig-name descname"><span class="pre">get_all_building_pad_instances_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_all_building_pad_instances_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_instances_in_model_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad elements placed in model.</p>
 <p>Filters by class.
 Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing ceiling instances.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -213,17 +210,17 @@ Since there are no in place families of type building pad possible, this should 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_category">
-<span class="sig-name descname"><span class="pre">get_all_building_pad_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_all_building_pad_type_ids_in_model_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad element type ids available in model.</p>
 <p>Filters by category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing building pad type ids.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -231,18 +228,18 @@ Since there are no in place families of type building pad possible, this should 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_class">
-<span class="sig-name descname"><span class="pre">get_all_building_pad_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.building_pads.</span></span><span class="sig-name descname"><span class="pre">get_all_building_pad_type_ids_in_model_by_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.building_pads.get_all_building_pad_type_ids_in_model_by_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all building pad element type ids available in model.</p>
 <p>Filters by class.
 Since there are no in place families of type building pad possible, this should return the same elements as the by category filter.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector containing building pad type ids.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -256,19 +253,19 @@ Since there are no in place families of type building pad possible, this should 
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.purge_unused_building_pad_types.BASIC_BUILDING_PAD_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">BASIC_BUILDING_PAD_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pad'</span></em><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.BASIC_BUILDING_PAD_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.purge_unused_building_pad_types.</span></span><span class="sig-name descname"><span class="pre">BASIC_BUILDING_PAD_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pad'</span></em><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.BASIC_BUILDING_PAD_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for pad</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.purge_unused_building_pad_types.BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Pad']</span></em><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.purge_unused_building_pad_types.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Pad']</span></em><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.BUILTIN_BUILDING_PAD_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in pad family names</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_used_building_pad_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_building_pad_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_used_building_pad_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.purge_unused_building_pad_types.</span></span><span class="sig-name descname"><span class="pre">get_used_building_pad_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_used_building_pad_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used building pad type ids.
 Filters by category.
 Used: at least one instance of this type is placed in the model.
@@ -280,7 +277,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.purge_unused_building_pad_types.family_no_types_in_use">
-<span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.purge_unused_building_pad_types.</span></span><span class="sig-name descname"><span class="pre">family_no_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">un_used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.family_no_types_in_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares two lists of ids. True if any id is not in unUsedTypeIds.
 TODO: check for more generic list comparison and remove this function.
 :param fam_type_ids: List of family type ids to check.
@@ -293,7 +290,7 @@ TODO: check for more generic list comparison and remove this function.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_unused_non_in_place_building_pad_type_ids_to_purge">
-<span class="sig-name descname"><span class="pre">get_unused_non_in_place_building_pad_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_unused_non_in_place_building_pad_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.BuildingPads.purge_unused_building_pad_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_in_place_building_pad_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.BuildingPads.purge_unused_building_pad_types.get_unused_non_in_place_building_pad_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused building pad type id’s.
 - Basic BuildingPad
 This method can be used to safely delete unused building pad types:
@@ -317,7 +314,7 @@ In the case that no building pad instance using any of the types is placed this 
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

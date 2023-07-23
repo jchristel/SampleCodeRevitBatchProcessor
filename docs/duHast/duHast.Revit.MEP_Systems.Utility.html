@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.MEP_Systems.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -102,7 +99,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.MergeLists.merge_into_unique_list">
-<span class="sig-name descname"><span class="pre">merge_into_unique_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_merge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.MergeLists.merge_into_unique_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.MergeLists.</span></span><span class="sig-name descname"><span class="pre">merge_into_unique_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_merge</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.MergeLists.merge_into_unique_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges the second list into the first by adding elements from second list which are not already in first list.
 TODO: Consider more generic code!
 :param list_source: List to add unique values to.
@@ -124,25 +121,25 @@ TODO: Consider more generic code!
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CABLE_TRAYS">
-<span class="sig-name descname"><span class="pre">CATS_LOADABLE_CABLE_TRAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CableTrayFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CABLE_TRAYS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CABLE_TRAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_CableTrayFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CABLE_TRAYS" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of loadable built in family categories for cable tray related elements.</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CONDUITS">
-<span class="sig-name descname"><span class="pre">CATS_LOADABLE_CONDUITS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_ConduitFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CONDUITS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_CONDUITS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_ConduitFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_CONDUITS" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of loadable built in family categories for conduit related elements.</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_PIPES">
-<span class="sig-name descname"><span class="pre">CATS_LOADABLE_PIPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_PipeAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_PipeFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_PIPES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.</span></span><span class="sig-name descname"><span class="pre">CATS_LOADABLE_PIPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInCategory.OST_PipeAccessory,</span> <span class="pre">Autodesk.Revit.DB.BuiltInCategory.OST_PipeFitting]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.CATS_LOADABLE_PIPES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of loadable built in family categories for pipe related elements.</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.ROUTING_PREF_RULE_GROUP_TYPES">
-<span class="sig-name descname"><span class="pre">ROUTING_PREF_RULE_GROUP_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Segments,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Elbows,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Junctions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Crosses,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Transitions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Unions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.MechanicalJoints,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Caps]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.ROUTING_PREF_RULE_GROUP_TYPES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.</span></span><span class="sig-name descname"><span class="pre">ROUTING_PREF_RULE_GROUP_TYPES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Segments,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Elbows,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Junctions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Crosses,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Transitions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Unions,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.MechanicalJoints,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsRectangularToOval,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.TransitionsOvalToRound,</span> <span class="pre">Autodesk.Revit.DB.RoutingPreferenceRuleGroupType.Caps]</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemCategories.ROUTING_PREF_RULE_GROUP_TYPES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of routing reference rule group types</p>
 </dd></dl>
 
@@ -154,91 +151,91 @@ TODO: Consider more generic code!
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_OVAL_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">DUCT_OVAL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Oval</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_OVAL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">DUCT_OVAL_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Oval</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_OVAL_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for oval ducting</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_ROUND_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Round</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Round</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for round ducting</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_RECTANGULAR_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">DUCT_RECTANGULAR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rectangular</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_RECTANGULAR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">DUCT_RECTANGULAR_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Rectangular</span> <span class="pre">Duct'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.DUCT_RECTANGULAR_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for rectangular ducting</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_DUCT_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Oval</span> <span class="pre">Duct',</span> <span class="pre">'Round</span> <span class="pre">Duct',</span> <span class="pre">'Rectangular</span> <span class="pre">Duct']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Oval</span> <span class="pre">Duct',</span> <span class="pre">'Round</span> <span class="pre">Duct',</span> <span class="pre">'Rectangular</span> <span class="pre">Duct']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in ducting family names</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_REC_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">FLEX_DUCT_REC_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_REC_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">FLEX_DUCT_REC_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_REC_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for rectangular flex ducting</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_ROUND_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">FLEX_DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">FLEX_DUCT_ROUND_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.FLEX_DUCT_ROUND_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for round flex ducting</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular',</span> <span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Flex</span> <span class="pre">Duct</span> <span class="pre">Rectangular',</span> <span class="pre">'Flex</span> <span class="pre">Duct</span> <span class="pre">Round']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_FLEX_DUCT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in flex ducting family names</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITH_FITTING_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">CONDUIT_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for conduits with fittings</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITHOUT_FITTING_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">CONDUIT_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">CONDUIT_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CONDUIT_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for conduits without fittings</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_CONDUIT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Conduit</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CONDUIT_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Conduit</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Conduit</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CONDUIT_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in conduit family names</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLE_TRAY_WITH_FITTING_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">CABLE_TRAY_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLE_TRAY_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">CABLE_TRAY_WITH_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLE_TRAY_WITH_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for cable tray with fittings</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.CABLET_RAY_WITHOUT_FITTING_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for cable tray without fittings</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Cable</span> <span class="pre">Tray</span> <span class="pre">with</span> <span class="pre">Fittings',</span> <span class="pre">'Cable</span> <span class="pre">Tray</span> <span class="pre">without</span> <span class="pre">Fittings']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_CABLE_TRAY_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in cable tray family names</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.PIPE_FAMILY_NAME">
-<span class="sig-name descname"><span class="pre">PIPE_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pipe</span> <span class="pre">Types'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.PIPE_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">PIPE_FAMILY_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Pipe</span> <span class="pre">Types'</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.PIPE_FAMILY_NAME" title="Permalink to this definition">¶</a></dt>
 <dd><p>Built in family name for pipes</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_PIPE_TYPE_FAMILY_NAMES">
-<span class="sig-name descname"><span class="pre">BUILTIN_PIPE_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Pipe</span> <span class="pre">Types']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_PIPE_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.</span></span><span class="sig-name descname"><span class="pre">BUILTIN_PIPE_TYPE_FAMILY_NAMES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Pipe</span> <span class="pre">Types']</span></em><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPSystemNames.BUILTIN_PIPE_TYPE_FAMILY_NAMES" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Built in pipe family names</p>
 </dd></dl>
 
@@ -251,20 +248,20 @@ TODO: Consider more generic code!
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.build_type_dictionary">
-<span class="sig-name descname"><span class="pre">build_type_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.build_type_dictionary" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.</span></span><span class="sig-name descname"><span class="pre">build_type_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.build_type_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the dictionary past in with keys and or values added retrieved from collector past in.</p>
 <p>TODO: similar function exists in Walls module. Consider more generic function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>collector</strong> (<em>Autodesk.Revit.DB.FilteredElementCollector</em>) – A filtered element collector containing railing type elements of family symbols</p></li>
 <li><p><strong>dic</strong> (<em>Dictionary {str:</em><em>[</em><em>Autodesk.Revit.DB.ElementId</em><em>]</em><em>}</em>) – dictionary containing key: railing type family name, value: list of ids</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary where key is the family name and values are ids of types belonging to that family.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary {str:[Autodesk.Revit.DB.ElementId]}</p>
 </dd>
 </dl>
@@ -272,7 +269,7 @@ TODO: Consider more generic code!
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.sort_types_by_family_name">
-<span class="sig-name descname"><span class="pre">sort_types_by_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.sort_types_by_family_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.</span></span><span class="sig-name descname"><span class="pre">sort_types_by_family_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.RevitMEPTypeSorting.sort_types_by_family_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary where key is the family name and values are ids of types belonging to that family.
 TODO: similar function exists in Walls module. Consider more generic function.
 :param doc: Current Revit model document.
@@ -291,7 +288,7 @@ TODO: similar function exists in Walls module. Consider more generic function.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id">
-<span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.</span></span><span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of unique symbol ids used in a single system type property.
 List can be empty if an exception during processing occurred.
 :param doc: Current Revit model document.
@@ -304,7 +301,7 @@ List can be empty if an exception during processing occurred.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids">
-<span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.</span></span><span class="sig-name descname"><span class="pre">get_unique_ids_of_used_symbols_from_system_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_unique_ids_of_used_symbols_from_system_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a list of unique symbol ids used in these MEP system type properties:
 - Cross
 - Elbow
@@ -323,7 +320,7 @@ List can be empty if an exception during processing occurred.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types">
-<span class="sig-name descname"><span class="pre">get_symbol_ids_of_mep_system_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_of_mep_system_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_type_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.MEP_Systems.Utility.SymbolsInSystemTypes.get_symbol_ids_of_mep_system_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets list of symbol ids belonging to provided categories loaded in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -348,7 +345,7 @@ List can be empty if an exception during processing occurred.
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

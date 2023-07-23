@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Annotation package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -146,16 +143,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.annotation.get_all_anno_symbol_types">
-<span class="sig-name descname"><span class="pre">get_all_anno_symbol_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.annotation.get_all_anno_symbol_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_anno_symbol_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.annotation.get_all_anno_symbol_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all annotation symbol types, area tag types, room tag types in the model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of types</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -163,16 +160,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.annotation.get_anno_symbol_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_anno_symbol_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.annotation.get_anno_symbol_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.annotation.</span></span><span class="sig-name descname"><span class="pre">get_anno_symbol_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.annotation.get_anno_symbol_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head ids used in annotation symbol types, area tag types, room tag types in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids representing arrow head symbols</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -186,7 +183,7 @@
 </section>
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_DIM">
-<span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.WITNS_LINE_TICK_MARK]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_DIM" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_DIM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_CENTERLINE_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_INTERIOR_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_STYLE_LEADER_TICK_MARK,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.DIM_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.WITNS_LINE_TICK_MARK]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_DIM" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of built in parameters attached to</p>
 <blockquote>
 <div><ul class="simple">
@@ -200,26 +197,26 @@
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_TEXT">
-<span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.LEADER_ARROWHEAD]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_TEXT" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.LEADER_ARROWHEAD]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_TEXT" title="Permalink to this definition">¶</a></dt>
 <dd><p>parameter containing the arrowhead id in text types</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_SPOT_DIMS">
-<span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_SPOT_DIMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_SYMBOL]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_SPOT_DIMS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_SPOT_DIMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_LEADER_ARROWHEAD,</span> <span class="pre">Autodesk.Revit.DB.BuiltInParameter.SPOT_ELEV_SYMBOL]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_SPOT_DIMS" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of built in parameters attached to spot dims containing arrow head ids
 and symbols used</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_STAIRS_PATH">
-<span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_STAIRS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.ARROWHEAD_TYPE]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_STAIRS_PATH" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">ARROWHEAD_PARAS_STAIRS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Autodesk.Revit.DB.BuiltInParameter.ARROWHEAD_TYPE]</span></em><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.ARROWHEAD_PARAS_STAIRS_PATH" title="Permalink to this definition">¶</a></dt>
 <dd><p>list of built in parameters attached to stair path types containing arrow head ids</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.get_arrow_head_ids_from_type">
-<span class="sig-name descname"><span class="pre">get_arrow_head_ids_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_head_ids_from_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">get_arrow_head_ids_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_head_ids_from_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head symbol ids used in dim types in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -233,7 +230,7 @@ and symbols used</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.get_arrow_types_in_model">
-<span class="sig-name descname"><span class="pre">get_arrow_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_types_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">get_arrow_types_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_types_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head types in the model.
 TODO: This uses a plain english name comparison to get arrow head types…may not work in non english versions of Revit!
 :param doc: Current Revit model document.
@@ -244,7 +241,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.arrow_heads.get_arrow_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_arrow_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.arrow_heads.</span></span><span class="sig-name descname"><span class="pre">get_arrow_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.arrow_heads.get_arrow_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow type ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -260,7 +257,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.dimensions.get_dim_types">
-<span class="sig-name descname"><span class="pre">get_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.dimensions.</span></span><span class="sig-name descname"><span class="pre">get_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all dimension types in a model
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -270,7 +267,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.dimensions.get_dim_type_ids">
-<span class="sig-name descname"><span class="pre">get_dim_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.dimensions.</span></span><span class="sig-name descname"><span class="pre">get_dim_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all dimension type ids in a model
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -280,7 +277,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.dimensions.get_all_dimension_elements">
-<span class="sig-name descname"><span class="pre">get_all_dimension_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_all_dimension_elements" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.dimensions.</span></span><span class="sig-name descname"><span class="pre">get_all_dimension_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_all_dimension_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all dimension elements placed in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -290,7 +287,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.dimensions.get_symbol_ids_from_dim_types">
-<span class="sig-name descname"><span class="pre">get_symbol_ids_from_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_symbol_ids_from_dim_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.dimensions.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_from_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_symbol_ids_from_dim_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all family symbol ids used as centre line symbol from all dim styles in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -300,7 +297,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.dimensions.get_dim_type_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_dim_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.dimensions.</span></span><span class="sig-name descname"><span class="pre">get_dim_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.dimensions.get_dim_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head symbol ids used in dim types in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -316,16 +313,16 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_types_by_category">
-<span class="sig-name descname"><span class="pre">get_all_generic_annotation_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_types_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.generic_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_generic_annotation_types_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_types_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will return a filtered element collector of all GenericAnnotation types in the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>_description_</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -333,16 +330,16 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_type_ids_by_category">
-<span class="sig-name descname"><span class="pre">get_all_generic_annotation_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.generic_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_generic_annotation_type_ids_by_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.generic_annotation.get_all_generic_annotation_type_ids_by_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will return a list of all GenericAnnotation types (symbols) id’s in the model excluding shared families.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>_description_</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -356,7 +353,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags.get_all_independent_tags">
-<span class="sig-name descname"><span class="pre">get_all_independent_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags.get_all_independent_tags" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags.</span></span><span class="sig-name descname"><span class="pre">get_all_independent_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags.get_all_independent_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all independent tag instances in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -366,7 +363,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags.get_independent_tag_type_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_independent_tag_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags.get_independent_tag_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags.</span></span><span class="sig-name descname"><span class="pre">get_independent_tag_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags.get_independent_tag_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head symbol ids used in independent tag types in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -382,19 +379,19 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties">
-<span class="sig-name descname"><span class="pre">get_elbow_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_elbow_properties.</span></span><span class="sig-name descname"><span class="pre">get_elbow_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns elbow properties depending on revit version.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]</p>
 </dd>
 </dl>
@@ -402,16 +399,16 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2021">
-<span class="sig-name descname"><span class="pre">get_elbow_properties_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2021" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_elbow_properties.</span></span><span class="sig-name descname"><span class="pre">get_elbow_properties_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get elbow properties in revit versions up to revit 2022</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of a single dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]</p>
 </dd>
 </dl>
@@ -419,16 +416,16 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2022">
-<span class="sig-name descname"><span class="pre">get_elbow_properties_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2022" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_elbow_properties.</span></span><span class="sig-name descname"><span class="pre">get_elbow_properties_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points_as_double</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_elbow_properties.get_elbow_properties_2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get elbow properties in revit versions from revit 2023 onwards</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of dictionaries with 3 keys: ELBOW_LOCATION, LEADER_END and LEADER_REFERENCE.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB.XYZ, str:Autodesk.Revit.DB Reference }]</p>
 </dd>
 </dl>
@@ -442,7 +439,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_modify_properties.move_tag">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">move_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.move_tag" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_modify_properties.</span></span><span class="sig-name descname"><span class="pre">move_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.move_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <p>Create new instance of move_tag(tag, new_location, old_location)</p>
 <dl class="py attribute">
@@ -467,16 +464,16 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_location">
-<span class="sig-name descname"><span class="pre">update_tag_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_location" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_modify_properties.</span></span><span class="sig-name descname"><span class="pre">update_tag_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_location" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves all tags in dictionary to new location within one transaction</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>tag_data</strong> (<em>{int:namedtuple move_tag}</em>) – A dictionary containing tag data of tag to be moved</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status. True if all tags where moved successfully, otherwise False.</p></li>
@@ -491,7 +488,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -499,17 +496,17 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_locations_from_report">
-<span class="sig-name descname"><span class="pre">update_tag_locations_from_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_locations_from_report" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_modify_properties.</span></span><span class="sig-name descname"><span class="pre">update_tag_locations_from_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_modify_properties.update_tag_locations_from_report" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a tag instance report and updates the location of tags in model with matching id if they have moved further then a given threshold distance.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>report_file_path</strong> (<em>str</em>) – The fully qualified file path of the report file.</p></li>
 <li><p><strong>distance_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – The threshold distance, in mm, a tag has to move before it gets moved to a new location, defaults to 50. The distance is calculated by subtracting the current tag location from the one recorded in the report.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status. True if all tags where moved successfully, or no tags had to be moved, otherwise False.</p></li>
@@ -524,7 +521,7 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -538,22 +535,22 @@ TODO: This uses a plain english name comparison to get arrow head types…may no
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements">
-<span class="sig-name descname"><span class="pre">get_tagged_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_tagged_elements.</span></span><span class="sig-name descname"><span class="pre">get_tagged_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns tagged element(s) depending on revit version.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>A list of dictionaries representing the tagged object(s).</p>
 <p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
 If an exception occurs it will return a dictionary with same keys but None values.</p>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId}]</p>
 </dd>
 </dl>
@@ -561,19 +558,19 @@ If an exception occurs it will return a dictionary with same keys but None value
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2021">
-<span class="sig-name descname"><span class="pre">get_tagged_elements_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2021" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_tagged_elements.</span></span><span class="sig-name descname"><span class="pre">get_tagged_elements_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get tagged element Id in revit versions up to revit 2022</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>A list with a single dictionary representing the tagged object.</p>
 <p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
 If an exception occurs it will return a dictionary with same keys but None values.</p>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId}]</p>
 </dd>
 </dl>
@@ -581,19 +578,19 @@ If an exception occurs it will return a dictionary with same keys but None value
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2022">
-<span class="sig-name descname"><span class="pre">get_tagged_elements_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2022" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.independent_tags_tagged_elements.</span></span><span class="sig-name descname"><span class="pre">get_tagged_elements_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.independent_tags_tagged_elements.get_tagged_elements_2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get elbow properties in revit versions from revit 2023 onwards</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>tag</strong> (<em>Autodesk.Revit.DB.IndependentTag</em>) – The tag element</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>A list of dictionaries representing the tagged object(s).</p>
 <p>Dictionary has three keys:HOST_ELEMENT_ID,LINK_ELEMENT_ID,LINK_INSTANCE_ID
 If an exception occurs it will return a dictionary with same keys but None values.</p>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[{str:Autodesk.Revit.DB.ElementId},]</p>
 </dd>
 </dl>
@@ -607,7 +604,7 @@ If an exception occurs it will return a dictionary with same keys but None value
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_types">
-<span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.multi_ref_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all multi reference annotation types in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -617,7 +614,7 @@ If an exception occurs it will return a dictionary with same keys but None value
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_type_ids">
-<span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.multi_ref_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all multi reference annotation type ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -627,7 +624,7 @@ If an exception occurs it will return a dictionary with same keys but None value
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_elements">
-<span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_elements" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.multi_ref_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_multi_ref_annotation_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_multi_ref_annotation_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all multi reference annotation elements in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -637,7 +634,7 @@ If an exception occurs it will return a dictionary with same keys but None value
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.multi_ref_annotation.get_all_similar_multi_reference_anno_types">
-<span class="sig-name descname"><span class="pre">get_all_similar_multi_reference_anno_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_similar_multi_reference_anno_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.multi_ref_annotation.</span></span><span class="sig-name descname"><span class="pre">get_all_similar_multi_reference_anno_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.multi_ref_annotation.get_all_similar_multi_reference_anno_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all multi reference annotation types using get similar types in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -653,7 +650,7 @@ If an exception occurs it will return a dictionary with same keys but None value
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_used_text_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_used_text_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_text_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_used_text_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_text_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all ids of text types used by elements in the model, includes types used in schedules (appearance)!
 Used: at least one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -664,7 +661,7 @@ Used: at least one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_used_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_used_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all used dimension type Ids in the model.
 Used: at least one instance using this type is placed in the model.
 :param doc: Current Revit model document.
@@ -675,7 +672,7 @@ Used: at least one instance using this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_styles_from_multi_ref">
-<span class="sig-name descname"><span class="pre">get_used_dim_styles_from_multi_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_reference_anno_types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_styles_from_multi_ref" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_used_dim_styles_from_multi_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_reference_anno_types</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_dim_styles_from_multi_ref" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all dimension styles used in multi ref annotation types.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -687,7 +684,7 @@ Used: at least one instance using this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_used_multi_ref_dim_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_used_multi_ref_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_multi_ref_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_used_multi_ref_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_multi_ref_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all ids of multi reference types used by elements in the model.
 Used: at least one instance using this type is placed in the model.
 :param doc: Current Revit model document.
@@ -698,7 +695,7 @@ Used: at least one instance using this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_all_used_arrow_head_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_used_arrow_head_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_used_arrow_head_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_all_used_arrow_head_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_used_arrow_head_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all used arrow types in the model.
 Used in types of dimension, text, independent tags, spot dims, annotation symbols (incl room and area tags), stairs path
 :param doc: Current Revit model document.
@@ -709,7 +706,7 @@ Used in types of dimension, text, independent tags, spot dims, annotation symbol
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_text_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_unused_text_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_text_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_text_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_text_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets ID of all unused text types in the model.
 Unused: Not one instance of this type is placed in the model.
 :param doc: Current Revit model document.
@@ -720,7 +717,7 @@ Unused: Not one instance of this type is placed in the model.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_dim_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_unused_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets ID of all unused dim types in the model.
 Includes checking multi ref dims for used dim types.
 :param doc: Current Revit model document.
@@ -731,7 +728,7 @@ Includes checking multi ref dims for used dim types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_multi_ref_dim_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_unused_multi_ref_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_multi_ref_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_multi_ref_dim_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_multi_ref_dim_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets IDs of all unused multi ref dimension types in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -741,7 +738,7 @@ Includes checking multi ref dims for used dim types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_arrow_type_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_unused_arrow_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_arrow_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_all_unused_arrow_type_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_all_unused_arrow_type_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused arrow type ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -751,7 +748,7 @@ Includes checking multi ref dims for used dim types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types">
-<span class="sig-name descname"><span class="pre">get_unused_symbol_ids_from_spot_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_symbol_ids_from_spot_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all family symbol ids not used as symbol in any spot elevation or spot coordinate type definition.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -761,7 +758,7 @@ Includes checking multi ref dims for used dim types.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types_to_purge">
-<span class="sig-name descname"><span class="pre">get_unused_symbol_ids_from_spot_types_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types_to_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_symbol_ids_from_spot_types_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_symbol_ids_from_spot_types_to_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all unused family and family symbol ids of category BuiltInCategory.OST_SpotElevSymbols.
 This method can be used to safely delete unused families.
 :param doc: Current Revit model document.
@@ -772,7 +769,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_used_generic_annotation_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_generic_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_generic_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_used_generic_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_used_generic_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all used generic annotation symbol ids ( used in model as well as dimension types)
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -782,7 +779,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_type_ids">
-<span class="sig-name descname"><span class="pre">get_unused_generic_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_generic_annotation_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all unused annotation symbol ids ( unused in model as well as dimension types)
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -792,7 +789,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_ids_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_generic_annotation_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.purge_unused_annotation_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_generic_annotation_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.purge_unused_annotation_types.get_unused_generic_annotation_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns symbol(type) ids and family ids (when no type is in use) of in generic anno families which can be purged
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -808,16 +805,16 @@ This method can be used to safely delete unused families.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.spot_dimensions.get_all_spot_dim_types">
-<span class="sig-name descname"><span class="pre">get_all_spot_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_dim_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.spot_dimensions.</span></span><span class="sig-name descname"><span class="pre">get_all_spot_dim_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_dim_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all spot Dim types in the model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A filtered element collector of spot dimension types</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector of spot dimension types</p>
 </dd>
 </dl>
@@ -825,7 +822,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.spot_dimensions.get_symbol_ids_from_spot_types">
-<span class="sig-name descname"><span class="pre">get_symbol_ids_from_spot_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_symbol_ids_from_spot_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.spot_dimensions.</span></span><span class="sig-name descname"><span class="pre">get_symbol_ids_from_spot_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_symbol_ids_from_spot_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all family symbol ids used as a symbol from all spot elevation type definitions and spot coordinate type definitions.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -835,7 +832,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbols_in_model">
-<span class="sig-name descname"><span class="pre">get_all_spot_elevation_symbols_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbols_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.spot_dimensions.</span></span><span class="sig-name descname"><span class="pre">get_all_spot_elevation_symbols_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbols_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all family symbols of category Spot Elevation Symbol in model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -845,7 +842,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbol_ids_in_model">
-<span class="sig-name descname"><span class="pre">get_all_spot_elevation_symbol_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbol_ids_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.spot_dimensions.</span></span><span class="sig-name descname"><span class="pre">get_all_spot_elevation_symbol_ids_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_all_spot_elevation_symbol_ids_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all family symbol ids of category Spot Elevation Symbol in model
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -855,7 +852,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.spot_dimensions.get_spot_type_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_spot_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_spot_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.spot_dimensions.</span></span><span class="sig-name descname"><span class="pre">get_spot_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.spot_dimensions.get_spot_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns all arrow head ids used in text types in a model</p>
 </dd></dl>
 
@@ -867,7 +864,7 @@ This method can be used to safely delete unused families.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.stair_path.get_all_stair_path_types">
-<span class="sig-name descname"><span class="pre">get_all_stair_path_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.stair_path.get_all_stair_path_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.stair_path.</span></span><span class="sig-name descname"><span class="pre">get_all_stair_path_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.stair_path.get_all_stair_path_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all stairs path types in the model/
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -877,7 +874,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.stair_path.get_stairs_path_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_stairs_path_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.stair_path.get_stairs_path_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.stair_path.</span></span><span class="sig-name descname"><span class="pre">get_stairs_path_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.stair_path.get_stairs_path_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head symbol ids used in stairs path types in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -893,7 +890,7 @@ This method can be used to safely delete unused families.
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.text.get_all_text_types">
-<span class="sig-name descname"><span class="pre">get_all_text_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.text.</span></span><span class="sig-name descname"><span class="pre">get_all_text_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all text types in the model
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -903,7 +900,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.text.get_all_text_type_ids">
-<span class="sig-name descname"><span class="pre">get_all_text_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.text.</span></span><span class="sig-name descname"><span class="pre">get_all_text_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all text type ids in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -913,7 +910,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.text.get_all_text_annotation_elements">
-<span class="sig-name descname"><span class="pre">get_all_text_annotation_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_annotation_elements" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.text.</span></span><span class="sig-name descname"><span class="pre">get_all_text_annotation_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_all_text_annotation_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all text annotation elements in the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -923,7 +920,7 @@ This method can be used to safely delete unused families.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Annotation.text.get_text_type_arrow_head_ids">
-<span class="sig-name descname"><span class="pre">get_text_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_text_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Annotation.text.</span></span><span class="sig-name descname"><span class="pre">get_text_type_arrow_head_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Annotation.text.get_text_type_arrow_head_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all arrow head ids used in text types in a model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -944,7 +941,7 @@ This method can be used to safely delete unused families.
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

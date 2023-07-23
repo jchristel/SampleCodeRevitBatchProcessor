@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Exports.Utility package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,17 +98,17 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_view_2019">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_view_2019" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2019.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_view_2019" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -119,17 +116,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_model_2019">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_model_2019" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2019.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2019</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2019.ifc_get_third_party_export_config_by_model_2019" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2019 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -143,17 +140,17 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_view_2020">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_view_2020" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2020.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_view_2020" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export (2x3 etc…).</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -161,17 +158,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_model_2020">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_model_2020" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2020.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2020</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2020.ifc_get_third_party_export_config_by_model_2020" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2020 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -185,17 +182,17 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_view_2021">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_view_2021" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2021.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_view_2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -203,17 +200,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_model_2021">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_model_2021" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2021.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2021</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2021.ifc_get_third_party_export_config_by_model_2021" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2021 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -227,17 +224,17 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_view_2022">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_view_2022" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2022.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_view_2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -245,17 +242,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_model_2022">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_model_2022" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2022.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2022.ifc_get_third_party_export_config_by_model_2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2022 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -269,17 +266,17 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_view_2023">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_view_2023" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2023.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_view_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_view_2023" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export by view. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -287,17 +284,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_model_2023">
-<span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_model_2023" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.export_ifc_config_2023.</span></span><span class="sig-name descname"><span class="pre">ifc_get_third_party_export_config_by_model_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.export_ifc_config_2023.ifc_get_third_party_export_config_by_model_2023" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function returning an IFC export configuration for Revit 2023 using the open source third party IFC exporter plug in supported by AutoDesk</p>
 <p>This configuration allows export the entire model. If ifc_version is None, IFCVersion.Default will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ifc_version</strong> (<em>Autodesk.Revit.DB.IFCVersion</em>) – The ifc version used for the export.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An IFCExportConfig object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>BIM.IFC.Export.UI.IFCExportConfiguration</p>
 </dd>
 </dl>
@@ -311,7 +308,7 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_coordinates.IFCCoords">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IFCCoords</span></span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_coordinates.IFCCoords" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.ifc_export_coordinates.</span></span><span class="sig-name descname"><span class="pre">IFCCoords</span></span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_coordinates.IFCCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Using enum class for IFC coordinates options.</p>
 <p>Class constructor</p>
@@ -355,11 +352,11 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IFCSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_phase_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_view_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_base_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_walls_and_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible_elements_of_current_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use2_d_room_boundary_for_volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_family_and_type_name_for_reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_internal_revit_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_ifc_common_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_2d_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts_as_building_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_solid_model_rep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_schedules_as_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_linked_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_site_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_active_view_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_specific_schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation_level_of_detail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_ifc_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_rooms_in_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_only_triangulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_steel_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_company_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_project_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type_name_only_for_ifc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_visible_revit_name_as_entity_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_placement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_site</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_epsg_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_geodetic_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_map_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.ifc_export_settings.</span></span><span class="sig-name descname"><span class="pre">IFCSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ifc_version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space_boundaries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_phase_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_view_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_base_quantities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_walls_and_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visible_elements_of_current_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use2_d_room_boundary_for_volume</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_family_and_type_name_for_reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_internal_revit_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_ifc_common_property_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_2d_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_parts_as_building_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_bounding_box</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_solid_model_rep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_schedules_as_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_user_defined_psets_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_linked_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_site_elevation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_active_view_geometry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_specific_schedules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tessellation_level_of_detail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_ifc_guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">export_rooms_in_view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_only_triangulation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_steel_elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_company_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cobie_project_info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type_name_only_for_ifc_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_visible_revit_name_as_entity_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_placement</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_site</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_crs_desc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_epsg_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_geodetic_datum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geo_ref_map_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_settings.IFCSettings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>_summary_</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – The name of the configuration.</p></li>
 <li><p><strong>ifcVersion</strong> – The IFCFileFormat of the configuration.</p></li>
@@ -403,7 +400,7 @@
 <li><p><strong>excludeFilter</strong> (<em>str</em>) – Exclude filter string (element list in an array, separated with semicolon ‘;’)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>Exception</strong> – _description_</p>
 </dd>
 </dl>
@@ -427,7 +424,7 @@
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Exports.Utility.ifc_export_space_boundaries.IFCSpaceBoundaries">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IFCSpaceBoundaries</span></span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_space_boundaries.IFCSpaceBoundaries" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Exports.Utility.ifc_export_space_boundaries.</span></span><span class="sig-name descname"><span class="pre">IFCSpaceBoundaries</span></span><a class="headerlink" href="#duHast.Revit.Exports.Utility.ifc_export_space_boundaries.IFCSpaceBoundaries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.base.Base" title="duHast.Utilities.Objects.base.Base"><code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></a></p>
 <p>Using enum class for IFC space boundary options.</p>
 <p>Class constructor</p>
@@ -461,7 +458,7 @@
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

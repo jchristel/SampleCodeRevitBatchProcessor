@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Revisions package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -101,16 +98,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.new_revision.new_revision_action_2022">
-<span class="sig-name descname"><span class="pre">new_revision_action_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2022" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.new_revision.</span></span><span class="sig-name descname"><span class="pre">new_revision_action_2022</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2022" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new revision in a revit document up to version 2022.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -124,7 +121,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -132,16 +129,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.new_revision.new_revision_action_2023">
-<span class="sig-name descname"><span class="pre">new_revision_action_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2023" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.new_revision.</span></span><span class="sig-name descname"><span class="pre">new_revision_action_2023</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.new_revision.new_revision_action_2023" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new revision in a revit document version 2023 and onwards.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -155,7 +152,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -169,22 +166,22 @@
 </section>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.REVISION_DATA">
-<span class="sig-name descname"><span class="pre">REVISION_DATA</span></span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.REVISION_DATA" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">REVISION_DATA</span></span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.REVISION_DATA" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code></p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.create_revision">
-<span class="sig-name descname"><span class="pre">create_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.create_revision" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">create_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.create_revision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a revision in the document.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">revisionData</span></code>) – Named tuple containing revision data</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision created status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -198,7 +195,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -206,16 +203,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.mark_revision_as_issued">
-<span class="sig-name descname"><span class="pre">mark_revision_as_issued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">mark_revision_as_issued</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a revision status to ‘Issued’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision</strong> (<em>Autodesk.REvit.DB.Revision</em>) – The revision</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -229,7 +226,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -237,16 +234,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.mark_revision_as_issued_by_revision_id">
-<span class="sig-name descname"><span class="pre">mark_revision_as_issued_by_revision_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued_by_revision_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">mark_revision_as_issued_by_revision_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.mark_revision_as_issued_by_revision_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a revision, identified by its id, status to ‘Issued’.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The Id of the revision.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision marked as issued status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -260,7 +257,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -268,17 +265,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.add_revisions_to_sheet">
-<span class="sig-name descname"><span class="pre">add_revisions_to_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.add_revisions_to_sheet" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">add_revisions_to_sheet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sheet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.add_revisions_to_sheet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds revisions to single sheet</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>sheet</strong> (<em>Autodesk.Revit.DB.SheetView</em>) – The sheet to add the revision to.</p></li>
 <li><p><strong>revision_ids</strong> (<em>[</em><em>Autodesk.Revit.ElementId</em><em>]</em>) – List of revision ids</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision adding to sheet status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -292,7 +289,7 @@
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -300,16 +297,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.get_issued_revisions">
-<span class="sig-name descname"><span class="pre">get_issued_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_issued_revisions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">get_issued_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_issued_revisions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all issued revisions in a model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of revision objects</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[Autodesk.Revit.DB.Revision]</p>
 </dd>
 </dl>
@@ -317,16 +314,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.get_last_issued_revision">
-<span class="sig-name descname"><span class="pre">get_last_issued_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_last_issued_revision" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">get_last_issued_revision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.get_last_issued_revision" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the last issued revision from a model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A revision object or None if no issued revision in the model</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.Revision or None</p>
 </dd>
 </dl>
@@ -334,19 +331,19 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.change_revision_sequence_number">
-<span class="sig-name descname"><span class="pre">change_revision_sequence_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sequence_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.change_revision_sequence_number" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">change_revision_sequence_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sequence_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.change_revision_sequence_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the revision sequence number of a revision.</p>
 <p>Pop the revision from its current index in the revision sequence list.
 Insert it again at the new index</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision</strong> (<em>Autodesk.Revit.DB.Revision</em>) – the revision</p></li>
 <li><p><strong>new_sequence_number</strong> (<em>int</em>) – The new index (sequence number ) of the revision. 1 based!!</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -365,17 +362,17 @@ Insert it again at the new index</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.re_order_revisions">
-<span class="sig-name descname"><span class="pre">re_order_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.re_order_revisions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">re_order_revisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.re_order_revisions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to replace the current revision sequence with the one past in.</p>
 <p>Note: both sequences must contain the same revisions…just in a different order.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_sequence</strong> (<em>IList&lt;ElementId&gt;</em>) – List of revision element ids describing the new sequence.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Revision re-ordering status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -389,7 +386,7 @@ Insert it again at the new index</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -397,16 +394,16 @@ Insert it again at the new index</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.revisions.delete_all_revisions_in_model">
-<span class="sig-name descname"><span class="pre">delete_all_revisions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_description_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.delete_all_revisions_in_model" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.revisions.</span></span><span class="sig-name descname"><span class="pre">delete_all_revisions_in_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_description_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.revisions.delete_all_revisions_in_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes all revision in file passing filter in one transaction.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current model document</p></li>
 <li><p><strong>revision_description_filter</strong> (<em>list</em><em>, </em><em>optional</em>) – list of filters, defaults to []</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status. True if all possible revisions where deleted successfully, otherwise False.</p></li>
@@ -421,7 +418,7 @@ Insert it again at the new index</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -435,19 +432,19 @@ Insert it again at the new index</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.sequence.get_revision_seq_of_name">
-<span class="sig-name descname"><span class="pre">get_revision_seq_of_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.get_revision_seq_of_name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.sequence.</span></span><span class="sig-name descname"><span class="pre">get_revision_seq_of_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.get_revision_seq_of_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a revision sequence by its name. If no match is found None is returned!</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_sequence_name</strong> (<em>str</em>) – The sequence name</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The matching sequence or None</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.RevisionNumberingSequence</p>
 </dd>
 </dl>
@@ -455,21 +452,21 @@ Insert it again at the new index</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Revisions.sequence.create_revision_alpha_seq">
-<span class="sig-name descname"><span class="pre">create_revision_alpha_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.AlphanumericRevisionSettings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.create_revision_alpha_seq" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Revisions.sequence.</span></span><span class="sig-name descname"><span class="pre">create_revision_alpha_seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">revision_sequence_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_settings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Autodesk.Revit.DB.AlphanumericRevisionSettings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Revisions.sequence.create_revision_alpha_seq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a revision sequence with provided name and settings.</p>
 <p>Will throw an exception if sequence creation failed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>revision_sequence_name</strong> (<em>str</em>) – The name of the sequence</p></li>
 <li><p><strong>alpha_settings</strong> (<em>Autodesk.Revit.DB.AlphanumericRevisionSettings</em><em>, </em><em>optional</em>) – Custom settings, defaults to rdb.AlphanumericRevisionSettings()</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The new sequence.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.RevisionNumberingSequence</p>
 </dd>
 </dl>
@@ -488,7 +485,7 @@ Insert it again at the new index</p>
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Revit.Family package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -350,7 +347,7 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_element_utils.get_all_generic_forms_in_family">
-<span class="sig-name descname"><span class="pre">get_all_generic_forms_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_generic_forms_in_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_element_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_generic_forms_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_generic_forms_in_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all generic forms (3D extrusions) in family.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -360,7 +357,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_element_utils.get_all_curve_based_elements_in_family">
-<span class="sig-name descname"><span class="pre">get_all_curve_based_elements_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_curve_based_elements_in_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_element_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_curve_based_elements_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_curve_based_elements_in_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all curve based elements in family.
 These are:</p>
 <blockquote>
@@ -370,13 +367,13 @@ These are:</p>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of Autodesk.Revit.DB.CurveElement.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.CurveElement</p>
 </dd>
 </dl>
@@ -384,7 +381,7 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_element_utils.get_all_model_text_elements_in_family">
-<span class="sig-name descname"><span class="pre">get_all_model_text_elements_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_model_text_elements_in_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_element_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_model_text_elements_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_model_text_elements_in_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all model text elements in family.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -394,7 +391,7 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_element_utils.get_all_reference_planes_in_family">
-<span class="sig-name descname"><span class="pre">get_all_reference_planes_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_reference_planes_in_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_element_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_reference_planes_in_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_element_utils.get_all_reference_planes_in_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all reference planes in family.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -410,7 +407,7 @@ These are:</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_load_option.FamilyLoadOption">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FamilyLoadOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_load_option.FamilyLoadOption" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_load_option.</span></span><span class="sig-name descname"><span class="pre">FamilyLoadOption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_load_option.FamilyLoadOption" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IFamilyLoadOptions</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_load_option.FamilyLoadOption.OnFamilyFound">
@@ -418,16 +415,16 @@ These are:</p>
 <dd><p>Defines behavior when a family is found in the model.</p>
 <p>Overwrite parameter values is set to True.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>familyInUse</strong> (<em>_type_</em>) – _description_</p></li>
 <li><p><strong>overwriteParameterValues</strong> (<em>_type_</em>) – _description_</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -439,7 +436,7 @@ These are:</p>
 <dd><p>Defines behavior when a shared family is found in the model.</p>
 <p>Overwrite parameter values is set to True. In case of any shared sub components already in the model but different in family loaded, the project version will be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sharedFamily</strong> (<em>_type_</em>) – _description_</p></li>
 <li><p><strong>familyInUse</strong> (<em>_type_</em>) – _description_</p></li>
@@ -447,10 +444,10 @@ These are:</p>
 <li><p><strong>overwriteParameterValues</strong> (<em>_type_</em>) – _description_</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -466,17 +463,17 @@ These are:</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_family_parameter_value_by_storage_type">
-<span class="sig-name descname"><span class="pre">set_family_parameter_value_by_storage_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value_by_storage_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_family_parameter_value_by_storage_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value_by_storage_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_family_parameter_value">
-<span class="sig-name descname"><span class="pre">set_family_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_family_parameter_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_family_parameter_value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_parameter_utils.set_parameter_formula">
-<span class="sig-name descname"><span class="pre">set_parameter_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_parameter_formula" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_parameter_utils.</span></span><span class="sig-name descname"><span class="pre">set_parameter_formula</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_para</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_parameter_utils.set_parameter_formula" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -487,7 +484,7 @@ These are:</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reference_elements.set_ref_planes_to_not_a_reference">
-<span class="sig-name descname"><span class="pre">set_ref_planes_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_ref_planes_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reference_elements.</span></span><span class="sig-name descname"><span class="pre">set_ref_planes_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_ref_planes_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will set any reference plane with reference type ‘weak’ within a family to reference type ‘not a reference’.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -499,7 +496,7 @@ These are:</p>
 - result.result: not used</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -507,7 +504,7 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reference_elements.set_symbolic_and_model_lines_to_not_a_reference">
-<span class="sig-name descname"><span class="pre">set_symbolic_and_model_lines_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_symbolic_and_model_lines_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reference_elements.</span></span><span class="sig-name descname"><span class="pre">set_symbolic_and_model_lines_to_not_a_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reference_elements.set_symbolic_and_model_lines_to_not_a_reference" title="Permalink to this definition">¶</a></dt>
 <dd><p>This will set any model or symbolic curve in a family with reference type ‘weak’ to reference type ‘not a reference’.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -519,7 +516,7 @@ These are:</p>
 - result.result: not used</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -533,23 +530,23 @@ These are:</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload.reload_all_families">
-<span class="sig-name descname"><span class="pre">reload_all_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_folders</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.reload_all_families" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">reload_all_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">library_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_sub_folders</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.reload_all_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads a number of families with setting: parameter values overwritten: True</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>library_location</strong> (<em>str</em>) – _description_</p></li>
 <li><p><strong>include_sub_folders</strong> (<em>bool</em>) – _description_</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>UserWarning</strong> – _description_</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns True if any of the reload actions was successful.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -557,16 +554,16 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload.get_family_ids_from_symbols">
-<span class="sig-name descname"><span class="pre">get_family_ids_from_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.get_family_ids_from_symbols" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">get_family_ids_from_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.get_family_ids_from_symbols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all loadable family ids in file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids representing loadable families.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -574,20 +571,20 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_reload.get_new_symbol_ids">
-<span class="sig-name descname"><span class="pre">get_new_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_load_symbol_id_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_load_symbol_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.get_new_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_reload.</span></span><span class="sig-name descname"><span class="pre">get_new_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pre_load_symbol_id_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after_load_symbol_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_reload.get_new_symbol_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of symbol ids not present prior to reload.</p>
 <p>Compares past in list of id’s and returns ids not in preloadSymbolIdList</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pre_load_symbol_id_list</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List of Ids of symbols prior the reload.</p></li>
 <li><p><strong>after_load_symbol_list</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – List of ids of symbols after the reload.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of element ids representing Family Symbols.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -612,7 +609,7 @@ These are:</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_rename_files_utils.rename_directive">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rename_directive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_files_utils.rename_directive" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_rename_files_utils.</span></span><span class="sig-name descname"><span class="pre">rename_directive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filePath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newName</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_files_utils.rename_directive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <p>Create new instance of rename_directive(name, filePath, category, newName)</p>
 <dl class="py attribute">
@@ -643,13 +640,13 @@ These are:</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_rename_files_utils.get_rename_directives">
-<span class="sig-name descname"><span class="pre">get_rename_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_files_utils.get_rename_directives" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_rename_files_utils.</span></span><span class="sig-name descname"><span class="pre">get_rename_directives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_rename_files_utils.get_rename_directives" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves file rename  directives from a given folder location.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>directory_path</strong> (<em>str</em>) – Fully qualified folder path to folder containing directives.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status. True if rename directives where found and loaded successfully, otherwise False.</p></li>
@@ -664,7 +661,7 @@ These are:</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -678,21 +675,21 @@ These are:</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.load_family">
-<span class="sig-name descname"><span class="pre">load_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.load_family" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">load_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">family_file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.load_family" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads or reloads a single family into a Revit document.</p>
 <p>Will load/ reload family provided in in path. By default the parameter values in the project file will be overwritten
 with parameter values in family.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>family_file_path</strong> (<em>str</em>) – The fully qualified file path of the family to be loaded.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raise</dt>
+<dt class="field-even">Raise<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Reload status (bool) returned in result.status.</p></li>
@@ -706,7 +703,7 @@ with parameter values in family.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -714,20 +711,20 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_symbols">
-<span class="sig-name descname"><span class="pre">get_family_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_family_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all family symbols (Revit family types) of given built in categories from the Revit model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>ICollection
 :cats sample: cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -735,20 +732,20 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_by_built_in_categories">
-<span class="sig-name descname"><span class="pre">get_family_instances_by_built_in_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_built_in_categories" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_family_instances_by_built_in_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_built_in_categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all family instances of given built in categories from the Revit model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>ICollection
 :cats sample: cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values:</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector of Autodesk.Revit.DB.Element matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -756,19 +753,19 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_of_built_in_category">
-<span class="sig-name descname"><span class="pre">get_family_instances_of_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtin_cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_of_built_in_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_family_instances_of_built_in_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builtin_cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_of_built_in_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all family instances of a single given built in category from the Revit model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>builtin_cat</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – single revit builtInCategory Enum value.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -776,17 +773,17 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_loadable_families">
-<span class="sig-name descname"><span class="pre">get_all_loadable_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_families" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_loadable_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all families in revit model by whether it is not an InPlace family.</p>
 <p>Note: slow filter due to use of lambda and cast to list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of families matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.Family</p>
 </dd>
 </dl>
@@ -794,16 +791,16 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_loadable_family_ids_through_types">
-<span class="sig-name descname"><span class="pre">get_all_loadable_family_ids_through_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_family_ids_through_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_loadable_family_ids_through_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_loadable_family_ids_through_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all loadable family ids in file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current family document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of family ids</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[Autodesk.Revit.DB.ElementId]</p>
 </dd>
 </dl>
@@ -811,17 +808,17 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_in_place_families">
-<span class="sig-name descname"><span class="pre">get_all_in_place_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_families" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_in_place_families</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_families" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all families in revit model by whether it is an InPlace family.</p>
 <p>Note: slow filter due to use of lambda and cast to list</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of families matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.Family</p>
 </dd>
 </dl>
@@ -829,16 +826,16 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_family_instances">
-<span class="sig-name descname"><span class="pre">get_all_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_family_instances" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_family_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_family_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all family instances in document.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector with all family instances in document.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.Collector</p>
 </dd>
 </dl>
@@ -846,16 +843,16 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven">
-<span class="sig-name descname"><span class="pre">is_any_nested_family_instance_label_driven</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">is_any_nested_family_instance_label_driven</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.is_any_nested_family_instance_label_driven" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks whether any family isntance in document is driven by the ‘Label’ property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if at least one instance is driven by label property. Othewise False</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -863,10 +860,10 @@ with parameter values in family.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_symbols_from_type">
-<span class="sig-name descname"><span class="pre">get_symbols_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_symbols_from_type" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_symbols_from_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_symbols_from_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all family types belonging to the same family as types past in.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>type_ids</strong> (<em>list</em><em> of </em><em>Autodesk.Revit.DB.ElementId</em>) – <ul>
@@ -875,12 +872,12 @@ with parameter values in family.</p>
 </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dictionary:
 where key is the family id as Autodesk.Revit.DB.ElementId
 value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId belonging to the family</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dic {Autodesk.Revit.DB.ElementId: list[Autodesk.Revit.DB.ElementId]}</p>
 </dd>
 </dl>
@@ -888,19 +885,19 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_instances_by_symbol_type_id">
-<span class="sig-name descname"><span class="pre">get_family_instances_by_symbol_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_symbol_type_id" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_family_instances_by_symbol_type_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_instances_by_symbol_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters all family instances of a single given family symbol (type).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>type_id</strong> (<em>Autodesk.Revit.DB.ElementId</em>) – The symbol (type) id</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A collector of Autodesk.Revit.DB.FamilyInstance matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Autodesk.Revit.DB.FilteredElementCollector</p>
 </dd>
 </dl>
@@ -908,19 +905,19 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_in_place_type_ids_in_model_of_category">
-<span class="sig-name descname"><span class="pre">get_all_in_place_type_ids_in_model_of_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_type_ids_in_model_of_category" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_in_place_type_ids_in_model_of_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fam_built_in_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_in_place_type_ids_in_model_of_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters family symbol (type) ids off all available in place families of single given built in category.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>fam_built_in_category</strong> (<em>Autodesk.Revit.DB.BuiltInCategory</em>) – built in revit category</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -928,19 +925,19 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_family_symbols_ids">
-<span class="sig-name descname"><span class="pre">get_family_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_family_symbols_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_family_symbols_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters family symbols belonging to list of built in categories past in.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p></li>
 <li><p><strong>cats</strong> (<em>cats = List</em><em>[</em><em>rdb.BuiltInCategory</em><em>] </em><em>(</em><em>[</em><em>rdb.BuiltInCategory.OST_Furniture</em><em>, </em><em>rdb.BuiltInCategory.OST_Parking</em><em>]</em><em>)</em>) – ICollection of Autodesk.Revit.DB.BuiltInCategory values.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -948,16 +945,16 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.family_utils.get_all_non_shared_family_symbol_ids">
-<span class="sig-name descname"><span class="pre">get_all_non_shared_family_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_non_shared_family_symbol_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.family_utils.</span></span><span class="sig-name descname"><span class="pre">get_all_non_shared_family_symbol_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.family_utils.get_all_non_shared_family_symbol_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters family symbols (types) belonging to hard coded categories lists (catsLoadableThreeD, catsLoadableTags)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>doc</strong> (<em>Autodesk.Revit.DB.Document</em>) – Current Revit model document.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -971,7 +968,7 @@ value is a list of all symbol(family type) ids as Autodesk.Revit.DB.ElementId be
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.family_all_types_in_use">
-<span class="sig-name descname"><span class="pre">family_all_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.family_all_types_in_use" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">family_all_types_in_use</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fam_type_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">used_type_ids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.family_all_types_in_use" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if symbols (types) of a family are in use in a model.
 Check is done by comparing entries of fam_type_ids with used_type_ids.
 :param fam_type_ids: list of symbol(type) ids of a family
@@ -984,7 +981,7 @@ Check is done by comparing entries of fam_type_ids with used_type_ids.
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge">
-<span class="sig-name descname"><span class="pre">get_unused_in_place_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unused_type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_in_place_ids_for_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unused_type_getter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_in_place_ids_for_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters symbol(type) ids and family ids (when not a single type of given family is in use) of families.
 The returned list of ids can be just unused family symbols or entire families if none of their symbols are in use.
 in terms of purging its faster to delete an entire family definition rather then deleting it’s symbols first and then the
@@ -997,10 +994,10 @@ definition.
 It requires as argument the current model document only.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of Element Ids representing the family symbols and or family id’s matching filter.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>list Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -1008,7 +1005,7 @@ It requires as argument the current model document only.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_used_unused_type_ids">
-<span class="sig-name descname"><span class="pre">get_used_unused_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_used_unused_type_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_used_unused_type_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id_getter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_used_unused_type_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters types obtained by past in type_id_getter method and depending on use_type past in returns either the used or unused symbols of a family
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -1020,13 +1017,13 @@ ICollection of built in categories,
 bool: exclude shared families</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>use_type</strong> (<em>int</em>) – 0, no dependent elements (not used); 1: has dependent elements(is in use)</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of Element Ids representing the family symbols matching filter.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of Autodesk.Revit.DB.ElementId</p>
 </dd>
 </dl>
@@ -1034,7 +1031,7 @@ bool: exclude shared families</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_unused_family_types">
-<span class="sig-name descname"><span class="pre">get_unused_family_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_family_types" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_family_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_shared_fam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_family_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters unused non shared family (symbols) type ids in model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -1046,7 +1043,7 @@ bool: exclude shared families</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Revit.Family.purge_unused_family_types.get_unused_non_shared_family_symbols_and_type_ids_to_purge">
-<span class="sig-name descname"><span class="pre">get_unused_non_shared_family_symbols_and_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_non_shared_family_symbols_and_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Revit.Family.purge_unused_family_types.</span></span><span class="sig-name descname"><span class="pre">get_unused_non_shared_family_symbols_and_type_ids_to_purge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Revit.Family.purge_unused_family_types.get_unused_non_shared_family_symbols_and_type_ids_to_purge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters unused, non shared and in place family (symbols) type ids in model which can be purged from the model.
 :param doc: Current Revit model document.
 :type doc: Autodesk.Revit.DB.Document
@@ -1067,7 +1064,7 @@ bool: exclude shared families</p>
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

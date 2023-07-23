@@ -4,15 +4,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>duHast.Data package &#8212; Sample Code Revit Batch Processor 0.0.7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/adctheme.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <meta name="generator" content="Sphinx/ADC Theme by Mirounga www.mirounga.fr"/>
@@ -184,16 +181,16 @@
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.get_translation_matrix">
-<span class="sig-name descname"><span class="pre">get_translation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_translation_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">get_translation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_translation_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the rotation/ translation matrix from the geometry object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>geometry_object</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code>) – A data geometry object instance.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A translation matrix.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>numpy array</p>
 </dd>
 </dl>
@@ -201,21 +198,21 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.get_outer_loop_as_shapely_points">
-<span class="sig-name descname"><span class="pre">get_outer_loop_as_shapely_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_outer_loop_as_shapely_points" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">get_outer_loop_as_shapely_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_outer_loop_as_shapely_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the boundary loop of an object as list of shapely points.</p>
 <p>Points are translated with passed in matrix.
 Any loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>geometry_object</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code>) – A data geometry object instance.</p></li>
 <li><p><strong>translation_matrix</strong> (<em>numpy array</em>) – A translation matrix.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of shapely points defining a polygon. (Empty list will be returned if less then 3 points in loop.)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List[shapely.point]</p>
 </dd>
 </dl>
@@ -223,21 +220,21 @@ Any loops containing less then 3 points will be ignored. (Empty list will be ret
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.get_inner_loops_as_shapely_points">
-<span class="sig-name descname"><span class="pre">get_inner_loops_as_shapely_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_inner_loops_as_shapely_points" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">get_inner_loops_as_shapely_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_inner_loops_as_shapely_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the inner loops (holes) of an object as list of lists of shapely points.</p>
 <p>Points are translated with passed in matrix.
 Any inner loops containing less then 3 points will be ignored. (Empty list will be returned)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>geoObject</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code>) – A data geometry object instance.</p></li>
 <li><p><strong>translationM</strong> (<em>numpy array</em>) – A translation matrix.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of lists of shapely points defining a polygon.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list [list[shapely.point]]</p>
 </dd>
 </dl>
@@ -245,17 +242,17 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.build_shapely_polygon">
-<span class="sig-name descname"><span class="pre">build_shapely_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapely_polygons</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.build_shapely_polygon" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">build_shapely_polygon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shapely_polygons</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.build_shapely_polygon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates shapely polygon with nested polygons from list of shapely polygons past in.</p>
 <p>Assumptions is: first polygon describes the boundary loop and any subsequent polygons are describing         holes within the boundary</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>shapely_polygons</strong> (<em>list</em><em>[</em><em>shapely.polygon</em><em>]</em>) – list of shapely polygons</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A shapely polygon.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>shapely.polygon</p>
 </dd>
 </dl>
@@ -263,17 +260,17 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.get_shapely_polygons_from_data_instance">
-<span class="sig-name descname"><span class="pre">get_shapely_polygons_from_data_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_shapely_polygons_from_data_instance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">get_shapely_polygons_from_data_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_shapely_polygons_from_data_instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of of shapely polygons from data instances past in.</p>
 <p>Polygons may contain holes</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data_instance</strong> (A class with .geometry property returning a <code class="xref py py-class docutils literal notranslate"><span class="pre">DataGeometry</span></code> instance.) – _description_</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of shapely polygons.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list [shapely.polygon]</p>
 </dd>
 </dl>
@@ -281,29 +278,29 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 
 <dl class="py data">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.GEOMETRY_CONVERTER">
-<span class="sig-name descname"><span class="pre">GEOMETRY_CONVERTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;}</span></em><a class="headerlink" href="#duHast.Data.data_to_shapely.GEOMETRY_CONVERTER" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">GEOMETRY_CONVERTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ceiling':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;,</span> <span class="pre">'room':</span> <span class="pre">&lt;function</span> <span class="pre">get_shapely_polygons_from_data_instance&gt;}</span></em><a class="headerlink" href="#duHast.Data.data_to_shapely.GEOMETRY_CONVERTER" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of available geometry (from revit to shapely ) converters</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.data_to_shapely.get_shapely_polygons_from_geo_object">
-<span class="sig-name descname"><span class="pre">get_shapely_polygons_from_geo_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_shapely_polygons_from_geo_object" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.data_to_shapely.</span></span><span class="sig-name descname"><span class="pre">get_shapely_polygons_from_geo_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_objects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.data_to_shapely.get_shapely_polygons_from_geo_object" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts polygon points from DataGeometry instances to shapely polygon instances and returns them as a dictionary where:</p>
 <ul class="simple">
 <li><p>key is the geometry objects id</p></li>
 <li><p>value is a list of shapely polygons</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>geometry_objects</strong> (<em>list</em><em>[</em><em>data object</em><em>]</em>) – A list of instances of the the same type (i.e DataRoom)</p></li>
 <li><p><strong>data_type</strong> (<em>str</em>) – string human readable identifying the data type ( each Data… class has this as a static field: dr.DataRoom.dataType)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dictionary.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>{int:[shapely.polygon]}</p>
 </dd>
 </dl>
@@ -334,7 +331,7 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.process_ceilings_to_rooms.write_data_to_file">
-<span class="sig-name descname"><span class="pre">write_data_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Number',</span> <span class="pre">'Name']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ceiling_type_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Type</span> <span class="pre">Mark']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ceiling_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Height</span> <span class="pre">Offset</span> <span class="pre">From</span> <span class="pre">Level']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_ceilings_to_rooms.write_data_to_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_ceilings_to_rooms.</span></span><span class="sig-name descname"><span class="pre">write_data_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Number',</span> <span class="pre">'Name']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ceiling_type_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Type</span> <span class="pre">Mark']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ceiling_instance_property_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Height</span> <span class="pre">Offset</span> <span class="pre">From</span> <span class="pre">Level']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_ceilings_to_rooms.write_data_to_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes Room data to file.</p>
 <p>Note:</p>
 <ul class="simple">
@@ -343,7 +340,7 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 <li><p>the report contains a row per associated element per room ( if 2 ceilings are in a room, the report will contain 2 rows)</p></li>
 </ul>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> ({str:[:class: <cite>.DataRoom</cite>]}) – A dictionary where key is the level name and values is a list of DataRoom instances.</p></li>
 <li><p><strong>output_file_path</strong> (<em>str</em>) – Fully qualified file path to output report file.</p></li>
@@ -352,7 +349,7 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 <li><p><strong>ceiling_instance_property_keys</strong> (<em>list</em><em>, </em><em>optional</em>) – Names of ceiling instance properties to be reported, defaults to [‘Height Offset From Level’]</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>Export status returned in result.status. False if an exception occurred, otherwise True.</p></li>
@@ -366,7 +363,7 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -374,15 +371,15 @@ Any inner loops containing less then 3 points will be ignored. (Empty list will 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="duHast.Data.process_ceilings_to_rooms.get_ceilings_by_room">
-<span class="sig-name descname"><span class="pre">get_ceilings_by_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_source_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_ceilings_to_rooms.get_ceilings_by_room" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">duHast.Data.process_ceilings_to_rooms.</span></span><span class="sig-name descname"><span class="pre">get_ceilings_by_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_source_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#duHast.Data.process_ceilings_to_rooms.get_ceilings_by_room" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads Revit data from file and runs an intersection check of each ceiling on a level with each room on the same level.</p>
 <p>Note:
 DataRoom instance will contain any ceilings in that room in associated elements property.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data_source_path</strong> (<em>str</em>) – Fully qualified file path to json formatted file containing DataRoom and DataCeiling objects.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Result class instance.</p>
 <ul class="simple">
 <li><p>result.status False if an exception occurred, otherwise True.</p></li>
@@ -397,7 +394,7 @@ DataRoom instance will contain any ceilings in that room in associated elements 
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="duHast.Utilities.Objects.html#duHast.Utilities.Objects.result.Result" title="duHast.Utilities.Objects.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
 </dd>
 </dl>
@@ -416,7 +413,7 @@ DataRoom instance will contain any ceilings in that room in associated elements 
     <div class="footer">
     <p>
       &copy; Copyright 2023, Jan Christel.
-      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 5.3.0 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
+      Created using <a href="http://www.sphinx-doc.org/">Sphinx</a> 7.0.1 <a href="https://github.com/mga-sphinx/sphinx_adc_theme">ADC Theme</a> .
     (Revision )
         </p>
     </div>

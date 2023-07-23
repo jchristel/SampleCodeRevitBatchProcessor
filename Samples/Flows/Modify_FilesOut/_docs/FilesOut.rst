@@ -153,9 +153,18 @@ ModifyFilesOut_StepTwo
         - concurrent Revit Batch Processor sessions STEP 2
         - post Revit Batch Processor scripts
 
-Revit project meta data file:
+- FileNames.csv
 
-This is a comma separated text files which contains meta data of the revit files to be processed in the following format:
+    - Revit project meta data file:
+        - This is a comma separated text files which contains meta data of the revit files to be processed in the following format:
+        - header row: none
+        - column 1: current file name (Revit) or view name for IFC / NWC exports
+        - column 2: Export file name (including revision separator prefix)
+        - column 3: revision
+        - column 4: revision suffix and end of file name
+        - column 5: file extension in format .extension
+        - column 6: meta data document number
+        - column 7: meta data document name
 
 
 _Script/logs

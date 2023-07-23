@@ -30,6 +30,7 @@
         <li id="toc_button"><div class="headerButton"><a href="#">Table of Contents</a></div></li>
         <li id="page_buttons">
             <div class="headerButton"><a href="../genindex.html" title="General Index" accesskey="I">index</a></div>
+            <div class="headerButton"><a href="../py-modindex.html" title="Python Module Index" >modules</a></div>
             <div class="headerButton"><a href="flows.MileStone.html" title="Milestone" accesskey="N">next</a></div>
             <div class="headerButton"><a href="index.html" title="Flows" accesskey="P">previous</a></div>
         </li>
@@ -54,7 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="flows.MileStone.html">Milestone</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.ModelMaintenance.html">Model Maintenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flows.FilesIn.html">FilesIn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flows.FilesOut.html">FilesOut</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flows.FilesOut.html">Files Out</a></li>
 </ul>
 </li>
 </ul>
@@ -90,7 +91,7 @@
 <h1>Add Revision<a class="headerlink" href="#add-revision" title="Permalink to this heading">¶</a></h1>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
-<p>The ‘Add Revision’ flow ia aimed at a QA process where one has the requirement to apply a revision to a model issued to other parties. The revision information needs to be stored within the model, not just as part of the file name.
+<p>The ‘Add Revision’ flow is aimed at a QA process where one has the requirement to apply a revision to a model issued to other parties. The revision information needs to be stored within the model, not just as part of the file name.
 This flow adds a revision to the model and then applies that revision to a nominated sheet which, in turn, is set as the start up view for the model.</p>
 <p>The revision information of that sheet can be used in other flows to append a revision to other exported  models (i.e. IFC or NavisWorks files)</p>
 <section id="actions-overview">
@@ -152,14 +153,14 @@ This flow adds a revision to the model and then applies that revision to a nomin
 </ul>
 </div></blockquote>
 </li>
-<li><p>Post_AddRevisionKillWSM.py</p>
+<li><p>Post_KillWSM.py</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>the post process script executed by each Revit Batch Processor session</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>Pre_AddRevision.py</p>
+<li><p>Pre_MarkerFiles.py</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>the pre process script executed by each Revit Batch Processor session</p></li>
